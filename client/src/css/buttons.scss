@@ -1,0 +1,20 @@
+@import "./variables";
+.button {
+  max-height: 36px;
+  max-width: 88px;
+  width: 88px;
+  line-height: 36px;
+  text-align: center;
+  text-justify: middle;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+.button-basic {
+  border: 1px solid color(textPrimary);
+}
+.button-primary {
+  background-color: color(buttonPrimary);
+}

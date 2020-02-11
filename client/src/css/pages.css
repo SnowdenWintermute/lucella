@@ -1,0 +1,7 @@
+.page-frame {
+  min-height: calc(100vh - 56px);
+  width: 100%;
+  padding-top: 50px;
+  background-color: #162229;
+}
+/*# sourceMappingURL=pages.css.map */

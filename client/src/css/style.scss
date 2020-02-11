@@ -1,0 +1,18 @@
+@import "variables";
+@import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
+// IBM Plex Sans Condensed
+// Public Sans
+// DM Sans
+// Nunito Sans
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: "DM Sans";
+  color: color(textPrimary);
+}
+
+a {
+  text-decoration: none;
+  color: color(textPrimary);
+}

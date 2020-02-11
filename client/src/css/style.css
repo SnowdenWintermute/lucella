@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
+* {
+  padding: 0px;
+  margin: 0px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  font-family: "DM Sans";
+  color: #9ba8b8;
+}
+
+a {
+  text-decoration: none;
+  color: #9ba8b8;
+}
+/*# sourceMappingURL=style.css.map */

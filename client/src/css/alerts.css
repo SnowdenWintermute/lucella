@@ -1,0 +1,30 @@
+.alerts-holder {
+  top: 100px;
+  position: absolute;
+}
+
+.alert {
+  height: 36px;
+  margin-left: 30px;
+  margin-bottom: 20px;
+  line-height: 36px;
+  vertical-align: middle;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 22px;
+  opacity: 0;
+  -webkit-transition: 0.3s ease-out;
+  transition: 0.3s ease-out;
+}
+
+.alert-animate {
+  margin-left: 100px;
+  opacity: 1;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.alert-danger {
+  background-color: #972121;
+}
+/*# sourceMappingURL=alerts.css.map */
