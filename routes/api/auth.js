@@ -80,7 +80,7 @@ router.post(
   }
 );
 
-// @route   POST api/auth/reset-password
+// @route   POST api/auth/request-password-reset
 // @desc    Send email to reset password
 // @access  Public
 router.post("/request-password-reset", async (req, res) => {
@@ -97,7 +97,7 @@ router.post("/request-password-reset", async (req, res) => {
         id: user.id
       }
     };
-    jwt.sign(
+    await jwt.sign(
       payload,
       config.get("jwtSecret"),
       {
@@ -109,7 +109,9 @@ router.post("/request-password-reset", async (req, res) => {
       }
     );
 
-    const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://lucella.org/password-reset/${passwordResetToken}"/></p>`;
+    console.log(passwordResetToken);
+
+    const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://lucella.org/password-reset/${passwordResetToken}" target="_blank">https://lucella.org/password-reset/${passwordResetToken}</a></p>`;
     const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: https://lucella.org/password-reset/${passwordResetToken}`;
 
     // create reusable transporter object using the default SMTP transport
@@ -137,8 +139,7 @@ router.post("/request-password-reset", async (req, res) => {
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
     res.status(200).json({
-      msg: "An email has been sent with a link to reset your password.",
-      token: passwordResetToken
+      msg: "An email has been sent with a link to reset your password."
     });
   } catch (error) {
     console.error(error.message);

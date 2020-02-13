@@ -10,3 +10,4 @@ PlayerModel for each game
   -array sorted by score (that is your rank)
   -created after user completes first of that game type
 Account recovery email
+Put redirect if logged in into parent component type

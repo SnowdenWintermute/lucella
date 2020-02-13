@@ -9,6 +9,7 @@ import Navbar from "./components/layout/Navbar";
 import Alerts from "./components/layout/Alerts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import RequestPasswordResetEmail from "./components/auth/RequestPasswordResetEmail";
 import Landing from "./components/layout/Landing";
 import Games from "./components/pages/games/Games";
 import Ladder from "./components/pages/ladder/Ladder";
@@ -40,6 +41,11 @@ function App() {
             <Route exact path="/" component={Landing}></Route>
             <Route exact path="/register" component={Register}></Route>
             <Route exact path="/login" component={Login}></Route>
+            <Route
+              exact
+              path="/request-password-reset"
+              component={RequestPasswordResetEmail}
+            ></Route>
             <Route exact path="/games" component={Games}></Route>
             <Route exact path="/ladder" component={Ladder}></Route>
             <Route exact path="/forum" component={Forum}></Route>

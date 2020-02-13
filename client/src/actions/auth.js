@@ -88,3 +88,27 @@ export const logout = () => async dispatch => {
     type: LOGOUT
   });
 };
+
+// request password reset email
+export const requestPasswordResetEmail = email => async dispatch => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+  const body = JSON.stringify(email);
+  try {
+    const res = await axios.post(
+      "/api/auth//request-password-reset",
+      body,
+      config
+    );
+    dispatch(setAlert(res.data.msg, "success"));
+  } catch (error) {
+    console.log("error");
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+    }
+  }
+};

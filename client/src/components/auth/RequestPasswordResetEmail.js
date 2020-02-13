@@ -1,24 +1,27 @@
 import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { login } from "../../actions/auth";
+import { requestPasswordResetEmail } from "../../actions/auth";
 
-const Login = ({ isAuthenticated, login }) => {
+const RequestPasswordResetEmail = ({
+  isAuthenticated,
+  requestPasswordResetEmail
+}) => {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
 
-  const { email, password } = formData;
+  const { email } = formData;
 
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async e => {
     e.preventDefault();
-    const { email, password } = formData;
-    login({ email, password });
+    const { email } = formData;
+    requestPasswordResetEmail({ email });
   };
 
   // redirect if logged in
@@ -39,28 +42,19 @@ const Login = ({ isAuthenticated, login }) => {
           value={email}
           onChange={e => onChange(e)}
         ></input>
-        <input
-          className="auth-text-input"
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={password}
-          onChange={e => onChange(e)}
-        ></input>
         <div className="forgot-password">
-          <Link to="request-password-reset">Forgot password?</Link>
+          Enter your email to request a password reset.
         </div>
         <div className="auth-bottom-links">
-          <Link to="/register">Create account</Link>
-          <input type="submit" className="button button-primary" value="SIGN" />
+          <input type="submit" className="button button-primary" value="SEND" />
         </div>
       </form>
     </div>
   );
 };
 
-Login.propTypes = {
-  login: PropTypes.func.isRequired,
+RequestPasswordResetEmail.propTypes = {
+  requestPasswordResetEmail: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool
 };
 
@@ -68,4 +62,6 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { requestPasswordResetEmail })(
+  RequestPasswordResetEmail
+);
