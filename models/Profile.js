@@ -11,7 +11,7 @@ const ProfileSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: ""
+    default: null
   },
   date: {
     type: Date,

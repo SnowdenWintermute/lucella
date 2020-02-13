@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const passwordResetAuth = require("../../middleware/passwordResetAuth");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
@@ -46,6 +47,59 @@ router.post(
       user.password = await bcrypt.hash(password, salt);
 
       await user.save();
+
+      const payload = {
+        user: {
+          id: user.id
+        }
+      };
+
+      jwt.sign(
+        payload,
+        config.get("jwtSecret"),
+        {
+          expiresIn: 360000
+        },
+        (err, token) => {
+          if (err) throw err;
+          res.json({ token });
+        }
+      );
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+  }
+);
+
+// @route   POST api/users/reset-password
+// @desc    Change a user's password
+// @access  Private
+router.post(
+  "/reset-password/:passwordResetToken",
+  [
+    check(
+      "password",
+      "Please enter a password with six or more characters"
+    ).isLength({
+      min: 6
+    }),
+    passwordResetAuth
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+      const user = await User.findById(req.user.id);
+      const salt = await bcrypt.genSalt(10);
+      const newPassword = req.body.password;
+      user.password = await bcrypt.hash(newPassword, salt);
+      await user.save();
+
+      console.log("password updated");
 
       const payload = {
         user: {

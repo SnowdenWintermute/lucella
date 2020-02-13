@@ -1,8 +1,8 @@
 @import "./variables";
 
 .alerts-holder {
+  position: fixed;
   top: 100px;
-  position: absolute;
 }
 .alert {
   height: 36px;
@@ -24,4 +24,7 @@
 }
 .alert-danger {
   background-color: color(danger);
+}
+.alert-success {
+  background-color: color(buttonPrimary);
 }

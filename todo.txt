@@ -1,0 +1,12 @@
+Clean up/separate routes into sub folders
+Settings/account page for user dropdown
+  -style in sketch
+  -delete account
+  -change username
+  -password reset view
+Profile view with name, avi and ranks
+PlayerModel for each game
+  -user ref
+  -array sorted by score (that is your rank)
+  -created after user completes first of that game type
+Account recovery email

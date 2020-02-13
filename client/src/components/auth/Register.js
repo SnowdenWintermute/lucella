@@ -1,24 +1,32 @@
 import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { login } from "../../actions/auth";
+import { Link, Redirect } from "react-router-dom";
+import { setAlert } from "../../actions/alert";
+import { register } from "../../actions/auth";
+import PropTypes from "prop-types";
 
-const Login = ({ isAuthenticated, login }) => {
+const Register = ({ setAlert, register, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
+    password2: ""
   });
 
-  const { email, password } = formData;
+  const { email, password, password2 } = formData;
 
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async e => {
     e.preventDefault();
-    const { email, password } = formData;
-    login({ email, password });
+    if (password !== password2) {
+      setAlert("Passwords do not match.", "danger");
+    } else {
+      register({
+        email,
+        password
+      });
+    }
   };
 
   // redirect if logged in
@@ -29,7 +37,7 @@ const Login = ({ isAuthenticated, login }) => {
   return (
     <div className="auth-frame">
       <h1 className="auth-brand-header">Lucella.org</h1>
-      <h3 className="auth-header">Sign In</h3>
+      <h3 className="auth-header">Create Account</h3>
       <form className="auth-form" onSubmit={e => onSubmit(e)}>
         <input
           className="auth-text-input"
@@ -47,18 +55,30 @@ const Login = ({ isAuthenticated, login }) => {
           value={password}
           onChange={e => onChange(e)}
         ></input>
-        <div className="forgot-password">Forgot password?</div>
+        <input
+          className="auth-text-input"
+          type="password"
+          name="password2"
+          placeholder="Password2"
+          value={password2}
+          onChange={e => onChange(e)}
+        ></input>
         <div className="auth-bottom-links">
-          <Link to="/register">Create account</Link>
-          <input type="submit" className="button button-primary" value="SIGN" />
+          <Link to="/login">Log in to existing account</Link>
+          <input
+            type="submit"
+            className="button button-primary"
+            value="CREATE"
+          />
         </div>
       </form>
     </div>
   );
 };
 
-Login.propTypes = {
-  login: PropTypes.func.isRequired,
+Register.propTypes = {
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool
 };
 
@@ -66,4 +86,4 @@ const mapStateToProps = state => ({
   isAuthenticated: state.auth.isAuthenticated
 });
 
-export default connect(mapStateToProps, { login })(Login);
+export default connect(mapStateToProps, { setAlert, register })(Register);

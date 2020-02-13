@@ -1,0 +1,64 @@
+@import "./variables";
+
+.auth-frame {
+  width: 100%;
+  max-width: 448px;
+  height: 500px;
+  margin: 0 auto;
+  margin-top: 100px;
+  background-color: color(dark);
+  padding: 38px;
+}
+.auth-brand-header,
+.auth-header {
+  display: block;
+  text-align: center;
+}
+.auth-brand-header {
+  color: color(textLight);
+  margin-bottom: 14px;
+  font-size: 24px;
+}
+.auth-header {
+  margin-bottom: 34px;
+}
+.auth-form {
+  width: 100%;
+}
+.auth-form .auth-text-input {
+  height: 54px;
+  width: 100%;
+  margin-bottom: 14px;
+  padding-left: 14px;
+  background-color: color(dark) !important;
+  border: 1px solid color(textPrimary);
+  font-size: 18px;
+}
+
+.auth-form input::placeholder {
+  background-color: color(dark);
+  color: color(textDark);
+  font-size: 18px;
+}
+.forgot-password {
+  margin-bottom: 35px;
+}
+.auth-bottom-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: color(textPrimary);
+  -webkit-box-shadow: 0 0 0px 1000px color(dark) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}

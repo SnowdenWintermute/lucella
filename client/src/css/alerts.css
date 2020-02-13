@@ -1,6 +1,6 @@
 .alerts-holder {
+  position: fixed;
   top: 100px;
-  position: absolute;
 }
 
 .alert {
@@ -26,5 +26,9 @@
 
 .alert-danger {
   background-color: #972121;
+}
+
+.alert-success {
+  background-color: #2f5f5c;
 }
 /*# sourceMappingURL=alerts.css.map */

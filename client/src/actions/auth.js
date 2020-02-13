@@ -66,6 +66,7 @@ export const register = ({ name, email, password }) => async dispatch => {
       type: REGISTER_SUCCESS,
       payload: res.data // jwt token
     });
+    dispatch(setAlert("Account created!", "success"));
     dispatch(loadUser());
   } catch (error) {
     const errors = error.response.data.errors;
