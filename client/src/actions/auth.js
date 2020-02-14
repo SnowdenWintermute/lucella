@@ -99,7 +99,7 @@ export const requestPasswordResetEmail = email => async dispatch => {
   const body = JSON.stringify(email);
   try {
     const res = await axios.post(
-      "/api/auth//request-password-reset",
+      "/api/auth/request-password-reset",
       body,
       config
     );

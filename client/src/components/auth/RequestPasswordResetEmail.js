@@ -32,7 +32,7 @@ const RequestPasswordResetEmail = ({
   return (
     <div className="auth-frame">
       <h1 className="auth-brand-header">Lucella.org</h1>
-      <h3 className="auth-header">Sign In</h3>
+      <h3 className="auth-header">Account Recovery</h3>
       <form className="auth-form" onSubmit={e => onSubmit(e)}>
         <input
           className="auth-text-input"

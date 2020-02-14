@@ -66,7 +66,7 @@ router.post(
         payload,
         config.get("jwtSecret"),
         {
-          expiresIn: 360000
+          expiresIn: 3600000
         },
         (err, token) => {
           if (err) throw err;
@@ -84,7 +84,6 @@ router.post(
 // @desc    Send email to reset password
 // @access  Public
 router.post("/request-password-reset", async (req, res) => {
-  let passwordResetToken;
   try {
     // get the user trying to reset password
     let user = await User.findOne({ email: req.body.email });
@@ -97,22 +96,21 @@ router.post("/request-password-reset", async (req, res) => {
         id: user.id
       }
     };
-    await jwt.sign(
+    const passwordResetToken = jwt.sign(
       payload,
       config.get("jwtSecret"),
       {
-        expiresIn: 36000
+        expiresIn: 3600
       },
-      (err, token) => {
-        if (err) throw err;
-        passwordResetToken = token;
-      }
+      { algorithm: "RS256" }
     );
 
     console.log(passwordResetToken);
+    const rootUrl = "localhost:3000/";
+    const emailPass = config.get("emailPassword");
 
-    const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://lucella.org/password-reset/${passwordResetToken}" target="_blank">https://lucella.org/password-reset/${passwordResetToken}</a></p>`;
-    const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: https://lucella.org/password-reset/${passwordResetToken}`;
+    const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://${rootUrl}password-reset/${passwordResetToken}" target="_blank">https://${rootUrl}password-reset/${passwordResetToken}</a></p>`;
+    const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: https://${rootUrl}password-reset/${passwordResetToken}`;
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
@@ -122,7 +120,7 @@ router.post("/request-password-reset", async (req, res) => {
       secure: true, // true for 465, false for other ports
       auth: {
         user: "no-reply@lucella.org", // generated ethereal user
-        pass: "Admin101!" // generated ethereal password
+        pass: emailPass // generated ethereal password
       }
     });
 
@@ -142,6 +140,7 @@ router.post("/request-password-reset", async (req, res) => {
       msg: "An email has been sent with a link to reset your password."
     });
   } catch (error) {
+    console.log("error sending email");
     console.error(error.message);
     res.status(500).send("Server error");
   }

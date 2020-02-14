@@ -1,11 +1,11 @@
 .auth-frame {
   width: 100%;
   max-width: 448px;
-  height: 500px;
   margin: 0 auto;
   margin-top: 100px;
   background-color: #080b11;
   padding: 38px;
+  padding-bottom: 70px;
 }
 
 .auth-brand-header,
