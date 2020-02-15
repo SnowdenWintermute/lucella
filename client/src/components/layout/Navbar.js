@@ -33,15 +33,30 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       />
       {showUserDropdown && (
         <ul className="user-menu">
-          <Link to="/profile" className="user-menu-item">
+          <Link
+            to="/profile"
+            className="user-menu-item"
+            onClick={e => onNavItemClick(e)}
+          >
             <img alt="user icon" src={userIcon} />
             Profile
           </Link>
-          <Link to="/wallet" className="user-menu-item">
+          <Link
+            to="/wallet"
+            className="user-menu-item"
+            onClick={e => onNavItemClick(e)}
+          >
             <img alt="wallet icon" src={walletIcon} />
             Wallet
           </Link>
-          <Link to="/login" className="user-menu-item" onClick={logout}>
+          <Link
+            to="/login"
+            className="user-menu-item"
+            onClick={e => {
+              onNavItemClick(e);
+              logout();
+            }}
+          >
             <img alt="logout icon" src={logoutIcon} />
             Logout
           </Link>
@@ -51,7 +66,11 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   );
 
   const guestMenu = (
-    <Link to="/login" className="button button-basic">
+    <Link
+      to="/login"
+      className="button button-basic"
+      onClick={e => onNavItemClick(e)}
+    >
       LOGIN
     </Link>
   );
@@ -59,7 +78,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const userMenu = isAuthenticated ? loggedInUserMenu : guestMenu;
 
   // tabs
-  const onTabClick = e => {
+  const onNavItemClick = e => {
     setActiveTab(e.target.name);
   };
 
@@ -73,7 +92,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
               to="/"
               className="brand-text"
               name="landing"
-              onClick={e => onTabClick(e)}
+              onClick={e => onNavItemClick(e)}
             >
               Lucella.org
             </Link>
@@ -83,7 +102,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
               to="/games"
               className={`nav-tab ${activeTab === "games" && "tab-active"}`}
               name="games"
-              onClick={e => onTabClick(e)}
+              onClick={e => onNavItemClick(e)}
             >
               GAMES
             </Link>
@@ -91,7 +110,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
               to="/ladder"
               className={`nav-tab ${activeTab === "ladder" && "tab-active"}`}
               name="ladder"
-              onClick={e => onTabClick(e)}
+              onClick={e => onNavItemClick(e)}
             >
               LADDER
             </Link>
@@ -99,7 +118,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
               to="/forum"
               className={`nav-tab ${activeTab === "forum" && "tab-active"}`}
               name="forum"
-              onClick={e => onTabClick(e)}
+              onClick={e => onNavItemClick(e)}
             >
               FORUM
             </Link>

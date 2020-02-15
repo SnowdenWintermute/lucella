@@ -105,7 +105,38 @@ export const requestPasswordResetEmail = email => async dispatch => {
     );
     dispatch(setAlert(res.data.msg, "success"));
   } catch (error) {
-    console.log("error");
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+    }
+  }
+};
+
+// change to a new password
+export const resetPassword = ({
+  password,
+  password2,
+  token
+}) => async dispatch => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+  const body = JSON.stringify({ password, password2 });
+  try {
+    const res = await axios.post(
+      `/api/users/reset-password/${token}`,
+      body,
+      config
+    );
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: res.data.token // jwt token
+    });
+    dispatch(setAlert(res.data.msg, "success"));
+  } catch (error) {
+    console.log(error.response.data.errors);
     const errors = error.response.data.errors;
     if (errors) {
       errors.forEach(err => dispatch(setAlert(err.msg, "danger")));

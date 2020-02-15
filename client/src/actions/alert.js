@@ -3,6 +3,7 @@ import { SET_ALERT, REMOVE_ALERT, ANIMATE_ALERT } from "./types";
 
 export const setAlert = (msg, alertType, timeout = 3000) => dispatch => {
   const id = uuid.v4();
+  if (!msg) msg = "Undefined error message";
   dispatch({
     type: SET_ALERT,
     payload: {

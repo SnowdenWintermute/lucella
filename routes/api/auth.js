@@ -105,7 +105,6 @@ router.post("/request-password-reset", async (req, res) => {
       { algorithm: "RS256" }
     );
 
-    console.log(passwordResetToken);
     const rootUrl = "localhost:3000/";
     const emailPass = config.get("emailPassword");
 

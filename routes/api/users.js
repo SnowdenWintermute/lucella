@@ -87,9 +87,19 @@ router.post(
     passwordResetAuth
   ],
   async (req, res) => {
-    const errors = validationResult(req);
+    let errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
+    }
+    if (req.body.password !== req.body.password2) {
+      errors = [
+        {
+          location: "body",
+          msg: "Passwords do not match",
+          param: "password"
+        }
+      ];
+      return res.status(400).json({ errors: errors });
     }
 
     try {
@@ -115,11 +125,11 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          res.json({ msg: "Password updated successfully", token });
         }
       );
     } catch (err) {
-      console.error(err.message);
+      console.log(err);
       res.status(500).send("Server error");
     }
   }

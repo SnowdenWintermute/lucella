@@ -10,6 +10,7 @@ import Alerts from "./components/layout/Alerts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import RequestPasswordResetEmail from "./components/auth/RequestPasswordResetEmail";
+import PasswordReset from "./components/auth/PasswordReset";
 import Landing from "./components/layout/Landing";
 import Games from "./components/pages/games/Games";
 import Ladder from "./components/pages/ladder/Ladder";
@@ -45,6 +46,11 @@ function App() {
               exact
               path="/request-password-reset"
               component={RequestPasswordResetEmail}
+            ></Route>
+            <Route
+              exact
+              path="/password-reset/:token"
+              component={PasswordReset}
             ></Route>
             <Route exact path="/games" component={Games}></Route>
             <Route exact path="/ladder" component={Ladder}></Route>
