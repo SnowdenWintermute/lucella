@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { setAlert } from "../../actions/alert";
 import { resetPassword } from "../../actions/auth";
 import PropTypes from "prop-types";
 
-const PasswordReset = ({ setAlert, resetPassword, isAuthenticated, match }) => {
+const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
   const [formData, setFormData] = useState({
     password: "",
     password2: ""
@@ -25,15 +25,11 @@ const PasswordReset = ({ setAlert, resetPassword, isAuthenticated, match }) => {
       resetPassword({
         password,
         password2,
-        token
+        token,
+        history
       });
     }
   };
-
-  // redirect if logged in
-  if (isAuthenticated) {
-    return <Redirect to="/games"></Redirect>;
-  }
 
   return (
     <div className="auth-frame">
@@ -76,5 +72,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { setAlert, resetPassword })(
-  PasswordReset
+  withRouter(PasswordReset)
 );

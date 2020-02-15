@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { requestPasswordResetEmail } from "../../actions/auth";
 
 const RequestPasswordResetEmail = ({
   isAuthenticated,
-  requestPasswordResetEmail
+  requestPasswordResetEmail,
+  history
 }) => {
   const [formData, setFormData] = useState({
     email: "",
@@ -21,7 +22,7 @@ const RequestPasswordResetEmail = ({
   const onSubmit = async e => {
     e.preventDefault();
     const { email } = formData;
-    requestPasswordResetEmail({ email });
+    requestPasswordResetEmail({ email, history });
   };
 
   // redirect if logged in
@@ -63,5 +64,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, { requestPasswordResetEmail })(
-  RequestPasswordResetEmail
+  withRouter(RequestPasswordResetEmail)
 );

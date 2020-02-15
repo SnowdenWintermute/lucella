@@ -12,3 +12,4 @@ PlayerModel for each game
 Account recovery email
 Put redirect if logged in into parent component type
 Better alert animations/fix them
+Make all password reset errors work

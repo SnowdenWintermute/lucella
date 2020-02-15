@@ -116,7 +116,8 @@ export const requestPasswordResetEmail = email => async dispatch => {
 export const resetPassword = ({
   password,
   password2,
-  token
+  token,
+  history
 }) => async dispatch => {
   const config = {
     headers: {
@@ -135,6 +136,7 @@ export const resetPassword = ({
       payload: res.data.token // jwt token
     });
     dispatch(setAlert(res.data.msg, "success"));
+    history.push("/games");
   } catch (error) {
     console.log(error.response.data.errors);
     const errors = error.response.data.errors;
