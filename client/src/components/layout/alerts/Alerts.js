@@ -1,24 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import Alert from "./Alert";
 
 const Alerts = ({ alerts }) => {
   const alertsToDisplay = [];
   if (alerts.length) {
     alerts.forEach(alert => {
-      const animateClass = alert.animating ? "alert-animate" : null;
       alertsToDisplay.push(
-        <div
-          className={`alert alert-${alert.alertType} ${animateClass}`}
+        <Alert
+          alertMsg={alert.msg}
+          alertType={alert.alertType}
           key={alert.msg}
-        >
-          {alert.msg}
-        </div>
+        />
       );
     });
   }
 
-  return <div className="alerts-holder">{alertsToDisplay}</div>;
+  return <ul className="alerts-holder">{alertsToDisplay}</ul>;
 };
 
 Alerts.propTypes = {

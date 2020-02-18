@@ -9,7 +9,5 @@ PlayerModel for each game
   -user ref
   -array sorted by score (that is your rank)
   -created after user completes first of that game type
-Account recovery email
 Put redirect if logged in into parent component type
-Better alert animations/fix them
 Make all password reset errors work

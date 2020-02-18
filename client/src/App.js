@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 // components
 import Navbar from "./components/layout/Navbar";
-import Alerts from "./components/layout/Alerts";
+import Alerts from "./components/layout/alerts/Alerts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import RequestPasswordResetEmail from "./components/auth/RequestPasswordResetEmail";

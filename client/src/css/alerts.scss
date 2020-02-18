@@ -3,17 +3,18 @@
 .alerts-holder {
   position: fixed;
   top: 100px;
+  list-style: none;
 }
 .alert {
-  height: 36px;
+  width: fit-content;
+  height: 46px;
   margin-left: 30px;
   margin-bottom: 20px;
+  border-radius: 4px;
   line-height: 36px;
-  vertical-align: middle;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 5px 15px 5px 15px;
   font-size: 22px;
-  color: color(textLighta);
+  color: color(textLight);
   opacity: 0;
   transition: 0.3s ease-out;
 }
@@ -27,4 +28,9 @@
 }
 .alert-success {
   background-color: color(buttonPrimary);
+}
+.alert-icon {
+  height: 20px;
+  fill: color(textLight);
+  margin-right: 10px;
 }
