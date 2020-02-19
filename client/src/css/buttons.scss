@@ -1,8 +1,8 @@
 @import "./variables";
 .button {
   max-height: 36px;
-  max-width: 88px;
-  width: 88px;
+  display: block;
+  min-width: 88px;
   line-height: 36px;
   text-align: center;
   text-justify: middle;
@@ -16,5 +16,10 @@
   border: 1px solid color(textPrimary);
 }
 .button-primary {
+  color: color(textLight);
   background-color: color(buttonPrimary);
+}
+.button-danger {
+  color: color(textLight);
+  background-color: color(danger);
 }

@@ -34,6 +34,7 @@ export const login = ({ email, password }) => async dispatch => {
     }
   };
   const body = JSON.stringify({ email, password });
+  console.log("login body: " + body);
   try {
     const res = await axios.post("/api/auth", body, config);
     dispatch({
@@ -41,6 +42,7 @@ export const login = ({ email, password }) => async dispatch => {
       payload: res.data // jwt token
     });
     dispatch(loadUser());
+    dispatch(setAlert("Welcome back", "success"));
   } catch (error) {
     const errors = error.response.data.errors;
     if (errors) {
@@ -137,6 +139,31 @@ export const resetPassword = ({
     });
     dispatch(setAlert(res.data.msg, "success"));
     history.push("/games");
+  } catch (error) {
+    console.log(error.response.data.errors);
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+    }
+  }
+};
+
+// delete account
+export const deleteAccount = ({ email, history }) => async dispatch => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+  const body = JSON.stringify({ email });
+
+  try {
+    const res = await axios.post(`/api/users/delete-account`, body, config);
+
+    dispatch({
+      type: LOGOUT
+    });
+    dispatch(setAlert(res.data.msg, "success"));
   } catch (error) {
     console.log(error.response.data.errors);
     const errors = error.response.data.errors;

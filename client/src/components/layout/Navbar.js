@@ -5,10 +5,11 @@ import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
 // img
 import logo from "../../img/logo.png";
-import logoutIcon from "../../img/logout.png";
-import userIcon from "../../img/user.png";
+import logoutIcon from "../../img/menuIcons/logout.png";
+import userIcon from "../../img/menuIcons/user.png";
 import profileIcon from "../../img/profile.png";
-import walletIcon from "../../img/wallet.png";
+import walletIcon from "../../img/menuIcons/wallet.png";
+import { ReactComponent as SettingsIcon } from "../../img/menuIcons/settings.svg";
 
 const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   // state
@@ -48,6 +49,16 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           >
             <img alt="wallet icon" src={walletIcon} />
             Wallet
+          </Link>
+          <Link
+            to="/settings"
+            className="user-menu-item"
+            onClick={e => {
+              onNavItemClick(e);
+            }}
+          >
+            <SettingsIcon className="menu-icon-svg"></SettingsIcon>
+            Settings
           </Link>
           <Link
             to="/login"

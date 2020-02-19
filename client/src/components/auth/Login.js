@@ -32,7 +32,7 @@ const Login = ({ isAuthenticated, login }) => {
       <h3 className="auth-header">Sign In</h3>
       <form className="auth-form" onSubmit={e => onSubmit(e)}>
         <input
-          className="auth-text-input"
+          className="simple-text-input"
           type="email"
           placeholder="Email"
           name="email"
@@ -40,7 +40,7 @@ const Login = ({ isAuthenticated, login }) => {
           onChange={e => onChange(e)}
         ></input>
         <input
-          className="auth-text-input"
+          className="simple-text-input"
           type="password"
           name="password"
           placeholder="Password"

@@ -5,10 +5,12 @@ import "./css/main.css";
 import { Provider } from "react-redux";
 import store from "./store";
 // components
+import PrivateRoute from "./components/routing/PrivateRoute";
 import Navbar from "./components/layout/Navbar";
 import Alerts from "./components/layout/alerts/Alerts";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
+import Settings from "./components/dashboard/Settings";
 import RequestPasswordResetEmail from "./components/auth/RequestPasswordResetEmail";
 import PasswordReset from "./components/auth/PasswordReset";
 import Landing from "./components/layout/Landing";
@@ -56,6 +58,11 @@ function App() {
             <Route exact path="/ladder" component={Ladder}></Route>
             <Route exact path="/forum" component={Forum}></Route>
             <Route exact path="/profile" component={Profile}></Route>
+            <PrivateRoute
+              exact
+              path="/settings"
+              component={Settings}
+            ></PrivateRoute>
           </Switch>
         </section>
       </Router>

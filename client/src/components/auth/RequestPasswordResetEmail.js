@@ -22,7 +22,7 @@ const RequestPasswordResetEmail = ({
   const onSubmit = async e => {
     e.preventDefault();
     const { email } = formData;
-    requestPasswordResetEmail({ email, history });
+    requestPasswordResetEmail({ email });
   };
 
   // redirect if logged in
@@ -36,7 +36,7 @@ const RequestPasswordResetEmail = ({
       <h3 className="auth-header">Account Recovery</h3>
       <form className="auth-form" onSubmit={e => onSubmit(e)}>
         <input
-          className="auth-text-input"
+          className="simple-text-input"
           type="email"
           placeholder="Email"
           name="email"

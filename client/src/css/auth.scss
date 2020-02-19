@@ -26,21 +26,6 @@
 .auth-form {
   width: 100%;
 }
-.auth-form .auth-text-input {
-  height: 54px;
-  width: 100%;
-  margin-bottom: 14px;
-  padding-left: 14px;
-  background-color: color(dark) !important;
-  border: 1px solid color(textPrimary);
-  font-size: 18px;
-}
-
-.auth-form input::placeholder {
-  background-color: color(dark);
-  color: color(textDark);
-  font-size: 18px;
-}
 .forgot-password {
   margin-bottom: 35px;
 }

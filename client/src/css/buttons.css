@@ -1,7 +1,7 @@
 .button {
   max-height: 36px;
-  max-width: 88px;
-  width: 88px;
+  display: block;
+  min-width: 88px;
   line-height: 36px;
   text-align: center;
   text-justify: middle;
@@ -17,6 +17,12 @@
 }
 
 .button-primary {
+  color: #bcd2e8;
   background-color: #2f5f5c;
+}
+
+.button-danger {
+  color: #bcd2e8;
+  background-color: #972121;
 }
 /*# sourceMappingURL=buttons.css.map */

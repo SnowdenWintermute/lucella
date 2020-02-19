@@ -16,3 +16,27 @@ a {
   text-decoration: none;
   color: color(textPrimary);
 }
+p {
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style: none;
+}
+
+.link-simple {
+  cursor: pointer;
+  width: fit-content;
+  &:hover {
+    color: color(textLight);
+  }
+}
+.link-simple-unblinked {
+  cursor: pointer;
+  width: fit-content;
+}
+.link-simple-blink {
+  cursor: pointer;
+  width: fit-content;
+  color: color(textLight);
+}

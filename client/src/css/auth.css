@@ -28,40 +28,6 @@
   width: 100%;
 }
 
-.auth-form .auth-text-input {
-  height: 54px;
-  width: 100%;
-  margin-bottom: 14px;
-  padding-left: 14px;
-  background-color: #080b11 !important;
-  border: 1px solid #9ba8b8;
-  font-size: 18px;
-}
-
-.auth-form input::-webkit-input-placeholder {
-  background-color: #080b11;
-  color: #656b72;
-  font-size: 18px;
-}
-
-.auth-form input:-ms-input-placeholder {
-  background-color: #080b11;
-  color: #656b72;
-  font-size: 18px;
-}
-
-.auth-form input::-ms-input-placeholder {
-  background-color: #080b11;
-  color: #656b72;
-  font-size: 18px;
-}
-
-.auth-form input::placeholder {
-  background-color: #080b11;
-  color: #656b72;
-  font-size: 18px;
-}
-
 .forgot-password {
   margin-bottom: 35px;
 }

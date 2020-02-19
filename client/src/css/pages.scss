@@ -6,3 +6,32 @@
   padding-top: 50px;
   background-color: color(primary);
 }
+.page-basic {
+  max-width: 800px;
+  border: 1px solid color(textPrimary);
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 100px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.header-basic {
+  margin-bottom: 5px;
+}
+.page-divider-line {
+  height: 2px;
+  width: 100%;
+  margin-right: 5px;
+  margin-left: -20px;
+  margin-bottom: 6px;
+  background-color: color(textPrimary);
+}
+.page-basic li {
+  margin-bottom: 22px;
+}
+.page-icon {
+  height: 18px;
+  width: 18px;
+  fill: color(textPrimary);
+  margin-right: 10px;
+}

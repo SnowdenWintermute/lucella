@@ -1,6 +1,7 @@
 const express = require("express");
 const usersMainRouter = express.Router();
 const passwordResetAuth = require("../../../middleware/passwordResetAuth");
+const auth = require("../../../middleware/auth");
 const { check } = require("express-validator");
 
 // @route   POST api/users
@@ -35,6 +36,21 @@ usersMainRouter.post(
     passwordResetAuth
   ],
   require("./passwordReset")
+);
+
+// @route   POST api/users/delete-account
+// @desc    Delete user account
+// @access  Private
+usersMainRouter.post(
+  "/delete-account",
+  [
+    check(
+      "email",
+      "Please enter the email associated with this account"
+    ).isEmail(),
+    auth
+  ],
+  require("./deleteAccount")
 );
 
 module.exports = usersMainRouter;

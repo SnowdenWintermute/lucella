@@ -3,7 +3,7 @@
 .alerts-holder {
   position: fixed;
   top: 100px;
-  list-style: none;
+  z-index: 20;
 }
 .alert {
   width: fit-content;
@@ -30,7 +30,8 @@
   background-color: color(buttonPrimary);
 }
 .alert-icon {
-  height: 20px;
+  height: 16px;
+  width: 16px;
   fill: color(textLight);
   margin-right: 10px;
 }

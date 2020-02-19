@@ -12,4 +12,38 @@ a {
   text-decoration: none;
   color: #9ba8b8;
 }
+
+p {
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style: none;
+}
+
+.link-simple {
+  cursor: pointer;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.link-simple:hover {
+  color: #bcd2e8;
+}
+
+.link-simple-unblinked {
+  cursor: pointer;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.link-simple-blink {
+  cursor: pointer;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  color: #bcd2e8;
+}
 /*# sourceMappingURL=style.css.map */

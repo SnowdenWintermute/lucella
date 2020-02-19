@@ -2,8 +2,8 @@ import React from "react";
 
 const Forum = props => {
   return (
-    <div>
-      <h1>Forum</h1>
+    <div className="page-basic">
+      <h1 className="header-basic">FORUM</h1>
     </div>
   );
 };

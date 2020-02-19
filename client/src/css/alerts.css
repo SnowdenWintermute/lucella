@@ -1,7 +1,7 @@
 .alerts-holder {
   position: fixed;
   top: 100px;
-  list-style: none;
+  z-index: 20;
 }
 
 .alert {
@@ -37,7 +37,8 @@
 }
 
 .alert-icon {
-  height: 20px;
+  height: 16px;
+  width: 16px;
   fill: #bcd2e8;
   margin-right: 10px;
 }

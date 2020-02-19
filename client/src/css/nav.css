@@ -132,4 +132,11 @@
 .user-menu-item img {
   margin-right: 10px;
 }
+
+.menu-icon-svg {
+  fill: #2f5f5c;
+  margin-right: 10px;
+  height: 23px;
+  width: 23px;
+}
 /*# sourceMappingURL=nav.css.map */
