@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Redirect, withRouter } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { requestPasswordResetEmail } from "../../actions/auth";
@@ -47,6 +47,7 @@ const RequestPasswordResetEmail = ({
           Enter your email to request a password reset.
         </div>
         <div className="auth-bottom-links">
+          <Link to="/login">Back to login</Link>
           <input type="submit" className="button button-primary" value="SEND" />
         </div>
       </form>

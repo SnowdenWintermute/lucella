@@ -1,9 +1,14 @@
 const User = require("../../../models/User");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 const nodemailer = require("nodemailer");
 const config = require("config");
 
 module.exports = async (req, res) => {
+  let errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     // get the user trying to reset password
     let user = await User.findOne({ email: req.body.email });

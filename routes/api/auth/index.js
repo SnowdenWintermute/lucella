@@ -23,6 +23,7 @@ authMainRouter.post(
 // @access  Public
 authMainRouter.post(
   "/request-password-reset",
+  check("email", "Please enter an email address").isEmail(),
   require("./requestPasswordReset")
 );
 
