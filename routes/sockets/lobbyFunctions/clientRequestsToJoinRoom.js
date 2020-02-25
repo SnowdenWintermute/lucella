@@ -5,7 +5,8 @@ function clientRequestsToJoinRoom({ io, socket, data }) {
   socket.emit("newMessage", {
     author: "Server",
     style: "private",
-    message: `Welcome to ${currentChatRoom}.`
+    message: `Welcome to ${currentChatRoom}.`,
+    timeStamp: Date.now()
   });
 }
 

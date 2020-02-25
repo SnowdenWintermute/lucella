@@ -5,9 +5,10 @@
   "main": "server.js",
   "scripts": {
     "start": "node servers",
-    "server": "nodemon servers",
+    "server": "nodemon server",
+    "servers": "nodemon servers",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run servers\" \"npm run client\""
   },
   "author": "Mike Silverman",
   "license": "ISC",

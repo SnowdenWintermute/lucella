@@ -6,7 +6,8 @@ $colors: (
   textDark: #656b72,
   menuPrimary: #3c5766,
   buttonPrimary: #2f5f5c,
-  danger: #972121
+  danger: #972121,
+  chatMessagePrivate: pink
 );
 
 @function color($color-name) {

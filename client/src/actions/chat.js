@@ -1,6 +1,6 @@
 import { NEW_CHAT_MESSAGE } from "./types";
 
-// get current user profile
+// add message to store
 export const newChatMessage = messageData => async dispatch => {
   try {
     dispatch({
@@ -9,5 +9,6 @@ export const newChatMessage = messageData => async dispatch => {
     });
   } catch (error) {
     console.log("new message error");
+    console.log(error);
   }
 };

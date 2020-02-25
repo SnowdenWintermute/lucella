@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 
-const GameLobbyChat = ({ profile: { profile }, chat }) => {
+const GameLobbyChat = ({
+  profile: { profile },
+  chat,
+  currentChatRoom,
+  sendNewMessage
+}) => {
   const [chatInput, setChatInput] = useState("");
 
   const onChange = e => {
@@ -9,16 +14,30 @@ const GameLobbyChat = ({ profile: { profile }, chat }) => {
   };
   const onSubmit = e => {
     e.preventDefault();
-    console.log("submat " + e);
-    // emit message to the room
-    // update redux store adding to this room's messages
+    sendNewMessage(chatInput);
+    setChatInput("");
   };
-  console.log(profile);
+
+  let messagesToDisplay;
+  if (chat[currentChatRoom]) {
+    messagesToDisplay = chat[currentChatRoom].map(message => {
+      return (
+        <li
+          className={`chat-message chat-message-${message.style}`}
+          key={message.timeStamp}
+        >
+          {message.author} : {message.message}
+        </li>
+      );
+    });
+  }
 
   return (
     <div className="game-lobby-chat">
       <div className="game-lobby-chat-stream-holder">
-        <div className="game-lobby-chat-stream"></div>
+        <div className="game-lobby-chat-stream">
+          <ul>{messagesToDisplay}</ul>
+        </div>
         <div className="game-lobby-chat-input-holder">
           <form onSubmit={e => onSubmit(e)}>
             <input

@@ -6,18 +6,14 @@ export default function(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case NEW_CHAT_MESSAGE:
-      const { room, message, style, author } = payload;
-      const messageToAdd = {
-        author,
-        message,
-        style
-      };
-      if (state[room]) {
-        const updatedRoom = [...state[room], messageToAdd];
-        return [...state, room[updatedRoom]];
+      console.log(payload);
+      const { room, message } = payload;
+      if (!state[room]) {
+        state[room] = [message];
       } else {
-        return [...state, room[messageToAdd]];
+        state[room] = [...state[room], message];
       }
+      return state;
     default:
       return state;
   }
