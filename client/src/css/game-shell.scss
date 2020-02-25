@@ -1,0 +1,59 @@
+@import "variables";
+.game-shell {
+  height: 95%;
+  width: 95%;
+  height: calc(100% - 60px);
+  margin: 0px auto;
+}
+.game-lobby {
+  height: 100%;
+  width: 100%;
+  border: 1px solid color(textPrimary);
+}
+.game-lobby-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+  height: 60px;
+  border-bottom: 1px solid color(textPrimary);
+}
+.game-lobby-top-bar ul {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+.game-lobby-top-bar ul li {
+  margin-right: 15px;
+}
+.game-lobby-top-bar .channel-info {
+  height: 100%;
+  width: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 1px solid color(textPrimary);
+}
+.game-lobby-chat {
+  display: flex;
+  height: calc(100% - 61px);
+}
+.game-lobby-chat-stream-holder {
+  width: calc(100% - 200px);
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.game-lobby-chat-stream {
+  height: 100%;
+  margin-bottom: 10px;
+  overflow-y: scroll;
+}
+.game-lobby-players-list {
+  border-left: 1px solid color(textPrimary);
+  width: 200px;
+  height: 100%;
+  padding: 10px;
+}

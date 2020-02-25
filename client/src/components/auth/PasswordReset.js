@@ -37,7 +37,7 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
       <h3 className="auth-header">Reset Password</h3>
       <form className="auth-form" onSubmit={e => onSubmit(e)}>
         <input
-          className="auth-text-input"
+          className="simple-text-input"
           type="password"
           name="password"
           placeholder="Password"
@@ -45,7 +45,7 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
           onChange={e => onChange(e)}
         ></input>
         <input
-          className="auth-text-input"
+          className="simple-text-input"
           type="password"
           name="password2"
           placeholder="Password2"

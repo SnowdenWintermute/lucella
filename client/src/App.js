@@ -18,6 +18,7 @@ import Games from "./components/pages/games/Games";
 import Ladder from "./components/pages/ladder/Ladder";
 import Forum from "./components/pages/forum/Forum";
 import Profile from "./components/profile/Profile";
+import BattleRoomShell from "./components/pages/games/battle-room/BattleRoomShell";
 
 // actions
 import { loadUser } from "./actions/auth";
@@ -55,6 +56,11 @@ function App() {
               component={PasswordReset}
             ></Route>
             <Route exact path="/games" component={Games}></Route>
+            <Route
+              exact
+              path="/battle-room"
+              component={BattleRoomShell}
+            ></Route>
             <Route exact path="/ladder" component={Ladder}></Route>
             <Route exact path="/forum" component={Forum}></Route>
             <Route exact path="/profile" component={Profile}></Route>

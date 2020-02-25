@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setAlert } from "./alert";
+import { getCurrentProfile } from "./profile";
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -19,7 +20,6 @@ export const loadUser = () => async dispatch => {
   }
 
   try {
-    console.log(localStorage);
     const res = await axios.get("/api/auth");
     dispatch({ type: USER_LOADED, payload: res.data });
   } catch (error) {
@@ -35,7 +35,6 @@ export const login = ({ email, password }) => async dispatch => {
     }
   };
   const body = JSON.stringify({ email, password });
-  console.log("login body: " + body);
   try {
     const res = await axios.post("/api/auth", body, config);
     dispatch({
@@ -43,6 +42,7 @@ export const login = ({ email, password }) => async dispatch => {
       payload: res.data // jwt token
     });
     dispatch(loadUser());
+    dispatch(getCurrentProfile());
     dispatch(setAlert("Welcome back", "success"));
   } catch (error) {
     const errors = error.response.data.errors;

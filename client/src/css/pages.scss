@@ -1,9 +1,12 @@
 @import "variables";
-
+.body {
+  height: 100%;
+}
 .page-frame {
-  min-height: calc(100vh - #{$navHeight});
+  height: calc(100vh - #{$navHeight});
+  min-height: 400px;
   width: 100%;
-  padding-top: 50px;
+  padding-top: 30px;
   background-color: color(primary);
 }
 .page-basic {
@@ -34,4 +37,8 @@
   width: 18px;
   fill: color(textPrimary);
   margin-right: 10px;
+}
+.game-page-title {
+  margin: 0;
+  margin-bottom: 6px;
 }

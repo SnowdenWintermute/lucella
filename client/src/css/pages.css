@@ -1,7 +1,12 @@
+.body {
+  height: 100%;
+}
+
 .page-frame {
-  min-height: calc(100vh - 56px);
+  height: calc(100vh - 56px);
+  min-height: 400px;
   width: 100%;
-  padding-top: 50px;
+  padding-top: 30px;
   background-color: #162229;
 }
 
@@ -37,5 +42,10 @@
   width: 18px;
   fill: #9ba8b8;
   margin-right: 10px;
+}
+
+.game-page-title {
+  margin: 0;
+  margin-bottom: 6px;
 }
 /*# sourceMappingURL=pages.css.map */
