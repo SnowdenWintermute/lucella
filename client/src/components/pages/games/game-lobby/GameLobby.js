@@ -5,17 +5,18 @@ import GameLobbyTopBar from "./GameLobbyTopBar";
 import GameLobbyChat from "./GameLobbyChat";
 import io from "socket.io-client";
 import { getCurrentProfile } from "../../../../actions/profile";
+import { newChatMessage } from "../../../../actions/chat";
 import { serverIp } from "../../../../config/config";
 const socket = io.connect(serverIp);
 
 const GameLobby = ({
   auth: { isAuthenticated, loading },
   getCurrentProfile,
-  profile,
+  loadProfile,
+  profile: { profile },
   defaultChatRoom
 }) => {
   const [currentChatRoom, setCurrentChatRoom] = useState(defaultChatRoom);
-  const [currentRoomMessages, setCurrentRoomMessages] = useState([]);
 
   useEffect(() => {
     if (!profile) {
@@ -27,17 +28,19 @@ const GameLobby = ({
     } else {
       socket.emit("clientRequestsToJoinRoom", { currentChatRoom });
     }
-  }, []);
+  }, [getCurrentProfile, loadProfile, currentChatRoom, profile]);
 
   useEffect(() => {
     socket.on("newMessage", message => {
-      // update redux store for messages in this channel
+      console.log(message);
+      const msgForReduxStore = { ...message, room: currentChatRoom };
+      newChatMessage(msgForReduxStore);
     });
 
     return () => {
       socket.disconnect();
     };
-  }, []);
+  });
 
   return (
     <div className="game-lobby">
@@ -56,4 +59,6 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getCurrentProfile })(GameLobby);
+export default connect(mapStateToProps, { getCurrentProfile, newChatMessage })(
+  GameLobby
+);

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 
-const GameLobbyChat = ({ profile }) => {
+const GameLobbyChat = ({ profile: { profile }, chat }) => {
   const [chatInput, setChatInput] = useState("");
 
   const onChange = e => {
@@ -37,7 +37,8 @@ const GameLobbyChat = ({ profile }) => {
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  profile: state.profile,
+  chat: state.chat
 });
 
 export default connect(mapStateToProps)(GameLobbyChat);
