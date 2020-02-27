@@ -5,6 +5,7 @@ const GameLobbyChat = ({
   profile: { profile },
   chat,
   currentChatRoom,
+  currentChatRoomUsers,
   sendNewMessage
 }) => {
   const [chatInput, setChatInput] = useState("");
@@ -18,7 +19,9 @@ const GameLobbyChat = ({
     setChatInput("");
   };
 
+  let usersInChannelToDisplay = [];
   let messagesToDisplay;
+
   if (chat[currentChatRoom]) {
     messagesToDisplay = chat[currentChatRoom].map(message => {
       return (
@@ -31,6 +34,10 @@ const GameLobbyChat = ({
       );
     });
   }
+
+  Object.keys(currentChatRoomUsers).forEach(key => {
+    usersInChannelToDisplay.push(<div key={key}>{key}</div>);
+  });
 
   return (
     <div className="game-lobby-chat">
@@ -50,7 +57,7 @@ const GameLobbyChat = ({
           </form>
         </div>
       </div>
-      <div className="game-lobby-players-list">{}</div>
+      <div className="game-lobby-players-list">{usersInChannelToDisplay}</div>
     </div>
   );
 };

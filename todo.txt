@@ -1,10 +1,19 @@
+User
+  -create unique on register username
 Profile
-  -change username
 Profile view with name, avi and ranks
 PlayerModel for each game
   -user ref
   -array sorted by score (that is your rank)
   -created after user completes first of that game type
-Put redirect if logged in into parent component type
-Make all password reset errors work
-Look into adding Helmet
+Chat
+  -use userId(or player name) to uniquify sockets
+  -press up to get last entered messages
+  -show users in room
+  -change channel(room)
+  -send private messages
+  -friend list
+  -make messages a class
+
+General
+  -remove magic strings

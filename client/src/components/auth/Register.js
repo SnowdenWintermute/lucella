@@ -8,11 +8,12 @@ import PropTypes from "prop-types";
 const Register = ({ setAlert, register, isAuthenticated }) => {
   const [formData, setFormData] = useState({
     email: "",
+    name: "",
     password: "",
     password2: ""
   });
 
-  const { email, password, password2 } = formData;
+  const { email, password, password2, name } = formData;
 
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,7 +25,8 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     } else {
       register({
         email,
-        password
+        password,
+        name
       });
     }
   };
@@ -45,6 +47,14 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
           placeholder="Email"
           name="email"
           value={email}
+          onChange={e => onChange(e)}
+        ></input>
+        <input
+          className="simple-text-input"
+          type="text"
+          placeholder="Name"
+          name="name"
+          value={name}
           onChange={e => onChange(e)}
         ></input>
         <input

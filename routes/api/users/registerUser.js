@@ -10,16 +10,26 @@ module.exports = async (req, res) => {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { email, password } = req.body;
-
+  const { email, password, name } = req.body;
+  console.log(name);
   try {
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
+    let findByName = await User.findOne({ name });
+    if (findByName) {
+      return res
+        .status(400)
+        .json({ errors: [{ msg: "Name is already taken" }] });
+    }
+    console.log(findByName);
+
+    console.log("attempt register");
 
     user = new User({
       email,
+      name,
       password
     });
 

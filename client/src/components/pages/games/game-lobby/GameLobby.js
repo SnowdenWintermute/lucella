@@ -7,50 +7,51 @@ import io from "socket.io-client";
 import { getCurrentProfile } from "../../../../actions/profile";
 import { newChatMessage } from "../../../../actions/chat";
 // import { serverIp } from "../../../../config/config";
-const socket = io("localhost:5000"); // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
+let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 
 const GameLobby = ({
-  getCurrentProfile,
-  loadProfile,
-  profile: { profile },
+  auth: { loading, user },
   defaultChatRoom,
   newChatMessage
 }) => {
   const [currentChatRoom, setCurrentChatRoom] = useState(defaultChatRoom);
+  const [currentChatRoomUsers, setCurrentChatRoomUsers] = useState({});
 
-  // useEffect(() => {
-  //   socket.connect();
-  // }, [null]);
-
-  useEffect(() => {
-    if (!profile) {
-      async function loadProfile() {
-        await getCurrentProfile();
-      }
-      loadProfile();
-    }
-  }, [getCurrentProfile, loadProfile, profile]);
+  const username = user ? user.name : "Anon";
 
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Requesting to join room: " + currentChatRoom);
-      socket.emit("clientRequestsToJoinRoom", { currentChatRoom });
-    });
+    socket = io("localhost:5000");
     return () => {
-      console.log("disconnecting socket");
       socket.disconnect();
     };
-  }, [currentChatRoom]);
+  }, []);
+
+  useEffect(() => {
+    if (!loading) {
+      socket.emit("clientRequestsToJoinRoom", { currentChatRoom, username });
+      console.log({ currentChatRoom, username });
+    }
+  }, [loading]);
+
+  useEffect(() => {}, []);
+
+  useEffect(() => {
+    socket.on("updateRoomUserList", data => {
+      console.log(data.currentUsers);
+      setCurrentChatRoomUsers(data.currentUsers);
+    });
+  }, []);
 
   useEffect(() => {
     socket.on("newMessage", message => {
+      console.log(message);
       const msgForReduxStore = { message, room: currentChatRoom };
       newChatMessage(msgForReduxStore);
     });
   }, [currentChatRoom, newChatMessage]);
 
   const sendNewMessage = message => {
-    const author = profile ? profile.name : "Anon";
+    const author = username;
     const messageToSend = {
       currentChatRoom,
       author,
@@ -60,11 +61,20 @@ const GameLobby = ({
     socket.emit("clientSendsNewChat", messageToSend);
   };
 
+  const joinRoom = roomName => {
+    socket.emit("clientRequestsToJoinRoom", roomName);
+  };
+
   return (
     <div className="game-lobby">
-      <GameLobbyTopBar />
+      <GameLobbyTopBar
+        channelName={currentChatRoom}
+        currentChatRoomUsers={currentChatRoomUsers}
+        joinRoom={joinRoom}
+      />
       <GameLobbyChat
         currentChatRoom={currentChatRoom}
+        currentChatRoomUsers={currentChatRoomUsers}
         sendNewMessage={sendNewMessage}
       />
     </div>
@@ -72,14 +82,11 @@ const GameLobby = ({
 };
 
 GameLobby.propTypes = {
-  getCurrentProfile: PropTypes.func.isRequired,
   newChatMessage: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  profile: state.profile
+  auth: state.auth
 });
 
-export default connect(mapStateToProps, { getCurrentProfile, newChatMessage })(
-  GameLobby
-);
+export default connect(mapStateToProps, { newChatMessage })(GameLobby);

@@ -11,6 +11,14 @@ usersMainRouter.post(
   "/",
   [
     check("email", "Please include a valid email").isEmail(),
+    check("name", "Please enter a name of at least three characters").isLength({
+      min: 3
+    }),
+    check("name", "Please enter a name of no more than 16 characters").isLength(
+      {
+        max: 16
+      }
+    ),
     check(
       "password",
       "Please enter a password with six or more characters"

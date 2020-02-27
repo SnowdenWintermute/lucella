@@ -1,12 +1,23 @@
 import React from "react";
 // import PropTypes from "prop-types";
 
-const GameLobbyTopBar = ({ channelName, numPlayersInChannel }) => {
+const GameLobbyTopBar = ({ channelName, joinRoom, currentChatRoomUsers }) => {
+  const onChannelClick = () => {
+    console.log("channel button clicked");
+  };
+
+  const numUsersInRoom = Object.keys(currentChatRoomUsers).length;
+
   return (
     <div className="game-lobby-top-bar">
       <ul>
         <li>
-          <button className="button button-basic">Channel</button>
+          <button
+            className="button button-basic"
+            onClick={() => onChannelClick()}
+          >
+            Channel
+          </button>
         </li>
         <li>
           <button className="button button-basic">Play Ranked</button>
@@ -19,7 +30,7 @@ const GameLobbyTopBar = ({ channelName, numPlayersInChannel }) => {
         </li>
       </ul>
       <div className="channel-info">
-        ChannelName: {channelName} (2{numPlayersInChannel})
+        {channelName} ({numUsersInRoom})
       </div>
     </div>
   );

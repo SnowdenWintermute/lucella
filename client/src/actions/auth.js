@@ -62,6 +62,7 @@ export const register = ({ name, email, password }) => async dispatch => {
       "Content-Type": "application/json"
     }
   };
+  console.log(name);
   const body = JSON.stringify({ name, email, password });
   try {
     const res = await axios.post("/api/users", body, config);
@@ -72,6 +73,7 @@ export const register = ({ name, email, password }) => async dispatch => {
     dispatch(setAlert("Account created!", "success"));
     dispatch(loadUser());
   } catch (error) {
+    console.log(error);
     const errors = error.response.data.errors;
     if (errors) {
       errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
