@@ -49,11 +49,15 @@
 .game-lobby-chat-stream {
   height: 100%;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column-reverse;
   overflow-y: scroll;
 }
 .game-lobby-players-list {
   border-left: 1px solid color(textPrimary);
   width: 200px;
-  height: 100%;
+  height: calc(100% + 1px);
   padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }

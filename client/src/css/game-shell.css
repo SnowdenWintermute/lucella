@@ -81,13 +81,22 @@
 .game-lobby-chat-stream {
   height: 100%;
   margin-bottom: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: reverse;
+      -ms-flex-direction: column-reverse;
+          flex-direction: column-reverse;
   overflow-y: scroll;
 }
 
 .game-lobby-players-list {
   border-left: 1px solid #9ba8b8;
   width: 200px;
-  height: 100%;
+  height: calc(100% + 1px);
   padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 /*# sourceMappingURL=game-shell.css.map */

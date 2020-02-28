@@ -29,11 +29,10 @@ const GameLobby = ({
   useEffect(() => {
     if (!loading) {
       socket.emit("clientRequestsToJoinRoom", { currentChatRoom, username });
+      console.log("requestedjoin");
       console.log({ currentChatRoom, username });
     }
   }, [loading]);
-
-  useEffect(() => {}, []);
 
   useEffect(() => {
     socket.on("updateRoomUserList", data => {
