@@ -49,7 +49,7 @@ const GameLobbyChat = ({
           <form onSubmit={e => onSubmit(e)}>
             <input
               type="text"
-              className="chat-text-input"
+              className="text-input-transparent"
               onChange={e => onChange(e)}
               value={chatInput}
               placeholder="Enter a message to chat..."

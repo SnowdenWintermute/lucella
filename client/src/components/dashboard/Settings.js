@@ -42,6 +42,8 @@ const Settings = ({
   return (
     <Fragment>
       <Modal
+        screenClass="modal-screen-dim"
+        frameClass="modal-frame-dark"
         isOpen={displayDeleteAccountModal}
         setParentDisplay={setParentDisplay}
         title={"Delete Account"}

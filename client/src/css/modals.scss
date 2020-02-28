@@ -4,9 +4,12 @@ $modalSidePadding: 20px;
 .modal-screen {
   position: absolute;
   top: 0px;
+  left: 0px;
   height: 100%;
   width: 100%;
   z-index: 10;
+}
+.modal-screen-dim {
   opacity: 0.7;
   background-color: color(dark);
 }
@@ -16,12 +19,15 @@ $modalSidePadding: 20px;
   padding-right: $modalSidePadding;
   padding-bottom: 50px;
   width: 500px;
-  max-width: 800px;
+  max-width: 100%;
   position: fixed;
   z-index: 11;
-  top: 150px;
+  top: 35%;
   left: 50%;
   transform: translateX(-50%);
+  // transform: translateY(-50%);
+}
+.modal-frame-dark {
   background: color(dark);
 }
 .modal-top-bar {
@@ -38,7 +44,6 @@ $modalSidePadding: 20px;
   margin-bottom: 15px;
 }
 .modal-title {
-  // border: 1px solid red;
   width: fit-content;
 }
 .modal-x-button {

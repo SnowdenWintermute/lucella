@@ -1,6 +1,13 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
 
-const Modal = ({ isOpen, children, setParentDisplay, title }) => {
+const Modal = ({
+  isOpen,
+  children,
+  setParentDisplay,
+  title,
+  screenClass,
+  frameClass
+}) => {
   const [displayModal, setDisplayModal] = useState(isOpen);
 
   // hide modal
@@ -47,8 +54,8 @@ const Modal = ({ isOpen, children, setParentDisplay, title }) => {
 
   const modalToShow = displayModal ? (
     <Fragment>
-      <div className="modal-screen" id="modal-screen"></div>
-      <div className="modal-frame">
+      <div className={`modal-screen ${screenClass}`} id="modal-screen"></div>
+      <div className={`modal-frame ${frameClass}`}>
         <div className="modal-top-bar">
           <div className="modal-title">{title}</div>
           <div className="modal-x-button" onClick={() => hideModal()}>

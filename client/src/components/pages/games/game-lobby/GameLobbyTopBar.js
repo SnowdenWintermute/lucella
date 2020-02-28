@@ -1,7 +1,12 @@
 import React from "react";
 // import PropTypes from "prop-types";
 
-const GameLobbyTopBar = ({ channelName, joinRoom, currentChatRoomUsers }) => {
+const GameLobbyTopBar = ({
+  channelName,
+  joinRoom,
+  currentChatRoomUsers,
+  showChangeChannelModal
+}) => {
   const onChannelClick = () => {
     console.log("channel button clicked");
   };
@@ -14,7 +19,7 @@ const GameLobbyTopBar = ({ channelName, joinRoom, currentChatRoomUsers }) => {
         <li>
           <button
             className="button button-basic"
-            onClick={() => onChannelClick()}
+            onClick={() => showChangeChannelModal()}
           >
             Channel
           </button>

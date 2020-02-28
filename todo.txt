@@ -1,5 +1,3 @@
-User
-  -create unique on register username
 Profile
 Profile view with name, avi and ranks
 PlayerModel for each game
@@ -7,13 +5,12 @@ PlayerModel for each game
   -array sorted by score (that is your rank)
   -created after user completes first of that game type
 Chat
-  -use userId(or player name) to uniquify sockets
   -press up to get last entered messages
-  -show users in room
   -change channel(room)
   -send private messages
   -friend list
   -make messages a class
-
+  -client can lie what their name is...
+  -icon of what game they're playing
 General
   -remove magic strings
