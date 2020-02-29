@@ -25,6 +25,7 @@
   left: 50%;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
+  background-color: #162229;
 }
 
 .modal-frame-dark {

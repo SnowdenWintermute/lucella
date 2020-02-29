@@ -19,7 +19,7 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
 
   const onSubmit = async e => {
     e.preventDefault();
-    if (/*password !== password2*/ false) {
+    if (password !== password2) {
       setAlert("Passwords do not match.", "danger");
     } else {
       resetPassword({
