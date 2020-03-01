@@ -13,7 +13,8 @@ let socket; // { transports: ["websocket"] } // some reason had to type this in 
 const GameLobby = ({
   auth: { loading, user },
   defaultChatRoom,
-  newChatMessage
+  newChatMessage,
+  chat
 }) => {
   const [currentChatRoom, setCurrentChatRoom] = useState(defaultChatRoom);
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
@@ -38,7 +39,7 @@ const GameLobby = ({
         username
       });
     }
-  }, [loading, currentChatRoom, username]);
+  }, [loading, username]);
 
   useEffect(() => {
     socket.on("updateRoomUserList", data => {
@@ -58,6 +59,7 @@ const GameLobby = ({
   }, []);
 
   const sendNewMessage = message => {
+    if (message === "") return;
     const author = username;
     const messageToSend = {
       currentChatRoom,
@@ -70,6 +72,7 @@ const GameLobby = ({
 
   const joinRoom = roomToJoin => {
     socket.emit("clientRequestsToJoinRoom", { roomToJoin, username });
+    setCurrentChatRoom(roomToJoin);
   };
   const onJoinRoomSubmit = e => {
     e.preventDefault();
@@ -123,7 +126,8 @@ GameLobby.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  chat: state.chat
 });
 
 export default connect(mapStateToProps, { newChatMessage })(GameLobby);
