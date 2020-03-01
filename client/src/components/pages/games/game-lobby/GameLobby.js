@@ -33,22 +33,29 @@ const GameLobby = ({
 
   useEffect(() => {
     if (!loading) {
-      socket.emit("clientRequestsToJoinRoom", { currentChatRoom, username });
+      socket.emit("clientRequestsToJoinRoom", {
+        roomToJoin: currentChatRoom,
+        username
+      });
     }
-  }, [loading]);
+  }, [loading, currentChatRoom, username]);
 
   useEffect(() => {
     socket.on("updateRoomUserList", data => {
-      setCurrentChatRoomUsers(data.currentUsers);
+      console.log(data);
+      const { roomName, currentUsers } = data;
+      setCurrentChatRoomUsers(currentUsers);
+      setCurrentChatRoom(roomName);
     });
   }, []);
 
   useEffect(() => {
     socket.on("newMessage", message => {
+      console.log("new message incame");
       const msgForReduxStore = { message, room: currentChatRoom };
       newChatMessage(msgForReduxStore);
     });
-  }, [currentChatRoom, newChatMessage]);
+  }, []);
 
   const sendNewMessage = message => {
     const author = username;
@@ -61,13 +68,14 @@ const GameLobby = ({
     socket.emit("clientSendsNewChat", messageToSend);
   };
 
-  const joinRoom = roomName => {
-    socket.emit("clientRequestsToJoinRoom", roomName);
+  const joinRoom = roomToJoin => {
+    socket.emit("clientRequestsToJoinRoom", { roomToJoin, username });
   };
   const onJoinRoomSubmit = e => {
     e.preventDefault();
     setDisplayChangeChannelModal(false);
     console.log("join room " + joinNewRoomInput);
+    joinRoom(joinNewRoomInput);
   };
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
@@ -91,6 +99,7 @@ const GameLobby = ({
           <input
             className={"text-input-transparent"}
             onChange={e => setJoinNewRoomInput(e.target.value)}
+            value={joinNewRoomInput}
           ></input>
         </form>
       </Modal>
