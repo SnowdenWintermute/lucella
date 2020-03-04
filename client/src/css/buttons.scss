@@ -2,6 +2,7 @@
 .button {
   max-height: 36px;
   display: block;
+  max-width: 100%;
   min-width: 88px;
   line-height: 36px;
   text-align: center;
@@ -15,12 +16,27 @@
 .button-basic {
   border: 1px solid color(textPrimary);
   background-color: transparent;
+  transition: 0.3s;
 }
 .button-primary {
   color: color(textLight);
   background-color: color(buttonPrimary);
 }
+.button-success {
+  color: color(textLight);
+  background-color: color(success);
+}
 .button-danger {
   color: color(textLight);
   background-color: color(danger);
+}
+.chat-button-hidden,
+.chat-buttons-hidden {
+  width: 0px !important;
+  opacity: 0;
+  min-width: 0px;
+  padding: 0px;
+  margin: 0px !important;
+  border: 0px;
+  overflow: hidden;
 }

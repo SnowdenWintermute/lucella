@@ -18,7 +18,7 @@ function removeSocketFromRoom({ io, socket, connectedSockets, chatrooms }) {
         }
       }
     });
-    console.log("21: " + roomToLeave);
+    socket.leave(roomToLeave);
     const roomForClient = generateRoomForClient({
       chatrooms,
       roomName: roomToLeave

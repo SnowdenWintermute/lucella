@@ -25,3 +25,8 @@ io.sockets.on("connect", socket => {
     socketDisconnect({ io, socket, chatrooms, connectedSockets });
   });
 });
+
+const games = io.of("/games");
+games.on("connection", socket => {
+  console.log(socket.id + " connected to games");
+});

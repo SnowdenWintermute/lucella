@@ -1,6 +1,7 @@
 .button {
   max-height: 36px;
   display: block;
+  max-width: 100%;
   min-width: 88px;
   line-height: 36px;
   text-align: center;
@@ -15,6 +16,8 @@
 .button-basic {
   border: 1px solid #9ba8b8;
   background-color: transparent;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
 }
 
 .button-primary {
@@ -22,8 +25,24 @@
   background-color: #2f5f5c;
 }
 
+.button-success {
+  color: #bcd2e8;
+  background-color: #2d6a2d;
+}
+
 .button-danger {
   color: #bcd2e8;
-  background-color: #972121;
+  background-color: #ac1a21;
+}
+
+.chat-button-hidden,
+.chat-buttons-hidden {
+  width: 0px !important;
+  opacity: 0;
+  min-width: 0px;
+  padding: 0px;
+  margin: 0px !important;
+  border: 0px;
+  overflow: hidden;
 }
 /*# sourceMappingURL=buttons.css.map */

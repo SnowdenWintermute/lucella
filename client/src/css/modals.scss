@@ -61,3 +61,8 @@ $modalSidePadding: 20px;
 .modal-submit-button {
   float: right;
 }
+.modal-option-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
+}

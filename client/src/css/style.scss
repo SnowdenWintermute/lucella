@@ -11,7 +11,11 @@
   font-family: "DM Sans";
   color: color(textPrimary);
 }
-
+.height-0-hidden {
+  height: 0px !important;
+  overflow: hidden;
+  padding: 0px !important;
+}
 a {
   text-decoration: none;
   color: color(textPrimary);
@@ -19,7 +23,10 @@ a {
 p {
   margin-bottom: 10px;
 }
-
+h3 {
+  font-weight: 100;
+  font-size: 18px;
+}
 ul {
   list-style: none;
 }

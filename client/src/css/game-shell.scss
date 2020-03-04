@@ -8,54 +8,92 @@
 .game-lobby {
   height: 100%;
   width: 100%;
+  display: grid;
+  grid-template-columns: calc(100% - 200px) 200px;
   border: 1px solid color(textPrimary);
+  grid-template-rows: 60px calc(100% - 60px);
 }
-.game-lobby-top-bar {
+.game-lobby-main-window {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  height: 100%;
+  width: 100%;
+}
+.pre-game-room {
+  height: 170px;
   display: flex;
-  justify-content: space-between;
+  border-right: 1px solid color(textPrimary);
+  transition: 0.3s;
+}
+.pre-game-room-player-list {
+  margin-bottom: 10px;
+}
+.game-lobby-top-buttons-chat {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  display: flex;
   align-items: center;
   padding-left: 10px;
-  height: 60px;
   border-bottom: 1px solid color(textPrimary);
+  border-right: 1px solid color(textPrimary);
 }
-.game-lobby-top-bar ul {
+.game-lobby-top-buttons-chat ul {
+  transition: 0.3s;
   display: flex;
   align-items: center;
   height: 100%;
+  width: 100%;
 }
-.game-lobby-top-bar ul li {
+
+.game-lobby-top-buttons-chat ul li {
   margin-right: 15px;
 }
-.game-lobby-top-bar .channel-info {
-  height: 100%;
-  width: 200px;
+.game-lobby-info-box {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-left: 1px solid color(textPrimary);
-}
-.game-lobby-chat {
-  display: flex;
-  height: calc(100% - 61px);
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  border-bottom: 1px solid color(textPrimary);
 }
 .game-lobby-chat-stream-holder {
-  width: calc(100% - 200px);
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  align-self: end;
   height: 100%;
   padding: 10px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border-right: 1px solid color(textPrimary);
+  transition: 0.3s;
+}
+.game-lobby-chat-stream-holder.game-setup {
+  border-top: 1px solid color(textPrimary);
+  height: calc(100% - 170px);
 }
 .game-lobby-chat-stream {
   height: 100%;
+  padding-top: 10px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: column-reverse;
   overflow-y: scroll;
 }
 .game-lobby-players-list {
-  border-left: 1px solid color(textPrimary);
-  width: 200px;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
   height: calc(100% + 1px);
   padding: 10px;
   overflow-y: auto;

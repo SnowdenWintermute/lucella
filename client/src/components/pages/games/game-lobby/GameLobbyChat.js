@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 
 const GameLobbyChat = ({
-  profile: { profile },
   chat,
   currentChatRoom,
-  currentChatRoomUsers,
-  sendNewMessage
+  sendNewMessage,
+  chatClass
 }) => {
   const [chatInput, setChatInput] = useState("");
 
@@ -19,7 +18,6 @@ const GameLobbyChat = ({
     setChatInput("");
   };
 
-  let usersInChannelToDisplay = [];
   let messagesToDisplay;
 
   if (chat[currentChatRoom]) {
@@ -35,29 +33,22 @@ const GameLobbyChat = ({
     });
   }
 
-  Object.keys(currentChatRoomUsers).forEach(key => {
-    usersInChannelToDisplay.push(<div key={key}>{key}</div>);
-  });
-
   return (
-    <div className="game-lobby-chat">
-      <div className="game-lobby-chat-stream-holder">
-        <div className="game-lobby-chat-stream">
-          <ul>{messagesToDisplay}</ul>
-        </div>
-        <div className="game-lobby-chat-input-holder">
-          <form onSubmit={e => onSubmit(e)}>
-            <input
-              type="text"
-              className="text-input-transparent"
-              onChange={e => onChange(e)}
-              value={chatInput}
-              placeholder="Enter a message to chat..."
-            ></input>
-          </form>
-        </div>
+    <div className={`game-lobby-chat-stream-holder ${chatClass}`}>
+      <div className="game-lobby-chat-stream">
+        <ul>{messagesToDisplay}</ul>
       </div>
-      <div className="game-lobby-players-list">{usersInChannelToDisplay}</div>
+      <div className="game-lobby-chat-input-holder">
+        <form onSubmit={e => onSubmit(e)}>
+          <input
+            type="text"
+            className="text-input-transparent"
+            onChange={e => onChange(e)}
+            value={chatInput}
+            placeholder="Enter a message to chat..."
+          ></input>
+        </form>
+      </div>
     </div>
   );
 };

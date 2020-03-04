@@ -11,8 +11,8 @@ function clientRequestsToJoinRoom({
 }) {
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatrooms });
-  const { roomToJoin, username } = data;
-  console.log("15: " + roomToJoin);
+  const { username } = data;
+  const roomToJoin = data.roomToJoin.toLowerCase();
   socket.join(roomToJoin);
   // if room doesn't exist, create it
   if (!chatrooms[roomToJoin]) {
@@ -57,19 +57,18 @@ function clientRequestsToJoinRoom({
       socket.id
     );
   }
+  const roomToJoinForClient = generateRoomForClient({
+    chatrooms,
+    roomName: roomToJoin
+  });
+
+  io.in(roomToJoin).emit("updateRoomUserList", roomToJoinForClient);
   socket.emit("newMessage", {
     author: "Server",
     style: "private",
     message: `Welcome to ${roomToJoin}.`,
     timeStamp: Date.now()
   });
-  console.log("roomName in clientRequestsToJoinRoom");
-  console.log(roomToJoin);
-  const roomForClient = generateRoomForClient({
-    chatrooms,
-    roomName: roomToJoin
-  });
-  io.in(roomToJoin).emit("updateRoomUserList", roomForClient);
   return chatrooms;
 }
 

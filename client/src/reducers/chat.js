@@ -6,7 +6,6 @@ export default function(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case NEW_CHAT_MESSAGE:
-      console.log(payload);
       const { room, message } = payload;
       if (!state[room]) {
         state[room] = [message];

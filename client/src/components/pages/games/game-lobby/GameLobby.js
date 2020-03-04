@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import GameLobbyTopBar from "./GameLobbyTopBar";
 import GameLobbyChat from "./GameLobbyChat";
+import GameLobbyTopButtons from "./GameLobbyTopButtons";
+import GameLobbyTopInfoBox from "./GameLobbyTopInfoBox";
+import GameLobbySideBar from "./GameLobbySideBar";
+import PreGameRoom from "./PreGameRoom";
+import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import Modal from "../../../common/modal/Modal";
 import io from "socket.io-client";
-import { getCurrentProfile } from "../../../../actions/profile";
 import { newChatMessage } from "../../../../actions/chat";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
@@ -13,8 +16,7 @@ let socket; // { transports: ["websocket"] } // some reason had to type this in 
 const GameLobby = ({
   auth: { loading, user },
   defaultChatRoom,
-  newChatMessage,
-  chat
+  newChatMessage
 }) => {
   const [currentChatRoom, setCurrentChatRoom] = useState(defaultChatRoom);
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
@@ -22,16 +24,27 @@ const GameLobby = ({
     false
   );
   const [currentChatRoomUsers, setCurrentChatRoomUsers] = useState({});
+  const [newRoomLoading, setNewRoomLoading] = useState(true);
+  const [chatClass, setChatClass] = useState("");
+  const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
+    "height-0-hidden"
+  );
+  const [preGameButtonDisplayClass, setPreGameButtonDisplayClass] = useState(
+    "chat-button-hidden"
+  );
+  const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
+  const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
+  const [gameMadePublic, setGameMadePublic] = useState(false);
 
   const username = user ? user.name : "Anon";
-
+  // setup socket
   useEffect(() => {
     socket = io("localhost:5000");
     return () => {
       socket.disconnect();
     };
   }, []);
-
+  // once profile is loaded (or found to be null), join default room (passed from parent)
   useEffect(() => {
     if (!loading) {
       socket.emit("clientRequestsToJoinRoom", {
@@ -40,24 +53,29 @@ const GameLobby = ({
       });
     }
   }, [loading, username]);
-
+  // handle new messages from io
+  useEffect(() => {
+    socket.on("newMessage", async message => {
+      const msgForReduxStore = { message, room: currentChatRoom };
+      newChatMessage(msgForReduxStore);
+    });
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [currentChatRoom]);
+  // handle new room data
   useEffect(() => {
     socket.on("updateRoomUserList", data => {
-      console.log(data);
+      setNewRoomLoading(false);
       const { roomName, currentUsers } = data;
       setCurrentChatRoomUsers(currentUsers);
       setCurrentChatRoom(roomName);
     });
-  }, []);
-
-  useEffect(() => {
-    socket.on("newMessage", message => {
-      console.log("new message incame");
-      const msgForReduxStore = { message, room: currentChatRoom };
-      newChatMessage(msgForReduxStore);
-    });
-  }, []);
-
+    return () => {
+      socket.off("updateRoomUserList");
+    };
+  }, [currentChatRoom]);
+  // sending a message
   const sendNewMessage = message => {
     if (message === "") return;
     const author = username;
@@ -69,18 +87,36 @@ const GameLobby = ({
     };
     socket.emit("clientSendsNewChat", messageToSend);
   };
-
-  const joinRoom = roomToJoin => {
-    socket.emit("clientRequestsToJoinRoom", { roomToJoin, username });
-    setCurrentChatRoom(roomToJoin);
-  };
+  // joining new rooms
   const onJoinRoomSubmit = e => {
     e.preventDefault();
-    setDisplayChangeChannelModal(false);
-    console.log("join room " + joinNewRoomInput);
     joinRoom(joinNewRoomInput);
   };
-
+  const joinRoom = roomToJoin => {
+    if (roomToJoin.toLowerCase() !== currentChatRoom) setNewRoomLoading(true);
+    setDisplayChangeChannelModal(false);
+    setJoinNewRoomInput("");
+    socket.emit("clientRequestsToJoinRoom", { roomToJoin, username });
+  };
+  // host game
+  const onHostGameClick = () => {
+    setChatClass("game-setup");
+    setPreGameRoomDisplayClass("");
+    setChatButtonDisplayClass("chat-button-hidden");
+    setChatButtonsDisplayClass("chat-buttons-hidden");
+    setPreGameButtonDisplayClass("");
+  };
+  const hostNewGame = () => {
+    setGameMadePublic(true);
+  };
+  // leave game
+  const onLeaveGameClick = () => {
+    setChatClass("");
+    setPreGameRoomDisplayClass("height-0-hidden");
+    setChatButtonDisplayClass("");
+    setChatButtonsDisplayClass("");
+    setPreGameButtonDisplayClass("chat-button-hidden");
+  };
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
   const setParentDisplay = status => {
     setDisplayChangeChannelModal(status);
@@ -90,34 +126,51 @@ const GameLobby = ({
   };
 
   return (
-    <div className="game-lobby">
+    <Fragment>
       <Modal
         screenClass=""
-        frameClass=""
+        frameClass="modal-frame-dark"
         isOpen={displayChangeChannelModal}
         setParentDisplay={setParentDisplay}
         title={"Join Channel"}
       >
-        <form onSubmit={e => onJoinRoomSubmit(e)}>
-          <input
-            className={"text-input-transparent"}
-            onChange={e => setJoinNewRoomInput(e.target.value)}
-            value={joinNewRoomInput}
-          ></input>
-        </form>
+        <ChangeChannelModalContents
+          setJoinNewRoomInput={setJoinNewRoomInput}
+          joinNewRoomInput={joinNewRoomInput}
+          onJoinRoomSubmit={onJoinRoomSubmit}
+          joinRoom={joinRoom}
+        />
       </Modal>
-      <GameLobbyTopBar
-        channelName={currentChatRoom}
-        currentChatRoomUsers={currentChatRoomUsers}
-        showChangeChannelModal={showChangeChannelModal}
-        joinRoom={joinRoom}
-      />
-      <GameLobbyChat
-        currentChatRoom={currentChatRoom}
-        currentChatRoomUsers={currentChatRoomUsers}
-        sendNewMessage={sendNewMessage}
-      />
-    </div>
+      <div className={`game-lobby`}>
+        <GameLobbyTopButtons
+          showChangeChannelModal={showChangeChannelModal}
+          onHostGameClick={onHostGameClick}
+          onLeaveGameClick={onLeaveGameClick}
+          chatButtonDisplayClass={chatButtonDisplayClass}
+          chatButtonsDisplayClass={chatButtonsDisplayClass}
+          preGameButtonDisplayClass={preGameButtonDisplayClass}
+        />
+        <GameLobbyTopInfoBox
+          newRoomLoading={newRoomLoading}
+          channelName={currentChatRoom}
+          currentChatRoomUsers={currentChatRoomUsers}
+        />
+        <div className="game-lobby-main-window">
+          <PreGameRoom
+            hostNewGame={hostNewGame}
+            preGameRoomDisplayClass={preGameRoomDisplayClass}
+            gameMadePublic={gameMadePublic}
+          />
+          <GameLobbyChat
+            currentChatRoom={currentChatRoom}
+            currentChatRoomUsers={currentChatRoomUsers}
+            sendNewMessage={sendNewMessage}
+            chatClass={chatClass}
+          />
+        </div>
+        <GameLobbySideBar currentChatRoomUsers={currentChatRoomUsers} />
+      </div>
+    </Fragment>
   );
 };
 

@@ -8,25 +8,61 @@
 .game-lobby {
   height: 100%;
   width: 100%;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: calc(100% - 200px) 200px;
+      grid-template-columns: calc(100% - 200px) 200px;
   border: 1px solid #9ba8b8;
+  -ms-grid-rows: 60px calc(100% - 60px);
+      grid-template-rows: 60px calc(100% - 60px);
 }
 
-.game-lobby-top-bar {
+.game-lobby-main-window {
+  -ms-grid-row: 2;
+      grid-row-start: 2;
+  grid-row-end: 3;
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  grid-column-end: 2;
+  height: 100%;
+  width: 100%;
+}
+
+.pre-game-room {
+  height: 170px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  border-right: 1px solid #9ba8b8;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.pre-game-room-player-list {
+  margin-bottom: 10px;
+}
+
+.game-lobby-top-buttons-chat {
+  -ms-grid-row: 1;
+      grid-row-start: 1;
+  grid-row-end: 2;
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  grid-column-end: 2;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
   padding-left: 10px;
-  height: 60px;
   border-bottom: 1px solid #9ba8b8;
+  border-right: 1px solid #9ba8b8;
 }
 
-.game-lobby-top-bar ul {
+.game-lobby-top-buttons-chat ul {
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -34,15 +70,14 @@
       -ms-flex-align: center;
           align-items: center;
   height: 100%;
+  width: 100%;
 }
 
-.game-lobby-top-bar ul li {
+.game-lobby-top-buttons-chat ul li {
   margin-right: 15px;
 }
 
-.game-lobby-top-bar .channel-info {
-  height: 100%;
-  width: 200px;
+.game-lobby-info-box {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -52,20 +87,27 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border-left: 1px solid #9ba8b8;
-}
-
-.game-lobby-chat {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  height: calc(100% - 61px);
+  -ms-grid-column: 2;
+      grid-column-start: 2;
+  grid-column-end: 3;
+  -ms-grid-row: 1;
+      grid-row-start: 1;
+  grid-row-end: 2;
+  border-bottom: 1px solid #9ba8b8;
 }
 
 .game-lobby-chat-stream-holder {
-  width: calc(100% - 200px);
+  -ms-grid-column: 1;
+      grid-column-start: 1;
+  grid-column-end: 2;
+  -ms-grid-row: 2;
+      grid-row-start: 2;
+  grid-row-end: 3;
+  -ms-flex-item-align: end;
+      align-self: end;
   height: 100%;
   padding: 10px;
+  padding-top: 20px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -76,10 +118,19 @@
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
+  border-right: 1px solid #9ba8b8;
+  -webkit-transition: 0.3s;
+  transition: 0.3s;
+}
+
+.game-lobby-chat-stream-holder.game-setup {
+  border-top: 1px solid #9ba8b8;
+  height: calc(100% - 170px);
 }
 
 .game-lobby-chat-stream {
   height: 100%;
+  padding-top: 10px;
   margin-bottom: 10px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -92,8 +143,12 @@
 }
 
 .game-lobby-players-list {
-  border-left: 1px solid #9ba8b8;
-  width: 200px;
+  -ms-grid-column: 2;
+      grid-column-start: 2;
+  grid-column-end: 3;
+  -ms-grid-row: 2;
+      grid-row-start: 2;
+  grid-row-end: 3;
   height: calc(100% + 1px);
   padding: 10px;
   overflow-y: auto;

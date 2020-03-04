@@ -1,6 +1,4 @@
 function generateRoomForClient({ chatrooms, roomName }) {
-  console.log(chatrooms);
-  console.log(roomName);
   let roomForClient = { roomName: roomName, currentUsers: {} };
   Object.keys(chatrooms[roomName].currentUsers).forEach(userKey => {
     let userForClient = {};
@@ -14,7 +12,6 @@ function generateRoomForClient({ chatrooms, roomName }) {
     );
     roomForClient.currentUsers[userKey] = userForClient;
   });
-  console.log(roomForClient);
   return roomForClient;
 }
 
