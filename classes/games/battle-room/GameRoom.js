@@ -1,8 +1,8 @@
 class GameRoom {
-  constructor({ host, gameName, defaultCountdownNumber, width, height }) {
+  constructor({ gameName, defaultCountdownNumber, width, height }) {
     this.gameName = gameName;
     this.players = {
-      host,
+      host: null,
       challenger: null,
     };
     this.spectators = [];

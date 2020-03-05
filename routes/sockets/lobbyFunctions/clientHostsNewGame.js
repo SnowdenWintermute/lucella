@@ -1,33 +1,37 @@
 const GameRoom = require("../../../classes/games/battle-room/GameRoom");
+const clientJoinsGame = require("./clientJoinsGame");
 const defaultCountdownNumber = 3;
 const width = 450;
 const height = 700;
 
-function clientHostsNewGame({ io, socket, connectedSockets, gameRooms, data }) {
-  const { gameName } = data;
+function clientHostsNewGame({
+  io,
+  socket,
+  connectedSockets,
+  gameRooms,
+  gameName,
+}) {
+  // if they are not already in a game and no game by this name exists, create the game room
+  console.log(gameName);
   if (!connectedSockets[socket.id].isInGame) {
-    connectedSockets[socket.id].isInGame = true;
-    let newGameRoom = new GameRoom({
-      host: connectedSockets[socket.id],
-      gameName,
-      defaultCountdownNumber,
-      width,
-      height,
-    });
-    gameRooms[gameName] = newGameRoom;
-    // join their socket to the new game room
-    socket.join(`game-${newGameRoom.gameName}`);
-    socket.emit("updateSocketInGameStatus", true);
-    io.sockets.emit("gameListUpdate", gameRooms);
-    io.to(`game-${newGameRoom.gameName}`).emit(
-      "currentGameRoomUpdate",
-      newGameRoom,
-    );
-    console.log(`socket ${socket.id} hosted game named ${gameName}`);
-    console.log(`list of currently hosted games:`);
-    console.log(gameRooms);
+    if (!gameRooms[gameName]) {
+      let newGameRoom = new GameRoom({
+        gameName,
+        defaultCountdownNumber,
+        width,
+        height,
+      });
+      gameRooms[gameName] = newGameRoom;
+      // join their socket to the new game room
+      clientJoinsGame({ io, socket, connectedSockets, gameRooms, gameName });
+    } else {
+      socket.emit("errorMessage", "A game by that name already exists");
+    }
   } else {
-    console.log("You can't host a game if you are already in one.");
+    socket.emit(
+      "errorMessage",
+      "You can't host a game if you are already in one",
+    );
   }
 }
 

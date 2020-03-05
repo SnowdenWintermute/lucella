@@ -7,7 +7,7 @@ const GameLobbyTopButtons = ({
   onLeaveGameClick,
   chatButtonDisplayClass,
   chatButtonsDisplayClass,
-  preGameButtonDisplayClass
+  preGameButtonDisplayClass,
 }) => {
   const onChannelClick = () => {
     showChangeChannelModal();
@@ -25,7 +25,7 @@ const GameLobbyTopButtons = ({
         </li>
         <li>
           <button className={`button button-basic ${chatButtonDisplayClass}`}>
-            Play Ranked
+            Ranked
           </button>
         </li>
         <li>
@@ -61,7 +61,7 @@ const GameLobbyTopButtons = ({
 };
 
 GameLobbyTopButtons.propTypes = {
-  showChangeChannelModal: PropTypes.func.isRequired
+  showChangeChannelModal: PropTypes.func.isRequired,
 };
 
 export default GameLobbyTopButtons;

@@ -23,8 +23,8 @@ io.sockets.on("connect", socket => {
       data,
     });
   });
-  socket.on("clientHostsNewGame", data => {
-    clientHostsNewGame({ io, socket, connectedSockets, gameRooms, data });
+  socket.on("clientHostsNewGame", ({ gameName }) => {
+    clientHostsNewGame({ io, socket, connectedSockets, gameRooms, gameName });
   });
   socket.on("clientSendsNewChat", data => {
     clientSendsNewChat({ io, socket, data });

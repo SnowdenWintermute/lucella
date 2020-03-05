@@ -1,14 +1,18 @@
 @import "variables";
 $preGameRoomHeight: 170px;
 .game-shell {
-  height: 95%;
-  width: 95%;
-  height: calc(100% - 60px);
+  width: 1200px;
+  max-width: 95%;
+  height: 100%;
+  padding-bottom: 30px;
   margin: 0px auto;
+  // border: 1px solid red;
 }
 .game-lobby {
-  height: 100%;
   width: 100%;
+  height: calc(100% - 50px);
+  margin: 0 auto;
+  max-width: 100%;
   display: grid;
   grid-template-columns: calc(100% - 200px) 200px;
   border: 1px solid color(textPrimary);

@@ -1,4 +1,4 @@
-const uuidv4 = require("uuid/v4");
+const uuid = require("uuid");
 const randomFourNumbers = require("../../../utils/randomFourNumbers");
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
@@ -24,7 +24,7 @@ function clientRequestsToJoinRoom({
     connectedSockets[socket.id] = {
       username,
       currentRoom: roomToJoin,
-      uuid: uuidv4(),
+      uuid: uuid.v4(),
     };
   }
   // put user in room's list of users

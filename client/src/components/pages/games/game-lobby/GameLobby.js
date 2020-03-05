@@ -38,6 +38,13 @@ const GameLobby = ({
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
 
   const username = user ? user.name : "Anon";
+  let authToken;
+  useEffect(() => {
+    if (localStorage.token) {
+      authToken = localStorage.token;
+      console.log(authToken);
+    }
+  }, [localStorage.token]);
   // setup socket
   useEffect(() => {
     socket = io("localhost:5000");
@@ -51,6 +58,7 @@ const GameLobby = ({
       socket.emit("clientRequestsToJoinRoom", {
         roomToJoin: currentChatRoom,
         username,
+        authToken,
       });
     }
   }, [loading, username]);
