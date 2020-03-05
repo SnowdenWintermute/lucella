@@ -1,10 +1,15 @@
 const io = require("../../expressServer").io;
 const clientRequestsToJoinRoom = require("./lobbyFunctions/clientRequestsToJoinRoom");
+const clientHostsNewGame = require("./lobbyFunctions/clientHostsNewGame");
 const clientSendsNewChat = require("./lobbyFunctions/clientSendsNewChat");
 const socketDisconnect = require("./generalFunctions/socketDisconnect");
 
+const GameRoom = require("../../classes/games/battle-room/GameRoom");
+const Orb = require("../../classes/games/battle-room/Orb");
+
 let chatrooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
-let connectedSockets = {}; // socketId: {currentRoom: String}, username: String}
+let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
+let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: false}
 
 io.sockets.on("connect", socket => {
   connectedSockets[socket.id] = { username: null, currentRoom: null };
@@ -13,10 +18,13 @@ io.sockets.on("connect", socket => {
     chatrooms = clientRequestsToJoinRoom({
       io,
       socket,
-      data,
       chatrooms,
-      connectedSockets
+      connectedSockets,
+      data,
     });
+  });
+  socket.on("clientHostsNewGame", data => {
+    clientHostsNewGame({ io, socket, connectedSockets, gameRooms, data });
   });
   socket.on("clientSendsNewChat", data => {
     clientSendsNewChat({ io, socket, data });

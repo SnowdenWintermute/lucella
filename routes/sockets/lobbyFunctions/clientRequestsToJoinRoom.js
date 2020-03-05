@@ -1,3 +1,4 @@
+const uuidv4 = require("uuid/v4");
 const randomFourNumbers = require("../../../utils/randomFourNumbers");
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
@@ -7,7 +8,7 @@ function clientRequestsToJoinRoom({
   socket,
   data,
   chatrooms,
-  connectedSockets
+  connectedSockets,
 }) {
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatrooms });
@@ -22,7 +23,8 @@ function clientRequestsToJoinRoom({
   if (username !== "Anon") {
     connectedSockets[socket.id] = {
       username,
-      currentRoom: roomToJoin
+      currentRoom: roomToJoin,
+      uuid: uuidv4(),
     };
   }
   // put user in room's list of users
@@ -34,11 +36,12 @@ function clientRequestsToJoinRoom({
       try {
         chatrooms[roomToJoin].currentUsers[randomAnonUsername] = {
           username: randomAnonUsername,
-          connectedSockets: [socket.id]
+          connectedSockets: [socket.id],
         };
         connectedSockets[socket.id] = {
           username: randomAnonUsername,
-          currentRoom: roomToJoin
+          currentRoom: roomToJoin,
+          uuid: uuidv4(),
         };
       } catch (err) {
         console.log("error generating random anon name - duplicate?");
@@ -49,17 +52,17 @@ function clientRequestsToJoinRoom({
   } else if (!chatrooms[roomToJoin].currentUsers[username]) {
     chatrooms[roomToJoin].currentUsers[username] = {
       username,
-      connectedSockets: [socket.id]
+      connectedSockets: [socket.id],
     };
   } else {
     // already connected, add to their list of sockets connected
     chatrooms[roomToJoin].currentUsers[username].connectedSockets.push(
-      socket.id
+      socket.id,
     );
   }
   const roomToJoinForClient = generateRoomForClient({
     chatrooms,
-    roomName: roomToJoin
+    roomName: roomToJoin,
   });
 
   io.in(roomToJoin).emit("updateRoomUserList", roomToJoinForClient);
@@ -67,7 +70,7 @@ function clientRequestsToJoinRoom({
     author: "Server",
     style: "private",
     message: `Welcome to ${roomToJoin}.`,
-    timeStamp: Date.now()
+    timeStamp: Date.now(),
   });
   return chatrooms;
 }

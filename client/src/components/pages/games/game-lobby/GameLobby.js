@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { setAlert } from "../../../../actions/alert";
 import GameLobbyChat from "./GameLobbyChat";
 import GameLobbyTopButtons from "./GameLobbyTopButtons";
 import GameLobbyTopInfoBox from "./GameLobbyTopInfoBox";
@@ -15,26 +16,26 @@ let socket; // { transports: ["websocket"] } // some reason had to type this in 
 
 const GameLobby = ({
   auth: { loading, user },
+  setAlert,
   defaultChatRoom,
-  newChatMessage
+  newChatMessage,
 }) => {
   const [currentChatRoom, setCurrentChatRoom] = useState(defaultChatRoom);
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
-    false
+    false,
   );
   const [currentChatRoomUsers, setCurrentChatRoomUsers] = useState({});
   const [newRoomLoading, setNewRoomLoading] = useState(true);
   const [chatClass, setChatClass] = useState("");
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
-    "height-0-hidden"
+    "height-0-hidden",
   );
   const [preGameButtonDisplayClass, setPreGameButtonDisplayClass] = useState(
-    "chat-button-hidden"
+    "chat-button-hidden",
   );
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
-  const [gameMadePublic, setGameMadePublic] = useState(false);
 
   const username = user ? user.name : "Anon";
   // setup socket
@@ -49,7 +50,7 @@ const GameLobby = ({
     if (!loading) {
       socket.emit("clientRequestsToJoinRoom", {
         roomToJoin: currentChatRoom,
-        username
+        username,
       });
     }
   }, [loading, username]);
@@ -83,7 +84,7 @@ const GameLobby = ({
       currentChatRoom,
       author,
       style: "normal",
-      message
+      message,
     };
     socket.emit("clientSendsNewChat", messageToSend);
   };
@@ -106,8 +107,12 @@ const GameLobby = ({
     setChatButtonsDisplayClass("chat-buttons-hidden");
     setPreGameButtonDisplayClass("");
   };
-  const hostNewGame = () => {
-    setGameMadePublic(true);
+  const hostNewGame = ({ gameName }) => {
+    if (gameName) {
+      socket.emit("clientHostsNewGame", { gameName });
+    } else {
+      setAlert("Please enter a game name", "danger");
+    }
   };
   // leave game
   const onLeaveGameClick = () => {
@@ -159,7 +164,7 @@ const GameLobby = ({
           <PreGameRoom
             hostNewGame={hostNewGame}
             preGameRoomDisplayClass={preGameRoomDisplayClass}
-            gameMadePublic={gameMadePublic}
+            socket={socket}
           />
           <GameLobbyChat
             currentChatRoom={currentChatRoom}
@@ -175,12 +180,14 @@ const GameLobby = ({
 };
 
 GameLobby.propTypes = {
-  newChatMessage: PropTypes.func.isRequired
+  newChatMessage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   auth: state.auth,
-  chat: state.chat
+  chat: state.chat,
 });
 
-export default connect(mapStateToProps, { newChatMessage })(GameLobby);
+export default connect(mapStateToProps, { newChatMessage, setAlert })(
+  GameLobby,
+);

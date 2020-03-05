@@ -1,4 +1,5 @@
 @import "variables";
+$preGameRoomHeight: 170px;
 .game-shell {
   height: 95%;
   width: 95%;
@@ -22,10 +23,11 @@
   width: 100%;
 }
 .pre-game-room {
-  height: 170px;
+  height: $preGameRoomHeight;
   display: flex;
   border-right: 1px solid color(textPrimary);
   transition: 0.3s;
+  overflow: hidden;
 }
 .pre-game-room-player-list {
   margin-bottom: 10px;
@@ -79,7 +81,7 @@
 }
 .game-lobby-chat-stream-holder.game-setup {
   border-top: 1px solid color(textPrimary);
-  height: calc(100% - 170px);
+  height: calc(100% - #{$preGameRoomHeight});
 }
 .game-lobby-chat-stream {
   height: 100%;

@@ -36,6 +36,7 @@
   border-right: 1px solid #9ba8b8;
   -webkit-transition: 0.3s;
   transition: 0.3s;
+  overflow: hidden;
 }
 
 .pre-game-room-player-list {

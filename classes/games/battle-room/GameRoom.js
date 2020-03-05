@@ -1,17 +1,9 @@
 class GameRoom {
-  constructor(
-    roomNumber,
-    hostUid,
-    gameName,
-    defaultCountdownNumber,
-    width,
-    height
-  ) {
-    this.roomNumber = roomNumber;
+  constructor({ host, gameName, defaultCountdownNumber, width, height }) {
     this.gameName = gameName;
     this.players = {
-      hostUid: hostUid,
-      challengerUid: null // uid
+      host,
+      challenger: null,
     };
     this.spectators = [];
     this.gameStatus = "inLobby"; // inLobby, countingDown, inProgress, gameOverScreen
@@ -23,40 +15,40 @@ class GameRoom {
     this.orbRadius = 8;
     this.orbs = {
       hostOrbs: [],
-      challengerOrbs: []
+      challengerOrbs: [],
     };
-    (this.playersReady = []), (this.messages = []); // {author: uid, msgText: String}
+    this.playersReady = [];
     this.score = {
       host: 0,
       challenger: 0,
-      neededToWin: 5
+      neededToWin: 5,
     };
     this.winner = null;
     this.dashes = {
       host: {
         dashes: 3,
         recharging: false,
-        cooldown: 3
+        cooldown: 3,
       },
       challenger: {
         dashes: 3,
         recharging: false,
-        cooldown: 3
-      }
+        cooldown: 3,
+      },
     };
     this.endzones = {
       host: {
         x: 0,
         y: 0,
         width: this.width,
-        height: 60
+        height: 60,
       },
       challenger: {
         x: 0,
         y: this.height - 60,
         width: this.width,
-        height: 60
-      }
+        height: 60,
+      },
     };
   }
 }
