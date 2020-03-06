@@ -2,22 +2,41 @@ const uuid = require("uuid");
 const randomFourNumbers = require("../../../utils/randomFourNumbers");
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
+const axios = require("axios");
 
-function clientRequestsToJoinRoom({
+const clientRequestsToJoinRoom = async ({
   io,
   socket,
   data,
-  chatrooms,
+  chatRooms,
   connectedSockets,
-}) {
+}) => {
+  console.log(chatRooms);
   // first remove this socket from any room it may be in before joining it to new room
-  removeSocketFromRoom({ io, socket, connectedSockets, chatrooms });
-  const { username } = data;
+  removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
+  const { username, authToken } = data;
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      data: authToken,
+    },
+  };
+  try {
+    const user = await axios.get(
+      "http://localhost:5000/api/auth/socket",
+      config,
+    );
+    console.log(user);
+  } catch (err) {
+    console.log("no user (make anon)");
+  }
   const roomToJoin = data.roomToJoin.toLowerCase();
   socket.join(roomToJoin);
   // if room doesn't exist, create it
-  if (!chatrooms[roomToJoin]) {
-    chatrooms[roomToJoin] = { roomName: roomToJoin, currentUsers: {} };
+  if (!chatRooms[roomToJoin]) {
+    chatRooms[roomToJoin] = { roomName: roomToJoin, currentUsers: {} };
+    console.log(roomToJoin + " created");
+    console.log(chatRooms[roomToJoin]);
   }
   // connectedSockets object:
   if (username !== "Anon") {
@@ -34,34 +53,35 @@ function clientRequestsToJoinRoom({
       const randomNums = randomFourNumbers().join("");
       const randomAnonUsername = "Anon" + randomNums;
       try {
-        chatrooms[roomToJoin].currentUsers[randomAnonUsername] = {
+        chatRooms[roomToJoin].currentUsers[randomAnonUsername] = {
           username: randomAnonUsername,
           connectedSockets: [socket.id],
         };
         connectedSockets[socket.id] = {
           username: randomAnonUsername,
           currentRoom: roomToJoin,
-          uuid: uuidv4(),
+          uuid: uuid.v4(),
         };
       } catch (err) {
+        console.log(err);
         console.log("error generating random anon name - duplicate?");
         makeRandomAnonName();
       }
     };
     makeRandomAnonName();
-  } else if (!chatrooms[roomToJoin].currentUsers[username]) {
-    chatrooms[roomToJoin].currentUsers[username] = {
+  } else if (!chatRooms[roomToJoin].currentUsers[username]) {
+    chatRooms[roomToJoin].currentUsers[username] = {
       username,
       connectedSockets: [socket.id],
     };
   } else {
     // already connected, add to their list of sockets connected
-    chatrooms[roomToJoin].currentUsers[username].connectedSockets.push(
+    chatRooms[roomToJoin].currentUsers[username].connectedSockets.push(
       socket.id,
     );
   }
   const roomToJoinForClient = generateRoomForClient({
-    chatrooms,
+    chatRooms,
     roomName: roomToJoin,
   });
 
@@ -72,7 +92,7 @@ function clientRequestsToJoinRoom({
     message: `Welcome to ${roomToJoin}.`,
     timeStamp: Date.now(),
   });
-  return chatrooms;
-}
+  return chatRooms;
+};
 
 module.exports = clientRequestsToJoinRoom;

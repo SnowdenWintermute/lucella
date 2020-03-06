@@ -7,6 +7,10 @@ const { check } = require("express-validator");
 // @desc    Get auth user
 // @access  Private
 authMainRouter.get("/", auth, require("./getUser"));
+// @route   GET api/auth/socket
+// @desc    Get auth user for socket server
+// @access  Private
+authMainRouter.get("/socket", require("./getUserForSocket"));
 // @route   POST api/auth
 // @desc    Login user
 // @access  Private
@@ -14,9 +18,9 @@ authMainRouter.post(
   "/",
   [
     check("email", "Please include a valid email").isEmail(),
-    check("password", "Password is required").exists()
+    check("password", "Password is required").exists(),
   ],
-  require("./loginUser")
+  require("./loginUser"),
 );
 // @route   POST api/auth/request-password-reset
 // @desc    Send email to reset password
@@ -24,7 +28,7 @@ authMainRouter.post(
 authMainRouter.post(
   "/request-password-reset",
   check("email", "Please enter an email address").isEmail(),
-  require("./requestPasswordReset")
+  require("./requestPasswordReset"),
 );
 
 module.exports = authMainRouter;

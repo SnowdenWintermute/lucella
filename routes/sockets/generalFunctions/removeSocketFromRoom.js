@@ -1,17 +1,17 @@
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 
-function removeSocketFromRoom({ io, socket, connectedSockets, chatrooms }) {
-  if (connectedSockets[socket.id].currentRoom) {
-    const roomToLeave = connectedSockets[socket.id].currentRoom;
+function removeSocketFromRoom({ io, socket, connectedSockets, chatRooms }) {
+  const roomToLeave = connectedSockets[socket.id].currentRoom;
+  if (roomToLeave) {
     const userNameLeaving = connectedSockets[socket.id].username;
     const userToRemoveFromRoom =
-      chatrooms[roomToLeave].currentUsers[userNameLeaving];
+      chatRooms[roomToLeave].currentUsers[userNameLeaving];
     userToRemoveFromRoom.connectedSockets.forEach(userConnectedSocket => {
       if (userConnectedSocket === socket.id) {
         if (userToRemoveFromRoom.connectedSockets.length < 2) {
-          delete chatrooms[roomToLeave].currentUsers[userNameLeaving];
+          delete chatRooms[roomToLeave].currentUsers[userNameLeaving];
         } else {
-          const indexOfSocket = chatrooms[roomToLeave].currentUsers[
+          const indexOfSocket = chatRooms[roomToLeave].currentUsers[
             userNameLeaving
           ].connectedSockets.indexOf(userConnectedSocket);
           userToRemoveFromRoom.connectedSockets.splice(indexOfSocket, 1);
@@ -20,8 +20,8 @@ function removeSocketFromRoom({ io, socket, connectedSockets, chatrooms }) {
     });
     socket.leave(roomToLeave);
     const roomForClient = generateRoomForClient({
-      chatrooms,
-      roomName: roomToLeave
+      chatRooms,
+      roomName: roomToLeave,
     });
     io.in(roomToLeave).emit("updateRoomUserList", roomForClient);
   }

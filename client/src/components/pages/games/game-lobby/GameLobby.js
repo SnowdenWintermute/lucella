@@ -57,7 +57,7 @@ const GameLobby = ({
     if (!loading) {
       socket.emit("clientRequestsToJoinRoom", {
         roomToJoin: currentChatRoom,
-        username,
+        username, // todo:remove
         authToken,
       });
     }
