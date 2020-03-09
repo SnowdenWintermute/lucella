@@ -23,6 +23,7 @@
     "mongoose": "^5.8.11",
     "nodemailer": "^6.4.2",
     "socket.io": "^2.3.0",
+    "socketio-jwt-auth": "^0.1.0",
     "uuid": "^7.0.2"
   },
   "devDependencies": {

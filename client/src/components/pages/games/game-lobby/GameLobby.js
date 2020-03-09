@@ -7,6 +7,7 @@ import GameLobbyTopButtons from "./GameLobbyTopButtons";
 import GameLobbyTopInfoBox from "./GameLobbyTopInfoBox";
 import GameLobbySideBar from "./GameLobbySideBar";
 import PreGameRoom from "./PreGameRoom";
+import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import Modal from "../../../common/modal/Modal";
 import io from "socket.io-client";
@@ -36,32 +37,39 @@ const GameLobby = ({
   );
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
+  const [authenticating, setAuthenticating] = useState(true);
+  const [gameList, setGameList] = useState({});
 
   const username = user ? user.name : "Anon";
-  let authToken;
-  useEffect(() => {
-    if (localStorage.token) {
-      authToken = localStorage.token;
-      console.log(authToken);
-    }
-  }, [localStorage.token]);
+  let authToken = null;
+
   // setup socket
   useEffect(() => {
-    socket = io("localhost:5000");
+    authToken = localStorage.token;
+    let query = { token: null };
+    console.log(authToken);
+    if (authToken) {
+      query.token = authToken;
+    }
+    socket = io("localhost:5000", { query });
     return () => {
       socket.disconnect();
     };
-  }, []);
-  // once profile is loaded (or found to be null), join default room (passed from parent)
+  }, [localStorage.token]);
   useEffect(() => {
-    if (!loading) {
+    socket.on("authenticationFinished", data => {
+      console.log("authenticationFinished");
+      setAuthenticating(false);
+    });
+  });
+  useEffect(() => {
+    console.log("requested join room");
+    if (!authenticating) {
       socket.emit("clientRequestsToJoinRoom", {
         roomToJoin: currentChatRoom,
-        username, // todo:remove
-        authToken,
       });
     }
-  }, [loading, username]);
+  }, [authenticating]);
   // handle new messages from io
   useEffect(() => {
     socket.on("newMessage", async message => {
@@ -75,6 +83,7 @@ const GameLobby = ({
   // handle new room data
   useEffect(() => {
     socket.on("updateRoomUserList", data => {
+      console.log("room updated");
       setNewRoomLoading(false);
       const { roomName, currentUsers } = data;
       setCurrentChatRoomUsers(currentUsers);
@@ -84,6 +93,15 @@ const GameLobby = ({
       socket.off("updateRoomUserList");
     };
   }, [currentChatRoom]);
+  useEffect(() => {
+    socket.on("gameListUpdate", data => {
+      console.log(data);
+      setGameList(data);
+    });
+    return () => {
+      socket.off("gameListUpdate");
+    };
+  }, []);
   // sending a message
   const sendNewMessage = message => {
     if (message === "") return;
@@ -174,6 +192,7 @@ const GameLobby = ({
             preGameRoomDisplayClass={preGameRoomDisplayClass}
             socket={socket}
           />
+          <GameList gameList={gameList} />
           <GameLobbyChat
             currentChatRoom={currentChatRoom}
             currentChatRoomUsers={currentChatRoomUsers}

@@ -1,5 +1,3 @@
-// const makePlayersObjectForClient = require("../utils/makePlayersObjectForClient");
-
 function clientJoinsGame({
   io,
   socket,
