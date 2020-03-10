@@ -2,7 +2,7 @@ const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
 const uuid = require("uuid");
 
-const clientRequestsToJoinRoom = async ({
+const clientRequestsToJoinRoom = ({
   io,
   socket,
   data,
@@ -10,7 +10,6 @@ const clientRequestsToJoinRoom = async ({
   connectedSockets,
   currentUser,
 }) => {
-  console.log("client requested join");
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
   const username = currentUser.name;
@@ -23,7 +22,7 @@ const clientRequestsToJoinRoom = async ({
 
   // put user in room's list of users
   if (!chatRooms[roomToJoin].currentUsers[username]) {
-    connectedSockets[socket.id].currentRoom = chatRooms[roomToJoin];
+    connectedSockets[socket.id].currentRoom = roomToJoin;
     chatRooms[roomToJoin].currentUsers[username] = {
       username,
       connectedSockets: [socket.id],

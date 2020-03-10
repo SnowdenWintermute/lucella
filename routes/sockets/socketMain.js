@@ -5,6 +5,7 @@ const clientHostsNewGame = require("./lobbyFunctions/clientHostsNewGame");
 const clientSendsNewChat = require("./lobbyFunctions/clientSendsNewChat");
 const socketConnects = require("./generalFunctions/socketConnects");
 const socketDisconnect = require("./generalFunctions/socketDisconnect");
+const makeRandomAnonUsername = require("../../utils/makeRandomAnonUsername");
 const User = require("../../models/User");
 
 const GameRoom = require("../../classes/games/battle-room/GameRoom");
@@ -21,16 +22,15 @@ io.sockets.on("connect", async socket => {
   currentUser = await socketConnects({ socket, connectedSockets });
   socket.emit("authenticationFinished", null);
   if (currentUser.isGuest) {
-    currentUser.username = makeRandomAnonUsername({
+    currentUser.name = makeRandomAnonUsername({
       socket,
       connectedSockets,
       connectedGuests,
     });
-    console.log(currentUser.username + " name generated");
   }
-  socket.on("clientRequestsToJoinRoom", async data => {
+  socket.on("clientRequestsToJoinRoom", data => {
     try {
-      chatRooms = await clientRequestsToJoinRoom({
+      chatRooms = clientRequestsToJoinRoom({
         io,
         socket,
         chatRooms,
@@ -46,7 +46,7 @@ io.sockets.on("connect", async socket => {
     clientHostsNewGame({ io, socket, connectedSockets, gameRooms, gameName });
   });
   socket.on("clientSendsNewChat", data => {
-    clientSendsNewChat({ io, socket, data });
+    clientSendsNewChat({ io, socket, data, currentUser });
   });
   socket.on("disconnect", () => {
     socketDisconnect({ io, socket, chatRooms, connectedSockets });
