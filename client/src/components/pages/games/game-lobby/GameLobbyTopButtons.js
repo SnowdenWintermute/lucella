@@ -5,32 +5,37 @@ const GameLobbyTopButtons = ({
   showChangeChannelModal,
   onHostGameClick,
   onLeaveGameClick,
+  onJoinGameClick,
   chatButtonDisplayClass,
   chatButtonsDisplayClass,
   preGameButtonDisplayClass,
+  gameListButtonDisplayClass,
+  onJoinGameBackClick,
 }) => {
   const onChannelClick = () => {
     showChangeChannelModal();
   };
   return (
-    <div className="game-lobby-top-buttons-chat">
+    <div className="game-lobby-top-buttons">
       <ul className={`chat-buttons-list ${chatButtonsDisplayClass}`}>
         <li>
           <button
-            className={`button button-basic ${chatButtonDisplayClass}`}
+            className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
             onClick={() => onChannelClick()}
           >
             Channel
           </button>
         </li>
         <li>
-          <button className={`button button-basic ${chatButtonDisplayClass}`}>
+          <button
+            className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
+          >
             Ranked
           </button>
         </li>
         <li>
           <button
-            className={`button button-basic ${chatButtonDisplayClass}`}
+            className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
             onClick={() => {
               onHostGameClick();
             }}
@@ -39,7 +44,10 @@ const GameLobbyTopButtons = ({
           </button>
         </li>
         <li>
-          <button className={`button button-basic ${chatButtonDisplayClass}`}>
+          <button
+            className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
+            onClick={() => onJoinGameClick()}
+          >
             Join
           </button>
         </li>
@@ -47,12 +55,22 @@ const GameLobbyTopButtons = ({
       <ul className={`pre-game-buttons`}>
         <li>
           <button
-            className={`button button-basic ${preGameButtonDisplayClass}`}
+            className={`button button-basic game-lobby-top-buttons__button ${preGameButtonDisplayClass}`}
             onClick={() => {
               onLeaveGameClick();
             }}
           >
             Leave Game
+          </button>
+        </li>
+        <li>
+          <button
+            className={`button button-basic game-lobby-top-buttons__button ${gameListButtonDisplayClass}`}
+            onClick={() => {
+              onJoinGameBackClick();
+            }}
+          >
+            Back
           </button>
         </li>
       </ul>

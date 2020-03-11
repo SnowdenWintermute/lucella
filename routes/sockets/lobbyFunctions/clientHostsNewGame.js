@@ -8,11 +8,12 @@ function clientHostsNewGame({
   io,
   socket,
   connectedSockets,
+  currentUser,
+  chatRooms,
   gameRooms,
   gameName,
 }) {
   // if they are not already in a game and no game by this name exists, create the game room
-  console.log(gameName);
   if (!connectedSockets[socket.id].isInGame) {
     if (!gameRooms[gameName]) {
       let newGameRoom = new GameRoom({
@@ -23,7 +24,15 @@ function clientHostsNewGame({
       });
       gameRooms[gameName] = newGameRoom;
       // join their socket to the new game room
-      clientJoinsGame({ io, socket, connectedSockets, gameRooms, gameName });
+      clientJoinsGame({
+        io,
+        socket,
+        connectedSockets,
+        currentUser,
+        chatRooms,
+        gameRooms,
+        gameName,
+      });
     } else {
       socket.emit("errorMessage", "A game by that name already exists");
     }

@@ -1,5 +1,6 @@
 @import "variables";
 $preGameRoomHeight: 170px;
+$gameListHeight: 300px;
 .game-shell {
   width: 1200px;
   max-width: 95%;
@@ -26,17 +27,33 @@ $preGameRoomHeight: 170px;
   height: 100%;
   width: 100%;
 }
-.pre-game-room {
-  height: $preGameRoomHeight;
+.pre-game-room,
+.game-list-frame {
   display: flex;
+  width: 100%;
   border-right: 1px solid color(textPrimary);
   transition: 0.3s;
   overflow: hidden;
 }
+.pre-game-room {
+  height: $preGameRoomHeight;
+}
+.game-list-frame {
+  height: $gameListHeight;
+  flex-direction: column;
+}
+.game-list-table {
+  border-collapse: collapse;
+}
+.game-list-table td {
+  padding: 2px;
+  padding-left: 10px;
+  border: 1px solid color(colorPrimary);
+}
 .pre-game-room-player-list {
   margin-bottom: 10px;
 }
-.game-lobby-top-buttons-chat {
+.game-lobby-top-buttons {
   grid-row-start: 1;
   grid-row-end: 2;
   grid-column-start: 1;
@@ -47,7 +64,10 @@ $preGameRoomHeight: 170px;
   border-bottom: 1px solid color(textPrimary);
   border-right: 1px solid color(textPrimary);
 }
-.game-lobby-top-buttons-chat ul {
+.game-lobby-top-buttons__button {
+  margin-right: 10px;
+}
+.game-lobby-top-buttons ul {
   transition: 0.3s;
   display: flex;
   align-items: center;
@@ -55,9 +75,6 @@ $preGameRoomHeight: 170px;
   width: 100%;
 }
 
-.game-lobby-top-buttons-chat ul li {
-  margin-right: 15px;
-}
 .game-lobby-info-box {
   display: flex;
   justify-content: center;
@@ -86,6 +103,10 @@ $preGameRoomHeight: 170px;
 .game-lobby-chat-stream-holder.game-setup {
   border-top: 1px solid color(textPrimary);
   height: calc(100% - #{$preGameRoomHeight});
+}
+.game-lobby-chat-stream-holder.viewing-game-list {
+  border-top: 1px solid color(textPrimary);
+  height: calc(100% - #{$gameListHeight});
 }
 .game-lobby-chat-stream {
   height: 100%;

@@ -55,6 +55,7 @@ const PreGameRoom = ({ preGameRoomDisplayClass, hostNewGame, socket }) => {
     >
       <h3 className="mb-10">Host a friendly match:</h3>
       <input
+        autoFocus={true}
         className={"text-input-transparent  mb-10"}
         placeholder={"Enter a game name"}
         value={gameNameInput}

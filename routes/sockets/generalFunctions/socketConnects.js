@@ -18,6 +18,7 @@ const socketConnects = async ({ socket, connectedSockets }) => {
   connectedSockets[socket.id] = {
     username: userToReturn.name,
     uuid: uuid.v4(),
+    socketId: socket.id,
   };
   return userToReturn;
 };

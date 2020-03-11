@@ -1,19 +1,19 @@
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
-const uuid = require("uuid");
 
 const clientRequestsToJoinRoom = ({
   io,
   socket,
-  data,
+  roomToJoin,
   chatRooms,
   connectedSockets,
-  currentUser,
+  username,
+  isDisconnecting,
 }) => {
+  console.log(username + " requests to join room " + roomToJoin);
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
-  const username = currentUser.name;
-  const roomToJoin = data.roomToJoin.toLowerCase();
+  if (isDisconnecting) return console.log("DISCONNECT in requestjoinroom");
   socket.join(roomToJoin);
   // if room doesn't exist, create it
   if (!chatRooms[roomToJoin]) {
