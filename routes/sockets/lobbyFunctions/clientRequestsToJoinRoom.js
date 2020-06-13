@@ -2,34 +2,26 @@ const uuid = require("uuid");
 const randomFourNumbers = require("../../../utils/randomFourNumbers");
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
-const axios = require("axios");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 
-const clientRequestsToJoinRoom = async ({
+const clientRequestsToJoinRoom = ({
   io,
   socket,
   data,
   chatRooms,
-  connectedSockets,
+  connectedSockets
 }) => {
   console.log(chatRooms);
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
   const { username, authToken } = data;
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      data: authToken,
-    },
-  };
-  try {
-    const user = await axios.get(
-      "http://localhost:5000/api/auth/socket",
-      config,
-    );
-    console.log(user);
-  } catch (err) {
-    console.log("no user (make anon)");
-  }
+  // console.log(authToken);
+  // const decoded = jwt.verify(authToken, config.get("jwtSecret"));
+  // console.log(decoded);
+
+  // if (authToken) username = decoded.user.username;
+
   const roomToJoin = data.roomToJoin.toLowerCase();
   socket.join(roomToJoin);
   // if room doesn't exist, create it
@@ -43,7 +35,7 @@ const clientRequestsToJoinRoom = async ({
     connectedSockets[socket.id] = {
       username,
       currentRoom: roomToJoin,
-      uuid: uuid.v4(),
+      uuid: uuid.v4()
     };
   }
   // put user in room's list of users
@@ -55,12 +47,12 @@ const clientRequestsToJoinRoom = async ({
       try {
         chatRooms[roomToJoin].currentUsers[randomAnonUsername] = {
           username: randomAnonUsername,
-          connectedSockets: [socket.id],
+          connectedSockets: [socket.id]
         };
         connectedSockets[socket.id] = {
           username: randomAnonUsername,
           currentRoom: roomToJoin,
-          uuid: uuid.v4(),
+          uuid: uuid.v4()
         };
       } catch (err) {
         console.log(err);
@@ -72,17 +64,17 @@ const clientRequestsToJoinRoom = async ({
   } else if (!chatRooms[roomToJoin].currentUsers[username]) {
     chatRooms[roomToJoin].currentUsers[username] = {
       username,
-      connectedSockets: [socket.id],
+      connectedSockets: [socket.id]
     };
   } else {
     // already connected, add to their list of sockets connected
     chatRooms[roomToJoin].currentUsers[username].connectedSockets.push(
-      socket.id,
+      socket.id
     );
   }
   const roomToJoinForClient = generateRoomForClient({
     chatRooms,
-    roomName: roomToJoin,
+    roomName: roomToJoin
   });
 
   io.in(roomToJoin).emit("updateRoomUserList", roomToJoinForClient);
@@ -90,7 +82,7 @@ const clientRequestsToJoinRoom = async ({
     author: "Server",
     style: "private",
     message: `Welcome to ${roomToJoin}.`,
-    timeStamp: Date.now(),
+    timeStamp: Date.now()
   });
   return chatRooms;
 };

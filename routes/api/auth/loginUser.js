@@ -25,7 +25,8 @@ module.exports = async (req, res) => {
 
     const payload = {
       user: {
-        id: user.id
+        id: user.id,
+        username: user.name
       }
     };
 
