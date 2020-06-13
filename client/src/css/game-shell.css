@@ -31,22 +31,45 @@
   width: 100%;
 }
 
-.pre-game-room {
-  height: 170px;
+.pre-game-room,
+.game-list-frame {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  width: 100%;
   border-right: 1px solid #9ba8b8;
   -webkit-transition: 0.3s;
   transition: 0.3s;
   overflow: hidden;
 }
 
+.pre-game-room {
+  height: 170px;
+}
+
+.game-list-frame {
+  height: 300px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.game-list-table {
+  border-collapse: collapse;
+}
+
+.game-list-table td {
+  padding: 2px;
+  padding-left: 10px;
+  border: 1px solid;
+}
+
 .pre-game-room-player-list {
   margin-bottom: 10px;
 }
 
-.game-lobby-top-buttons-chat {
+.game-lobby-top-buttons {
   -ms-grid-row: 1;
       grid-row-start: 1;
   grid-row-end: 2;
@@ -64,7 +87,11 @@
   border-right: 1px solid #9ba8b8;
 }
 
-.game-lobby-top-buttons-chat ul {
+.game-lobby-top-buttons__button {
+  margin-right: 10px;
+}
+
+.game-lobby-top-buttons ul {
   -webkit-transition: 0.3s;
   transition: 0.3s;
   display: -webkit-box;
@@ -75,10 +102,6 @@
           align-items: center;
   height: 100%;
   width: 100%;
-}
-
-.game-lobby-top-buttons-chat ul li {
-  margin-right: 15px;
 }
 
 .game-lobby-info-box {
@@ -130,6 +153,11 @@
 .game-lobby-chat-stream-holder.game-setup {
   border-top: 1px solid #9ba8b8;
   height: calc(100% - 170px);
+}
+
+.game-lobby-chat-stream-holder.viewing-game-list {
+  border-top: 1px solid #9ba8b8;
+  height: calc(100% - 300px);
 }
 
 .game-lobby-chat-stream {

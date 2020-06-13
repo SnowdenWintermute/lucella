@@ -1,5 +1,3 @@
-const uuid = require("uuid");
-const randomFourNumbers = require("../../../utils/randomFourNumbers");
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
 const jwt = require("jsonwebtoken");
@@ -8,11 +6,11 @@ const config = require("config");
 const clientRequestsToJoinRoom = ({
   io,
   socket,
-  data,
+  roomToJoin,
   chatRooms,
-  connectedSockets
+  connectedSockets,
 }) => {
-  console.log(chatRooms);
+  // console.log(username + " requests to join room " + roomToJoin);
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
   const { username, authToken } = data;
@@ -22,7 +20,6 @@ const clientRequestsToJoinRoom = ({
 
   // if (authToken) username = decoded.user.username;
 
-  const roomToJoin = data.roomToJoin.toLowerCase();
   socket.join(roomToJoin);
   // if room doesn't exist, create it
   if (!chatRooms[roomToJoin]) {
@@ -35,9 +32,10 @@ const clientRequestsToJoinRoom = ({
     connectedSockets[socket.id] = {
       username,
       currentRoom: roomToJoin,
-      uuid: uuid.v4()
+      uuid: uuid.v4(),
     };
   }
+
   // put user in room's list of users
   if (username === "Anon") {
     // give them a rand 4 string and if duplicate run it again - danger of loop?
@@ -47,12 +45,12 @@ const clientRequestsToJoinRoom = ({
       try {
         chatRooms[roomToJoin].currentUsers[randomAnonUsername] = {
           username: randomAnonUsername,
-          connectedSockets: [socket.id]
+          connectedSockets: [socket.id],
         };
         connectedSockets[socket.id] = {
           username: randomAnonUsername,
           currentRoom: roomToJoin,
-          uuid: uuid.v4()
+          uuid: uuid.v4(),
         };
       } catch (err) {
         console.log(err);
@@ -64,7 +62,7 @@ const clientRequestsToJoinRoom = ({
   } else if (!chatRooms[roomToJoin].currentUsers[username]) {
     chatRooms[roomToJoin].currentUsers[username] = {
       username,
-      connectedSockets: [socket.id]
+      connectedSockets: [socket.id],
     };
   } else {
     // already connected, add to their list of sockets connected
@@ -74,7 +72,7 @@ const clientRequestsToJoinRoom = ({
   }
   const roomToJoinForClient = generateRoomForClient({
     chatRooms,
-    roomName: roomToJoin
+    roomName: roomToJoin,
   });
 
   io.in(roomToJoin).emit("updateRoomUserList", roomToJoinForClient);
@@ -82,7 +80,7 @@ const clientRequestsToJoinRoom = ({
     author: "Server",
     style: "private",
     message: `Welcome to ${roomToJoin}.`,
-    timeStamp: Date.now()
+    timeStamp: Date.now(),
   });
   return chatRooms;
 };

@@ -8,7 +8,7 @@ function generateRoomForClient({ chatRooms, roomName }) {
           userForClient[userPropKey] =
             chatRooms[roomName].currentUsers[userKey][userPropKey];
         }
-      }
+      },
     );
     roomForClient.currentUsers[userKey] = userForClient;
   });

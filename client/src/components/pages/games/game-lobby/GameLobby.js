@@ -7,6 +7,7 @@ import GameLobbyTopButtons from "./GameLobbyTopButtons";
 import GameLobbyTopInfoBox from "./GameLobbyTopInfoBox";
 import GameLobbySideBar from "./GameLobbySideBar";
 import PreGameRoom from "./PreGameRoom";
+import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import Modal from "../../../common/modal/Modal";
 import io from "socket.io-client";
@@ -31,37 +32,51 @@ const GameLobby = ({
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
     "height-0-hidden",
   );
+  const [gameListDisplayClass, setGameListDisplayClass] = useState(
+    "height-0-hidden",
+  );
+  const [gameListButtonDisplayClass, setGameListButtonDisplayClass] = useState(
+    "chat-button-hidden",
+  );
   const [preGameButtonDisplayClass, setPreGameButtonDisplayClass] = useState(
     "chat-button-hidden",
   );
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
+  const [authenticating, setAuthenticating] = useState(true);
+  const [gameList, setGameList] = useState({});
+  const [currentGame, setCurrentGame] = useState("");
 
   const username = user ? user.name : "Anon";
-  let authToken;
-  useEffect(() => {
-    if (localStorage.token) {
-      authToken = localStorage.token;
-      console.log(authToken);
-    }
-  }, [localStorage.token]);
+  let authToken = null;
+
   // setup socket
   useEffect(() => {
-    socket = io("localhost:5000");
+    authToken = localStorage.token;
+    let query = { token: null };
+    console.log(authToken);
+    if (authToken) {
+      query.token = authToken;
+    }
+    socket = io("localhost:5000", { query });
     return () => {
       socket.disconnect();
     };
-  }, []);
-  // once profile is loaded (or found to be null), join default room (passed from parent)
+  }, [localStorage.token]);
   useEffect(() => {
-    if (!loading) {
+    socket.on("authenticationFinished", data => {
+      console.log("authenticationFinished");
+      setAuthenticating(false);
+    });
+  });
+  useEffect(() => {
+    console.log("requested join room");
+    if (!authenticating) {
       socket.emit("clientRequestsToJoinRoom", {
         roomToJoin: currentChatRoom,
-        username, // todo:remove
-        authToken,
       });
     }
-  }, [loading, username]);
+  }, [authenticating]);
   // handle new messages from io
   useEffect(() => {
     socket.on("newMessage", async message => {
@@ -75,6 +90,7 @@ const GameLobby = ({
   // handle new room data
   useEffect(() => {
     socket.on("updateRoomUserList", data => {
+      console.log("room updated");
       setNewRoomLoading(false);
       const { roomName, currentUsers } = data;
       setCurrentChatRoomUsers(currentUsers);
@@ -84,6 +100,15 @@ const GameLobby = ({
       socket.off("updateRoomUserList");
     };
   }, [currentChatRoom]);
+  useEffect(() => {
+    socket.on("gameListUpdate", data => {
+      console.log(data);
+      setGameList(data);
+    });
+    return () => {
+      socket.off("gameListUpdate");
+    };
+  }, []);
   // sending a message
   const sendNewMessage = message => {
     if (message === "") return;
@@ -117,10 +142,34 @@ const GameLobby = ({
   };
   const hostNewGame = ({ gameName }) => {
     if (gameName) {
+      setCurrentGame(gameName);
       socket.emit("clientHostsNewGame", { gameName });
     } else {
       setAlert("Please enter a game name", "danger");
     }
+  };
+  // join games
+  const onJoinGameClick = () => {
+    setChatClass("viewing-game-list");
+    setGameListDisplayClass("");
+    setChatButtonDisplayClass("chat-button-hidden");
+    setChatButtonsDisplayClass("chat-buttons-hidden");
+    setGameListButtonDisplayClass("");
+  };
+  const joinGame = ({ gameName }) => {
+    if (gameName) {
+      setCurrentGame(gameName);
+      socket.emit("clientJoinsGame", { gameName });
+    } else {
+      setAlert("No game by that name exists", "danger");
+    }
+  };
+  const onJoinGameBackClick = () => {
+    setChatClass("");
+    setGameListDisplayClass("height-0-hidden");
+    setChatButtonDisplayClass("");
+    setChatButtonsDisplayClass("");
+    setGameListButtonDisplayClass("chat-button-hidden");
   };
   // leave game
   const onLeaveGameClick = () => {
@@ -129,6 +178,8 @@ const GameLobby = ({
     setChatButtonDisplayClass("");
     setChatButtonsDisplayClass("");
     setPreGameButtonDisplayClass("chat-button-hidden");
+    console.log("client leaving game " + currentGame);
+    socket.emit("clientLeavesGame", currentGame);
   };
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
   const setParentDisplay = status => {
@@ -159,9 +210,12 @@ const GameLobby = ({
           showChangeChannelModal={showChangeChannelModal}
           onHostGameClick={onHostGameClick}
           onLeaveGameClick={onLeaveGameClick}
+          onJoinGameClick={onJoinGameClick}
+          onJoinGameBackClick={onJoinGameBackClick}
           chatButtonDisplayClass={chatButtonDisplayClass}
           chatButtonsDisplayClass={chatButtonsDisplayClass}
           preGameButtonDisplayClass={preGameButtonDisplayClass}
+          gameListButtonDisplayClass={gameListButtonDisplayClass}
         />
         <GameLobbyTopInfoBox
           newRoomLoading={newRoomLoading}
@@ -173,6 +227,10 @@ const GameLobby = ({
             hostNewGame={hostNewGame}
             preGameRoomDisplayClass={preGameRoomDisplayClass}
             socket={socket}
+          />
+          <GameList
+            gameList={gameList}
+            gameListDisplayClass={gameListDisplayClass}
           />
           <GameLobbyChat
             currentChatRoom={currentChatRoom}
