@@ -8,17 +8,13 @@ const clientRequestsToJoinRoom = ({
   socket,
   roomToJoin,
   chatRooms,
+  username,
   connectedSockets,
 }) => {
   // console.log(username + " requests to join room " + roomToJoin);
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
-  const { username, authToken } = data;
-  // console.log(authToken);
-  // const decoded = jwt.verify(authToken, config.get("jwtSecret"));
-  // console.log(decoded);
-
-  // if (authToken) username = decoded.user.username;
+  console.log("17 " + username);
 
   socket.join(roomToJoin);
   // if room doesn't exist, create it
@@ -32,34 +28,11 @@ const clientRequestsToJoinRoom = ({
     connectedSockets[socket.id] = {
       username,
       currentRoom: roomToJoin,
-      uuid: uuid.v4(),
     };
   }
 
   // put user in room's list of users
-  if (username === "Anon") {
-    // give them a rand 4 string and if duplicate run it again - danger of loop?
-    makeRandomAnonName = () => {
-      const randomNums = randomFourNumbers().join("");
-      const randomAnonUsername = "Anon" + randomNums;
-      try {
-        chatRooms[roomToJoin].currentUsers[randomAnonUsername] = {
-          username: randomAnonUsername,
-          connectedSockets: [socket.id],
-        };
-        connectedSockets[socket.id] = {
-          username: randomAnonUsername,
-          currentRoom: roomToJoin,
-          uuid: uuid.v4(),
-        };
-      } catch (err) {
-        console.log(err);
-        console.log("error generating random anon name - duplicate?");
-        makeRandomAnonName();
-      }
-    };
-    makeRandomAnonName();
-  } else if (!chatRooms[roomToJoin].currentUsers[username]) {
+  if (!chatRooms[roomToJoin].currentUsers[username]) {
     chatRooms[roomToJoin].currentUsers[username] = {
       username,
       connectedSockets: [socket.id],
