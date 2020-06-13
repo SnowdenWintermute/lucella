@@ -24,22 +24,22 @@ const GameLobby = ({
   const [currentChatRoom, setCurrentChatRoom] = useState(defaultChatRoom);
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
-    false,
+    false
   );
   const [currentChatRoomUsers, setCurrentChatRoomUsers] = useState({});
   const [newRoomLoading, setNewRoomLoading] = useState(true);
   const [chatClass, setChatClass] = useState("");
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
-    "height-0-hidden",
+    "height-0-hidden"
   );
   const [gameListDisplayClass, setGameListDisplayClass] = useState(
-    "height-0-hidden",
+    "height-0-hidden"
   );
   const [gameListButtonDisplayClass, setGameListButtonDisplayClass] = useState(
-    "chat-button-hidden",
+    "chat-button-hidden"
   );
   const [preGameButtonDisplayClass, setPreGameButtonDisplayClass] = useState(
-    "chat-button-hidden",
+    "chat-button-hidden"
   );
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
@@ -64,7 +64,7 @@ const GameLobby = ({
     };
   }, [localStorage.token]);
   useEffect(() => {
-    socket.on("authenticationFinished", data => {
+    socket.on("authenticationFinished", (data) => {
       console.log("authenticationFinished");
       setAuthenticating(false);
     });
@@ -79,7 +79,7 @@ const GameLobby = ({
   }, [authenticating]);
   // handle new messages from io
   useEffect(() => {
-    socket.on("newMessage", async message => {
+    socket.on("newMessage", async (message) => {
       const msgForReduxStore = { message, room: currentChatRoom };
       newChatMessage(msgForReduxStore);
     });
@@ -89,7 +89,7 @@ const GameLobby = ({
   }, [currentChatRoom]);
   // handle new room data
   useEffect(() => {
-    socket.on("updateRoomUserList", data => {
+    socket.on("updateRoomUserList", (data) => {
       console.log("room updated");
       setNewRoomLoading(false);
       const { roomName, currentUsers } = data;
@@ -101,7 +101,7 @@ const GameLobby = ({
     };
   }, [currentChatRoom]);
   useEffect(() => {
-    socket.on("gameListUpdate", data => {
+    socket.on("gameListUpdate", (data) => {
       console.log(data);
       setGameList(data);
     });
@@ -110,7 +110,7 @@ const GameLobby = ({
     };
   }, []);
   // sending a message
-  const sendNewMessage = message => {
+  const sendNewMessage = (message) => {
     if (message === "") return;
     const author = username;
     const messageToSend = {
@@ -122,11 +122,11 @@ const GameLobby = ({
     socket.emit("clientSendsNewChat", messageToSend);
   };
   // joining new rooms
-  const onJoinRoomSubmit = e => {
+  const onJoinRoomSubmit = (e) => {
     e.preventDefault();
     joinRoom(joinNewRoomInput);
   };
-  const joinRoom = roomToJoin => {
+  const joinRoom = (roomToJoin) => {
     if (roomToJoin.toLowerCase() !== currentChatRoom) setNewRoomLoading(true);
     setDisplayChangeChannelModal(false);
     setJoinNewRoomInput("");
@@ -149,14 +149,15 @@ const GameLobby = ({
     }
   };
   // join games
-  const onJoinGameClick = () => {
+  const onViewGamesListClick = () => {
     setChatClass("viewing-game-list");
     setGameListDisplayClass("");
     setChatButtonDisplayClass("chat-button-hidden");
     setChatButtonsDisplayClass("chat-buttons-hidden");
     setGameListButtonDisplayClass("");
   };
-  const joinGame = ({ gameName }) => {
+  const onJoinGameClick = (gameName) => {
+    console.log("clicked to join game " + gameName);
     if (gameName) {
       setCurrentGame(gameName);
       socket.emit("clientJoinsGame", { gameName });
@@ -182,7 +183,7 @@ const GameLobby = ({
     socket.emit("clientLeavesGame", currentGame);
   };
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
-  const setParentDisplay = status => {
+  const setParentDisplay = (status) => {
     setDisplayChangeChannelModal(status);
   };
   const showChangeChannelModal = () => {
@@ -210,7 +211,7 @@ const GameLobby = ({
           showChangeChannelModal={showChangeChannelModal}
           onHostGameClick={onHostGameClick}
           onLeaveGameClick={onLeaveGameClick}
-          onJoinGameClick={onJoinGameClick}
+          onViewGamesListClick={onViewGamesListClick}
           onJoinGameBackClick={onJoinGameBackClick}
           chatButtonDisplayClass={chatButtonDisplayClass}
           chatButtonsDisplayClass={chatButtonsDisplayClass}
@@ -231,6 +232,7 @@ const GameLobby = ({
           <GameList
             gameList={gameList}
             gameListDisplayClass={gameListDisplayClass}
+            onJoinGameClick={onJoinGameClick}
           />
           <GameLobbyChat
             currentChatRoom={currentChatRoom}
@@ -249,11 +251,11 @@ GameLobby.propTypes = {
   newChatMessage: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   auth: state.auth,
   chat: state.chat,
 });
 
 export default connect(mapStateToProps, { newChatMessage, setAlert })(
-  GameLobby,
+  GameLobby
 );

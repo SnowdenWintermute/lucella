@@ -5,7 +5,7 @@ const GameLobbyTopButtons = ({
   showChangeChannelModal,
   onHostGameClick,
   onLeaveGameClick,
-  onJoinGameClick,
+  onViewGamesListClick,
   chatButtonDisplayClass,
   chatButtonsDisplayClass,
   preGameButtonDisplayClass,
@@ -46,7 +46,7 @@ const GameLobbyTopButtons = ({
         <li>
           <button
             className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
-            onClick={() => onJoinGameClick()}
+            onClick={() => onViewGamesListClick()}
           >
             Join
           </button>

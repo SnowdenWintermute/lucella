@@ -17,7 +17,7 @@ let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socket
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: false}
 let connectedGuests = {};
 
-io.sockets.on("connect", async socket => {
+io.sockets.on("connect", async (socket) => {
   let currentUser = {};
   connectedSockets[socket.id] = { username: null, currentRoom: null };
   currentUser = await socketConnects({ socket, connectedSockets });
@@ -30,7 +30,7 @@ io.sockets.on("connect", async socket => {
       connectedGuests,
     });
   }
-  socket.on("clientRequestsToJoinRoom", data => {
+  socket.on("clientRequestsToJoinRoom", (data) => {
     const roomToJoin = data.roomToJoin.toLowerCase();
     chatRooms = clientRequestsToJoinRoom({
       io,
@@ -52,7 +52,7 @@ io.sockets.on("connect", async socket => {
       gameName,
     });
   });
-  socket.on("clientLeavesGame", gameName => {
+  socket.on("clientLeavesGame", (gameName) => {
     clientLeavesGame({
       io,
       socket,
@@ -64,7 +64,10 @@ io.sockets.on("connect", async socket => {
       username: currentUser.name,
     });
   });
-  socket.on("clientSendsNewChat", data => {
+  socket.on("clientJoinsGame", (data) => {
+    console.log("client clicked to join game " + data);
+  });
+  socket.on("clientSendsNewChat", (data) => {
     clientSendsNewChat({ io, socket, data, currentUser });
   });
   socket.on("disconnect", () => {
@@ -82,6 +85,6 @@ io.sockets.on("connect", async socket => {
 });
 
 const games = io.of("/games");
-games.on("connection", socket => {
+games.on("connection", (socket) => {
   console.log(socket.id + " connected to games");
 });

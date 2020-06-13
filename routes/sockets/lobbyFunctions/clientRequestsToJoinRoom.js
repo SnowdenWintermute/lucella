@@ -1,7 +1,5 @@
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
-const jwt = require("jsonwebtoken");
-const config = require("config");
 
 const clientRequestsToJoinRoom = ({
   io,
@@ -14,7 +12,6 @@ const clientRequestsToJoinRoom = ({
   // console.log(username + " requests to join room " + roomToJoin);
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
-  console.log("17 " + username);
 
   socket.join(roomToJoin);
   // if room doesn't exist, create it
@@ -24,12 +21,10 @@ const clientRequestsToJoinRoom = ({
     console.log(chatRooms[roomToJoin]);
   }
   // connectedSockets object:
-  if (username !== "Anon") {
-    connectedSockets[socket.id] = {
-      username,
-      currentRoom: roomToJoin,
-    };
-  }
+  connectedSockets[socket.id] = {
+    username,
+    currentRoom: roomToJoin,
+  };
 
   // put user in room's list of users
   if (!chatRooms[roomToJoin].currentUsers[username]) {

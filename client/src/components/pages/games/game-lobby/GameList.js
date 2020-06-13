@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const GameList = ({ gameList, gameListDisplayClass }) => {
+const GameList = ({ gameList, gameListDisplayClass, onJoinGameClick }) => {
   const gamesToDisplay = [];
   if (gameList) {
     for (const game in gameList) {
@@ -16,13 +16,18 @@ const GameList = ({ gameList, gameListDisplayClass }) => {
           </td>
           <td>
             {gameList[game].gameStatus === "inLobby" && (
-              <button className="button button-primary">Join</button>
+              <button
+                className="button button-primary"
+                onClick={() => onJoinGameClick(gameName)}
+              >
+                Join
+              </button>
             )}
           </td>
           <td>
             <button className="button button-basic">Watch</button>
           </td>
-        </tr>,
+        </tr>
       );
     }
   }
