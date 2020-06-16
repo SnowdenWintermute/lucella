@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { setAlert } from "../../actions/alert";
-import { register } from "../../actions/auth";
+import { setAlert } from "../../store/actions/alert";
+import { register } from "../../store/actions/auth";
 import PropTypes from "prop-types";
 
 const Register = ({ setAlert, register, isAuthenticated }) => {
@@ -10,15 +10,15 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     email: "",
     name: "",
     password: "",
-    password2: ""
+    password2: "",
   });
 
   const { email, password, password2, name } = formData;
 
-  const onChange = e =>
+  const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
       setAlert("Passwords do not match.", "danger");
@@ -26,7 +26,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
       register({
         email,
         password,
-        name
+        name,
       });
     }
   };
@@ -40,14 +40,14 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
     <div className="auth-frame">
       <h1 className="auth-brand-header">Lucella.org</h1>
       <h3 className="auth-header">Create Account</h3>
-      <form className="auth-form" onSubmit={e => onSubmit(e)}>
+      <form className="auth-form" onSubmit={(e) => onSubmit(e)}>
         <input
           className="simple-text-input"
           type="email"
           placeholder="Email"
           name="email"
           value={email}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         ></input>
         <input
           className="simple-text-input"
@@ -55,7 +55,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
           placeholder="Name"
           name="name"
           value={name}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         ></input>
         <input
           className="simple-text-input"
@@ -63,7 +63,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
           name="password"
           placeholder="Password"
           value={password}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         ></input>
         <input
           className="simple-text-input"
@@ -71,7 +71,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
           name="password2"
           placeholder="Password2"
           value={password2}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         ></input>
         <div className="auth-bottom-links">
           <Link to="/login">Log in to existing account</Link>
@@ -89,11 +89,11 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
 Register.propTypes = {
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps, { setAlert, register })(Register);

@@ -2,7 +2,10 @@ import React, { useState, Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { requestPasswordResetEmail, deleteAccount } from "../../actions/auth";
+import {
+  requestPasswordResetEmail,
+  deleteAccount,
+} from "../../store/actions/auth";
 import FlashingClickableText from "../common/FlashingClickableText";
 import Modal from "../common/modal/Modal";
 
@@ -12,7 +15,7 @@ const Settings = ({
   auth: { user },
   requestPasswordResetEmail,
   deleteAccount,
-  history
+  history,
 }) => {
   const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(
     false
@@ -22,7 +25,7 @@ const Settings = ({
   const accountEmail = user ? user.email : "...";
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
-  const setParentDisplay = status => {
+  const setParentDisplay = (status) => {
     setDisplayDeleteAccountModal(status);
   };
   const showDeleteAccountModal = () => {
@@ -30,11 +33,11 @@ const Settings = ({
   };
 
   // DELETE ACCOUNT FORM
-  const onSubmitDeleteAccount = e => {
+  const onSubmitDeleteAccount = (e) => {
     e.preventDefault();
     deleteAccount({ email });
   };
-  const onChange = e => {
+  const onChange = (e) => {
     setEmail(e.target.value);
   };
 
@@ -53,10 +56,10 @@ const Settings = ({
           ranking info. If you are certain of your decision, type your email
           address into the input and click Confirm Delete.
         </p>
-        <form onSubmit={e => onSubmitDeleteAccount(e)}>
+        <form onSubmit={(e) => onSubmitDeleteAccount(e)}>
           <input
             className="simple-text-input"
-            onChange={e => onChange(e)}
+            onChange={(e) => onChange(e)}
             placeholder="Email"
             name="email"
             value={email}
@@ -78,7 +81,7 @@ const Settings = ({
         <li>
           <FlashingClickableText
             className="link-simple"
-            onClick={function() {
+            onClick={function () {
               requestPasswordResetEmail({ email: accountEmail });
             }}
           >
@@ -98,14 +101,14 @@ const Settings = ({
 Settings.propTypes = {
   auth: PropTypes.object.isRequired,
   requestPasswordResetEmail: PropTypes.func.isRequired,
-  deleteAccount: PropTypes.func.isRequired
+  deleteAccount: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth
+const mapStateToProps = (state) => ({
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, {
   requestPasswordResetEmail,
-  deleteAccount
+  deleteAccount,
 })(withRouter(Settings));

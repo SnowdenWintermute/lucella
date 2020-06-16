@@ -1,9 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const GameLobbySideBar = ({ currentChatRoomUsers }) => {
+const UserList = ({ currentChatRoomUsers }) => {
   let usersInChannelToDisplay = [];
-  Object.keys(currentChatRoomUsers).forEach(key => {
+  Object.keys(currentChatRoomUsers).forEach((key) => {
     usersInChannelToDisplay.push(<div key={key}>{key}</div>);
   });
   return (
@@ -11,8 +11,8 @@ const GameLobbySideBar = ({ currentChatRoomUsers }) => {
   );
 };
 
-GameLobbySideBar.propTypes = {
-  currentChatRoomUsers: PropTypes.object.isRequired
+UserList.propTypes = {
+  currentChatRoomUsers: PropTypes.object.isRequired,
 };
 
-export default GameLobbySideBar;
+export default UserList;

@@ -21,7 +21,7 @@ import Profile from "./components/profile/Profile";
 import BattleRoomShell from "./components/pages/games/battle-room/BattleRoomShell";
 
 // actions
-import { loadUser } from "./actions/auth";
+import { loadUser } from "./store/actions/auth";
 
 // utils
 import setAuthToken from "./utils/setAuthToken";

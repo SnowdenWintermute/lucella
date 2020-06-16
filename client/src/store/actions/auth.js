@@ -9,12 +9,12 @@ import {
   USER_LOADED,
   AUTH_ERROR,
   LOGOUT,
-  CLEAR_PROFILE
+  CLEAR_PROFILE,
 } from "./types";
-import setAuthToken from "../utils/setAuthToken";
+import setAuthToken from "../../utils/setAuthToken";
 
 // load user
-export const loadUser = () => async dispatch => {
+export const loadUser = () => async (dispatch) => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
   }
@@ -28,18 +28,18 @@ export const loadUser = () => async dispatch => {
 };
 
 // login user
-export const login = ({ email, password }) => async dispatch => {
+export const login = ({ email, password }) => async (dispatch) => {
   const config = {
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
   const body = JSON.stringify({ email, password });
   try {
     const res = await axios.post("/api/auth", body, config);
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data // jwt token
+      payload: res.data, // jwt token
     });
     dispatch(loadUser());
     dispatch(getCurrentProfile());
@@ -47,20 +47,20 @@ export const login = ({ email, password }) => async dispatch => {
   } catch (error) {
     const errors = error.response.data.errors;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      errors.forEach((err) => dispatch(setAlert(err.msg, "danger")));
     }
     dispatch({
-      type: LOGIN_FAIL
+      type: LOGIN_FAIL,
     });
   }
 };
 
 // register user
-export const register = ({ name, email, password }) => async dispatch => {
+export const register = ({ name, email, password }) => async (dispatch) => {
   const config = {
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
   console.log(name);
   const body = JSON.stringify({ name, email, password });
@@ -68,7 +68,7 @@ export const register = ({ name, email, password }) => async dispatch => {
     const res = await axios.post("/api/users", body, config);
     dispatch({
       type: REGISTER_SUCCESS,
-      payload: res.data // jwt token
+      payload: res.data, // jwt token
     });
     dispatch(setAlert("Account created!", "success"));
     dispatch(loadUser());
@@ -76,30 +76,30 @@ export const register = ({ name, email, password }) => async dispatch => {
     console.log(error);
     const errors = error.response.data.errors;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      errors.forEach((err) => dispatch(setAlert(err.msg, "danger")));
     }
     dispatch({
-      type: REGISTER_FAIL
+      type: REGISTER_FAIL,
     });
   }
 };
 
 // logout user / clear profile
-export const logout = () => async dispatch => {
+export const logout = () => async (dispatch) => {
   dispatch({
-    type: CLEAR_PROFILE
+    type: CLEAR_PROFILE,
   });
   dispatch({
-    type: LOGOUT
+    type: LOGOUT,
   });
 };
 
 // request password reset email
-export const requestPasswordResetEmail = email => async dispatch => {
+export const requestPasswordResetEmail = (email) => async (dispatch) => {
   const config = {
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
   const body = JSON.stringify(email);
   try {
@@ -112,7 +112,7 @@ export const requestPasswordResetEmail = email => async dispatch => {
   } catch (error) {
     const errors = error.response.data.errors;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      errors.forEach((err) => dispatch(setAlert(err.msg, "danger")));
     }
   }
 };
@@ -122,12 +122,12 @@ export const resetPassword = ({
   password,
   password2,
   token,
-  history
-}) => async dispatch => {
+  history,
+}) => async (dispatch) => {
   const config = {
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
   const body = JSON.stringify({ password, password2 });
   try {
@@ -138,7 +138,7 @@ export const resetPassword = ({
     );
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data.token // jwt token
+      payload: res.data.token, // jwt token
     });
     dispatch(setAlert(res.data.msg, "success"));
     history.push("/games");
@@ -146,17 +146,17 @@ export const resetPassword = ({
     console.log(error.response.data.errors);
     const errors = error.response.data.errors;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      errors.forEach((err) => dispatch(setAlert(err.msg, "danger")));
     }
   }
 };
 
 // delete account
-export const deleteAccount = ({ email, history }) => async dispatch => {
+export const deleteAccount = ({ email, history }) => async (dispatch) => {
   const config = {
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
   const body = JSON.stringify({ email });
 
@@ -164,14 +164,14 @@ export const deleteAccount = ({ email, history }) => async dispatch => {
     const res = await axios.post(`/api/users/delete-account`, body, config);
 
     dispatch({
-      type: LOGOUT
+      type: LOGOUT,
     });
     dispatch(setAlert(res.data.msg, "success"));
   } catch (error) {
     console.log(error.response.data.errors);
     const errors = error.response.data.errors;
     if (errors) {
-      errors.forEach(err => dispatch(setAlert(err.msg, "danger")));
+      errors.forEach((err) => dispatch(setAlert(err.msg, "danger")));
     }
   }
 };

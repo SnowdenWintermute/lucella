@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { logout } from "../../actions/auth";
+import { logout } from "../../store/actions/auth";
 // img
 import logo from "../../img/logo.png";
 import logoutIcon from "../../img/menuIcons/logout.png";
@@ -17,7 +17,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const [activeTab, setActiveTab] = useState(null);
   // effects
   useEffect(() => {
-    window.addEventListener("click", e => {
+    window.addEventListener("click", (e) => {
       if (e.target.name !== "profile-icon")
         if (showUserDropdown) toggleUserDropdown(!showUserDropdown);
     });
@@ -37,7 +37,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <Link
             to="/profile"
             className="user-menu-item"
-            onClick={e => onNavItemClick(e)}
+            onClick={(e) => onNavItemClick(e)}
           >
             <img alt="user icon" src={userIcon} />
             Profile
@@ -45,7 +45,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <Link
             to="/wallet"
             className="user-menu-item"
-            onClick={e => onNavItemClick(e)}
+            onClick={(e) => onNavItemClick(e)}
           >
             <img alt="wallet icon" src={walletIcon} />
             Wallet
@@ -53,7 +53,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <Link
             to="/settings"
             className="user-menu-item"
-            onClick={e => {
+            onClick={(e) => {
               onNavItemClick(e);
             }}
           >
@@ -63,7 +63,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
           <Link
             to="/login"
             className="user-menu-item"
-            onClick={e => {
+            onClick={(e) => {
               onNavItemClick(e);
               logout();
             }}
@@ -80,7 +80,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
     <Link
       to="/login"
       className="button button-basic"
-      onClick={e => onNavItemClick(e)}
+      onClick={(e) => onNavItemClick(e)}
     >
       LOGIN
     </Link>
@@ -89,7 +89,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const userMenu = isAuthenticated ? loggedInUserMenu : guestMenu;
 
   // tabs
-  const onNavItemClick = e => {
+  const onNavItemClick = (e) => {
     setActiveTab(e.target.name);
   };
 
@@ -103,7 +103,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
               to="/"
               className="brand-text"
               name="landing"
-              onClick={e => onNavItemClick(e)}
+              onClick={(e) => onNavItemClick(e)}
             >
               Lucella.org
             </Link>
@@ -113,7 +113,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
               to="/games"
               className={`nav-tab ${activeTab === "games" && "tab-active"}`}
               name="games"
-              onClick={e => onNavItemClick(e)}
+              onClick={(e) => onNavItemClick(e)}
             >
               GAMES
             </Link>
@@ -121,7 +121,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
               to="/ladder"
               className={`nav-tab ${activeTab === "ladder" && "tab-active"}`}
               name="ladder"
-              onClick={e => onNavItemClick(e)}
+              onClick={(e) => onNavItemClick(e)}
             >
               LADDER
             </Link>
@@ -129,7 +129,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
               to="/forum"
               className={`nav-tab ${activeTab === "forum" && "tab-active"}`}
               name="forum"
-              onClick={e => onNavItemClick(e)}
+              onClick={(e) => onNavItemClick(e)}
             >
               FORUM
             </Link>
@@ -144,11 +144,11 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
 
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  auth: state.auth
+const mapStateToProps = (state) => ({
+  auth: state.auth,
 });
 
 export default connect(mapStateToProps, { logout })(Navbar);

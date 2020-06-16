@@ -1,44 +1,68 @@
 import React, { Fragment, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { ReactComponent as SuccessIcon } from "../../../../../src/img/alertIcons/success.svg";
 import PropTypes from "prop-types";
+import * as gameUiActions from "../../../../store/actions/game-ui";
+import * as alertActions from "../../../../store/actions/alert";
 
-const PreGameRoom = ({ preGameRoomDisplayClass, hostNewGame, socket }) => {
+const PreGameRoom = ({ socket }) => {
+  const dispatch = useDispatch();
+  const gameSetupScreenIsOpen = useSelector(
+    (state) => state.gameUi.gameSetupScreen.isOpen
+  );
+  const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
+    "height-0-hidden"
+  );
   const [gameNameInput, setGameNameInput] = useState("");
-  const [currentGameRoom, setCurrentGameRoom] = useState(null);
 
-  const makeGamePublic = e => {
-    e.preventDefault();
-    hostNewGame({ gameName: gameNameInput });
-  };
+  const currentGame = useSelector((state) => state.gameUi.currentGame);
 
+  // element's own visibility/showclass
+  useEffect(() => {
+    if (gameSetupScreenIsOpen) setPreGameRoomDisplayClass("");
+    if (!gameSetupScreenIsOpen) setPreGameRoomDisplayClass("height-0-hidden");
+  }, [gameSetupScreenIsOpen]);
+
+  // players in room and their ready status/ the countdown
   useEffect(() => {
     if (!socket) return;
-    socket.on("currentGameRoomUpdate", data => {
+    socket.on("currentGameRoomUpdate", (data) => {
       console.log(data);
-      setCurrentGameRoom(data);
+      dispatch(gameUiActions.setCurrentGame(data));
     });
     return () => {
       socket.off("currentGameRoomUpdate");
-      setCurrentGameRoom(null);
+      dispatch(gameUiActions.setCurrentGame(null));
     };
   }, [socket]);
 
-  const preGameRoomMenu = currentGameRoom ? (
+  // 'make public' actually request to server to host a game
+  const makeGamePublic = (e) => {
+    e.preventDefault();
+    const gameName = gameNameInput;
+    if (gameName) {
+      socket.emit("clientHostsNewGame", { gameName });
+    } else {
+      dispatch(alertActions.setAlert("Please enter a game name", "danger"));
+    }
+  };
+
+  const preGameRoomMenu = currentGame ? (
     <Fragment>
-      <h3>Game: {currentGameRoom.gameName}</h3>
+      <h3>Game: {currentGame.gameName}</h3>
       <div>Players:</div>
       <table className="pre-game-room-player-list">
         <tbody>
           <tr>
-            <td>{currentGameRoom.players.host.username}</td>
+            <td>{currentGame.players.host.username}</td>
             <td>
               <SuccessIcon className="alert-icon"></SuccessIcon>
             </td>
           </tr>
           <tr>
             <td>
-              {currentGameRoom.players.challenger
-                ? currentGameRoom.players.challenger
+              {currentGame.players.challenger
+                ? currentGame.players.challenger
                 : "Awaiting challenger..."}
             </td>
             <td></td>
@@ -49,7 +73,7 @@ const PreGameRoom = ({ preGameRoomDisplayClass, hostNewGame, socket }) => {
     </Fragment>
   ) : (
     <form
-      onSubmit={e => {
+      onSubmit={(e) => {
         makeGamePublic(e);
       }}
     >
@@ -59,7 +83,7 @@ const PreGameRoom = ({ preGameRoomDisplayClass, hostNewGame, socket }) => {
         className={"text-input-transparent  mb-10"}
         placeholder={"Enter a game name"}
         value={gameNameInput}
-        onChange={e => {
+        onChange={(e) => {
           setGameNameInput(e.target.value);
         }}
       />
@@ -76,6 +100,8 @@ const PreGameRoom = ({ preGameRoomDisplayClass, hostNewGame, socket }) => {
   );
 };
 
-PreGameRoom.propTypes = {};
+PreGameRoom.propTypes = {
+  socket: PropTypes.object,
+};
 
 export default PreGameRoom;

@@ -66,6 +66,7 @@ io.sockets.on("connect", async (socket) => {
   });
   socket.on("clientJoinsGame", (data) => {
     console.log("client clicked to join game " + data);
+    // here
   });
   socket.on("clientSendsNewChat", (data) => {
     clientSendsNewChat({ io, socket, data, currentUser });

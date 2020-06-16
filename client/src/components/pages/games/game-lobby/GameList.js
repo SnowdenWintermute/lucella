@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
+import * as alertActions from "../../../../store/actions/alert";
 
-const GameList = ({ gameList, gameListDisplayClass, onJoinGameClick }) => {
+const GameList = ({ socket }) => {
+  const dispatch = useDispatch();
+  const [gameList, setGameList] = useState({});
+  const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
+  const gameListDisplayClass = !gameListIsOpen && "height-0-hidden";
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("gameListUpdate", (data) => {
+      setGameList(data);
+    });
+    return () => {
+      socket.off("gameListUpdate");
+    };
+  }, [socket]);
+
+  // join games
+  const onJoinGameClick = (gameName) => {
+    console.log("clicked to join game " + gameName);
+    if (gameName) {
+      socket.emit("clientJoinsGame", { gameName });
+    } else {
+      dispatch(alertActions.setAlert("No game by that name exists", "danger"));
+    }
+  };
+
   const gamesToDisplay = [];
   if (gameList) {
     for (const game in gameList) {

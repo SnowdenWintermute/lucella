@@ -2,24 +2,24 @@ import React, { useState } from "react";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { requestPasswordResetEmail } from "../../actions/auth";
+import { requestPasswordResetEmail } from "../../store/actions/auth";
 
 const RequestPasswordResetEmail = ({
   isAuthenticated,
   requestPasswordResetEmail,
-  history
+  history,
 }) => {
   const [formData, setFormData] = useState({
     email: "",
-    password: ""
+    password: "",
   });
 
   const { email } = formData;
 
-  const onChange = e =>
+  const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const { email } = formData;
     requestPasswordResetEmail({ email });
@@ -34,14 +34,14 @@ const RequestPasswordResetEmail = ({
     <div className="auth-frame">
       <h1 className="auth-brand-header">Lucella.org</h1>
       <h3 className="auth-header">Account Recovery</h3>
-      <form className="auth-form" onSubmit={e => onSubmit(e)}>
+      <form className="auth-form" onSubmit={(e) => onSubmit(e)}>
         <input
           className="simple-text-input"
           type="email"
           placeholder="Email"
           name="email"
           value={email}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         ></input>
         <div className="forgot-password">
           Enter your email to request a password reset.
@@ -57,11 +57,11 @@ const RequestPasswordResetEmail = ({
 
 RequestPasswordResetEmail.propTypes = {
   requestPasswordResetEmail: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps, { requestPasswordResetEmail })(

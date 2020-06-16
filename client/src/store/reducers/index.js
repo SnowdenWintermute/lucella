@@ -4,5 +4,6 @@ import alert from "./alert";
 import auth from "./auth";
 import profile from "./profile";
 import chat from "./chat";
+import gameUi from "./game-ui";
 
-export default combineReducers({ alert, auth, profile, chat });
+export default combineReducers({ alert, auth, profile, chat, gameUi });

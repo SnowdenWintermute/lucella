@@ -1,23 +1,23 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { setAlert } from "../../actions/alert";
-import { resetPassword } from "../../actions/auth";
+import { setAlert } from "../../store/actions/alert";
+import { resetPassword } from "../../store/actions/auth";
 import PropTypes from "prop-types";
 
 const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
   const [formData, setFormData] = useState({
     password: "",
-    password2: ""
+    password2: "",
   });
 
   const { password, password2 } = formData;
   const token = match.params.token;
 
-  const onChange = e =>
+  const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = async e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== password2) {
       setAlert("Passwords do not match.", "danger");
@@ -26,7 +26,7 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
         password,
         password2,
         token,
-        history
+        history,
       });
     }
   };
@@ -35,14 +35,14 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
     <div className="auth-frame">
       <h1 className="auth-brand-header">Lucella.org</h1>
       <h3 className="auth-header">Reset Password</h3>
-      <form className="auth-form" onSubmit={e => onSubmit(e)}>
+      <form className="auth-form" onSubmit={(e) => onSubmit(e)}>
         <input
           className="simple-text-input"
           type="password"
           name="password"
           placeholder="Password"
           value={password}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         ></input>
         <input
           className="simple-text-input"
@@ -50,7 +50,7 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
           name="password2"
           placeholder="Password2"
           value={password2}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         ></input>
         <div className="auth-bottom-links">
           <Link to="/login">Log in to existing account</Link>
@@ -64,11 +64,11 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
 PasswordReset.propTypes = {
   setAlert: PropTypes.func.isRequired,
   resetPassword: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool
+  isAuthenticated: PropTypes.bool,
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 export default connect(mapStateToProps, { setAlert, resetPassword })(
