@@ -43,7 +43,7 @@ const clientRequestsToJoinRoom = ({
     roomName: roomToJoin,
   });
 
-  io.in(roomToJoin).emit("updateRoomUserList", roomToJoinForClient);
+  io.in(roomToJoin).emit("updateChatRoom", roomToJoinForClient);
   socket.emit("newMessage", {
     author: "Server",
     style: "private",

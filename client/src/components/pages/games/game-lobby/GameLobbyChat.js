@@ -10,9 +10,11 @@ const GameLobbyChat = ({ socket, username }) => {
   const gameSetupScreenIsOpen = useSelector(
     (state) => state.gameUi.gameSetupScreen.isOpen
   );
-  const currentChatRoom = useSelector((state) => state.currentChatRoom);
+  const currentChatRoomName = useSelector(
+    (state) => state.chat.currentChatRoomName
+  );
   const currentChatRoomMessages = useSelector(
-    (state) => state.chat.messageListsByRoom[currentChatRoom]
+    (state) => state.chat.messageListsByRoom[currentChatRoomName]
   );
 
   useEffect(() => {
@@ -29,20 +31,22 @@ const GameLobbyChat = ({ socket, username }) => {
   useEffect(() => {
     if (!socket) return;
     socket.on("newMessage", async (message) => {
-      const msgForReduxStore = { message, room: currentChatRoom };
+      console.log(message);
+      const msgForReduxStore = { message, room: currentChatRoomName };
       dispatch(chatActions.newChatMessage(msgForReduxStore));
     });
     return () => {
       socket.off("newMessage");
     };
-  }, [socket, currentChatRoom, dispatch]);
+  }, [socket, currentChatRoomName, dispatch]);
 
   // sending a message
   const sendNewMessage = (message) => {
     if (message === "") return;
+    console.log("sending message in room " + currentChatRoomName);
     const author = username;
     const messageToSend = {
-      currentChatRoom,
+      currentChatRoomName,
       author,
       style: "normal",
       message,

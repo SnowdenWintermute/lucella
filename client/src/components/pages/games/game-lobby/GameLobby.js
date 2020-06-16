@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { setAlert } from "../../../../store/actions/alert";
 import GameLobbyChat from "./GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
@@ -15,7 +15,7 @@ import { newChatMessage } from "../../../../store/actions/chat";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 
 const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
-  const [currentChatRoom, setCurrentChatRoom] = useState(defaultChatRoom);
+  const dispatch = useDispatch();
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
     false
@@ -39,6 +39,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
       socket.disconnect();
     };
   }, [localStorage.token]);
+
   useEffect(() => {
     socket.on("authenticationFinished", (data) => {
       console.log("authenticationFinished");
@@ -46,11 +47,18 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     });
   });
 
+  // errors
+  useEffect(() => {
+    socket.on("errorMessage", (data) => {
+      console.log(data);
+    });
+  });
+
   // join initial room
   useEffect(() => {
     if (!authenticating) {
       socket.emit("clientRequestsToJoinRoom", {
-        roomToJoin: currentChatRoom,
+        roomToJoin: defaultChatRoom,
       });
     }
   }, [authenticating]);

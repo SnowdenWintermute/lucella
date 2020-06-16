@@ -19,14 +19,15 @@ const ChannelBar = ({ socket, defaultChatRoom }) => {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("updateRoomUserList", (data) => {
+    socket.on("updateChatRoom", (data) => {
+      console.log(data);
       setNewRoomLoading(false);
       const { roomName, currentUsers } = data;
       dispatch(chatActions.setCurrentChatRoomUsers(currentUsers));
       dispatch(chatActions.setCurrentChatRoomName(roomName));
     });
     return () => {
-      socket.off("updateRoomUserList");
+      socket.off("updateChatRoom");
     };
   }, [socket, dispatch]);
 

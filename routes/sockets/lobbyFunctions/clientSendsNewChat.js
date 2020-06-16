@@ -1,7 +1,9 @@
 function clientSendsNewChat({ io, data, currentUser }) {
-  const { currentChatRoom, style, message } = data;
+  const { currentChatRoomName, style, message } = data;
+  console.log(data.currentChatRoomName);
+  console.log(data.message);
   const author = currentUser.name;
-  io.in(currentChatRoom).emit("newMessage", {
+  io.in(currentChatRoomName).emit("newMessage", {
     author,
     style,
     message,

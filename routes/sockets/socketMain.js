@@ -69,6 +69,7 @@ io.sockets.on("connect", async (socket) => {
     // here
   });
   socket.on("clientSendsNewChat", (data) => {
+    console.log("client sent chat message " + data);
     clientSendsNewChat({ io, socket, data, currentUser });
   });
   socket.on("disconnect", () => {

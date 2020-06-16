@@ -30,7 +30,7 @@ function removeSocketFromRoom({ io, socket, connectedSockets, chatRooms }) {
       chatRooms,
       roomName: roomToLeave,
     });
-    io.in(roomToLeave).emit("updateRoomUserList", roomForClient);
+    io.in(roomToLeave).emit("updateChatRoom", roomForClient);
   }
 }
 module.exports = removeSocketFromRoom;
