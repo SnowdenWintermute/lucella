@@ -10,7 +10,6 @@ import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import Modal from "../../../common/modal/Modal";
 import io from "socket.io-client";
-import { newChatMessage } from "../../../../store/actions/chat";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 
@@ -20,10 +19,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
     false
   );
-
   const [authenticating, setAuthenticating] = useState(true);
-  const [currentGame, setCurrentGame] = useState("");
-
   const username = user ? user.name : "Anon";
   let authToken = null;
 
@@ -114,15 +110,11 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   );
 };
 
-GameLobby.propTypes = {
-  newChatMessage: PropTypes.func.isRequired,
-};
+GameLobby.propTypes = {};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
   chat: state.chat,
 });
 
-export default connect(mapStateToProps, { newChatMessage, setAlert })(
-  GameLobby
-);
+export default connect(mapStateToProps, { setAlert })(GameLobby);

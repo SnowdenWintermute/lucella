@@ -15,9 +15,11 @@ export default function (state = initialState, action) {
   switch (type) {
     case NEW_CHAT_MESSAGE:
       const { room, message } = payload;
-      if (!state[room]) {
+      if (!state.messageListsByRoom[room]) {
         state.messageListsByRoom[room] = [message];
       } else {
+        console.log("adding msg to store");
+        console.log(state.messageListsByRoom[room]);
         state.messageListsByRoom[room] = [
           ...state.messageListsByRoom[room],
           message,
