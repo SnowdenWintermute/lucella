@@ -1,9 +1,9 @@
 import {
   VIEW_GAMES_LIST_CLICKED,
-  SETUP_NEW_GAME_CLICKED,
-  CANCEL_GAME_SETUP_CLICKED,
+  OPEN_PRE_GAME_SCREEN,
+  CLOSE_PRE_GAME_SCREEN,
   SET_CURRENT_GAME,
-  CANCEL_VIEW_GAMES_LIST_CLICKED,
+  CLOSE_GAME_LIST,
 } from "./types";
 
 export const viewGamesListClicked = () => (dispatch) => {
@@ -11,19 +11,19 @@ export const viewGamesListClicked = () => (dispatch) => {
     type: VIEW_GAMES_LIST_CLICKED,
   });
 };
-export const cancelViewGamesListClicked = () => (dispatch) => {
+export const cancelViewGamesList = () => (dispatch) => {
   dispatch({
-    type: CANCEL_VIEW_GAMES_LIST_CLICKED,
+    type: CLOSE_GAME_LIST,
   });
 };
-export const setupNewGameClicked = () => (dispatch) => {
+export const openPreGameScreen = () => (dispatch) => {
   dispatch({
-    type: SETUP_NEW_GAME_CLICKED,
+    type: OPEN_PRE_GAME_SCREEN,
   });
 };
-export const cancelGameSetupClicked = () => (dispatch) => {
+export const closePreGameScreen = () => (dispatch) => {
   dispatch({
-    type: CANCEL_GAME_SETUP_CLICKED,
+    type: CLOSE_PRE_GAME_SCREEN,
   });
 };
 export const setCurrentGame = (gameObject) => (dispatch) => {

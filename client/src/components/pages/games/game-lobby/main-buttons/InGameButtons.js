@@ -9,7 +9,7 @@ const InGameButtons = ({ socket }) => {
     cancelGameSetupButtonDisplayClass,
     setCancelGameSetupButtonDisplayClass,
   ] = useState("chat-button-hidden");
-  const [gameListButtonDisplayClass, setGameListButtonDisplayClass] = useState(
+  const [goBackButtonDisplayClass, setGoBackButtonDisplayClass] = useState(
     "chat-button-hidden"
   );
   const [
@@ -18,38 +18,41 @@ const InGameButtons = ({ socket }) => {
   ] = useState("chat-button-hidden");
   const currentGame = useSelector((state) => state.gameUi.currentGame);
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
-  const gameSetupScreenIsOpen = useSelector(
-    (state) => state.gameUi.gameSetupScreen.isOpen
+  const preGameScreenIsOpen = useSelector(
+    (state) => state.gameUi.preGameScreen.isOpen
   );
 
   // button visibility
   useEffect(() => {
-    if (gameListIsOpen) setGameListButtonDisplayClass("");
-    if (!gameListIsOpen) setGameListButtonDisplayClass("chat-button-hidden");
-    if (gameSetupScreenIsOpen) setCancelGameSetupButtonDisplayClass("");
-    if (!gameSetupScreenIsOpen)
+    if (gameListIsOpen) setGoBackButtonDisplayClass("");
+    if (!gameListIsOpen) setGoBackButtonDisplayClass("chat-button-hidden");
+    if (preGameScreenIsOpen) setCancelGameSetupButtonDisplayClass("");
+    if (!preGameScreenIsOpen)
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     if (currentGame) {
       setLeaveGameButtonDisplayClass("");
+      setGoBackButtonDisplayClass("chat-button-hidden");
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     }
     if (!currentGame) setLeaveGameButtonDisplayClass("chat-button-hidden");
-  }, [gameListIsOpen, gameSetupScreenIsOpen, currentGame]);
+  }, [gameListIsOpen, preGameScreenIsOpen, currentGame]);
 
   // go back from list
   const onViewGamesListBackClick = () => {
-    dispatch(gameUiActions.cancelViewGamesListClicked());
+    dispatch(gameUiActions.cancelViewGamesList());
+    // request update of rooms list (this is needed to see rooms that were created before this socket joined)
+    socket.emit("clientRequestsUpdateOfGameRoomList");
   };
 
   // cancel game setup
   const onCancelGameSetupClick = () => {
-    dispatch(gameUiActions.cancelGameSetupClicked());
+    dispatch(gameUiActions.closePreGameScreen());
     console.log("client cancelled setup of " + currentGame);
   };
 
   // leave current game
   const onLeaveGameClick = () => {
-    dispatch(gameUiActions.cancelGameSetupClicked());
+    dispatch(gameUiActions.closePreGameScreen());
     console.log("client requested to leave game " + currentGame.gameName);
     socket.emit("clientLeavesGame", currentGame.gameName);
   };
@@ -74,7 +77,7 @@ const InGameButtons = ({ socket }) => {
       </li>
       <li>
         <button
-          className={`button button-basic game-lobby-top-buttons__button ${gameListButtonDisplayClass}`}
+          className={`button button-basic game-lobby-top-buttons__button ${goBackButtonDisplayClass}`}
           onClick={onViewGamesListBackClick}
         >
           Back

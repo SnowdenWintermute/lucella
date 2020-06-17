@@ -13,6 +13,8 @@ function clientHostsNewGame({
   gameRooms,
   gameName,
 }) {
+  console.log("from clientHostsGame 16");
+  console.log(connectedSockets);
   // if their socket is not already in a game and no game by this name exists, create the game room
   if (!connectedSockets[socket.id].isInGame) {
     if (!gameRooms[gameName]) {

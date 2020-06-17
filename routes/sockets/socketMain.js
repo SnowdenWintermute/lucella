@@ -2,6 +2,7 @@ const io = require("../../expressServer").io;
 const jwtAuth = require("socketio-jwt-auth");
 const clientRequestsToJoinRoom = require("./lobbyFunctions/clientRequestsToJoinRoom");
 const clientHostsNewGame = require("./lobbyFunctions/clientHostsNewGame");
+const clientJoinsGame = require("./lobbyFunctions/clientJoinsGame");
 const clientSendsNewChat = require("./lobbyFunctions/clientSendsNewChat");
 const socketConnects = require("./generalFunctions/socketConnects");
 const socketDisconnect = require("./generalFunctions/socketDisconnect");
@@ -19,7 +20,11 @@ let connectedGuests = {};
 
 io.sockets.on("connect", async (socket) => {
   let currentUser = {};
-  connectedSockets[socket.id] = { username: null, currentRoom: null };
+  connectedSockets[socket.id] = {
+    username: null,
+    currentRoom: null,
+    socketId: socket.id,
+  };
   currentUser = await socketConnects({ socket, connectedSockets });
   socket.emit("authenticationFinished", null);
   socket.emit("gameListUpdate", gameRooms);
@@ -30,6 +35,9 @@ io.sockets.on("connect", async (socket) => {
       connectedGuests,
     });
   }
+  socket.on("clientRequestsUpdateOfGameRoomList", () => {
+    socket.emit("gameListUpdate", gameRooms);
+  });
   socket.on("clientRequestsToJoinRoom", (data) => {
     const roomToJoin = data.roomToJoin.toLowerCase();
     chatRooms = clientRequestsToJoinRoom({
@@ -65,11 +73,18 @@ io.sockets.on("connect", async (socket) => {
     });
   });
   socket.on("clientJoinsGame", (data) => {
-    console.log("client clicked to join game " + data);
-    // here
+    const { gameName } = data;
+    clientJoinsGame({
+      io,
+      socket,
+      connectedSockets,
+      currentUser,
+      chatRooms,
+      gameRooms,
+      gameName,
+    });
   });
   socket.on("clientSendsNewChat", (data) => {
-    console.log("client sent chat message " + data);
     clientSendsNewChat({ io, socket, data, currentUser });
   });
   socket.on("disconnect", () => {

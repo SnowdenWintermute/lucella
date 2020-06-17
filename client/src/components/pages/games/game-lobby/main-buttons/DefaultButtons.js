@@ -3,26 +3,26 @@ import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import * as gameUiActions from "../../../../../store/actions/game-ui";
 
-const DefaultButtons = ({ showChangeChannelModal }) => {
+const DefaultButtons = ({ showChangeChannelModal, socket }) => {
   const dispatch = useDispatch();
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
-  const gameSetupScreenIsOpen = useSelector(
-    (state) => state.gameUi.gameSetupScreen.isOpen
+  const preGameScreenIsOpen = useSelector(
+    (state) => state.gameUi.preGameScreen.isOpen
   );
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
 
   // manage button visibility
   useEffect(() => {
-    if (gameListIsOpen || gameSetupScreenIsOpen) {
+    if (gameListIsOpen || preGameScreenIsOpen) {
       setChatButtonDisplayClass("chat-button-hidden");
       setChatButtonsDisplayClass("chat-buttons-hidden");
     }
-    if (!gameListIsOpen && !gameSetupScreenIsOpen) {
+    if (!gameListIsOpen && !preGameScreenIsOpen) {
       setChatButtonDisplayClass("");
       setChatButtonsDisplayClass("");
     }
-  }, [gameListIsOpen, gameSetupScreenIsOpen]);
+  }, [gameListIsOpen, preGameScreenIsOpen]);
 
   // change chat channel
   const onChannelClick = () => {
@@ -31,12 +31,13 @@ const DefaultButtons = ({ showChangeChannelModal }) => {
 
   // view list of games
   const onViewGamesListClick = () => {
+    socket.emit("clientRequestsUpdateOfGameRoomList");
     dispatch(gameUiActions.viewGamesListClicked());
   };
 
   // pre-game host screen
-  const handleSetupNewGame = () => {
-    dispatch(gameUiActions.setupNewGameClicked());
+  const onSetupNewGameClick = () => {
+    dispatch(gameUiActions.openPreGameScreen());
   };
 
   return (
@@ -59,7 +60,7 @@ const DefaultButtons = ({ showChangeChannelModal }) => {
       <li>
         <button
           className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
-          onClick={handleSetupNewGame}
+          onClick={onSetupNewGameClick}
         >
           Host
         </button>

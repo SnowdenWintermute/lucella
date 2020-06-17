@@ -22,6 +22,7 @@ const clientRequestsToJoinRoom = ({
   }
   // connectedSockets object:
   connectedSockets[socket.id] = {
+    ...connectedSockets[socket.id],
     username,
     currentRoom: roomToJoin,
   };

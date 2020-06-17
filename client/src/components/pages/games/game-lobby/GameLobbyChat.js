@@ -7,8 +7,8 @@ const GameLobbyChat = ({ socket, username }) => {
   const [chatInput, setChatInput] = useState("");
   const [chatClass, setChatClass] = useState("");
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
-  const gameSetupScreenIsOpen = useSelector(
-    (state) => state.gameUi.gameSetupScreen.isOpen
+  const preGameScreenIsOpen = useSelector(
+    (state) => state.gameUi.preGameScreen.isOpen
   );
   const currentChatRoomName = useSelector(
     (state) => state.chat.currentChatRoomName
@@ -19,9 +19,9 @@ const GameLobbyChat = ({ socket, username }) => {
 
   useEffect(() => {
     if (gameListIsOpen) setChatClass("viewing-game-list");
-    if (gameSetupScreenIsOpen) setChatClass("game-setup");
-    if (!gameListIsOpen && !gameSetupScreenIsOpen) setChatClass("");
-  }, [gameListIsOpen, gameSetupScreenIsOpen]);
+    if (preGameScreenIsOpen) setChatClass("game-setup");
+    if (!gameListIsOpen && !preGameScreenIsOpen) setChatClass("");
+  }, [gameListIsOpen, preGameScreenIsOpen]);
 
   const onChange = (e) => {
     setChatInput(e.target.value);

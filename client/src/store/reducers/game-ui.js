@@ -1,9 +1,9 @@
 import {
   VIEW_GAMES_LIST_CLICKED,
-  CANCEL_GAME_SETUP_CLICKED,
-  SETUP_NEW_GAME_CLICKED,
+  CLOSE_PRE_GAME_SCREEN,
+  OPEN_PRE_GAME_SCREEN,
   SET_CURRENT_GAME,
-  CANCEL_VIEW_GAMES_LIST_CLICKED,
+  CLOSE_GAME_LIST,
 } from "../actions/types";
 
 const initialState = {
@@ -11,7 +11,7 @@ const initialState = {
   gameList: {
     isOpen: false,
   },
-  gameSetupScreen: {
+  preGameScreen: {
     isOpen: false,
   },
 };
@@ -22,14 +22,14 @@ export default function (state = initialState, action) {
     case VIEW_GAMES_LIST_CLICKED:
       state.gameList.isOpen = true;
       return state;
-    case CANCEL_VIEW_GAMES_LIST_CLICKED:
+    case CLOSE_GAME_LIST:
       state.gameList.isOpen = false;
       return state;
-    case SETUP_NEW_GAME_CLICKED:
-      state.gameSetupScreen.isOpen = true;
+    case OPEN_PRE_GAME_SCREEN:
+      state.preGameScreen.isOpen = true;
       return state;
-    case CANCEL_GAME_SETUP_CLICKED:
-      state.gameSetupScreen.isOpen = false;
+    case CLOSE_PRE_GAME_SCREEN:
+      state.preGameScreen.isOpen = false;
       return state;
     case SET_CURRENT_GAME:
       state.currentGame = payload;

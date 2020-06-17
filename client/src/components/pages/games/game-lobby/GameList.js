@@ -2,22 +2,34 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import * as alertActions from "../../../../store/actions/alert";
+import * as gameUiActions from "../../../../store/actions/game-ui";
 
 const GameList = ({ socket }) => {
   const dispatch = useDispatch();
   const [gameList, setGameList] = useState({});
+  const currentGame = useSelector((state) => state.gameUi.currentGame);
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
   const gameListDisplayClass = !gameListIsOpen && "height-0-hidden";
 
   useEffect(() => {
     if (!socket) return;
     socket.on("gameListUpdate", (data) => {
+      console.log("game list updated");
+      console.log(data);
       setGameList(data);
     });
     return () => {
       socket.off("gameListUpdate");
     };
   }, [socket]);
+
+  // cancel viewing game list if in a game
+  useEffect(() => {
+    if (currentGame) {
+      dispatch(gameUiActions.cancelViewGamesList());
+      dispatch(gameUiActions.openPreGameScreen());
+    }
+  }, [currentGame]);
 
   // join games
   const onJoinGameClick = (gameName) => {

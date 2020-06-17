@@ -10,6 +10,8 @@ function clientJoinsGame({
   gameName,
 }) {
   const username = currentUser.name;
+  console.log("from clientJoinsGame 13");
+  console.log(connectedSockets);
   try {
     // can't join a game that doesn't exist
     if (!gameRooms[gameName])
@@ -19,7 +21,7 @@ function clientJoinsGame({
       if (!gameRooms[gameName].players.host) {
         gameRooms[gameName].players.host = connectedSockets[socket.id];
         console.log(username + " joined game " + gameName + " as host");
-      } else if (!gameRooms[gameName.players.challenger]) {
+      } else if (!gameRooms[gameName].players.challenger) {
         // can't join game hosted by self
         if (
           gameRooms[gameName].players.host.username ===
@@ -27,11 +29,11 @@ function clientJoinsGame({
         )
           return socket.emit(
             "errorMessage",
-            "You can not join a game hosted by yourself",
+            "You can not join a game hosted by yourself"
           );
         // otherwise join as the challenger
         console.log(username + " joined game " + gameName + " as challenger");
-        gameRooms[gameName.players.challenger] = connectedSockets[socket.id];
+        gameRooms[gameName].players.challenger = connectedSockets[socket.id];
       } else {
         return socket.emit("errorMessage", "That game is currently full");
       }
@@ -47,7 +49,7 @@ function clientJoinsGame({
       io.sockets.emit("gameListUpdate", gameRooms);
       io.to(`game-${gameName}`).emit(
         "currentGameRoomUpdate",
-        gameRooms[gameName],
+        gameRooms[gameName]
       );
       currentUser.currentGameName = gameName;
       console.log("from clientJoinsGame:");

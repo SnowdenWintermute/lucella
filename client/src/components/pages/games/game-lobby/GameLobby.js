@@ -46,7 +46,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   // errors
   useEffect(() => {
     socket.on("errorMessage", (data) => {
-      console.log(data);
+      console.log("error from server: " + data);
     });
   });
 

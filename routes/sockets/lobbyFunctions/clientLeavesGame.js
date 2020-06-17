@@ -21,9 +21,18 @@ function clientLeavesGame({
     if (gameRooms[gameName].players.host.username === username) {
       console.log("Host leaving");
       io.to(`game-${gameName}`).emit("currentGameRoomUpdate", null);
+      io.to(`game-${gameName}`).emit("gameClosedByHost", null);
+      io.to(`game-${gameName}`).emit("newMessage", {
+        author: "Server",
+        style: "private",
+        message: `Game ${gameName} closed by host.`,
+        timeStamp: Date.now(),
+      });
       if (gameRooms[gameName].players.challenger) {
         let socketIdToRemove = gameRooms[gameName].players.challenger.socketId;
         connectedSockets[socketIdToRemove].isInGame = false;
+        console.log("removing challenger");
+        console.log(connectedSockets[socketIdToRemove]);
         // send challenger to prev room
         const prevRoom = connectedSockets[socketIdToRemove].previousRoom;
         socketRequestsToJoinRoom({
@@ -36,9 +45,7 @@ function clientLeavesGame({
           isDisconnecting,
         });
       }
-      connectedSockets[socket.id].isInGame = false;
       delete gameRooms[gameName];
-      console.log(gameRooms);
       // CHALLENGER LEAVING
     } else if (gameRooms[gameName].players.challenger) {
       console.log("challenger leaving");
@@ -47,7 +54,8 @@ function clientLeavesGame({
         socket.emit("currentGameRoomUpdate", null);
       }
     }
-    // EITHER LEAVES
+    // EITHER HOST OR CHALLENGER LEAVES
+    connectedSockets[socket.id].isInGame = false;
     const prevRoom = connectedSockets[socket.id].previousRoom;
     socketRequestsToJoinRoom({
       io,
@@ -61,7 +69,7 @@ function clientLeavesGame({
 
     io.to(`game-${gameName}`).emit(
       "currentGameRoomUpdate",
-      gameRooms[gameName],
+      gameRooms[gameName]
     );
     io.sockets.emit("gameListUpdate", gameRooms);
   } catch (err) {

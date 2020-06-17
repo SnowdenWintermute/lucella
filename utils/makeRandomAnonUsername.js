@@ -11,6 +11,7 @@ function makeRandomAnonUsername({ socket, connectedSockets, connectedGuests }) {
       connectedSockets: [socket.id],
     };
     connectedSockets[socket.id] = {
+      ...connectedSockets[socket.id],
       username: randomAnonUsername,
       uuid: uuid.v4(),
     };

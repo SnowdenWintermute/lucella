@@ -7,7 +7,10 @@ import InGameButtons from "./InGameButtons";
 const MainButtons = ({ socket, showChangeChannelModal }) => {
   return (
     <div className="game-lobby-top-buttons">
-      <DefaultButtons showChangeChannelModal={showChangeChannelModal} />
+      <DefaultButtons
+        socket={socket}
+        showChangeChannelModal={showChangeChannelModal}
+      />
       <InGameButtons socket={socket} />
     </div>
   );

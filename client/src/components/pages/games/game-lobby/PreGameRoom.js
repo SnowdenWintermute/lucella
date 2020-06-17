@@ -7,8 +7,8 @@ import * as alertActions from "../../../../store/actions/alert";
 
 const PreGameRoom = ({ socket }) => {
   const dispatch = useDispatch();
-  const gameSetupScreenIsOpen = useSelector(
-    (state) => state.gameUi.gameSetupScreen.isOpen
+  const preGameScreen = useSelector(
+    (state) => state.gameUi.preGameScreen.isOpen
   );
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
     "height-0-hidden"
@@ -19,9 +19,9 @@ const PreGameRoom = ({ socket }) => {
 
   // element's own visibility/showclass
   useEffect(() => {
-    if (gameSetupScreenIsOpen) setPreGameRoomDisplayClass("");
-    if (!gameSetupScreenIsOpen) setPreGameRoomDisplayClass("height-0-hidden");
-  }, [gameSetupScreenIsOpen]);
+    if (preGameScreen) setPreGameRoomDisplayClass("");
+    if (!preGameScreen) setPreGameRoomDisplayClass("height-0-hidden");
+  }, [preGameScreen]);
 
   // players in room and their ready status/ the countdown
   useEffect(() => {
@@ -29,6 +29,9 @@ const PreGameRoom = ({ socket }) => {
     socket.on("currentGameRoomUpdate", (data) => {
       console.log(data);
       dispatch(gameUiActions.setCurrentGame(data));
+    });
+    socket.on("gameClosedByHost", () => {
+      dispatch(gameUiActions.closePreGameScreen());
     });
     return () => {
       socket.off("currentGameRoomUpdate");
@@ -62,7 +65,7 @@ const PreGameRoom = ({ socket }) => {
           <tr>
             <td>
               {currentGame.players.challenger
-                ? currentGame.players.challenger
+                ? currentGame.players.challenger.username
                 : "Awaiting challenger..."}
             </td>
             <td></td>
