@@ -33,11 +33,23 @@ const PreGameRoom = ({ socket }) => {
     socket.on("gameClosedByHost", () => {
       dispatch(gameUiActions.closePreGameScreen());
     });
+    socket.on("updateOfCurrentRoomPlayerReadyStatus", ({ playersReady }) => {
+      console.log(playersReady);
+      console.log(currentGame);
+      dispatch(
+        gameUiActions.setCurrentGame({
+          ...currentGame,
+          playersReady: { ...currentGame.playersReady, ...playersReady },
+        })
+      );
+    });
     return () => {
       socket.off("currentGameRoomUpdate");
-      dispatch(gameUiActions.setCurrentGame(null));
+      socket.off("gameClosedByHost");
+      socket.off("updateOfCurrentRoomPlayerReadyStatus");
+      console.log("PreGameRoom unmounted");
     };
-  }, [socket]);
+  }, [socket, dispatch, currentGame]);
 
   // 'make public' actually request to server to host a game
   const makeGamePublic = (e) => {
@@ -50,6 +62,12 @@ const PreGameRoom = ({ socket }) => {
     }
   };
 
+  // ready up
+  const onReadyClick = () => {
+    console.log(currentGame);
+    socket.emit("clientClicksReady", { gameName: currentGame.gameName });
+  };
+
   const preGameRoomMenu = currentGame ? (
     <Fragment>
       <h3>Game: {currentGame.gameName}</h3>
@@ -59,7 +77,9 @@ const PreGameRoom = ({ socket }) => {
           <tr>
             <td>{currentGame.players.host.username}</td>
             <td>
-              <SuccessIcon className="alert-icon"></SuccessIcon>
+              {currentGame.playersReady.host && (
+                <SuccessIcon className="alert-icon"></SuccessIcon>
+              )}
             </td>
           </tr>
           <tr>
@@ -68,11 +88,17 @@ const PreGameRoom = ({ socket }) => {
                 ? currentGame.players.challenger.username
                 : "Awaiting challenger..."}
             </td>
-            <td></td>
+            <td>
+              {currentGame.playersReady.challenger && (
+                <SuccessIcon className="alert-icon"></SuccessIcon>
+              )}
+            </td>
           </tr>
         </tbody>
       </table>
-      <button className="button button-primary">READY</button>
+      <button className="button button-primary" onClick={onReadyClick}>
+        READY
+      </button>
     </Fragment>
   ) : (
     <form

@@ -14,8 +14,6 @@ const GameList = ({ socket }) => {
   useEffect(() => {
     if (!socket) return;
     socket.on("gameListUpdate", (data) => {
-      console.log("game list updated");
-      console.log(data);
       setGameList(data);
     });
     return () => {
@@ -29,7 +27,7 @@ const GameList = ({ socket }) => {
       dispatch(gameUiActions.cancelViewGamesList());
       dispatch(gameUiActions.openPreGameScreen());
     }
-  }, [currentGame]);
+  }, [currentGame, dispatch]);
 
   // join games
   const onJoinGameClick = (gameName) => {

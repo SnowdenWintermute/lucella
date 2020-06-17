@@ -1,4 +1,6 @@
 const clientRequestsToJoinRoom = require("./clientRequestsToJoinRoom");
+const generateGameForClient = require("../../../utils/generateGameForClient");
+const generateGamesForClient = require("../../../utils/generateGamesForClient");
 
 function clientJoinsGame({
   io,
@@ -46,14 +48,16 @@ function clientJoinsGame({
         username,
       });
       connectedSockets[socket.id].isInGame = true;
-      io.sockets.emit("gameListUpdate", gameRooms);
+      gamesForClient = generateGamesForClient({ gamesObject: gameRooms });
+      io.sockets.emit("gameListUpdate", gamesForClient);
+      gameRoomForClient = generateGameForClient({
+        gameObject: gameRooms[gameName],
+      });
       io.to(`game-${gameName}`).emit(
         "currentGameRoomUpdate",
         gameRooms[gameName]
       );
       currentUser.currentGameName = gameName;
-      console.log("from clientJoinsGame:");
-      console.log(gameRooms[gameName].players);
     } else {
       socket.emit("errorMessage", "You are already in a game");
     }

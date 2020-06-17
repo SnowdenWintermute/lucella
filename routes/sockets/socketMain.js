@@ -3,6 +3,7 @@ const jwtAuth = require("socketio-jwt-auth");
 const clientRequestsToJoinRoom = require("./lobbyFunctions/clientRequestsToJoinRoom");
 const clientHostsNewGame = require("./lobbyFunctions/clientHostsNewGame");
 const clientJoinsGame = require("./lobbyFunctions/clientJoinsGame");
+const clientClicksReady = require("./lobbyFunctions/clientClicksReady");
 const clientSendsNewChat = require("./lobbyFunctions/clientSendsNewChat");
 const socketConnects = require("./generalFunctions/socketConnects");
 const socketDisconnect = require("./generalFunctions/socketDisconnect");
@@ -80,6 +81,15 @@ io.sockets.on("connect", async (socket) => {
       connectedSockets,
       currentUser,
       chatRooms,
+      gameRooms,
+      gameName,
+    });
+  });
+  socket.on("clientClicksReady", ({ gameName }) => {
+    clientClicksReady({
+      io,
+      socket,
+      connectedSockets,
       gameRooms,
       gameName,
     });

@@ -18,7 +18,6 @@ const clientRequestsToJoinRoom = ({
   if (!chatRooms[roomToJoin]) {
     chatRooms[roomToJoin] = { roomName: roomToJoin, currentUsers: {} };
     console.log(roomToJoin + " created");
-    console.log(chatRooms[roomToJoin]);
   }
   // connectedSockets object:
   connectedSockets[socket.id] = {

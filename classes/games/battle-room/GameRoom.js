@@ -17,7 +17,7 @@ class GameRoom {
       hostOrbs: [],
       challengerOrbs: [],
     };
-    this.playersReady = [];
+    this.playersReady = { host: false, challenger: false };
     this.score = {
       host: 0,
       challenger: 0,

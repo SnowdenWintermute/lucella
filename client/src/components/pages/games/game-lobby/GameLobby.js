@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { connect, useDispatch } from "react-redux";
+import { connect } from "react-redux";
 import { setAlert } from "../../../../store/actions/alert";
 import GameLobbyChat from "./GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
@@ -14,7 +14,6 @@ import io from "socket.io-client";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 
 const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
-  const dispatch = useDispatch();
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
     false
@@ -57,7 +56,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
         roomToJoin: defaultChatRoom,
       });
     }
-  }, [authenticating]);
+  }, [authenticating, defaultChatRoom]);
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
   const setParentDisplay = (status) => {
@@ -110,7 +109,9 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   );
 };
 
-GameLobby.propTypes = {};
+GameLobby.propTypes = {
+  defaultChatRoom: PropTypes.string,
+};
 
 const mapStateToProps = (state) => ({
   auth: state.auth,

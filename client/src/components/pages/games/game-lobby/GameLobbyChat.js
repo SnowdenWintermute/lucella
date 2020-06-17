@@ -66,7 +66,7 @@ const GameLobbyChat = ({ socket, username }) => {
       return (
         <li
           className={`chat-message chat-message-${message.style}`}
-          key={message.timeStamp}
+          key={message.timeStamp + " " + message.message}
         >
           {message.author} : {message.message}
         </li>
