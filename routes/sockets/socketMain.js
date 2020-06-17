@@ -16,6 +16,7 @@ const Orb = require("../../classes/games/battle-room/Orb");
 
 let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
+let gameCountdownIntervals = {};
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: false}
 let connectedGuests = {};
 
@@ -92,6 +93,7 @@ io.sockets.on("connect", async (socket) => {
       connectedSockets,
       gameRooms,
       gameName,
+      gameCountdownIntervals,
     });
   });
   socket.on("clientSendsNewChat", (data) => {

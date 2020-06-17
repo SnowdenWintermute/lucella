@@ -47,7 +47,6 @@ const PreGameRoom = ({ socket }) => {
       socket.off("currentGameRoomUpdate");
       socket.off("gameClosedByHost");
       socket.off("updateOfCurrentRoomPlayerReadyStatus");
-      console.log("PreGameRoom unmounted");
     };
   }, [socket, dispatch, currentGame]);
 
