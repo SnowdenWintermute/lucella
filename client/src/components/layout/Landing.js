@@ -1,8 +1,15 @@
 import React from "react";
 
-const Landing = props => {
+const Landing = (props) => {
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "80%",
+      }}
+    >
       <h1>Lucella (Latin) : Small gains or slight profits.</h1>
     </div>
   );

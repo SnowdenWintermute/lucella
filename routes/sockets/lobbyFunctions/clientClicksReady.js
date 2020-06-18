@@ -8,6 +8,7 @@ function clientClicksReady({
   gameRooms,
   gameName,
   gameCountdownIntervals,
+  defaultCountdownNumber,
 }) {
   if (!connectedSockets[socket.id].isInGame) return;
   if (!gameRooms[gameName]) return;
@@ -25,9 +26,10 @@ function clientClicksReady({
       .playersReady.challenger;
   }
   // send update of who is currently ready
-  io.to(`game-${gameName}`).emit("updateOfCurrentRoomPlayerReadyStatus", {
-    playersReady: gameRooms[gameName].playersReady,
-  });
+  io.to(`game-${gameName}`).emit(
+    "updateOfCurrentRoomPlayerReadyStatus",
+    gameRooms[gameName].playersReady
+  );
   // if both host and challenger are ready, start the countdown
   if (
     gameRooms[gameName].playersReady.host &&
@@ -40,8 +42,10 @@ function clientClicksReady({
   } else {
     // cancel current countdown if one exists
     cancelGameCountdown({
+      io,
       gameRoom: gameRooms[gameName],
       gameCountdownIntervals,
+      defaultCountdownNumber,
     });
   }
 }

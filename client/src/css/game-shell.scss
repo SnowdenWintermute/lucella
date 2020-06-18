@@ -17,7 +17,7 @@ $gameListHeight: 300px;
   display: grid;
   grid-template-columns: calc(100% - 200px) 200px;
   border: 1px solid color(textPrimary);
-  grid-template-rows: 60px calc(100% - 60px);
+  grid-template-rows: 60px 100%;
 }
 .game-lobby-main-window {
   grid-row-start: 2;
@@ -31,12 +31,13 @@ $gameListHeight: 300px;
 .game-list-frame {
   display: flex;
   width: 100%;
+  height: auto;
   border-right: 1px solid color(textPrimary);
   transition: 0.3s;
   overflow: hidden;
 }
 .pre-game-room {
-  height: $preGameRoomHeight;
+  // height: $preGameRoomHeight;
 }
 .game-list-frame {
   height: $gameListHeight;
@@ -92,7 +93,6 @@ $gameListHeight: 300px;
   grid-row-end: 3;
   align-self: end;
   height: 100%;
-  min-height: 200px;
   padding: 10px;
   padding-top: 20px;
   display: flex;
@@ -103,7 +103,7 @@ $gameListHeight: 300px;
 }
 .game-lobby-chat-stream-holder.game-setup {
   border-top: 1px solid color(textPrimary);
-  height: calc(100% - #{$preGameRoomHeight});
+  // height: calc(100% - #{$preGameRoomHeight});
 }
 .game-lobby-chat-stream-holder.viewing-game-list {
   border-top: 1px solid color(textPrimary);

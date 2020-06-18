@@ -17,6 +17,7 @@ const Orb = require("../../classes/games/battle-room/Orb");
 let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
 let gameCountdownIntervals = {};
+const defaultCountdownNumber = 3;
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: false}
 let connectedGuests = {};
 
@@ -30,6 +31,7 @@ io.sockets.on("connect", async (socket) => {
   currentUser = await socketConnects({ socket, connectedSockets });
   socket.emit("authenticationFinished", null);
   socket.emit("gameListUpdate", gameRooms);
+  socket.emit("currentGameRoomUpdate", null);
   if (currentUser.isGuest) {
     currentUser.name = makeRandomAnonUsername({
       socket,
@@ -60,6 +62,7 @@ io.sockets.on("connect", async (socket) => {
       chatRooms,
       gameRooms,
       gameName,
+      defaultCountdownNumber,
     });
   });
   socket.on("clientLeavesGame", (gameName) => {
@@ -72,6 +75,8 @@ io.sockets.on("connect", async (socket) => {
       gameRooms,
       gameName,
       username: currentUser.name,
+      gameCountdownIntervals,
+      defaultCountdownNumber,
     });
   });
   socket.on("clientJoinsGame", (data) => {
@@ -94,6 +99,7 @@ io.sockets.on("connect", async (socket) => {
       gameRooms,
       gameName,
       gameCountdownIntervals,
+      defaultCountdownNumber,
     });
   });
   socket.on("clientSendsNewChat", (data) => {

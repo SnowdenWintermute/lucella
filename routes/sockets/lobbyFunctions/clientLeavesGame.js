@@ -1,4 +1,7 @@
 const socketRequestsToJoinRoom = require("./clientRequestsToJoinRoom");
+const cancelGameCountdown = require("./cancelGameCountdown");
+const generateGameForClient = require("../../../utils/generateGameForClient");
+
 function clientLeavesGame({
   io,
   socket,
@@ -8,9 +11,13 @@ function clientLeavesGame({
   gameRooms,
   gameName,
   isDisconnecting,
+  gameCountdownIntervals,
+  defaultCountdownNumber,
 }) {
   const username = currentUser.name;
   console.log("client " + username + " requests to leave game " + gameName);
+  console.log("clientLeavesGame19");
+  console.log(gameRooms[gameName].players);
   try {
     if (!gameRooms[gameName])
       return socket.emit("errorMessage", "No game by that name exists");
@@ -53,6 +60,18 @@ function clientLeavesGame({
         gameRooms[gameName].players.challenger = null;
         socket.emit("currentGameRoomUpdate", null);
       }
+      // cancel the countdown and unready everyone
+      cancelGameCountdown({
+        io,
+        gameRoom: gameRooms[gameName],
+        gameCountdownIntervals,
+        defaultCountdownNumber,
+      });
+      gameRooms[gameName].playersReady = { host: false, challenger: false };
+      io.in(`game-${gameName}`).emit(
+        "updateOfCurrentRoomPlayerReadyStatus",
+        gameRooms[gameName].playersReady
+      );
     }
     // EITHER HOST OR CHALLENGER LEAVES
     connectedSockets[socket.id].isInGame = false;
@@ -67,10 +86,12 @@ function clientLeavesGame({
       isDisconnecting,
     });
 
-    io.to(`game-${gameName}`).emit(
-      "currentGameRoomUpdate",
-      gameRooms[gameName]
-    );
+    gameRoomForClient = gameRooms[gameName]
+      ? generateGameForClient({
+          gameObject: gameRooms[gameName],
+        })
+      : null;
+    io.to(`game-${gameName}`).emit("currentGameRoomUpdate", gameRoomForClient);
     io.sockets.emit("gameListUpdate", gameRooms);
   } catch (err) {
     console.log(err);

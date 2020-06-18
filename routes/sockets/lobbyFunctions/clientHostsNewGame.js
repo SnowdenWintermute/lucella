@@ -1,6 +1,5 @@
 const GameRoom = require("../../../classes/games/battle-room/GameRoom");
 const clientJoinsGame = require("./clientJoinsGame");
-const defaultCountdownNumber = 3;
 const width = 450;
 const height = 700;
 
@@ -12,9 +11,8 @@ function clientHostsNewGame({
   chatRooms,
   gameRooms,
   gameName,
+  defaultCountdownNumber,
 }) {
-  console.log("from clientHostsGame 16");
-  console.log(connectedSockets);
   // if their socket is not already in a game and no game by this name exists, create the game room
   if (!connectedSockets[socket.id].isInGame) {
     if (!gameRooms[gameName]) {

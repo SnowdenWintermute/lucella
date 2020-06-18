@@ -23,6 +23,11 @@ const PreGameRoom = ({ socket }) => {
     if (!preGameScreen) setPreGameRoomDisplayClass("height-0-hidden");
   }, [preGameScreen]);
 
+  useEffect(() => {
+    console.log("27");
+    // console.log(playersReady);
+  }, [currentGame]);
+
   // players in room and their ready status/ the countdown
   useEffect(() => {
     if (!socket) return;
@@ -33,20 +38,32 @@ const PreGameRoom = ({ socket }) => {
     socket.on("gameClosedByHost", () => {
       dispatch(gameUiActions.closePreGameScreen());
     });
-    socket.on("updateOfCurrentRoomPlayerReadyStatus", ({ playersReady }) => {
+    socket.on("updateOfCurrentRoomPlayerReadyStatus", (playersReady) => {
+      if (!currentGame) return null;
+      const updatedCurrentGame = currentGame;
+      updatedCurrentGame.playersReady = playersReady;
+      console.log(updatedCurrentGame);
+      dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
+      console.log("updated readys ");
       console.log(playersReady);
-      console.log(currentGame);
-      dispatch(
-        gameUiActions.setCurrentGame({
-          ...currentGame,
-          playersReady: { ...currentGame.playersReady, ...playersReady },
-        })
-      );
+    });
+    socket.on("currentGameStatusUpdate", (gameStatus) => {
+      const updatedCurrentGame = currentGame;
+      updatedCurrentGame.gameStatus = gameStatus;
+      console.log(updatedCurrentGame);
+      dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
+    });
+    socket.on("currentGameCountdownUpdate", (countdown) => {
+      const updatedCurrentGame = currentGame;
+      updatedCurrentGame.countdown = countdown;
+      dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
     });
     return () => {
       socket.off("currentGameRoomUpdate");
       socket.off("gameClosedByHost");
       socket.off("updateOfCurrentRoomPlayerReadyStatus");
+      socket.off("currentGameStatusUpdate");
+      socket.off("currentGameCountdownUpdate");
     };
   }, [socket, dispatch, currentGame]);
 
@@ -91,6 +108,13 @@ const PreGameRoom = ({ socket }) => {
               {currentGame.playersReady.challenger && (
                 <SuccessIcon className="alert-icon"></SuccessIcon>
               )}
+            </td>
+          </tr>
+          <tr>
+            <td>{currentGame.gameStatus}</td>
+            <td>
+              {currentGame.gameStatus === "countingDown" &&
+                currentGame.countdown}
             </td>
           </tr>
         </tbody>

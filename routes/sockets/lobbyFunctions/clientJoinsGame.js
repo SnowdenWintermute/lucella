@@ -12,8 +12,6 @@ function clientJoinsGame({
   gameName,
 }) {
   const username = currentUser.name;
-  console.log("from clientJoinsGame 13");
-  console.log(connectedSockets);
   try {
     // can't join a game that doesn't exist
     if (!gameRooms[gameName])
@@ -39,6 +37,7 @@ function clientJoinsGame({
       } else {
         return socket.emit("errorMessage", "That game is currently full");
       }
+
       chatRooms = clientRequestsToJoinRoom({
         io,
         socket,
@@ -55,7 +54,7 @@ function clientJoinsGame({
       });
       io.to(`game-${gameName}`).emit(
         "currentGameRoomUpdate",
-        gameRooms[gameName]
+        gameRoomForClient
       );
       currentUser.currentGameName = gameName;
     } else {
