@@ -2,7 +2,13 @@ import {
   NEW_CHAT_MESSAGE,
   SET_CURRENT_CHAT_ROOM_NAME,
   SET_CURRENT_CHAT_ROOM_USERS,
+  SET_NEW_CHAT_ROOM_LOADING,
 } from "./types";
+
+// chat room loading
+export const setNewChatRoomLoading = (payload) => (dispatch) => {
+  dispatch({ type: SET_NEW_CHAT_ROOM_LOADING, payload });
+};
 
 // update chat room name
 export const setCurrentChatRoomName = (roomName) => (dispatch) => {

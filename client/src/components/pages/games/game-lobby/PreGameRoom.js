@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ReactComponent as SuccessIcon } from "../../../../../src/img/alertIcons/success.svg";
 import PropTypes from "prop-types";
-import * as gameUiActions from "../../../../store/actions/game-ui";
 import * as alertActions from "../../../../store/actions/alert";
 
 const PreGameRoom = ({ socket }) => {
@@ -16,6 +15,7 @@ const PreGameRoom = ({ socket }) => {
   const [gameNameInput, setGameNameInput] = useState("");
 
   const currentGame = useSelector((state) => state.gameUi.currentGame);
+  const playersReady = useSelector((state) => state.gameUi.playersReady);
 
   // element's own visibility/showclass
   useEffect(() => {
@@ -23,57 +23,11 @@ const PreGameRoom = ({ socket }) => {
     if (!preGameScreen) setPreGameRoomDisplayClass("height-0-hidden");
   }, [preGameScreen]);
 
-  useEffect(() => {
-    console.log("27");
-    // console.log(playersReady);
-  }, [currentGame]);
-
-  // players in room and their ready status/ the countdown
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("currentGameRoomUpdate", (data) => {
-      console.log(data);
-      dispatch(gameUiActions.setCurrentGame(data));
-    });
-    socket.on("gameClosedByHost", () => {
-      dispatch(gameUiActions.closePreGameScreen());
-    });
-    socket.on("updateOfCurrentRoomPlayerReadyStatus", (playersReady) => {
-      if (!currentGame) return null;
-      const updatedCurrentGame = currentGame;
-      updatedCurrentGame.playersReady = playersReady;
-      console.log(updatedCurrentGame);
-      dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
-      console.log("updated readys ");
-      console.log(playersReady);
-    });
-    socket.on("currentGameStatusUpdate", (gameStatus) => {
-      if (!currentGame) return;
-      const updatedCurrentGame = currentGame;
-      updatedCurrentGame.gameStatus = gameStatus;
-      console.log(updatedCurrentGame);
-      dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
-    });
-    socket.on("currentGameCountdownUpdate", (countdown) => {
-      if (!currentGame) return;
-      const updatedCurrentGame = currentGame;
-      updatedCurrentGame.countdown = countdown;
-      dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
-    });
-    return () => {
-      socket.off("currentGameRoomUpdate");
-      socket.off("gameClosedByHost");
-      socket.off("updateOfCurrentRoomPlayerReadyStatus");
-      socket.off("currentGameStatusUpdate");
-      socket.off("currentGameCountdownUpdate");
-    };
-  }, [socket, dispatch, currentGame]);
-
   // 'make public' actually request to server to host a game
   const makeGamePublic = (e) => {
     e.preventDefault();
     const gameName = gameNameInput;
-    if (gameName) {
+    if (gameName && socket) {
       socket.emit("clientHostsNewGame", { gameName });
     } else {
       dispatch(alertActions.setAlert("Please enter a game name", "danger"));
@@ -95,7 +49,7 @@ const PreGameRoom = ({ socket }) => {
           <tr>
             <td>{currentGame.players.host.username}</td>
             <td>
-              {currentGame.playersReady.host && (
+              {playersReady.host && (
                 <SuccessIcon className="alert-icon"></SuccessIcon>
               )}
             </td>
@@ -107,7 +61,7 @@ const PreGameRoom = ({ socket }) => {
                 : "Awaiting challenger..."}
             </td>
             <td>
-              {currentGame.playersReady.challenger && (
+              {playersReady.challenger && (
                 <SuccessIcon className="alert-icon"></SuccessIcon>
               )}
             </td>

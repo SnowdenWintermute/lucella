@@ -10,6 +10,7 @@ import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import Modal from "../../../common/modal/Modal";
 import io from "socket.io-client";
+import SocketManager from "../socket-manager/SocketManager";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 
@@ -39,13 +40,6 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     socket.on("authenticationFinished", (data) => {
       console.log("authenticationFinished");
       setAuthenticating(false);
-    });
-  });
-
-  // errors
-  useEffect(() => {
-    socket.on("errorMessage", (data) => {
-      console.log("error from server: " + data);
     });
   });
 
@@ -79,6 +73,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
 
   return (
     <Fragment>
+      <SocketManager socket={socket} />
       <Modal
         screenClass=""
         frameClass="modal-frame-dark"

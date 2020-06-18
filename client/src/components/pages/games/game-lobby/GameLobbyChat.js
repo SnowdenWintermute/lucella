@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import * as chatActions from "../../../../store/actions/chat";
+import { useSelector } from "react-redux";
 
 const GameLobbyChat = ({ socket, username }) => {
-  const dispatch = useDispatch();
   const [chatInput, setChatInput] = useState("");
   const [chatClass, setChatClass] = useState("");
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
@@ -26,19 +24,6 @@ const GameLobbyChat = ({ socket, username }) => {
   const onChange = (e) => {
     setChatInput(e.target.value);
   };
-
-  // handle new messages from io
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("newMessage", async (message) => {
-      console.log(message);
-      const msgForReduxStore = { message, room: currentChatRoomName };
-      dispatch(chatActions.newChatMessage(msgForReduxStore));
-    });
-    return () => {
-      socket.off("newMessage");
-    };
-  }, [socket, currentChatRoomName, dispatch]);
 
   // sending a message
   const sendNewMessage = (message) => {

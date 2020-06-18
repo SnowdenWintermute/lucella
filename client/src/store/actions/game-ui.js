@@ -4,6 +4,7 @@ import {
   CLOSE_PRE_GAME_SCREEN,
   SET_CURRENT_GAME,
   CLOSE_GAME_LIST,
+  UPDATE_PLAYERS_READY,
 } from "./types";
 
 export const viewGamesListClicked = () => (dispatch) => {
@@ -30,5 +31,11 @@ export const setCurrentGame = (gameObject) => (dispatch) => {
   dispatch({
     type: SET_CURRENT_GAME,
     payload: gameObject,
+  });
+};
+export const updatePlayersReady = (playersReadyObject) => (dispatch) => {
+  dispatch({
+    type: UPDATE_PLAYERS_READY,
+    payload: playersReadyObject,
   });
 };

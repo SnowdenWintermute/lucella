@@ -1,18 +1,25 @@
 import {
   NEW_CHAT_MESSAGE,
   SET_CURRENT_CHAT_ROOM_USERS,
+  SET_CURRENT_CHAT_ROOM_NAME,
+  SET_NEW_CHAT_ROOM_LOADING,
 } from "../actions/types";
-import { SET_CURRENT_CHAT_ROOM_NAME } from "../actions/types";
 
 const initialState = {
   currentChatRoomName: "",
   currentChatRoomUsers: {},
   messageListsByRoom: {},
+  newChatRoomLoading: true,
 };
 
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
+    case SET_NEW_CHAT_ROOM_LOADING:
+      return {
+        ...state,
+        newChatRoomLoading: payload,
+      };
     case NEW_CHAT_MESSAGE:
       const { room, message } = payload;
       if (!state.messageListsByRoom[room]) {

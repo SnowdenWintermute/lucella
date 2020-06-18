@@ -5,6 +5,7 @@ import {
   OPEN_PRE_GAME_SCREEN,
   SET_CURRENT_GAME,
   CLOSE_GAME_LIST,
+  UPDATE_PLAYERS_READY,
 } from "../actions/types";
 
 const initialState = {
@@ -14,6 +15,10 @@ const initialState = {
   },
   preGameScreen: {
     isOpen: false,
+  },
+  playersReady: {
+    host: false,
+    challenger: false,
   },
 };
 
@@ -45,6 +50,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         currentGame: updatedGame,
+      };
+    case UPDATE_PLAYERS_READY:
+      return {
+        ...state,
+        playersReady: { ...payload },
       };
     default:
       return state;
