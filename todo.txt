@@ -6,7 +6,6 @@ PlayerModel for each game
   -created after user completes first of that game type
 Chat
   -press up to get last entered messages
-  -change channel(room)
   -send private messages
   -friend list
   -make messages a class
@@ -14,3 +13,11 @@ Chat
   -icon of what game they're playing
 General
   -remove magic strings
+  -fix reducers to be shallow objects (not nested) and only
+  replace what is needed (the update of ready players in lobby is replacing whole game object, same for countdown)
+
+Game
+  -if player leaves game inProgress, destroy the game and award a win/loss
+
+DONE
+  -change chat channel(room)

@@ -16,8 +16,6 @@ function clientLeavesGame({
 }) {
   const username = currentUser.name;
   console.log("client " + username + " requests to leave game " + gameName);
-  console.log("clientLeavesGame19");
-  console.log(gameRooms[gameName].players);
   try {
     if (!gameRooms[gameName])
       return socket.emit("errorMessage", "No game by that name exists");
@@ -39,7 +37,6 @@ function clientLeavesGame({
         let socketIdToRemove = gameRooms[gameName].players.challenger.socketId;
         connectedSockets[socketIdToRemove].isInGame = false;
         console.log("removing challenger");
-        console.log(connectedSockets[socketIdToRemove]);
         // send challenger to prev room
         const prevRoom = connectedSockets[socketIdToRemove].previousRoom;
         socketRequestsToJoinRoom({

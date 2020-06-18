@@ -17,13 +17,15 @@ $gameListHeight: 300px;
   display: grid;
   grid-template-columns: calc(100% - 200px) 200px;
   border: 1px solid color(textPrimary);
-  grid-template-rows: 60px 100%;
+  grid-template-rows: 60px 1fr;
 }
 .game-lobby-main-window {
   grid-row-start: 2;
   grid-row-end: 3;
   grid-column-start: 1;
   grid-column-end: 2;
+  display: grid;
+  grid-template-rows: min-content min-content 1fr;
   height: 100%;
   width: 100%;
 }
@@ -31,7 +33,6 @@ $gameListHeight: 300px;
 .game-list-frame {
   display: flex;
   width: 100%;
-  height: auto;
   border-right: 1px solid color(textPrimary);
   transition: 0.3s;
   overflow: hidden;
@@ -40,7 +41,7 @@ $gameListHeight: 300px;
   // height: $preGameRoomHeight;
 }
 .game-list-frame {
-  height: $gameListHeight;
+  // height: $gameListHeight;
   flex-direction: column;
 }
 .game-list-table {
@@ -89,8 +90,8 @@ $gameListHeight: 300px;
 .game-lobby-chat-stream-holder {
   grid-column-start: 1;
   grid-column-end: 2;
-  grid-row-start: 2;
-  grid-row-end: 3;
+  grid-row-start: 3;
+  grid-row-end: 4;
   align-self: end;
   height: 100%;
   padding: 10px;
@@ -103,11 +104,9 @@ $gameListHeight: 300px;
 }
 .game-lobby-chat-stream-holder.game-setup {
   border-top: 1px solid color(textPrimary);
-  // height: calc(100% - #{$preGameRoomHeight});
 }
 .game-lobby-chat-stream-holder.viewing-game-list {
   border-top: 1px solid color(textPrimary);
-  height: calc(100% - #{$gameListHeight});
 }
 .game-lobby-chat-stream {
   height: 100%;

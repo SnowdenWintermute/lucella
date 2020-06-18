@@ -48,12 +48,14 @@ const PreGameRoom = ({ socket }) => {
       console.log(playersReady);
     });
     socket.on("currentGameStatusUpdate", (gameStatus) => {
+      if (!currentGame) return;
       const updatedCurrentGame = currentGame;
       updatedCurrentGame.gameStatus = gameStatus;
       console.log(updatedCurrentGame);
       dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
     });
     socket.on("currentGameCountdownUpdate", (countdown) => {
+      if (!currentGame) return;
       const updatedCurrentGame = currentGame;
       updatedCurrentGame.countdown = countdown;
       dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));

@@ -41,9 +41,11 @@ export default function (state = initialState, action) {
         preGameScreen: { isOpen: false },
       };
     case SET_CURRENT_GAME:
-      const newState = cloneDeep(state);
-      newState.currentGame = payload;
-      return newState;
+      const updatedGame = cloneDeep(payload);
+      return {
+        ...state,
+        currentGame: updatedGame,
+      };
     default:
       return state;
   }

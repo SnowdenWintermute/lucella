@@ -9,7 +9,7 @@ const GameList = ({ socket }) => {
   const [gameList, setGameList] = useState({});
   const currentGame = useSelector((state) => state.gameUi.currentGame);
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
-  const gameListDisplayClass = !gameListIsOpen && "height-0-hidden";
+  const gameListDisplayClass = gameListIsOpen ? "" : "height-0-hidden";
 
   useEffect(() => {
     if (!socket) return;
