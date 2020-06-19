@@ -24,10 +24,7 @@ const UISocketListener = ({ socket }) => {
     });
     socket.on("currentGameStatusUpdate", (gameStatus) => {
       if (!currentGame) return;
-      const updatedCurrentGame = currentGame;
-      updatedCurrentGame.gameStatus = gameStatus;
-      console.log(updatedCurrentGame);
-      dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
+      dispatch(gameUiActions.setCurrentGameStatus(gameStatus));
     });
     socket.on("currentGameCountdownUpdate", (countdown) => {
       if (!currentGame) return;

@@ -6,6 +6,7 @@ import {
   SET_CURRENT_GAME,
   CLOSE_GAME_LIST,
   UPDATE_PLAYERS_READY,
+  UPDATE_GAME_STATUS,
 } from "../actions/types";
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
     host: false,
     challenger: false,
   },
+  gameStatus: "inLobby",
 };
 
 export default function (state = initialState, action) {
@@ -55,6 +57,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         playersReady: { ...payload },
+      };
+    case UPDATE_GAME_STATUS:
+      return {
+        ...state,
+        gameStatus: payload,
       };
     default:
       return state;

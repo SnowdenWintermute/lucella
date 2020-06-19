@@ -15,6 +15,7 @@ const PreGameRoom = ({ socket }) => {
   const [gameNameInput, setGameNameInput] = useState("");
 
   const currentGame = useSelector((state) => state.gameUi.currentGame);
+  const gameStatus = useSelector((state) => state.gameUi.gameStatus);
   const playersReady = useSelector((state) => state.gameUi.playersReady);
 
   // element's own visibility/showclass
@@ -67,11 +68,8 @@ const PreGameRoom = ({ socket }) => {
             </td>
           </tr>
           <tr>
-            <td>{currentGame.gameStatus}</td>
-            <td>
-              {currentGame.gameStatus === "countingDown" &&
-                currentGame.countdown}
-            </td>
+            <td>{gameStatus}</td>
+            <td>{gameStatus === "countingDown" && currentGame.countdown}</td>
           </tr>
         </tbody>
       </table>

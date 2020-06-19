@@ -4,6 +4,7 @@ function cancelGameCountdown({
   gameCountdownIntervals,
   defaultCountdownNumber,
 }) {
+  if (!gameCountdownIntervals) return; // this is needed because wouldn't exist if no one started a countdown yet
   if (!gameCountdownIntervals[gameRoom.gameName]) return;
   gameRoom.gameStatus = "inLobby";
   io.to(`game-${gameRoom.gameName}`).emit(

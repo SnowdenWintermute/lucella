@@ -8,7 +8,7 @@ import {
 const initialState = {
   currentChatRoomName: "",
   currentChatRoomUsers: {},
-  messageListsByRoom: {},
+  messages: [],
   newChatRoomLoading: true,
 };
 
@@ -21,25 +21,28 @@ export default function (state = initialState, action) {
         newChatRoomLoading: payload,
       };
     case NEW_CHAT_MESSAGE:
-      const { room, message } = payload;
-      if (!state.messageListsByRoom[room]) {
-        state.messageListsByRoom[room] = [message];
+      const { message } = payload;
+      if (!state.messages) {
+        return {
+          ...state,
+          messages: [message],
+        };
       } else {
-        console.log("adding msg to store");
-        console.log(state.messageListsByRoom[room]);
-        state.messageListsByRoom[room] = [
-          ...state.messageListsByRoom[room],
-          message,
-        ];
+        return {
+          ...state,
+          messages: [...state.messages, message],
+        };
       }
-      return state;
     case SET_CURRENT_CHAT_ROOM_NAME:
-      const roomName = payload;
-      state.currentChatRoomName = roomName;
-      return state;
+      return {
+        ...state,
+        currentChatRoomName: payload,
+      };
     case SET_CURRENT_CHAT_ROOM_USERS:
-      state.currentChatRoomUsers = payload;
-      return state;
+      return {
+        ...state,
+        currentChatRoomUsers: payload,
+      };
     default:
       return state;
   }

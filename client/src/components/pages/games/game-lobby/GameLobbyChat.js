@@ -11,9 +11,7 @@ const GameLobbyChat = ({ socket, username }) => {
   const currentChatRoomName = useSelector(
     (state) => state.chat.currentChatRoomName
   );
-  const currentChatRoomMessages = useSelector(
-    (state) => state.chat.messageListsByRoom[currentChatRoomName]
-  );
+  const allMessages = useSelector((state) => state.chat.messages);
 
   useEffect(() => {
     if (gameListIsOpen) setChatClass("viewing-game-list");
@@ -46,8 +44,8 @@ const GameLobbyChat = ({ socket, username }) => {
 
   // create chat message display elements
   let messagesToDisplay;
-  if (currentChatRoomMessages) {
-    messagesToDisplay = currentChatRoomMessages.map((message) => {
+  if (allMessages) {
+    messagesToDisplay = allMessages.map((message) => {
       return (
         <li
           className={`chat-message chat-message-${message.style}`}

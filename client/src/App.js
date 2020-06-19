@@ -33,7 +33,7 @@ if (localStorage.token) {
 function App() {
   useEffect(() => {
     store.dispatch(loadUser());
-  }, []); // without the brackets, this will run forever. Else it is like component did mount. the [] is where you can put properties that if they update, will run the func
+  }, []);
 
   return (
     <Provider store={store}>
