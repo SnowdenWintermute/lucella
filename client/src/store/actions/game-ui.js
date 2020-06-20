@@ -6,6 +6,7 @@ import {
   CLOSE_GAME_LIST,
   UPDATE_PLAYERS_READY,
   UPDATE_GAME_STATUS,
+  UPDATE_GAME_COUNTDOWN,
 } from "./types";
 
 export const viewGamesListClicked = () => (dispatch) => {
@@ -44,5 +45,11 @@ export const setCurrentGameStatus = (gameStatus) => (dispatch) => {
   dispatch({
     type: UPDATE_GAME_STATUS,
     payload: gameStatus,
+  });
+};
+export const setCurrentGameCountdown = (countdownNumber) => (dispatch) => {
+  dispatch({
+    type: UPDATE_GAME_COUNTDOWN,
+    payload: countdownNumber,
   });
 };

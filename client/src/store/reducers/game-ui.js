@@ -6,6 +6,7 @@ import {
   SET_CURRENT_GAME,
   CLOSE_GAME_LIST,
   UPDATE_PLAYERS_READY,
+  UPDATE_GAME_COUNTDOWN,
   UPDATE_GAME_STATUS,
 } from "../actions/types";
 
@@ -17,10 +18,13 @@ const initialState = {
   preGameScreen: {
     isOpen: false,
   },
+  currentGameName: "",
+  playersInGame: {},
   playersReady: {
     host: false,
     challenger: false,
   },
+  countdownNumber: null,
   gameStatus: "inLobby",
 };
 
@@ -52,11 +56,19 @@ export default function (state = initialState, action) {
       return {
         ...state,
         currentGame: updatedGame,
+        currentGameName: payload && payload.gameName,
+        playersInGame: payload && payload.players,
+        countdownNumber: updatedGame && updatedGame.countdown,
       };
     case UPDATE_PLAYERS_READY:
       return {
         ...state,
         playersReady: { ...payload },
+      };
+    case UPDATE_GAME_COUNTDOWN:
+      return {
+        ...state,
+        countdownNumber: payload,
       };
     case UPDATE_GAME_STATUS:
       return {

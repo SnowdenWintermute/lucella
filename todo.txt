@@ -16,6 +16,11 @@ General
   -fix reducers to be shallow objects (not nested) and only
   replace what is needed (the update of ready players in lobby is replacing whole game object, same for countdown)
 
+PreGame UI
+- separate game lobby (players, ready status,countdown,gameStatus) and
+in game objects (end zones, points, orbs, dashes) and have a reference prop to link them
+so we can send just the data that is needed in the lobby
+
 Game
   -if player leaves game inProgress, destroy the game and award a win/loss
 

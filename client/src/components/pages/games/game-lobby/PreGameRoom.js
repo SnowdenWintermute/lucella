@@ -13,10 +13,11 @@ const PreGameRoom = ({ socket }) => {
     "height-0-hidden"
   );
   const [gameNameInput, setGameNameInput] = useState("");
-
-  const currentGame = useSelector((state) => state.gameUi.currentGame);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
   const playersReady = useSelector((state) => state.gameUi.playersReady);
+  const playersInGame = useSelector((state) => state.gameUi.playersInGame);
+  const currentGameName = useSelector((state) => state.gameUi.currentGameName);
+  const countdownNumber = useSelector((state) => state.gameUi.countdownNumber);
 
   // element's own visibility/showclass
   useEffect(() => {
@@ -37,18 +38,17 @@ const PreGameRoom = ({ socket }) => {
 
   // ready up
   const onReadyClick = () => {
-    console.log(currentGame);
-    socket.emit("clientClicksReady", { gameName: currentGame.gameName });
+    socket.emit("clientClicksReady", { gameName: currentGameName });
   };
 
-  const preGameRoomMenu = currentGame ? (
+  const preGameRoomMenu = currentGameName ? (
     <Fragment>
-      <h3>Game: {currentGame.gameName}</h3>
+      <h3>Game: {currentGameName}</h3>
       <div>Players:</div>
       <table className="pre-game-room-player-list">
         <tbody>
           <tr>
-            <td>{currentGame.players.host.username}</td>
+            <td>{playersInGame.host.username}</td>
             <td>
               {playersReady.host && (
                 <SuccessIcon className="alert-icon"></SuccessIcon>
@@ -57,8 +57,8 @@ const PreGameRoom = ({ socket }) => {
           </tr>
           <tr>
             <td>
-              {currentGame.players.challenger
-                ? currentGame.players.challenger.username
+              {playersInGame.challenger
+                ? playersInGame.challenger.username
                 : "Awaiting challenger..."}
             </td>
             <td>
@@ -69,7 +69,7 @@ const PreGameRoom = ({ socket }) => {
           </tr>
           <tr>
             <td>{gameStatus}</td>
-            <td>{gameStatus === "countingDown" && currentGame.countdown}</td>
+            <td>{gameStatus === "countingDown" && countdownNumber}</td>
           </tr>
         </tbody>
       </table>

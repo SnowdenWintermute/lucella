@@ -11,7 +11,6 @@ const UISocketListener = ({ socket }) => {
   useEffect(() => {
     if (!socket) return;
     socket.on("currentGameRoomUpdate", (data) => {
-      console.log(data);
       dispatch(gameUiActions.setCurrentGame(data));
     });
     socket.on("gameClosedByHost", () => {
@@ -28,9 +27,7 @@ const UISocketListener = ({ socket }) => {
     });
     socket.on("currentGameCountdownUpdate", (countdown) => {
       if (!currentGame) return;
-      const updatedCurrentGame = currentGame;
-      updatedCurrentGame.countdown = countdown;
-      dispatch(gameUiActions.setCurrentGame(updatedCurrentGame));
+      dispatch(gameUiActions.setCurrentGameCountdown(countdown));
     });
     return () => {
       socket.off("currentGameRoomUpdate");
