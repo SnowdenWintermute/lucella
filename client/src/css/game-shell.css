@@ -16,28 +16,34 @@
   -ms-grid-columns: calc(100% - 200px) 200px;
       grid-template-columns: calc(100% - 200px) 200px;
   border: 1px solid #9ba8b8;
-  -ms-grid-rows: 60px 1fr;
-      grid-template-rows: 60px 1fr;
+  -ms-grid-rows: 60px calc(100% - 60px);
+      grid-template-rows: 60px calc(100% - 60px);
 }
 
 .game-lobby-main-window {
+  height: 100%;
+  width: 100%;
+  display: -ms-grid;
+  display: grid;
   -ms-grid-row: 2;
       grid-row-start: 2;
   grid-row-end: 3;
   -ms-grid-column: 1;
       grid-column-start: 1;
   grid-column-end: 2;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-rows: min-content min-content 1fr;
-      grid-template-rows: -webkit-min-content -webkit-min-content 1fr;
-      grid-template-rows: min-content min-content 1fr;
-  height: 100%;
-  width: 100%;
+  -ms-grid-rows: min-content 1fr min-content;
+      grid-template-rows: -webkit-min-content 1fr -webkit-min-content;
+      grid-template-rows: min-content 1fr min-content;
 }
 
 .pre-game-room,
 .game-list-frame {
+  -ms-grid-row: 1;
+  -ms-grid-row-span: 1;
+  grid-row: 1/2;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
+  grid-column: 1/2;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -123,45 +129,20 @@
   border-bottom: 1px solid #9ba8b8;
 }
 
-.game-lobby-chat-stream-holder {
-  -ms-grid-column: 1;
-      grid-column-start: 1;
-  grid-column-end: 2;
-  -ms-grid-row: 3;
-      grid-row-start: 3;
-  grid-row-end: 4;
-  -ms-flex-item-align: end;
-      align-self: end;
-  height: 100%;
-  padding: 10px;
-  padding-top: 20px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  border-right: 1px solid #9ba8b8;
-  -webkit-transition: 0.3s;
-  transition: 0.3s;
-}
-
-.game-lobby-chat-stream-holder.game-setup {
-  border-top: 1px solid #9ba8b8;
-}
-
-.game-lobby-chat-stream-holder.viewing-game-list {
+.game-lobby-chat-stream.game-setup,
+.game-lobby-chat-stream.viewing-game-list {
   border-top: 1px solid #9ba8b8;
 }
 
 .game-lobby-chat-stream {
-  height: 100%;
-  padding-top: 10px;
-  margin-bottom: 10px;
+  padding: 10px 10px 0px 10px;
+  -ms-grid-row: 2;
+  -ms-grid-row-span: 1;
+  grid-row: 2 / 3;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
+  grid-column: 1 / 2;
+  border-right: 1px solid #9ba8b8;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -170,6 +151,17 @@
       -ms-flex-direction: column-reverse;
           flex-direction: column-reverse;
   overflow-y: scroll;
+}
+
+.game-lobby-chat-input-holder {
+  border-right: 1px solid #9ba8b8;
+  padding: 10px;
+  -ms-grid-row: 3;
+  -ms-grid-row-span: 1;
+  grid-row: 3 / 4;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 1;
+  grid-column: 1 / 2;
 }
 
 .game-lobby-players-list {

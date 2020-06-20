@@ -16,7 +16,7 @@ const InGameButtons = ({ socket }) => {
     leaveGameButtonDisplayClass,
     setLeaveGameButtonDisplayClass,
   ] = useState("chat-button-hidden");
-  const currentGame = useSelector((state) => state.gameUi.currentGame);
+  const currentGameName = useSelector((state) => state.gameUi.currentGameName);
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
   const preGameScreenIsOpen = useSelector(
     (state) => state.gameUi.preGameScreen.isOpen
@@ -29,13 +29,13 @@ const InGameButtons = ({ socket }) => {
     if (preGameScreenIsOpen) setCancelGameSetupButtonDisplayClass("");
     if (!preGameScreenIsOpen)
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
-    if (currentGame) {
+    if (currentGameName) {
       setLeaveGameButtonDisplayClass("");
       setGoBackButtonDisplayClass("chat-button-hidden");
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     }
-    if (!currentGame) setLeaveGameButtonDisplayClass("chat-button-hidden");
-  }, [gameListIsOpen, preGameScreenIsOpen, currentGame]);
+    if (!currentGameName) setLeaveGameButtonDisplayClass("chat-button-hidden");
+  }, [gameListIsOpen, preGameScreenIsOpen, currentGameName]);
 
   // go back from list
   const onViewGamesListBackClick = () => {
@@ -47,14 +47,13 @@ const InGameButtons = ({ socket }) => {
   // cancel game setup
   const onCancelGameSetupClick = () => {
     dispatch(gameUiActions.closePreGameScreen());
-    console.log("client cancelled setup of " + currentGame);
   };
 
   // leave current game
   const onLeaveGameClick = () => {
     dispatch(gameUiActions.closePreGameScreen());
-    console.log("client requested to leave game " + currentGame.gameName);
-    socket.emit("clientLeavesGame", currentGame.gameName);
+    console.log("client requested to leave game " + currentGameName);
+    socket.emit("clientLeavesGame", currentGameName);
   };
 
   return (

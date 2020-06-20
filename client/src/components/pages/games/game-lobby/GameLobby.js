@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { setAlert } from "../../../../store/actions/alert";
 import GameLobbyChat from "./GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
@@ -11,6 +11,7 @@ import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import Modal from "../../../common/modal/Modal";
 import io from "socket.io-client";
 import SocketManager from "../socket-manager/SocketManager";
+import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 
@@ -20,6 +21,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     false
   );
   const [authenticating, setAuthenticating] = useState(true);
+  const gameStatus = useSelector((state) => state.gameUi.gameStatus);
   const username = user ? user.name : "Anon";
   let authToken = null;
 
@@ -88,18 +90,22 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
           joinRoom={joinRoom}
         />
       </Modal>
-      <div className={`game-lobby`}>
-        <MainButtons
-          socket={socket}
-          showChangeChannelModal={showChangeChannelModal}
-        />
-        <ChannelBar socket={socket} defaultChatRoom={defaultChatRoom} />
-        <div className="game-lobby-main-window">
-          <PreGameRoom socket={socket} />
-          <GameList socket={socket} />
-          <GameLobbyChat socket={socket} username={username} />
+      {gameStatus !== "inProgress" ? (
+        <div className={`game-lobby`}>
+          <MainButtons
+            socket={socket}
+            showChangeChannelModal={showChangeChannelModal}
+          />
+          <ChannelBar socket={socket} defaultChatRoom={defaultChatRoom} />
+          <div className="game-lobby-main-window">
+            <PreGameRoom socket={socket} />
+            <GameList socket={socket} />
+            <GameLobbyChat socket={socket} username={username} />
+          </div>
         </div>
-      </div>
+      ) : (
+        <BattleRoomGameInstance socket={socket} />
+      )}
     </Fragment>
   );
 };

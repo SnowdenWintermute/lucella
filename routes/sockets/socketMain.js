@@ -17,7 +17,7 @@ const Orb = require("../../classes/games/battle-room/Orb");
 let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
 let gameCountdownIntervals = {};
-const defaultCountdownNumber = 3;
+const defaultCountdownNumber = 0;
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: false}
 let connectedGuests = {};
 

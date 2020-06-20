@@ -12,7 +12,6 @@ const ChatSocketListener = ({ socket }) => {
   useEffect(() => {
     if (!socket) return;
     socket.on("updateChatRoom", (data) => {
-      console.log(data);
       dispatch(chatActions.setNewChatRoomLoading(false));
       const { roomName, currentUsers } = data;
       dispatch(chatActions.setCurrentChatRoomUsers(currentUsers));
@@ -26,7 +25,6 @@ const ChatSocketListener = ({ socket }) => {
   useEffect(() => {
     if (!socket) return;
     socket.on("newMessage", async (message) => {
-      console.log(message);
       const msgForReduxStore = { message, room: currentChatRoomName };
       dispatch(chatActions.newChatMessage(msgForReduxStore));
     });

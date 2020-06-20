@@ -1,18 +1,19 @@
-import cloneDeep from "lodash.clonedeep";
 import {
   VIEW_GAMES_LIST_CLICKED,
+  UPDATE_GAMES_LIST,
   CLOSE_PRE_GAME_SCREEN,
   OPEN_PRE_GAME_SCREEN,
   SET_CURRENT_GAME,
   CLOSE_GAME_LIST,
+  UPDATE_PLAYERS,
   UPDATE_PLAYERS_READY,
   UPDATE_GAME_COUNTDOWN,
   UPDATE_GAME_STATUS,
 } from "../actions/types";
 
 const initialState = {
-  currentGame: null,
   gameList: {
+    games: {},
     isOpen: false,
   },
   preGameScreen: {
@@ -36,6 +37,14 @@ export default function (state = initialState, action) {
         ...state,
         gameList: { isOpen: true },
       };
+    case UPDATE_GAMES_LIST:
+      return {
+        ...state,
+        gameList: {
+          ...state.gameList,
+          games: payload,
+        },
+      };
     case CLOSE_GAME_LIST:
       return {
         ...state,
@@ -52,14 +61,20 @@ export default function (state = initialState, action) {
         preGameScreen: { isOpen: false },
       };
     case SET_CURRENT_GAME:
-      const updatedGame = cloneDeep(payload);
       return {
         ...state,
-        currentGame: updatedGame,
         currentGameName: payload && payload.gameName,
         playersInGame: payload && payload.players,
-        countdownNumber: updatedGame && updatedGame.countdown,
+        playersReady: payload && payload.playersReady,
+        countdownNumber: payload && payload.countdown,
+        gameStatus: payload && payload.gameStatus,
       };
+    case UPDATE_PLAYERS:
+      return {
+        ...state,
+        playersInGame: { ...payload },
+      };
+
     case UPDATE_PLAYERS_READY:
       return {
         ...state,

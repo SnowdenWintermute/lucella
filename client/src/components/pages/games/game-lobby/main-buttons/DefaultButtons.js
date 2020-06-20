@@ -31,6 +31,7 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
 
   // view list of games
   const onViewGamesListClick = () => {
+    if (!socket) return;
     socket.emit("clientRequestsUpdateOfGameRoomList");
     dispatch(gameUiActions.viewGamesListClicked());
   };

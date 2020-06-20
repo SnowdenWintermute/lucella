@@ -17,20 +17,22 @@ $gameListHeight: 300px;
   display: grid;
   grid-template-columns: calc(100% - 200px) 200px;
   border: 1px solid color(textPrimary);
-  grid-template-rows: 60px 1fr;
+  grid-template-rows: 60px calc(100% - 60px);
 }
 .game-lobby-main-window {
+  height: 100%;
+  width: 100%;
+  display: grid;
   grid-row-start: 2;
   grid-row-end: 3;
   grid-column-start: 1;
   grid-column-end: 2;
-  display: grid;
-  grid-template-rows: min-content min-content 1fr;
-  height: 100%;
-  width: 100%;
+  grid-template-rows: min-content 1fr min-content;
 }
 .pre-game-room,
 .game-list-frame {
+  grid-row: 1/2;
+  grid-column: 1/2;
   display: flex;
   width: 100%;
   border-right: 1px solid color(textPrimary);
@@ -38,10 +40,8 @@ $gameListHeight: 300px;
   overflow: hidden;
 }
 .pre-game-room {
-  // height: $preGameRoomHeight;
 }
 .game-list-frame {
-  // height: $gameListHeight;
   flex-direction: column;
 }
 .game-list-table {
@@ -87,34 +87,26 @@ $gameListHeight: 300px;
   grid-row-end: 2;
   border-bottom: 1px solid color(textPrimary);
 }
-.game-lobby-chat-stream-holder {
-  grid-column-start: 1;
-  grid-column-end: 2;
-  grid-row-start: 3;
-  grid-row-end: 4;
-  align-self: end;
-  height: 100%;
-  padding: 10px;
-  padding-top: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-right: 1px solid color(textPrimary);
-  transition: 0.3s;
-}
-.game-lobby-chat-stream-holder.game-setup {
-  border-top: 1px solid color(textPrimary);
-}
-.game-lobby-chat-stream-holder.viewing-game-list {
+.game-lobby-chat-stream.game-setup,
+.game-lobby-chat-stream.viewing-game-list {
   border-top: 1px solid color(textPrimary);
 }
 .game-lobby-chat-stream {
-  height: 100%;
-  padding-top: 10px;
-  margin-bottom: 10px;
+  // height: 100%;
+  padding: 10px 10px 0px 10px;
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  border-right: 1px solid color(textPrimary);
   display: flex;
   flex-direction: column-reverse;
   overflow-y: scroll;
+}
+.game-lobby-chat-input-holder {
+  // border-top: 1px solid color(textPrimary);
+  border-right: 1px solid color(textPrimary);
+  padding: 10px;
+  grid-row: 3 / 4;
+  grid-column: 1 / 2;
 }
 .game-lobby-players-list {
   grid-column-start: 2;

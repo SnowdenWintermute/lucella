@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 
 const GameLobbyChat = ({ socket, username }) => {
@@ -58,22 +58,22 @@ const GameLobbyChat = ({ socket, username }) => {
   }
 
   return (
-    <div className={`game-lobby-chat-stream-holder ${chatClass}`}>
-      <div className="game-lobby-chat-stream">
+    <Fragment>
+      <div className={`game-lobby-chat-stream ${chatClass}`}>
         <ul>{messagesToDisplay}</ul>
       </div>
       <div className="game-lobby-chat-input-holder">
         <form onSubmit={(e) => onSubmit(e)}>
           <input
             type="text"
-            className="text-input-transparent"
+            className="text-input-transparent game-lobby-chat-input"
             onChange={(e) => onChange(e)}
             value={chatInput}
             placeholder="Enter a message to chat..."
           ></input>
         </form>
       </div>
-    </div>
+    </Fragment>
   );
 };
 

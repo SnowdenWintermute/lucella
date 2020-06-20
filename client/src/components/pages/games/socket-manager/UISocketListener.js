@@ -6,11 +6,15 @@ import * as gameUiActions from "../../../../store/actions/game-ui";
 
 const UISocketListener = ({ socket }) => {
   const dispatch = useDispatch();
-  const currentGame = useSelector((state) => state.gameUi.currentGame);
+  const currentGameName = useSelector((state) => state.gameUi.currentGameName);
 
   useEffect(() => {
     if (!socket) return;
+    socket.on("gameListUpdate", (data) => {
+      dispatch(gameUiActions.updateGamesList(data));
+    });
     socket.on("currentGameRoomUpdate", (data) => {
+      console.log(data);
       dispatch(gameUiActions.setCurrentGame(data));
     });
     socket.on("gameClosedByHost", () => {
@@ -18,15 +22,15 @@ const UISocketListener = ({ socket }) => {
     });
     socket.on("updateOfCurrentRoomPlayerReadyStatus", (playersReady) => {
       console.log(playersReady);
-      if (!currentGame) return null;
+      if (!currentGameName) return null;
       dispatch(gameUiActions.updatePlayersReady(playersReady));
     });
     socket.on("currentGameStatusUpdate", (gameStatus) => {
-      if (!currentGame) return;
+      if (!currentGameName) return;
       dispatch(gameUiActions.setCurrentGameStatus(gameStatus));
     });
     socket.on("currentGameCountdownUpdate", (countdown) => {
-      if (!currentGame) return;
+      if (!currentGameName) return;
       dispatch(gameUiActions.setCurrentGameCountdown(countdown));
     });
     return () => {
@@ -35,8 +39,9 @@ const UISocketListener = ({ socket }) => {
       socket.off("updateOfCurrentRoomPlayerReadyStatus");
       socket.off("currentGameStatusUpdate");
       socket.off("currentGameCountdownUpdate");
+      socket.off("gameListUpdate");
     };
-  }, [socket, dispatch, currentGame]);
+  }, [socket, dispatch, currentGameName]);
 
   // errors
   useEffect(() => {
@@ -48,7 +53,8 @@ const UISocketListener = ({ socket }) => {
     return () => {
       socket.off("errorMessage");
     };
-  }, [socket]);
+  }, [socket, dispatch]);
+  //
   return <div></div>;
 };
 
