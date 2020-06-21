@@ -10,7 +10,6 @@ function clientLeavesGame({
   chatRooms,
   gameRooms,
   gameName,
-  isDisconnecting,
   gameCountdownIntervals,
   defaultCountdownNumber,
 }) {
@@ -46,7 +45,6 @@ function clientLeavesGame({
           connectedSockets,
           username: gameRooms[gameName].players.challenger.username,
           roomToJoin: prevRoom ? prevRoom : "the void",
-          isDisconnecting,
         });
       }
       delete gameRooms[gameName];
@@ -80,7 +78,6 @@ function clientLeavesGame({
       connectedSockets,
       username,
       roomToJoin: prevRoom ? prevRoom : "the void",
-      isDisconnecting,
     });
 
     gameRoomForClient = gameRooms[gameName]

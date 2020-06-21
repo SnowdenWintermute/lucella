@@ -1,6 +1,17 @@
-const { io } = require("../../../expressServer");
+startGame = require("../battleRoomGame/startGame");
 
-function startGameCountdown({ gameRoom, gameCountdownIntervals }) {
+function startGameCountdown({
+  io,
+  socket,
+  connectedSockets,
+  gameRooms,
+  gameDatas,
+  gameRoom,
+  gameDataIntervals,
+  gameUpdatePackets,
+  gameCountdownIntervals,
+  gameEndingIntervals,
+}) {
   gameRoom.gameStatus = "countingDown";
   io.to(`game-${gameRoom.gameName}`).emit(
     "currentGameStatusUpdate",
@@ -13,9 +24,18 @@ function startGameCountdown({ gameRoom, gameCountdownIntervals }) {
         "currentGameStatusUpdate",
         gameRoom.gameStatus
       );
-      return clearInterval(gameCountdownIntervals[gameRoom.gameName]);
       // TODO: start the game ticks
-      // startGameTicks()
+      gameDataIntervals[gameRoom.gameName] = startGame({
+        io,
+        connectedSockets,
+        gameRooms,
+        gameRoom,
+        gameDatas,
+        gameDataIntervals,
+        gameUpdatePackets,
+        gameEndingIntervals,
+      });
+      return clearInterval(gameCountdownIntervals[gameRoom.gameName]);
     }
     gameRoom.countdown--;
     console.log(gameRoom.countdown);

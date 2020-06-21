@@ -6,7 +6,11 @@ function clientClicksReady({
   socket,
   connectedSockets,
   gameRooms,
+  gameDatas,
   gameName,
+  gameDataIntervals,
+  gameUpdatePackets,
+  gameEndingIntervals,
   gameCountdownIntervals,
   defaultCountdownNumber,
 }) {
@@ -36,7 +40,15 @@ function clientClicksReady({
     gameRooms[gameName].playersReady.challenger
   ) {
     startGameCountdown({
+      io,
+      socket,
+      connectedSockets,
+      gameRooms,
+      gameDatas,
       gameRoom: gameRooms[gameName],
+      gameDataIntervals,
+      gameUpdatePackets,
+      gameEndingIntervals,
       gameCountdownIntervals,
     });
   } else {

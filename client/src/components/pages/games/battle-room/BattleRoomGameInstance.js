@@ -1,10 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
-import { handleKeypress } from "./user-input-listeners/userInputListeners";
+import {
+  handleKeypress,
+  mouseUpHandler,
+  mouseDownHandler,
+  mouseMoveHandler,
+} from "./user-input-listeners/userInputListeners";
 import { draw } from "./canvasMain";
 
 const BattleRoomGameInstance = ({ socket }) => {
-  const [mouseData, setMouseData] = useState({
+  const mouseData = {
     leftPressedAtX: null,
     leftPressedAtY: null,
     leftReleasedAtX: null,
@@ -15,26 +20,44 @@ const BattleRoomGameInstance = ({ socket }) => {
     xPos: 0,
     yPos: 0,
     mouseOnScreen: null,
+  };
+  const [currentGameData, setCurrentGameData] = useState(null);
+  const [clientPlayer, setClientPlayer] = useState([]);
+  const [canvasInfo, setCanvasInfo] = useState({
+    width: 450,
+    height: 750,
   });
 
   const canvasRef = useRef();
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeypress);
+    window.addEventListener("keydown", onKeyPress);
     return () => {
-      window.removeEventListener("keydown", handleKeypress);
+      window.removeEventListener("keydown", onKeyPress);
     };
   }, []);
 
+  const onKeyPress = (e) => {
+    handleKeypress({
+      e,
+      socket,
+      currentGameData,
+      clientPlayer,
+      mouseData,
+    });
+  };
+
+  // draw interval
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
     console.log(mouseData.leftPressedAtX);
     const drawInterval = setInterval(() => {
-      draw(context, mouseData);
+      if (!currentGameData) return;
+      draw({ context, mouseData, clientPlayer, currentGameData, canvasInfo });
     }, 33);
     return () => clearInterval(drawInterval);
-  }, [canvasRef, mouseData]);
+  }, [canvasRef, mouseData, currentGameData]);
 
   return (
     <div
@@ -42,26 +65,25 @@ const BattleRoomGameInstance = ({ socket }) => {
       onContextMenu={(e) => e.preventDefault()}
     >
       <canvas
-        height={750}
-        width={450}
+        height={canvasInfo.height}
+        width={canvasInfo.width}
         className="battle-room-canvas"
         ref={canvasRef}
         onMouseDown={(e) => {
-          console.log("mousedown");
-          console.log(e);
-          setMouseData({
-            ...mouseData,
-            leftPressedAtX: e.nativeEvent.offsetX,
-            leftPressedAtY: e.nativeEvent.offsetY,
-          });
+          mouseDownHandler({ e, mouseData });
         }}
         onMouseUp={(e) => {
-          console.log("mouseup");
+          mouseUpHandler({
+            e,
+            socket,
+            currentGameData,
+            clientPlayer,
+            mouseData,
+          });
         }}
         onContextMenu={(e) => e.preventDefault()}
         onMouseMove={(e) => {
-          if (!mouseData.leftCurrentlyPressed) return;
-          console.log("mousemove");
+          mouseMoveHandler({ e, mouseData });
         }}
         onMouseLeave={(e) => {
           console.log("mouseleave");

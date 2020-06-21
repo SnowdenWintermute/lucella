@@ -20,6 +20,7 @@
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "lodash.clonedeep": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
     "mongoose": "^5.8.11",
     "nodemailer": "^6.4.2",
     "socket.io": "^2.3.0",

@@ -1,4 +1,4 @@
-class GameRoom {
+class GameData {
   constructor({ gameName, width, height }) {
     this.gameName = gameName;
     this.endingStateCountdown = 2;
@@ -43,4 +43,4 @@ class GameRoom {
     };
   }
 }
-module.exports = GameRoom;
+module.exports = GameData;
