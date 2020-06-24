@@ -10,7 +10,7 @@ const drawOrbs = ({ context, clientPlayer, currentGameData }) => {
       context.fill();
       context.lineWidth = 3;
       // orb number
-      if (orb.owner === clientPlayer.uid) {
+      if (orb.owner === clientPlayer.uuid) {
         context.fillStyle = "rgb(200,200,200)";
         context.textAlign = "center";
         context.textBaseline = "middle";

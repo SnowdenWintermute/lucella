@@ -27,8 +27,6 @@ function startGame({
     width: consts.gameWidth,
     height: consts.gameHeight,
   });
-  console.log(gameName + "started");
-  io.to(`game-${gameName}`).emit("serverInitsGame"); // maybe combine this with the first tick
   for (let i = 0; i < 5; i++) {
     let startingX = (i + 1) * 50 + 75;
     gameDatas[gameName].orbs.hostOrbs.push(
@@ -36,7 +34,7 @@ function startGame({
         startingX,
         100,
         gameDatas[gameName].orbRadius,
-        gameRoom.players.host.uid,
+        gameRoom.players.host.uuid,
         i + 1,
         "0, 153, 0"
       )
@@ -46,12 +44,14 @@ function startGame({
         startingX,
         600,
         gameDatas[gameName].orbRadius,
-        gameRoom.players.challenger.uid,
+        gameRoom.players.challenger.uuid,
         i + 1,
         "89, 0, 179"
       )
     );
   }
+  console.log(gameName + "started");
+  io.to(`game-${gameName}`).emit("serverInitsGame", gameDatas[gameName]);
   gameUpdatePackets[gameName] = {}; // why do this?
   gameUpdatePackets[gameName] = cloneDeep(gameDatas[gameName]);
   io.to(`game-${gameName}`).emit("tickFromServer", gameDatas[gameName]); // maybe combine this with serverInitsGame
@@ -73,16 +73,18 @@ function startGame({
     // create a packet with any data that changed to send to client
     let newPacket = {};
     Object.keys(gameUpdatePackets[gameName]).forEach((key) => {
-      if (!isEqual(gameUpdatePackets[gameName][key], gameRoom[key])) {
+      if (
+        !isEqual(gameUpdatePackets[gameName][key], gameDatas[gameName][key])
+      ) {
         if (
-          typeof gameRoom[key] === "object" ||
-          typeof gameRoom[key] === "array"
+          typeof gameData[gameName][key] === "object" ||
+          typeof gameData[gameName][key] === "array"
         ) {
-          newPacket[key] = cloneDeep(gameRoom[key]);
-          gameUpdatePackets[gameName][key] = cloneDeep(gameRoom[key]);
+          newPacket[key] = cloneDeep(gameData[gameName][key]);
+          gameUpdatePackets[gameName][key] = cloneDeep(gameData[gameName][key]);
         } else {
-          newPacket[key] = gameRoom[key];
-          gameUpdatePackets[gameName][key] = gameRoom[key];
+          newPacket[key] = gameData[gameName][key];
+          gameUpdatePackets[gameName][key] = gameData[gameName][key];
         }
       }
     });

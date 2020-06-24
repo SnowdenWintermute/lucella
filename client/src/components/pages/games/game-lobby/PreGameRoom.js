@@ -18,6 +18,9 @@ const PreGameRoom = ({ socket }) => {
   const playersInGame = useSelector((state) => state.gameUi.playersInGame);
   const currentGameName = useSelector((state) => state.gameUi.currentGameName);
   const countdownNumber = useSelector((state) => state.gameUi.countdownNumber);
+  const playerDesignation = useSelector(
+    (state) => state.gameUi.playerDesignation
+  );
 
   // element's own visibility/showclass
   useEffect(() => {
@@ -43,7 +46,12 @@ const PreGameRoom = ({ socket }) => {
 
   const preGameRoomMenu = currentGameName ? (
     <Fragment>
-      <h3>Game: {currentGameName}</h3>
+      <h3>
+        {playerDesignation && playerDesignation === "host"
+          ? "You are the host of "
+          : "You are challinging the host of "}
+        game: {currentGameName}
+      </h3>
       <div>Players:</div>
       <table className="pre-game-room-player-list">
         <tbody>

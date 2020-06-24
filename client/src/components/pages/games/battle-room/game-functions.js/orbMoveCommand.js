@@ -2,13 +2,14 @@ const orbMoveCommand = ({
   socket,
   currentGameData,
   clientPlayer,
+  playersInGame,
   headingX,
   headingY,
 }) => {
   let hostOrChallenger;
-  if (currentGameData.players.host.uid == clientPlayer.uid)
+  if (playersInGame.host.uuid === clientPlayer.uuid)
     hostOrChallenger = "hostOrbs";
-  if (currentGameData.players.challenger.uid == clientPlayer.uid)
+  if (playersInGame.challenger.uuid === clientPlayer.uuid)
     hostOrChallenger = "challengerOrbs";
   currentGameData.orbs[hostOrChallenger].forEach((orb) => {
     if (orb.isSelected) {

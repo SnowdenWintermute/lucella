@@ -2,6 +2,7 @@ const selectOrbs = ({
   socket,
   clientPlayer,
   currentGameData,
+  playersInGame,
   startX,
   startY,
   currX,
@@ -10,7 +11,7 @@ const selectOrbs = ({
   if (!currentGameData) return;
   let playerOrbsToSelect;
   let stackedOrbHighestIndex;
-  if (clientPlayer.uid == currentGameData.players.host.uid)
+  if (clientPlayer.uuid === playersInGame.host.uuid)
     playerOrbsToSelect = "hostOrbs";
   else playerOrbsToSelect = "challengerOrbs";
   currentGameData.orbs[playerOrbsToSelect].forEach((orb, i) => {
@@ -23,7 +24,7 @@ const selectOrbs = ({
       // not drawing a small ass box with the end corner on the stack of orbs
       Math.abs(currX - startX) < 3 &&
       Math.abs(currY - startY) < 3 &&
-      orb.owner === clientPlayer.uid
+      orb.owner === clientPlayer.uuid
     ) {
       if (!stackedOrbHighestIndex) {
         stackedOrbHighestIndex = orb.num;
@@ -54,7 +55,7 @@ const selectOrbs = ({
           orb.xPos - orb.radius <= currX &&
           orb.yPos - orb.radius <= startY &&
           orb.yPos + orb.radius >= currY)) &&
-      orb.owner === clientPlayer.uid
+      orb.owner === clientPlayer.uuid
     ) {
       orb.isSelected = true;
     } else {

@@ -9,6 +9,7 @@ import {
   UPDATE_PLAYERS_READY,
   UPDATE_GAME_COUNTDOWN,
   UPDATE_GAME_STATUS,
+  UPDATE_PLAYER_DESIGNATION,
 } from "../actions/types";
 
 const initialState = {
@@ -27,6 +28,7 @@ const initialState = {
   },
   countdownNumber: null,
   gameStatus: "inLobby",
+  playerDesignation: null,
 };
 
 export default function (state = initialState, action) {
@@ -89,6 +91,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         gameStatus: payload,
+      };
+    case UPDATE_PLAYER_DESIGNATION:
+      return {
+        ...state,
+        playerDesignation: payload,
       };
     default:
       return state;

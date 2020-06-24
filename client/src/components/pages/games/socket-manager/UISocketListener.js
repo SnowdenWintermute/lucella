@@ -14,16 +14,17 @@ const UISocketListener = ({ socket }) => {
       dispatch(gameUiActions.updateGamesList(data));
     });
     socket.on("currentGameRoomUpdate", (data) => {
-      console.log(data);
       dispatch(gameUiActions.setCurrentGame(data));
     });
     socket.on("gameClosedByHost", () => {
       dispatch(gameUiActions.closePreGameScreen());
     });
     socket.on("updateOfCurrentRoomPlayerReadyStatus", (playersReady) => {
-      console.log(playersReady);
       if (!currentGameName) return null;
       dispatch(gameUiActions.updatePlayersReady(playersReady));
+    });
+    socket.on("serverSendsPlayerDesignation", (data) => {
+      dispatch(gameUiActions.updatePlayerDesignation(data));
     });
     socket.on("currentGameStatusUpdate", (gameStatus) => {
       if (!currentGameName) return;

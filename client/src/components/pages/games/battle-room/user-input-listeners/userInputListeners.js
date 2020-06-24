@@ -9,6 +9,7 @@ export const handleKeypress = ({
   socket,
   currentGameData,
   clientPlayer,
+  playersInGame,
   mouseData,
 }) => {
   let keyPressed;
@@ -37,6 +38,7 @@ export const handleKeypress = ({
       socket,
       currentGameData,
       clientPlayer,
+      playersInGame,
       keyPressed,
       mouseData,
     });
@@ -47,6 +49,7 @@ export const handleKeypress = ({
 export const mouseDownHandler = ({ e, mouseData }) => {
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = true;
+    console.log(mouseData);
     mouseData.leftPressedAtX = e.nativeEvent.offsetX;
     mouseData.leftPressedAtY = e.nativeEvent.offsetY;
   }
@@ -56,9 +59,11 @@ export const mouseUpHandler = ({
   socket,
   currentGameData,
   clientPlayer,
+  playersInGame,
   e,
   mouseData,
 }) => {
+  console.log("mouseUp");
   if (e.button === 2) {
     mouseData.rightReleasedAtY = mouseData.yPos;
     mouseData.rightReleasedAtX = mouseData.xPos;
@@ -66,18 +71,20 @@ export const mouseUpHandler = ({
       socket,
       currentGameData,
       clientPlayer,
+      playersInGame,
       headingX: mouseData.rightReleasedAtX,
       headingY: mouseData.rightReleasedAtY,
     });
   }
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = false;
-    mouseData.leftReleasedAtX = e.offsetX;
-    mouseData.leftReleasedAtY = e.offsetY;
+    mouseData.leftReleasedAtX = e.nativeEvent.offsetX;
+    mouseData.leftReleasedAtY = e.nativeEvent.offsetY;
     const { leftPressedAtX, leftPressedAtY, xPos, yPos } = mouseData;
     selectOrbs({
       socket,
       currentGameData,
+      playersInGame,
       clientPlayer,
       startX: leftPressedAtX,
       startY: leftPressedAtY,
@@ -90,9 +97,34 @@ export const mouseUpHandler = ({
 export const mouseMoveHandler = throttledEventHandlerCreator(
   33,
   ({ e, mouseData }) => {
-    if (!mouseData.leftCurrentlyPressed) return;
-    mouseData.xPos = e.offsetX;
-    mouseData.yPos = e.offsetY;
+    mouseData.xPos = e.nativeEvent.offsetX;
+    mouseData.yPos = e.nativeEvent.offsetY;
     console.log("mousemove");
   }
 );
+
+export const mouseLeaveHandler = ({
+  socket,
+  currentGameData,
+  clientPlayer,
+  playersInGame,
+  mouseData,
+}) => {
+  mouseData.mouseOnScreen = false;
+  if (mouseData.leftCurrentlyPressed) {
+    const { leftPressedAtX, leftPressedAtY, xPos, yPos } = mouseData;
+    selectOrbs({
+      socket,
+      currentGameData,
+      playersInGame,
+      clientPlayer,
+      startX: leftPressedAtX,
+      startY: leftPressedAtY,
+      currX: xPos,
+      currY: yPos,
+    });
+  }
+};
+
+export const mouseEnterHandler = ({ mouseData }) =>
+  (mouseData.mouseOnScreen = true);
