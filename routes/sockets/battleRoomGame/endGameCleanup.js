@@ -6,6 +6,7 @@ function endGameCleanup({
   gameRoom,
   gameData,
   gameRooms,
+  gameDatas,
   gameDataIntervals,
   gameEndingIntervals,
   connectedSockets,
@@ -15,7 +16,7 @@ function endGameCleanup({
   delete gameDataIntervals[gameRoom.gameName];
   gameEndingIntervals[gameRoom.gameName] = setInterval(() => {
     if (gameData.endingStateCountdown < 2) {
-      io.to(`game-${gameRoom.gameName}`).emit("showEndScreen", gameRoom);
+      io.to(`game-${gameRoom.gameName}`).emit("showEndScreen", gameData);
       clearInterval(gameEndingIntervals[gameRoom.gameName]);
       delete gameEndingIntervals[gameRoom.gameName];
       delete gameDatas[gameRoom.gameName];

@@ -110,6 +110,36 @@ io.sockets.on("connect", async (socket) => {
       defaultCountdownNumber,
     });
   });
+  socket.on("clientSendsOrbSelections", (data) => {
+    // TODO: check for correct ownership (or maybe it doesn't matter if they hack to select opponent orbs because they can't move them anyway)
+    // roomNumber, ownerOfOrbs, orbsToBeUpdated
+    const { gameName, ownerOfOrbs, orbsToBeUpdated } = data;
+    if (gameDatas[gameName]) {
+      gameDatas[gameName].orbs[ownerOfOrbs].forEach((orb) => {
+        orbsToBeUpdated.forEach((selectedOrb) => {
+          if (selectedOrb.num === orb.num) {
+            orb.isSelected = selectedOrb.isSelected;
+          }
+        });
+      });
+    }
+  });
+  socket.on("clientSubmitsMoveCommand", (data) => {
+    const { orbsClientWantsToMove, gameName } = data;
+    let whichPlayerOrbs;
+    if (
+      gameRooms[gameName].players.host.uuid == connectedSockets[socket.id].uuid
+    )
+      whichPlayerOrbs = "hostOrbs";
+    if (
+      gameRooms[gameName].players.challenger.uuid ==
+      connectedSockets[socket.id].uuid
+    )
+      whichPlayerOrbs = "challengerOrbs";
+
+    gameDatas[gameName].orbs[whichPlayerOrbs] = orbsClientWantsToMove;
+  });
+
   socket.on("clientSendsNewChat", (data) => {
     clientSendsNewChat({ io, socket, data, currentUser });
   });

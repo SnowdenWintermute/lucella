@@ -22,7 +22,7 @@ const BattleRoomGameInstance = ({ socket }) => {
     rightReleasedAtY: null,
     xPos: 0,
     yPos: 0,
-    mouseOnScreen: null,
+    mouseOnScreen: true,
   };
   let currentGameData = useRef({});
   const playerDesignation = useSelector(

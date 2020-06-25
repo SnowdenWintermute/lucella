@@ -77,14 +77,16 @@ function startGame({
         !isEqual(gameUpdatePackets[gameName][key], gameDatas[gameName][key])
       ) {
         if (
-          typeof gameData[gameName][key] === "object" ||
-          typeof gameData[gameName][key] === "array"
+          typeof gameDatas[gameName][key] === "object" ||
+          typeof gameDatas[gameName][key] === "array"
         ) {
-          newPacket[key] = cloneDeep(gameData[gameName][key]);
-          gameUpdatePackets[gameName][key] = cloneDeep(gameData[gameName][key]);
+          newPacket[key] = cloneDeep(gameDatas[gameName][key]);
+          gameUpdatePackets[gameName][key] = cloneDeep(
+            gameDatas[gameName][key]
+          );
         } else {
-          newPacket[key] = gameData[gameName][key];
-          gameUpdatePackets[gameName][key] = gameData[gameName][key];
+          newPacket[key] = gameDatas[gameName][key];
+          gameUpdatePackets[gameName][key] = gameDatas[gameName][key];
         }
       }
     });

@@ -53,6 +53,7 @@ function handleScoringPoints({
       connectedSockets,
       gameRooms,
       gameRoom,
+      gameData,
       gameDatas,
       gameDataIntervals,
       gameEndingIntervals,
