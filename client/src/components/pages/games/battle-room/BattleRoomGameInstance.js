@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import {
   handleKeypress,
@@ -10,8 +10,10 @@ import {
   mouseEnterHandler,
 } from "./user-input-listeners/userInputListeners";
 import draw from "./canvasMain";
+import * as gameUiActions from "../../../../store/actions/game-ui";
 
 const BattleRoomGameInstance = ({ socket }) => {
+  const dispatch = useDispatch();
   const mouseData = {
     leftPressedAtX: null,
     leftPressedAtY: null,
@@ -53,8 +55,9 @@ const BattleRoomGameInstance = ({ socket }) => {
       });
     });
     return () => {
-      socket.on("serverInitsGame");
+      socket.off("serverInitsGame");
       socket.off("tickFromServer");
+      dispatch(gameUiActions.clearGameUiData());
     };
   }, [socket]);
 

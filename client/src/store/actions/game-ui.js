@@ -10,6 +10,7 @@ import {
   UPDATE_GAME_COUNTDOWN,
   UPDATE_GAMES_LIST,
   UPDATE_PLAYER_DESIGNATION,
+  CLEAR_GAME_UI,
 } from "./types";
 
 export const viewGamesListClicked = () => (dispatch) => {
@@ -72,5 +73,11 @@ export const updatePlayerDesignation = (hostOrClient) => (dispatch) => {
   dispatch({
     type: UPDATE_PLAYER_DESIGNATION,
     payload: hostOrClient,
+  });
+};
+
+export const clearGameUiData = () => (dispatch) => {
+  dispatch({
+    type: CLEAR_GAME_UI,
   });
 };

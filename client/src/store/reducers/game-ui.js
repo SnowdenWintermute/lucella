@@ -10,6 +10,7 @@ import {
   UPDATE_GAME_COUNTDOWN,
   UPDATE_GAME_STATUS,
   UPDATE_PLAYER_DESIGNATION,
+  CLEAR_GAME_UI,
 } from "../actions/types";
 
 const initialState = {
@@ -97,6 +98,8 @@ export default function (state = initialState, action) {
         ...state,
         playerDesignation: payload,
       };
+    case CLEAR_GAME_UI:
+      return initialState;
     default:
       return state;
   }

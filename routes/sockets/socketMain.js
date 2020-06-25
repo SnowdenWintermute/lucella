@@ -144,6 +144,7 @@ io.sockets.on("connect", async (socket) => {
     clientSendsNewChat({ io, socket, data, currentUser });
   });
   socket.on("disconnect", () => {
+    console.log(socket.id + " disconnected");
     socketDisconnect({
       io,
       socket,

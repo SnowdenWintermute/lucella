@@ -1,6 +1,6 @@
 Profile
 Profile view with name, avi and ranks
-PlayerModel for each game
+PlayerModel for each game (for record page)
   -user ref
   -array sorted by score (that is your rank)
   -created after user completes first of that game type
@@ -13,16 +13,15 @@ Chat
   -icon of what game they're playing
 General
   -remove magic strings
-  -fix reducers to be shallow objects (not nested) and only
-  replace what is needed (the update of ready players in lobby is replacing whole game object, same for countdown)
-
-PreGame UI
+Sockets
+ - Clean up main socket listener file and separate concerns
 
 Game
-  -if player leaves game inProgress, destroy the game and award a win/loss
+  -if player leaves game inProgress, destroy the game and award a win/loss (only host leaving destroys game rn)
 
 DONE
   -change chat channel(room)
   - separate game lobby (players, ready status,countdown,gameStatus) and
 in game objects (end zones, points, orbs, dashes) and have a reference prop to link them
 so we can send just the data that is needed in the lobby
+-fix reducers to be shallow objects (not nested) and only replace what is needed
