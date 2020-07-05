@@ -15,10 +15,12 @@ function startGame({
   connectedSockets,
   gameRooms,
   gameDatas,
+  chatRooms,
   gameRoom,
   gameDataIntervals,
   gameEndingIntervals,
   gameUpdatePackets,
+  gameCountdownIntervals,
 }) {
   // initializing the game
   const { gameName } = gameRoom;
@@ -36,8 +38,8 @@ function startGame({
         gameDatas[gameName].orbRadius,
         gameRoom.players.host.uuid,
         i + 1,
-        "0, 153, 0"
-      )
+        "0, 153, 0",
+      ),
     );
     gameDatas[gameName].orbs.challengerOrbs.push(
       new Orb(
@@ -46,8 +48,8 @@ function startGame({
         gameDatas[gameName].orbRadius,
         gameRoom.players.challenger.uuid,
         i + 1,
-        "89, 0, 179"
-      )
+        "89, 0, 179",
+      ),
     );
   }
   console.log(gameName + "started");
@@ -66,9 +68,11 @@ function startGame({
       gameRooms,
       gameRoom,
       gameData: gameDatas[gameName],
+      chatRooms,
       gameDatas,
       gameDataIntervals,
       gameEndingIntervals,
+      gameCountdownIntervals,
     });
     // create a packet with any data that changed to send to client
     let newPacket = {};
@@ -82,7 +86,7 @@ function startGame({
         ) {
           newPacket[key] = cloneDeep(gameDatas[gameName][key]);
           gameUpdatePackets[gameName][key] = cloneDeep(
-            gameDatas[gameName][key]
+            gameDatas[gameName][key],
           );
         } else {
           newPacket[key] = gameDatas[gameName][key];

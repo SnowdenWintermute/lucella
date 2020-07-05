@@ -36,6 +36,7 @@ io.sockets.on("connect", async (socket) => {
   socket.emit("authenticationFinished", null);
   socket.emit("gameListUpdate", gameRooms);
   socket.emit("currentGameRoomUpdate", null);
+  console.log("socket connected and room set to null");
   if (currentUser.isGuest) {
     currentUser.name = makeRandomAnonUsername({
       socket,
@@ -101,6 +102,7 @@ io.sockets.on("connect", async (socket) => {
       socket,
       connectedSockets,
       gameRooms,
+      chatRooms,
       gameDatas,
       gameName,
       gameDataIntervals,

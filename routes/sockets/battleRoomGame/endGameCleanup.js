@@ -1,4 +1,4 @@
-const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
+const clientRequestsToJoinRoom = require("../lobbyFunctions/clientRequestsToJoinRoom");
 
 function endGameCleanup({
   io,
@@ -6,6 +6,7 @@ function endGameCleanup({
   gameRoom,
   gameData,
   gameRooms,
+  chatRooms,
   gameDatas,
   gameDataIntervals,
   gameEndingIntervals,
@@ -15,31 +16,42 @@ function endGameCleanup({
   clearInterval(gameDataIntervals[gameRoom.gameName]);
   delete gameDataIntervals[gameRoom.gameName];
   gameEndingIntervals[gameRoom.gameName] = setInterval(() => {
+    console.log(gameData.endingStateCountdown);
     if (gameData.endingStateCountdown < 2) {
-      io.to(`game-${gameRoom.gameName}`).emit("showEndScreen", gameData);
       clearInterval(gameEndingIntervals[gameRoom.gameName]);
-      delete gameEndingIntervals[gameRoom.gameName];
-      delete gameDatas[gameRoom.gameName];
-      // remove the host from the game, thereby removing all players and destroying the game
-      clientLeavesGame({
+      const host = connectedSockets[gameRoom.players.host.socketId];
+      const challenger = connectedSockets[gameRoom.players.challenger.socketId];
+      host.isInGame = false;
+      challenger.isInGame = false;
+
+      io.in(`game-${gameRoom.gameName}`).emit("showEndScreen", gameData);
+      io.in(`game-${gameRoom.gameName}`).emit("currentGameRoomUpdate", null);
+      clientRequestsToJoinRoom({
         io,
-        socket,
-        gameRooms,
-        connectedSockets,
+        socket: io.sockets.sockets[host.socketId],
+        roomToJoin: connectedSockets[host.socketId].previousRoom,
         chatRooms,
-        gameName: gameRoom.gameName,
-        currentUser: gameRoom.players.host,
-        gameCountdownIntervals,
-        defaultCountdownNumber,
+        username: host.username,
+        connectedSockets,
+      });
+      clientRequestsToJoinRoom({
+        io,
+        socket: io.sockets.sockets[challenger.socketId],
+        roomToJoin: connectedSockets[challenger.socketId].previousRoom,
+        chatRooms,
+        username: challenger.username,
+        connectedSockets,
       });
 
+      delete gameEndingIntervals[gameRoom.gameName];
+      delete gameDatas[gameRoom.gameName];
+      delete gameRooms[gameRoom.gameName];
       io.sockets.emit("gameListUpdate", gameRooms);
-      io.to(`game-${gameRoom.gameName}`).emit("currentGameRoomUpdate", null);
     } else {
-      gameRoom.endingStateCountdown -= 1;
+      gameData.endingStateCountdown -= 1;
       io.to(`game-${gameRoom.gameName}`).emit(
         "gameEndingCountdown",
-        gameRoom.endingStateCountdown
+        gameRoom.endingStateCountdown,
       );
     }
   }, 1000);

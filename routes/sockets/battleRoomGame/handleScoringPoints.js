@@ -4,11 +4,13 @@ function handleScoringPoints({
   io,
   connectedSockets,
   gameRooms,
+  chatRooms,
   gameRoom,
   gameData,
   gameDatas,
   gameDataIntervals,
   gameEndingIntervals,
+  gameCountdownIntervals,
 }) {
   for (let orbSet in gameData.orbs) {
     gameData.orbs[orbSet].forEach((orb) => {
@@ -52,11 +54,13 @@ function handleScoringPoints({
       io,
       connectedSockets,
       gameRooms,
+      chatRooms,
       gameRoom,
       gameData,
       gameDatas,
       gameDataIntervals,
       gameEndingIntervals,
+      gameCountdownIntervals,
     });
   }
 }

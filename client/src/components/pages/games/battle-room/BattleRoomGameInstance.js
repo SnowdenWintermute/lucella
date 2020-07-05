@@ -28,7 +28,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   };
   let currentGameData = useRef({});
   const playerDesignation = useSelector(
-    (state) => state.gameUi.playerDesignation
+    (state) => state.gameUi.playerDesignation,
   );
   const playersInGame = useSelector((state) => state.gameUi.playersInGame);
   const [clientPlayer, setClientPlayer] = useState([]);
@@ -59,7 +59,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       socket.off("tickFromServer");
       dispatch(gameUiActions.clearGameUiData());
     };
-  }, [socket]);
+  }, [socket, dispatch]);
 
   // set up a ref to the current draw function so it's interval can have access to it having current proporties
   useEffect(() => {
@@ -89,7 +89,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         mouseData,
       });
     },
-    [socket, currentGameData, playersInGame, clientPlayer, mouseData]
+    [socket, currentGameData, playersInGame, clientPlayer, mouseData],
   );
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);

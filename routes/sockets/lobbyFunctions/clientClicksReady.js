@@ -6,6 +6,7 @@ function clientClicksReady({
   socket,
   connectedSockets,
   gameRooms,
+  chatRooms,
   gameDatas,
   gameName,
   gameDataIntervals,
@@ -32,7 +33,7 @@ function clientClicksReady({
   // send update of who is currently ready
   io.to(`game-${gameName}`).emit(
     "updateOfCurrentRoomPlayerReadyStatus",
-    gameRooms[gameName].playersReady
+    gameRooms[gameName].playersReady,
   );
   // if both host and challenger are ready, start the countdown
   if (
@@ -44,6 +45,7 @@ function clientClicksReady({
       socket,
       connectedSockets,
       gameRooms,
+      chatRooms,
       gameDatas,
       gameRoom: gameRooms[gameName],
       gameDataIntervals,

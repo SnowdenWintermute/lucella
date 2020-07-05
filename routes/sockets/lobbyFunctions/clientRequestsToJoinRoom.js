@@ -1,5 +1,6 @@
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
+const ChatMessage = require("../../../classes/chat/ChatMessage");
 
 const clientRequestsToJoinRoom = ({
   io,
@@ -35,7 +36,7 @@ const clientRequestsToJoinRoom = ({
   } else {
     // already connected, add to their list of sockets connected
     chatRooms[roomToJoin].currentUsers[username].connectedSockets.push(
-      socket.id
+      socket.id,
     );
   }
   const roomToJoinForClient = generateRoomForClient({
@@ -44,12 +45,14 @@ const clientRequestsToJoinRoom = ({
   });
 
   io.in(roomToJoin).emit("updateChatRoom", roomToJoinForClient);
-  socket.emit("newMessage", {
-    author: "Server",
-    style: "private",
-    message: `Welcome to ${roomToJoin}.`,
-    timeStamp: Date.now(),
-  });
+  socket.emit(
+    "newMessage",
+    new ChatMessage({
+      author: "Server",
+      style: "private",
+      messageText: `Welcome to ${roomToJoin}.`,
+    }),
+  );
   return chatRooms;
 };
 

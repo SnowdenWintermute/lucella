@@ -63,7 +63,7 @@ const selectOrbs = ({
     }
   });
   socket.emit("clientSendsOrbSelections", {
-    roomNumber: currentGameData.roomNumber,
+    gameName: currentGameData.gameName,
     ownerOfOrbs: playerOrbsToSelect,
     orbsToBeUpdated: currentGameData.orbs[playerOrbsToSelect],
   });

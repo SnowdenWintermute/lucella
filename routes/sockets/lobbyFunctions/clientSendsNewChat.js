@@ -1,14 +1,18 @@
+const ChatMessage = require("../../../classes/chat/ChatMessage");
+
 function clientSendsNewChat({ io, data, currentUser }) {
-  const { currentChatRoomName, style, message } = data;
+  const { currentChatRoomName, style, messageText } = data;
   console.log(data.currentChatRoomName);
-  console.log(data.message);
+  console.log(data.messageText);
   const author = currentUser.name;
-  io.in(currentChatRoomName).emit("newMessage", {
-    author,
-    style,
-    message,
-    timeStamp: Date.now(),
-  });
+  io.in(currentChatRoomName).emit(
+    "newMessage",
+    new ChatMessage({
+      author,
+      style,
+      messageText,
+    }),
+  );
 }
 
 module.exports = clientSendsNewChat;

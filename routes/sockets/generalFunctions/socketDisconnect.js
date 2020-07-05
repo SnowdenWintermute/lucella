@@ -10,6 +10,8 @@ function socketDisconnect({
   gameRooms,
   gameName,
 }) {
+  console.log("socketDisconnect 13");
+  console.log(currentUser);
   if (currentUser.currentGameName) {
     clientLeavesGame({
       io,

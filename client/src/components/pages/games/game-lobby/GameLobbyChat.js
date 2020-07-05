@@ -6,10 +6,10 @@ const GameLobbyChat = ({ socket, username }) => {
   const [chatClass, setChatClass] = useState("");
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
   const preGameScreenIsOpen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen
+    (state) => state.gameUi.preGameScreen.isOpen,
   );
   const currentChatRoomName = useSelector(
-    (state) => state.chat.currentChatRoomName
+    (state) => state.chat.currentChatRoomName,
   );
   const allMessages = useSelector((state) => state.chat.messages);
 
@@ -32,7 +32,7 @@ const GameLobbyChat = ({ socket, username }) => {
       currentChatRoomName,
       author,
       style: "normal",
-      message,
+      messageText: message,
     };
     socket.emit("clientSendsNewChat", messageToSend);
   };
@@ -46,12 +46,13 @@ const GameLobbyChat = ({ socket, username }) => {
   let messagesToDisplay;
   if (allMessages) {
     messagesToDisplay = allMessages.map((message) => {
+      console.log(message);
       return (
         <li
           className={`chat-message chat-message-${message.style}`}
-          key={message.timeStamp + " " + message.message}
+          key={message.timeStamp + " " + message.messageText}
         >
-          {message.author} : {message.message}
+          {message.author} : {message.messageText}
         </li>
       );
     });

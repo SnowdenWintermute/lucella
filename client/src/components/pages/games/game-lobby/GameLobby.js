@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { connect, useSelector } from "react-redux";
+import { connect, useSelector, useDispatch } from "react-redux";
 import { setAlert } from "../../../../store/actions/alert";
 import GameLobbyChat from "./GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
@@ -12,13 +12,15 @@ import Modal from "../../../common/modal/Modal";
 import io from "socket.io-client";
 import SocketManager from "../socket-manager/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
+import * as gameUiActions from "../../../../store/actions/game-ui";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 
 const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
+  const dispatch = useDispatch();
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
-    false
+    false,
   );
   const [authenticating, setAuthenticating] = useState(true);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
@@ -35,6 +37,8 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     socket = io("localhost:5000", { query });
     return () => {
       socket.disconnect();
+      dispatch(gameUiActions.setCurrentGame(null));
+      dispatch(gameUiActions.closePreGameScreen());
     };
   }, [localStorage.token]);
 

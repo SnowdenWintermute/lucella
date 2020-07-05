@@ -4,7 +4,7 @@ class GameData {
     this.endingStateCountdown = 2;
     this.width = width;
     this.height = height;
-    this.speed = 4;
+    this.speed = 8;
     this.orbRadius = 8;
     this.orbs = {
       hostOrbs: [],

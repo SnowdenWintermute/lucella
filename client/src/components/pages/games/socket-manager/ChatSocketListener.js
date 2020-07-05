@@ -6,7 +6,7 @@ import * as chatActions from "../../../../store/actions/chat";
 const ChatSocketListener = ({ socket }) => {
   const dispatch = useDispatch();
   const currentChatRoomName = useSelector(
-    (state) => state.chat.currentChatRoomName
+    (state) => state.chat.currentChatRoomName,
   );
 
   useEffect(() => {
@@ -14,6 +14,7 @@ const ChatSocketListener = ({ socket }) => {
     socket.on("updateChatRoom", (data) => {
       dispatch(chatActions.setNewChatRoomLoading(false));
       const { roomName, currentUsers } = data;
+      console.log(currentUsers);
       dispatch(chatActions.setCurrentChatRoomUsers(currentUsers));
       dispatch(chatActions.setCurrentChatRoomName(roomName));
     });
