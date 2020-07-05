@@ -153,9 +153,13 @@ io.sockets.on("connect", async (socket) => {
       currentUser,
       connectedSockets,
       chatRooms,
+      gameDatas,
       gameRooms,
+      gameCountdownIntervals,
+      gameDataIntervals,
+      gameEndingIntervals,
+      defaultCountdownNumber,
       gameName: currentUser.currentGameName,
-      username: currentUser.name,
     });
   });
 });

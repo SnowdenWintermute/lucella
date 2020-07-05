@@ -8,10 +8,13 @@ function socketDisconnect({
   connectedSockets,
   chatRooms,
   gameRooms,
+  gameDatas,
   gameName,
+  gameCountdownIntervals,
+  gameDataIntervals,
+  gameEndingIntervals,
+  defaultCountdownNumber,
 }) {
-  console.log("socketDisconnect 13");
-  console.log(currentUser);
   if (currentUser.currentGameName) {
     clientLeavesGame({
       io,
@@ -20,7 +23,12 @@ function socketDisconnect({
       connectedSockets,
       chatRooms,
       gameRooms,
+      gameDatas,
       gameName,
+      gameCountdownIntervals,
+      gameDataIntervals,
+      gameEndingIntervals,
+      defaultCountdownNumber,
       isDisconnecting: true,
     });
   } else {

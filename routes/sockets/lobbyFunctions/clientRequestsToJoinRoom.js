@@ -11,6 +11,7 @@ const clientRequestsToJoinRoom = ({
   connectedSockets,
   authorizedForGameChannel,
 }) => {
+  if (!socket) return;
   if (!roomToJoin) roomToJoin = "the void";
   if (roomToJoin.slice(0, 5) === "game-") {
     if (!authorizedForGameChannel)

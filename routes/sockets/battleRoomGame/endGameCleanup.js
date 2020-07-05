@@ -11,7 +11,9 @@ function endGameCleanup({
   gameDataIntervals,
   gameEndingIntervals,
   connectedSockets,
+  isDisconnecting
 }) {
+  if(gameRoom.gameStatus==="ending") return 
   gameRoom.gameStatus = "ending";
   io.in(`game-${gameRoom.gameName}`).emit(
     "currentGameStatusUpdate",
