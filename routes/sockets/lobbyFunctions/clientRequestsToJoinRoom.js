@@ -9,7 +9,16 @@ const clientRequestsToJoinRoom = ({
   chatRooms,
   username,
   connectedSockets,
+  authorizedForGameChannel,
 }) => {
+  if (!roomToJoin) roomToJoin = "the void";
+  if (roomToJoin.slice(0, 5) === "game-") {
+    if (!authorizedForGameChannel)
+      return socket.emit(
+        "errorMessage",
+        "Not authorized for that chat channel",
+      );
+  }
   // console.log(username + " requests to join room " + roomToJoin);
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });

@@ -1,7 +1,7 @@
 class GameData {
   constructor({ gameName, width, height }) {
     this.gameName = gameName;
-    this.endingStateCountdown = 2;
+    this.endingStateCountdown = 3;
     this.width = width;
     this.height = height;
     this.speed = 8;

@@ -11,6 +11,7 @@ import {
   UPDATE_GAMES_LIST,
   UPDATE_PLAYER_DESIGNATION,
   CLEAR_GAME_UI,
+  SET_GAME_WINNER,
 } from "./types";
 
 export const viewGamesListClicked = () => (dispatch) => {
@@ -75,7 +76,12 @@ export const updatePlayerDesignation = (hostOrClient) => (dispatch) => {
     payload: hostOrClient,
   });
 };
-
+export const setGameWinner = (data) => (dispatch) => {
+  dispatch({
+    type: SET_GAME_WINNER,
+    payload: data,
+  });
+};
 export const clearGameUiData = () => (dispatch) => {
   dispatch({
     type: CLEAR_GAME_UI,

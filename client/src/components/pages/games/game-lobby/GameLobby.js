@@ -94,7 +94,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
           joinRoom={joinRoom}
         />
       </Modal>
-      {gameStatus !== "inProgress" ? (
+      {gameStatus !== "inProgress" && gameStatus !== "ending" ? (
         <div className={`game-lobby`}>
           <MainButtons
             socket={socket}

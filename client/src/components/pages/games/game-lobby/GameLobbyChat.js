@@ -26,7 +26,6 @@ const GameLobbyChat = ({ socket, username }) => {
   // sending a message
   const sendNewMessage = (message) => {
     if (message === "") return;
-    console.log("sending message in room " + currentChatRoomName);
     const author = username;
     const messageToSend = {
       currentChatRoomName,
@@ -46,7 +45,6 @@ const GameLobbyChat = ({ socket, username }) => {
   let messagesToDisplay;
   if (allMessages) {
     messagesToDisplay = allMessages.map((message) => {
-      console.log(message);
       return (
         <li
           className={`chat-message chat-message-${message.style}`}

@@ -14,14 +14,14 @@ function startGameCountdown({
   gameEndingIntervals,
 }) {
   gameRoom.gameStatus = "countingDown";
-  io.to(`game-${gameRoom.gameName}`).emit(
+  io.in(`game-${gameRoom.gameName}`).emit(
     "currentGameStatusUpdate",
     gameRoom.gameStatus,
   );
   gameCountdownIntervals[gameRoom.gameName] = setInterval(() => {
     if (gameRoom.countdown === 0) {
       gameRoom.gameStatus = "inProgress";
-      io.to(`game-${gameRoom.gameName}`).emit(
+      io.in(`game-${gameRoom.gameName}`).emit(
         "currentGameStatusUpdate",
         gameRoom.gameStatus,
       );

@@ -31,7 +31,7 @@ function clientJoinsGame({
         )
           return socket.emit(
             "errorMessage",
-            "You can not join a game hosted by yourself"
+            "You can not join a game hosted by yourself",
           );
         // otherwise join as the challenger
         console.log(username + " joined game " + gameName + " as challenger");
@@ -48,6 +48,7 @@ function clientJoinsGame({
         chatRooms,
         connectedSockets,
         username,
+        authorizedForGameChannel: true,
       });
       connectedSockets[socket.id].isInGame = true;
       gamesForClient = generateGamesForClient({ gamesObject: gameRooms });
@@ -57,7 +58,7 @@ function clientJoinsGame({
       });
       io.to(`game-${gameName}`).emit(
         "currentGameRoomUpdate",
-        gameRoomForClient
+        gameRoomForClient,
       );
       currentUser.currentGameName = gameName;
     } else {

@@ -9,6 +9,9 @@ function draw({
   clientPlayer,
   currentGameData,
   canvasInfo,
+  gameOverCountdownText,
+  gameStatus,
+  winner,
 }) {
   return requestAnimationFrame(() => {
     if (!currentGameData) return;
@@ -31,7 +34,14 @@ function draw({
 
     drawScore({ context, clientPlayer, currentGameData });
     drawOrbs({ context, clientPlayer, currentGameData });
-    gameOverText({ context, currentGameData });
+    gameOverText({
+      context,
+      currentGameData,
+      gameStatus,
+      winner,
+      gameOverCountdownText,
+    });
+    console.log(gameOverCountdownText);
 
     // selection box
     if (mouseData.leftCurrentlyPressed) {
@@ -46,7 +56,7 @@ function draw({
         mouseData.leftPressedAtX,
         mouseData.leftPressedAtY,
         selectionBoxSize.width,
-        selectionBoxSize.height
+        selectionBoxSize.height,
       );
       context.lineWidth = 3;
       context.stroke();

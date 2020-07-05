@@ -13,8 +13,24 @@ function endGameCleanup({
   connectedSockets,
 }) {
   gameRoom.gameStatus = "ending";
+  io.in(`game-${gameRoom.gameName}`).emit(
+    "currentGameStatusUpdate",
+    gameRoom.gameStatus,
+  );
+  io.to(`game-${gameRoom.gameName}`).emit(
+    "gameEndingCountdown",
+    gameData.endingStateCountdown,
+  );
   clearInterval(gameDataIntervals[gameRoom.gameName]);
   delete gameDataIntervals[gameRoom.gameName];
+  gameRoom.winner =
+    gameRoom.score.host === gameRoom.score.neededToWin
+      ? gameRoom.players.host.username
+      : gameRoom.players.challenger.username;
+  io.in(`game-${gameRoom.gameName}`).emit(
+    "serverSendsWinnerInfo",
+    gameRoom.winner,
+  );
   gameEndingIntervals[gameRoom.gameName] = setInterval(() => {
     console.log(gameData.endingStateCountdown);
     if (gameData.endingStateCountdown < 2) {
@@ -51,7 +67,7 @@ function endGameCleanup({
       gameData.endingStateCountdown -= 1;
       io.to(`game-${gameRoom.gameName}`).emit(
         "gameEndingCountdown",
-        gameRoom.endingStateCountdown,
+        gameData.endingStateCountdown,
       );
     }
   }, 1000);

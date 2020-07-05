@@ -31,6 +31,8 @@ const BattleRoomGameInstance = ({ socket }) => {
     (state) => state.gameUi.playerDesignation,
   );
   const playersInGame = useSelector((state) => state.gameUi.playersInGame);
+  const gameStatus = useSelector((state) => state.gameUi.gameStatus);
+  const winner = useSelector((state) => state.gameUi.winner);
   const [clientPlayer, setClientPlayer] = useState([]);
   const canvasInfo = {
     width: 450,
@@ -39,6 +41,7 @@ const BattleRoomGameInstance = ({ socket }) => {
 
   const canvasRef = useRef();
   const drawRef = useRef();
+  const gameOverCountdownText = useRef();
 
   useEffect(() => {
     setClientPlayer(playersInGame[playerDesignation]);
@@ -54,9 +57,18 @@ const BattleRoomGameInstance = ({ socket }) => {
         currentGameData.current[key] = packet[key];
       });
     });
+    socket.on("serverSendsWinnerInfo", (data) => {
+      dispatch(gameUiActions.setGameWinner(data));
+    });
+    socket.on("gameEndingCountdown", (data) => {
+      console.log(data);
+      return (gameOverCountdownText.current = data);
+    });
     return () => {
       socket.off("serverInitsGame");
       socket.off("tickFromServer");
+      socket.off("gameEndingCountdown");
+      socket.off("serverSendsWinnerInfo");
       dispatch(gameUiActions.clearGameUiData());
     };
   }, [socket, dispatch]);
@@ -74,6 +86,9 @@ const BattleRoomGameInstance = ({ socket }) => {
         clientPlayer,
         currentGameData: currentGameData.current,
         canvasInfo,
+        gameOverCountdownText: gameOverCountdownText.current,
+        gameStatus,
+        winner,
       });
     };
   });

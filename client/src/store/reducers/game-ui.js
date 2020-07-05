@@ -11,6 +11,7 @@ import {
   UPDATE_GAME_STATUS,
   UPDATE_PLAYER_DESIGNATION,
   CLEAR_GAME_UI,
+  SET_GAME_WINNER,
 } from "../actions/types";
 
 const initialState = {
@@ -30,6 +31,7 @@ const initialState = {
   countdownNumber: null,
   gameStatus: "inLobby",
   playerDesignation: null,
+  winner: null,
 };
 
 export default function (state = initialState, action) {
@@ -97,6 +99,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         playerDesignation: payload,
+      };
+    case SET_GAME_WINNER:
+      return {
+        ...state,
+        winner: payload,
       };
     case CLEAR_GAME_UI:
       return initialState;

@@ -28,6 +28,7 @@ const PreGameRoom = ({ socket }) => {
   useEffect(() => {
     if (preGameScreen) {
       setPreGameRoomDisplayClass("");
+      if (!channelNameInput.current) return;
       channelNameInput.current.focus();
     }
     if (!preGameScreen) setPreGameRoomDisplayClass("height-0-hidden");
