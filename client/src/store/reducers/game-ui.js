@@ -12,6 +12,8 @@ import {
   UPDATE_PLAYER_DESIGNATION,
   CLEAR_GAME_UI,
   SET_GAME_WINNER,
+  SET_SCORE_SCREEN_DATA,
+  CLOSE_SCORE_SCREEN,
 } from "../actions/types";
 
 const initialState = {
@@ -32,6 +34,8 @@ const initialState = {
   gameStatus: "inLobby",
   playerDesignation: null,
   winner: null,
+  scoreScreenData: {},
+  scoreScreenDisplayed: false,
 };
 
 export default function (state = initialState, action) {
@@ -107,6 +111,18 @@ export default function (state = initialState, action) {
       };
     case CLEAR_GAME_UI:
       return initialState;
+    case SET_SCORE_SCREEN_DATA:
+      console.log(payload);
+      return {
+        ...state,
+        scoreScreenData: { ...payload },
+        scoreScreenDisplayed: true,
+      };
+    case CLOSE_SCORE_SCREEN:
+      return {
+        ...state,
+        scoreScreenDisplayed: false,
+      };
     default:
       return state;
   }

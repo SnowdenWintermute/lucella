@@ -1,7 +1,8 @@
 class GameData {
-  constructor({ gameName, width, height }) {
+  constructor({ gameName, width, height, isRanked }) {
     this.gameName = gameName;
-    this.endingStateCountdown = 3;
+    this.isRanked = isRanked;
+    this.endingStateCountdown = 1;
     this.width = width;
     this.height = height;
     this.speed = 8;

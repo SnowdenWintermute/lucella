@@ -10,6 +10,7 @@ function removeSocketFromRoom({ io, socket, connectedSockets, chatRooms }) {
       connectedSockets[socket.id].currentRoom,
   );
   const roomToLeave = connectedSockets[socket.id].currentRoom;
+  if (!chatRooms[roomToLeave]) return;
   connectedSockets[socket.id].previousRoom = roomToLeave;
   if (roomToLeave) {
     const userNameLeaving = connectedSockets[socket.id].username;

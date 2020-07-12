@@ -5,5 +5,6 @@ import auth from "./auth";
 import profile from "./profile";
 import chat from "./chat";
 import gameUi from "./game-ui";
+import lobbyUi from "./lobby-ui";
 
-export default combineReducers({ alert, auth, profile, chat, gameUi });
+export default combineReducers({ alert, auth, profile, chat, gameUi, lobbyUi });

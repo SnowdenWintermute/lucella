@@ -8,11 +8,13 @@ import ChannelBar from "./channel-bar/ChannelBar";
 import PreGameRoom from "./PreGameRoom";
 import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
+import ScoreScreenModalContents from "./ScoreScreenModalContents";
 import Modal from "../../../common/modal/Modal";
 import io from "socket.io-client";
 import SocketManager from "../socket-manager/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import * as gameUiActions from "../../../../store/actions/game-ui";
+import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 
@@ -21,6 +23,9 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
     false,
+  );
+  const scoreScreenDisplayed = useSelector(
+    (state) => state.lobbyUi.scoreScreenDisplayed,
   );
   const [authenticating, setAuthenticating] = useState(true);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
@@ -59,8 +64,11 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   }, [authenticating, defaultChatRoom]);
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
-  const setParentDisplay = (status) => {
+  const setChannelModalParentDisplay = (status) => {
     setDisplayChangeChannelModal(status);
+  };
+  const setScoreScreenModalParentDisplay = (status) => {
+    dispatch(lobbyUiActions.closeScoreScreen());
   };
   const showChangeChannelModal = () => {
     setDisplayChangeChannelModal(true);
@@ -84,7 +92,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
         screenClass=""
         frameClass="modal-frame-dark"
         isOpen={displayChangeChannelModal}
-        setParentDisplay={setParentDisplay}
+        setParentDisplay={setChannelModalParentDisplay}
         title={"Join Channel"}
       >
         <ChangeChannelModalContents
@@ -93,6 +101,15 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
           onJoinRoomSubmit={onJoinRoomSubmit}
           joinRoom={joinRoom}
         />
+      </Modal>
+      <Modal
+        screenClass=""
+        frameClass="modal-frame-dark"
+        isOpen={scoreScreenDisplayed}
+        setParentDisplay={setScoreScreenModalParentDisplay}
+        title={"Score Screen"}
+      >
+        <ScoreScreenModalContents />
       </Modal>
       {gameStatus !== "inProgress" && gameStatus !== "ending" ? (
         <div className={`game-lobby`}>

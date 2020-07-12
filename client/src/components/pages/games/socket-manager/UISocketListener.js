@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import * as alertActions from "../../../../store/actions/alert";
 import * as gameUiActions from "../../../../store/actions/game-ui";
+import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
 
 const UISocketListener = ({ socket }) => {
   const dispatch = useDispatch();
@@ -14,8 +15,6 @@ const UISocketListener = ({ socket }) => {
       dispatch(gameUiActions.updateGamesList(data));
     });
     socket.on("currentGameRoomUpdate", (data) => {
-      console.log("currentGameRoomUpdated");
-      console.log(data);
       dispatch(gameUiActions.setCurrentGame(data));
     });
     socket.on("gameClosedByHost", () => {
@@ -36,13 +35,19 @@ const UISocketListener = ({ socket }) => {
       if (!currentGameName) return;
       dispatch(gameUiActions.setCurrentGameCountdown(countdown));
     });
+    socket.on("showEndScreen", (data) => {
+      console.log(data);
+      dispatch(lobbyUiActions.setScoreScreenData(data));
+    });
     return () => {
+      socket.off("gameListUpdate");
       socket.off("currentGameRoomUpdate");
       socket.off("gameClosedByHost");
       socket.off("updateOfCurrentRoomPlayerReadyStatus");
+      socket.off("serverSendsPlayerDesignation");
       socket.off("currentGameStatusUpdate");
       socket.off("currentGameCountdownUpdate");
-      socket.off("gameListUpdate");
+      socket.off("showEndScreen");
     };
   }, [socket, dispatch, currentGameName]);
 

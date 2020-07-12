@@ -1,6 +1,7 @@
 const clientRequestsToJoinRoom = require("../lobbyFunctions/clientRequestsToJoinRoom");
+const updateWinLossRecords = require("./updateWinLossRecords");
 
-function endGameCleanup({
+async function endGameCleanup({
   io,
   socket,
   gameRoom,
@@ -11,9 +12,9 @@ function endGameCleanup({
   gameDataIntervals,
   gameEndingIntervals,
   connectedSockets,
-  isDisconnecting
+  isDisconnecting,
 }) {
-  if(gameRoom.gameStatus==="ending") return 
+  if (gameRoom.gameStatus === "ending") return;
   gameRoom.gameStatus = "ending";
   io.in(`game-${gameRoom.gameName}`).emit(
     "currentGameStatusUpdate",
@@ -29,6 +30,19 @@ function endGameCleanup({
     gameRoom.score.host === gameRoom.score.neededToWin
       ? gameRoom.players.host.username
       : gameRoom.players.challenger.username;
+
+  const loser = (gameRoom.winner = gameRoom.players.host.username
+    ? gameRoom.players.challenger.username
+    : gameRoom.players.host.username);
+
+  // update game records in mongodb
+  await updateWinLossRecords({
+    winner: gameRoom.winner,
+    loser,
+    gameRoom,
+    gameData,
+  });
+
   io.in(`game-${gameRoom.gameName}`).emit(
     "serverSendsWinnerInfo",
     gameRoom.winner,
@@ -42,7 +56,10 @@ function endGameCleanup({
       host.isInGame = false;
       challenger.isInGame = false;
 
-      io.in(`game-${gameRoom.gameName}`).emit("showEndScreen", gameData);
+      io.in(`game-${gameRoom.gameName}`).emit("showEndScreen", {
+        gameRoom,
+        gameData,
+      });
       io.in(`game-${gameRoom.gameName}`).emit("currentGameRoomUpdate", null);
       clientRequestsToJoinRoom({
         io,

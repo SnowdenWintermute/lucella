@@ -14,7 +14,6 @@ const ChatSocketListener = ({ socket }) => {
     socket.on("updateChatRoom", (data) => {
       dispatch(chatActions.setNewChatRoomLoading(false));
       const { roomName, currentUsers } = data;
-      console.log(currentUsers);
       dispatch(chatActions.setCurrentChatRoomUsers(currentUsers));
       dispatch(chatActions.setCurrentChatRoomName(roomName));
     });
