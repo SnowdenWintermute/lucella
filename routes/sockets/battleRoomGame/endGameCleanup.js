@@ -31,9 +31,9 @@ async function endGameCleanup({
       ? gameRoom.players.host.username
       : gameRoom.players.challenger.username;
 
-  const loser = (gameRoom.winner = gameRoom.players.host.username
+  const loser = gameRoom.winner === gameRoom.players.host.username
     ? gameRoom.players.challenger.username
-    : gameRoom.players.host.username);
+    : gameRoom.players.host.username;
 
   // update game records in mongodb
   await updateWinLossRecords({

@@ -8,6 +8,18 @@ const BattleRoomRecordSchema = new mongoose.Schema({
   },
   casualGames: [BattleRoomGameRecordSchema],
   rankedGames: [BattleRoomGameRecordSchema],
+  wins:{type:Number,
+  default:0,
+  },
+  losses:{type:Number,
+  default:0,
+  },
+  disconnects:{type:Number,
+  default:0,
+  },
+  winrate:{type:Number,
+  default:0,
+  }
 });
 
 module.exports = BattleRoomRecord = mongoose.model(

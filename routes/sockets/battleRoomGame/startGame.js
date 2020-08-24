@@ -20,7 +20,7 @@ function startGame({
   gameDataIntervals,
   gameEndingIntervals,
   gameUpdatePackets,
-  gameCountdownIntervals,
+  gameCountdownIntervals
 }) {
   // initializing the game
   const { gameName } = gameRoom;

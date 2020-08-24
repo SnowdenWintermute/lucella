@@ -9,6 +9,8 @@ async function updateWinLossRecords({
   gameData,
   isRanked,
 }) {
+  console.log("winner: "+winner)
+  console.log("loser: "+loser)
   // determine score
   const winnerRole =
     gameRoom.players.host.username === winner ? "host" : "challenger";
@@ -25,7 +27,9 @@ async function updateWinLossRecords({
   });
   const gameCategory = isRanked ? "rankedGames" : "casualGames";
 
+
   // handle host record
+   // determine if record exists
   const hostDbRecord = await User.findOne({
     name: gameRoom.players.host.username,
   });
@@ -38,7 +42,13 @@ async function updateWinLossRecords({
         user: hostDbRecord.id,
       });
     }
+    // add game record
     hostBattleRoomRecord[gameCategory].push(gameRecord);
+
+    //update w/l and winrate
+    if(winnerRole==="host") hostBattleRoomRecord.wins = hostBattleRoomRecord.wins +1
+    if(winnerRole==="challenger") hostBattleRoomRecord.losses = hostBattleRoomRecord.losses +1
+    hostBattleRoomRecord.winrate = (hostBattleRoomRecord.wins + hostBattleRoomRecord.losses)/2 * 100
     await hostBattleRoomRecord.save();
   }
   // handle challenger record
@@ -54,7 +64,13 @@ async function updateWinLossRecords({
         user: challengerDbRecord.id,
       });
     }
+    // add game record
     challengerBattleRoomRecord[gameCategory].push(gameRecord);
+
+    //update w/l and winrate
+    if(winnerRole==="challenger") challengerBattleRoomRecord.wins = challengerBattleRoomRecord.wins +1
+    if(winnerRole==="challenger") challengerBattleRoomRecord.losses = challengerBattleRoomRecord.losses +1
+    challengerBattleRoomRecord.winrate = (challengerBattleRoomRecord.wins + challengerBattleRoomRecord.losses)/2 * 100
     await challengerBattleRoomRecord.save();
   }
 }
