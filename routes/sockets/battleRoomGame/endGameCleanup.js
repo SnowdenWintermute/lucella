@@ -27,10 +27,9 @@ async function endGameCleanup({
   clearInterval(gameDataIntervals[gameRoom.gameName]);
   delete gameDataIntervals[gameRoom.gameName];
   gameRoom.winner =
-    gameRoom.score.host === gameRoom.score.neededToWin
+    gameData.winner === "host"
       ? gameRoom.players.host.username
       : gameRoom.players.challenger.username;
-
   const loser =
     gameRoom.winner === gameRoom.players.host.username
       ? gameRoom.players.challenger.username
