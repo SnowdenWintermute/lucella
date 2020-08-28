@@ -9,8 +9,8 @@ async function updateWinLossRecords({
   gameData,
   isRanked,
 }) {
-  console.log("winner: "+winner)
-  console.log("loser: "+loser)
+  console.log("winner: " + winner);
+  console.log("loser: " + loser);
   // determine score
   const winnerRole =
     gameRoom.players.host.username === winner ? "host" : "challenger";
@@ -18,22 +18,18 @@ async function updateWinLossRecords({
     gameRoom.players.challenger.username === winner ? "host" : "challenger";
   const winnerScore = gameData.score[winnerRole];
   const loserScore = gameData.score[loserRole];
-  // create the game record
-  const gameRecord = new BattleRoomGameRecord({
-    winner,
-    loser,
-    winnerScore,
-    loserScore,
-  });
-  const gameCategory = isRanked ? "rankedGames" : "casualGames";
 
-
-  // handle host record
-   // determine if record exists
+  // determine if both players have accounts in the database
   const hostDbRecord = await User.findOne({
     name: gameRoom.players.host.username,
   });
-  if (hostDbRecord) {
+  const challengerDbRecord = await User.findOne({
+    name: gameRoom.players.challenger.username,
+  });
+  // if both players are registered users, update their win loss records
+  if (hostDbRecord && challengerDbRecord) {
+    // check for and if needed, create game history entrys
+    // for host
     let hostBattleRoomRecord = await BattleRoomRecord.findOne({
       user: hostDbRecord.id,
     });
@@ -42,20 +38,7 @@ async function updateWinLossRecords({
         user: hostDbRecord.id,
       });
     }
-    // add game record
-    hostBattleRoomRecord[gameCategory].push(gameRecord);
-
-    //update w/l and winrate
-    if(winnerRole==="host") hostBattleRoomRecord.wins = hostBattleRoomRecord.wins +1
-    if(winnerRole==="challenger") hostBattleRoomRecord.losses = hostBattleRoomRecord.losses +1
-    hostBattleRoomRecord.winrate = (hostBattleRoomRecord.wins + hostBattleRoomRecord.losses)/2 * 100
-    await hostBattleRoomRecord.save();
-  }
-  // handle challenger record
-  const challengerDbRecord = await User.findOne({
-    name: gameRoom.players.challenger.username,
-  });
-  if (challengerDbRecord) {
+    // for challenger
     let challengerBattleRoomRecord = await BattleRoomRecord.findOne({
       user: challengerDbRecord.id,
     });
@@ -64,13 +47,87 @@ async function updateWinLossRecords({
         user: challengerDbRecord.id,
       });
     }
-    // add game record
-    challengerBattleRoomRecord[gameCategory].push(gameRecord);
 
-    //update w/l and winrate
-    if(winnerRole==="challenger") challengerBattleRoomRecord.wins = challengerBattleRoomRecord.wins +1
-    if(winnerRole==="challenger") challengerBattleRoomRecord.losses = challengerBattleRoomRecord.losses +1
-    challengerBattleRoomRecord.winrate = (challengerBattleRoomRecord.wins + challengerBattleRoomRecord.losses)/2 * 100
+    // update w/l, elo and winrates
+    // calculate elos
+    const hostElo = hostBattleRoomRecord.elo;
+    const challengerElo = challengerBattleRoomRecord.elo;
+    let newHostElo, newChallengerElo;
+    // for host
+    if (winnerRole === "host") {
+      hostBattleRoomRecord.wins = hostBattleRoomRecord.wins + 1;
+      challengerBattleRoomRecord.losses = challengerBattleRoomRecord.losses + 1;
+      newHostElo =
+        hostElo + 32 * (1 - (10 ^ (hostElo / 400)) / (hostElo + challengerElo));
+      newChallengerElo =
+        challengerElo +
+        32 * (0 - (10 ^ (challengerElo / 400)) / (challengerElo + hostElo));
+    }
+    if (winnerRole === "challenger") {
+      challengerBattleRoomRecord.wins = challengerBattleRoomRecord.wins + 1;
+      hostBattleRoomRecord.losses = hostBattleRoomRecord.losses + 1;
+      newHostElo =
+        hostElo + 32 * (0 - (10 ^ (hostElo / 400)) / (hostElo + challengerElo));
+      newChallengerElo =
+        challengerElo +
+        32 * (1 - (10 ^ (challengerElo / 400)) / (challengerElo + hostElo));
+    }
+    hostBattleRoomRecord.winrate =
+      ((hostBattleRoomRecord.wins + hostBattleRoomRecord.losses) / 2) * 100;
+    challengerBattleRoomRecord.winrate =
+      ((challengerBattleRoomRecord.wins + challengerBattleRoomRecord.losses) /
+        2) *
+      100;
+
+    // create the game records
+    const gameRecordForHost = new BattleRoomGameRecord({
+      winner: {
+        winner,
+        elo:
+          winnerRole === "host"
+            ? hostBattleRoomRecord.elo
+            : challengerBattleRoomRecord.elo,
+      },
+      loser: {
+        loser,
+        elo:
+          loserRole === "host"
+            ? hostBattleRoomRecord.elo
+            : challengerBattleRoomRecord.elo,
+      },
+      winnerScore,
+      loserScore,
+      eloChange: newHostElo - hostBattleRoomRecord.elo,
+    });
+    const gameRecordForChallenger = new BattleRoomGameRecord({
+      winner: {
+        winner,
+        elo:
+          winnerRole === "host"
+            ? hostBattleRoomRecord.elo
+            : challengerBattleRoomRecord.elo,
+      },
+      loser: {
+        loser,
+        elo:
+          loserRole === "host"
+            ? hostBattleRoomRecord.elo
+            : challengerBattleRoomRecord.elo,
+      },
+      winnerScore,
+      loserScore,
+      eloChange: newChallengerElo - challengerBattleRoomRecord.elo,
+    });
+    const gameCategory = isRanked ? "rankedGames" : "casualGames";
+    // add game records
+    challengerBattleRoomRecord[gameCategory].push(gameRecordForChallenger);
+    hostBattleRoomRecord[gameCategory].push(gameRecordForHost);
+
+    // update to new elo values
+    hostBattleRoomRecord.elo = newHostElo;
+    challengerBattleRoomRecord.elo = newChallengerElo;
+
+    await hostBattleRoomRecord.save();
     await challengerBattleRoomRecord.save();
   }
 }

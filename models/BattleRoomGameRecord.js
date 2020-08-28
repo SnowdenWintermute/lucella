@@ -6,15 +6,28 @@ const BattleRoomGameRecordSchema = new mongoose.Schema({
     default: Date.now(),
   },
   winner: {
-    type: String,
+    name: {
+      type: String,
+    },
+    elo: {
+      type: Number,
+    },
   },
   loser: {
-    type: String,
+    name: {
+      type: String,
+    },
+    elo: {
+      type: Number,
+    },
   },
   winnerScore: {
     type: Number,
   },
   loserScore: {
+    type: Number,
+  },
+  eloChange: {
     type: Number,
   },
 });
