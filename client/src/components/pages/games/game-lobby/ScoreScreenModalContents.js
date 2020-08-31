@@ -7,17 +7,23 @@ const ScoreScreenModalContents = () => {
   );
   const [eloAnimatedChange, setEloAnimatedChange] = useState();
   const scoreScreenData = useSelector((state) => state.lobbyUi.scoreScreenData);
-  const username = useSelector((state) => state.auth.user.name);
+  const username = useSelector((state) =>
+    state.auth.user ? state.auth.user.name : null,
+  );
 
-  const playerOldElo =
-    scoreScreenData.gameRoom.players.challenger.username === username
-      ? scoreScreenData.eloUpdates.challengerElo
-      : scoreScreenData.eloUpdates.hostElo;
+  let playerOldElo, playerNewElo;
 
-  const playerNewElo =
-    scoreScreenData.gameRoom.players.challenger.username === username
-      ? scoreScreenData.eloUpdates.newChallengerElo
-      : scoreScreenData.eloUpdates.newHostElo;
+  if (scoreScreenData.eloUpdates) {
+    playerOldElo =
+      scoreScreenData.gameRoom.players.challenger.username === username
+        ? scoreScreenData.eloUpdates.challengerElo
+        : scoreScreenData.eloUpdates.hostElo;
+
+    playerNewElo =
+      scoreScreenData.gameRoom.players.challenger.username === username
+        ? scoreScreenData.eloUpdates.newChallengerElo
+        : scoreScreenData.eloUpdates.newHostElo;
+  }
 
   const eloDiff = playerNewElo - playerOldElo;
 
@@ -53,13 +59,17 @@ const ScoreScreenModalContents = () => {
             <td>{scoreScreenData.gameRoom.players.challenger.username}:</td>
             <td>{scoreScreenData.gameData.score.challenger}</td>
           </tr>
-          <tr>
-            <td className={eloAnimatedChangeClass}>Elo: {eloAnimatedChange}</td>
-            <td className={eloAnimatedChangeClass}>
-              {`(${Math.sign(eloDiff) === 1 ? "+" : ""}
+          {scoreScreenData.eloUpdates && (
+            <tr>
+              <td className={eloAnimatedChangeClass}>
+                Elo: {eloAnimatedChange}
+              </td>
+              <td className={eloAnimatedChangeClass}>
+                {`(${Math.sign(eloDiff) === 1 ? "+" : ""}
               ${eloDiff})`}
-            </td>
-          </tr>
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
