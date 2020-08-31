@@ -1,8 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const ScoreScreenModalContents = () => {
+  const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState(
+    "elo-animate-1",
+  );
+  const [eloAnimatedChange, setEloAnimatedChange] = useState();
   const scoreScreenData = useSelector((state) => state.lobbyUi.scoreScreenData);
+  const username = useSelector((state) => state.auth.user.name);
+
+  const playerOldElo =
+    scoreScreenData.gameRoom.players.challenger.username === username
+      ? scoreScreenData.eloUpdates.challengerElo
+      : scoreScreenData.eloUpdates.hostElo;
+
+  const playerNewElo =
+    scoreScreenData.gameRoom.players.challenger.username === username
+      ? scoreScreenData.eloUpdates.newChallengerElo
+      : scoreScreenData.eloUpdates.newHostElo;
+
+  const eloDiff = playerNewElo - playerOldElo;
+
+  useEffect(() => {
+    setEloAnimatedChange(playerOldElo);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const newEloAnimateClass =
+        Math.sign(eloDiff) === 1 ? "elo-animate-2-win" : "elo-animate-2-loss";
+      setEloAnimatedChangeClass(newEloAnimateClass);
+    }, 1000);
+    setTimeout(() => {
+      setEloAnimatedChange(playerNewElo);
+    }, 1300);
+    setTimeout(() => {
+      setEloAnimatedChangeClass("elo-animate-3");
+    }, 3000);
+  }, []);
+
   if (!scoreScreenData.gameData) return <div />;
   return (
     <div>
@@ -16,6 +52,13 @@ const ScoreScreenModalContents = () => {
           <tr>
             <td>{scoreScreenData.gameRoom.players.challenger.username}:</td>
             <td>{scoreScreenData.gameData.score.challenger}</td>
+          </tr>
+          <tr>
+            <td className={eloAnimatedChangeClass}>Elo: {eloAnimatedChange}</td>
+            <td className={eloAnimatedChangeClass}>
+              {`(${Math.sign(eloDiff) === 1 ? "+" : ""}
+              ${eloDiff})`}
+            </td>
           </tr>
         </tbody>
       </table>

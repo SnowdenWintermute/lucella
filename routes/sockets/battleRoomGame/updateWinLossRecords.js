@@ -135,6 +135,12 @@ async function updateWinLossRecords({
 
     await hostBattleRoomRecord.save();
     await challengerBattleRoomRecord.save();
+    return {
+      hostElo,
+      challengerElo,
+      newHostElo,
+      newChallengerElo,
+    };
   }
 }
 

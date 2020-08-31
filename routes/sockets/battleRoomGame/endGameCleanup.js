@@ -36,7 +36,7 @@ async function endGameCleanup({
       : gameRoom.players.host.username;
 
   // update game records in mongodb
-  await updateWinLossRecords({
+  const eloUpdates = await updateWinLossRecords({
     winner: gameRoom.winner,
     loser,
     gameRoom,
@@ -60,6 +60,7 @@ async function endGameCleanup({
       io.in(`game-${gameRoom.gameName}`).emit("showEndScreen", {
         gameRoom,
         gameData,
+        eloUpdates,
       });
       io.in(`game-${gameRoom.gameName}`).emit("currentGameRoomUpdate", null);
       clientRequestsToJoinRoom({
