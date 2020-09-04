@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 
 const ScoreScreenModalContents = () => {
@@ -11,18 +11,25 @@ const ScoreScreenModalContents = () => {
     state.auth.user ? state.auth.user.name : null,
   );
 
-  let playerOldElo, playerNewElo;
+  let playerOldElo, playerNewElo, playerOldRank, playerNewRank;
 
   if (scoreScreenData.eloUpdates) {
     playerOldElo =
       scoreScreenData.gameRoom.players.challenger.username === username
         ? scoreScreenData.eloUpdates.challengerElo
         : scoreScreenData.eloUpdates.hostElo;
-
     playerNewElo =
       scoreScreenData.gameRoom.players.challenger.username === username
         ? scoreScreenData.eloUpdates.newChallengerElo
         : scoreScreenData.eloUpdates.newHostElo;
+    playerOldRank =
+      scoreScreenData.gameRoom.players.challenger.username === username
+        ? scoreScreenData.eloUpdates.oldChallengerRank
+        : scoreScreenData.eloUpdates.oldHostRank;
+    playerNewRank =
+      scoreScreenData.gameRoom.players.challenger.username === username
+        ? scoreScreenData.eloUpdates.newChallengerRank
+        : scoreScreenData.eloUpdates.newHostRank;
   }
 
   const eloDiff = playerNewElo - playerOldElo;
@@ -60,15 +67,35 @@ const ScoreScreenModalContents = () => {
             <td>{scoreScreenData.gameData.score.challenger}</td>
           </tr>
           {scoreScreenData.eloUpdates ? (
-            <tr>
-              <td className={eloAnimatedChangeClass}>
-                Elo: {eloAnimatedChange}
-              </td>
-              <td className={eloAnimatedChangeClass}>
-                {`(${Math.sign(eloDiff) === 1 ? "+" : ""}
+            <Fragment>
+              <tr>
+                <td className={eloAnimatedChangeClass}>
+                  Elo: {eloAnimatedChange}
+                </td>
+                <td className={eloAnimatedChangeClass}>
+                  {`(${Math.sign(eloDiff) === 1 ? "+" : ""}
               ${eloDiff})`}
-              </td>
-            </tr>
+                </td>
+              </tr>
+              {playerOldRank !== playerNewRank ? (
+                <tr>
+                  <td className={""}>Rank:</td>
+                  <td className={""}>
+                    {playerOldRank + 1}
+                    {` -> `}
+                    {playerNewRank + 1}
+                  </td>
+                </tr>
+              ) : (
+                <tr>
+                  <td>Rank:</td>
+                  <td>
+                    {playerOldRank + 1}
+                    {` (unchanged)`}
+                  </td>
+                </tr>
+              )}
+            </Fragment>
           ) : (
             <tr>
               <td>No changes to ladder rating</td>
