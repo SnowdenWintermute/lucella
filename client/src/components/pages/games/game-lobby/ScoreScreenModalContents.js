@@ -59,7 +59,7 @@ const ScoreScreenModalContents = () => {
             <td>{scoreScreenData.gameRoom.players.challenger.username}:</td>
             <td>{scoreScreenData.gameData.score.challenger}</td>
           </tr>
-          {scoreScreenData.eloUpdates && (
+          {scoreScreenData.eloUpdates ? (
             <tr>
               <td className={eloAnimatedChangeClass}>
                 Elo: {eloAnimatedChange}
@@ -68,6 +68,10 @@ const ScoreScreenModalContents = () => {
                 {`(${Math.sign(eloDiff) === 1 ? "+" : ""}
               ${eloDiff})`}
               </td>
+            </tr>
+          ) : (
+            <tr>
+              <td>No changes to ladder rating</td>
             </tr>
           )}
         </tbody>

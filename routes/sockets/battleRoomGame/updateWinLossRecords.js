@@ -1,5 +1,6 @@
 const User = require("../../../models/User");
 const BattleRoomRecord = require("../../../models/BattleRoomRecord");
+const BattleRoomLadder = require("../../../models/BattleRoomLadder");
 const BattleRoomGameRecord = require("../../../models/BattleRoomGameRecord");
 
 async function updateWinLossRecords({
@@ -132,9 +133,28 @@ async function updateWinLossRecords({
     // update to new elo values
     hostBattleRoomRecord.elo = newHostElo;
     challengerBattleRoomRecord.elo = newChallengerElo;
-
     await hostBattleRoomRecord.save();
     await challengerBattleRoomRecord.save();
+    // update ladder
+    let ladder = await BattleRoomLadder.findOne({}).populate("ladder");
+    if (!ladder) {
+      ladder = new BattleRoomLadder();
+      if (hostBattleRoomRecord.elo > challengerBattleRoomRecord.elo) {
+        ladder.ladder.push(hostBattleRoomRecord, challengerBattleRoomRecord);
+      } else {
+        ladder.ladder.push(challengerBattleRoomRecord, hostBattleRoomRecord);
+      }
+    } else {
+      console.log(ladder);
+      ladder.ladder.sort((a, b) => {
+        console.log(b.elo);
+        console.log(a.elo);
+        return b.elo - a.elo;
+      });
+    }
+
+    await ladder.save();
+
     return {
       hostElo,
       challengerElo,
