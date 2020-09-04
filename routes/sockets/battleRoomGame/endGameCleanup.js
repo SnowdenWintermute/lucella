@@ -49,7 +49,6 @@ async function endGameCleanup({
     gameRoom.winner,
   );
   gameEndingIntervals[gameRoom.gameName] = setInterval(() => {
-    console.log(gameData.endingStateCountdown);
     if (gameData.endingStateCountdown < 2) {
       clearInterval(gameEndingIntervals[gameRoom.gameName]);
       const host = connectedSockets[gameRoom.players.host.socketId];

@@ -137,29 +137,54 @@ async function updateWinLossRecords({
     await challengerBattleRoomRecord.save();
     // update ladder
     let ladder = await BattleRoomLadder.findOne({}).populate("ladder");
+    let oldHostRank, oldChallengerRank, newHostRank, newChallengerRank;
     if (!ladder) {
       ladder = new BattleRoomLadder();
       if (hostBattleRoomRecord.elo > challengerBattleRoomRecord.elo) {
-        ladder.ladder.push(hostBattleRoomRecord, challengerBattleRoomRecord);
+        ladder.ladder.push(
+          hostBattleRoomRecord.id,
+          challengerBattleRoomRecord.id,
+        );
       } else {
-        ladder.ladder.push(challengerBattleRoomRecord, hostBattleRoomRecord);
+        ladder.ladder.push(
+          challengerBattleRoomRecord.id,
+          hostBattleRoomRecord.id,
+        );
       }
-    } else {
-      console.log(ladder);
-      ladder.ladder.sort((a, b) => {
-        console.log(b.elo);
-        console.log(a.elo);
-        return b.elo - a.elo;
-      });
     }
+    console.log(ladder);
+    oldHostRank = ladder.ladder.findIndex(
+      (i) => i.id === hostBattleRoomRecord.id,
+    );
+    oldChallengerRank = ladder.ladder.findIndex(
+      (i) => i.id === challengerBattleRoomRecord.id,
+    );
+    ladder.ladder.sort((a, b) => {
+      console.log(b.elo);
+      console.log(a.elo);
+      return b.elo - a.elo;
+    });
+    newHostRank = ladder.ladder.findIndex(
+      (i) => i.id === hostBattleRoomRecord.id,
+    );
+    newChallengerRank = ladder.ladder.findIndex(
+      (i) => i.id === challengerBattleRoomRecord.id,
+    );
 
     await ladder.save();
+
+    console.log(newHostRank);
+    console.log(newChallengerRank);
 
     return {
       hostElo,
       challengerElo,
       newHostElo,
       newChallengerElo,
+      oldHostRank,
+      newHostRank,
+      oldChallengerRank,
+      newChallengerRank,
     };
   }
 }
