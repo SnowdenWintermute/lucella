@@ -1,0 +1,55 @@
+@import "variables";
+
+.ladder-nav {
+  display: flex;
+  justify-content: space-between;
+}
+.ladder-search {
+  display: flex;
+  width: 100%;
+}
+.ladder-search-input {
+  height: 40px;
+  width: 260px;
+  padding-left: 10px;
+  margin: 0px;
+}
+.ladder-search-icon {
+  width: 80px;
+  border: 1px solid color(textPrimary);
+  border-left: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ladder-page-buttons {
+  display: flex;
+}
+.ladder-page-button {
+  max-height: 100%;
+  height: 100%;
+}
+.ladder-table {
+  border: 0px;
+  border-collapse: collapse;
+  display: flex;
+}
+.ladder-table-body {
+  width: 100%;
+}
+.ladder-table-row {
+  display: flex;
+  width: 100%;
+}
+.ladder-table-datum {
+  height: 40px;
+  min-width: 80px;
+  border-bottom: 1px solid color(textPrimary);
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  align-items: flex-end;
+}
+.ladder-table-datum:last-child {
+  width: 100%;
+}

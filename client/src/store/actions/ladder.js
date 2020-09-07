@@ -9,7 +9,11 @@ export const getLadderPage = (pageNumber) => async (dispatch) => {
     );
     dispatch({
       type: GET_LADDER_PAGE,
-      payload: { pageNumber, pageData: res.data },
+      payload: {
+        pageNumber,
+        totalNumberOfPages: res.data.totalNumberOfPages,
+        pageData: res.data.pageData,
+      },
     });
   } catch (error) {
     console.log(error.response);

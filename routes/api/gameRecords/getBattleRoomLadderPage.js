@@ -12,16 +12,18 @@ module.exports = async (req, res) => {
       },
     });
     const page = req.params.page;
+    const pageSize = 10;
     console.log("sending ladder page " + page);
-    const startIndex = (page - 1) * 10;
+    const startIndex = (page - 1) * pageSize;
     const endIndex =
-      startIndex + 10 > ladder.ladder.length - startIndex + 10
+      startIndex + pageSize > ladder.ladder.length - startIndex + pageSize
         ? ladder.ladder.length - startIndex - 1
-        : startIndex + 10;
+        : startIndex + pageSize;
 
     const ladderPageToSend = ladder.ladder.splice(startIndex, endIndex);
+    const totalNumberOfPages = Math.ceil(ladder.ladder.length / pageSize);
 
-    res.json(ladderPageToSend);
+    res.json({ pageData: ladderPageToSend, totalNumberOfPages });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server error");

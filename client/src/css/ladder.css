@@ -1,0 +1,86 @@
+.ladder-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+.ladder-search {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.ladder-search-input {
+  height: 40px;
+  width: 260px;
+  padding-left: 10px;
+  margin: 0px;
+}
+
+.ladder-search-icon {
+  width: 80px;
+  border: 1px solid #9ba8b8;
+  border-left: 0px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.ladder-page-buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.ladder-page-button {
+  max-height: 100%;
+  height: 100%;
+}
+
+.ladder-table {
+  border: 0px;
+  border-collapse: collapse;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.ladder-table-body {
+  width: 100%;
+}
+
+.ladder-table-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.ladder-table-datum {
+  height: 40px;
+  min-width: 80px;
+  border-bottom: 1px solid #9ba8b8;
+  margin: 0px;
+  padding: 0px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: end;
+      -ms-flex-align: end;
+          align-items: flex-end;
+}
+
+.ladder-table-datum:last-child {
+  width: 100%;
+}
+/*# sourceMappingURL=ladder.css.map */

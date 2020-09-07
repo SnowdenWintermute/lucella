@@ -12,7 +12,11 @@ export default function (state = initialState, action) {
       console.log(payload);
       return {
         ...state,
-        ladderPages: { ...payload },
+        totalNumberOfPages: payload.totalNumberOfPages,
+        ladderPages: {
+          ...state.ladderPages,
+          [payload.pageNumber]: payload.pageData,
+        },
       };
     default:
       return state;
