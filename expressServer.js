@@ -20,14 +20,15 @@ app.get("/:id", (req, res) => {
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/profile", require("./routes/api/profile"));
+app.use("/api/gameRecords", require("./routes/api/gameRecords"));
 
 const PORT = process.env.PORT || 5000;
 const expressServer = app.listen(PORT, () =>
-  console.log(`express server on port ${PORT}`)
+  console.log(`express server on port ${PORT}`),
 );
 const io = socketio(expressServer);
 
 module.exports = {
   io,
-  app
+  app,
 };

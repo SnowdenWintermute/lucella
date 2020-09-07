@@ -21,7 +21,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       if (e.target.name !== "profile-icon")
         if (showUserDropdown) toggleUserDropdown(!showUserDropdown);
     });
-  });
+  }, []);
   // functions
   const loggedInUserMenu = (
     <Fragment>

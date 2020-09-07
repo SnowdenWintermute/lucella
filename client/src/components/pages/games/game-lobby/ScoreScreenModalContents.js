@@ -81,7 +81,7 @@ const ScoreScreenModalContents = () => {
                 <tr>
                   <td className={""}>Rank:</td>
                   <td className={""}>
-                    {playerOldRank + 1}
+                    {playerOldRank + 1 === 0 ? "Unranked" : playerOldRank + 1}
                     {` -> `}
                     {playerNewRank + 1}
                   </td>

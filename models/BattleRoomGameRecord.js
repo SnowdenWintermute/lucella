@@ -9,7 +9,10 @@ const BattleRoomGameRecordSchema = new mongoose.Schema({
     name: {
       type: String,
     },
-    elo: {
+    oldElo: {
+      type: Number,
+    },
+    newElo: {
       type: Number,
     },
   },
@@ -17,7 +20,10 @@ const BattleRoomGameRecordSchema = new mongoose.Schema({
     name: {
       type: String,
     },
-    elo: {
+    oldElo: {
+      type: Number,
+    },
+    newElo: {
       type: Number,
     },
   },
@@ -25,9 +31,6 @@ const BattleRoomGameRecordSchema = new mongoose.Schema({
     type: Number,
   },
   loserScore: {
-    type: Number,
-  },
-  eloChange: {
     type: Number,
   },
 });

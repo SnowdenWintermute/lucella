@@ -87,48 +87,22 @@ async function updateWinLossRecords({
       100;
 
     // create the game records
-    const gameRecordForHost = new BattleRoomGameRecord({
+    const gameRecord = new BattleRoomGameRecord({
       winner: {
         name: winner,
-        elo:
-          winnerRole === "host"
-            ? hostBattleRoomRecord.elo
-            : challengerBattleRoomRecord.elo,
+        oldElo: winnerRole === "host" ? hostElo : challengerElo,
+        newElo: winnerRole === "host" ? newHostElo : newChallengerElo,
       },
       loser: {
         name: loser,
-        elo:
-          loserRole === "host"
-            ? hostBattleRoomRecord.elo
-            : challengerBattleRoomRecord.elo,
+        oldElo: winnerRole === "host" ? challengerElo : hostElo,
+        newElo: winnerRole === "host" ? newChallengerElo : newHostElo,
       },
       winnerScore,
       loserScore,
-      eloChange: newHostElo - hostBattleRoomRecord.elo,
     });
-    const gameRecordForChallenger = new BattleRoomGameRecord({
-      winner: {
-        name: winner,
-        elo:
-          winnerRole === "host"
-            ? hostBattleRoomRecord.elo
-            : challengerBattleRoomRecord.elo,
-      },
-      loser: {
-        name: loser,
-        elo:
-          loserRole === "host"
-            ? hostBattleRoomRecord.elo
-            : challengerBattleRoomRecord.elo,
-      },
-      winnerScore,
-      loserScore,
-      eloChange: newChallengerElo - challengerBattleRoomRecord.elo,
-    });
-    const gameCategory = isRanked ? "rankedGames" : "casualGames";
-    // add game records
-    challengerBattleRoomRecord[gameCategory].push(gameRecordForChallenger);
-    hostBattleRoomRecord[gameCategory].push(gameRecordForHost);
+    // add game record
+    await gameRecord.save();
 
     // update to new elo values
     hostBattleRoomRecord.elo = newHostElo;
@@ -152,15 +126,23 @@ async function updateWinLossRecords({
         );
       }
     }
-    console.log(ladder);
     oldHostRank = ladder.ladder.findIndex(
       (i) => i.id === hostBattleRoomRecord.id,
     );
     oldChallengerRank = ladder.ladder.findIndex(
       (i) => i.id === challengerBattleRoomRecord.id,
     );
+    console.log("old host rank: " + oldHostRank);
+    console.log("old challenger rank: " + oldChallengerRank);
+    if (oldHostRank === -1) {
+      console.log("adding host to ladder");
+      ladder.ladder.push(hostBattleRoomRecord.id);
+    }
+    if (oldChallengerRank === -1) {
+      console.log("adding challenger to ladder");
+      ladder.ladder.push(challengerBattleRoomRecord.id);
+    }
     ladder.ladder.sort((a, b) => {
-      console.log(b.elo);
       console.log(a.elo);
       return b.elo - a.elo;
     });
@@ -172,9 +154,6 @@ async function updateWinLossRecords({
     );
 
     await ladder.save();
-
-    console.log(newHostRank);
-    console.log(newChallengerRank);
 
     return {
       hostElo,

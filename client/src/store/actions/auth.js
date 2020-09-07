@@ -62,7 +62,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
       "Content-Type": "application/json",
     },
   };
-  console.log(name);
+
   const body = JSON.stringify({ name, email, password });
   try {
     const res = await axios.post("/api/users", body, config);
@@ -106,7 +106,7 @@ export const requestPasswordResetEmail = (email) => async (dispatch) => {
     const res = await axios.post(
       "/api/auth/request-password-reset",
       body,
-      config
+      config,
     );
     dispatch(setAlert(res.data.msg, "success"));
   } catch (error) {
@@ -134,7 +134,7 @@ export const resetPassword = ({
     const res = await axios.post(
       `/api/users/reset-password/${token}`,
       body,
-      config
+      config,
     );
     dispatch({
       type: LOGIN_SUCCESS,

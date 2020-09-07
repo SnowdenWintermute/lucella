@@ -12,21 +12,21 @@ usersMainRouter.post(
   [
     check("email", "Please include a valid email").isEmail(),
     check("name", "Please enter a name of at least three characters").isLength({
-      min: 3
+      min: 3,
     }),
     check("name", "Please enter a name of no more than 16 characters").isLength(
       {
-        max: 16
-      }
+        max: 16,
+      },
     ),
     check(
       "password",
-      "Please enter a password with six or more characters"
+      "Please enter a password with six or more characters",
     ).isLength({
-      min: 6
-    })
+      min: 6,
+    }),
   ],
-  require("./registerUser")
+  require("./registerUser"),
 );
 
 // @route   POST api/users/reset-password
@@ -37,13 +37,13 @@ usersMainRouter.post(
   [
     check(
       "password",
-      "Please enter a password with six or more characters"
+      "Please enter a password with six or more characters",
     ).isLength({
-      min: 6
+      min: 6,
     }),
-    passwordResetAuth
+    passwordResetAuth,
   ],
-  require("./passwordReset")
+  require("./passwordReset"),
 );
 
 // @route   POST api/users/delete-account
@@ -54,11 +54,19 @@ usersMainRouter.post(
   [
     check(
       "email",
-      "Please enter the email associated with this account"
+      "Please enter the email associated with this account",
     ).isEmail(),
-    auth
+    auth,
   ],
-  require("./deleteAccount")
+  require("./deleteAccount"),
+);
+
+// @route   POST api/users/create-dummy-users
+// @desc    Create many user datas
+// @access  Public
+usersMainRouter.post(
+  "/create-dummy-users",
+  require("./createUsersAndBattleRoomData"),
 );
 
 module.exports = usersMainRouter;
