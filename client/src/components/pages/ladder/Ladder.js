@@ -29,9 +29,7 @@ const Ladder = (props) => {
       );
     })
   ) : (
-    <tr>
-      <td className="ladder-table-datum">...</td>
-    </tr>
+    <div>{`...`}</div>
   );
 
   return (
