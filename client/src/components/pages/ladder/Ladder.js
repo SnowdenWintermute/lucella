@@ -52,9 +52,9 @@ const Ladder = (props) => {
           </label>
         </form>
         <div className="ladder-page-buttons">
-          <button className="button button-basic ladder-page-button">{`<`}</button>
+          <button className="button-basic ladder-page-button">{`<`}</button>
           <button
-            className={"button button-basic ladder-page-button"}
+            className={"button-basic ladder-page-button"}
           >{`>`}</button>
         </div>
       </section>
