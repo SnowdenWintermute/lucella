@@ -16,12 +16,18 @@ module.exports = async (req, res) => {
     console.log("sending ladder page " + page);
     const startIndex = (page - 1) * pageSize;
     const endIndex =
-      startIndex + pageSize > ladder.ladder.length - startIndex + pageSize
-        ? ladder.ladder.length - startIndex - 1
+      startIndex + pageSize > ladder.ladder.length
+        ? startIndex + (ladder.ladder.length - pageSize)
         : startIndex + pageSize;
 
-    const ladderPageToSend = ladder.ladder.splice(startIndex, endIndex);
+    const ladderPageToSend = ladder.ladder.slice(startIndex, endIndex);
     const totalNumberOfPages = Math.ceil(ladder.ladder.length / pageSize);
+
+    console.log("startIndex " + startIndex);
+    console.log("endIndex " + endIndex);
+    console.log("ladderlength " + ladder.ladder.length);
+    console.log("pageSize " + pageSize);
+    console.log(totalNumberOfPages);
 
     res.json({ pageData: ladderPageToSend, totalNumberOfPages });
   } catch (err) {

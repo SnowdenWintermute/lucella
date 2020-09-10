@@ -52,7 +52,11 @@ const Login = ({ isAuthenticated, login }) => {
         </div>
         <div className="auth-bottom-links">
           <Link to="/register">Create account</Link>
-          <input type="submit" className="button button-primary" value="SIGN" />
+          <input
+            type="submit"
+            className="button button-standard-size button-primary"
+            value="SIGN"
+          />
         </div>
       </form>
     </div>

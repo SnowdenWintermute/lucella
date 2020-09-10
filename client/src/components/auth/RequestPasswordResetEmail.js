@@ -48,7 +48,11 @@ const RequestPasswordResetEmail = ({
         </div>
         <div className="auth-bottom-links">
           <Link to="/login">Back to login</Link>
-          <input type="submit" className="button button-primary" value="SEND" />
+          <input
+            type="submit"
+            className="button button-standard-size button-primary"
+            value="SEND"
+          />
         </div>
       </form>
     </div>
@@ -65,5 +69,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { requestPasswordResetEmail })(
-  withRouter(RequestPasswordResetEmail)
+  withRouter(RequestPasswordResetEmail),
 );

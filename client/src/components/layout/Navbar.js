@@ -79,7 +79,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const guestMenu = (
     <Link
       to="/login"
-      className="button button-basic"
+      className="button button-standard-size button-basic"
       onClick={(e) => onNavItemClick(e)}
     >
       LOGIN

@@ -77,7 +77,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
           <Link to="/login">Log in to existing account</Link>
           <input
             type="submit"
-            className="button button-primary"
+            className="button button-standard-size button-primary"
             value="CREATE"
           />
         </div>

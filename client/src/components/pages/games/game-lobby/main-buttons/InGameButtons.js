@@ -10,7 +10,7 @@ const InGameButtons = ({ socket }) => {
     setCancelGameSetupButtonDisplayClass,
   ] = useState("chat-button-hidden");
   const [goBackButtonDisplayClass, setGoBackButtonDisplayClass] = useState(
-    "chat-button-hidden"
+    "chat-button-hidden",
   );
   const [
     leaveGameButtonDisplayClass,
@@ -19,7 +19,7 @@ const InGameButtons = ({ socket }) => {
   const currentGameName = useSelector((state) => state.gameUi.currentGameName);
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
   const preGameScreenIsOpen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen
+    (state) => state.gameUi.preGameScreen.isOpen,
   );
 
   // button visibility
@@ -60,7 +60,7 @@ const InGameButtons = ({ socket }) => {
     <ul className={`pre-game-buttons`}>
       <li>
         <button
-          className={`button button-basic game-lobby-top-buttons__button ${cancelGameSetupButtonDisplayClass}`}
+          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${cancelGameSetupButtonDisplayClass}`}
           onClick={onCancelGameSetupClick}
         >
           Cancel
@@ -68,7 +68,7 @@ const InGameButtons = ({ socket }) => {
       </li>
       <li>
         <button
-          className={`button button-basic game-lobby-top-buttons__button ${leaveGameButtonDisplayClass}`}
+          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${leaveGameButtonDisplayClass}`}
           onClick={onLeaveGameClick}
         >
           Leave Game
@@ -76,7 +76,7 @@ const InGameButtons = ({ socket }) => {
       </li>
       <li>
         <button
-          className={`button button-basic game-lobby-top-buttons__button ${goBackButtonDisplayClass}`}
+          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${goBackButtonDisplayClass}`}
           onClick={onViewGamesListBackClick}
         >
           Back

@@ -54,7 +54,11 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
         ></input>
         <div className="auth-bottom-links">
           <Link to="/login">Log in to existing account</Link>
-          <input type="submit" className="button button-primary" value="SET" />
+          <input
+            type="submit"
+            className="button button-standard-size button-primary"
+            value="SET"
+          />
         </div>
       </form>
     </div>
@@ -72,5 +76,5 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, { setAlert, resetPassword })(
-  withRouter(PasswordReset)
+  withRouter(PasswordReset),
 );

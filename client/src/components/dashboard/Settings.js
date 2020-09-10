@@ -18,7 +18,7 @@ const Settings = ({
   history,
 }) => {
   const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(
-    false
+    false,
   );
   const [email, setEmail] = useState("");
 
@@ -65,7 +65,7 @@ const Settings = ({
             value={email}
           ></input>
           <button
-            className="button button-danger modal-submit-button"
+            className="button button-standard-size button-danger modal-submit-button"
             action="submit"
           >
             Confirm Delete

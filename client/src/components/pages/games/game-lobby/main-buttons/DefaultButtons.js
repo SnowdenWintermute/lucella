@@ -7,7 +7,7 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
   const dispatch = useDispatch();
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
   const preGameScreenIsOpen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen
+    (state) => state.gameUi.preGameScreen.isOpen,
   );
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
@@ -45,7 +45,7 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
     <ul className={`chat-buttons-list ${chatButtonsDisplayClass}`}>
       <li>
         <button
-          className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
+          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
           onClick={onChannelClick}
         >
           Channel
@@ -53,14 +53,14 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
       </li>
       <li>
         <button
-          className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
+          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
         >
           Ranked
         </button>
       </li>
       <li>
         <button
-          className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
+          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
           onClick={onSetupNewGameClick}
         >
           Host
@@ -68,7 +68,7 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
       </li>
       <li>
         <button
-          className={`button button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
+          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
           onClick={onViewGamesListClick}
         >
           Join
