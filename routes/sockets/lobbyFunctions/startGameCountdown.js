@@ -25,7 +25,7 @@ function startGameCountdown({
         "currentGameStatusUpdate",
         gameRoom.gameStatus,
       );
-      // TODO: start the game ticks
+      // start the game ticks
       gameDataIntervals[gameRoom.gameName] = startGame({
         io,
         connectedSockets,

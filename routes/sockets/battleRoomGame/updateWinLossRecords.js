@@ -143,7 +143,6 @@ async function updateWinLossRecords({
       ladder.ladder.push(challengerBattleRoomRecord.id);
     }
     ladder.ladder.sort((a, b) => {
-      console.log(a.elo);
       return b.elo - a.elo;
     });
     newHostRank = ladder.ladder.findIndex(

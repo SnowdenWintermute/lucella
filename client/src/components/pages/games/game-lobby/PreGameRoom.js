@@ -87,7 +87,10 @@ const PreGameRoom = ({ socket }) => {
           </tr>
         </tbody>
       </table>
-      <button className="button button-primary" onClick={onReadyClick}>
+      <button
+        className="button button-standard-size button-primary"
+        onClick={onReadyClick}
+      >
         READY
       </button>
     </Fragment>
@@ -108,7 +111,9 @@ const PreGameRoom = ({ socket }) => {
           setGameNameInput(e.target.value);
         }}
       />
-      <button className="button button-primary">Make Public</button>
+      <button className="button button-standard-size button-primary">
+        Make Public
+      </button>
     </form>
   );
 

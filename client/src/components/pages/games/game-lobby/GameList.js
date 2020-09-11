@@ -44,7 +44,7 @@ const GameList = ({ socket }) => {
           <td>
             {gameList[game].gameStatus === "inLobby" && (
               <button
-                className="button button-primary"
+                className="button button-standard-size button-primary"
                 onClick={() => onJoinGameClick(gameName)}
               >
                 Join
@@ -52,9 +52,11 @@ const GameList = ({ socket }) => {
             )}
           </td>
           <td>
-            <button className="button button-basic">Watch</button>
+            <button className="button button-standard-size button-basic">
+              Watch
+            </button>
           </td>
-        </tr>
+        </tr>,
       );
     }
   }

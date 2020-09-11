@@ -21,7 +21,7 @@ function clientLeavesGame({
   defaultCountdownNumber,
   isDisconnecting,
 }) {
-  const username = currentUser.name;
+  const username = connectedSockets[socket.id].username;
   try {
     if (!gameRooms[gameName])
       return socket.emit("errorMessage", "No game by that name exists");

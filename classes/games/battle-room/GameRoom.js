@@ -1,5 +1,5 @@
 class GameRoom {
-  constructor({ gameName, defaultCountdownNumber }) {
+  constructor({ gameName, defaultCountdownNumber, isRanked }) {
     this.gameName = gameName;
     this.players = {
       host: null,
@@ -15,6 +15,7 @@ class GameRoom {
       neededToWin: 5,
     };
     this.winner = null;
+    this.isRanked = isRanked ? isRanked : false;
   }
 }
 module.exports = GameRoom;

@@ -12,6 +12,7 @@ function clientHostsNewGame({
   gameRooms,
   gameName,
   defaultCountdownNumber,
+  isRanked,
 }) {
   // if their socket is not already in a game and no game by this name exists, create the game room
   if (!connectedSockets[socket.id].isInGame) {
@@ -21,6 +22,7 @@ function clientHostsNewGame({
         defaultCountdownNumber,
         width,
         height,
+        isRanked,
       });
       gameRooms[gameName] = newGameRoom;
       // join their socket to the new game room
@@ -39,7 +41,7 @@ function clientHostsNewGame({
   } else {
     socket.emit(
       "errorMessage",
-      "You can't host a game if you are already in one"
+      "You can't host a game if you are already in one",
     );
   }
 }

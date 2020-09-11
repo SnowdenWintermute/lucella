@@ -41,6 +41,12 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
     dispatch(gameUiActions.openPreGameScreen());
   };
 
+  // join ranked
+  const onRankedClick = () => {
+    if (!socket) return;
+    socket.emit("clientStartsSeekingRankedGame");
+  };
+
   return (
     <ul className={`chat-buttons-list ${chatButtonsDisplayClass}`}>
       <li>
@@ -54,6 +60,7 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
       <li>
         <button
           className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
+          onClick={onRankedClick}
         >
           Ranked
         </button>

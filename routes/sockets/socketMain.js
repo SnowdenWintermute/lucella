@@ -8,6 +8,7 @@ const clientSendsNewChat = require("./lobbyFunctions/clientSendsNewChat");
 const socketConnects = require("./generalFunctions/socketConnects");
 const socketDisconnect = require("./generalFunctions/socketDisconnect");
 const clientLeavesGame = require("./lobbyFunctions/clientLeavesGame");
+const clientClicksRanked = require("./lobbyFunctions/clientClicksRanked");
 const makeRandomAnonUsername = require("../../utils/makeRandomAnonUsername");
 const User = require("../../models/User");
 
@@ -16,6 +17,11 @@ const Orb = require("../../classes/games/battle-room/Orb");
 
 let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
+let rankedQueue = {
+  users: {},
+  matchmakingInterval: null,
+  currentEloDiffThreshold: 0,
+}; // {users:{socketId:socket.id,record:BattleRoomRecord}, matchmakingInterval, currentEloDiffThreshold}
 let gameDatas = {};
 let gameCountdownIntervals = {};
 let gameDataIntervals = {};
@@ -110,6 +116,23 @@ io.sockets.on("connect", async (socket) => {
       gameEndingIntervals,
       gameCountdownIntervals,
       defaultCountdownNumber,
+    });
+  });
+  socket.on("clientStartsSeekingRankedGame", async () => {
+    await clientClicksRanked({
+      io,
+      socket,
+      connectedSockets,
+      currentUser,
+      gameRooms,
+      chatRooms,
+      gameDatas,
+      gameDataIntervals,
+      gameUpdatePackets,
+      gameEndingIntervals,
+      gameCountdownIntervals,
+      defaultCountdownNumber,
+      rankedQueue,
     });
   });
   socket.on("clientSendsOrbSelections", (data) => {
