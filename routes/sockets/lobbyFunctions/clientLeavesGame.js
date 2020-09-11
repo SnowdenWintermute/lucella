@@ -9,7 +9,6 @@ const endGameCleanup = require("../battleRoomGame/endGameCleanup");
 function clientLeavesGame({
   io,
   socket,
-  currentUser,
   connectedSockets,
   chatRooms,
   gameRooms,

@@ -4,7 +4,6 @@ const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
 function socketDisconnect({
   io,
   socket,
-  currentUser,
   connectedSockets,
   chatRooms,
   gameRooms,
@@ -15,11 +14,10 @@ function socketDisconnect({
   gameEndingIntervals,
   defaultCountdownNumber,
 }) {
-  if (currentUser.currentGameName) {
+  if (connectedSockets[socket.id].currentGameName) {
     clientLeavesGame({
       io,
       socket,
-      currentUser,
       connectedSockets,
       chatRooms,
       gameRooms,
@@ -34,6 +32,7 @@ function socketDisconnect({
   } else {
     removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
   }
+  delete connectedSockets[socket.id];
   console.log(`${socket.id} disconnected`);
 }
 

@@ -1,5 +1,4 @@
 const io = require("../../expressServer").io;
-const jwtAuth = require("socketio-jwt-auth");
 const clientRequestsToJoinRoom = require("./lobbyFunctions/clientRequestsToJoinRoom");
 const clientHostsNewGame = require("./lobbyFunctions/clientHostsNewGame");
 const clientJoinsGame = require("./lobbyFunctions/clientJoinsGame");
@@ -10,10 +9,6 @@ const socketDisconnect = require("./generalFunctions/socketDisconnect");
 const clientLeavesGame = require("./lobbyFunctions/clientLeavesGame");
 const clientClicksRanked = require("./lobbyFunctions/clientClicksRanked");
 const makeRandomAnonUsername = require("../../utils/makeRandomAnonUsername");
-const User = require("../../models/User");
-
-const GameRoom = require("../../classes/games/battle-room/GameRoom");
-const Orb = require("../../classes/games/battle-room/Orb");
 
 let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
@@ -28,23 +23,27 @@ let gameDataIntervals = {};
 let gameUpdatePackets = {};
 let gameEndingIntervals = {};
 const defaultCountdownNumber = 0;
-let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: false}
+let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: Bool, currentGameName: String, isGuest: Bool}
 let connectedGuests = {};
 
+setInterval(() => {
+  console.log("connectedSockets");
+  console.log(connectedSockets);
+}, 5000);
+
 io.sockets.on("connect", async (socket) => {
-  let currentUser = {};
   connectedSockets[socket.id] = {
     username: null,
     currentRoom: null,
     socketId: socket.id,
   };
-  currentUser = await socketConnects({ socket, connectedSockets });
+  await socketConnects({ socket, connectedSockets });
   socket.emit("authenticationFinished", null);
   socket.emit("gameListUpdate", gameRooms);
   socket.emit("currentGameRoomUpdate", null);
   console.log("socket connected and room set to null");
-  if (currentUser.isGuest) {
-    currentUser.name = makeRandomAnonUsername({
+  if (connectedSockets[socket.id].isGuest) {
+    connectedSockets[socket.id].username = makeRandomAnonUsername({
       socket,
       connectedSockets,
       connectedGuests,
@@ -60,7 +59,7 @@ io.sockets.on("connect", async (socket) => {
       socket,
       chatRooms,
       connectedSockets,
-      username: currentUser.name,
+      username: connectedSockets[socket.id].username,
       roomToJoin,
     });
   });
@@ -69,7 +68,6 @@ io.sockets.on("connect", async (socket) => {
       io,
       socket,
       connectedSockets,
-      currentUser,
       chatRooms,
       gameRooms,
       gameName,
@@ -80,12 +78,11 @@ io.sockets.on("connect", async (socket) => {
     clientLeavesGame({
       io,
       socket,
-      currentUser,
       connectedSockets,
       chatRooms,
       gameRooms,
       gameName,
-      username: currentUser.name,
+      username: connectedSockets[socket.id].username,
       gameCountdownIntervals,
       defaultCountdownNumber,
     });
@@ -96,7 +93,6 @@ io.sockets.on("connect", async (socket) => {
       io,
       socket,
       connectedSockets,
-      currentUser,
       chatRooms,
       gameRooms,
       gameName,
@@ -123,7 +119,6 @@ io.sockets.on("connect", async (socket) => {
       io,
       socket,
       connectedSockets,
-      currentUser,
       gameRooms,
       chatRooms,
       gameDatas,
@@ -166,14 +161,13 @@ io.sockets.on("connect", async (socket) => {
   });
 
   socket.on("clientSendsNewChat", (data) => {
-    clientSendsNewChat({ io, socket, data, currentUser });
+    clientSendsNewChat({ io, socket, connectedSockets, data });
   });
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected");
     socketDisconnect({
       io,
       socket,
-      currentUser,
       connectedSockets,
       chatRooms,
       gameDatas,
@@ -182,7 +176,7 @@ io.sockets.on("connect", async (socket) => {
       gameDataIntervals,
       gameEndingIntervals,
       defaultCountdownNumber,
-      gameName: currentUser.currentGameName,
+      gameName: connectedSockets[socket.id].currentGameName,
     });
   });
 });

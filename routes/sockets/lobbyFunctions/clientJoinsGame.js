@@ -6,7 +6,6 @@ function clientJoinsGame({
   io,
   socket,
   connectedSockets,
-  currentUser,
   chatRooms,
   gameRooms,
   gameName,
