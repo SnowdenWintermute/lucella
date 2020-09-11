@@ -11,7 +11,7 @@ function clientJoinsGame({
   gameRooms,
   gameName,
 }) {
-  const username = currentUser.name;
+  const username = connectedSockets[socket.id].username;
   try {
     // can't join a game that doesn't exist
     if (!gameRooms[gameName])
@@ -60,7 +60,7 @@ function clientJoinsGame({
         "currentGameRoomUpdate",
         gameRoomForClient,
       );
-      currentUser.currentGameName = gameName;
+      connectedSockets[socket.id].currentGameName = gameName;
     } else {
       socket.emit("errorMessage", "You are already in a game");
     }
