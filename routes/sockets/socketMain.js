@@ -26,11 +26,6 @@ const defaultCountdownNumber = 0;
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: Bool, currentGameName: String, isGuest: Bool}
 let connectedGuests = {};
 
-setInterval(() => {
-  console.log("connectedSockets");
-  console.log(connectedSockets);
-}, 5000);
-
 io.sockets.on("connect", async (socket) => {
   connectedSockets[socket.id] = {
     username: null,

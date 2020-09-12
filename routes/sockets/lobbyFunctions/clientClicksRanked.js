@@ -31,6 +31,7 @@ async function clientClicksRanked({
       "errorMessage",
       "Log in or create an account to play ranked games",
     );
+  // join socket to ranked queue channel
 
   // put user socket in queue and reset global eloDiff threshold
   const userBattleRoomRecord = await BattleRoomRecord.findOne({
@@ -41,6 +42,7 @@ async function clientClicksRanked({
     record: userBattleRoomRecord,
     socketId: socket.id,
   };
+  socket.join("ranked-queue");
 
   rankedQueue.currentEloDiffThreshold = 0;
   nextEloThresholdIncrease = 1;
@@ -57,53 +59,64 @@ async function clientClicksRanked({
         clearInterval(rankedQueue.matchmakingInterval);
         delete rankedQueue.matchmakingInterval;
         return;
-      } else {
-        console.log(
-          "num players seeking: " + Object.keys(rankedQueue.users).length,
-        );
       }
+      const queueSize = Object.keys(rankedQueue.users).length;
+      console.log("Number of players seeking a ranked match: " + queueSize);
+      io.in("ranked-queue").emit("serverSendsMatchmakingQueueSize", queueSize);
       // try to find the two players with lowest elo difference
       let bestMatch = null;
       let bestMatchEloDiff = null;
       Object.keys(rankedQueue.users).forEach((playerInQueue) => {
         // check if this socket is still connected
-        console.log(rankedQueue.users[playerInQueue].socketId);
-        if (io.sockets.sockets[rankedQueue.users[playerInQueue].socketId]) {
-          console.log(
-            io.sockets.sockets[rankedQueue.users[playerInQueue].socketId].id,
-          );
+        if (io.sockets.sockets[playerInQueue]) {
           // check each player's elo against the others
           let lowestEloDiffPlayer = null;
           let bestEloDiffSoFar = null;
           const currPlayerElo = rankedQueue.users[playerInQueue].record.elo;
           Object.keys(rankedQueue.users).forEach((playerToCompare) => {
-            if (playerToCompare !== playerInQueue) {
-              const comparedPlayerElo =
-                rankedQueue.users[playerToCompare].record.elo;
-              const currEloDiff = Math.abs(currPlayerElo - comparedPlayerElo);
+            // check if comparing socket is still connected
+            if (io.sockets.sockets[playerToCompare]) {
+              // check if the two sockets are from the same user, and don't compare two of the exact same entry in rankedQueue.users
               if (
-                lowestEloDiffPlayer === null ||
-                bestEloDiffSoFar > currEloDiff
+                playerToCompare !== playerInQueue &&
+                connectedSockets[playerInQueue].username !==
+                  connectedSockets[playerToCompare].username
               ) {
-                console.log("best match for curr player updated");
-                lowestEloDiffPlayer = rankedQueue.users[playerToCompare];
-                bestEloDiffSoFar = currEloDiff;
+                const comparedPlayerElo =
+                  rankedQueue.users[playerToCompare].record.elo;
+                const currEloDiff = Math.abs(currPlayerElo - comparedPlayerElo);
+                if (
+                  lowestEloDiffPlayer === null ||
+                  bestEloDiffSoFar > currEloDiff
+                ) {
+                  console.log("Best match for current player updated");
+                  lowestEloDiffPlayer = rankedQueue.users[playerToCompare];
+                  bestEloDiffSoFar = currEloDiff;
+                }
               }
+            } else {
+              console.log("Socket seeking match no longer connected");
+              delete rankedQueue.users[playerToCompare];
+              return;
             }
           });
+
+          // after comparing this user to all users in queue, check if their best match is better than the overall best match
           if (
             lowestEloDiffPlayer &&
             (bestMatch === null || bestEloDiffSoFar < bestMatchEloDiff)
           ) {
+            console.log("Best overall matchup updated");
             bestMatchEloDiff = bestEloDiffSoFar;
             bestMatch = {
               host: rankedQueue.users[playerInQueue],
               challenger: lowestEloDiffPlayer,
             };
           }
+          // continue until all users are compared to each other
         } else {
-          console.log("socket seeking match no longer connected");
-          delete rankedQueue.users[rankedQueue.users[playerInQueue].socketId];
+          console.log("Socket seeking match no longer connected");
+          delete rankedQueue.users[playerInQueue];
           return;
         }
       });
@@ -112,15 +125,13 @@ async function clientClicksRanked({
       console.log(bestMatch);
       // check best match against threshold
       console.log(
-        "current eloDiff threshold: " + rankedQueue.currentEloDiffThreshold,
+        "Current eloDiff threshold: " + rankedQueue.currentEloDiffThreshold,
       );
       if (
         bestMatch !== null &&
         bestMatchEloDiff < rankedQueue.currentEloDiffThreshold
       ) {
         // start game, remove players from queue, and stop the interval if no players are seeking
-        console.log("new ranked game started");
-
         // if either player is no longer connected, abandon this iteration of the matchmaking loop
         if (
           !io.sockets.sockets[bestMatch.host.socketId] ||

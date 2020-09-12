@@ -39,6 +39,9 @@ const UISocketListener = ({ socket }) => {
       console.log(data);
       dispatch(lobbyUiActions.setScoreScreenData(data));
     });
+    socket.on("serverSendsMatchmakingQueueSize", (queueSize) => {
+      console.log("queueSize: " + queueSize);
+    });
     return () => {
       socket.off("gameListUpdate");
       socket.off("currentGameRoomUpdate");
@@ -48,6 +51,7 @@ const UISocketListener = ({ socket }) => {
       socket.off("currentGameStatusUpdate");
       socket.off("currentGameCountdownUpdate");
       socket.off("showEndScreen");
+      socket.off("serverSendsMatchmakingQueueSize");
     };
   }, [socket, dispatch, currentGameName]);
 
