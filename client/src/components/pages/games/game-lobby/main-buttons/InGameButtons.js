@@ -5,12 +5,13 @@ import * as gameUiActions from "../../../../../store/actions/game-ui";
 
 const InGameButtons = ({ socket }) => {
   const dispatch = useDispatch();
+  const [buttonsDisplayClass, setButtonsDisplayClass] = useState("");
   const [
     cancelGameSetupButtonDisplayClass,
     setCancelGameSetupButtonDisplayClass,
   ] = useState("chat-button-hidden");
   const [goBackButtonDisplayClass, setGoBackButtonDisplayClass] = useState(
-    "chat-button-hidden",
+    "chat-button-hidden"
   );
   const [
     leaveGameButtonDisplayClass,
@@ -18,8 +19,11 @@ const InGameButtons = ({ socket }) => {
   ] = useState("chat-button-hidden");
   const currentGameName = useSelector((state) => state.gameUi.currentGameName);
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
+  const matchmakingScreenIsOpen = useSelector(
+    (state) => state.gameUi.matchmakingScreen.isOpen
+  );
   const preGameScreenIsOpen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen,
+    (state) => state.gameUi.preGameScreen.isOpen
   );
 
   // button visibility
@@ -35,7 +39,14 @@ const InGameButtons = ({ socket }) => {
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     }
     if (!currentGameName) setLeaveGameButtonDisplayClass("chat-button-hidden");
-  }, [gameListIsOpen, preGameScreenIsOpen, currentGameName]);
+    if (matchmakingScreenIsOpen) setButtonsDisplayClass("chat-button-hidden");
+    if (!matchmakingScreenIsOpen) setButtonsDisplayClass("");
+  }, [
+    gameListIsOpen,
+    preGameScreenIsOpen,
+    currentGameName,
+    matchmakingScreenIsOpen,
+  ]);
 
   // go back from list
   const onViewGamesListBackClick = () => {
@@ -57,7 +68,7 @@ const InGameButtons = ({ socket }) => {
   };
 
   return (
-    <ul className={`pre-game-buttons`}>
+    <ul className={`pre-game-buttons ${buttonsDisplayClass}`}>
       <li>
         <button
           className={`button button-standard-size button-basic game-lobby-top-buttons__button ${cancelGameSetupButtonDisplayClass}`}

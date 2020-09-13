@@ -36,7 +36,8 @@
 }
 
 .pre-game-room,
-.game-list-frame {
+.game-list-frame,
+.matchmaking-queue-screen {
   -ms-grid-row: 1;
   -ms-grid-row-span: 1;
   grid-row: 1/2;
@@ -128,8 +129,7 @@
   border-bottom: 1px solid #9ba8b8;
 }
 
-.game-lobby-chat-stream.game-setup,
-.game-lobby-chat-stream.viewing-game-list {
+.game-lobby-chat-stream.chat-stream-top-border {
   border-top: 1px solid #9ba8b8;
 }
 

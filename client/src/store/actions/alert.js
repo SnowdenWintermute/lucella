@@ -1,7 +1,7 @@
 import uuid from "uuid";
 import { SET_ALERT, REMOVE_ALERT } from "./types";
 
-export const setAlert = (msg, alertType, timeout = 3000) => dispatch => {
+export const setAlert = (msg, alertType, timeout = 3000) => (dispatch) => {
   const id = uuid.v4();
   if (!msg) msg = "Undefined error message";
   dispatch({
@@ -9,8 +9,15 @@ export const setAlert = (msg, alertType, timeout = 3000) => dispatch => {
     payload: {
       msg,
       alertType,
-      id
-    }
+      id,
+    },
   });
   setTimeout(() => dispatch({ type: REMOVE_ALERT, payload: id }), timeout);
+};
+
+export const clearAlert = (id) => (dispatch) => {
+  dispatch({
+    type: REMOVE_ALERT,
+    payload: id,
+  });
 };

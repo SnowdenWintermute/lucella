@@ -29,7 +29,8 @@ $gameListHeight: 300px;
   grid-template-rows: min-content 1fr min-content;
 }
 .pre-game-room,
-.game-list-frame {
+.game-list-frame,
+.matchmaking-queue-screen {
   grid-row: 1/2;
   grid-column: 1/2;
   display: flex;
@@ -86,8 +87,7 @@ $gameListHeight: 300px;
   grid-row-end: 2;
   border-bottom: 1px solid color(textPrimary);
 }
-.game-lobby-chat-stream.game-setup,
-.game-lobby-chat-stream.viewing-game-list {
+.game-lobby-chat-stream.chat-stream-top-border {
   border-top: 1px solid color(textPrimary);
 }
 .game-lobby-chat-stream {

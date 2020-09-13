@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import DefaultButtons from "./DefaultButtons";
 import InGameButtons from "./InGameButtons";
+import MatchmakingButtons from "./MatchmakingButtons";
 
 const MainButtons = ({ socket, showChangeChannelModal }) => {
   return (
@@ -12,6 +13,7 @@ const MainButtons = ({ socket, showChangeChannelModal }) => {
         showChangeChannelModal={showChangeChannelModal}
       />
       <InGameButtons socket={socket} />
+      <MatchmakingButtons socket={socket} />
     </div>
   );
 };

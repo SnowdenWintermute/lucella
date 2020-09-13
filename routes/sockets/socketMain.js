@@ -16,6 +16,7 @@ let rankedQueue = {
   users: {},
   matchmakingInterval: null,
   currentEloDiffThreshold: 0,
+  rankedGameCurrentNumber: 0,
 }; // {users:{socketId:socket.id,record:BattleRoomRecord}, matchmakingInterval, currentEloDiffThreshold}
 let gameDatas = {};
 let gameCountdownIntervals = {};
@@ -124,6 +125,9 @@ io.sockets.on("connect", async (socket) => {
       defaultCountdownNumber,
       rankedQueue,
     });
+  });
+  socket.on("clientCancelsMatchmakingSearch", () => {
+    delete rankedQueue.users[socket.id];
   });
   socket.on("clientSendsOrbSelections", (data) => {
     // TODO: check for correct ownership (or maybe it doesn't matter if they hack to select opponent orbs because they can't move them anyway)

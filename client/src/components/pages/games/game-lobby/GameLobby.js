@@ -6,6 +6,7 @@ import GameLobbyChat from "./GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
 import ChannelBar from "./channel-bar/ChannelBar";
 import PreGameRoom from "./PreGameRoom";
+import MatchmakingQueueDisplay from "./MatchmakingQueueDisplay";
 import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import ScoreScreenModalContents from "./ScoreScreenModalContents";
@@ -22,10 +23,10 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   const dispatch = useDispatch();
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
-    false,
+    false
   );
   const scoreScreenDisplayed = useSelector(
-    (state) => state.lobbyUi.scoreScreenDisplayed,
+    (state) => state.lobbyUi.scoreScreenDisplayed
   );
   const [authenticating, setAuthenticating] = useState(true);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
@@ -120,6 +121,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
           <ChannelBar socket={socket} defaultChatRoom={defaultChatRoom} />
           <div className="game-lobby-main-window">
             <PreGameRoom socket={socket} />
+            <MatchmakingQueueDisplay socket={socket} />
             <GameList socket={socket} />
             <GameLobbyChat socket={socket} username={username} />
           </div>

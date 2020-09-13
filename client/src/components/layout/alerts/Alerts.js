@@ -6,12 +6,13 @@ import Alert from "./Alert";
 const Alerts = ({ alerts }) => {
   const alertsToDisplay = [];
   if (alerts.length) {
-    alerts.forEach(alert => {
+    alerts.forEach((alert) => {
       alertsToDisplay.push(
         <Alert
           alertMsg={alert.msg}
           alertType={alert.alertType}
           key={alert.msg}
+          id={alert.id}
         />
       );
     });
@@ -21,11 +22,11 @@ const Alerts = ({ alerts }) => {
 };
 
 Alerts.propTypes = {
-  alerts: PropTypes.array.isRequired
+  alerts: PropTypes.array.isRequired,
 };
 
-const mapStateToProps = state => ({
-  alerts: state.alert
+const mapStateToProps = (state) => ({
+  alerts: state.alert,
 });
 
 export default connect(mapStateToProps)(Alerts);

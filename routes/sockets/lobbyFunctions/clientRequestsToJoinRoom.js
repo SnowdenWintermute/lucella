@@ -17,7 +17,7 @@ const clientRequestsToJoinRoom = ({
     if (!authorizedForGameChannel)
       return socket.emit(
         "errorMessage",
-        "Not authorized for that chat channel",
+        "Not authorized for that chat channel"
       );
   }
   // console.log(username + " requests to join room " + roomToJoin);
@@ -46,7 +46,7 @@ const clientRequestsToJoinRoom = ({
   } else {
     // already connected, add to their list of sockets connected
     chatRooms[roomToJoin].currentUsers[username].connectedSockets.push(
-      socket.id,
+      socket.id
     );
   }
   const roomToJoinForClient = generateRoomForClient({
@@ -61,7 +61,7 @@ const clientRequestsToJoinRoom = ({
       author: "Server",
       style: "private",
       messageText: `Welcome to ${roomToJoin}.`,
-    }),
+    })
   );
   return chatRooms;
 };

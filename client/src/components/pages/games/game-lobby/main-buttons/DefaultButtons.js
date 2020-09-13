@@ -6,23 +6,26 @@ import * as gameUiActions from "../../../../../store/actions/game-ui";
 const DefaultButtons = ({ showChangeChannelModal, socket }) => {
   const dispatch = useDispatch();
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
+  const matchmakingScreenIsOpen = useSelector(
+    (state) => state.gameUi.matchmakingScreen.isOpen
+  );
   const preGameScreenIsOpen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen,
+    (state) => state.gameUi.preGameScreen.isOpen
   );
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
 
   // manage button visibility
   useEffect(() => {
-    if (gameListIsOpen || preGameScreenIsOpen) {
+    if (gameListIsOpen || preGameScreenIsOpen || matchmakingScreenIsOpen) {
       setChatButtonDisplayClass("chat-button-hidden");
       setChatButtonsDisplayClass("chat-buttons-hidden");
     }
-    if (!gameListIsOpen && !preGameScreenIsOpen) {
+    if (!gameListIsOpen && !preGameScreenIsOpen && !matchmakingScreenIsOpen) {
       setChatButtonDisplayClass("");
       setChatButtonsDisplayClass("");
     }
-  }, [gameListIsOpen, preGameScreenIsOpen]);
+  }, [gameListIsOpen, preGameScreenIsOpen, matchmakingScreenIsOpen]);
 
   // change chat channel
   const onChannelClick = () => {

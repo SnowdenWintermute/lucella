@@ -14,6 +14,8 @@ import {
   SET_GAME_WINNER,
   SET_SCORE_SCREEN_DATA,
   CLOSE_SCORE_SCREEN,
+  SET_MATCHMAKING_DATA,
+  SET_MATCHMAKING_WINDOW_VISIBLE,
 } from "../actions/types";
 
 const initialState = {
@@ -23,6 +25,10 @@ const initialState = {
   },
   preGameScreen: {
     isOpen: false,
+  },
+  matchmakingScreen: {
+    isOpen: false,
+    currentData: {},
   },
   currentGameName: "",
   playersInGame: {},
@@ -122,6 +128,22 @@ export default function (state = initialState, action) {
       return {
         ...state,
         scoreScreenDisplayed: false,
+      };
+    case SET_MATCHMAKING_WINDOW_VISIBLE:
+      return {
+        ...state,
+        matchmakingScreen: {
+          ...state.matchmakingScreen,
+          isOpen: payload,
+        },
+      };
+    case SET_MATCHMAKING_DATA:
+      return {
+        ...state,
+        matchmakingScreen: {
+          ...state.matchmakingScreen,
+          currentData: payload,
+        },
       };
     default:
       return state;

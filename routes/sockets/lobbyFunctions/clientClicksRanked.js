@@ -19,7 +19,7 @@ async function clientClicksRanked({
   defaultCountdownNumber,
   rankedQueue,
 }) {
-  // if user is already in game or not logged in, return error
+  // if socket is already in game or not logged in, an appropriate return error
   if (connectedSockets[socket.id].isInGame)
     return socket.emit("errorMessage", "You are already in a game");
 
@@ -29,9 +29,8 @@ async function clientClicksRanked({
   if (!user)
     return socket.emit(
       "errorMessage",
-      "Log in or create an account to play ranked games",
+      "Log in or create an account to play ranked games"
     );
-  // join socket to ranked queue channel
 
   // put user socket in queue and reset global eloDiff threshold
   const userBattleRoomRecord = await BattleRoomRecord.findOne({
@@ -42,11 +41,13 @@ async function clientClicksRanked({
     record: userBattleRoomRecord,
     socketId: socket.id,
   };
+  // put socket in ranked queue channel to get notifications
   socket.join("ranked-queue");
+  socket.emit("matchmakningQueueJoined");
 
   rankedQueue.currentEloDiffThreshold = 0;
   nextEloThresholdIncrease = 1;
-  rankedGameCurrentNumber = 0;
+  let currentIntervalIteration = 1;
 
   // if no rankedQueue interval, start one
   if (
@@ -60,9 +61,12 @@ async function clientClicksRanked({
         delete rankedQueue.matchmakingInterval;
         return;
       }
+      console.log("matchmaking queue searching...");
       const queueSize = Object.keys(rankedQueue.users).length;
-      console.log("Number of players seeking a ranked match: " + queueSize);
-      io.in("ranked-queue").emit("serverSendsMatchmakingQueueSize", queueSize);
+      io.in("ranked-queue").emit("serverSendsMatchmakingQueueData", {
+        queueSize,
+        currentEloDiffThreshold: rankedQueue.currentEloDiffThreshold,
+      });
       // try to find the two players with lowest elo difference
       let bestMatch = null;
       let bestMatchEloDiff = null;
@@ -120,13 +124,7 @@ async function clientClicksRanked({
           return;
         }
       });
-      console.log("bestMatchEloDiff: " + bestMatchEloDiff);
-      console.log("bestMatch: ");
-      console.log(bestMatch);
       // check best match against threshold
-      console.log(
-        "Current eloDiff threshold: " + rankedQueue.currentEloDiffThreshold,
-      );
       if (
         bestMatch !== null &&
         bestMatchEloDiff < rankedQueue.currentEloDiffThreshold
@@ -147,20 +145,13 @@ async function clientClicksRanked({
             ];
         } else {
           // if no one has dc'd yet, put them in a game together
-          console.log(
-            "game between " +
-              io.sockets.sockets[bestMatch.host.socketId].id +
-              "(host) and " +
-              io.sockets.sockets[bestMatch.challenger.socketId].id +
-              "(challenger) started",
-          );
           clientHostsNewGame({
             io,
             socket: io.sockets.sockets[bestMatch.host.socketId],
             connectedSockets,
             chatRooms,
             gameRooms,
-            gameName: `ranked-${rankedGameCurrentNumber}`,
+            gameName: `ranked-${rankedQueue.rankedGameCurrentNumber}`,
             defaultCountdownNumber,
             isRanked: true,
           });
@@ -170,12 +161,18 @@ async function clientClicksRanked({
             connectedSockets,
             chatRooms,
             gameRooms,
-            gameName: `ranked-${rankedGameCurrentNumber}`,
+            gameName: `ranked-${rankedQueue.rankedGameCurrentNumber}`,
           });
-          rankedGameCurrentNumber += 1;
+          rankedQueue.rankedGameCurrentNumber += 1;
           // remove matched players from queue
           delete rankedQueue.users[bestMatch.host.socketId];
           delete rankedQueue.users[bestMatch.challenger.socketId];
+          io.sockets.sockets[bestMatch.host.socketId].emit("matchFound");
+          io.sockets.sockets[bestMatch.challenger.socketId].emit("matchFound");
+          io.sockets.sockets[bestMatch.host.socketId].leave("ranked-queue");
+          io.sockets.sockets[bestMatch.challenger.socketId].leave(
+            "ranked-queue"
+          );
           if (Object.keys(rankedQueue.users).length < 1)
             clearInterval(rankedQueue.matchmakingInterval);
           delete rankedQueue.matchmakingInterval;
@@ -185,10 +182,11 @@ async function clientClicksRanked({
       } else {
         // increase threshold
         if (nextEloThresholdIncrease < 3000) {
-          rankedQueue.currentEloDiffThreshold += nextEloThresholdIncrease;
-          nextEloThresholdIncrease = nextEloThresholdIncrease * 2;
+          const newEloThreshold = rankedQueue.currentEloDiffThreshold + 4;
+          rankedQueue.currentEloDiffThreshold = newEloThreshold;
         }
       }
+      currentIntervalIteration++;
     }, 1000);
   }
 }

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import * as alertActions from "../../../../store/actions/alert";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
+import gameUi from "../../../../store/reducers/game-ui";
 
 const UISocketListener = ({ socket }) => {
   const dispatch = useDispatch();
@@ -11,6 +12,9 @@ const UISocketListener = ({ socket }) => {
 
   useEffect(() => {
     if (!socket) return;
+    socket.on("connect", () => {
+      dispatch(gameUiActions.clearGameUiData());
+    });
     socket.on("gameListUpdate", (data) => {
       dispatch(gameUiActions.updateGamesList(data));
     });
@@ -39,8 +43,14 @@ const UISocketListener = ({ socket }) => {
       console.log(data);
       dispatch(lobbyUiActions.setScoreScreenData(data));
     });
-    socket.on("serverSendsMatchmakingQueueSize", (queueSize) => {
-      console.log("queueSize: " + queueSize);
+    socket.on("matchmakningQueueJoined", () => {
+      dispatch(gameUiActions.setMatchmakingWindowVisible(true));
+    });
+    socket.on("serverSendsMatchmakingQueueData", (data) => {
+      dispatch(gameUiActions.setMatchmakingData(data));
+    });
+    socket.on("matchFound", () => {
+      dispatch(gameUiActions.setMatchmakingWindowVisible(false));
     });
     return () => {
       socket.off("gameListUpdate");
@@ -51,7 +61,9 @@ const UISocketListener = ({ socket }) => {
       socket.off("currentGameStatusUpdate");
       socket.off("currentGameCountdownUpdate");
       socket.off("showEndScreen");
-      socket.off("serverSendsMatchmakingQueueSize");
+      socket.off("matchmakingQueueJoined");
+      socket.off("serverSendsMatchmakingQueueData");
+      socket.off("matchFound");
     };
   }, [socket, dispatch, currentGameName]);
 

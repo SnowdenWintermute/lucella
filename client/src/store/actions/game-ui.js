@@ -12,6 +12,8 @@ import {
   UPDATE_PLAYER_DESIGNATION,
   CLEAR_GAME_UI,
   SET_GAME_WINNER,
+  SET_MATCHMAKING_WINDOW_VISIBLE,
+  SET_MATCHMAKING_DATA,
 } from "./types";
 
 export const viewGamesListClicked = () => (dispatch) => {
@@ -86,4 +88,12 @@ export const clearGameUiData = () => (dispatch) => {
   dispatch({
     type: CLEAR_GAME_UI,
   });
+};
+
+export const setMatchmakingWindowVisible = (isOpen) => (dispatch) => {
+  dispatch({ type: SET_MATCHMAKING_WINDOW_VISIBLE, payload: isOpen });
+};
+
+export const setMatchmakingData = (data) => (dispatch) => {
+  dispatch({ type: SET_MATCHMAKING_DATA, payload: data });
 };
