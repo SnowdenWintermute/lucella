@@ -42,7 +42,7 @@ function clientLeavesGame({
             author: "Server",
             style: "private",
             messageText: `Game ${gameName} closed by host.`,
-          }),
+          })
         );
         if (gameRooms[gameName].players.challenger) {
           let socketIdToRemove =
@@ -77,12 +77,28 @@ function clientLeavesGame({
         gameRooms[gameName].playersReady = { host: false, challenger: false };
         io.in(`game-${gameName}`).emit(
           "updateOfCurrentRoomPlayerReadyStatus",
-          gameRooms[gameName].playersReady,
+          gameRooms[gameName].playersReady
         );
       }
       // EITHER HOST OR CHALLENGER LEAVES
       if (isDisconnecting) {
         removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
+        // if dc from ranked game, remove the other player too
+        if (gameRooms[gameName].isRanked) {
+          const socketToRemove = connectedSockets.forEach((connectedSocket) => {
+            if (
+              connectedSockets[connectedSocket].currentGameName === gameName
+            ) {
+              return connectedSocket;
+            }
+          });
+          removeSocketFromRoom({
+            io,
+            socket: socketToRemove,
+            connectedSockets,
+            chatRooms,
+          });
+        }
         delete connectedSockets[socket.id];
       } else {
         connectedSockets[socket.id].isInGame = false;
@@ -103,7 +119,7 @@ function clientLeavesGame({
         : null;
       io.to(`game-${gameName}`).emit(
         "currentGameRoomUpdate",
-        gameRoomForClient,
+        gameRoomForClient
       );
       const chatRoomForClient = generateRoomForClient({
         chatRooms,
@@ -112,7 +128,7 @@ function clientLeavesGame({
       io.to(`game-${gameName}`).emit("updateChatRoom", chatRoomForClient);
       io.sockets.emit("gameListUpdate", gameRooms);
     } else {
-      // game in progress or counting down
+      // game in progress
       console.log("disconnect => end game cleanup");
       endGameCleanup({
         io,

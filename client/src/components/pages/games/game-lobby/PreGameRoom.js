@@ -7,10 +7,10 @@ import * as alertActions from "../../../../store/actions/alert";
 const PreGameRoom = ({ socket }) => {
   const dispatch = useDispatch();
   const preGameScreen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen,
+    (state) => state.gameUi.preGameScreen.isOpen
   );
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
-    "height-0-hidden",
+    "height-0-hidden"
   );
   const [gameNameInput, setGameNameInput] = useState("");
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
@@ -18,8 +18,9 @@ const PreGameRoom = ({ socket }) => {
   const playersInGame = useSelector((state) => state.gameUi.playersInGame);
   const currentGameName = useSelector((state) => state.gameUi.currentGameName);
   const countdownNumber = useSelector((state) => state.gameUi.countdownNumber);
+  const isRanked = useSelector((state) => state.gameUi.isRanked);
   const playerDesignation = useSelector(
-    (state) => state.gameUi.playerDesignation,
+    (state) => state.gameUi.playerDesignation
   );
 
   const channelNameInput = useRef();
@@ -53,9 +54,10 @@ const PreGameRoom = ({ socket }) => {
   const preGameRoomMenu = currentGameName ? (
     <Fragment>
       <h3>
-        {playerDesignation && playerDesignation === "host"
-          ? "You are the host of "
-          : "You are challinging the host of "}
+        {!isRanked &&
+          (playerDesignation && playerDesignation === "host"
+            ? "You are the host of "
+            : "You are challinging the host of ")}
         game: {currentGameName}
       </h3>
       <div>Players:</div>
@@ -87,12 +89,14 @@ const PreGameRoom = ({ socket }) => {
           </tr>
         </tbody>
       </table>
-      <button
-        className="button button-standard-size button-primary"
-        onClick={onReadyClick}
-      >
-        READY
-      </button>
+      {!isRanked && (
+        <button
+          className="button button-standard-size button-primary"
+          onClick={onReadyClick}
+        >
+          READY
+        </button>
+      )}
     </Fragment>
   ) : (
     <form

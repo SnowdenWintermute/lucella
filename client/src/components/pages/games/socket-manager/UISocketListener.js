@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import * as alertActions from "../../../../store/actions/alert";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
-import gameUi from "../../../../store/reducers/game-ui";
 
 const UISocketListener = ({ socket }) => {
   const dispatch = useDispatch();
@@ -25,14 +24,12 @@ const UISocketListener = ({ socket }) => {
       dispatch(gameUiActions.closePreGameScreen());
     });
     socket.on("updateOfCurrentRoomPlayerReadyStatus", (playersReady) => {
-      if (!currentGameName) return null;
       dispatch(gameUiActions.updatePlayersReady(playersReady));
     });
     socket.on("serverSendsPlayerDesignation", (data) => {
       dispatch(gameUiActions.updatePlayerDesignation(data));
     });
     socket.on("currentGameStatusUpdate", (gameStatus) => {
-      if (!currentGameName) return;
       dispatch(gameUiActions.setCurrentGameStatus(gameStatus));
     });
     socket.on("currentGameCountdownUpdate", (countdown) => {

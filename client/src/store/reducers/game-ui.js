@@ -42,6 +42,7 @@ const initialState = {
   winner: null,
   scoreScreenData: {},
   scoreScreenDisplayed: false,
+  isRanked: null,
 };
 
 export default function (state = initialState, action) {
@@ -83,6 +84,7 @@ export default function (state = initialState, action) {
         playersReady: payload && payload.playersReady,
         countdownNumber: payload && payload.countdown,
         gameStatus: payload && payload.gameStatus,
+        isRanked: payload && payload.isRanked,
       };
     case UPDATE_PLAYERS:
       return {

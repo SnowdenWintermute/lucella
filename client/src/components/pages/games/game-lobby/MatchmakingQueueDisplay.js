@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-const MatchmakingQueueDisplay = ({ socket }) => {
+const MatchmakingQueueDisplay = () => {
   const [hideClass, setHideClass] = useState("height-0-hidden");
   const matchmakingQueueScreen = useSelector(
     (state) => state.gameUi.matchmakingScreen

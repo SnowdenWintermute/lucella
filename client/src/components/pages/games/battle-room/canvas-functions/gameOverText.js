@@ -12,14 +12,14 @@ const gameOverText = ({
     context.textBaseline = "middle";
     context.font = "bold 12px Arial";
     context.fillText(
-      `Winner: ${winner}`,
+      `Winner: ${winner ? winner : "..."}`,
       currentGameData.width / 2,
-      currentGameData.height / 2,
+      currentGameData.height / 2
     );
     context.fillText(
       "Score screen in " + gameOverCountdownText,
       currentGameData.width / 2,
-      currentGameData.height / 2 + 20,
+      currentGameData.height / 2 + 20
     );
   }
 };

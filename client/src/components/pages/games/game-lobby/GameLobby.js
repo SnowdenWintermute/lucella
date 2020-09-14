@@ -121,7 +121,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
           <ChannelBar socket={socket} defaultChatRoom={defaultChatRoom} />
           <div className="game-lobby-main-window">
             <PreGameRoom socket={socket} />
-            <MatchmakingQueueDisplay socket={socket} />
+            <MatchmakingQueueDisplay />
             <GameList socket={socket} />
             <GameLobbyChat socket={socket} username={username} />
           </div>

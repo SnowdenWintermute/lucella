@@ -23,7 +23,7 @@ let gameCountdownIntervals = {};
 let gameDataIntervals = {};
 let gameUpdatePackets = {};
 let gameEndingIntervals = {};
-const defaultCountdownNumber = 0;
+const defaultCountdownNumber = 3;
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: Bool, currentGameName: String, isGuest: Bool}
 let connectedGuests = {};
 
@@ -68,6 +68,7 @@ io.sockets.on("connect", async (socket) => {
       gameRooms,
       gameName,
       defaultCountdownNumber,
+      isRanked: false,
     });
   });
   socket.on("clientLeavesGame", (gameName) => {

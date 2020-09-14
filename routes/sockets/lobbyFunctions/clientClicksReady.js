@@ -14,9 +14,11 @@ function clientClicksReady({
   gameEndingIntervals,
   gameCountdownIntervals,
   defaultCountdownNumber,
+  fromServer,
 }) {
   if (!connectedSockets[socket.id].isInGame) return;
   if (!gameRooms[gameName]) return;
+  if (gameRooms[gameName].isRanked && !fromServer) return; // can't unready if matched through matchmaking
   // check who clicked ready
   if (
     gameRooms[gameName].players.host.uuid === connectedSockets[socket.id].uuid
@@ -33,7 +35,7 @@ function clientClicksReady({
   // send update of who is currently ready
   io.to(`game-${gameName}`).emit(
     "updateOfCurrentRoomPlayerReadyStatus",
-    gameRooms[gameName].playersReady,
+    gameRooms[gameName].playersReady
   );
   // if both host and challenger are ready, start the countdown
   if (

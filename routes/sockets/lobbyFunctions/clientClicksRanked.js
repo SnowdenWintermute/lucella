@@ -4,6 +4,7 @@ const User = require("../../../models/User");
 const BattleRoomRecord = require("../../../models/BattleRoomRecord");
 const clientJoinsGame = require("./clientJoinsGame");
 const clientHostsNewGame = require("./clientHostsNewGame");
+const clientClicksReady = require("./clientClicksReady");
 
 async function clientClicksRanked({
   io,
@@ -61,7 +62,6 @@ async function clientClicksRanked({
         delete rankedQueue.matchmakingInterval;
         return;
       }
-      console.log("matchmaking queue searching...");
       const queueSize = Object.keys(rankedQueue.users).length;
       io.in("ranked-queue").emit("serverSendsMatchmakingQueueData", {
         queueSize,
@@ -145,13 +145,14 @@ async function clientClicksRanked({
             ];
         } else {
           // if no one has dc'd yet, put them in a game together
+          const gameName = `ranked-${rankedQueue.rankedGameCurrentNumber}`;
           clientHostsNewGame({
             io,
             socket: io.sockets.sockets[bestMatch.host.socketId],
             connectedSockets,
             chatRooms,
             gameRooms,
-            gameName: `ranked-${rankedQueue.rankedGameCurrentNumber}`,
+            gameName,
             defaultCountdownNumber,
             isRanked: true,
           });
@@ -161,7 +162,37 @@ async function clientClicksRanked({
             connectedSockets,
             chatRooms,
             gameRooms,
-            gameName: `ranked-${rankedQueue.rankedGameCurrentNumber}`,
+            gameName,
+          });
+          clientClicksReady({
+            io,
+            socket: io.sockets.sockets[bestMatch.host.socketId],
+            connectedSockets,
+            gameRooms,
+            chatRooms,
+            gameDatas,
+            gameName,
+            gameDataIntervals,
+            gameUpdatePackets,
+            gameEndingIntervals,
+            gameCountdownIntervals,
+            defaultCountdownNumber,
+            fromServer: true,
+          });
+          clientClicksReady({
+            io,
+            socket: io.sockets.sockets[bestMatch.challenger.socketId],
+            connectedSockets,
+            gameRooms,
+            chatRooms,
+            gameDatas,
+            gameName,
+            gameDataIntervals,
+            gameUpdatePackets,
+            gameEndingIntervals,
+            gameCountdownIntervals,
+            defaultCountdownNumber,
+            fromServer: true,
           });
           rankedQueue.rankedGameCurrentNumber += 1;
           // remove matched players from queue
@@ -181,8 +212,11 @@ async function clientClicksRanked({
         }
       } else {
         // increase threshold
-        if (nextEloThresholdIncrease < 3000) {
-          const newEloThreshold = rankedQueue.currentEloDiffThreshold + 4;
+        if (rankedQueue.currentEloDiffThreshold < 3000) {
+          const newEloThreshold = Math.round(
+            0.35 * Math.pow(1.5, currentIntervalIteration) + 100
+          );
+
           rankedQueue.currentEloDiffThreshold = newEloThreshold;
         }
       }

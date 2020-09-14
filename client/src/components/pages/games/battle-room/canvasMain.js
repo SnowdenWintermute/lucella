@@ -41,7 +41,6 @@ function draw({
       winner,
       gameOverCountdownText,
     });
-    console.log(gameOverCountdownText);
 
     // selection box
     if (mouseData.leftCurrentlyPressed) {
@@ -56,7 +55,7 @@ function draw({
         mouseData.leftPressedAtX,
         mouseData.leftPressedAtY,
         selectionBoxSize.width,
-        selectionBoxSize.height,
+        selectionBoxSize.height
       );
       context.lineWidth = 3;
       context.stroke();

@@ -18,6 +18,7 @@ const InGameButtons = ({ socket }) => {
     setLeaveGameButtonDisplayClass,
   ] = useState("chat-button-hidden");
   const currentGameName = useSelector((state) => state.gameUi.currentGameName);
+  const isRanked = useSelector((state) => state.gameUi.isRanked);
   const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
   const matchmakingScreenIsOpen = useSelector(
     (state) => state.gameUi.matchmakingScreen.isOpen
@@ -34,7 +35,9 @@ const InGameButtons = ({ socket }) => {
     if (!preGameScreenIsOpen)
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     if (currentGameName) {
-      setLeaveGameButtonDisplayClass("");
+      if (!isRanked) {
+        setLeaveGameButtonDisplayClass("");
+      }
       setGoBackButtonDisplayClass("chat-button-hidden");
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     }
@@ -69,6 +72,7 @@ const InGameButtons = ({ socket }) => {
 
   return (
     <ul className={`pre-game-buttons ${buttonsDisplayClass}`}>
+      <li>{isRanked && <h3>Ranked game starting...</h3>}</li>
       <li>
         <button
           className={`button button-standard-size button-basic game-lobby-top-buttons__button ${cancelGameSetupButtonDisplayClass}`}
