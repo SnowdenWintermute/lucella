@@ -1,10 +1,4 @@
-function setOrbHeadings({
-  connectedSockets,
-  playerRole,
-  gameRoom,
-  gameData,
-  data,
-}) {
+function setOrbHeadings({ playerRole, gameData, data }) {
   console.log(data);
   const { newOrbHeadings } = data;
   let whichPlayerOrbs;

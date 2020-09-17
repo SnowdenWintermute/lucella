@@ -63,7 +63,6 @@ const BattleRoomGameInstance = ({ socket }) => {
       dispatch(gameUiActions.setGameWinner(data));
     });
     socket.on("gameEndingCountdown", (data) => {
-      console.log(data);
       return (gameOverCountdownText.current = data);
     });
     return () => {

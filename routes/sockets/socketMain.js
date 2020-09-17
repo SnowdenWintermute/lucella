@@ -156,6 +156,7 @@ io.sockets.on("connect", async (socket) => {
     // TODO: check for correct ownership (or maybe it doesn't matter if they hack to select opponent orbs because they can't move them anyway)
     // roomNumber, ownerOfOrbs, orbsToBeUpdated
     const gameName = connectedSockets[socket.id].currentGameName;
+    if (!gameRooms[gameName]) return;
     queueUpGameCommand({
       socket,
       connectedSockets,
@@ -164,16 +165,6 @@ io.sockets.on("connect", async (socket) => {
       data,
       commandType: "orbSelect",
     });
-    const { ownerOfOrbs, orbsToBeUpdated } = data;
-    if (gameDatas[gameName]) {
-      gameDatas[gameName].gameState.orbs[ownerOfOrbs].forEach((orb) => {
-        orbsToBeUpdated.forEach((selectedOrb) => {
-          if (selectedOrb.num === orb.num) {
-            orb.isSelected = selectedOrb.isSelected;
-          }
-        });
-      });
-    }
   });
   socket.on("clientSubmitsMoveCommand", (data) => {
     const gameName = connectedSockets[socket.id].currentGameName;
