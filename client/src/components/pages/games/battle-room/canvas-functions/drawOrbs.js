@@ -1,7 +1,7 @@
 // draw all orbs
 const drawOrbs = ({ context, clientPlayer, currentGameData }) => {
-  for (let orbSet in currentGameData.orbs) {
-    currentGameData.orbs[orbSet].forEach((orb) => {
+  for (let orbSet in currentGameData.gameState.orbs) {
+    currentGameData.gameState.orbs[orbSet].forEach((orb) => {
       context.beginPath();
       context.fillStyle = orb.isGhosting
         ? `rgba(${orb.color},.3)`

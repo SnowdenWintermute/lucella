@@ -4,9 +4,9 @@ const drawScore = ({ context, currentGameData }) => {
   context.textAlign = "center";
   context.textBaseline = "middle";
   context.font = "bold 12px Arial";
-  context.fillText(`${currentGameData.score.host}`, 20, 20);
+  context.fillText(`${currentGameData.gameState.score.host}`, 20, 20);
   context.fillText(
-    `${currentGameData.score.challenger}`,
+    `${currentGameData.gameState.score.challenger}`,
     20,
     currentGameData.height - 20
   );

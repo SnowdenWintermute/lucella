@@ -10,6 +10,9 @@ const clientLeavesGame = require("./lobbyFunctions/clientLeavesGame");
 const clientClicksRanked = require("./lobbyFunctions/clientClicksRanked");
 const makeRandomAnonUsername = require("../../utils/makeRandomAnonUsername");
 
+var sizeof = require("object-sizeof");
+const queueUpGameCommand = require("./battleRoomGame/queueUpGameCommand");
+
 let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
 let rankedQueue = {
@@ -18,16 +21,44 @@ let rankedQueue = {
   currentEloDiffThreshold: 0,
   rankedGameCurrentNumber: 0,
 }; // {users:{socketId:socket.id,record:BattleRoomRecord}, matchmakingInterval, currentEloDiffThreshold}
-let gameDatas = {};
-let gameCountdownIntervals = {};
-let gameDataIntervals = {};
-let gameUpdatePackets = {};
-let gameEndingIntervals = {};
-const defaultCountdownNumber = 3;
+let gameDatas = {}; // see below
+// {
+//   gameName: {
+//     commandQueue:{
+//       host:[],
+//       challenger:[]
+//     },
+//     intervals:{
+//       physics: Interval,
+//       updates: Interval,
+//       endingCountdown: Interval
+//     },
+//     gameState:{},
+//     nextDeltaPacket: {}
+//   }
+// }
+const defaultCountdownNumber = 0;
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: Bool, currentGameName: String, isGuest: Bool}
 let connectedGuests = {};
 
 io.sockets.on("connect", async (socket) => {
+  /// testing ///
+
+  // const testObj = {
+  //   destination: {
+  //     x: 32,
+  //     y: 100,
+  //   },
+  //   isSel: ["a1", "b2"],
+  // };
+  // const testObjBuffer = Buffer.from(JSON.stringify(testObj));
+  // console.log(testObjBuffer);
+  // console.log(sizeof(testObjBuffer));
+  // console.log(sizeof(testObj));
+  // console.log(JSON.parse(testObjBuffer));
+
+  /// testing ///
+
   connectedSockets[socket.id] = {
     username: null,
     currentRoom: null,
@@ -80,7 +111,6 @@ io.sockets.on("connect", async (socket) => {
       gameRooms,
       gameName,
       username: connectedSockets[socket.id].username,
-      gameCountdownIntervals,
       defaultCountdownNumber,
     });
   });
@@ -104,10 +134,6 @@ io.sockets.on("connect", async (socket) => {
       chatRooms,
       gameDatas,
       gameName,
-      gameDataIntervals,
-      gameUpdatePackets,
-      gameEndingIntervals,
-      gameCountdownIntervals,
       defaultCountdownNumber,
     });
   });
@@ -119,10 +145,6 @@ io.sockets.on("connect", async (socket) => {
       gameRooms,
       chatRooms,
       gameDatas,
-      gameDataIntervals,
-      gameUpdatePackets,
-      gameEndingIntervals,
-      gameCountdownIntervals,
       defaultCountdownNumber,
       rankedQueue,
     });
@@ -133,9 +155,18 @@ io.sockets.on("connect", async (socket) => {
   socket.on("clientSendsOrbSelections", (data) => {
     // TODO: check for correct ownership (or maybe it doesn't matter if they hack to select opponent orbs because they can't move them anyway)
     // roomNumber, ownerOfOrbs, orbsToBeUpdated
-    const { gameName, ownerOfOrbs, orbsToBeUpdated } = data;
+    const gameName = connectedSockets[socket.id].currentGameName;
+    queueUpGameCommand({
+      socket,
+      connectedSockets,
+      gameRooms,
+      gameData: gameDatas[gameName],
+      data,
+      commandType: "orbSelect",
+    });
+    const { ownerOfOrbs, orbsToBeUpdated } = data;
     if (gameDatas[gameName]) {
-      gameDatas[gameName].orbs[ownerOfOrbs].forEach((orb) => {
+      gameDatas[gameName].gameState.orbs[ownerOfOrbs].forEach((orb) => {
         orbsToBeUpdated.forEach((selectedOrb) => {
           if (selectedOrb.num === orb.num) {
             orb.isSelected = selectedOrb.isSelected;
@@ -145,19 +176,16 @@ io.sockets.on("connect", async (socket) => {
     }
   });
   socket.on("clientSubmitsMoveCommand", (data) => {
-    const { orbsClientWantsToMove, gameName } = data;
-    let whichPlayerOrbs;
-    if (
-      gameRooms[gameName].players.host.uuid == connectedSockets[socket.id].uuid
-    )
-      whichPlayerOrbs = "hostOrbs";
-    if (
-      gameRooms[gameName].players.challenger.uuid ==
-      connectedSockets[socket.id].uuid
-    )
-      whichPlayerOrbs = "challengerOrbs";
-
-    gameDatas[gameName].orbs[whichPlayerOrbs] = orbsClientWantsToMove;
+    const gameName = connectedSockets[socket.id].currentGameName;
+    if (!gameRooms[gameName]) return;
+    queueUpGameCommand({
+      socket,
+      connectedSockets,
+      gameRooms,
+      gameData: gameDatas[gameName],
+      data,
+      commandType: "orbMove",
+    });
   });
 
   socket.on("clientSendsNewChat", (data) => {
@@ -172,9 +200,6 @@ io.sockets.on("connect", async (socket) => {
       chatRooms,
       gameDatas,
       gameRooms,
-      gameCountdownIntervals,
-      gameDataIntervals,
-      gameEndingIntervals,
       defaultCountdownNumber,
       gameName: connectedSockets[socket.id].currentGameName,
     });

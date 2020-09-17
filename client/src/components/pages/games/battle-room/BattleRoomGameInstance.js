@@ -28,7 +28,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   };
   let currentGameData = useRef({});
   const playerDesignation = useSelector(
-    (state) => state.gameUi.playerDesignation,
+    (state) => state.gameUi.playerDesignation
   );
   const playersInGame = useSelector((state) => state.gameUi.playersInGame);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
@@ -38,6 +38,7 @@ const BattleRoomGameInstance = ({ socket }) => {
     width: 450,
     height: 750,
   };
+  let commandQueue = { counter: 0, queue: [] };
 
   const canvasRef = useRef();
   const drawRef = useRef();
@@ -53,6 +54,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       currentGameData.current = data;
     });
     socket.on("tickFromServer", (packet) => {
+      console.log(packet);
       Object.keys(packet).forEach((key) => {
         currentGameData.current[key] = packet[key];
       });
@@ -102,9 +104,10 @@ const BattleRoomGameInstance = ({ socket }) => {
         clientPlayer,
         playersInGame,
         mouseData,
+        commandQueue,
       });
     },
-    [socket, currentGameData, playersInGame, clientPlayer, mouseData],
+    [socket, currentGameData, playersInGame, clientPlayer, mouseData]
   );
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);
@@ -115,6 +118,7 @@ const BattleRoomGameInstance = ({ socket }) => {
 
   // draw interval
   useEffect(() => {
+    console.log("drawRef currentDrawFunction updated");
     function currentDrawFunction() {
       drawRef.current();
     }
@@ -122,7 +126,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       currentDrawFunction();
     }, 33);
     return () => clearInterval(drawInterval);
-  });
+  }, [drawRef]);
 
   return (
     <div
@@ -145,6 +149,7 @@ const BattleRoomGameInstance = ({ socket }) => {
             clientPlayer,
             mouseData,
             playersInGame,
+            commandQueue,
           });
         }}
         onContextMenu={(e) => e.preventDefault()}
@@ -158,6 +163,7 @@ const BattleRoomGameInstance = ({ socket }) => {
             clientPlayer,
             playersInGame,
             mouseData,
+            commandQueue,
           });
         }}
         onMouseEnter={(e) => {

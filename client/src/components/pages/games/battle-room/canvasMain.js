@@ -20,14 +20,14 @@ function draw({
     context.clearRect(0, 0, canvasInfo.width, canvasInfo.height);
 
     // endzones
-    let { x, y, width, height } = currentGameData.endzones.host;
+    let { x, y, width, height } = currentGameData.gameState.endzones.host;
     context.beginPath();
     context.fillStyle = "rgb(50,50,70)";
     context.fillRect(x, y, width, height);
-    x = currentGameData.endzones.challenger.x;
-    y = currentGameData.endzones.challenger.y;
-    width = currentGameData.endzones.challenger.width;
-    height = currentGameData.endzones.challenger.height;
+    x = currentGameData.gameState.endzones.challenger.x;
+    y = currentGameData.gameState.endzones.challenger.y;
+    width = currentGameData.gameState.endzones.challenger.width;
+    height = currentGameData.gameState.endzones.challenger.height;
     context.beginPath();
     context.fillStyle = "rgb(50,70,50)";
     context.fillRect(x, y, width, height);

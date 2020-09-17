@@ -7,6 +7,7 @@ const selectOrbs = ({
   startY,
   currX,
   currY,
+  commandQueue,
 }) => {
   if (!currentGameData) return;
   let playerOrbsToSelect;
@@ -14,7 +15,7 @@ const selectOrbs = ({
   if (clientPlayer.uuid === playersInGame.host.uuid)
     playerOrbsToSelect = "hostOrbs";
   else playerOrbsToSelect = "challengerOrbs";
-  currentGameData.orbs[playerOrbsToSelect].forEach((orb, i) => {
+  currentGameData.gameState.orbs[playerOrbsToSelect].forEach((orb, i) => {
     if (
       // clicking directly on, select only highest index stacked orb
       currX + orb.radius >= orb.xPos &&
@@ -30,7 +31,7 @@ const selectOrbs = ({
         stackedOrbHighestIndex = orb.num;
         orb.isSelected = true;
       } else if (orb.num > stackedOrbHighestIndex) {
-        currentGameData.orbs[playerOrbsToSelect].forEach((orb) => {
+        currentGameData.gameState.orbs[playerOrbsToSelect].forEach((orb) => {
           orb.isSelected = false;
           console.log("orb unselected " + orb.num);
         });
@@ -62,10 +63,25 @@ const selectOrbs = ({
       orb.isSelected = false;
     }
   });
+
+  // update client log of issued commands
+  commandQueue.counter++;
+  const commandPositionInQueue = commandQueue.counter;
+  commandQueue.queue.push({
+    type: "orbSelect",
+    data: {
+      gameName: currentGameData.gameName,
+      ownerOfOrbs: playerOrbsToSelect,
+      orbsToBeUpdated: currentGameData.gameState.orbs[playerOrbsToSelect],
+      commandPositionInQueue,
+    },
+  });
+
   socket.emit("clientSendsOrbSelections", {
     gameName: currentGameData.gameName,
     ownerOfOrbs: playerOrbsToSelect,
-    orbsToBeUpdated: currentGameData.orbs[playerOrbsToSelect],
+    orbsToBeUpdated: currentGameData.gameState.orbs[playerOrbsToSelect],
+    commandPositionInQueue,
   });
 };
 

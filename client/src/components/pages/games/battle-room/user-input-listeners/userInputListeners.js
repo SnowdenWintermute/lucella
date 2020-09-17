@@ -11,6 +11,7 @@ export const handleKeypress = ({
   clientPlayer,
   playersInGame,
   mouseData,
+  commandQueue,
 }) => {
   let keyPressed;
   switch (e.keyCode) {
@@ -41,6 +42,7 @@ export const handleKeypress = ({
       playersInGame,
       keyPressed,
       mouseData,
+      commandQueue,
     });
   }
   console.log("keydown " + e.keyCode);
@@ -62,6 +64,7 @@ export const mouseUpHandler = ({
   playersInGame,
   e,
   mouseData,
+  commandQueue,
 }) => {
   console.log("mouseUp");
   if (e.button === 2) {
@@ -74,6 +77,7 @@ export const mouseUpHandler = ({
       playersInGame,
       headingX: mouseData.rightReleasedAtX,
       headingY: mouseData.rightReleasedAtY,
+      commandQueue,
     });
   }
   if (e.button === 0) {
@@ -90,6 +94,7 @@ export const mouseUpHandler = ({
       startY: leftPressedAtY,
       currX: xPos,
       currY: yPos,
+      commandQueue,
     });
   }
 };
@@ -109,6 +114,7 @@ export const mouseLeaveHandler = ({
   clientPlayer,
   playersInGame,
   mouseData,
+  commandQueue,
 }) => {
   mouseData.mouseOnScreen = false;
   if (mouseData.leftCurrentlyPressed) {
@@ -122,6 +128,7 @@ export const mouseLeaveHandler = ({
       startY: leftPressedAtY,
       currX: xPos,
       currY: yPos,
+      commandQueue,
     });
   }
 };

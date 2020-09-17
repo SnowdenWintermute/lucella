@@ -8,10 +8,6 @@ function startGameCountdown({
   chatRooms,
   gameDatas,
   gameRoom,
-  gameDataIntervals,
-  gameUpdatePackets,
-  gameCountdownIntervals,
-  gameEndingIntervals,
 }) {
   gameRoom.gameStatus = "countingDown";
   console.log("status: " + gameRoom.gameStatus);
@@ -19,7 +15,7 @@ function startGameCountdown({
     "currentGameStatusUpdate",
     gameRoom.gameStatus
   );
-  gameCountdownIntervals[gameRoom.gameName] = setInterval(() => {
+  gameRoom.countdownInterval = setInterval(() => {
     if (gameRoom.countdown === 0) {
       gameRoom.gameStatus = "inProgress";
       io.to(`game-${gameRoom.gameName}`).emit(
@@ -27,19 +23,16 @@ function startGameCountdown({
         gameRoom.gameStatus
       );
       // start the game ticks
-      gameDataIntervals[gameRoom.gameName] = startGame({
+      startGame({
         io,
+        socket,
         connectedSockets,
         gameRooms,
         chatRooms,
         gameRoom,
         gameDatas,
-        gameDataIntervals,
-        gameUpdatePackets,
-        gameEndingIntervals,
-        gameCountdownIntervals,
       });
-      return clearInterval(gameCountdownIntervals[gameRoom.gameName]);
+      return clearInterval(gameRoom.countdownInterval);
     }
     gameRoom.countdown--;
     console.log(gameRoom.countdown);

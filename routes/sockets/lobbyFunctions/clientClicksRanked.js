@@ -13,10 +13,6 @@ async function clientClicksRanked({
   gameRooms,
   chatRooms,
   gameDatas,
-  gameDataIntervals,
-  gameUpdatePackets,
-  gameEndingIntervals,
-  gameCountdownIntervals,
   defaultCountdownNumber,
   rankedQueue,
 }) {
@@ -172,10 +168,6 @@ async function clientClicksRanked({
             chatRooms,
             gameDatas,
             gameName,
-            gameDataIntervals,
-            gameUpdatePackets,
-            gameEndingIntervals,
-            gameCountdownIntervals,
             defaultCountdownNumber,
             fromServer: true,
           });
@@ -187,10 +179,6 @@ async function clientClicksRanked({
             chatRooms,
             gameDatas,
             gameName,
-            gameDataIntervals,
-            gameUpdatePackets,
-            gameEndingIntervals,
-            gameCountdownIntervals,
             defaultCountdownNumber,
             fromServer: true,
           });

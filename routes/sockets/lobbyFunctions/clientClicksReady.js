@@ -9,10 +9,6 @@ function clientClicksReady({
   chatRooms,
   gameDatas,
   gameName,
-  gameDataIntervals,
-  gameUpdatePackets,
-  gameEndingIntervals,
-  gameCountdownIntervals,
   defaultCountdownNumber,
   fromServer,
 }) {
@@ -50,17 +46,12 @@ function clientClicksReady({
       chatRooms,
       gameDatas,
       gameRoom: gameRooms[gameName],
-      gameDataIntervals,
-      gameUpdatePackets,
-      gameEndingIntervals,
-      gameCountdownIntervals,
     });
   } else {
     // cancel current countdown if one exists
     cancelGameCountdown({
       io,
       gameRoom: gameRooms[gameName],
-      gameCountdownIntervals,
       defaultCountdownNumber,
     });
   }

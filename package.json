@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.1.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "object-sizeof": "^1.6.1"
   }
 }

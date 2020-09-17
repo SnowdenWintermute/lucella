@@ -8,9 +8,6 @@ async function endGameCleanup({
   gameData,
   gameRooms,
   chatRooms,
-  gameDatas,
-  gameDataIntervals,
-  gameEndingIntervals,
   connectedSockets,
   isDisconnecting,
 }) {
@@ -25,8 +22,8 @@ async function endGameCleanup({
     "gameEndingCountdown",
     gameData.endingStateCountdown
   );
-  clearInterval(gameDataIntervals[gameName]);
-  delete gameDataIntervals[gameName];
+  clearInterval(gameData.intervals.physics);
+  clearInterval(gameData.intervals.updates);
   if (!isDisconnecting) {
     gameRoom.winner =
       gameData.winner === "host"
@@ -61,9 +58,9 @@ async function endGameCleanup({
   });
 
   io.in(`game-${gameName}`).emit("serverSendsWinnerInfo", gameRoom.winner);
-  gameEndingIntervals[gameName] = setInterval(() => {
+  gameData.intervals.endingCountdown = setInterval(() => {
     if (gameData.endingStateCountdown < 2) {
-      clearInterval(gameEndingIntervals[gameName]);
+      clearInterval(gameData.intervals.endingCountdown);
       const host = connectedSockets[gameRoom.players.host.socketId];
       const challenger = connectedSockets[gameRoom.players.challenger.socketId];
 
@@ -97,8 +94,7 @@ async function endGameCleanup({
         });
       }
 
-      delete gameEndingIntervals[gameName];
-      delete gameDatas[gameName];
+      delete gameData;
       delete gameRooms[gameName];
       io.sockets.emit("gameListUpdate", gameRooms);
     } else {

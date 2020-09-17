@@ -14,9 +14,6 @@ function clientLeavesGame({
   gameRooms,
   gameName,
   gameDatas,
-  gameCountdownIntervals,
-  gameDataIntervals,
-  gameEndingIntervals,
   defaultCountdownNumber,
   isDisconnecting,
 }) {
@@ -71,7 +68,6 @@ function clientLeavesGame({
         cancelGameCountdown({
           io,
           gameRoom: gameRooms[gameName],
-          gameCountdownIntervals,
           defaultCountdownNumber,
         });
         gameRooms[gameName].playersReady = { host: false, challenger: false };
@@ -138,8 +134,6 @@ function clientLeavesGame({
         gameRooms,
         chatRooms,
         gameDatas,
-        gameDataIntervals,
-        gameEndingIntervals,
         connectedSockets,
         isDisconnecting,
       });

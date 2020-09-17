@@ -9,9 +9,6 @@ function socketDisconnect({
   gameRooms,
   gameDatas,
   gameName,
-  gameCountdownIntervals,
-  gameDataIntervals,
-  gameEndingIntervals,
   defaultCountdownNumber,
 }) {
   if (connectedSockets[socket.id].currentGameName) {
@@ -23,9 +20,6 @@ function socketDisconnect({
       gameRooms,
       gameDatas,
       gameName,
-      gameCountdownIntervals,
-      gameDataIntervals,
-      gameEndingIntervals,
       defaultCountdownNumber,
       isDisconnecting: true,
     });
