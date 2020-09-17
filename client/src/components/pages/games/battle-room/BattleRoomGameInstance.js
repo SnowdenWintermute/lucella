@@ -54,7 +54,6 @@ const BattleRoomGameInstance = ({ socket }) => {
       currentGameData.current = data;
     });
     socket.on("tickFromServer", (packet) => {
-      console.log(packet);
       Object.keys(packet).forEach((key) => {
         currentGameData.current[key] = packet[key];
       });

@@ -1,5 +1,4 @@
 function setOrbHeadings({ playerRole, gameData, data }) {
-  console.log(data);
   const { newOrbHeadings } = data;
   let whichPlayerOrbs;
   if (playerRole === "host") whichPlayerOrbs = "hostOrbs";

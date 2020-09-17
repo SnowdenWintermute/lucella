@@ -13,7 +13,6 @@ function createGamePhysicsInterval({
 }) {
   return setInterval(() => {
     if (!gameData) return;
-    console.log(gameData.commandQueue.host);
     // go through the command queues
     Object.keys(gameData.commandQueue).forEach((playerRole) => {
       Object.keys(gameData.commandQueue[playerRole]).forEach(

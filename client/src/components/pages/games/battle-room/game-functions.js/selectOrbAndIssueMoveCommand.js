@@ -9,7 +9,6 @@ const selectOrbAndIssueMoveCommand = ({
   mouseData,
   commandQueue,
 }) => {
-  console.log(playersInGame);
   if (!currentGameData) return;
   let playerOrbsToSelect;
   if (clientPlayer.uuid === playersInGame.host.uuid)
@@ -17,13 +16,11 @@ const selectOrbAndIssueMoveCommand = ({
   else playerOrbsToSelect = "challengerOrbs";
   currentGameData.gameState.orbs[playerOrbsToSelect].forEach((orb) => {
     orb.isSelected = false;
-    console.log("orb unselected " + orb.num);
   });
   if (
     currentGameData.gameState.orbs[playerOrbsToSelect][keyPressed - 1].owner ===
     clientPlayer.uuid
   ) {
-    console.log("orb " + keyPressed - 1 + " selected");
     currentGameData.gameState.orbs[playerOrbsToSelect][
       keyPressed - 1
     ].isSelected = true;
@@ -54,6 +51,7 @@ const selectOrbAndIssueMoveCommand = ({
     orbsToBeUpdated: currentGameData.gameState.orbs[playerOrbsToSelect],
     commandPositionInQueue,
   });
+  
   orbMoveCommand({
     socket,
     currentGameData,

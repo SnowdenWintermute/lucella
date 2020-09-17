@@ -13,6 +13,7 @@ const orbMoveCommand = ({
   if (playersInGame.challenger.uuid === clientPlayer.uuid)
     hostOrChallenger = "challengerOrbs";
   currentGameData.gameState.orbs[hostOrChallenger].forEach((orb) => {
+    console.log(orb.isSelected)
     if (orb.isSelected) {
       orb.heading.xPos = headingX;
       orb.heading.yPos = headingY;
