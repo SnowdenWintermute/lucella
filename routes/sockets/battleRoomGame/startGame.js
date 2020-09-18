@@ -48,7 +48,7 @@ function startGame({
   console.log(gameName + "started");
   io.to(`game-${gameName}`).emit("serverInitsGame", gameData);
   gameData.lastUpdatePacket = cloneDeep(gameData);
-  io.to(`game-${gameName}`).emit("tickFromServer", gameData);
+  // io.to(`game-${gameName}`).emit("tickFromServer", gameData);
   // set up physics loop
   console.log("starting physics interval");
   gameData.intervals.physics = createGamePhysicsInterval({

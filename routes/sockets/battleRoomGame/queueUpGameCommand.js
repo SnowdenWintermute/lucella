@@ -6,7 +6,7 @@ function queueUpGameCommand({
   data,
   commandType,
 }) {
-  console.log(commandType)
+  console.log(commandType);
   const gameName = connectedSockets[socket.id].currentGameName;
   if (!gameRooms[gameName]) return;
   let playerRole;
@@ -21,8 +21,6 @@ function queueUpGameCommand({
     playerRole = "challenger";
   else playerRole = null;
   gameData.commandQueue[playerRole].push({ data, commandType });
-  if (gameData.commandQueue[playerRole].length > 10)
-    gameData.commandQueue[playerRole].shift();
 }
 
 module.exports = queueUpGameCommand;

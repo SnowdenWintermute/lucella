@@ -18,22 +18,11 @@ function createGamePhysicsInterval({
       Object.keys(gameData.commandQueue[playerRole]).forEach(
         (commandInQueue) => {
           if (!gameData.commandQueue[playerRole][commandInQueue]) return;
-          if (
-            gameData.commandQueue[playerRole][commandInQueue].commandType ===
-            "orbMove"
-          ) {
-            // execute the command
-            setOrbHeadings({
-              playerRole,
-              connectedSockets,
-              gameRoom,
-              gameData,
-              data: gameData.commandQueue[playerRole][commandInQueue].data,
-            });
-          } else if (
-            gameData.commandQueue[playerRole][commandInQueue].commandType ===
-            "orbSelect"
-          ) {
+          const { commandType } = gameData.commandQueue[playerRole][
+            commandInQueue
+          ];
+
+          if (commandType === "orbSelect") {
             const { orbsToBeUpdated } = gameData.commandQueue[playerRole][
               commandInQueue
             ].data;
@@ -46,6 +35,41 @@ function createGamePhysicsInterval({
               });
             });
           }
+          if (commandType === "orbMove") {
+            setOrbHeadings({
+              playerRole,
+              connectedSockets,
+              gameRoom,
+              gameData,
+              data: gameData.commandQueue[playerRole][commandInQueue].data,
+            });
+          }
+          if (commandType === "orbSelectAndMove") {
+            console.log("selectAndMove");
+            // select first
+            const { orbsToBeUpdated } = gameData.commandQueue[playerRole][
+              commandInQueue
+            ].data.selectCommandData;
+
+            gameData.gameState.orbs[playerRole + "Orbs"].forEach((orb) => {
+              orbsToBeUpdated.forEach((selectedOrb) => {
+                if (selectedOrb.num === orb.num) {
+                  orb.isSelected = selectedOrb.isSelected;
+                }
+              });
+              // then set heading
+              setOrbHeadings({
+                playerRole,
+                connectedSockets,
+                gameRoom,
+                gameData,
+                data:
+                  gameData.commandQueue[playerRole][commandInQueue].data
+                    .moveCommandData,
+              });
+            });
+          }
+
           // update the most recently processed command number
           gameData.gameState.lastProcessedCommands[playerRole] =
             gameData.commandQueue[playerRole][

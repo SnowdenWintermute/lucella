@@ -1,25 +1,29 @@
-function clientPredictOwnOrbs({ gameData }) {
-  // go through the orbs and update each based on their current heading (orbSet is either challenger or host)
-  for (let orbSet in gameData.orbs) {
-    gameData.orbs[orbSet].forEach((orb) => {
+function moveOrbs({ gameData }) {
+  // go through the orbs and update each based on their current heading [orbSet is either challenger or host]
+  for (let orbSet in gameData.gameState.orbs) {
+    gameData.gameState.orbs[orbSet].forEach((orb) => {
       // send any ghost orb toward it's endzone
       if (orb.isGhosting) {
         orb.heading.xPos = orb.xPos;
         switch (orbSet) {
           case "hostOrbs":
             orb.heading.yPos =
-              gameData.endzones.host.y + gameData.endzones.host.height;
+              gameData.gameState.endzones.host.y +
+              gameData.gameState.endzones.host.height;
             if (
               orb.yPos <=
-              gameData.endzones.host.y +
-                gameData.endzones.host.height +
+              gameData.gameState.endzones.host.y +
+                gameData.gameState.endzones.host.height +
                 orb.radius
             )
               orb.isGhosting = false;
             break;
           case "challengerOrbs":
-            orb.heading.yPos = gameData.endzones.challenger.y;
-            if (orb.yPos >= gameData.endzones.challenger.y - orb.radius)
+            orb.heading.yPos = gameData.gameState.endzones.challenger.y;
+            if (
+              orb.yPos >=
+              gameData.gameState.endzones.challenger.y - orb.radius
+            )
               orb.isGhosting = false;
             break;
         }
@@ -42,4 +46,4 @@ function clientPredictOwnOrbs({ gameData }) {
   }
 }
 
-module.exports = clientPredictOwnOrbs;
+module.exports = moveOrbs;

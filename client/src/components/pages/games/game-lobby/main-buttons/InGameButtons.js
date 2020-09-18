@@ -49,6 +49,7 @@ const InGameButtons = ({ socket }) => {
     preGameScreenIsOpen,
     currentGameName,
     matchmakingScreenIsOpen,
+    isRanked,
   ]);
 
   // go back from list

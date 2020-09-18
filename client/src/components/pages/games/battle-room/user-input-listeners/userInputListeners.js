@@ -1,8 +1,8 @@
 import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator";
 
-import selectOrbs from "../game-functions.js/selectOrbs";
-import orbMoveCommand from "../game-functions.js/orbMoveCommand";
-import selectOrbAndIssueMoveCommand from "../game-functions.js/selectOrbAndIssueMoveCommand";
+import selectOrbs from "../game-functions/selectOrbs";
+import orbMoveCommand from "../game-functions/orbMoveCommand";
+import selectOrbAndIssueMoveCommand from "../game-functions/selectOrbAndIssueMoveCommand";
 
 export const handleKeypress = ({
   e,
@@ -70,7 +70,7 @@ export const mouseUpHandler = ({
   if (e.button === 2) {
     mouseData.rightReleasedAtY = mouseData.yPos;
     mouseData.rightReleasedAtX = mouseData.xPos;
-    orbMoveCommand({
+    const data = orbMoveCommand({
       socket,
       currentGameData,
       clientPlayer,
@@ -79,6 +79,7 @@ export const mouseUpHandler = ({
       headingY: mouseData.rightReleasedAtY,
       commandQueue,
     });
+    socket.emit("clientSubmitsMoveCommand", data);
   }
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = false;

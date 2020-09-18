@@ -36,7 +36,7 @@ const ScoreScreenModalContents = () => {
 
   useEffect(() => {
     setEloAnimatedChange(playerOldElo);
-  }, []);
+  }, [playerOldElo]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -50,7 +50,7 @@ const ScoreScreenModalContents = () => {
     setTimeout(() => {
       setEloAnimatedChangeClass("elo-animate-3");
     }, 3000);
-  }, []);
+  }, [eloDiff, playerNewElo]);
 
   if (!scoreScreenData.gameData) return <div />;
   return (

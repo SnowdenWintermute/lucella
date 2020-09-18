@@ -11,6 +11,7 @@ import {
 } from "./user-input-listeners/userInputListeners";
 import draw from "./canvasMain";
 import * as gameUiActions from "../../../../store/actions/game-ui";
+import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
 
 const BattleRoomGameInstance = ({ socket }) => {
   const dispatch = useDispatch();
@@ -26,7 +27,9 @@ const BattleRoomGameInstance = ({ socket }) => {
     yPos: 0,
     mouseOnScreen: true,
   };
+  let lastServerGameUpdate = useRef({});
   let currentGameData = useRef({});
+  let commandQueue = useRef({ counter: 0, queue: [] });
   const playerDesignation = useSelector(
     (state) => state.gameUi.playerDesignation
   );
@@ -38,10 +41,10 @@ const BattleRoomGameInstance = ({ socket }) => {
     width: 450,
     height: 750,
   };
-  let commandQueue = { counter: 0, queue: [] };
 
   const canvasRef = useRef();
   const drawRef = useRef();
+  const physicsRef = useRef();
   const gameOverCountdownText = useRef();
 
   useEffect(() => {
@@ -52,10 +55,11 @@ const BattleRoomGameInstance = ({ socket }) => {
     if (!socket) return;
     socket.on("serverInitsGame", (data) => {
       currentGameData.current = data;
+      lastServerGameUpdate.current = data;
     });
     socket.on("tickFromServer", (packet) => {
       Object.keys(packet).forEach((key) => {
-        currentGameData.current[key] = packet[key];
+        lastServerGameUpdate.current[key] = packet[key];
       });
     });
     socket.on("serverSendsWinnerInfo", (data) => {
@@ -102,10 +106,17 @@ const BattleRoomGameInstance = ({ socket }) => {
         clientPlayer,
         playersInGame,
         mouseData,
-        commandQueue,
+        commandQueue: commandQueue.current,
       });
     },
-    [socket, currentGameData, playersInGame, clientPlayer, mouseData]
+    [
+      socket,
+      currentGameData,
+      playersInGame,
+      clientPlayer,
+      mouseData,
+      commandQueue,
+    ]
   );
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);
@@ -114,9 +125,20 @@ const BattleRoomGameInstance = ({ socket }) => {
     };
   }, [onKeyPress]);
 
+  // physics interval
+  useEffect(() => {
+    console.log(currentGameData);
+    physicsRef.current = createGamePhysicsInterval({
+      lastServerGameUpdate: lastServerGameUpdate.current,
+      gameData: currentGameData.current,
+      commandQueue: commandQueue.current.queue,
+      playerRole: playerDesignation,
+    });
+    return () => clearInterval(physicsRef.current);
+  }, [lastServerGameUpdate, currentGameData, commandQueue, physicsRef]);
+
   // draw interval
   useEffect(() => {
-    console.log("drawRef currentDrawFunction updated");
     function currentDrawFunction() {
       drawRef.current();
     }
@@ -147,7 +169,7 @@ const BattleRoomGameInstance = ({ socket }) => {
             clientPlayer,
             mouseData,
             playersInGame,
-            commandQueue,
+            commandQueue: commandQueue.current,
           });
         }}
         onContextMenu={(e) => e.preventDefault()}
@@ -161,7 +183,7 @@ const BattleRoomGameInstance = ({ socket }) => {
             clientPlayer,
             playersInGame,
             mouseData,
-            commandQueue,
+            commandQueue: commandQueue.current,
           });
         }}
         onMouseEnter={(e) => {

@@ -22,7 +22,7 @@ function createGameUpdateInterval({ io, gameData }) {
       }
     });
     io.to(`game-${gameData.gameName}`).emit("tickFromServer", newPacket);
-  }, 45);
+  }, 300);
 }
 
 module.exports = createGameUpdateInterval;

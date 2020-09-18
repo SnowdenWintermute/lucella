@@ -14,7 +14,7 @@ const Ladder = (props) => {
 
   useEffect(() => {
     if (!ladder.ladderPages["1"]) dispatch(getLadderPage(1));
-  }, [ladder]);
+  }, [ladder, dispatch]);
 
   const onSearchUserRecord = (e) => {
     e.preventDefault();

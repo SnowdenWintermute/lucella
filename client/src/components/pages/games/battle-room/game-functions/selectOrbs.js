@@ -64,23 +64,28 @@ const selectOrbs = ({
     }
   });
 
+  const orbsToBeUpdated = currentGameData.gameState.orbs[
+    playerOrbsToSelect
+  ].map((orb) => {
+    return { num: orb.num, isSelected: orb.isSelected };
+  });
+
+  console.log(orbsToBeUpdated);
   // update client log of issued commands
   commandQueue.counter++;
   const commandPositionInQueue = commandQueue.counter;
   commandQueue.queue.push({
     type: "orbSelect",
     data: {
-      gameName: currentGameData.gameName,
       ownerOfOrbs: playerOrbsToSelect,
-      orbsToBeUpdated: currentGameData.gameState.orbs[playerOrbsToSelect],
+      orbsToBeUpdated,
       commandPositionInQueue,
     },
   });
 
   socket.emit("clientSendsOrbSelections", {
-    gameName: currentGameData.gameName,
     ownerOfOrbs: playerOrbsToSelect,
-    orbsToBeUpdated: currentGameData.gameState.orbs[playerOrbsToSelect],
+    orbsToBeUpdated,
     commandPositionInQueue,
   });
 };

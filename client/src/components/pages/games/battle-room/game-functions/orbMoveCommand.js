@@ -13,7 +13,6 @@ const orbMoveCommand = ({
   if (playersInGame.challenger.uuid === clientPlayer.uuid)
     hostOrChallenger = "challengerOrbs";
   currentGameData.gameState.orbs[hostOrChallenger].forEach((orb) => {
-    console.log(orb.isSelected)
     if (orb.isSelected) {
       orb.heading.xPos = headingX;
       orb.heading.yPos = headingY;
@@ -30,7 +29,6 @@ const orbMoveCommand = ({
       return orbHeadingInfo;
     }
   );
-  console.log(newOrbHeadings);
   const data = {
     newOrbHeadings,
     commandPositionInQueue,
@@ -39,14 +37,8 @@ const orbMoveCommand = ({
     type: "orbMove",
     data,
   });
-  console.log(commandQueue);
 
-  socket.emit("clientSubmitsMoveCommand", data);
-
-  // client side prediction of own orbs
-  // 1. store the sent command [{number: 0, data:{orbsClientWantsToMove: }}]
-  // 2. discard any old commands already confirmed by the server
-  // 3. draw predicted positions of client orbs
+  return data;
 };
 
 export default orbMoveCommand;
