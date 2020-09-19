@@ -1,5 +1,6 @@
 const moveOrbs = require("./moveOrbs");
 const handleOrbCollisions = require("./handleOrbCollisions");
+const handleScoringPoints = require("./handleScoringPoints");
 const setOrbHeadings = require("./setOrbHeadings");
 
 function createGamePhysicsInterval({
@@ -14,10 +15,16 @@ function createGamePhysicsInterval({
     if (Object.keys(gameData).length < 1) return;
     // console.log(commandQueue);
     // go through the command queue
+    console.log(
+      "server last processed" +
+        lastServerGameUpdate.gameState.lastProcessedCommands[playerRole]
+    );
     commandQueue.queue.forEach((commandInQueue) => {
-      console.log(commandInQueue);
       // if (commandInQueue) return;
       const { commandType } = commandInQueue;
+      console.log(
+        "client last processed " + commandInQueue.data.commandPositionInQueue
+      );
 
       if (commandType === "orbSelect") {
         const { orbsToBeUpdated } = commandInQueue.data;
@@ -62,12 +69,14 @@ function createGamePhysicsInterval({
       // update the most recently processed command number
       gameData.gameState.lastProcessedCommands =
         commandInQueue.data.commandPositionInQueue;
+      // check most recent server update against the appropriate past client update
       // remove command from queue
       commandQueue.queue.splice(commandQueue.queue.indexOf(commandInQueue));
     });
     if (!gameData) return;
     moveOrbs({ gameData });
     handleOrbCollisions({ gameData });
+    handleScoringPoints({ gameData });
 
     // reconcile if updates differ
   }, 33);

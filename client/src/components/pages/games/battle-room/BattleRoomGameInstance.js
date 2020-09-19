@@ -60,7 +60,7 @@ const BattleRoomGameInstance = ({ socket }) => {
     });
     socket.on("tickFromServer", (packet) => {
       if (!lastServerGameUpdate) return;
-      console.log(lastServerGameUpdate);
+      // console.log(lastServerGameUpdate);
       Object.keys(packet).forEach((key) => {
         let newUpdate = lastServerGameUpdate;
         newUpdate[key] = packet[key];

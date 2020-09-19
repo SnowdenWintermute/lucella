@@ -1,5 +1,5 @@
 // draw all orbs
-const drawOrbs = ({ context, clientPlayer, currentGameData }) => {
+const drawOrbs = ({ context, clientPlayer, currentGameData, testColor }) => {
   for (let orbSet in currentGameData.gameState.orbs) {
     currentGameData.gameState.orbs[orbSet].forEach((orb) => {
       context.beginPath();
@@ -7,7 +7,7 @@ const drawOrbs = ({ context, clientPlayer, currentGameData }) => {
         ? `rgba(${orb.color},.3)`
         : `rgb(${orb.color})`;
       context.arc(orb.xPos, orb.yPos, orb.radius, 0, Math.PI * 2);
-      context.fill();
+      testColor ? context.fill() : context.stroke();
       context.lineWidth = 3;
       // orb number
       if (orb.owner === clientPlayer.uuid) {

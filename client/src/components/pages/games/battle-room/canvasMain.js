@@ -35,7 +35,12 @@ function draw({
 
     drawScore({ context, clientPlayer, currentGameData });
     drawOrbs({ context, clientPlayer, currentGameData });
-    drawOrbs({ context, clientPlayer, currentGameData: lastServerGameUpdate });
+    drawOrbs({
+      context,
+      clientPlayer,
+      currentGameData: lastServerGameUpdate,
+      testColor: true,
+    });
     gameOverText({
       context,
       currentGameData,
