@@ -68,7 +68,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   const setChannelModalParentDisplay = (status) => {
     setDisplayChangeChannelModal(status);
   };
-  const setScoreScreenModalParentDisplay = (status) => {
+  const setScoreScreenModalParentDisplay = () => {
     dispatch(lobbyUiActions.closeScoreScreen());
   };
   const showChangeChannelModal = () => {

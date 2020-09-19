@@ -48,7 +48,6 @@ function draw({
         mouseData.leftCurrentlyPressed = false;
       }
       const selectionBoxSize = getSelectionBoxSize({ mouseData });
-      console.log("drawing selection box");
       context.beginPath();
       context.strokeStyle = "rgb(103,191,104)";
       context.rect(

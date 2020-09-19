@@ -12,6 +12,7 @@ import {
 import draw from "./canvasMain";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
+import cloneDeep from "lodash.clonedeep";
 
 const BattleRoomGameInstance = ({ socket }) => {
   const dispatch = useDispatch();
@@ -44,7 +45,6 @@ const BattleRoomGameInstance = ({ socket }) => {
 
   const canvasRef = useRef();
   const drawRef = useRef();
-  const physicsRef = useRef();
   const gameOverCountdownText = useRef();
 
   useEffect(() => {
@@ -54,8 +54,9 @@ const BattleRoomGameInstance = ({ socket }) => {
   useEffect(() => {
     if (!socket) return;
     socket.on("serverInitsGame", (data) => {
-      currentGameData.current = data;
-      lastServerGameUpdate.current = data;
+      console.log("gameInit");
+      currentGameData.current = cloneDeep(data);
+      lastServerGameUpdate.current = cloneDeep(data);
     });
     socket.on("tickFromServer", (packet) => {
       Object.keys(packet).forEach((key) => {
@@ -127,15 +128,14 @@ const BattleRoomGameInstance = ({ socket }) => {
 
   // physics interval
   useEffect(() => {
-    console.log(currentGameData);
-    physicsRef.current = createGamePhysicsInterval({
+    const physicsInterval = createGamePhysicsInterval({
       lastServerGameUpdate: lastServerGameUpdate.current,
       gameData: currentGameData.current,
-      commandQueue: commandQueue.current.queue,
+      commandQueue: commandQueue.current,
       playerRole: playerDesignation,
     });
-    return () => clearInterval(physicsRef.current);
-  }, [lastServerGameUpdate, currentGameData, commandQueue, physicsRef]);
+    return () => clearInterval(physicsInterval);
+  }, [lastServerGameUpdate, currentGameData, commandQueue]);
 
   // draw interval
   useEffect(() => {

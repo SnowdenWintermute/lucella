@@ -10,6 +10,7 @@ const selectOrbs = ({
   commandQueue,
 }) => {
   if (!currentGameData) return;
+  if (!currentGameData.gameState) return;
   let playerOrbsToSelect;
   let stackedOrbHighestIndex;
   if (clientPlayer.uuid === playersInGame.host.uuid)
@@ -33,7 +34,6 @@ const selectOrbs = ({
       } else if (orb.num > stackedOrbHighestIndex) {
         currentGameData.gameState.orbs[playerOrbsToSelect].forEach((orb) => {
           orb.isSelected = false;
-          console.log("orb unselected " + orb.num);
         });
         stackedOrbHighestIndex = orb.num;
         orb.isSelected = true;

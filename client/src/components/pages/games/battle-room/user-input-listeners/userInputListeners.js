@@ -33,7 +33,6 @@ export const handleKeypress = ({
     default:
       return;
   }
-  console.log(keyPressed);
   if (keyPressed > 0 && keyPressed < 6) {
     selectOrbAndIssueMoveCommand({
       socket,
@@ -45,7 +44,6 @@ export const handleKeypress = ({
       commandQueue,
     });
   }
-  console.log("keydown " + e.keyCode);
 };
 
 export const mouseDownHandler = ({ e, mouseData }) => {
@@ -66,7 +64,6 @@ export const mouseUpHandler = ({
   mouseData,
   commandQueue,
 }) => {
-  console.log("mouseUp");
   if (e.button === 2) {
     mouseData.rightReleasedAtY = mouseData.yPos;
     mouseData.rightReleasedAtX = mouseData.xPos;
@@ -105,7 +102,6 @@ export const mouseMoveHandler = throttledEventHandlerCreator(
   ({ e, mouseData }) => {
     mouseData.xPos = e.nativeEvent.offsetX;
     mouseData.yPos = e.nativeEvent.offsetY;
-    console.log("mousemove");
   }
 );
 
