@@ -8,6 +8,7 @@ function draw({
   mouseData,
   clientPlayer,
   currentGameData,
+  lastServerGameUpdate,
   canvasInfo,
   gameOverCountdownText,
   gameStatus,
@@ -34,6 +35,7 @@ function draw({
 
     drawScore({ context, clientPlayer, currentGameData });
     drawOrbs({ context, clientPlayer, currentGameData });
+    drawOrbs({ context, clientPlayer, currentGameData: lastServerGameUpdate });
     gameOverText({
       context,
       currentGameData,

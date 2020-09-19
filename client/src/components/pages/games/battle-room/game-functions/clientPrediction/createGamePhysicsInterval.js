@@ -9,10 +9,7 @@ function createGamePhysicsInterval({
   playerRole,
 }) {
   return setInterval(() => {
-    console.log(commandQueue);
-    console.log(gameData);
-    console.log(Object.keys(gameData).length);
-    // console.log(gameData);
+    // console.log(commandQueue);
     if (!gameData) return;
     if (Object.keys(gameData).length < 1) return;
     // console.log(commandQueue);

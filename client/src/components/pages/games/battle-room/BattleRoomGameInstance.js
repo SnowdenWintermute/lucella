@@ -28,8 +28,8 @@ const BattleRoomGameInstance = ({ socket }) => {
     yPos: 0,
     mouseOnScreen: true,
   };
-  let lastServerGameUpdate = useRef({});
-  let currentGameData = useRef({});
+  let [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
+  let [currentGameData, setCurrentGameData] = useState();
   let commandQueue = useRef({ counter: 0, queue: [] });
   const playerDesignation = useSelector(
     (state) => state.gameUi.playerDesignation
@@ -55,12 +55,16 @@ const BattleRoomGameInstance = ({ socket }) => {
     if (!socket) return;
     socket.on("serverInitsGame", (data) => {
       console.log("gameInit");
-      currentGameData.current = cloneDeep(data);
-      lastServerGameUpdate.current = cloneDeep(data);
+      setCurrentGameData(cloneDeep(data));
+      setLastServerGameUpdate(cloneDeep(data));
     });
     socket.on("tickFromServer", (packet) => {
+      if (!lastServerGameUpdate) return;
+      console.log(lastServerGameUpdate);
       Object.keys(packet).forEach((key) => {
-        lastServerGameUpdate.current[key] = packet[key];
+        let newUpdate = lastServerGameUpdate;
+        newUpdate[key] = packet[key];
+        setLastServerGameUpdate(newUpdate);
       });
     });
     socket.on("serverSendsWinnerInfo", (data) => {
@@ -81,7 +85,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   // set up a ref to the current draw function so it's interval can have access to it having current proporties
   useEffect(() => {
     drawRef.current = function () {
-      if (!currentGameData.current) return;
+      if (!currentGameData) return;
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
       // if (!draw) return;
@@ -89,7 +93,8 @@ const BattleRoomGameInstance = ({ socket }) => {
         context,
         mouseData,
         clientPlayer,
-        currentGameData: currentGameData.current,
+        currentGameData: currentGameData,
+        lastServerGameUpdate,
         canvasInfo,
         gameOverCountdownText: gameOverCountdownText.current,
         gameStatus,
@@ -103,7 +108,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       handleKeypress({
         e,
         socket,
-        currentGameData: currentGameData.current,
+        currentGameData: currentGameData,
         clientPlayer,
         playersInGame,
         mouseData,
@@ -129,8 +134,8 @@ const BattleRoomGameInstance = ({ socket }) => {
   // physics interval
   useEffect(() => {
     const physicsInterval = createGamePhysicsInterval({
-      lastServerGameUpdate: lastServerGameUpdate.current,
-      gameData: currentGameData.current,
+      lastServerGameUpdate,
+      gameData: currentGameData,
       commandQueue: commandQueue.current,
       playerRole: playerDesignation,
     });
@@ -165,7 +170,7 @@ const BattleRoomGameInstance = ({ socket }) => {
           mouseUpHandler({
             e,
             socket,
-            currentGameData: currentGameData.current,
+            currentGameData: currentGameData,
             clientPlayer,
             mouseData,
             playersInGame,
@@ -179,7 +184,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         onMouseLeave={(e) => {
           mouseLeaveHandler({
             socket,
-            currentGameData: currentGameData.current,
+            currentGameData: currentGameData,
             clientPlayer,
             playersInGame,
             mouseData,
