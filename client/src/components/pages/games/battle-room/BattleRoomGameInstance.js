@@ -29,10 +29,11 @@ const BattleRoomGameInstance = ({ socket }) => {
     mouseOnScreen: true,
   };
   let [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
+  const numberOfLastServerUpdateApplied = useRef(null);
   let [currentGameData, setCurrentGameData] = useState();
   let commandQueue = useRef({ counter: 0, queue: [] });
   const playerDesignation = useSelector(
-    (state) => state.gameUi.playerDesignation
+    (state) => state.gameUi.playerDesignation,
   );
   const playersInGame = useSelector((state) => state.gameUi.playersInGame);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
@@ -122,7 +123,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       clientPlayer,
       mouseData,
       commandQueue,
-    ]
+    ],
   );
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);
@@ -135,6 +136,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   useEffect(() => {
     const physicsInterval = createGamePhysicsInterval({
       lastServerGameUpdate,
+      numberOfLastServerUpdateApplied: numberOfLastServerUpdateApplied.current,
       gameData: currentGameData,
       commandQueue: commandQueue.current,
       playerRole: playerDesignation,

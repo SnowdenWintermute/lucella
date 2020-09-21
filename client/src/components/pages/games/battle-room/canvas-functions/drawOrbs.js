@@ -7,7 +7,7 @@ const drawOrbs = ({ context, clientPlayer, currentGameData, testColor }) => {
         ? `rgba(${orb.color},.3)`
         : `rgb(${orb.color})`;
       context.arc(orb.xPos, orb.yPos, orb.radius, 0, Math.PI * 2);
-      testColor ? context.fill() : context.stroke();
+      testColor ? context.stroke() : context.fill();
       context.lineWidth = 3;
       // orb number
       if (orb.owner === clientPlayer.uuid) {

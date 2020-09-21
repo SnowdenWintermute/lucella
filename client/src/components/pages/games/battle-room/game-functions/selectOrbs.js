@@ -70,7 +70,6 @@ const selectOrbs = ({
     return { num: orb.num, isSelected: orb.isSelected };
   });
 
-  console.log(orbsToBeUpdated);
   // update client log of issued commands
   commandQueue.counter++;
   const commandPositionInQueue = commandQueue.counter;

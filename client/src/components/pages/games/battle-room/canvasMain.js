@@ -35,12 +35,6 @@ function draw({
 
     drawScore({ context, clientPlayer, currentGameData });
     drawOrbs({ context, clientPlayer, currentGameData });
-    drawOrbs({
-      context,
-      clientPlayer,
-      currentGameData: lastServerGameUpdate,
-      testColor: true,
-    });
     gameOverText({
       context,
       currentGameData,
@@ -61,7 +55,7 @@ function draw({
         mouseData.leftPressedAtX,
         mouseData.leftPressedAtY,
         selectionBoxSize.width,
-        selectionBoxSize.height
+        selectionBoxSize.height,
       );
       context.lineWidth = 3;
       context.stroke();

@@ -49,7 +49,6 @@ export const handleKeypress = ({
 export const mouseDownHandler = ({ e, mouseData }) => {
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = true;
-    console.log(mouseData);
     mouseData.leftPressedAtX = e.nativeEvent.offsetX;
     mouseData.leftPressedAtY = e.nativeEvent.offsetY;
   }
@@ -102,7 +101,7 @@ export const mouseMoveHandler = throttledEventHandlerCreator(
   ({ e, mouseData }) => {
     mouseData.xPos = e.nativeEvent.offsetX;
     mouseData.yPos = e.nativeEvent.offsetY;
-  }
+  },
 );
 
 export const mouseLeaveHandler = ({

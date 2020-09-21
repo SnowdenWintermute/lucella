@@ -18,6 +18,9 @@ function handleScoringPoints({ gameData }) {
             gameData.gameState.score.challenger += 1;
             orb.isGhosting = true;
           }
+          break;
+        default:
+          break;
       }
     });
   }

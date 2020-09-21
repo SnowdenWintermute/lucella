@@ -23,10 +23,10 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   const dispatch = useDispatch();
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
-    false
+    false,
   );
   const scoreScreenDisplayed = useSelector(
-    (state) => state.lobbyUi.scoreScreenDisplayed
+    (state) => state.lobbyUi.scoreScreenDisplayed,
   );
   const [authenticating, setAuthenticating] = useState(true);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);

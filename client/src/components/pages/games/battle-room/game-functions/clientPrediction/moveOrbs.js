@@ -26,6 +26,8 @@ function moveOrbs({ gameData }) {
             )
               orb.isGhosting = false;
             break;
+          default:
+            break;
         }
       }
       // send orb toward it's heading
