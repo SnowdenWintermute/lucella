@@ -12,13 +12,13 @@ function createGamePhysicsInterval({
   playerRole,
 }) {
   return setInterval(() => {
-    // console.log(commandQueue);
     if (!gameData) return;
     if (Object.keys(gameData).length < 1) return;
     // console.log(commandQueue);
     const numberOfLastCommandUpdateFromServer = lastServerGameUpdate.gameState
       ? lastServerGameUpdate.gameState.lastProcessedCommands[playerRole]
       : null;
+    console.log(lastServerGameUpdate.gameState.lastProcessedCommands);
     // set gameState to last recieved state
     if (lastServerGameUpdate.gameState) {
       if (
@@ -50,7 +50,7 @@ function createGamePhysicsInterval({
     commandQueue.queue.forEach((commandInQueue) => {
       // if (commandInQueue) return;
       const { commandType } = commandInQueue;
-
+      // select orb
       if (commandType === "orbSelect") {
         const { orbsToBeUpdated } = commandInQueue.data;
 
@@ -62,6 +62,7 @@ function createGamePhysicsInterval({
           });
         });
       }
+      // move
       if (commandType === "orbMove") {
         setOrbHeadings({
           playerRole,
@@ -69,11 +70,15 @@ function createGamePhysicsInterval({
           data: commandInQueue.data,
         });
       }
-      if (commandType === "orbSelectAndMove") {
+      // select and move
+      if (commandType === "selectAndMoveOrb") {
+        console.log("selectAndMoveOrb");
         // select first
-        const { orbsToBeUpdated } = commandQueue[
-          commandInQueue
-        ].data.selectCommandData;
+        const { orbsToBeUpdated } = commandInQueue.data.selectCommandData;
+
+        console.log(commandInQueue);
+        console.log(orbsToBeUpdated);
+        console.log(commandInQueue.data.moveCommandData);
 
         gameData.gameState.orbs[playerRole + "Orbs"].forEach((orb) => {
           orbsToBeUpdated.forEach((selectedOrb) => {

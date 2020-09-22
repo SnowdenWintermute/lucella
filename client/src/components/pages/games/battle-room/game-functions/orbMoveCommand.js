@@ -1,11 +1,11 @@
 const orbMoveCommand = ({
-  socket,
   currentGameData,
   clientPlayer,
   playersInGame,
   headingX,
   headingY,
   commandQueue,
+  isPartOfSelectAndMoveCommand,
 }) => {
   let hostOrChallenger;
   if (playersInGame.host.uuid === clientPlayer.uuid)
@@ -27,16 +27,17 @@ const orbMoveCommand = ({
     (orb) => {
       const orbHeadingInfo = { heading: orb.heading };
       return orbHeadingInfo;
-    }
+    },
   );
   const data = {
     newOrbHeadings,
     commandPositionInQueue,
   };
-  commandQueue.queue.push({
-    type: "orbMove",
-    data,
-  });
+  if (!isPartOfSelectAndMoveCommand)
+    commandQueue.queue.push({
+      type: "orbMove",
+      data,
+    });
 
   return data;
 };

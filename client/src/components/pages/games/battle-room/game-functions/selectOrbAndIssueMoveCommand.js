@@ -44,15 +44,9 @@ const selectOrbAndIssueMoveCommand = async ({
   const selectCommandData = {
     ownerOfOrbs: playerOrbsToSelect,
     orbsToBeUpdated,
-    commandPositionInQueue,
   };
-  commandQueue.queue.push({
-    type: "orbSelect",
-    data: selectCommandData,
-  });
 
   const moveCommandData = orbMoveCommand({
-    socket,
     currentGameData,
     clientPlayer,
     playersInGame,
@@ -63,9 +57,17 @@ const selectOrbAndIssueMoveCommand = async ({
       keyPressed - 1
     ].heading.yPos = mouseData.yPos),
     commandQueue,
+    isPartOfSelectAndMoveCommand: true,
   });
 
-  socket.emit("selectAndMoveOrb", { selectCommandData, moveCommandData });
+  const data = { selectCommandData, moveCommandData, commandPositionInQueue };
+
+  commandQueue.queue.push({
+    type: "selectAndMoveOrb",
+    data,
+  });
+
+  socket.emit("selectAndMoveOrb", data);
 };
 
 export default selectOrbAndIssueMoveCommand;

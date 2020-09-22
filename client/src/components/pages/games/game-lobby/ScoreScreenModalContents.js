@@ -3,12 +3,12 @@ import { useSelector } from "react-redux";
 
 const ScoreScreenModalContents = () => {
   const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState(
-    "elo-animate-1"
+    "elo-animate-1",
   );
   const [eloAnimatedChange, setEloAnimatedChange] = useState();
   const scoreScreenData = useSelector((state) => state.lobbyUi.scoreScreenData);
   const username = useSelector((state) =>
-    state.auth.user ? state.auth.user.name : null
+    state.auth.user ? state.auth.user.name : null,
   );
 
   let playerOldElo, playerNewElo, playerOldRank, playerNewRank;
@@ -35,21 +35,28 @@ const ScoreScreenModalContents = () => {
   const eloDiff = playerNewElo - playerOldElo;
 
   useEffect(() => {
-    setEloAnimatedChange(playerOldElo);
+    let didCancel = false;
+    if (!didCancel) setEloAnimatedChange(playerOldElo);
+    return () => {
+      didCancel = true;
+    };
   }, [playerOldElo]);
 
   useEffect(() => {
-    setTimeout(() => {
+    const animateTimeoutOne = setTimeout(() => {
       const newEloAnimateClass =
         Math.sign(eloDiff) === 1 ? "elo-animate-2-win" : "elo-animate-2-loss";
       setEloAnimatedChangeClass(newEloAnimateClass);
     }, 1000);
-    setTimeout(() => {
+    const animateTimeoutTwo = setTimeout(() => {
       setEloAnimatedChange(playerNewElo);
     }, 1300);
-    setTimeout(() => {
+    const animateTimeoutThree = setTimeout(() => {
       setEloAnimatedChangeClass("elo-animate-3");
     }, 3000);
+    return () => {
+      clearTimeout(animateTimeoutOne, animateTimeoutTwo, animateTimeoutThree);
+    };
   }, [eloDiff, playerNewElo]);
 
   if (!scoreScreenData.gameData) return <div />;

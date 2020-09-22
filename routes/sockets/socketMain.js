@@ -134,7 +134,6 @@ io.sockets.on("connect", async (socket) => {
       data,
       commandType: "orbSelect",
     });
-    console.log(data);
   });
   socket.on("clientSubmitsMoveCommand", (data) => {
     const gameName = connectedSockets[socket.id].currentGameName;
@@ -147,11 +146,10 @@ io.sockets.on("connect", async (socket) => {
       data,
       commandType: "orbMove",
     });
-    console.log(data);
   });
   socket.on("selectAndMoveOrb", (data) => {
     const gameName = connectedSockets[socket.id].currentGameName;
-
+    console.log(data);
     queueUpGameCommand({
       socket,
       connectedSockets,

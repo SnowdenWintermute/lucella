@@ -6,7 +6,6 @@ function queueUpGameCommand({
   data,
   commandType,
 }) {
-  console.log(commandType);
   const gameName = connectedSockets[socket.id].currentGameName;
   if (!gameRooms[gameName]) return;
   let playerRole;
