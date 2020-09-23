@@ -1,4 +1,5 @@
 import cloneDeep from "lodash.clonedeep";
+import isEqual from "lodash.isequal";
 const moveOrbs = require("./moveOrbs");
 const handleOrbCollisions = require("./handleOrbCollisions");
 const handleScoringPoints = require("./handleScoringPoints");
@@ -10,6 +11,7 @@ function createGamePhysicsInterval({
   gameData,
   commandQueue,
   playerRole,
+  gameDataQueue,
 }) {
   return setInterval(() => {
     if (!gameData) return;
@@ -18,19 +20,31 @@ function createGamePhysicsInterval({
     const numberOfLastCommandUpdateFromServer = lastServerGameUpdate.gameState
       ? lastServerGameUpdate.gameState.lastProcessedCommands[playerRole]
       : null;
-    console.log(lastServerGameUpdate.gameState.lastProcessedCommands);
+    const opponentOrbsRole =
+      playerRole === "host" ? "challengerOrbs" : "hostOrbs";
     // set gameState to last recieved state
     if (lastServerGameUpdate.gameState) {
       if (
         !numberOfLastServerUpdateApplied ||
         numberOfLastServerUpdateApplied !== numberOfLastCommandUpdateFromServer
       ) {
-        console.log(numberOfLastServerUpdateApplied);
         Object.keys(lastServerGameUpdate.gameState).forEach((key) => {
-          if (lastServerGameUpdate.gameState[key] !== gameData.gameState[key])
-            gameData.gameState[key] = cloneDeep(
+          if (
+            !isEqual(
               lastServerGameUpdate.gameState[key],
-            );
+              gameData.gameState[key],
+            )
+          ) {
+            if (key === "orbs") {
+              gameData.gameState.orbs[playerRole + "Orbs"] = cloneDeep(
+                lastServerGameUpdate.gameState.orbs[playerRole + "Orbs"],
+              );
+            } else {
+              gameData.gameState[key] = cloneDeep(
+                lastServerGameUpdate.gameState[key],
+              );
+            }
+          }
         });
         numberOfLastServerUpdateApplied = numberOfLastCommandUpdateFromServer;
       }
@@ -46,9 +60,8 @@ function createGamePhysicsInterval({
     // discard corresponding command in client's queue
     commandQueue.queue.splice(commandQueue.queue.indexOf(commandToDiscard));
 
-    // go through the client command queue and predict game state
+    // go through the client command queue and predict game state for client's orbs
     commandQueue.queue.forEach((commandInQueue) => {
-      // if (commandInQueue) return;
       const { commandType } = commandInQueue;
       // select orb
       if (commandType === "orbSelect") {
@@ -76,10 +89,6 @@ function createGamePhysicsInterval({
         // select first
         const { orbsToBeUpdated } = commandInQueue.data.selectCommandData;
 
-        console.log(commandInQueue);
-        console.log(orbsToBeUpdated);
-        console.log(commandInQueue.data.moveCommandData);
-
         gameData.gameState.orbs[playerRole + "Orbs"].forEach((orb) => {
           orbsToBeUpdated.forEach((selectedOrb) => {
             if (selectedOrb.num === orb.num) {
@@ -95,6 +104,21 @@ function createGamePhysicsInterval({
         });
       }
     });
+    // go through gameData queue and show opponent positions in the past
+    if (Object.keys(gameDataQueue).length > 1) {
+      console.log(gameDataQueue);
+      if (
+        gameDataQueue[gameDataQueue.length - 2].gameState &&
+        gameData.gameState
+      ) {
+        gameData.gameState.orbs[opponentOrbsRole] =
+          gameDataQueue[gameDataQueue.length - 2].gameState.orbs[
+            opponentOrbsRole
+          ];
+      }
+      gameDataQueue.shift();
+    }
+
     if (!gameData) return;
     moveOrbs({ gameData });
     handleOrbCollisions({ gameData });

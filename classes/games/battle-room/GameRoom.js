@@ -9,7 +9,7 @@ class GameRoom {
     this.gameStatus = "inLobby"; // inLobby, countingDown, inProgress, gameOverScreen
     this.countdown = defaultCountdownNumber;
     this.countdownInterval = null;
-    this.playersReady = { host: false, challenger: false };
+    this.playersReady = { host: true, challenger: false };
     this.score = {
       host: 0,
       challenger: 0,

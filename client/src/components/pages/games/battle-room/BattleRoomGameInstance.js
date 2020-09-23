@@ -32,6 +32,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   const numberOfLastServerUpdateApplied = useRef(null);
   let [currentGameData, setCurrentGameData] = useState();
   let commandQueue = useRef({ counter: 0, queue: [] });
+  let gameDataQueue = useRef([]);
   const playerDesignation = useSelector(
     (state) => state.gameUi.playerDesignation,
   );
@@ -62,11 +63,12 @@ const BattleRoomGameInstance = ({ socket }) => {
     socket.on("tickFromServer", (packet) => {
       if (!lastServerGameUpdate) return;
       // console.log(lastServerGameUpdate);
+      let newUpdate = lastServerGameUpdate;
       Object.keys(packet).forEach((key) => {
-        let newUpdate = lastServerGameUpdate;
-        newUpdate[key] = packet[key];
+        newUpdate[key] = cloneDeep(packet[key]);
         setLastServerGameUpdate(newUpdate);
       });
+      gameDataQueue.current.push(newUpdate);
     });
     socket.on("serverSendsWinnerInfo", (data) => {
       dispatch(gameUiActions.setGameWinner(data));
@@ -139,6 +141,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       numberOfLastServerUpdateApplied: numberOfLastServerUpdateApplied.current,
       gameData: currentGameData,
       commandQueue: commandQueue.current,
+      gameDataQueue: gameDataQueue.current,
       playerRole: playerDesignation,
     });
     return () => clearInterval(physicsInterval);

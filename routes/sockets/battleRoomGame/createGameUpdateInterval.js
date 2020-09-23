@@ -6,7 +6,6 @@ function createGameUpdateInterval({ io, gameData }) {
     // create a packet with any data that changed to send to client
     let newPacket = {};
     Object.keys(gameData.lastUpdatePacket).forEach((key) => {
-      // console.log(key);
       if (key == "intervals" || key == "lastUpdatePacket") return;
       if (!isEqual(gameData.lastUpdatePacket[key], gameData[key])) {
         if (
@@ -22,7 +21,7 @@ function createGameUpdateInterval({ io, gameData }) {
       }
     });
     io.to(`game-${gameData.gameName}`).emit("tickFromServer", newPacket);
-  }, 300);
+  }, 45);
 }
 
 module.exports = createGameUpdateInterval;
