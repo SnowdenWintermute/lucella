@@ -1,16 +1,16 @@
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { ReactComponent as SuccessIcon } from "../../../../../src/img/alertIcons/success.svg";
+import { ReactComponent as SuccessIcon } from "../../../../img/alertIcons/success.svg";
 import PropTypes from "prop-types";
 import * as alertActions from "../../../../store/actions/alert";
 
 const PreGameRoom = ({ socket }) => {
   const dispatch = useDispatch();
   const preGameScreen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen
+    (state) => state.gameUi.preGameScreen.isOpen,
   );
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
-    "height-0-hidden"
+    "height-0-hidden",
   );
   const [gameNameInput, setGameNameInput] = useState("");
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
@@ -20,7 +20,7 @@ const PreGameRoom = ({ socket }) => {
   const countdownNumber = useSelector((state) => state.gameUi.countdownNumber);
   const isRanked = useSelector((state) => state.gameUi.isRanked);
   const playerDesignation = useSelector(
-    (state) => state.gameUi.playerDesignation
+    (state) => state.gameUi.playerDesignation,
   );
 
   const channelNameInput = useRef();

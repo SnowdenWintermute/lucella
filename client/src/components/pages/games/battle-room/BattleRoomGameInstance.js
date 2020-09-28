@@ -13,6 +13,7 @@ import draw from "./canvasMain";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
 import cloneDeep from "lodash.clonedeep";
+import { convertBufferToGameStateObject } from "./game-functions/convertBufferToGameStateObject";
 
 const BattleRoomGameInstance = ({ socket }) => {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   };
   let [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
   const numberOfLastServerUpdateApplied = useRef(null);
-  let [currentGameData, setCurrentGameData] = useState();
+  let currentGameData = useRef();
   let commandQueue = useRef({ counter: 0, queue: [] });
   let gameDataQueue = useRef([]);
   const playerDesignation = useSelector(
@@ -57,18 +58,27 @@ const BattleRoomGameInstance = ({ socket }) => {
     if (!socket) return;
     socket.on("serverInitsGame", (data) => {
       console.log("gameInit");
-      setCurrentGameData(cloneDeep(data));
+      currentGameData.current = cloneDeep(data);
       setLastServerGameUpdate(cloneDeep(data));
     });
     socket.on("tickFromServer", (packet) => {
       if (!lastServerGameUpdate) return;
-      // console.log(lastServerGameUpdate);
       let newUpdate = lastServerGameUpdate;
       Object.keys(packet).forEach((key) => {
         newUpdate[key] = cloneDeep(packet[key]);
         setLastServerGameUpdate(newUpdate);
       });
       gameDataQueue.current.push(newUpdate);
+    });
+    socket.on("bufferTickFromServer", (data) => {
+      if (!currentGameData.current) return;
+      if (!currentGameData.current.gameState) return;
+      // console.log(currentGameData.gameState);
+      const decodedPacket = convertBufferToGameStateObject({
+        data,
+        model: currentGameData.current.gameState,
+      });
+      // console.log(decodedPacket);
     });
     socket.on("serverSendsWinnerInfo", (data) => {
       dispatch(gameUiActions.setGameWinner(data));
@@ -79,6 +89,7 @@ const BattleRoomGameInstance = ({ socket }) => {
     return () => {
       socket.off("serverInitsGame");
       socket.off("tickFromServer");
+      socket.off("bufferTickFromServer");
       socket.off("gameEndingCountdown");
       socket.off("serverSendsWinnerInfo");
       dispatch(gameUiActions.clearGameUiData());
@@ -88,7 +99,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   // set up a ref to the current draw function so it's interval can have access to it having current proporties
   useEffect(() => {
     drawRef.current = function () {
-      if (!currentGameData) return;
+      if (!currentGameData.current) return;
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
       // if (!draw) return;
@@ -96,7 +107,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         context,
         mouseData,
         clientPlayer,
-        currentGameData: currentGameData,
+        currentGameData: currentGameData.current,
         lastServerGameUpdate,
         canvasInfo,
         gameOverCountdownText: gameOverCountdownText.current,
@@ -111,21 +122,14 @@ const BattleRoomGameInstance = ({ socket }) => {
       handleKeypress({
         e,
         socket,
-        currentGameData: currentGameData,
+        currentGameData: currentGameData.current,
         clientPlayer,
         playersInGame,
         mouseData,
         commandQueue: commandQueue.current,
       });
     },
-    [
-      socket,
-      currentGameData,
-      playersInGame,
-      clientPlayer,
-      mouseData,
-      commandQueue,
-    ],
+    [socket, playersInGame, clientPlayer, mouseData, commandQueue],
   );
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);
@@ -139,13 +143,13 @@ const BattleRoomGameInstance = ({ socket }) => {
     const physicsInterval = createGamePhysicsInterval({
       lastServerGameUpdate,
       numberOfLastServerUpdateApplied: numberOfLastServerUpdateApplied.current,
-      gameData: currentGameData,
+      gameData: currentGameData.current,
       commandQueue: commandQueue.current,
       gameDataQueue: gameDataQueue.current,
       playerRole: playerDesignation,
     });
     return () => clearInterval(physicsInterval);
-  }, [lastServerGameUpdate, currentGameData, commandQueue]);
+  }, [lastServerGameUpdate, commandQueue]);
 
   // draw interval
   useEffect(() => {
@@ -175,7 +179,7 @@ const BattleRoomGameInstance = ({ socket }) => {
           mouseUpHandler({
             e,
             socket,
-            currentGameData: currentGameData,
+            currentGameData: currentGameData.current,
             clientPlayer,
             mouseData,
             playersInGame,
@@ -189,7 +193,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         onMouseLeave={(e) => {
           mouseLeaveHandler({
             socket,
-            currentGameData: currentGameData,
+            currentGameData: currentGameData.current,
             clientPlayer,
             playersInGame,
             mouseData,

@@ -31,8 +31,8 @@ function startGame({
         gameData.orbRadius,
         gameRoom.players.host.uuid,
         i + 1,
-        "0, 153, 0"
-      )
+        "0, 153, 0",
+      ),
     );
     gameData.gameState.orbs.challengerOrbs.push(
       new Orb(
@@ -41,8 +41,8 @@ function startGame({
         gameData.orbRadius,
         gameRoom.players.challenger.uuid,
         i + 1,
-        "89, 0, 179"
-      )
+        "89, 0, 179",
+      ),
     );
   }
   console.log(gameName + "started");

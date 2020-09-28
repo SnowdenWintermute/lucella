@@ -1,3 +1,5 @@
+const GameState = require("./GameState");
+
 class GameData {
   constructor({ gameName, width, height, isRanked }) {
     this.gameName = gameName;
@@ -11,47 +13,7 @@ class GameData {
     this.height = height;
     this.speed = 8;
     this.orbRadius = 8;
-    this.gameState = {
-      lastProcessedCommands: {
-        host: null,
-        challenger: null,
-      },
-      orbs: {
-        hostOrbs: [],
-        challengerOrbs: [],
-      },
-      score: {
-        host: 0,
-        challenger: 0,
-        neededToWin: 5,
-      },
-      dashes: {
-        host: {
-          dashes: 3,
-          recharging: false,
-          cooldown: 3,
-        },
-        challenger: {
-          dashes: 3,
-          recharging: false,
-          cooldown: 3,
-        },
-      },
-      endzones: {
-        host: {
-          x: 0,
-          y: 0,
-          width: this.width,
-          height: 60,
-        },
-        challenger: {
-          x: 0,
-          y: this.height - 60,
-          width: this.width,
-          height: 60,
-        },
-      },
-    };
+    this.gameState = new GameState({ width: this.width, height: this.height });
   }
 }
 module.exports = GameData;

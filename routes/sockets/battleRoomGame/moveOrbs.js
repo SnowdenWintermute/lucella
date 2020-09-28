@@ -36,11 +36,11 @@ function moveOrbs({ gameData }) {
       const velY = (ty / dist) * gameData.speed;
 
       if (dist >= orb.radius) {
-        orb.xPos += velX;
-        orb.yPos += velY;
+        orb.xPos = Math.round(orb.xPos + velX);
+        orb.yPos = Math.round(orb.yPos + velY);
       } else {
-        orb.xPos = orb.heading.xPos;
-        orb.yPos = orb.heading.yPos;
+        orb.xPos = Math.round(orb.heading.xPos);
+        orb.yPos = Math.round(orb.heading.yPos);
       }
     });
   }
