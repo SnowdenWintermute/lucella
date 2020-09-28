@@ -33,7 +33,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   const numberOfLastServerUpdateApplied = useRef(null);
   let currentGameData = useRef();
   let commandQueue = useRef({ counter: 0, queue: [] });
-  let gameDataQueue = useRef([]);
+  let gameStateQueue = useRef([]);
   const playerDesignation = useSelector(
     (state) => state.gameUi.playerDesignation,
   );
@@ -61,24 +61,16 @@ const BattleRoomGameInstance = ({ socket }) => {
       currentGameData.current = cloneDeep(data);
       setLastServerGameUpdate(cloneDeep(data));
     });
-    socket.on("tickFromServer", (packet) => {
+    socket.on("bufferTickFromServer", (data) => {
+      if (!lastServerGameUpdate) return;
+      const decodedPacket = convertBufferToGameStateObject({ data });
       if (!lastServerGameUpdate) return;
       let newUpdate = lastServerGameUpdate;
-      Object.keys(packet).forEach((key) => {
-        newUpdate[key] = cloneDeep(packet[key]);
+      Object.keys(decodedPacket).forEach((key) => {
+        newUpdate[key] = cloneDeep(decodedPacket[key]);
         setLastServerGameUpdate(newUpdate);
       });
-      gameDataQueue.current.push(newUpdate);
-    });
-    socket.on("bufferTickFromServer", (data) => {
-      if (!currentGameData.current) return;
-      if (!currentGameData.current.gameState) return;
-      // console.log(currentGameData.gameState);
-      const decodedPacket = convertBufferToGameStateObject({
-        data,
-        model: currentGameData.current.gameState,
-      });
-      // console.log(decodedPacket);
+      gameStateQueue.current.push(newUpdate);
     });
     socket.on("serverSendsWinnerInfo", (data) => {
       dispatch(gameUiActions.setGameWinner(data));
@@ -145,7 +137,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       numberOfLastServerUpdateApplied: numberOfLastServerUpdateApplied.current,
       gameData: currentGameData.current,
       commandQueue: commandQueue.current,
-      gameDataQueue: gameDataQueue.current,
+      gameStateQueue: gameStateQueue.current,
       playerRole: playerDesignation,
     });
     return () => clearInterval(physicsInterval);

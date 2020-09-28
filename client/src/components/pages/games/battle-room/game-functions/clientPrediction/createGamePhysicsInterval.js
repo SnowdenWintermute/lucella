@@ -11,7 +11,7 @@ function createGamePhysicsInterval({
   gameData,
   commandQueue,
   playerRole,
-  gameDataQueue,
+  gameStateQueue,
 }) {
   return setInterval(() => {
     if (!gameData) return;
@@ -43,7 +43,7 @@ function createGamePhysicsInterval({
     clientPredictOwnOrbPositions({ commandQueue, gameData, playerRole });
 
     // go through gameData queue and show opponent positions in the past
-    showOpponentOrbsInPast({ gameDataQueue, gameData, playerRole });
+    showOpponentOrbsInPast({ gameStateQueue, gameData, playerRole });
 
     if (!gameData) return;
     moveOrbs({ gameData });

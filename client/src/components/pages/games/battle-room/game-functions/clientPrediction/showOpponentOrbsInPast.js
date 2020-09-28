@@ -1,21 +1,33 @@
 export const showOpponentOrbsInPast = ({
-  gameDataQueue,
+  gameStateQueue,
   gameData,
   playerRole,
 }) => {
   const opponentOrbsRole =
     playerRole === "host" ? "challengerOrbs" : "hostOrbs";
 
-  if (Object.keys(gameDataQueue).length > 1) {
-    if (
-      gameDataQueue[gameDataQueue.length - 2].gameState &&
-      gameData.gameState
-    ) {
-      gameData.gameState.orbs[opponentOrbsRole] =
-        gameDataQueue[gameDataQueue.length - 2].gameState.orbs[
-          opponentOrbsRole
-        ];
+  // console.log(gameStateQueue);
+
+  if (Object.keys(gameStateQueue).length > 1) {
+    // console.log("length of gameStateQueue > 1");
+    console.log(gameStateQueue[gameStateQueue.length - 2]);
+    if (gameStateQueue[gameStateQueue.length - 2]) {
+      console.log(gameData.gameState.orbs[opponentOrbsRole]);
+      gameData.gameState.orbs[opponentOrbsRole].forEach((orb, i) => {
+        Object.keys(orb).forEach((key) => {
+          if (
+            gameStateQueue[gameStateQueue.length - 2].orbs[opponentOrbsRole][i][
+              key
+            ]
+          )
+            orb[key] =
+              gameStateQueue[gameStateQueue.length - 2].orbs[opponentOrbsRole][
+                i
+              ][key];
+        });
+      });
+      gameStateQueue.shift();
     }
-    gameDataQueue.shift();
   }
+  // console.log(gameData.gameState.orbs);
 };
