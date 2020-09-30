@@ -18,7 +18,7 @@ const drawOrbs = ({ context, clientPlayer, currentGameData, testColor }) => {
         context.fillText(orb.num, orb.xPos, orb.yPos);
       }
       // orb selection ring
-      if (orb.isSelected) {
+      if (orb.isSelected && orb.isSelected != "0") {
         context.strokeStyle = "rgb(30,200,30)";
         context.stroke();
       }

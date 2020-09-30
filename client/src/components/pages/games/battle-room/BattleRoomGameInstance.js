@@ -64,7 +64,6 @@ const BattleRoomGameInstance = ({ socket }) => {
     socket.on("bufferTickFromServer", (data) => {
       if (!lastServerGameUpdate) return;
       const decodedPacket = convertBufferToGameStateObject({ data });
-      if (!lastServerGameUpdate) return;
       let newUpdate = lastServerGameUpdate;
       Object.keys(decodedPacket).forEach((key) => {
         newUpdate[key] = cloneDeep(decodedPacket[key]);
