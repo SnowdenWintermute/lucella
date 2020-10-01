@@ -8,7 +8,7 @@ export const showOpponentOrbsInPast = ({
   const opponentOrbsRole =
     playerRole === "host" ? "challengerOrbs" : "hostOrbs";
 
-  if (Object.keys(gameStateQueue).length > 1) {
+  if (gameStateQueue.length > 1) {
     gameData.gameState.orbs[opponentOrbsRole].forEach((orb, i) => {
       Object.keys(orb).forEach((key) => {
         if (
@@ -25,7 +25,7 @@ export const showOpponentOrbsInPast = ({
       });
     });
     gameStateQueue.shift();
-  } else {
+  } else if (gameStateQueue.length > 0) {
     gameData.gameState.orbs[opponentOrbsRole].forEach((orb, i) => {
       Object.keys(orb).forEach((key) => {
         if (gameStateQueue[0].orbs[opponentOrbsRole][i].hasOwnProperty(key)) {

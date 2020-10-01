@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../store/actions/auth";
 // img
@@ -15,6 +15,8 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   // state
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const [activeTab, setActiveTab] = useState(null);
+  const gameStatus = useSelector((state) => state.gameUi.gameStatus);
+
   // effects
   useEffect(() => {
     window.addEventListener("click", (e) => {
@@ -94,51 +96,54 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   };
 
   return (
-    <Fragment>
-      <nav className="nav">
-        <div className="nav-right-holder">
-          <img className="logo-img" alt="lucella logo" src={logo} />
-          <h1>
-            <Link
-              to="/"
-              className="brand-text"
-              name="landing"
-              onClick={(e) => onNavItemClick(e)}
-            >
-              Lucella.org
-            </Link>
-          </h1>
-          <div className="nav-tabs">
-            <Link
-              to="/games"
-              className={`nav-tab ${activeTab === "games" && "tab-active"}`}
-              name="games"
-              onClick={(e) => onNavItemClick(e)}
-            >
-              GAMES
-            </Link>
-            <Link
-              to="/ladder"
-              className={`nav-tab ${activeTab === "ladder" && "tab-active"}`}
-              name="ladder"
-              onClick={(e) => onNavItemClick(e)}
-            >
-              LADDER
-            </Link>
-            <Link
-              to="/forum"
-              className={`nav-tab ${activeTab === "forum" && "tab-active"}`}
-              name="forum"
-              onClick={(e) => onNavItemClick(e)}
-            >
-              FORUM
-            </Link>
+    gameStatus !== "inProgress" &&
+    gameStatus !== "ending" && (
+      <Fragment>
+        <nav className="nav">
+          <div className="nav-right-holder">
+            <img className="logo-img" alt="lucella logo" src={logo} />
+            <h1>
+              <Link
+                to="/"
+                className="brand-text"
+                name="landing"
+                onClick={(e) => onNavItemClick(e)}
+              >
+                Lucella.org
+              </Link>
+            </h1>
+            <div className="nav-tabs">
+              <Link
+                to="/games"
+                className={`nav-tab ${activeTab === "games" && "tab-active"}`}
+                name="games"
+                onClick={(e) => onNavItemClick(e)}
+              >
+                GAMES
+              </Link>
+              <Link
+                to="/ladder"
+                className={`nav-tab ${activeTab === "ladder" && "tab-active"}`}
+                name="ladder"
+                onClick={(e) => onNavItemClick(e)}
+              >
+                LADDER
+              </Link>
+              <Link
+                to="/forum"
+                className={`nav-tab ${activeTab === "forum" && "tab-active"}`}
+                name="forum"
+                onClick={(e) => onNavItemClick(e)}
+              >
+                FORUM
+              </Link>
+            </div>
           </div>
-        </div>
-        <ul className="user-menu-holder">{!loading ? userMenu : "..."}</ul>
-      </nav>
-      <div className="nav-tab-thin-bar"></div>
-    </Fragment>
+          <ul className="user-menu-holder">{!loading ? userMenu : "..."}</ul>
+        </nav>
+        <div className="nav-tab-thin-bar"></div>
+      </Fragment>
+    )
   );
 };
 

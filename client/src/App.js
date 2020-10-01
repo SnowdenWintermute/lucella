@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./css/main.css";
 // redux
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "./store";
 // components
 import PrivateRoute from "./components/routing/PrivateRoute";
@@ -34,43 +34,36 @@ function App() {
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);
-
   return (
     <Provider store={store}>
       <Router>
         <Navbar></Navbar>
         <Alerts></Alerts>
-        <section className="page-frame">
-          <Switch>
-            <Route exact path="/" component={Landing}></Route>
-            <Route exact path="/register" component={Register}></Route>
-            <Route exact path="/login" component={Login}></Route>
-            <Route
-              exact
-              path="/request-password-reset"
-              component={RequestPasswordResetEmail}
-            ></Route>
-            <Route
-              exact
-              path="/password-reset/:token"
-              component={PasswordReset}
-            ></Route>
-            <Route exact path="/games" component={Games}></Route>
-            <Route
-              exact
-              path="/battle-room"
-              component={BattleRoomShell}
-            ></Route>
-            <Route exact path="/ladder" component={Ladder}></Route>
-            <Route exact path="/forum" component={Forum}></Route>
-            <Route exact path="/profile" component={Profile}></Route>
-            <PrivateRoute
-              exact
-              path="/settings"
-              component={Settings}
-            ></PrivateRoute>
-          </Switch>
-        </section>
+        <Switch>
+          <Route exact path="/" component={Landing}></Route>
+          <Route exact path="/register" component={Register}></Route>
+          <Route exact path="/login" component={Login}></Route>
+          <Route
+            exact
+            path="/request-password-reset"
+            component={RequestPasswordResetEmail}
+          ></Route>
+          <Route
+            exact
+            path="/password-reset/:token"
+            component={PasswordReset}
+          ></Route>
+          <Route exact path="/games" component={Games}></Route>
+          <Route exact path="/battle-room" component={BattleRoomShell}></Route>
+          <Route exact path="/ladder" component={Ladder}></Route>
+          <Route exact path="/forum" component={Forum}></Route>
+          <Route exact path="/profile" component={Profile}></Route>
+          <PrivateRoute
+            exact
+            path="/settings"
+            component={Settings}
+          ></PrivateRoute>
+        </Switch>
       </Router>
     </Provider>
   );

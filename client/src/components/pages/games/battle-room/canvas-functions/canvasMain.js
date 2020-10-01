@@ -1,14 +1,13 @@
-import drawOrbs from "./canvas-functions/drawOrbs";
-import drawScore from "./canvas-functions/drawScore";
-import gameOverText from "./canvas-functions/gameOverText";
-import getSelectionBoxSize from "./canvas-functions/getSelectionBoxSize";
+import drawOrbs from "./drawOrbs";
+import drawScore from "./drawScore";
+import gameOverText from "./gameOverText";
+import getSelectionBoxSize from "./getSelectionBoxSize";
 
 function draw({
   context,
   mouseData,
   clientPlayer,
   currentGameData,
-  lastServerGameUpdate,
   canvasInfo,
   gameOverCountdownText,
   gameStatus,
@@ -21,20 +20,32 @@ function draw({
     context.clearRect(0, 0, canvasInfo.width, canvasInfo.height);
 
     // endzones
-    let { x, y, width, height } = currentGameData.gameState.endzones.host;
+    let x = currentGameData.gameState.endzones.host.x;
+    let y = currentGameData.gameState.endzones.host.y;
+    let width = canvasInfo.width;
+    let height =
+      (currentGameData.gameState.endzones.host.height /
+        currentGameData.height) *
+      canvasInfo.height;
     context.beginPath();
     context.fillStyle = "rgb(50,50,70)";
     context.fillRect(x, y, width, height);
     x = currentGameData.gameState.endzones.challenger.x;
-    y = currentGameData.gameState.endzones.challenger.y;
-    width = currentGameData.gameState.endzones.challenger.width;
-    height = currentGameData.gameState.endzones.challenger.height;
+    y =
+      (currentGameData.gameState.endzones.challenger.y /
+        currentGameData.height) *
+      canvasInfo.height;
+    width = canvasInfo.width;
+    height =
+      (currentGameData.gameState.endzones.challenger.height /
+        currentGameData.height) *
+      canvasInfo.height;
     context.beginPath();
     context.fillStyle = "rgb(50,70,50)";
     context.fillRect(x, y, width, height);
 
-    drawScore({ context, clientPlayer, currentGameData });
-    drawOrbs({ context, clientPlayer, currentGameData });
+    drawScore({ context, clientPlayer, currentGameData, canvasInfo });
+    drawOrbs({ context, clientPlayer, currentGameData, canvasInfo });
     gameOverText({
       context,
       currentGameData,

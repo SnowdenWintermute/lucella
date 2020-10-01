@@ -9,7 +9,7 @@ import {
   mouseLeaveHandler,
   mouseEnterHandler,
 } from "./user-input-listeners/userInputListeners";
-import draw from "./canvasMain";
+import draw from "./canvas-functions/canvasMain";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
 import cloneDeep from "lodash.clonedeep";
@@ -41,12 +41,9 @@ const BattleRoomGameInstance = ({ socket }) => {
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
   const winner = useSelector((state) => state.gameUi.winner);
   const [clientPlayer, setClientPlayer] = useState([]);
-  const canvasInfo = {
-    width: 450,
-    height: 750,
-  };
 
   const canvasRef = useRef();
+  const [canvasInfo, setCanvasInfo] = useState({});
   const drawRef = useRef();
   const gameOverCountdownText = useRef();
 
@@ -87,12 +84,30 @@ const BattleRoomGameInstance = ({ socket }) => {
     };
   }, [socket, dispatch]);
 
+  useEffect(() => {
+    setCanvasInfo({
+      height: window.innerHeight,
+      width: window.innerHeight * 0.6,
+    });
+  }, [setCanvasInfo]);
+
+  useEffect(() => {
+    function handleResize() {
+      setCanvasInfo({
+        height: window.innerHeight,
+        width: window.innerHeight * 0.6,
+      });
+    }
+    window.addEventListener("resize", handleResize);
+  }, [setCanvasInfo]);
+
   // set up a ref to the current draw function so it's interval can have access to it having current proporties
   useEffect(() => {
     drawRef.current = function () {
       if (!currentGameData.current) return;
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
+      console.log(canvas.height);
       // if (!draw) return;
       draw({
         context,
