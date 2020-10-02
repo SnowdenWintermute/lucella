@@ -10,6 +10,7 @@ export const handleKeypress = throttledEventHandlerCreator(
     e,
     socket,
     currentGameData,
+    canvasInfo,
     clientPlayer,
     playersInGame,
     mouseData,
@@ -49,11 +50,16 @@ export const handleKeypress = throttledEventHandlerCreator(
   },
 );
 
-export const mouseDownHandler = ({ e, mouseData }) => {
+export const mouseDownHandler = ({
+  e,
+  mouseData,
+  currentGameData,
+  canvasInfo,
+}) => {
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = true;
-    mouseData.leftPressedAtX = e.nativeEvent.offsetX;
-    mouseData.leftPressedAtY = e.nativeEvent.offsetY;
+    mouseData.leftPressedAtX = mouseData.xPos;
+    mouseData.leftPressedAtY = mouseData.yPos;
   }
 };
 
@@ -82,8 +88,8 @@ export const mouseUpHandler = ({
   }
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = false;
-    mouseData.leftReleasedAtX = e.nativeEvent.offsetX;
-    mouseData.leftReleasedAtY = e.nativeEvent.offsetY;
+    mouseData.leftReleasedAtX = mouseData.xPos;
+    mouseData.leftReleasedAtY = mouseData.yPos;
     const { leftPressedAtX, leftPressedAtY, xPos, yPos } = mouseData;
     selectOrbs({
       socket,
@@ -101,9 +107,14 @@ export const mouseUpHandler = ({
 
 export const mouseMoveHandler = throttledEventHandlerCreator(
   33,
-  ({ e, mouseData }) => {
-    mouseData.xPos = e.nativeEvent.offsetX;
-    mouseData.yPos = e.nativeEvent.offsetY;
+  ({ e, mouseData, currentGameData, canvasInfo }) => {
+    mouseData.xPos =
+      (e.nativeEvent.offsetX / canvasInfo.width) * currentGameData.width;
+    mouseData.yPos =
+      (e.nativeEvent.offsetY / canvasInfo.height) * currentGameData.height;
+
+    console.log(mouseData.xPos);
+    console.log(mouseData.yPos);
   },
 );
 

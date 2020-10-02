@@ -1,6 +1,14 @@
-const getSelectionBoxSize = ({ mouseData }) => {
-  const width = mouseData.xPos - mouseData.leftPressedAtX;
-  const height = mouseData.yPos - mouseData.leftPressedAtY;
+const getSelectionBoxSize = ({
+  mouseData,
+  canvasXDrawFraction,
+  canvasYDrawFraction,
+}) => {
+  const width =
+    mouseData.xPos * canvasXDrawFraction -
+    mouseData.leftPressedAtX * canvasXDrawFraction;
+  const height =
+    mouseData.yPos * canvasYDrawFraction -
+    mouseData.leftPressedAtY * canvasYDrawFraction;
   return {
     width,
     height,

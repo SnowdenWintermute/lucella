@@ -4,6 +4,8 @@ const gameOverText = ({
   gameStatus,
   winner,
   gameOverCountdownText,
+  canvasXDrawFraction,
+  canvasYDrawFraction,
 }) => {
   if (gameStatus === "ending") {
     context.beginPath();
@@ -13,13 +15,13 @@ const gameOverText = ({
     context.font = "bold 12px Arial";
     context.fillText(
       `Winner: ${winner ? winner : "..."}`,
-      currentGameData.width / 2,
-      currentGameData.height / 2
+      (currentGameData.width * canvasXDrawFraction) / 2,
+      (currentGameData.height * canvasYDrawFraction) / 2,
     );
     context.fillText(
       "Score screen in " + gameOverCountdownText,
-      currentGameData.width / 2,
-      currentGameData.height / 2 + 20
+      (currentGameData.width * canvasXDrawFraction) / 2,
+      (currentGameData.height * canvasYDrawFraction) / 2 + 20,
     );
   }
 };

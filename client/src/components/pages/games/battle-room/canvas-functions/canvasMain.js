@@ -19,6 +19,9 @@ function draw({
     // clear it out
     context.clearRect(0, 0, canvasInfo.width, canvasInfo.height);
 
+    const canvasXDrawFraction = canvasInfo.width / currentGameData.width;
+    const canvasYDrawFraction = canvasInfo.height / currentGameData.height;
+
     // endzones
     let x = currentGameData.gameState.endzones.host.x;
     let y = currentGameData.gameState.endzones.host.y;
@@ -52,6 +55,8 @@ function draw({
       gameStatus,
       winner,
       gameOverCountdownText,
+      canvasXDrawFraction,
+      canvasYDrawFraction,
     });
 
     // selection box
@@ -59,12 +64,16 @@ function draw({
       if (!mouseData.mouseOnScreen) {
         mouseData.leftCurrentlyPressed = false;
       }
-      const selectionBoxSize = getSelectionBoxSize({ mouseData });
+      const selectionBoxSize = getSelectionBoxSize({
+        mouseData,
+        canvasXDrawFraction,
+        canvasYDrawFraction,
+      });
       context.beginPath();
       context.strokeStyle = "rgb(103,191,104)";
       context.rect(
-        mouseData.leftPressedAtX,
-        mouseData.leftPressedAtY,
+        mouseData.leftPressedAtX * canvasXDrawFraction,
+        mouseData.leftPressedAtY * canvasYDrawFraction,
         selectionBoxSize.width,
         selectionBoxSize.height,
       );

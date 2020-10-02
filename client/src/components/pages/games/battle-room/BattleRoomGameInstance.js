@@ -107,8 +107,6 @@ const BattleRoomGameInstance = ({ socket }) => {
       if (!currentGameData.current) return;
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
-      console.log(canvas.height);
-      // if (!draw) return;
       draw({
         context,
         mouseData,
@@ -129,6 +127,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         e,
         socket,
         currentGameData: currentGameData.current,
+        canvasInfo,
         clientPlayer,
         playersInGame,
         mouseData,
@@ -179,13 +178,19 @@ const BattleRoomGameInstance = ({ socket }) => {
         className="battle-room-canvas"
         ref={canvasRef}
         onMouseDown={(e) => {
-          mouseDownHandler({ e, mouseData });
+          mouseDownHandler({
+            e,
+            mouseData,
+            currentGameData: currentGameData.current,
+            canvasInfo,
+          });
         }}
         onMouseUp={(e) => {
           mouseUpHandler({
             e,
             socket,
             currentGameData: currentGameData.current,
+            canvasInfo,
             clientPlayer,
             mouseData,
             playersInGame,
@@ -194,12 +199,18 @@ const BattleRoomGameInstance = ({ socket }) => {
         }}
         onContextMenu={(e) => e.preventDefault()}
         onMouseMove={(e) => {
-          mouseMoveHandler({ e, mouseData });
+          mouseMoveHandler({
+            e,
+            mouseData,
+            canvasInfo,
+            currentGameData: currentGameData.current,
+          });
         }}
         onMouseLeave={(e) => {
           mouseLeaveHandler({
             socket,
             currentGameData: currentGameData.current,
+            canvasInfo,
             clientPlayer,
             playersInGame,
             mouseData,
