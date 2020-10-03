@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./css/main.css";
 // redux
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import store from "./store";
 // components
 import PrivateRoute from "./components/routing/PrivateRoute";

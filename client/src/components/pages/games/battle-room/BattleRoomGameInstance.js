@@ -8,6 +8,9 @@ import {
   mouseMoveHandler,
   mouseLeaveHandler,
   mouseEnterHandler,
+  touchStartHandler,
+  touchMoveHandler,
+  touchEndHandler,
 } from "./user-input-listeners/userInputListeners";
 import draw from "./canvas-functions/canvasMain";
 import * as gameUiActions from "../../../../store/actions/game-ui";
@@ -25,6 +28,8 @@ const BattleRoomGameInstance = ({ socket }) => {
     leftCurrentlyPressed: false,
     rightReleasedAtX: null,
     rightReleasedAtY: null,
+    touchStartX: null,
+    touchStartY: null,
     xPos: 0,
     yPos: 0,
     mouseOnScreen: true,
@@ -85,17 +90,23 @@ const BattleRoomGameInstance = ({ socket }) => {
   }, [socket, dispatch]);
 
   useEffect(() => {
+    const gameWidthRatio = window.innerHeight * 0.6;
     setCanvasInfo({
       height: window.innerHeight,
-      width: window.innerHeight * 0.6,
+      width:
+        gameWidthRatio > window.innerWidth ? window.innerWidth : gameWidthRatio,
     });
   }, [setCanvasInfo]);
 
   useEffect(() => {
     function handleResize() {
+      const gameWidthRatio = window.innerHeight * 0.6;
       setCanvasInfo({
         height: window.innerHeight,
-        width: window.innerHeight * 0.6,
+        width:
+          gameWidthRatio > window.innerWidth
+            ? window.innerWidth
+            : gameWidthRatio,
       });
     }
     window.addEventListener("resize", handleResize);
@@ -127,7 +138,6 @@ const BattleRoomGameInstance = ({ socket }) => {
         e,
         socket,
         currentGameData: currentGameData.current,
-        canvasInfo,
         clientPlayer,
         playersInGame,
         mouseData,
@@ -177,6 +187,34 @@ const BattleRoomGameInstance = ({ socket }) => {
         width={canvasInfo.width}
         className="battle-room-canvas"
         ref={canvasRef}
+        onTouchStart={(e) => {
+          mouseData.touchStartTime = touchStartHandler({
+            e,
+            canvasInfo,
+            currentGameData: currentGameData.current,
+            mouseData,
+          });
+        }}
+        onTouchMove={(e) => {
+          touchMoveHandler({
+            e,
+            canvasInfo,
+            currentGameData: currentGameData.current,
+            mouseData,
+          });
+        }}
+        onTouchEnd={(e) => {
+          touchEndHandler({
+            e,
+            canvasInfo,
+            currentGameData: currentGameData.current,
+            mouseData,
+            socket,
+            clientPlayer,
+            playersInGame,
+            commandQueue: commandQueue.current,
+          });
+        }}
         onMouseDown={(e) => {
           mouseDownHandler({
             e,

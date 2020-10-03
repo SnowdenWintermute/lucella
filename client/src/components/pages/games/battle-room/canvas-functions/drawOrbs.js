@@ -6,7 +6,8 @@ const drawOrbs = ({
   canvasInfo,
   testColor,
 }) => {
-  const orbRadiusFraction = canvasInfo.height / 750;
+  const orbRadiusFractionX = canvasInfo.width / 450;
+  const orbRadiusFractionY = canvasInfo.height / 750;
   const widthFraction = canvasInfo.width / currentGameData.width;
   const heightFraction = canvasInfo.height / currentGameData.height;
 
@@ -16,10 +17,12 @@ const drawOrbs = ({
       context.fillStyle = orb.isGhosting
         ? `rgba(${orb.color},.3)`
         : `rgb(${orb.color})`;
-      context.arc(
+      context.ellipse(
         orb.xPos * widthFraction,
         orb.yPos * heightFraction,
-        orb.radius * orbRadiusFraction,
+        orb.radius * orbRadiusFractionX,
+        orb.radius * orbRadiusFractionY,
+        0,
         0,
         Math.PI * 2,
       );
@@ -30,7 +33,7 @@ const drawOrbs = ({
         context.fillStyle = "rgb(200,200,200)";
         context.textAlign = "center";
         context.textBaseline = "middle";
-        context.font = `bold ${12 * orbRadiusFraction}px Arial`;
+        context.font = `bold ${12 * orbRadiusFractionX}px Arial`;
         context.fillText(
           orb.num,
           orb.xPos * widthFraction,
@@ -38,7 +41,7 @@ const drawOrbs = ({
         );
       }
       // orb selection ring
-      if (orb.isSelected && orb.isSelected != "0") {
+      if (orb.isSelected && orb.isSelected !== 0) {
         context.strokeStyle = "rgb(30,200,30)";
         context.stroke();
       }

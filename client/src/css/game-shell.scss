@@ -2,14 +2,21 @@
 $preGameRoomHeight: 170px;
 $gameListHeight: 300px;
 .game-shell {
-  width: 1200px;
-  max-width: 95%;
+  // width: 1200px;
+  max-width: 100%;
   height: 100%;
   margin: 0px auto;
+  // border: 1px solid red
+}
+.game-page-title {
+  width: 1200px;
+  max-width: 100%;
   // border: 1px solid red;
+  margin: 0 auto;
 }
 .game-lobby {
-  width: 100%;
+  width: 1200px;
+  max-width: 95%;
   height: calc(100% - 50px);
   margin: 0 auto;
   max-width: 100%;

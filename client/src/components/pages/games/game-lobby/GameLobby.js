@@ -117,19 +117,21 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
         <ScoreScreenModalContents />
       </Modal>
       {gameStatus !== "inProgress" && gameStatus !== "ending" ? (
-        <div className={`game-lobby`}>
-          <MainButtons
-            socket={socket}
-            showChangeChannelModal={showChangeChannelModal}
-          />
-          <ChannelBar socket={socket} defaultChatRoom={defaultChatRoom} />
-          <div className="game-lobby-main-window">
-            <PreGameRoom socket={socket} />
-            <MatchmakingQueueDisplay />
-            <GameList socket={socket} />
-            <GameLobbyChat socket={socket} username={username} />
+        <Fragment>
+          <div className={`game-lobby`}>
+            <MainButtons
+              socket={socket}
+              showChangeChannelModal={showChangeChannelModal}
+            />
+            <ChannelBar socket={socket} defaultChatRoom={defaultChatRoom} />
+            <div className="game-lobby-main-window">
+              <PreGameRoom socket={socket} />
+              <MatchmakingQueueDisplay />
+              <GameList socket={socket} />
+              <GameLobbyChat socket={socket} username={username} />
+            </div>
           </div>
-        </div>
+        </Fragment>
       ) : (
         <BattleRoomGameInstance socket={socket} />
       )}
