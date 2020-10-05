@@ -9,6 +9,24 @@
   cursor: pointer;
 }
 
+@media (max-width: 420px) {
+  .button {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 340px) {
+  .button {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 310px) {
+  .button {
+    font-size: 8px;
+  }
+}
+
 .button-standard-size {
   max-height: 36px;
   max-width: 100%;

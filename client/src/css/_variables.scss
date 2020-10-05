@@ -9,7 +9,7 @@ $colors: (
   oldDanger: #972121,
   danger: #ac1a21,
   success: #2d6a2d,
-  chatMessagePrivate: pink
+  chatMessagePrivate: pink,
 );
 
 @function color($color-name) {
@@ -17,3 +17,5 @@ $colors: (
 }
 
 $navHeight: 56px;
+$minAppWidth: 370px;
+$navThinBarHeight: 6px;

@@ -20,8 +20,9 @@
 }
 
 .nav-tab-thin-bar {
-  height: 6px;
+  height: $navThinBarHeight;
   width: 100%;
+  min-width: $minAppWidth;
   background-color: color(menuPrimary);
   position: absolute;
   top: $navHeight;
@@ -51,11 +52,11 @@
   height: 46px;
   color: color(textPrimary);
   background-color: color(dark);
-  line-height: 50px;
-  text-align: center;
-  vertical-align: middle;
   font-size: 18px;
   margin-right: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .tab-active {
   background-color: color(menuPrimary);
@@ -105,4 +106,23 @@
   margin-right: 10px;
   height: 23px;
   width: 23px;
+}
+.tab-icon-svg {
+  fill: color(textPrimary);
+  margin: 0 auto;
+  height: 70%;
+  width: auto;
+}
+
+// mobile
+.nav-mobile {
+  padding: 5px 10px;
+}
+.nav-tab-mobile {
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.nav-logo-mobile {
+  align-self: center;
 }

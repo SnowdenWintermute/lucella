@@ -8,6 +8,13 @@
   padding-bottom: 70px;
 }
 
+@media (max-width: 460px) {
+  .auth-frame {
+    margin-top: 0px;
+    min-height: 100%;
+  }
+}
+
 .auth-brand-header,
 .auth-header {
   display: block;

@@ -1,7 +1,13 @@
 .game-shell {
-  max-width: 100%;
+  width: 1200px;
+  max-width: 95%;
   height: 100%;
   margin: 0px auto;
+}
+
+.game-shell-in-game {
+  width: auto;
+  max-width: 100%;
 }
 
 .game-page-title {
@@ -23,6 +29,13 @@
   border: 1px solid #9ba8b8;
   -ms-grid-rows: 60px calc(100% - 60px);
       grid-template-rows: 60px calc(100% - 60px);
+}
+
+@media (max-width: 500px) {
+  .game-lobby {
+    -ms-grid-columns: 70% 30%;
+        grid-template-columns: 70% 30%;
+  }
 }
 
 .game-lobby-main-window {
@@ -135,6 +148,13 @@
   border-bottom: 1px solid #9ba8b8;
 }
 
+@media (max-width: 500px) {
+  .game-lobby-info-box {
+    padding: 5px;
+    text-align: center;
+  }
+}
+
 .game-lobby-chat-stream.chat-stream-top-border {
   border-top: 1px solid #9ba8b8;
 }
@@ -180,5 +200,28 @@
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+@media (max-width: 500px) {
+  .game-lobby-players-list {
+    overflow-x: scroll;
+  }
+}
+
+.chat-buttons-modal-list {
+  width: 100%;
+  margin: 0 auto;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.game-lobby-menu-modal-button {
+  margin-bottom: 10px;
 }
 /*# sourceMappingURL=game-shell.css.map */

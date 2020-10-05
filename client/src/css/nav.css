@@ -25,6 +25,7 @@
 .nav-tab-thin-bar {
   height: 6px;
   width: 100%;
+  min-width: 370px;
   background-color: #3c5766;
   position: absolute;
   top: 56px;
@@ -67,11 +68,17 @@
   height: 46px;
   color: #9ba8b8;
   background-color: #080b11;
-  line-height: 50px;
-  text-align: center;
-  vertical-align: middle;
   font-size: 18px;
   margin-right: 6px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .tab-active {
@@ -138,5 +145,28 @@
   margin-right: 10px;
   height: 23px;
   width: 23px;
+}
+
+.tab-icon-svg {
+  fill: #9ba8b8;
+  margin: 0 auto;
+  height: 70%;
+  width: auto;
+}
+
+.nav-mobile {
+  padding: 5px 10px;
+}
+
+.nav-tab-mobile {
+  width: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.nav-logo-mobile {
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
 }
 /*# sourceMappingURL=nav.css.map */

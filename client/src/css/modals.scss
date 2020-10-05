@@ -19,14 +19,17 @@ $modalSidePadding: 20px;
   padding-right: $modalSidePadding;
   padding-bottom: 50px;
   width: 500px;
-  max-width: 100%;
+  max-width: 94%;
   position: fixed;
   z-index: 11;
-  top: 35%;
+  top: 25%;
   left: 50%;
   transform: translateX(-50%);
   background-color: color(primary);
   // transform: translateY(-50%);
+  @media (max-height: 600px) {
+    top: 10%;
+  }
 }
 .modal-frame-dark {
   background: color(dark);

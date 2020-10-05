@@ -80,69 +80,71 @@ const Ladder = (props) => {
   );
 
   return (
-    <div className="page-basic">
-      <h1 className="header-basic">LADDER</h1>
-      <section className="ladder-nav">
-        <form
-          className="ladder-search"
-          onSubmit={(e) => {
-            onSearchUserRecord(e);
-          }}
-        >
-          <input
-            className={"simple-text-input ladder-search-input"}
-            id="ladder-search-input"
-            name="Search"
-            value={searchText}
-            onChange={(e) => {
-              setSearchText(e.target.value);
+    <section className="page-frame">
+      <div className="page-basic">
+        <h1 className="header-basic">LADDER</h1>
+        <section className="ladder-nav">
+          <form
+            className="ladder-search"
+            onSubmit={(e) => {
+              onSearchUserRecord(e);
             }}
-            placeholder={"Enter a username..."}
-          ></input>
-          <label htmlFor="ladder-search-input">
-            <button className={"button button-primary ladder-search-button"}>
-              Search
-            </button>
-          </label>
-        </form>
-        <div className="ladder-page-buttons">
-          <button
-            className="button button-basic ladder-page-button"
-            onClick={(e) => {
-              onTurnPage(e, "back");
-            }}
-          >{`<`}</button>
-          <span className={"ladder-current-page-number-holder"}>
-            <div
-              className={`ladder-current-page-number ${pageNumberAnimateClass}`}
-            >
-              {ladder.currentPage}
-            </div>
-          </span>
-          <button
-            className={"button button-basic ladder-page-button"}
-            onClick={(e) => {
-              onTurnPage(e, "foreward");
-            }}
-          >{`>`}</button>
-        </div>
-      </section>
-      <table className={"ladder-table"}>
-        <tbody className="ladder-table-body">
-          <tr className="ladder-table-row">
-            <td className="ladder-table-datum">Rank</td>
-            <td className="ladder-table-datum">Name</td>
-            <td className="ladder-table-datum">Elo</td>
-            <td className="ladder-table-datum">Wins</td>
-            <td className="ladder-table-datum">Losses</td>
-            <td className="ladder-table-datum">Win Rate</td>
-          </tr>
-          {!ladder.viewingSearchedUser
-            ? ladderEntriesToShow
-            : searchedUserToShow}
-        </tbody>
-      </table>
-    </div>
+          >
+            <input
+              className={"simple-text-input ladder-search-input"}
+              id="ladder-search-input"
+              name="Search"
+              value={searchText}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+              }}
+              placeholder={"Enter a username..."}
+            ></input>
+            <label htmlFor="ladder-search-input">
+              <button className={"button button-primary ladder-search-button"}>
+                Search
+              </button>
+            </label>
+          </form>
+          <div className="ladder-page-buttons">
+            <button
+              className="button button-basic ladder-page-button"
+              onClick={(e) => {
+                onTurnPage(e, "back");
+              }}
+            >{`<`}</button>
+            <span className={"ladder-current-page-number-holder"}>
+              <div
+                className={`ladder-current-page-number ${pageNumberAnimateClass}`}
+              >
+                {ladder.currentPage}
+              </div>
+            </span>
+            <button
+              className={"button button-basic ladder-page-button"}
+              onClick={(e) => {
+                onTurnPage(e, "foreward");
+              }}
+            >{`>`}</button>
+          </div>
+        </section>
+        <table className={"ladder-table"}>
+          <tbody className="ladder-table-body">
+            <tr className="ladder-table-row">
+              <td className="ladder-table-datum">Rank</td>
+              <td className="ladder-table-datum">Name</td>
+              <td className="ladder-table-datum">Elo</td>
+              <td className="ladder-table-datum">Wins</td>
+              <td className="ladder-table-datum">Losses</td>
+              <td className="ladder-table-datum">Win Rate</td>
+            </tr>
+            {!ladder.viewingSearchedUser
+              ? ladderEntriesToShow
+              : searchedUserToShow}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 };
 

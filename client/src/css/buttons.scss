@@ -8,6 +8,15 @@
   border: none;
   font-size: 18px;
   cursor: pointer;
+  @media (max-width: 420px) {
+    font-size: 14px;
+  }
+  @media (max-width: 340px) {
+    font-size: 12px;
+  }
+  @media (max-width: 310px) {
+    font-size: 8px;
+  }
 }
 .button-standard-size {
   max-height: 36px;

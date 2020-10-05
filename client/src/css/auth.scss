@@ -9,6 +9,10 @@
   background-color: color(dark);
   padding: 38px;
   padding-bottom: 70px;
+  @media (max-width: 460px) {
+    margin-top: 0px;
+    min-height: 100%;
+  }
 }
 .auth-brand-header,
 .auth-header {
