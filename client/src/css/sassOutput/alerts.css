@@ -1,0 +1,41 @@
+.alerts-holder {
+  position: fixed;
+  top: 100px;
+  z-index: 20;
+}
+
+.alert {
+  width: fit-content;
+  min-height: 46px;
+  margin-left: 30px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  line-height: 36px;
+  padding: 5px 15px 5px 15px;
+  font-size: 22px;
+  color: #bcd2e8;
+  opacity: 0;
+  transition: 0.3s ease-out;
+}
+
+.alert-animate {
+  margin-left: 100px;
+  opacity: 1;
+  transition: 0.3s;
+}
+
+.alert-danger {
+  background-color: #ac1a21;
+}
+
+.alert-success {
+  background-color: #2f5f5c;
+}
+
+.alert-icon {
+  height: 16px;
+  width: 16px;
+  fill: #bcd2e8;
+  margin-right: 10px;
+}
+/*# sourceMappingURL=alerts.css.map */

@@ -1,0 +1,169 @@
+.game-shell {
+  width: 1200px;
+  max-width: 95%;
+  height: 100%;
+  margin: 0px auto;
+}
+
+.game-shell-in-game {
+  width: auto;
+  max-width: 100%;
+}
+
+.game-page-title {
+  width: 1200px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.game-lobby {
+  width: 1200px;
+  max-width: 95%;
+  height: calc(100% - 50px);
+  margin: 0 auto;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: calc(100% - 200px) 200px;
+  border: 1px solid #9ba8b8;
+  grid-template-rows: 60px calc(100% - 60px);
+}
+
+@media (max-width: 500px) {
+  .game-lobby {
+    grid-template-columns: 70% 30%;
+  }
+}
+
+.game-lobby-main-window {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-template-rows: min-content 1fr min-content;
+}
+
+.pre-game-room,
+.game-list-frame,
+.matchmaking-queue-screen {
+  grid-row: 1/2;
+  grid-column: 1/2;
+  display: flex;
+  width: 100%;
+  border-right: 1px solid #9ba8b8;
+  transition: 0.3s;
+  overflow: hidden;
+}
+
+.game-list-frame {
+  flex-direction: column;
+}
+
+.game-list-table {
+  border-collapse: collapse;
+}
+
+.game-list-table td {
+  padding: 2px;
+  padding-left: 10px;
+  border: 1px solid;
+}
+
+.pre-game-room-player-list {
+  margin-bottom: 10px;
+}
+
+.game-lobby-top-buttons {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  grid-column-start: 1;
+  grid-column-end: 2;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  border-bottom: 1px solid #9ba8b8;
+  border-right: 1px solid #9ba8b8;
+}
+
+.game-lobby-top-buttons__button {
+  margin-right: 10px;
+}
+
+.game-lobby-top-buttons ul {
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.game-lobby-info-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  border-bottom: 1px solid #9ba8b8;
+}
+
+@media (max-width: 500px) {
+  .game-lobby-info-box {
+    padding: 5px;
+    text-align: center;
+  }
+}
+
+.game-lobby-chat-stream.chat-stream-top-border {
+  border-top: 1px solid #9ba8b8;
+}
+
+.game-lobby-chat-stream {
+  padding: 10px 10px 0px 10px;
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  border-right: 1px solid #9ba8b8;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: scroll;
+}
+
+.game-lobby-chat-input-holder {
+  border-right: 1px solid #9ba8b8;
+  padding: 10px;
+  grid-row: 3 / 4;
+  grid-column: 1 / 2;
+}
+
+.game-lobby-players-list {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  height: calc(100% + 1px);
+  padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (max-width: 500px) {
+  .game-lobby-players-list {
+    overflow-x: scroll;
+  }
+}
+
+.chat-buttons-modal-list {
+  width: 100%;
+  margin: 0 auto;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.game-lobby-menu-modal-button {
+  margin-bottom: 10px;
+}
+/*# sourceMappingURL=game-shell.css.map */

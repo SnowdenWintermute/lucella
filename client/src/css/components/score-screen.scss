@@ -1,0 +1,17 @@
+@import "../abstracts/variables";
+
+.elo-animate-1 {
+  transition: 0s;
+}
+.elo-animate-2-win {
+  color: color(success);
+  transition: 0.6s;
+}
+.elo-animate-2-loss {
+  color: color(danger);
+  transition: 0.6s;
+}
+.elo-animate-3 {
+  color: color(textPrimary);
+  transition: 1s;
+}

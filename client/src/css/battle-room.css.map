@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAAA,AAAA,mBAAmB,CAAC;EAElB,gBAAgB,EAAE,IAAI;EACtB,MAAM,EAAE,MAAM;EACd,OAAO,EAAE,KAAK;CACf;;AACD,AAAA,0BAA0B,CAAC;EACzB,KAAK,EAAE,IAAI;EACX,MAAM,EAAE,IAAI;EACZ,MAAM,EAAE,CAAC;EACT,OAAO,EAAE,CAAC;CAEX",
-    "sources": [
-        "battle-room.scss"
-    ],
-    "names": [],
-    "file": "battle-room.css"
-}

@@ -1,9 +1,7 @@
+Nav
+  -show first letter of logged in user as menu icon
 Profile
 Profile view with name, avi and ranks
-PlayerModel for each game (for record page)
-  -user ref
-  -array sorted by score (that is your rank)
-  -created after user completes first of that game type
 Chat
   -press up to get last entered messages
   -send private messages
@@ -18,6 +16,7 @@ Sockets
 
 Game
   -if player leaves game inProgress, destroy the game and award a win/loss (only host leaving destroys game rn)
+  -slim client request packets
 
 DONE
   -change chat channel(room)

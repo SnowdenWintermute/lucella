@@ -1,0 +1,38 @@
+@import "../abstracts/variables";
+
+.alerts-holder {
+  position: fixed;
+  top: 100px;
+  z-index: 20;
+}
+.alert {
+  width: fit-content;
+  min-height: 46px;
+  margin-left: 30px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  line-height: 36px;
+  padding: 5px 15px 5px 15px;
+  font-size: 22px;
+  color: color(textLight);
+  opacity: 0;
+  transition: 0.3s ease-out;
+  // pointer-events: none;
+}
+.alert-animate {
+  margin-left: 100px;
+  opacity: 1;
+  transition: 0.3s;
+}
+.alert-danger {
+  background-color: color(danger);
+}
+.alert-success {
+  background-color: color(buttonPrimary);
+}
+.alert-icon {
+  height: 16px;
+  width: 16px;
+  fill: color(textLight);
+  margin-right: 10px;
+}

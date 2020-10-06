@@ -1,0 +1,68 @@
+.button {
+  display: block;
+  text-align: center;
+  text-justify: middle;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+@media (max-width: 420px) {
+  .button {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 340px) {
+  .button {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 310px) {
+  .button {
+    font-size: 8px;
+  }
+}
+
+.button-standard-size {
+  max-height: 36px;
+  max-width: 100%;
+  min-width: 90px;
+  line-height: 36px;
+}
+
+.button-basic {
+  border: 1px solid #9ba8b8;
+  background-color: transparent;
+  transition: 0.3s;
+}
+
+.button-primary {
+  color: #bcd2e8;
+  background-color: #2f5f5c;
+}
+
+.button-success {
+  color: #bcd2e8;
+  background-color: #2d6a2d;
+}
+
+.button-danger {
+  color: #bcd2e8;
+  background-color: #ac1a21;
+}
+
+.chat-button-hidden,
+.chat-buttons-hidden {
+  width: 0px !important;
+  opacity: 0;
+  min-width: 0px;
+  padding: 0px;
+  margin: 0px !important;
+  border: 0px;
+  overflow: hidden;
+}
+/*# sourceMappingURL=buttons.css.map */

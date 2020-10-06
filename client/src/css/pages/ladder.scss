@@ -1,0 +1,97 @@
+@import "../abstracts/variables";
+
+.ladder-nav {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  max-width: 100%;
+  // height: 40px;
+}
+.ladder-search {
+  display: flex;
+  height: 100%;
+}
+.ladder-search-input {
+  height: 40px;
+  width: 260px;
+  padding-left: 10px;
+  margin: 0px;
+}
+.ladder-search-button {
+  width: 80px;
+  height: 100%;
+  border: 1px solid color(textPrimary);
+  border-left: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ladder-page-buttons {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  @media (max-width: 556px) {
+    margin-top: 10px;
+  }
+}
+.ladder-page-button {
+  max-height: 100%;
+  height: 100%;
+  width: 60px !important;
+  max-width: 60px !important;
+  display: block;
+  // border: 1px solid red;
+}
+.ladder-current-page-number-holder {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0px 10px 0px 10px;
+}
+.ladder-current-page-number {
+  border: 1px solid color(textPrimary);
+  height: 100%;
+  width: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.1s;
+}
+.ladder-current-page-number-animate {
+  background: color(dark);
+}
+.ladder-table {
+  border: 0px;
+  border-collapse: collapse;
+  display: flex;
+  width: 100%;
+}
+.ladder-table-body {
+  width: 100%;
+}
+.ladder-table-row {
+  display: flex;
+  width: 100%;
+}
+.ladder-table-datum {
+  height: 40px;
+  min-width: 80px;
+  border-bottom: 1px solid color(textPrimary);
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  align-items: flex-end;
+  @media (max-width: 556px) {
+    min-width: 60px;
+  }
+  @media (max-width: 556px) {
+    min-width: 60px;
+  }
+  @media (max-width: 380px) {
+    min-width: 50px;
+  }
+}
+.ladder-table-datum:last-child {
+  width: 100%;
+}

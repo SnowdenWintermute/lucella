@@ -1,0 +1,53 @@
+@import "../abstracts/variables";
+.button {
+  display: block;
+  text-align: center;
+  text-justify: middle;
+  padding-left: 10px;
+  padding-right: 10px;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  @media (max-width: 420px) {
+    font-size: 14px;
+  }
+  @media (max-width: 340px) {
+    font-size: 12px;
+  }
+  @media (max-width: 310px) {
+    font-size: 8px;
+  }
+}
+.button-standard-size {
+  max-height: 36px;
+  max-width: 100%;
+  min-width: 90px;
+  line-height: 36px;
+}
+.button-basic {
+  border: 1px solid color(textPrimary);
+  background-color: transparent;
+  transition: 0.3s;
+}
+.button-primary {
+  color: color(textLight);
+  background-color: color(buttonPrimary);
+}
+.button-success {
+  color: color(textLight);
+  background-color: color(success);
+}
+.button-danger {
+  color: color(textLight);
+  background-color: color(danger);
+}
+.chat-button-hidden,
+.chat-buttons-hidden {
+  width: 0px !important;
+  opacity: 0;
+  min-width: 0px;
+  padding: 0px;
+  margin: 0px !important;
+  border: 0px;
+  overflow: hidden;
+}

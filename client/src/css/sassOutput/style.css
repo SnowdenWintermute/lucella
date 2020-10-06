@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: "DM Sans";
+  color: #9ba8b8;
+}
+
+.height-0-hidden {
+  height: 0px !important;
+  overflow: hidden;
+  padding: 0px !important;
+}
+
+a {
+  text-decoration: none;
+  color: #9ba8b8;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-weight: 100;
+  font-size: 18px;
+}
+
+ul {
+  list-style: none;
+}
+
+.link-simple {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.link-simple:hover {
+  color: #bcd2e8;
+}
+
+.link-simple-unblinked {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.link-simple-blink {
+  cursor: pointer;
+  width: fit-content;
+  color: #bcd2e8;
+}
+/*# sourceMappingURL=style.css.map */

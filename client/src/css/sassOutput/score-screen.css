@@ -1,0 +1,19 @@
+.elo-animate-1 {
+  transition: 0s;
+}
+
+.elo-animate-2-win {
+  color: #2d6a2d;
+  transition: 0.6s;
+}
+
+.elo-animate-2-loss {
+  color: #ac1a21;
+  transition: 0.6s;
+}
+
+.elo-animate-3 {
+  color: #9ba8b8;
+  transition: 1s;
+}
+/*# sourceMappingURL=score-screen.css.map */

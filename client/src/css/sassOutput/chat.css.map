@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "AAEA,AAAA,qBAAqB,CAAC;EACpB,KAAK,ECQe,IAAI;CDPzB",
+    "sources": [
+        "../components/chat.scss",
+        "../abstracts/_variables.scss"
+    ],
+    "names": [],
+    "file": "chat.css"
+}
