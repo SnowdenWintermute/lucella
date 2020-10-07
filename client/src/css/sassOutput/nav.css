@@ -9,6 +9,12 @@
   padding: 0.7rem 2rem;
 }
 
+@media (max-width: 450px) {
+  .nav {
+    padding: 5px 10px;
+  }
+}
+
 .nav ul {
   display: flex;
   list-style: none;
@@ -41,6 +47,12 @@
   margin-right: 64px;
 }
 
+@media (max-width: 786px) {
+  .brand-text {
+    display: none;
+  }
+}
+
 .nav-tabs {
   height: 56px;
   display: flex;
@@ -59,8 +71,22 @@
   align-items: center;
 }
 
+@media (max-width: 786px) {
+  .nav-tab {
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
 .tab-active {
   background-color: #3c5766;
+}
+
+@media (max-width: 450px) {
+  .tab-title-text {
+    display: none;
+  }
 }
 
 .user-menu-holder {
@@ -123,14 +149,10 @@
   width: auto;
 }
 
-.nav-mobile {
-  padding: 5px 10px;
-}
-
-.nav-tab-mobile {
-  width: auto;
-  padding-left: 10px;
-  padding-right: 10px;
+@media (min-width: 450px) {
+  .tab-icon-svg {
+    display: none;
+  }
 }
 
 .nav-logo-mobile {

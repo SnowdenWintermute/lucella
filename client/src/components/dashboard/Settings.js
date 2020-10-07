@@ -72,28 +72,30 @@ const Settings = ({
           </button>
         </form>
       </Modal>
-      <ul className="page-basic">
-        <h1 className="header-basic">SETTINGS </h1>
-        <div className="page-divider-line"></div>
-        <li>
-          <span>Logged in as {accountEmail}</span>
-        </li>
-        <li>
-          <FlashingClickableText
-            className="link-simple"
-            onClick={function () {
-              requestPasswordResetEmail({ email: accountEmail });
-            }}
-          >
-            Change Password
-          </FlashingClickableText>
-        </li>
-        <li>
-          <div className="link-simple" onClick={showDeleteAccountModal}>
-            Delete Account
-          </div>
-        </li>
-      </ul>
+      <div className="page-frame">
+        <ul className="page-basic">
+          <h1 className="header-basic">SETTINGS </h1>
+          <div className="page-divider-line"></div>
+          <li>
+            <span>Logged in as {accountEmail}</span>
+          </li>
+          <li>
+            <FlashingClickableText
+              className="link-simple"
+              onClick={function () {
+                requestPasswordResetEmail({ email: accountEmail });
+              }}
+            >
+              Change Password
+            </FlashingClickableText>
+          </li>
+          <li>
+            <div className="link-simple" onClick={showDeleteAccountModal}>
+              Delete Account
+            </div>
+          </li>
+        </ul>
+      </div>
     </Fragment>
   );
 };

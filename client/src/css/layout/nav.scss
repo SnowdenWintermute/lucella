@@ -12,6 +12,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.7rem 2rem;
+  @media (max-width: $navTinyWidth) {
+    padding: 5px 10px;
+  }
 }
 
 .nav ul {
@@ -41,6 +44,9 @@
 .brand-text {
   font-family: "Nunito Sans";
   margin-right: 64px;
+  @media (max-width: $mobileNavWidth) {
+    display: none;
+  }
 }
 .nav-tabs {
   height: 56px;
@@ -57,9 +63,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: $mobileNavWidth) {
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 }
 .tab-active {
   background-color: color(menuPrimary);
+}
+.tab-title-text {
+  @media (max-width: $navTinyWidth) {
+    display: none;
+  }
 }
 .user-menu-holder {
   position: relative;
@@ -112,17 +128,12 @@
   margin: 0 auto;
   height: 70%;
   width: auto;
+  @media (min-width: 450px) {
+    display: none;
+  }
 }
 
 // mobile
-.nav-mobile {
-  padding: 5px 10px;
-}
-.nav-tab-mobile {
-  width: auto;
-  padding-left: 10px;
-  padding-right: 10px;
-}
 .nav-logo-mobile {
   align-self: center;
 }

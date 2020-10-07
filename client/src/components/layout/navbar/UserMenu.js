@@ -12,6 +12,7 @@ export const UserMenu = ({ isAuthenticated, onNavItemClick }) => {
   const dispatch = useDispatch();
   const [showUserDropdown, toggleUserDropdown] = useState(false);
 
+  // show/hide menu
   useEffect(() => {
     const clearUserDropdown = (e) => {
       if (e.target.name !== "profile-icon")
