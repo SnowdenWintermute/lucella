@@ -10,9 +10,11 @@ import { clearAlert } from "../../../store/actions/alert";
 const Alert = ({ alertMsg = "undefined alert message", alertType, id }) => {
   const dispatch = useDispatch();
   const [animateClass, setAnimateClass] = useState("");
+
   useEffect(() => {
     setTimeout(() => setAnimateClass("alert-animate"), 1);
   }, []);
+
   const alertIcon =
     alertType === "danger" ? (
       <DangerIcon className="alert-icon"></DangerIcon>

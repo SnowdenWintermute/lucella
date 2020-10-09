@@ -5,18 +5,21 @@ import profileIcon from "../../../img/profile.png";
 import walletIcon from "../../../img/menuIcons/wallet.png";
 import { ReactComponent as SettingsIcon } from "../../../img/menuIcons/settings.svg";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/auth";
 
 export const UserMenu = ({ isAuthenticated, onNavItemClick }) => {
   const dispatch = useDispatch();
   const [showUserDropdown, toggleUserDropdown] = useState(false);
+  const username = useSelector(
+    (state) => state.auth.user && state.auth.user.name,
+  );
 
   // show/hide menu
   useEffect(() => {
     const clearUserDropdown = (e) => {
-      if (e.target.name !== "profile-icon")
-        if (showUserDropdown) toggleUserDropdown(!showUserDropdown);
+      if (e.target.getAttribute("name") !== "profile-icon")
+        toggleUserDropdown(false);
     };
     window.addEventListener("click", (e) => clearUserDropdown(e));
     return () => window.removeEventListener("click", clearUserDropdown);
@@ -24,13 +27,20 @@ export const UserMenu = ({ isAuthenticated, onNavItemClick }) => {
 
   const loggedInUserMenu = (
     <Fragment>
-      <img
+      <div
         src={profileIcon}
-        className="user-icon"
+        className="user-icon-circle"
         name="profile-icon"
         alt="profile icon"
-        onClick={() => toggleUserDropdown(!showUserDropdown)}
-      />
+        onClick={(e) => {
+          console.log(e.target.getAttribute("name"));
+          toggleUserDropdown(!showUserDropdown);
+        }}
+      >
+        <div className="user-icon-letter" name="profile-icon">
+          {username && username.slice(0, 1)}
+        </div>
+      </div>
       {showUserDropdown && (
         <ul className="user-menu">
           <Link

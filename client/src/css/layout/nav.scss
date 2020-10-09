@@ -80,8 +80,27 @@
 .user-menu-holder {
   position: relative;
 }
-.user-icon {
+.user-icon-circle {
   cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: color(buttonPrimary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-icon-letter {
+  font-size: 20px;
+  font-weight: bold;
+  color: color(textLight);
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome, Edge, Opera and Firefox */
 }
 .user-menu {
   position: absolute;

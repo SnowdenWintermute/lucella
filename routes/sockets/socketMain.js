@@ -1,17 +1,11 @@
 const io = require("../../expressServer").io;
-const clientRequestsToJoinRoom = require("./lobbyFunctions/clientRequestsToJoinRoom");
-const clientHostsNewGame = require("./lobbyFunctions/clientHostsNewGame");
-const clientJoinsGame = require("./lobbyFunctions/clientJoinsGame");
-const clientClicksReady = require("./lobbyFunctions/clientClicksReady");
-const clientSendsNewChat = require("./lobbyFunctions/clientSendsNewChat");
 const socketConnects = require("./generalFunctions/socketConnects");
 const socketDisconnect = require("./generalFunctions/socketDisconnect");
-const clientLeavesGame = require("./lobbyFunctions/clientLeavesGame");
-const clientClicksRanked = require("./lobbyFunctions/clientClicksRanked");
 const makeRandomAnonUsername = require("../../utils/makeRandomAnonUsername");
 
-// var sizeof = require("object-sizeof");
-const queueUpGameCommand = require("./battleRoomGame/queueUpGameCommand");
+const chatListeners = require("./listeners/chatListeners");
+const gameUiListeners = require("./listeners/gameUiListeners");
+const battleRoomGameListeners = require("./listeners/battleRoomGameListeners");
 
 let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
@@ -44,125 +38,20 @@ io.sockets.on("connect", async (socket) => {
       connectedGuests,
     });
   }
-  socket.on("clientRequestsUpdateOfGameRoomList", () => {
-    socket.emit("gameListUpdate", gameRooms);
-  });
-  socket.on("clientRequestsToJoinRoom", (data) => {
-    const roomToJoin = data.roomToJoin.toLowerCase();
-    chatRooms = clientRequestsToJoinRoom({
-      io,
-      socket,
-      chatRooms,
-      connectedSockets,
-      username: connectedSockets[socket.id].username,
-      roomToJoin,
-    });
-  });
-  socket.on("clientHostsNewGame", ({ gameName }) => {
-    clientHostsNewGame({
-      io,
-      socket,
-      connectedSockets,
-      chatRooms,
-      gameRooms,
-      gameName,
-      defaultCountdownNumber,
-      isRanked: false,
-    });
-  });
-  socket.on("clientLeavesGame", (gameName) => {
-    clientLeavesGame({
-      io,
-      socket,
-      connectedSockets,
-      chatRooms,
-      gameRooms,
-      gameName,
-      username: connectedSockets[socket.id].username,
-      defaultCountdownNumber,
-    });
-  });
-  socket.on("clientJoinsGame", (data) => {
-    const { gameName } = data;
-    clientJoinsGame({
-      io,
-      socket,
-      connectedSockets,
-      chatRooms,
-      gameRooms,
-      gameName,
-    });
-  });
-  socket.on("clientClicksReady", ({ gameName }) => {
-    clientClicksReady({
-      io,
-      socket,
-      connectedSockets,
-      gameRooms,
-      chatRooms,
-      gameDatas,
-      gameName,
-      defaultCountdownNumber,
-    });
-  });
-  socket.on("clientStartsSeekingRankedGame", async () => {
-    await clientClicksRanked({
-      io,
-      socket,
-      connectedSockets,
-      gameRooms,
-      chatRooms,
-      gameDatas,
-      defaultCountdownNumber,
-      rankedQueue,
-    });
-  });
-  socket.on("clientCancelsMatchmakingSearch", () => {
-    delete rankedQueue.users[socket.id];
-  });
 
-  socket.on("clientSendsOrbSelections", (data) => {
-    // TODO: check for correct ownership (or maybe it doesn't matter if they hack to select opponent orbs because they can't move them anyway)
-    // roomNumber, ownerOfOrbs, orbsToBeUpdated
-    const gameName = connectedSockets[socket.id].currentGameName;
-    if (!gameRooms[gameName]) return;
-    queueUpGameCommand({
-      socket,
-      connectedSockets,
-      gameRooms,
-      gameData: gameDatas[gameName],
-      data,
-      commandType: "orbSelect",
-    });
+  chatListeners({ io, socket, connectedSockets });
+  gameUiListeners({
+    io,
+    socket,
+    chatRooms,
+    connectedSockets,
+    gameRooms,
+    gameDatas,
+    defaultCountdownNumber,
+    rankedQueue,
   });
-  socket.on("clientSubmitsMoveCommand", (data) => {
-    const gameName = connectedSockets[socket.id].currentGameName;
-    if (!gameRooms[gameName]) return;
-    queueUpGameCommand({
-      socket,
-      connectedSockets,
-      gameRooms,
-      gameData: gameDatas[gameName],
-      data,
-      commandType: "orbMove",
-    });
-  });
-  socket.on("selectAndMoveOrb", (data) => {
-    const gameName = connectedSockets[socket.id].currentGameName;
-    console.log(data);
-    queueUpGameCommand({
-      socket,
-      connectedSockets,
-      gameRooms,
-      gameData: gameDatas[gameName],
-      data,
-      commandType: "orbSelectAndMove",
-    });
-  });
+  battleRoomGameListeners({ socket, connectedSockets, gameRooms, gameDatas });
 
-  socket.on("clientSendsNewChat", (data) => {
-    clientSendsNewChat({ io, socket, connectedSockets, data });
-  });
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected");
     socketDisconnect({

@@ -93,8 +93,30 @@
   position: relative;
 }
 
-.user-icon {
+.user-icon-circle {
   cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2f5f5c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-icon-letter {
+  font-size: 20px;
+  font-weight: bold;
+  color: #bcd2e8;
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  /* Safari */
+  /* Konqueror HTML */
+  /* Old versions of Firefox */
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                                supported by Chrome, Edge, Opera and Firefox */
 }
 
 .user-menu {
