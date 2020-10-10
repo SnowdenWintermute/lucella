@@ -16,7 +16,6 @@ let rankedQueue = {
   rankedGameCurrentNumber: 0,
 }; // {users:{socketId:socket.id,record:BattleRoomRecord}, matchmakingInterval, currentEloDiffThreshold}
 let gameDatas = {}; // see Class for detailed info
-const defaultCountdownNumber = 0;
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: Bool, currentGameName: String, isGuest: Bool}
 let connectedGuests = {};
 
@@ -47,13 +46,13 @@ io.sockets.on("connect", async (socket) => {
     connectedSockets,
     gameRooms,
     gameDatas,
-    defaultCountdownNumber,
     rankedQueue,
   });
   battleRoomGameListeners({ socket, connectedSockets, gameRooms, gameDatas });
 
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected");
+    console.log(connectedSockets);
     socketDisconnect({
       io,
       socket,
@@ -61,7 +60,6 @@ io.sockets.on("connect", async (socket) => {
       chatRooms,
       gameDatas,
       gameRooms,
-      defaultCountdownNumber,
       gameName: connectedSockets[socket.id].currentGameName,
     });
   });

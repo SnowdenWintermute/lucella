@@ -9,7 +9,6 @@ function clientClicksReady({
   chatRooms,
   gameDatas,
   gameName,
-  defaultCountdownNumber,
   fromServer,
 }) {
   if (!connectedSockets[socket.id].isInGame) return;
@@ -52,7 +51,6 @@ function clientClicksReady({
     cancelGameCountdown({
       io,
       gameRoom: gameRooms[gameName],
-      defaultCountdownNumber,
     });
   }
 }

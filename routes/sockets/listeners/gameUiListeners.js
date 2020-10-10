@@ -12,7 +12,6 @@ const gameUiListeners = ({
   connectedSockets,
   gameRooms,
   gameDatas,
-  defaultCountdownNumber,
   rankedQueue,
 }) => {
   socket.on("clientRequestsUpdateOfGameRoomList", () => {
@@ -37,7 +36,6 @@ const gameUiListeners = ({
       chatRooms,
       gameRooms,
       gameName,
-      defaultCountdownNumber,
       isRanked: false,
     });
   });
@@ -50,7 +48,6 @@ const gameUiListeners = ({
       gameRooms,
       gameName,
       username: connectedSockets[socket.id].username,
-      defaultCountdownNumber,
     });
   });
   socket.on("clientJoinsGame", (data) => {
@@ -73,7 +70,6 @@ const gameUiListeners = ({
       chatRooms,
       gameDatas,
       gameName,
-      defaultCountdownNumber,
     });
   });
   socket.on("clientStartsSeekingRankedGame", async () => {
@@ -84,7 +80,6 @@ const gameUiListeners = ({
       gameRooms,
       chatRooms,
       gameDatas,
-      defaultCountdownNumber,
       rankedQueue,
     });
   });

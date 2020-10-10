@@ -45,7 +45,6 @@ function createGamePhysicsInterval({
             });
           }
           if (commandType === "orbSelectAndMove") {
-            console.log("selectAndMove");
             // select first
             const { orbsToBeUpdated } = gameData.commandQueue[playerRole][
               commandInQueue

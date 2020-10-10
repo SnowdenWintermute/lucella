@@ -13,7 +13,6 @@ async function clientClicksRanked({
   gameRooms,
   chatRooms,
   gameDatas,
-  defaultCountdownNumber,
   rankedQueue,
 }) {
   // if socket is already in game or not logged in, an appropriate return error
@@ -142,44 +141,41 @@ async function clientClicksRanked({
         } else {
           // if no one has dc'd yet, put them in a game together
           const gameName = `ranked-${rankedQueue.rankedGameCurrentNumber}`;
-          clientHostsNewGame({
+          const argsForGameFunctions = {
             io,
-            socket: io.sockets.sockets[bestMatch.host.socketId],
             connectedSockets,
             chatRooms,
             gameRooms,
             gameName,
-            defaultCountdownNumber,
+          };
+          // io,
+          // connectedSockets,
+          // chatRooms,
+          // gameRooms,
+          // gameName,
+          // socket,
+          // gameDatas,
+          // fromServer,
+
+          clientHostsNewGame({
+            ...argsForGameFunctions,
+            socket: io.sockets.sockets[bestMatch.host.socketId],
             isRanked: true,
           });
           clientJoinsGame({
-            io,
+            ...argsForGameFunctions,
             socket: io.sockets.sockets[bestMatch.challenger.socketId],
-            connectedSockets,
-            chatRooms,
-            gameRooms,
-            gameName,
           });
           clientClicksReady({
-            io,
+            ...argsForGameFunctions,
             socket: io.sockets.sockets[bestMatch.host.socketId],
-            connectedSockets,
-            gameRooms,
-            chatRooms,
             gameDatas,
-            gameName,
-            defaultCountdownNumber,
             fromServer: true,
           });
           clientClicksReady({
-            io,
+            ...argsForGameFunctions,
             socket: io.sockets.sockets[bestMatch.challenger.socketId],
-            connectedSockets,
-            gameRooms,
-            chatRooms,
             gameDatas,
-            gameName,
-            defaultCountdownNumber,
             fromServer: true,
           });
           rankedQueue.rankedGameCurrentNumber += 1;

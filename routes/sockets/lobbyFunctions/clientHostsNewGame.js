@@ -1,7 +1,5 @@
 const GameRoom = require("../../../classes/games/battle-room/GameRoom");
 const clientJoinsGame = require("./clientJoinsGame");
-const width = 450;
-const height = 700;
 
 function clientHostsNewGame({
   io,
@@ -10,7 +8,6 @@ function clientHostsNewGame({
   chatRooms,
   gameRooms,
   gameName,
-  defaultCountdownNumber,
   isRanked,
 }) {
   // if their socket is not already in a game and no game by this name exists, create the game room
@@ -18,9 +15,6 @@ function clientHostsNewGame({
     if (!gameRooms[gameName]) {
       let newGameRoom = new GameRoom({
         gameName,
-        defaultCountdownNumber,
-        width,
-        height,
         isRanked,
       });
       gameRooms[gameName] = newGameRoom;
@@ -39,7 +33,7 @@ function clientHostsNewGame({
   } else {
     socket.emit(
       "errorMessage",
-      "You can't host a game if you are already in one",
+      "You can't host a game if you are already in one"
     );
   }
 }

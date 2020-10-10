@@ -9,9 +9,9 @@ function socketDisconnect({
   gameRooms,
   gameDatas,
   gameName,
-  defaultCountdownNumber,
 }) {
-  if (connectedSockets[socket.id].currentGameName) {
+  if (gameName) {
+    console.log(gameName);
     clientLeavesGame({
       io,
       socket,
@@ -20,7 +20,6 @@ function socketDisconnect({
       gameRooms,
       gameDatas,
       gameName,
-      defaultCountdownNumber,
       isDisconnecting: true,
     });
   } else {
