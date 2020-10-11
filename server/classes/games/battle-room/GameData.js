@@ -1,7 +1,7 @@
 const GameState = require("./GameState");
 
 class GameData {
-  constructor({ gameName, width, height, isRanked }) {
+  constructor({ gameName, isRanked }) {
     this.gameName = gameName;
     this.intervals = {};
     this.commandQueue = { host: [], challenger: [] };
@@ -9,8 +9,8 @@ class GameData {
     this.isRanked = isRanked;
     this.winner = null;
     this.endingStateCountdown = 1;
-    this.width = width;
-    this.height = height;
+    this.width = 450;
+    this.height = 750;
     this.speed = 8;
     this.orbRadius = 8;
     this.gameState = new GameState({ width: this.width, height: this.height });

@@ -15,6 +15,7 @@ const UISocketListener = ({ socket }) => {
       dispatch(gameUiActions.clearGameUiData());
     });
     socket.on("gameListUpdate", (data) => {
+      console.log(data);
       dispatch(gameUiActions.updateGamesList(data));
     });
     socket.on("currentGameRoomUpdate", (data) => {

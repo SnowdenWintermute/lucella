@@ -18,8 +18,8 @@ async function updateWinLossRecords({
       gameRoom.players.host.username === winner ? "host" : "challenger";
     const loserRole =
       gameRoom.players.challenger.username === winner ? "host" : "challenger";
-    const winnerScore = gameData.score[winnerRole];
-    const loserScore = gameData.score[loserRole];
+    const winnerScore = gameData.gameState.score[winnerRole];
+    const loserScore = gameData.gameState.score[loserRole];
 
     // determine if both players have accounts in the database
     const hostDbRecord = await User.findOne({

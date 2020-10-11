@@ -40,7 +40,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   let commandQueue = useRef({ counter: 0, queue: [] });
   let gameStateQueue = useRef([]);
   const playerDesignation = useSelector(
-    (state) => state.gameUi.playerDesignation,
+    (state) => state.gameUi.playerDesignation
   );
   const playersInGame = useSelector((state) => state.gameUi.playersInGame);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
@@ -144,7 +144,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         commandQueue: commandQueue.current,
       });
     },
-    [socket, playersInGame, clientPlayer, mouseData, commandQueue],
+    [socket, playersInGame, clientPlayer, mouseData, commandQueue]
   );
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);

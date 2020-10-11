@@ -1,6 +1,11 @@
 const queueUpGameCommand = require("../battleRoomGame/queueUpGameCommand");
 
-const battleRoomGameListeners = ({socket, connectedSockets, gameRooms, gameDatas}) => {
+const battleRoomGameListeners = ({
+  socket,
+  connectedSockets,
+  gameRooms,
+  gameDatas,
+}) => {
   socket.on("clientSendsOrbSelections", (data) => {
     // TODO: check for correct ownership (or maybe it doesn't matter if they hack to select opponent orbs because they can't move them anyway)
     // roomNumber, ownerOfOrbs, orbsToBeUpdated
@@ -29,7 +34,6 @@ const battleRoomGameListeners = ({socket, connectedSockets, gameRooms, gameDatas
   });
   socket.on("selectAndMoveOrb", (data) => {
     const gameName = connectedSockets[socket.id].currentGameName;
-    console.log(data);
     queueUpGameCommand({
       socket,
       connectedSockets,
@@ -39,6 +43,6 @@ const battleRoomGameListeners = ({socket, connectedSockets, gameRooms, gameDatas
       commandType: "orbSelectAndMove",
     });
   });
-}
+};
 
-module.exports = battleRoomGameListeners
+module.exports = battleRoomGameListeners;

@@ -1,5 +1,5 @@
 class GameRoom {
-  constructor({ gameName, defaultCountdownNumber, isRanked }) {
+  constructor({ gameName, isRanked }) {
     this.gameName = gameName;
     this.players = {
       host: null,
@@ -7,9 +7,10 @@ class GameRoom {
     };
     this.spectators = [];
     this.gameStatus = "inLobby"; // inLobby, countingDown, inProgress, gameOverScreen
-    this.countdown = defaultCountdownNumber;
+    this.countdown = 1;
+    this.countdownStartsAt = 1;
     this.countdownInterval = null;
-    this.playersReady = { host: true, challenger: false };
+    this.playersReady = { host: false, challenger: false };
     this.score = {
       host: 0,
       challenger: 0,

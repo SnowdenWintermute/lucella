@@ -14,7 +14,6 @@ function clientLeavesGame({
   gameRooms,
   gameName,
   gameDatas,
-  defaultCountdownNumber,
   isDisconnecting,
 }) {
   const username = connectedSockets[socket.id].username;
@@ -56,19 +55,18 @@ function clientLeavesGame({
             roomToJoin: prevRoom ? prevRoom : "the void",
           });
         }
-        delete gameRooms[gameName];
+        gameRooms[gameName].players.host = null;
+        gameRooms[gameName].players.challenger = null;
         // if the game was in progress, award a win to the challenger
         // TODO ^
       } else if (gameRooms[gameName].players.challenger.username === username) {
         // CHALLENGER LEAVING
-        console.log("challenger leaving");
         gameRooms[gameName].players.challenger = null;
         socket.emit("currentGameRoomUpdate", null);
         // cancel the countdown and unready everyone
         cancelGameCountdown({
           io,
           gameRoom: gameRooms[gameName],
-          defaultCountdownNumber,
         });
         gameRooms[gameName].playersReady = { host: false, challenger: false };
         io.in(`game-${gameName}`).emit(
@@ -122,10 +120,8 @@ function clientLeavesGame({
         roomName: `game-${gameName}`,
       });
       io.to(`game-${gameName}`).emit("updateChatRoom", chatRoomForClient);
-      io.sockets.emit("gameListUpdate", gameRooms);
     } else {
       // game in progress
-      console.log("disconnect => end game cleanup");
       endGameCleanup({
         io,
         socket,
@@ -138,6 +134,12 @@ function clientLeavesGame({
         isDisconnecting,
       });
     }
+    if (
+      !gameRooms[gameName].players.host &&
+      !gameRooms[gameName].players.challenger
+    )
+      delete gameRooms[gameName];
+    io.sockets.emit("gameListUpdate", gameRooms);
   } catch (err) {
     console.log(err);
   }
