@@ -79,7 +79,7 @@ async function clientClicksRanked({
               if (
                 playerToCompare !== playerInQueue &&
                 connectedSockets[playerInQueue].username !==
-                  connectedSockets[playerToCompare].username
+                connectedSockets[playerToCompare].username
               ) {
                 const comparedPlayerElo =
                   rankedQueue.users[playerToCompare].record.elo;
@@ -148,14 +148,6 @@ async function clientClicksRanked({
             gameRooms,
             gameName,
           };
-          // io,
-          // connectedSockets,
-          // chatRooms,
-          // gameRooms,
-          // gameName,
-          // socket,
-          // gameDatas,
-          // fromServer,
 
           clientHostsNewGame({
             ...argsForGameFunctions,
