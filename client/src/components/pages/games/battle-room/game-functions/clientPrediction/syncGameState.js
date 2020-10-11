@@ -1,5 +1,5 @@
 import cloneDeep from "lodash.clonedeep";
-import isEqual from "lodash.isequal";
+import isEqual from 'lodash.isequal'
 
 export const syncGameState = ({
   gameData,

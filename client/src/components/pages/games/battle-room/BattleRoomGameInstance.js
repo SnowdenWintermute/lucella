@@ -15,7 +15,7 @@ import {
 import draw from "./canvas-functions/canvasMain";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
-import cloneDeep from "lodash.clonedeep";
+import cloneDeep from 'lodash.clonedeep'
 import { convertBufferToGameStateObject } from "./game-functions/convertBufferToGameStateObject";
 
 const BattleRoomGameInstance = ({ socket }) => {
