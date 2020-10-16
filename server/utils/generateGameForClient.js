@@ -1,6 +1,6 @@
 // makes a gameRoom (lobby object) for client without socketIds
 
-const cloneDeep = require("lodash/clonedeep");
+const cloneDeep = require("lodash.clonedeep");
 // remove socketId prop from players props of game object
 function generateGameForClient({ gameObject }) {
   let gameForClient = cloneDeep(gameObject);

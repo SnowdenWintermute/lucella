@@ -14,6 +14,9 @@ const socketConnects = async ({ socket, connectedSockets }) => {
     userToReturn = await User.findById(decoded.user.id).select("-password");
     isGuest = false;
   } catch (err) {
+    console.log(err)
+  }
+  if (!userToReturn) {
     isGuest = true;
     userToReturn = { name: "Anon", isGuest: true };
   }

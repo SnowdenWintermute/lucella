@@ -81,6 +81,7 @@ export const touchEndHandler = ({
 export const touchMoveHandler = throttledEventHandlerCreator(
   33,
   ({ e, canvasInfo, currentGameData, mouseData }) => {
+    e.preventDefault()
     const { touchStartX, touchStartY } = mouseData;
     const rect = e.target.getBoundingClientRect();
     const offsetX = e.targetTouches[0].pageX - rect.left;
@@ -196,11 +197,14 @@ export const mouseUpHandler = ({
 export const mouseMoveHandler = throttledEventHandlerCreator(
   33,
   ({ e, mouseData, currentGameData, canvasInfo }) => {
-    if (!canvasInfo) return;
-    mouseData.xPos =
-      (e.nativeEvent.offsetX / canvasInfo.width) * currentGameData.width;
-    mouseData.yPos =
-      (e.nativeEvent.offsetY / canvasInfo.height) * currentGameData.height;
+    try {
+      mouseData.xPos =
+        (e.nativeEvent.offsetX / canvasInfo.width) * currentGameData.width;
+      mouseData.yPos =
+        (e.nativeEvent.offsetY / canvasInfo.height) * currentGameData.height;
+    } catch (err) {
+      console.log(err)
+    }
   },
 );
 

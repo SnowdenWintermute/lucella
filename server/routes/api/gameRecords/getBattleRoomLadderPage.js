@@ -14,10 +14,16 @@ module.exports = async (req, res) => {
     const page = req.params.page;
     const pageSize = 10;
     const startIndex = (page - 1) * pageSize;
-    const endIndex =
-      startIndex + pageSize > ladder.ladder.length
-        ? startIndex + (ladder.ladder.length - pageSize)
-        : startIndex + pageSize;
+    let endIndex
+    if (startIndex + pageSize > ladder.ladder.length) {
+      if (page == 1) {
+        endIndex = ladder.ladder.length
+      } else {
+        endIndex = ladder.ladder.length - pageSize * page
+      }
+    } else {
+      endIndex = startIndex + pageSize
+    }
 
     const ladderPageToSend = ladder.ladder.slice(startIndex, endIndex);
     const totalNumberOfPages = Math.ceil(ladder.ladder.length / pageSize);

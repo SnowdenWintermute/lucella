@@ -1,4 +1,4 @@
-const cloneDeep = require("lodash/clonedeep");
+const cloneDeep = require("lodash.clonedeep");
 // remove socketId prop from players props of game object
 function generateGamesForClient({ gamesObject }) {
   let gamesForClient = cloneDeep(gamesObject);

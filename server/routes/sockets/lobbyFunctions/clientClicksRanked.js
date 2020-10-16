@@ -29,9 +29,15 @@ async function clientClicksRanked({
     );
 
   // put user socket in queue and reset global eloDiff threshold
-  const userBattleRoomRecord = await BattleRoomRecord.findOne({
+  // find user's record to compare elos, if they don't have one, make one
+  let userBattleRoomRecord = await BattleRoomRecord.findOne({
     user: user.id,
   });
+  if (!userBattleRoomRecord) userBattleRoomRecord = new BattleRoomRecord({
+    user: user.id,
+  });
+  await userBattleRoomRecord.save()
+
   rankedQueue.users[socket.id] = {
     userId: user.id,
     record: userBattleRoomRecord,
@@ -71,7 +77,7 @@ async function clientClicksRanked({
           // check each player's elo against the others
           let lowestEloDiffPlayer = null;
           let bestEloDiffSoFar = null;
-          const currPlayerElo = rankedQueue.users[playerInQueue].record.elo;
+          const currPlayerElo = rankedQueue.users[playerInQueue].record.elo
           Object.keys(rankedQueue.users).forEach((playerToCompare) => {
             // check if comparing socket is still connected
             if (io.sockets.sockets[playerToCompare]) {
@@ -82,7 +88,7 @@ async function clientClicksRanked({
                 connectedSockets[playerToCompare].username
               ) {
                 const comparedPlayerElo =
-                  rankedQueue.users[playerToCompare].record.elo;
+                  rankedQueue.users[playerToCompare].record ? rankedQueue.users[playerToCompare].record.elo : 1500;
                 const currEloDiff = Math.abs(currPlayerElo - comparedPlayerElo);
                 if (
                   lowestEloDiffPlayer === null ||

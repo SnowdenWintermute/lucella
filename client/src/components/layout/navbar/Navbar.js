@@ -55,7 +55,7 @@ const Navbar = () => {
                 <span className="tab-title-text">LADDER</span>
                 <LadderIcon className="tab-icon-svg" />
               </Link>
-              <Link
+              {/* <Link
                 to="/forum"
                 className={`nav-tab ${activeTab === "forum" && "tab-active"}`}
                 name="forum"
@@ -63,7 +63,7 @@ const Navbar = () => {
               >
                 <span className="tab-title-text">FORUM</span>
                 <ForumIcon className="tab-icon-svg" />
-              </Link>
+              </Link> */}
             </div>
           </div>
           {/* User menu */}
@@ -74,8 +74,8 @@ const Navbar = () => {
                 onNavItemClick={onNavItemClick}
               />
             ) : (
-              "..."
-            )}
+                "..."
+              )}
           </div>
         </nav>
         <div className="nav-tab-thin-bar"></div>

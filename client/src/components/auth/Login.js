@@ -25,7 +25,7 @@ const Login = () => {
 
   // redirect if logged in
   if (isAuthenticated) {
-    return <Redirect to="/games"></Redirect>;
+    return <Redirect to="/battle-room"></Redirect>;
   }
 
   return (

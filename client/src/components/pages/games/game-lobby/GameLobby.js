@@ -18,6 +18,8 @@ import * as gameUiActions from "../../../../store/actions/game-ui";
 import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
+const { env } = require('../../../../consts')
+const socketAddress = env === "PRODUCTION" ? "https://lucella.org" : "localhost:8080"
 
 const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   const dispatch = useDispatch();
@@ -40,7 +42,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     if (authToken) {
       query.token = authToken;
     }
-    socket = io("localhost:5000", { query });
+    socket = io.connect(socketAddress, { query });
     return () => {
       socket.disconnect();
       dispatch(gameUiActions.setCurrentGame(null));
@@ -133,8 +135,8 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
           </div>
         </Fragment>
       ) : (
-        <BattleRoomGameInstance socket={socket} />
-      )}
+          <BattleRoomGameInstance socket={socket} />
+        )}
     </Fragment>
   );
 };

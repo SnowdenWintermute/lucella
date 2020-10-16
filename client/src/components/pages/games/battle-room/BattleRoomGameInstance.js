@@ -182,7 +182,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       className="battle-room-canvas-holder"
       onContextMenu={(e) => e.preventDefault()}
     >
-      <canvas
+      {currentGameData.current && <canvas
         height={canvasInfo.height}
         width={canvasInfo.width}
         className="battle-room-canvas"
@@ -258,7 +258,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         onMouseEnter={(e) => {
           mouseEnterHandler({ mouseData });
         }}
-      />
+      />}
     </div>
   );
 };

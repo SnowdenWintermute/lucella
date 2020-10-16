@@ -2,6 +2,7 @@
   background-color: grey;
   margin: 0 auto;
   display: block;
+  overscroll-behavior-y: none;
 }
 
 .battle-room-canvas-holder {
@@ -9,5 +10,6 @@
   height: 100%;
   margin: 0;
   padding: 0;
+  overscroll-behavior-y: none;
 }
 /*# sourceMappingURL=battle-room.css.map */

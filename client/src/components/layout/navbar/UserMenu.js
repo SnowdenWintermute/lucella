@@ -43,22 +43,22 @@ export const UserMenu = ({ isAuthenticated, onNavItemClick }) => {
       </div>
       {showUserDropdown && (
         <ul className="user-menu">
-          <Link
+          {/* <Link
             to="/profile"
             className="user-menu-item"
             onClick={(e) => onNavItemClick(e)}
           >
             <img alt="user icon" src={userIcon} />
             Profile
-          </Link>
-          <Link
+          </Link> */}
+          {/* <Link
             to="/wallet"
             className="user-menu-item"
             onClick={(e) => onNavItemClick(e)}
           >
             <img alt="wallet icon" src={walletIcon} />
             Wallet
-          </Link>
+          </Link> */}
           <Link
             to="/settings"
             className="user-menu-item"

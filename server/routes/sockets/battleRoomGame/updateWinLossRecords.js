@@ -30,25 +30,12 @@ async function updateWinLossRecords({
     });
     // if both players are registered users, update their win loss records
     if (hostDbRecord && challengerDbRecord) {
-      // check for and if needed, create game history entrys
-      // for host
       let hostBattleRoomRecord = await BattleRoomRecord.findOne({
         user: hostDbRecord.id,
       });
-      if (!hostBattleRoomRecord) {
-        hostBattleRoomRecord = new BattleRoomRecord({
-          user: hostDbRecord.id,
-        });
-      }
-      // for challenger
       let challengerBattleRoomRecord = await BattleRoomRecord.findOne({
         user: challengerDbRecord.id,
       });
-      if (!challengerBattleRoomRecord) {
-        challengerBattleRoomRecord = new BattleRoomRecord({
-          user: challengerDbRecord.id,
-        });
-      }
 
       // update w/l, elo and winrates
       // calculate elos
@@ -117,17 +104,7 @@ async function updateWinLossRecords({
       let oldHostRank, oldChallengerRank, newHostRank, newChallengerRank;
       if (!ladder) {
         ladder = new BattleRoomLadder();
-        if (hostBattleRoomRecord.elo > challengerBattleRoomRecord.elo) {
-          ladder.ladder.push(
-            hostBattleRoomRecord.id,
-            challengerBattleRoomRecord.id
-          );
-        } else {
-          ladder.ladder.push(
-            challengerBattleRoomRecord.id,
-            hostBattleRoomRecord.id
-          );
-        }
+        console.log("new ladder created")
       }
       oldHostRank = ladder.ladder.findIndex(
         (i) => i.id === hostBattleRoomRecord.id
@@ -137,6 +114,7 @@ async function updateWinLossRecords({
       );
       console.log("old host rank: " + oldHostRank);
       console.log("old challenger rank: " + oldChallengerRank);
+      // if players record not found in ladder, add it in
       if (oldHostRank === -1) {
         console.log("adding host to ladder");
         ladder.ladder.push(hostBattleRoomRecord.id);

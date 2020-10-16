@@ -51,11 +51,11 @@ const GameList = ({ socket }) => {
               </button>
             )}
           </td>
-          <td>
+          {/* <td>
             <button className="button button-standard-size button-basic">
               Watch
             </button>
-          </td>
+          </td> */}
         </tr>,
       );
     }

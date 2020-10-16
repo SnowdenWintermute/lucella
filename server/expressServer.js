@@ -12,17 +12,24 @@ connectDB();
 app.use(express.json({ extended: false }));
 app.use(helmet());
 
-app.get("/:id", (req, res) => {
-  res.send("API running");
-});
+// app.get("/:id", (req, res) => {
+//   res.send("API running");
+// });
 
 // define routes
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/profile", require("./routes/api/profile"));
 app.use("/api/gameRecords", require("./routes/api/gameRecords"));
+const path = require('path');
 
-const PORT = process.env.PORT || 5000;
+app.use(express.static(path.join(__dirname, '../client/build')));
+app.get('*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
+
+// process.env.PORT ||
+const PORT = process.env.PORT || 8080;
 const expressServer = app.listen(PORT, () =>
   console.log(`express server on port ${PORT}`),
 );
