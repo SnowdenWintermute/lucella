@@ -34,6 +34,7 @@ const battleRoomGameListeners = ({
   });
   socket.on("selectAndMoveOrb", (data) => {
     const gameName = connectedSockets[socket.id].currentGameName;
+    console.log(data.moveCommandData.newOrbHeadings)
     queueUpGameCommand({
       socket,
       connectedSockets,
@@ -43,6 +44,11 @@ const battleRoomGameListeners = ({
       commandType: "orbSelectAndMove",
     });
   });
+  // socket.on("clientRequestsGameData", () => {
+  //   const gameName = connectedSockets[socket.id].currentGameName;
+  //   socket.emit("serverSendsFullGameData", gameDatas[gameName])
+  //   console.log("client requested re-send of full game data")
+  // })
 };
 
 module.exports = battleRoomGameListeners;

@@ -11,8 +11,8 @@ class GameData {
     this.endingStateCountdown = 1;
     this.width = 450;
     this.height = 750;
-    this.speed = 4;
-    this.orbRadius = 20;
+    this.speed = 8;
+    this.orbRadius = 15;
     this.gameState = new GameState({ width: this.width, height: this.height });
   }
 }

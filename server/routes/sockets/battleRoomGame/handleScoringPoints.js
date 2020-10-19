@@ -11,12 +11,12 @@ function handleScoringPoints({
 }) {
   for (let orbSet in gameData.gameState.orbs) {
     gameData.gameState.orbs[orbSet].forEach((orb) => {
-      if (orb.isGhosting) return;
+      if (orb.isGhost) return;
       switch (orbSet) {
         case "hostOrbs":
           if (orb.yPos >= gameData.gameState.endzones.challenger.y) {
             gameData.gameState.score.host += 1;
-            orb.isGhosting = true;
+            orb.isGhost = true;
           }
           break;
         case "challengerOrbs":
@@ -26,7 +26,7 @@ function handleScoringPoints({
             gameData.gameState.endzones.host.height
           ) {
             gameData.gameState.score.challenger += 1;
-            orb.isGhosting = true;
+            orb.isGhost = true;
           }
       }
     });

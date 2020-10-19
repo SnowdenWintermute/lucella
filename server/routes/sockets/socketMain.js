@@ -52,7 +52,6 @@ io.sockets.on("connect", async (socket) => {
 
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected");
-    console.log(connectedSockets);
     socketDisconnect({
       io,
       socket,

@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   const { email, password, name } = req.body;
   console.log(name);
   try {
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email: email.toLowerCase() });
     if (user) {
       return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     }
@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
     console.log("attempt register");
 
     user = new User({
-      email,
+      email: email.toLowerCase(),
       name,
       password
     });

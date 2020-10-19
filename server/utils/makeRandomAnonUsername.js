@@ -15,7 +15,6 @@ function makeRandomAnonUsername({ socket, connectedSockets, connectedGuests }) {
       username: randomAnonUsername,
       uuid: uuid.v4(),
     };
-    console.log(randomAnonUsername);
   } catch (err) {
     console.log(err);
     console.log("error generating random anon name - duplicate?");

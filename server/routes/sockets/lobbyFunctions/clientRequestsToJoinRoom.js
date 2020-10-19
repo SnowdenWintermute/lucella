@@ -20,7 +20,6 @@ const clientRequestsToJoinRoom = ({
         "Not authorized for that chat channel"
       );
   }
-  // console.log(username + " requests to join room " + roomToJoin);
   // first remove this socket from any room it may be in before joining it to new room
   removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
 
@@ -28,7 +27,6 @@ const clientRequestsToJoinRoom = ({
   // if room doesn't exist, create it
   if (!chatRooms[roomToJoin]) {
     chatRooms[roomToJoin] = { roomName: roomToJoin, currentUsers: {} };
-    console.log(roomToJoin + " created");
   }
   // connectedSockets object:
   connectedSockets[socket.id] = {

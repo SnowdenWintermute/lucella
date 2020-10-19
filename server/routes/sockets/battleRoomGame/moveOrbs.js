@@ -3,7 +3,7 @@ function moveOrbs({ gameData }) {
   for (let orbSet in gameData.gameState.orbs) {
     gameData.gameState.orbs[orbSet].forEach((orb) => {
       // send any ghost orb toward it's endzone
-      if (orb.isGhosting) {
+      if (orb.isGhost) {
         orb.heading.xPos = orb.xPos;
         switch (orbSet) {
           case "hostOrbs":
@@ -13,10 +13,10 @@ function moveOrbs({ gameData }) {
             if (
               orb.yPos <=
               gameData.gameState.endzones.host.y +
-                gameData.gameState.endzones.host.height +
-                orb.radius
+              gameData.gameState.endzones.host.height +
+              orb.radius
             )
-              orb.isGhosting = false;
+              orb.isGhost = false;
             break;
           case "challengerOrbs":
             orb.heading.yPos = gameData.gameState.endzones.challenger.y;
@@ -24,7 +24,7 @@ function moveOrbs({ gameData }) {
               orb.yPos >=
               gameData.gameState.endzones.challenger.y - orb.radius
             )
-              orb.isGhosting = false;
+              orb.isGhost = false;
             break;
         }
       }
@@ -32,8 +32,9 @@ function moveOrbs({ gameData }) {
       let tx = orb.heading.xPos - orb.xPos;
       let ty = orb.heading.yPos - orb.yPos;
       let dist = Math.sqrt(tx * tx + ty * ty);
-      const velX = (tx / dist) * gameData.speed;
-      const velY = (ty / dist) * gameData.speed;
+      const deltaT = Date.now() - gameData.gameState.lastUpdateTimestamp
+      const velX = (tx / dist) * (gameData.speed / deltaT * 33);
+      const velY = (ty / dist) * (gameData.speed / deltaT * 33);
 
       if (dist >= orb.radius) {
         orb.xPos = Math.round(orb.xPos + velX);

@@ -1,5 +1,6 @@
 class GameState {
   constructor({ width, height }) {
+    this.lastUpdateTimestamp = null;
     this.lastProcessedCommands = {
       host: null,
       challenger: null,

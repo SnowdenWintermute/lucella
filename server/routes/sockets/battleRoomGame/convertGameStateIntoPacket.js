@@ -64,6 +64,7 @@ function convertGameStateIntoPacket({ gameState }) {
     gameState.orbs.challengerOrbs[4].isSelected,
     gameState.score.host,
     gameState.score.challenger,
+    gameState.score.neededToWin,
   ];
   return new Int32Array(packetArray);
 }

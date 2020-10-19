@@ -94,6 +94,7 @@ function createGamePhysicsInterval({
       gameData,
       chatRooms,
     });
+    gameData.gameState.lastUpdateTimestamp = Date.now()
   }, 33);
 }
 
