@@ -26,16 +26,19 @@ function moveOrbs({ gameData }) {
             )
               orb.isGhost = false;
             break;
+          default:
+            break;
         }
       }
       // send orb toward it's heading
       let tx = orb.heading.xPos - orb.xPos;
       let ty = orb.heading.yPos - orb.yPos;
       let dist = Math.sqrt(tx * tx + ty * ty);
-      const deltaT = Date.now() - gameData.gameState.lastUpdateTimestamp
-      const velX = (tx / dist) * (gameData.speed / deltaT * 33);
-      const velY = (ty / dist) * (gameData.speed / deltaT * 33);
-
+      const deltaT = Date.now() - gameData.gameState.lastUpdateTimestamp || 33
+      console.log(deltaT)
+      const velX = (tx / dist || 0) * (gameData.speed / 33 * deltaT);
+      const velY = (ty / dist || 0) * (gameData.speed / 33 * deltaT);
+      // console.log(velX, velY)
       if (dist >= orb.radius) {
         orb.xPos = Math.round(orb.xPos + velX);
         orb.yPos = Math.round(orb.yPos + velY);

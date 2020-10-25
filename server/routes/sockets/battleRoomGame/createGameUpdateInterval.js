@@ -30,8 +30,7 @@ function createGameUpdateInterval({ io, gameData }) {
       "bufferTickFromServer",
       testPacket.buffer,
     );
-    // io.to(`game-${gameData.gameName}`).emit("tickFromServer", newPacket);
-  }, 545);
+  }, 45);
 }
 
 module.exports = createGameUpdateInterval;

@@ -1,3 +1,4 @@
+const cloneDeep = require("lodash.clonedeep");
 const queueUpGameCommand = require("../battleRoomGame/queueUpGameCommand");
 
 const battleRoomGameListeners = ({
@@ -44,11 +45,17 @@ const battleRoomGameListeners = ({
       commandType: "orbSelectAndMove",
     });
   });
-  // socket.on("clientRequestsGameData", () => {
-  //   const gameName = connectedSockets[socket.id].currentGameName;
-  //   socket.emit("serverSendsFullGameData", gameDatas[gameName])
-  //   console.log("client requested re-send of full game data")
-  // })
+  socket.on("clientRequestsGameData", () => {
+    const gameName = connectedSockets[socket.id].currentGameName;
+    let gameDataForClient = {}
+    Object.keys(gameDatas[gameName]).forEach(key => {
+      if (key !== "intervals") {
+        gameDataForClient[key] = cloneDeep(gameDatas[gameName][key])
+      }
+    })
+    socket.emit("serverSendsFullGameData", gameDataForClient)
+    console.log("client requested re-send of full game data")
+  })
 };
 
 module.exports = battleRoomGameListeners;
