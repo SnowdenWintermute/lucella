@@ -35,7 +35,6 @@ const battleRoomGameListeners = ({
   });
   socket.on("selectAndMoveOrb", (data) => {
     const gameName = connectedSockets[socket.id].currentGameName;
-    console.log(data.moveCommandData.newOrbHeadings)
     queueUpGameCommand({
       socket,
       connectedSockets,

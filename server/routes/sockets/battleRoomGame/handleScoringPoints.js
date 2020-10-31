@@ -17,6 +17,7 @@ function handleScoringPoints({
           if (orb.yPos >= gameData.gameState.endzones.challenger.y) {
             gameData.gameState.score.host += 1;
             orb.isGhost = true;
+            gameData.gameState.speed += .5
           }
           break;
         case "challengerOrbs":
@@ -27,10 +28,19 @@ function handleScoringPoints({
           ) {
             gameData.gameState.score.challenger += 1;
             orb.isGhost = true;
+            gameData.gameState.speed += .5
           }
       }
     });
   }
+  // players must win by at least 2 points
+  if (Math.abs(gameData.gameState.score.challenger - gameData.gameState.score.host) < 2) {
+    if (gameData.gameState.score.challenger >=
+      gameData.gameState.score.neededToWin - 1 && gameData.gameState.score.host >= gameData.gameState.score.neededToWin - 1) {
+      gameData.gameState.score.neededToWin += 1
+    }
+  }
+  // assign winner
   if (
     gameData.gameState.score.challenger >=
     gameData.gameState.score.neededToWin &&

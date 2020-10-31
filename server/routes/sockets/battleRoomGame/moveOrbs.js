@@ -35,10 +35,8 @@ function moveOrbs({ gameData }) {
       let ty = orb.heading.yPos - orb.yPos;
       let dist = Math.sqrt(tx * tx + ty * ty);
       const deltaT = Date.now() - gameData.gameState.lastUpdateTimestamp || 33
-      console.log(deltaT)
-      const velX = (tx / dist || 0) * (gameData.speed / 33 * deltaT);
-      const velY = (ty / dist || 0) * (gameData.speed / 33 * deltaT);
-      // console.log(velX, velY)
+      const velX = (tx / dist || 0) * (gameData.gameState.speed / 33 * deltaT);
+      const velY = (ty / dist || 0) * (gameData.gameState.speed / 33 * deltaT);
       if (dist >= orb.radius) {
         orb.xPos = Math.round(orb.xPos + velX);
         orb.yPos = Math.round(orb.yPos + velY);

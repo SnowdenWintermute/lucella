@@ -40,6 +40,7 @@ class GameState {
         height: 60,
       },
     };
+    this.speed = 4;
   }
 }
 

@@ -1,4 +1,6 @@
 function convertGameStateIntoPacket({ gameState }) {
+  const dateString = gameState.lastUpdateTimestamp.toString()
+  const lastFourPlacesOfDateNow = parseInt(dateString.slice(dateString.length - 4))
   const packetArray = [
     gameState.lastProcessedCommands.host,
     gameState.lastProcessedCommands.challenger,
@@ -65,7 +67,8 @@ function convertGameStateIntoPacket({ gameState }) {
     gameState.score.host,
     gameState.score.challenger,
     gameState.score.neededToWin,
-    // gameState.lastUpdateTimestamp
+    lastFourPlacesOfDateNow,
+    gameState.speed * 10,
   ];
   return new Int32Array(packetArray);
 }
