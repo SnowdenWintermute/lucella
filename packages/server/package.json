@@ -1,0 +1,38 @@
+{
+  "name": "lucella",
+  "version": "1.0.0",
+  "description": "Lucella: Latin - small gains or profits.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node servers",
+    "server": "nodemon server",
+    "servers": "nodemon servers",
+    "client": "npm start --prefix ../client",
+    "dev": "concurrently \"npm run servers\" \"npm run client\""
+  },
+  "author": "Mike Silverman",
+  "license": "ISC",
+  "dependencies": {
+    "@lucella/common": "1.0.0",
+    "bcryptjs": "^2.4.3",
+    "config": "^3.2.5",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.4.0",
+    "helmet": "^3.21.2",
+    "jsonwebtoken": "^8.5.1",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.isequal": "^4.5.0",
+    "lodash.values": "^4.3.0",
+    "mongoose": "^5.8.11",
+    "nodemailer": "^6.4.2",
+    "socket.io": "^2.3.0",
+    "socketio-jwt-auth": "^0.1.0",
+    "uuid": "^7.0.2"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "nodemon": "^2.0.2",
+    "object-sizeof": "^1.6.1"
+  }
+}
