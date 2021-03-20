@@ -1,8 +1,8 @@
 const clientSendsNewChat = require("../lobbyFunctions/clientSendsNewChat");
 
-const chatListeners = ({ io, socket, connectedSockets }) => {
+const chatListeners = ({ application }) => {
   socket.on("clientSendsNewChat", (data) => {
-    clientSendsNewChat({ io, socket, connectedSockets, data });
+    clientSendsNewChat({ application, data });
   });
 };
 

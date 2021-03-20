@@ -34,32 +34,26 @@ io.sockets.on("connect", async (socket) => {
     gameRooms,
     gameDatas,
     rankedQueue,
-  }
+  };
   socket.emit("authenticationFinished", null);
   socket.emit("gameListUpdate", gameRooms);
   socket.emit("currentGameRoomUpdate", null);
   console.log("socket connected and room set to null");
-  if (connectedSockets[socket.id].isGuest) {
+  if (connectedSockets[socket.id].isGuest)
     connectedSockets[socket.id].username = makeRandomAnonUsername({
       socket,
       connectedSockets,
       connectedGuests,
     });
-  }
 
-  chatListeners({ io, socket, connectedSockets });
+  chatListeners({ application });
   gameUiListeners({ application });
   battleRoomGameListeners({ socket, connectedSockets, gameRooms, gameDatas });
 
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected");
     socketDisconnect({
-      io,
-      socket,
-      connectedSockets,
-      chatRooms,
-      gameDatas,
-      gameRooms,
+      application,
       gameName: connectedSockets[socket.id].currentGameName,
     });
   });

@@ -1,16 +1,9 @@
 startGame = require("../battleRoomGame/startGame");
-//
-function startGameCountdown({
-  io,
-  socket,
-  connectedSockets,
-  gameRooms,
-  chatRooms,
-  gameDatas,
-  gameRoom,
-}) {
+
+function startGameCountdown({ application, gameName }) {
+  const { io, gameRooms } = application;
+  const gameRoom = gameRooms[gameName];
   gameRoom.gameStatus = "countingDown";
-  console.log("status: " + gameRoom.gameStatus);
   io.to(`game-${gameRoom.gameName}`).emit(
     "currentGameStatusUpdate",
     gameRoom.gameStatus
@@ -23,19 +16,10 @@ function startGameCountdown({
         gameRoom.gameStatus
       );
       // start the game ticks
-      startGame({
-        io,
-        socket,
-        connectedSockets,
-        gameRooms,
-        chatRooms,
-        gameRoom,
-        gameDatas,
-      });
+      startGame({ application, gameName });
       return clearInterval(gameRoom.countdownInterval);
     }
     gameRoom.countdown--;
-    console.log(gameRoom.countdown);
     io.to(`game-${gameRoom.gameName}`).emit(
       "currentGameCountdownUpdate",
       gameRoom.countdown

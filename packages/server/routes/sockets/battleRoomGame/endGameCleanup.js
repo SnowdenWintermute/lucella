@@ -1,16 +1,10 @@
 const clientRequestsToJoinRoom = require("../lobbyFunctions/clientRequestsToJoinRoom");
 const updateWinLossRecords = require("./updateWinLossRecords");
 
-async function endGameCleanup({
-  io,
-  socket,
-  gameRoom,
-  gameData,
-  gameRooms,
-  chatRooms,
-  connectedSockets,
-  isDisconnecting,
-}) {
+async function endGameCleanup({ application, gameName, isDisconnecting }) {
+  const { io, socket, gameRooms, connectedSockets } = application;
+  const gameRoom = application.gameRooms[gameName];
+  const gameData = application.gameDatas[gameName];
   const { gameName } = gameRoom;
   if (gameRoom.gameStatus === "ending") return;
   gameRoom.gameStatus = "ending";
@@ -24,23 +18,17 @@ async function endGameCleanup({
   );
   clearInterval(gameData.intervals.physics);
   clearInterval(gameData.intervals.updates);
-  if (!isDisconnecting) {
+  if (!isDisconnecting)
     gameRoom.winner =
       gameData.winner === "host"
         ? gameRoom.players.host.username
         : gameRoom.players.challenger.username;
-  } else {
+  else {
     const userThatDisconnected = connectedSockets[socket.id];
     gameRoom.winner =
       gameRoom.players.host.username === userThatDisconnected.username
         ? gameRoom.players.challenger.username
         : gameRoom.players.host.username;
-    console.log(
-      "user " +
-        userThatDisconnected.username +
-        " dc'd, assigning win to " +
-        gameRoom.winner
-    );
   }
 
   const loser =
@@ -74,28 +62,28 @@ async function endGameCleanup({
       if (host) {
         host.isInGame = false;
         clientRequestsToJoinRoom({
-          io,
-          socket: io.sockets.sockets[host.socketId],
-          roomToJoin: connectedSockets[host.socketId].previousRoom,
-          chatRooms,
+          application: {
+            ...application,
+            socket: io.sockets.sockets[host.socketId],
+          },
           username: host.username,
-          connectedSockets,
+          roomToJoin: connectedSockets[host.socketId].previousRoom,
         });
       }
       if (challenger) {
         challenger.isInGame = false;
         clientRequestsToJoinRoom({
-          io,
-          socket: io.sockets.sockets[challenger.socketId],
-          roomToJoin: connectedSockets[challenger.socketId].previousRoom,
-          chatRooms,
+          application: {
+            ...application,
+            socket: io.sockets.sockets[challenger.socketId],
+          },
           username: challenger.username,
-          connectedSockets,
+          roomToJoin: connectedSockets[challenger.socketId].previousRoom,
         });
       }
 
       delete gameData;
-      delete gameRooms[gameName];
+      delete gameRoom;
       io.sockets.emit("gameListUpdate", gameRooms);
     } else {
       gameData.endingStateCountdown -= 1;

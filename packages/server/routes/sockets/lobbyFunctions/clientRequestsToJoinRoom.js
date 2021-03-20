@@ -3,31 +3,27 @@ const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom")
 const ChatMessage = require("../../../classes/chat/ChatMessage");
 
 const clientRequestsToJoinRoom = ({
-  io,
-  socket,
+  application,
   roomToJoin,
-  chatRooms,
   username,
-  connectedSockets,
   authorizedForGameChannel,
 }) => {
+  const { io, socket, connectedSockets, chatRooms } = application;
   if (!socket) return;
   if (!roomToJoin) roomToJoin = "the void";
-  if (roomToJoin.slice(0, 5) === "game-") {
+  if (roomToJoin.slice(0, 5) === "game-")
     if (!authorizedForGameChannel)
       return socket.emit(
         "errorMessage",
         "Not authorized for that chat channel"
       );
-  }
   // first remove this socket from any room it may be in before joining it to new room
-  removeSocketFromRoom({ io, socket, connectedSockets, chatRooms });
+  removeSocketFromRoom({ application });
 
   socket.join(roomToJoin);
   // if room doesn't exist, create it
-  if (!chatRooms[roomToJoin]) {
+  if (!chatRooms[roomToJoin])
     chatRooms[roomToJoin] = { roomName: roomToJoin, currentUsers: {} };
-  }
   // connectedSockets object:
   connectedSockets[socket.id] = {
     ...connectedSockets[socket.id],
@@ -36,17 +32,16 @@ const clientRequestsToJoinRoom = ({
   };
 
   // put user in room's list of users
-  if (!chatRooms[roomToJoin].currentUsers[username]) {
+  if (!chatRooms[roomToJoin].currentUsers[username])
     chatRooms[roomToJoin].currentUsers[username] = {
       username,
       connectedSockets: [socket.id],
     };
-  } else {
-    // already connected, add to their list of sockets connected
+  // already connected, add to their list of sockets connected
+  else
     chatRooms[roomToJoin].currentUsers[username].connectedSockets.push(
       socket.id
     );
-  }
   const roomToJoinForClient = generateRoomForClient({
     chatRooms,
     roomName: roomToJoin,

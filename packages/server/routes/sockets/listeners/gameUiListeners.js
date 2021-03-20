@@ -6,7 +6,7 @@ const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
 const clientClicksRanked = require("../lobbyFunctions/clientClicksRanked");
 
 const gameUiListeners = ({
-  application
+  application,
   // io,
   // socket,
   // chatRooms,
@@ -15,21 +15,37 @@ const gameUiListeners = ({
   // gameDatas,
   // rankedQueue,
 }) => {
-  const { socket, gameRooms, rankedQueue } = application
-  socket.on("clientRequestsUpdateOfGameRoomList", () => { socket.emit("gameListUpdate", gameRooms) });
+  const { socket, gameRooms, rankedQueue } = application;
+  socket.on("clientRequestsUpdateOfGameRoomList", () => {
+    socket.emit("gameListUpdate", gameRooms);
+  });
   socket.on("clientRequestsToJoinRoom", (data) => {
     const roomToJoin = data.roomToJoin.toLowerCase();
-    chatRooms = clientRequestsToJoinRoom({ application, username: connectedSockets[socket.id].username, roomToJoin, });
+    chatRooms = clientRequestsToJoinRoom({
+      application,
+      username: connectedSockets[socket.id].username,
+      roomToJoin,
+    });
   });
-  socket.on("clientHostsNewGame", ({ gameName }) => { clientHostsNewGame({ application, gameName, isRanked: false, }) });
-  socket.on("clientLeavesGame", (gameName) => { clientLeavesGame({ application, gameName, username: connectedSockets[socket.id].username, }); });
+  socket.on("clientHostsNewGame", ({ gameName }) => {
+    clientHostsNewGame({ application, gameName, isRanked: false });
+  });
+  socket.on("clientLeavesGame", (gameName) => {
+    clientLeavesGame({ application, gameName });
+  });
   socket.on("clientJoinsGame", (data) => {
     const { gameName } = data;
-    clientJoinsGame({ application, gameName, });
+    clientJoinsGame({ application, gameName });
   });
-  socket.on("clientClicksReady", ({ gameName }) => { clientClicksReady({ application, gameName, }) });
-  socket.on("clientStartsSeekingRankedGame", async () => { await clientClicksRanked({ application }) });
-  socket.on("clientCancelsMatchmakingSearch", () => { delete rankedQueue.users[socket.id] });
+  socket.on("clientClicksReady", ({ gameName }) => {
+    clientClicksReady({ application, gameName });
+  });
+  socket.on("clientStartsSeekingRankedGame", async () => {
+    await clientClicksRanked({ application });
+  });
+  socket.on("clientCancelsMatchmakingSearch", () => {
+    delete rankedQueue.users[socket.id];
+  });
 };
 
 module.exports = gameUiListeners;

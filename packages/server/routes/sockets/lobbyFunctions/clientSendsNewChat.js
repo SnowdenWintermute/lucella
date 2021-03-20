@@ -1,6 +1,7 @@
 const ChatMessage = require("../../../classes/chat/ChatMessage");
 
-function clientSendsNewChat({ io, socket, connectedSockets, data }) {
+function clientSendsNewChat({ application, data }) {
+  const { io, socket, connectedSockets } = application;
   const { currentChatRoomName, style, messageText } = data;
   io.in(currentChatRoomName).emit(
     "newMessage",
@@ -8,7 +9,7 @@ function clientSendsNewChat({ io, socket, connectedSockets, data }) {
       author: connectedSockets[socket.id].username,
       style,
       messageText,
-    }),
+    })
   );
 }
 

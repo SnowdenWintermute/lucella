@@ -1,6 +1,7 @@
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 
-function removeSocketFromRoom({ io, socket, connectedSockets, chatRooms }) {
+function removeSocketFromRoom({ application }) {
+  const { io, socket, connectedSockets, chatRooms } = application;
   if (!socket) return;
   if (!connectedSockets[socket.id].currentRoom) return;
   const roomToLeave = connectedSockets[socket.id].currentRoom;

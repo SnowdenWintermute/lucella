@@ -6,15 +6,8 @@ const clientJoinsGame = require("./clientJoinsGame");
 const clientHostsNewGame = require("./clientHostsNewGame");
 const clientClicksReady = require("./clientClicksReady");
 
-async function clientClicksRanked({
-  io,
-  socket,
-  connectedSockets,
-  gameRooms,
-  chatRooms,
-  gameDatas,
-  rankedQueue,
-}) {
+async function clientClicksRanked({ application }) {
+  const { io, socket, connectedSockets, rankedQueue } = application;
   // if socket is already in game or not logged in, an appropriate return error
   if (connectedSockets[socket.id].isInGame)
     return socket.emit("errorMessage", "You are already in a game");
@@ -33,10 +26,11 @@ async function clientClicksRanked({
   let userBattleRoomRecord = await BattleRoomRecord.findOne({
     user: user.id,
   });
-  if (!userBattleRoomRecord) userBattleRoomRecord = new BattleRoomRecord({
-    user: user.id,
-  });
-  await userBattleRoomRecord.save()
+  if (!userBattleRoomRecord)
+    userBattleRoomRecord = new BattleRoomRecord({
+      user: user.id,
+    });
+  await userBattleRoomRecord.save();
 
   rankedQueue.users[socket.id] = {
     userId: user.id,
@@ -77,7 +71,7 @@ async function clientClicksRanked({
           // check each player's elo against the others
           let lowestEloDiffPlayer = null;
           let bestEloDiffSoFar = null;
-          const currPlayerElo = rankedQueue.users[playerInQueue].record.elo
+          const currPlayerElo = rankedQueue.users[playerInQueue].record.elo;
           Object.keys(rankedQueue.users).forEach((playerToCompare) => {
             // check if comparing socket is still connected
             if (io.sockets.sockets[playerToCompare]) {
@@ -85,10 +79,12 @@ async function clientClicksRanked({
               if (
                 playerToCompare !== playerInQueue &&
                 connectedSockets[playerInQueue].username !==
-                connectedSockets[playerToCompare].username
+                  connectedSockets[playerToCompare].username
               ) {
-                const comparedPlayerElo =
-                  rankedQueue.users[playerToCompare].record ? rankedQueue.users[playerToCompare].record.elo : 1500;
+                const comparedPlayerElo = rankedQueue.users[playerToCompare]
+                  .record
+                  ? rankedQueue.users[playerToCompare].record.elo
+                  : 1500;
                 const currEloDiff = Math.abs(currPlayerElo - comparedPlayerElo);
                 if (
                   lowestEloDiffPlayer === null ||
@@ -147,34 +143,34 @@ async function clientClicksRanked({
         } else {
           // if no one has dc'd yet, put them in a game together
           const gameName = `ranked-${rankedQueue.rankedGameCurrentNumber}`;
-          const argsForGameFunctions = {
-            io,
-            connectedSockets,
-            chatRooms,
-            gameRooms,
-            gameName,
-          };
-
           clientHostsNewGame({
-            ...argsForGameFunctions,
-            socket: io.sockets.sockets[bestMatch.host.socketId],
+            application: {
+              ...application,
+              socket: io.sockets.sockets[bestMatch.host.socketId],
+            },
+            gameName,
             isRanked: true,
           });
           clientJoinsGame({
-            ...argsForGameFunctions,
-            socket: io.sockets.sockets[bestMatch.challenger.socketId],
+            application: {
+              ...application,
+              socket: io.sockets.sockets[bestMatch.challenger.socketId],
+            },
+            gameName,
           });
           clientClicksReady({
-            ...argsForGameFunctions,
-            socket: io.sockets.sockets[bestMatch.host.socketId],
-            gameDatas,
-            fromServer: true,
+            application: {
+              ...application,
+              socket: io.sockets.sockets[bestMatch.host.socketId],
+            },
+            gameName,
           });
           clientClicksReady({
-            ...argsForGameFunctions,
-            socket: io.sockets.sockets[bestMatch.challenger.socketId],
-            gameDatas,
-            fromServer: true,
+            application: {
+              ...application,
+              socket: io.sockets.sockets[bestMatch.challenger.socketId],
+            },
+            gameName,
           });
           rankedQueue.rankedGameCurrentNumber += 1;
           // remove matched players from queue
