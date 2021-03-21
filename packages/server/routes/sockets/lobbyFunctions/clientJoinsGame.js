@@ -31,7 +31,7 @@ function clientJoinsGame({ application, gameName }) {
       chatRooms = clientRequestsToJoinRoom({
         application,
         username,
-        roomToJoin: `game-${gameName}`,
+        roomName: `game-${gameName}`,
         authorizedForGameChannel: true,
       });
       connectedSockets[socket.id].isInGame = true;

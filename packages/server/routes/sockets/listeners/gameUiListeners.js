@@ -5,26 +5,16 @@ const clientClicksReady = require("../lobbyFunctions/clientClicksReady");
 const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
 const clientClicksRanked = require("../lobbyFunctions/clientClicksRanked");
 
-const gameUiListeners = ({
-  application,
-  // io,
-  // socket,
-  // chatRooms,
-  // connectedSockets,
-  // gameRooms,
-  // gameDatas,
-  // rankedQueue,
-}) => {
+const gameUiListeners = ({ application }) => {
   const { socket, gameRooms, rankedQueue } = application;
   socket.on("clientRequestsUpdateOfGameRoomList", () => {
     socket.emit("gameListUpdate", gameRooms);
   });
   socket.on("clientRequestsToJoinRoom", (data) => {
-    const roomToJoin = data.roomToJoin.toLowerCase();
     chatRooms = clientRequestsToJoinRoom({
       application,
       username: connectedSockets[socket.id].username,
-      roomToJoin,
+      roomName: data.roomToJoin.toLowerCase(),
     });
   });
   socket.on("clientHostsNewGame", ({ gameName }) => {

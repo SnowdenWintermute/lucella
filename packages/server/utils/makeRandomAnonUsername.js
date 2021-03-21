@@ -1,15 +1,11 @@
 const randomFourNumbers = require("./randomFourNumbers");
 const uuid = require("uuid");
 
-function makeRandomAnonUsername({ socket, connectedSockets, connectedGuests }) {
+function makeRandomAnonUsername({ socket, connectedSockets }) {
   // give them a rand 4 string and if duplicate run it again - danger of loop?
   const randomNums = randomFourNumbers().join("");
   const randomAnonUsername = "Anon" + randomNums;
   try {
-    connectedGuests[randomAnonUsername] = {
-      username: randomAnonUsername,
-      connectedSockets: [socket.id],
-    };
     connectedSockets[socket.id] = {
       ...connectedSockets[socket.id],
       username: randomAnonUsername,

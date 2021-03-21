@@ -67,7 +67,7 @@ async function endGameCleanup({ application, gameName, isDisconnecting }) {
             socket: io.sockets.sockets[host.socketId],
           },
           username: host.username,
-          roomToJoin: connectedSockets[host.socketId].previousRoom,
+          roomName: connectedSockets[host.socketId].previousRoomName,
         });
       }
       if (challenger) {
@@ -78,7 +78,7 @@ async function endGameCleanup({ application, gameName, isDisconnecting }) {
             socket: io.sockets.sockets[challenger.socketId],
           },
           username: challenger.username,
-          roomToJoin: connectedSockets[challenger.socketId].previousRoom,
+          roomName: connectedSockets[challenger.socketId].previousRoomName,
         });
       }
 

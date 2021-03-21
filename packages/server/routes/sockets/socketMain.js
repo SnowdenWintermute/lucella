@@ -1,5 +1,5 @@
 const io = require("../../expressServer").io;
-const socketConnects = require("./generalFunctions/socketConnects");
+const handleNewSocketConnection = require("./generalFunctions/handleNewSocketConnection");
 const socketDisconnect = require("./generalFunctions/socketDisconnect");
 const makeRandomAnonUsername = require("../../utils/makeRandomAnonUsername");
 
@@ -11,7 +11,6 @@ let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSoc
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
 let gameDatas = {}; // see Class for detailed info
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: Bool, currentGameName: String, isGuest: Bool}
-let connectedGuests = {};
 let rankedQueue = {
   users: {},
   matchmakingInterval: null,
@@ -25,7 +24,7 @@ io.sockets.on("connect", async (socket) => {
     currentRoom: null,
     socketId: socket.id,
   };
-  await socketConnects({ socket, connectedSockets });
+  await handleNewSocketConnection({ socket, connectedSockets });
   const application = {
     io,
     socket,
@@ -43,7 +42,6 @@ io.sockets.on("connect", async (socket) => {
     connectedSockets[socket.id].username = makeRandomAnonUsername({
       socket,
       connectedSockets,
-      connectedGuests,
     });
 
   chatListeners({ application });

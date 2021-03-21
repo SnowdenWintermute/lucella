@@ -1,59 +1,33 @@
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
 const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
 const ChatMessage = require("../../../classes/chat/ChatMessage");
+const updateRoomUsernameList = require("../generalFunctions/updateRoomUsernameList/updateRoomUsernameList");
 
 const clientRequestsToJoinRoom = ({
   application,
-  roomToJoin,
-  username,
+  roomName,
   authorizedForGameChannel,
 }) => {
   const { io, socket, connectedSockets, chatRooms } = application;
   if (!socket) return;
-  if (!roomToJoin) roomToJoin = "the void";
-  if (roomToJoin.slice(0, 5) === "game-")
-    if (!authorizedForGameChannel)
-      return socket.emit(
-        "errorMessage",
-        "Not authorized for that chat channel"
-      );
-  // first remove this socket from any room it may be in before joining it to new room
+  if (!roomName) roomName = "the void";
+  if (roomName.slice(0, 5) === "game-" && !authorizedForGameChannel)
+    return socket.emit("errorMessage", "Not authorized for that chat channel");
+
   removeSocketFromRoom({ application });
-
-  socket.join(roomToJoin);
-  // if room doesn't exist, create it
-  if (!chatRooms[roomToJoin])
-    chatRooms[roomToJoin] = { roomName: roomToJoin, currentUsers: {} };
-  // connectedSockets object:
-  connectedSockets[socket.id] = {
-    ...connectedSockets[socket.id],
-    username,
-    currentRoom: roomToJoin,
-  };
-
-  // put user in room's list of users
-  if (!chatRooms[roomToJoin].currentUsers[username])
-    chatRooms[roomToJoin].currentUsers[username] = {
-      username,
-      connectedSockets: [socket.id],
-    };
-  // already connected, add to their list of sockets connected
-  else
-    chatRooms[roomToJoin].currentUsers[username].connectedSockets.push(
-      socket.id
-    );
-  const roomToJoinForClient = generateRoomForClient({
-    chatRooms,
-    roomName: roomToJoin,
-  });
-
-  io.in(roomToJoin).emit("updateChatRoom", roomToJoinForClient);
+  socket.join(roomName);
+  connectedSockets[socket.id].currentRoom = roomName;
+  if (!chatRooms[roomName])
+    chatRooms[roomName] = { roomName, currentUsers: {} };
+  updateRoomUsernameList({ roomToJoin: chatRooms[roomName] });
+  const roomForClient = generateRoomForClient({ chatRooms, roomName });
+  io.in(roomName).emit("updateChatRoom", roomForClient);
   socket.emit(
     "newMessage",
     new ChatMessage({
       author: "Server",
       style: "private",
-      messageText: `Welcome to ${roomToJoin}.`,
+      messageText: `Welcome to ${roomName}.`,
     })
   );
   return chatRooms;
