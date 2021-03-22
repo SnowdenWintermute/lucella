@@ -1,18 +1,13 @@
-module.exports = ({ socket, connectedSockets, roomToLeave }) => {
-  connectedSockets[socket.id].previousRoomName = roomNameToLeave;
+module.exports = ({ application, nameOfRoomToLeave }) => {
+  const { socket, connectedSockets, chatRooms } = application
+  const roomToLeave = chatRooms[nameOfRoomToLeave]
+  if (!roomToLeave) return
   const userNameLeaving = connectedSockets[socket.id].username;
-  const userToRemoveFromRoom = roomToLeave.currentUsers[userNameLeaving];
-  userToRemoveFromRoom.connectedSockets.forEach((userConnectedSocket) => {
-    if (
-      userConnectedSocket === socket.id &&
-      userToRemoveFromRoom.connectedSockets.length <= 1
-    )
-      delete userToRemoveFromRoom;
-    else {
-      const indexOfSocket = userToRemoveFromRoom.connectedSockets.indexOf(
-        userConnectedSocket
-      );
-      userToRemoveFromRoom.connectedSockets.splice(indexOfSocket, 1);
-    }
+  const userToRemoveFromRoom = roomToLeave.connectedUsers[userNameLeaving];
+  userToRemoveFromRoom.connectedSockets.forEach((userConnectedSocket, i) => {
+    if (userConnectedSocket === socket.id)
+      if (userToRemoveFromRoom.connectedSockets.length <= 1)
+        delete roomToLeave.connectedUsers[userNameLeaving];
+      else userToRemoveFromRoom.connectedSockets.splice(i, 1);
   });
 };

@@ -1,10 +1,13 @@
-module.exports = ({ roomToJoin }) => {
+module.exports = ({ application, nameOfRoomToJoin }) => {
+  const { socket, connectedSockets, chatRooms } = application
+  const username = connectedSockets[socket.id].username
+  const roomToJoin = chatRooms[nameOfRoomToJoin]
   // put user in room's list of users
-  if (!roomToJoin.currentUsers[username])
-    roomToJoin.currentUsers[username] = {
+  if (!roomToJoin.connectedUsers[username])
+    roomToJoin.connectedUsers[username] = {
       username,
       connectedSockets: [socket.id],
     };
   // already connected, add to their list of sockets connected
-  else roomToJoin.currentUsers[username].connectedSockets.push(socket.id);
+  else roomToJoin.connectedUsers[username].connectedSockets.push(socket.id);
 };

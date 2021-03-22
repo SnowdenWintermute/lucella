@@ -13,8 +13,8 @@ const ChatSocketListener = ({ socket }) => {
     if (!socket) return;
     socket.on("updateChatRoom", (data) => {
       dispatch(chatActions.setNewChatRoomLoading(false));
-      const { roomName, currentUsers } = data;
-      dispatch(chatActions.setCurrentChatRoomUsers(currentUsers));
+      const { roomName, connectedUsers } = data;
+      dispatch(chatActions.setCurrentChatRoomUsers(connectedUsers));
       dispatch(chatActions.setCurrentChatRoomName(roomName));
     });
     return () => {

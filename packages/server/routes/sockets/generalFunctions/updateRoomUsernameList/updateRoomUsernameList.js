@@ -1,4 +1,7 @@
-module.exports = ({ socket, connectedSockets, roomToLeave, roomToJoin }) => {
-  if (roomToLeave) userLeavingRoom({ socket, connectedSockets, roomToLeave });
-  if (roomToJoin) userJoiningRoom({ roomToJoin });
+const userLeavingRoom = require('./userLeavingRoom')
+const userJoiningRoom = require('./userJoiningRoom')
+
+module.exports = ({ application, nameOfRoomToLeave, nameOfRoomToJoin }) => {
+  if (nameOfRoomToLeave) userLeavingRoom({ application, nameOfRoomToLeave });
+  if (nameOfRoomToJoin) userJoiningRoom({ application, nameOfRoomToJoin });
 };

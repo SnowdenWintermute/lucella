@@ -7,7 +7,7 @@ const chatListeners = require("./listeners/chatListeners");
 const gameUiListeners = require("./listeners/gameUiListeners");
 const battleRoomGameListeners = require("./listeners/battleRoomGameListeners");
 
-let chatRooms = {}; // roomName: {connectedUsers: {userName:String, connectedSockets: [socketId]}}
+let chatRooms = {}; // roomName: {connectedUsers: username: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
 let gameDatas = {}; // see Class for detailed info
 let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: Bool, currentGameName: String, isGuest: Bool}
@@ -43,7 +43,6 @@ io.sockets.on("connect", async (socket) => {
       socket,
       connectedSockets,
     });
-
   chatListeners({ application });
   gameUiListeners({ application });
   battleRoomGameListeners({ socket, connectedSockets, gameRooms, gameDatas });

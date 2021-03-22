@@ -5,15 +5,14 @@ function removeSocketFromRoom({ application }) {
   const { io, socket, connectedSockets, chatRooms } = application;
   if (!socket) return;
   if (!connectedSockets[socket.id].currentRoom) return;
-  const roomNameToLeave = connectedSockets[socket.id].currentRoom;
-  const roomToLeave = chatRooms[roomNameToLeave];
-  if (!roomToLeave) return;
-  updateRoomUsernameList({ socket, connectedSockets, roomToLeave });
-  socket.leave(roomNameToLeave);
+  const nameOfRoomToLeave = connectedSockets[socket.id].currentRoom;
+  connectedSockets[socket.id].previousRoomName = nameOfRoomToLeave;
+  updateRoomUsernameList({ application, nameOfRoomToLeave });
+  socket.leave(nameOfRoomToLeave);
   const roomForClient = generateRoomForClient({
     chatRooms,
-    roomName: roomNameToLeave,
+    roomName: nameOfRoomToLeave,
   });
-  io.in(roomNameToLeave).emit("updateChatRoom", roomForClient);
+  io.in(nameOfRoomToLeave).emit("updateChatRoom", roomForClient);
 }
 module.exports = removeSocketFromRoom;

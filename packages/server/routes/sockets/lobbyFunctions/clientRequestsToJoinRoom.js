@@ -18,8 +18,8 @@ const clientRequestsToJoinRoom = ({
   socket.join(roomName);
   connectedSockets[socket.id].currentRoom = roomName;
   if (!chatRooms[roomName])
-    chatRooms[roomName] = { roomName, currentUsers: {} };
-  updateRoomUsernameList({ roomToJoin: chatRooms[roomName] });
+    chatRooms[roomName] = { roomName, connectedUsers: {} };
+  updateRoomUsernameList({ application, nameOfRoomToJoin: roomName });
   const roomForClient = generateRoomForClient({ chatRooms, roomName });
   io.in(roomName).emit("updateChatRoom", roomForClient);
   socket.emit(
@@ -30,7 +30,6 @@ const clientRequestsToJoinRoom = ({
       messageText: `Welcome to ${roomName}.`,
     })
   );
-  return chatRooms;
 };
 
 module.exports = clientRequestsToJoinRoom;

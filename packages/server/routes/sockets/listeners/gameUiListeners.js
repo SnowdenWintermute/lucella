@@ -6,12 +6,12 @@ const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
 const clientClicksRanked = require("../lobbyFunctions/clientClicksRanked");
 
 const gameUiListeners = ({ application }) => {
-  const { socket, gameRooms, rankedQueue } = application;
+  const { socket, connectedSockets, gameRooms, rankedQueue } = application;
   socket.on("clientRequestsUpdateOfGameRoomList", () => {
     socket.emit("gameListUpdate", gameRooms);
   });
   socket.on("clientRequestsToJoinRoom", (data) => {
-    chatRooms = clientRequestsToJoinRoom({
+    clientRequestsToJoinRoom({
       application,
       username: connectedSockets[socket.id].username,
       roomName: data.roomToJoin.toLowerCase(),

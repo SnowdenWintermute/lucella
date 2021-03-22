@@ -1,16 +1,16 @@
 function generateRoomForClient({ chatRooms, roomName }) {
-  let roomForClient = { roomName: roomName, currentUsers: {} };
-  Object.keys(chatRooms[roomName].currentUsers).forEach((userKey) => {
+  let roomForClient = { roomName: roomName, connectedUsers: {} };
+  Object.keys(chatRooms[roomName].connectedUsers).forEach((userKey) => {
     let userForClient = {};
-    Object.keys(chatRooms[roomName].currentUsers[userKey]).forEach(
+    Object.keys(chatRooms[roomName].connectedUsers[userKey]).forEach(
       (userPropKey) => {
         if (userPropKey !== "connectedSockets") {
           userForClient[userPropKey] =
-            chatRooms[roomName].currentUsers[userKey][userPropKey];
+            chatRooms[roomName].connectedUsers[userKey][userPropKey];
         }
       }
     );
-    roomForClient.currentUsers[userKey] = userForClient;
+    roomForClient.connectedUsers[userKey] = userForClient;
   });
   return roomForClient;
 }

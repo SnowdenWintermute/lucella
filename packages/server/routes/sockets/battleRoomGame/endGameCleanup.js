@@ -1,3 +1,4 @@
+const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
 const clientRequestsToJoinRoom = require("../lobbyFunctions/clientRequestsToJoinRoom");
 const updateWinLossRecords = require("./updateWinLossRecords");
 
@@ -5,7 +6,6 @@ async function endGameCleanup({ application, gameName, isDisconnecting }) {
   const { io, socket, gameRooms, connectedSockets } = application;
   const gameRoom = application.gameRooms[gameName];
   const gameData = application.gameDatas[gameName];
-  const { gameName } = gameRoom;
   if (gameRoom.gameStatus === "ending") return;
   gameRoom.gameStatus = "ending";
   io.in(`game-${gameName}`).emit(
@@ -25,6 +25,7 @@ async function endGameCleanup({ application, gameName, isDisconnecting }) {
         : gameRoom.players.challenger.username;
   else {
     const userThatDisconnected = connectedSockets[socket.id];
+    removeSocketFromRoom({ application, nameOfRoomToLeave: `game-${gameName}` })
     gameRoom.winner =
       gameRoom.players.host.username === userThatDisconnected.username
         ? gameRoom.players.challenger.username
