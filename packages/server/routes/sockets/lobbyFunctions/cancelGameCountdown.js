@@ -1,4 +1,4 @@
-function cancelGameCountdown({ io, gameRoom }) {
+module.exports = ({ io, gameRoom }) => {
   if (!gameRoom.countdownInterval) return;
   gameRoom.gameStatus = "inLobby";
   io.to(`game-${gameRoom.gameName}`).emit(
@@ -12,5 +12,3 @@ function cancelGameCountdown({ io, gameRoom }) {
     gameRoom.countdown
   );
 }
-
-module.exports = cancelGameCountdown;

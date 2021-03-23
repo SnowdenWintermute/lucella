@@ -1,7 +1,7 @@
 const GameRoom = require("../../../classes/games/battle-room/GameRoom");
 const clientJoinsGame = require("./clientJoinsGame");
 
-function clientHostsNewGame({ application, gameName, isRanked }) {
+module.exports = ({ application, gameName, isRanked }) => {
   const { socket, connectedSockets, gameRooms } = application;
   if (!connectedSockets[socket.id].isInGame)
     if (!gameRooms[gameName]) {
@@ -14,5 +14,3 @@ function clientHostsNewGame({ application, gameName, isRanked }) {
       "You can't host a game if you are already in one"
     );
 }
-
-module.exports = clientHostsNewGame;

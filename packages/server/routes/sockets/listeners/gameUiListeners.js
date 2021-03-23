@@ -1,7 +1,7 @@
 const clientRequestsToJoinRoom = require("../lobbyFunctions/clientRequestsToJoinRoom");
 const clientHostsNewGame = require("../lobbyFunctions/clientHostsNewGame");
 const clientJoinsGame = require("../lobbyFunctions/clientJoinsGame");
-const clientClicksReady = require("../lobbyFunctions/clientClicksReady");
+const handleReadyClick = require("../lobbyFunctions/handleReadyClick");
 const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
 const handleQueueUpForRankedMatch = require("../lobbyFunctions/handleQueueUpForRankedMatch");
 
@@ -28,7 +28,7 @@ const gameUiListeners = ({ application }) => {
     clientJoinsGame({ application, gameName });
   });
   socket.on("clientClicksReady", ({ gameName }) => {
-    clientClicksReady({ application, gameName });
+    handleReadyClick({ application, gameName });
   });
   socket.on("clientStartsSeekingRankedGame", async () => {
     await handleQueueUpForRankedMatch({ application });
