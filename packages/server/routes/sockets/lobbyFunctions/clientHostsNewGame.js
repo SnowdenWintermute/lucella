@@ -2,7 +2,7 @@ const GameRoom = require("../../../classes/games/battle-room/GameRoom");
 const clientJoinsGame = require("./clientJoinsGame");
 
 function clientHostsNewGame({ application, gameName, isRanked }) {
-  const { connectedSockets, gameRooms } = application;
+  const { socket, connectedSockets, gameRooms } = application;
   if (!connectedSockets[socket.id].isInGame)
     if (!gameRooms[gameName]) {
       gameRooms[gameName] = new GameRoom({ gameName, isRanked });

@@ -18,7 +18,6 @@ import * as gameUiActions from "../../../../store/actions/game-ui";
 import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
-const { env } = require('../../../../consts')
 const socketAddress = process.env.REACT_APP_DEV_MODE ? process.env.REACT_APP_SOCKET_API_DEV : process.env.REACT_APP_SOCKET_API
 
 const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
@@ -51,7 +50,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   }, [localStorage.token]);
 
   useEffect(() => {
-    socket.on("authenticationFinished", (data) => {
+    socket.on("authenticationFinished", () => {
       console.log("authenticationFinished");
       setAuthenticating(false);
     });

@@ -1,5 +1,5 @@
 function cancelGameCountdown({ io, gameRoom }) {
-  if (!gameRoom.countdownInterval) return; // this is needed because wouldn't exist if no one started a countdown yet
+  if (!gameRoom.countdownInterval) return;
   gameRoom.gameStatus = "inLobby";
   io.to(`game-${gameRoom.gameName}`).emit(
     "currentGameStatusUpdate",

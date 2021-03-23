@@ -6,7 +6,7 @@ module.exports = ({ gameData, commandInQueue, playerRole }) => {
   const { commandType } = commandInQueue
   switch (commandType) {
     case "orbSelect":
-      handleOrbSelect({ gameData, orbsToBeUpdated: commandInQueue.data })
+      handleOrbSelect({ gameData, orbsToBeUpdated: commandInQueue.data, playerRole })
       break
     case "orbMove":
       setOrbHeadings({
@@ -17,7 +17,7 @@ module.exports = ({ gameData, commandInQueue, playerRole }) => {
       break
     case "orbSelectAndMove":
       const { orbsToBeUpdated } = commandInQueue.data.selectCommandData;
-      handleOrbSelect({ gameData, orbsToBeUpdated })
+      handleOrbSelect({ gameData, orbsToBeUpdated, playerRole })
       setOrbHeadings({
         gameData,
         data: commandInQueue.data.moveCommandData,

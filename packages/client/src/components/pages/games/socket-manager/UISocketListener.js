@@ -15,7 +15,6 @@ const UISocketListener = ({ socket }) => {
       dispatch(gameUiActions.clearGameUiData());
     });
     socket.on("gameListUpdate", (data) => {
-      console.log(data);
       dispatch(gameUiActions.updateGamesList(data));
     });
     socket.on("currentGameRoomUpdate", (data) => {
@@ -38,7 +37,6 @@ const UISocketListener = ({ socket }) => {
       dispatch(gameUiActions.setCurrentGameCountdown(countdown));
     });
     socket.on("showEndScreen", (data) => {
-      console.log(data);
       dispatch(lobbyUiActions.setScoreScreenData(data));
     });
     socket.on("matchmakningQueueJoined", () => {

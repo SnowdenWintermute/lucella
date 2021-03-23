@@ -3,7 +3,7 @@ const helmet = require("helmet");
 const connectDB = require("./config/db");
 const socketio = require("socket.io");
 const cors = require('cors')
-
+require('dotenv').config();
 
 const app = express();
 
@@ -29,7 +29,6 @@ app.use(express.static(path.join(__dirname, '../client/build')));
 app.get('*', function (req, res) {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
 });
-
 
 app.use(cors())
 

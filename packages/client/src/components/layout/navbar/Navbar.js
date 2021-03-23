@@ -1,21 +1,28 @@
 import React, { useState, Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { UserMenu } from "./UserMenu";
 // img
 import logo from "../../../img/logo.png";
 import { ReactComponent as GamesIcon } from "../../../img/menuIcons/queen.svg";
 import { ReactComponent as LadderIcon } from "../../../img/menuIcons/podium.svg";
-import { ReactComponent as ForumIcon } from "../../../img/menuIcons/discussion.svg";
+// import { ReactComponent as ForumIcon } from "../../../img/menuIcons/discussion.svg";
 import { useEffect } from "react";
-import { useHistory } from 'react-router-dom'
+
 const Navbar = () => {
   const history = useHistory()
-  const { pathname } = history.location
+  const [activeTab, setActiveTab] = useState(history.location)
+  useEffect(() => {
+    console.log(history.location)
+    const { pathname } = history.location
+    setActiveTab(pathname)
+    console.log(pathname)
+  }, [history])
   // state
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus); // used to hide navbar in game
+
 
   return (
     gameStatus !== "inProgress" &&
@@ -35,7 +42,7 @@ const Navbar = () => {
             <div className="nav-tabs">
               <Link
                 to="/battle-room"
-                className={`nav-tab ${pathname === "/battle-room" && "tab-active"}`}
+                className={`nav-tab ${activeTab === "/battle-room" && "tab-active"}`}
                 name="games"
               >
                 <span className="tab-title-text">GAME</span>
@@ -43,7 +50,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/ladder"
-                className={`nav-tab ${pathname === "/ladder" && "tab-active"}`}
+                className={`nav-tab ${activeTab === "/ladder" && "tab-active"}`}
                 name="ladder"
               >
                 <span className="tab-title-text">LADDER</span>
@@ -51,7 +58,7 @@ const Navbar = () => {
               </Link>
               {/* <Link
                 to="/forum"
-                className={`nav-tab ${pathname === "/forum" && "tab-active"}`}
+                className={`nav-tab ${activeTab === "/forum" && "tab-active"}`}
                 name="forum"
               >
                 <span className="tab-title-text">FORUM</span>
@@ -66,8 +73,8 @@ const Navbar = () => {
                 isAuthenticated={isAuthenticated}
               />
             ) : (
-                "..."
-              )}
+              "..."
+            )}
           </div>
         </nav>
         <div className="nav-tab-thin-bar"></div>

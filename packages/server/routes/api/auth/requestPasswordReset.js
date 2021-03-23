@@ -2,7 +2,6 @@ const User = require("../../../models/User");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const nodemailer = require("nodemailer");
-const config = require("config");
 
 module.exports = async (req, res) => {
   let errors = validationResult(req);
@@ -23,7 +22,7 @@ module.exports = async (req, res) => {
     };
     const passwordResetToken = jwt.sign(
       payload,
-      config.get("jwtSecret"),
+      process.env.JWT_SECRET,
       {
         expiresIn: 3600
       },
@@ -31,7 +30,7 @@ module.exports = async (req, res) => {
     );
 
     const rootUrl = "localhost:3000/";
-    const emailPass = config.get("emailPassword");
+    const emailPass = process.env.EMAIL_PASSWORD;
 
     const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://${rootUrl}password-reset/${passwordResetToken}" target="_blank">https://${rootUrl}password-reset/${passwordResetToken}</a></p>`;
     const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: https://${rootUrl}password-reset/${passwordResetToken}`;
