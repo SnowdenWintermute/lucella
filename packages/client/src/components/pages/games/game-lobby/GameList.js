@@ -37,7 +37,7 @@ const GameList = ({ socket }) => {
       gamesToDisplay.push(
         <tr className="game-list-item" key={gameList[game].gameName}>
           <td>{gameName}</td>
-          <td>Host: {host.username}</td>
+          <td>Host: {host?.username}</td>
           <td>
             Challenger: {challenger ? challenger.username : "Awaiting Opponent"}
           </td>

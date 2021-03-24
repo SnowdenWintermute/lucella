@@ -1,22 +1,23 @@
-const clientRequestsToJoinRoom = require("./clientRequestsToJoinRoom");
-const cancelGameCountdown = require("./cancelGameCountdown");
-const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
-const generateGameRoomForClient = require("../../../utils/generateGameRoomForClient");
-const generateRoomForClient = require("../../../utils/generateRoomForClient");
+const clientRequestsToJoinRoom = require("../clientRequestsToJoinRoom");
+const cancelGameCountdown = require("../cancelGameCountdown");
+const removeSocketFromRoom = require("../../generalFunctions/removeSocketFromRoom");
+const generateGameRoomForClient = require("../../../../utils/generateGameRoomForClient");
+const generateRoomForClient = require("../../../../utils/generateRoomForClient");
+const handleHostLeavingGameSetup = require('./handleHostLeavingGameSetup')
 
 module.exports = ({ application, gameName, isDisconnecting }) => {
-  const { io, socket, connectedSockets, chatRooms } = application;
+  const { io, socket, connectedSockets, chatRooms, gameRooms } = application;
   const username = connectedSockets[socket.id].username;
   const gameRoom = gameRooms[gameName];
   const { players } = gameRoom;
-  if (players.host.username === username) {
+  if (players.host.username === username)
     handleHostLeavingGameSetup({ application, gameName });
-  } else if (players.challenger.username === username) {
+  else if (players.challenger.username === username) {
     // CHALLENGER LEAVING
     players.challenger = null;
     socket.emit("currentGameRoomUpdate", null);
     // cancel the countdown and unready everyone
-    cancelGameCountdown({ io, gameRoom: game });
+    cancelGameCountdown({ io, gameRoom });
     gameRoom.playersReady = { host: false, challenger: false };
     io.in(`game-${gameName}`).emit(
       "updateOfCurrentRoomPlayerReadyStatus",
@@ -46,7 +47,8 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
     });
   }
   if (!players.host) {
-    delete gameRoom;
+    console.log("do we ever get here")
+    delete gameRooms[gameName];
     delete chatRooms[gameName];
   } else {
     gameRoomForClient = gameRoom

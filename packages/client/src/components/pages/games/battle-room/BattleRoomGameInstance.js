@@ -40,9 +40,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   let currentGameData = useRef();
   let commandQueue = useRef({ counter: 0, queue: [] });
   let gameStateQueue = useRef([]);
-  const playerDesignation = useSelector(
-    (state) => state.gameUi.playerDesignation
-  );
+  const playerDesignation = useSelector((state) => state.gameUi.playerDesignation);
   const playersInGame = useSelector((state) => state.gameUi.playersInGame);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
   const winner = useSelector((state) => state.gameUi.winner);

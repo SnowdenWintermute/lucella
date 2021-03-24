@@ -1,8 +1,8 @@
-const clientRequestsToJoinRoom = require("./clientRequestsToJoinRoom");
-const ChatMessage = require("../../../classes/chat/ChatMessage");
+const clientRequestsToJoinRoom = require("../clientRequestsToJoinRoom");
+const ChatMessage = require("../../../../classes/chat/ChatMessage");
 
 module.exports = ({ application, gameName }) => {
-  const { io, connectedSockets } = application;
+  const { io, connectedSockets, gameRooms } = application;
   const gameRoom = gameRooms[gameName];
   const { players } = gameRoom;
   io.to(`game-${gameName}`).emit("currentGameRoomUpdate", null);

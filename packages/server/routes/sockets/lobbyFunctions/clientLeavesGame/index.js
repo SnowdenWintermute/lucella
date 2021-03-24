@@ -1,6 +1,7 @@
-const endGameCleanup = require("../battleRoomGame/endGameCleanup");
+const endGameCleanup = require("../../battleRoomGame/endGameCleanup");
+const handleLeavingGameSetupScreen = require('./handleLeavingGameSetupScreen')
 
-function clientLeavesGame({ application, gameName, isDisconnecting }) {
+module.exports = ({ application, gameName, isDisconnecting }) => {
   const { io, socket, connectedSockets, gameRooms } = application;
   const gameRoom = gameRooms[gameName];
   try {
@@ -11,19 +12,15 @@ function clientLeavesGame({ application, gameName, isDisconnecting }) {
     if (
       gameRoom.gameStatus === "inLobby" ||
       gameRoom.gameStatus === "countingDown"
-    ) {
-      handleLeavingGameSetupScreen({ application, gameName, isDisconnecting });
-    } else {
+    ) handleLeavingGameSetupScreen({ application, gameName, isDisconnecting });
+    else
       endGameCleanup({
         application,
         gameName,
         isDisconnecting,
       });
-    }
     io.sockets.emit("gameListUpdate", gameRooms);
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
 }
-
-module.exports = clientLeavesGame;

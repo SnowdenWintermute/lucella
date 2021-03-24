@@ -1,6 +1,6 @@
 const cloneDeep = require("lodash.clonedeep");
 // remove socketId prop from players props of game object
-function generateGamesForClient({ gamesObject }) {
+module.exports = ({ gamesObject }) => {
   let gamesForClient = cloneDeep(gamesObject);
   Object.keys(gamesForClient).forEach((game) => {
     Object.keys(gamesForClient[game].players).forEach((player) => {
@@ -10,5 +10,3 @@ function generateGamesForClient({ gamesObject }) {
   });
   return gamesForClient;
 }
-
-module.exports = generateGamesForClient;
