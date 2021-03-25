@@ -5,12 +5,15 @@ import {
   GET_BATTLE_ROOM_USER_RECORD,
 } from "./types";
 import { setAlert } from "./alert";
+const apiUrl = process.env.REACT_APP_DEV_MODE
+  ? process.env.REACT_APP_SOCKET_API_DEV
+  : process.env.REACT_APP_SOCKET_API;
 
 // get a ladder page
 export const getLadderPage = (pageNumber) => async (dispatch) => {
   try {
     const res = await axios.get(
-      `/api/gameRecords/battle-room-ladder-page/${pageNumber}`,
+      `${apiUrl}/api/gameRecords/battle-room-ladder-page/${pageNumber}`
     );
     dispatch({
       type: GET_LADDER_PAGE,
@@ -37,7 +40,7 @@ export const changeLadderPageViewing = (pageNumber) => (dispatch) => {
 export const getBattleRoomUserRecord = (username) => async (dispatch) => {
   try {
     const res = await axios.get(
-      `/api/gameRecords/battle-room-ladder/${username}`,
+      `${apiUrl}/api/gameRecords/battle-room-ladder/${username}`
     );
     dispatch({
       type: GET_BATTLE_ROOM_USER_RECORD,
@@ -48,8 +51,8 @@ export const getBattleRoomUserRecord = (username) => async (dispatch) => {
       dispatch(
         setAlert(
           "User not found. Please note that names are case sensitive",
-          "danger",
-        ),
+          "danger"
+        )
       );
   }
 };

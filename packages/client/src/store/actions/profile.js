@@ -2,14 +2,17 @@ import axios from "axios";
 // import { setAlert } from "./alert";
 
 import { GET_PROFILE, /*GET_PROFILES*/ PROFILE_ERROR } from "./types";
+const apiUrl = process.env.REACT_APP_DEV_MODE
+  ? process.env.REACT_APP_SOCKET_API_DEV
+  : process.env.REACT_APP_SOCKET_API;
 
 // get current user profile
-export const getCurrentProfile = () => async dispatch => {
+export const getCurrentProfile = () => async (dispatch) => {
   try {
-    const res = await axios.get("/api/profile/me");
+    const res = await axios.get(`${apiUrl}/api/profile/me`);
     dispatch({
       type: GET_PROFILE,
-      payload: res.data
+      payload: res.data,
     });
   } catch (error) {
     dispatch({
@@ -18,8 +21,8 @@ export const getCurrentProfile = () => async dispatch => {
         msg: error.response.data.msg
           ? error.response.data.msg
           : error.responseText,
-        status: error.response.status
-      }
+        status: error.response.status,
+      },
     });
   }
 };

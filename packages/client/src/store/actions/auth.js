@@ -13,6 +13,10 @@ import {
 } from "./types";
 import setAuthToken from "../../utils/setAuthToken";
 
+const apiUrl = process.env.REACT_APP_DEV_MODE
+  ? process.env.REACT_APP_SOCKET_API_DEV
+  : process.env.REACT_APP_SOCKET_API;
+
 // load user
 export const loadUser = () => async (dispatch) => {
   if (localStorage.token) {
@@ -20,7 +24,7 @@ export const loadUser = () => async (dispatch) => {
   }
 
   try {
-    const res = await axios.get("/api/auth");
+    const res = await axios.get(`${apiUrl}/api/auth`);
     dispatch({ type: USER_LOADED, payload: res.data });
   } catch (error) {
     dispatch({ type: AUTH_ERROR });
@@ -36,7 +40,7 @@ export const login = ({ email, password }) => async (dispatch) => {
   };
   const body = JSON.stringify({ email, password });
   try {
-    const res = await axios.post("/api/auth", body, config);
+    const res = await axios.post(`${apiUrl}/api/auth`, body, config);
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data, // jwt token
@@ -45,7 +49,7 @@ export const login = ({ email, password }) => async (dispatch) => {
     dispatch(getCurrentProfile());
     dispatch(setAlert("Welcome back", "success"));
   } catch (error) {
-    const errors = error.response.data.errors;
+    const errors = error.response?.data.errors;
     if (errors) {
       errors.forEach((err) => dispatch(setAlert(err.msg, "danger")));
     }
@@ -65,7 +69,7 @@ export const register = ({ name, email, password }) => async (dispatch) => {
 
   const body = JSON.stringify({ name, email, password });
   try {
-    const res = await axios.post("/api/users", body, config);
+    const res = await axios.post(`${apiUrl}/api/users`, body, config);
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data, // jwt token
@@ -104,9 +108,9 @@ export const requestPasswordResetEmail = (email) => async (dispatch) => {
   const body = JSON.stringify(email);
   try {
     const res = await axios.post(
-      "/api/auth/request-password-reset",
+      `${apiUrl}/api/auth/request-password-reset`,
       body,
-      config,
+      config
     );
     dispatch(setAlert(res.data.msg, "success"));
   } catch (error) {
@@ -132,9 +136,9 @@ export const resetPassword = ({
   const body = JSON.stringify({ password, password2 });
   try {
     const res = await axios.post(
-      `/api/users/reset-password/${token}`,
+      `${apiUrl}/api/users/reset-password/${token}`,
       body,
-      config,
+      config
     );
     dispatch({
       type: LOGIN_SUCCESS,
@@ -161,7 +165,11 @@ export const deleteAccount = ({ email, history }) => async (dispatch) => {
   const body = JSON.stringify({ email });
 
   try {
-    const res = await axios.post(`/api/users/delete-account`, body, config);
+    const res = await axios.post(
+      `${apiUrl}/api/users/delete-account`,
+      body,
+      config
+    );
 
     dispatch({
       type: LOGOUT,

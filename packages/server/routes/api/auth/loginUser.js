@@ -5,16 +5,14 @@ const bcrypt = require("bcryptjs");
 
 module.exports = async (req, res) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
+  if (!errors.isEmpty())
     return res.status(400).json({ errors: errors.array() });
-  }
   const { email, password } = req.body;
 
   try {
     let user = await User.findOne({ email: email.toLowerCase() });
-    if (!user) {
+    if (!user)
       return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
-    }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
@@ -25,15 +23,15 @@ module.exports = async (req, res) => {
     const payload = {
       user: {
         id: user.id,
-        username: user.name
-      }
+        username: user.name,
+      },
     };
 
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
       {
-        expiresIn: 3600000
+        expiresIn: 3600000,
       },
       (err, token) => {
         if (err) throw err;

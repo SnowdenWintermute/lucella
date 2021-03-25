@@ -18,6 +18,7 @@ app.use(helmet());
 //   res.send("API running");
 // });
 
+app.use(cors())
 // define routes
 app.use("/api/users", require("./routes/api/users"));
 app.use("/api/auth", require("./routes/api/auth"));
@@ -25,12 +26,11 @@ app.use("/api/profile", require("./routes/api/profile"));
 app.use("/api/gameRecords", require("./routes/api/gameRecords"));
 const path = require('path');
 
-app.use(express.static(path.join(__dirname, '../client/build')));
-app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
+// app.use(express.static(path.join(__dirname, '../client/build')));
+// app.get('*', function (req, res) {
+//   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+// });
 
-app.use(cors())
 
 // process.env.PORT ||
 const PORT = process.env.PORT || 8080;
