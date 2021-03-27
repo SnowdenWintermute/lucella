@@ -6,9 +6,7 @@ function createGameUpdateInterval({ io, gameData }) {
   return setInterval(() => {
     // create a packet with any data that changed to send to client
     const { gameState } = gameData;
-
     const testPacket = convertGameStateIntoPacket({ gameState });
-
     let newPacket = {};
     Object.keys(gameData.lastUpdatePacket).forEach((key) => {
       if (key == "intervals" || key == "lastUpdatePacket") return;
@@ -28,7 +26,7 @@ function createGameUpdateInterval({ io, gameData }) {
 
     io.to(`game-${gameData.gameName}`).emit(
       "bufferTickFromServer",
-      testPacket.buffer,
+      testPacket.buffer
     );
   }, 45);
 }

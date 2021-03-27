@@ -8,6 +8,7 @@ const createGameUpdateInterval = require("./createGameUpdateInterval");
 function startGame({ application, gameName }) {
   const { io, gameRooms, gameDatas } = application;
   const gameRoom = gameRooms[gameName];
+  if (!gameRoom) return;
   // initializing the game
   gameDatas[gameName] = new GameData({
     gameName,

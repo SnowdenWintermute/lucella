@@ -1,8 +1,7 @@
 module.exports = ({ application, nameOfRoomToJoin }) => {
-  const { socket, connectedSockets, chatRooms } = application
-  const username = connectedSockets[socket.id].username
-  const roomToJoin = chatRooms[nameOfRoomToJoin]
-  // put user in room's list of users
+  const { socket, connectedSockets, chatRooms } = application;
+  const username = connectedSockets[socket.id].username;
+  const roomToJoin = chatRooms[nameOfRoomToJoin];
   if (!roomToJoin.connectedUsers[username])
     roomToJoin.connectedUsers[username] = {
       username,

@@ -45,7 +45,7 @@ io.sockets.on("connect", async (socket) => {
     });
   chatListeners({ application });
   gameUiListeners({ application });
-  battleRoomGameListeners({ socket, connectedSockets, gameRooms, gameDatas });
+  battleRoomGameListeners({ application });
 
   socket.on("disconnect", () => {
     console.log(socket.id + " disconnected");

@@ -15,7 +15,6 @@ function startGameCountdown({ application, gameName }) {
         "currentGameStatusUpdate",
         gameRoom.gameStatus
       );
-      // start the game ticks
       startGame({ application, gameName });
       return clearInterval(gameRoom.countdownInterval);
     }

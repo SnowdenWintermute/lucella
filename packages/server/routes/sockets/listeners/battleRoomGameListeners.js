@@ -1,60 +1,41 @@
-const cloneDeep = require("lodash.clonedeep");
+const generateGameDataForClient = require("../../../utils/generateGameDataForClient");
 const queueUpGameCommand = require("../battleRoomGame/queueUpGameCommand");
 
-const battleRoomGameListeners = ({
-  socket,
-  connectedSockets,
-  gameRooms,
-  gameDatas,
-}) => {
+const battleRoomGameListeners = ({ application }) => {
+  const { socket, connectedSockets, gameRooms, gameDatas } = application;
+  const gameName = connectedSockets[socket.id].currentGameName;
   socket.on("clientSendsOrbSelections", (data) => {
-    // TODO: check for correct ownership (or maybe it doesn't matter if they hack to select opponent orbs because they can't move them anyway)
-    // roomNumber, ownerOfOrbs, orbsToBeUpdated
-    const gameName = connectedSockets[socket.id].currentGameName;
     if (!gameRooms[gameName]) return;
     queueUpGameCommand({
-      socket,
-      connectedSockets,
-      gameRooms,
-      gameData: gameDatas[gameName],
+      application,
+      gameName,
       data,
       commandType: "orbSelect",
     });
   });
   socket.on("clientSubmitsMoveCommand", (data) => {
-    const gameName = connectedSockets[socket.id].currentGameName;
     if (!gameRooms[gameName]) return;
     queueUpGameCommand({
-      socket,
-      connectedSockets,
-      gameRooms,
-      gameData: gameDatas[gameName],
+      application,
+      gameName,
       data,
       commandType: "orbMove",
     });
   });
   socket.on("selectAndMoveOrb", (data) => {
-    const gameName = connectedSockets[socket.id].currentGameName;
     queueUpGameCommand({
-      socket,
-      connectedSockets,
-      gameRooms,
-      gameData: gameDatas[gameName],
+      application,
+      gameName,
       data,
       commandType: "orbSelectAndMove",
     });
   });
   socket.on("clientRequestsGameData", () => {
-    const gameName = connectedSockets[socket.id].currentGameName;
-    let gameDataForClient = {}
-    Object.keys(gameDatas[gameName]).forEach(key => {
-      if (key !== "intervals") {
-        gameDataForClient[key] = cloneDeep(gameDatas[gameName][key])
-      }
-    })
-    socket.emit("serverSendsFullGameData", gameDataForClient)
-    console.log("client requested re-send of full game data")
-  })
+    socket.emit(
+      "serverSendsFullGameData",
+      generateGameDataForClient({ gameData: gameDatas[gameName] })
+    );
+  });
 };
 
 module.exports = battleRoomGameListeners;

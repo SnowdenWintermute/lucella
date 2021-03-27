@@ -1,7 +1,8 @@
 const clientRequestsToJoinRoom = require("../clientRequestsToJoinRoom");
 const generateGameRoomForClient = require("../../../../utils/generateGameRoomForClient");
 const generateRoomForClient = require("../../../../utils/generateRoomForClient");
-const handleHostLeavingGameSetup = require('./handleHostLeavingGameSetup');
+const handleHostLeavingGameSetup = require("./handleHostLeavingGameSetup");
+const handleChallengerLeavingGameSetup = require("./handleChallengerLeavingGameSetup");
 const handleDisconnectionFromGameSetup = require("./handleDisconnectionFromGameSetup");
 
 module.exports = ({ application, gameName, isDisconnecting }) => {
@@ -12,10 +13,9 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
   if (players.host.username === username)
     handleHostLeavingGameSetup({ application, gameName });
   else if (players.challenger.username === username)
-    handleChallengerLeavingGameSetup({ application, gameRoom, players })
-
+    handleChallengerLeavingGameSetup({ application, gameName, players });
   if (isDisconnecting)
-    handleDisconnectionFromGameSetup({ application, gameRoom })
+    handleDisconnectionFromGameSetup({ application, gameRoom });
   else {
     connectedSockets[socket.id].isInGame = false;
     const prevRoom = connectedSockets[socket.id].previousRoomName;
@@ -29,10 +29,16 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
     delete gameRooms[gameName];
     delete chatRooms[gameName];
   } else {
-    io.in(`game-${gameName}`).emit("currentGameRoomUpdate", generateGameRoomForClient({ gameRoom }));
-    io.in(`game-${gameName}`).emit("updateChatRoom", generateRoomForClient({
-      chatRooms,
-      roomName: `game-${gameName}`,
-    }));
+    io.in(`game-${gameName}`).emit(
+      "currentGameRoomUpdate",
+      generateGameRoomForClient({ gameRoom })
+    );
+    io.in(`game-${gameName}`).emit(
+      "updateChatRoom",
+      generateRoomForClient({
+        chatRooms,
+        roomName: `game-${gameName}`,
+      })
+    );
   }
 };

@@ -3,12 +3,12 @@ import { useSelector } from "react-redux";
 
 const ScoreScreenModalContents = () => {
   const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState(
-    "elo-animate-1",
+    "elo-animate-1"
   );
   const [eloAnimatedChange, setEloAnimatedChange] = useState();
   const scoreScreenData = useSelector((state) => state.lobbyUi.scoreScreenData);
   const username = useSelector((state) =>
-    state.auth.user ? state.auth.user.name : null,
+    state.auth.user ? state.auth.user.name : null
   );
 
   let playerOldElo, playerNewElo, playerOldRank, playerNewRank;
@@ -58,7 +58,7 @@ const ScoreScreenModalContents = () => {
       clearTimeout(animateTimeoutOne, animateTimeoutTwo, animateTimeoutThree);
     };
   }, [eloDiff, playerNewElo]);
-
+  console.log(scoreScreenData.eloUpdates);
   if (!scoreScreenData.gameData) return <div />;
   return (
     <div>
@@ -73,7 +73,11 @@ const ScoreScreenModalContents = () => {
             <td>{scoreScreenData.gameRoom.players.challenger.username}:</td>
             <td>{scoreScreenData.gameData.gameState.score.challenger}</td>
           </tr>
-          {scoreScreenData.eloUpdates ? (
+          {scoreScreenData.eloUpdates.casualGame ? (
+            <tr>
+              <td>No changes to ladder rating</td>
+            </tr>
+          ) : (
             <Fragment>
               <tr>
                 <td className={eloAnimatedChangeClass}>
@@ -103,10 +107,6 @@ const ScoreScreenModalContents = () => {
                 </tr>
               )}
             </Fragment>
-          ) : (
-            <tr>
-              <td>No changes to ladder rating</td>
-            </tr>
           )}
         </tbody>
       </table>
