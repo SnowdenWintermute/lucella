@@ -8,7 +8,7 @@ function removeSocketFromRoom({ application }) {
   const nameOfRoomToLeave = connectedSockets[socket.id].currentRoom;
   connectedSockets[socket.id].previousRoomName = nameOfRoomToLeave;
   updateRoomUsernameList({ application, nameOfRoomToLeave });
-  socket.leave(nameOfRoomToLeave);
+  socket.leave(nameOfRoomToLeave)
   const roomForClient = generateRoomForClient({
     chatRooms,
     roomName: nameOfRoomToLeave,

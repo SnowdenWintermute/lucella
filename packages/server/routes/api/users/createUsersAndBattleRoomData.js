@@ -50,10 +50,7 @@ async function createUsersAndBattleRoomData(req, res) {
         ladder = new BattleRoomLadder();
       }
       ladder.ladder.push(newBattleRoomRecord.id);
-      ladder.ladder.sort((a, b) => {
-        console.log(a.elo);
-        return b.elo - a.elo;
-      });
+      ladder.ladder.sort((a, b) => b.elo - a.elo);
 
       await ladder.save();
     }

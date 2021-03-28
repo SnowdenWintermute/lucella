@@ -10,10 +10,6 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
   const username = connectedSockets[socket.id].username;
   const gameRoom = gameRooms[gameName];
   const { players } = gameRoom;
-  if (players.host.username === username)
-    handleHostLeavingGameSetup({ application, gameName });
-  else if (players.challenger.username === username)
-    handleChallengerLeavingGameSetup({ application, gameName, players });
   if (isDisconnecting)
     handleDisconnectionFromGameSetup({ application, gameRoom });
   else {
@@ -25,6 +21,10 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
       roomName: prevRoom ? prevRoom : "the void",
     });
   }
+  if (players.host.username === username)
+    handleHostLeavingGameSetup({ application, gameName });
+  else if (players.challenger.username === username)
+    handleChallengerLeavingGameSetup({ application, gameName, players });
   if (!players.host) {
     delete gameRooms[gameName];
     delete chatRooms[gameName];

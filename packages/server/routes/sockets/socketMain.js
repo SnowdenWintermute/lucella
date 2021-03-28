@@ -37,7 +37,6 @@ io.sockets.on("connect", async (socket) => {
   socket.emit("authenticationFinished", null);
   socket.emit("gameListUpdate", gameRooms);
   socket.emit("currentGameRoomUpdate", null);
-  console.log("socket connected and room set to null");
   if (connectedSockets[socket.id].isGuest)
     connectedSockets[socket.id].username = makeRandomAnonUsername({
       socket,
