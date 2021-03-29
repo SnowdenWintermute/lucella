@@ -1,4 +1,4 @@
-const endGameCleanup = require("./endGameCleanup");
+const endGameCleanup = require("../endGameCleanup");
 const handleOrbInEndzone = require("@lucella/common/battleRoomGame/handleOrbInEndzone");
 const updateScoreNeededToWin = require("./updateScoreNeededToWin");
 const assignWinner = require("./assignWinner");
