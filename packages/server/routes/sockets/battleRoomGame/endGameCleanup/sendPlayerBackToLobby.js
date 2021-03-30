@@ -3,7 +3,7 @@ const clientRequestsToJoinRoom = require("../../lobbyFunctions/clientRequestsToJ
 module.exports = ({ application, player }) => {
   if (!player) return;
   const { io, connectedSockets } = application;
-  player.isInGame = false;
+  player.currentGameName = null
   clientRequestsToJoinRoom({
     application: {
       ...application,

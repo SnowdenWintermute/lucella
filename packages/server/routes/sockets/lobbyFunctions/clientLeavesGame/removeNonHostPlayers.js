@@ -5,7 +5,6 @@ module.exports = ({ application, players }) => {
   if (players.challenger) {
     let socketIdToRemove = players.challenger.socketId;
     if (connectedSockets[socketIdToRemove]) {
-      connectedSockets[socketIdToRemove].isInGame = false;
       connectedSockets[socketIdToRemove].currentGameName = null
       const prevRoom = connectedSockets[socketIdToRemove].previousRoomName;
       clientRequestsToJoinRoom({

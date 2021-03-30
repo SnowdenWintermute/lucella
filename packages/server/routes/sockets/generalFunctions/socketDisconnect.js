@@ -3,6 +3,7 @@ const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
 
 module.exports = ({ application, gameName }) => {
   const { socket, connectedSockets } = application;
+  console.log("gameName: ", gameName)
   if (gameName)
     clientLeavesGame({
       application,

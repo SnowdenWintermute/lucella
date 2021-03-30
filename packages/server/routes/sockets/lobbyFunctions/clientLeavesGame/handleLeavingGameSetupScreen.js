@@ -13,7 +13,8 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
   if (isDisconnecting)
     handleDisconnectionFromGameSetup({ application, gameRoom });
   else {
-    connectedSockets[socket.id].isInGame = false;
+    connectedSockets[socket.id].currentGameName = null
+    socket.emit("currentGameRoomUpdate", null)
     const prevRoom = connectedSockets[socket.id].previousRoomName;
     clientRequestsToJoinRoom({
       application,
@@ -28,17 +29,18 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
   if (!players.host) {
     delete gameRooms[gameName];
     delete chatRooms[gameName];
-  } else {
-    io.in(`game-${gameName}`).emit(
-      "currentGameRoomUpdate",
-      generateGameRoomForClient({ gameRoom })
-    );
-    io.in(`game-${gameName}`).emit(
-      "updateChatRoom",
-      generateRoomForClient({
-        chatRooms,
-        roomName: `game-${gameName}`,
-      })
-    );
   }
+
+  io.in(`game-${gameName}`).emit(
+    "currentGameRoomUpdate",
+    generateGameRoomForClient({ gameRoom })
+  );
+  io.in(`game-${gameName}`).emit(
+    "updateChatRoom",
+    generateRoomForClient({
+      chatRooms,
+      roomName: `game-${gameName}`,
+    })
+  );
+
 };

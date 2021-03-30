@@ -7,7 +7,7 @@ module.exports = ({ application, gameName }) => {
     const { io, socket, connectedSockets, gameRooms } = application;
     const gameRoom = gameRooms[gameName];
     const { players, playersReady } = gameRoom;
-    if (!connectedSockets[socket.id].isInGame) throw new Error("Already in game");
+    if (!connectedSockets[socket.id].currentGameName) throw new Error("Already in game");
     if (!gameRoom) throw new Error("No such game exists");
     if (gameRoom.gameStatus === "countingDown" && gameRoom.isRanked) throw new Error("Can't unready from ranked game");
     togglePlayerReadyState({ application, players, playersReady })

@@ -10,7 +10,7 @@ const battleRoomGameListeners = require("./listeners/battleRoomGameListeners");
 let chatRooms = {}; // roomName: {connectedUsers: username: {userName:String, connectedSockets: [socketId]}}
 let gameRooms = {}; // roomName: {connectedUsers: {host:{username:String, socketId: socket.id}, {challenger:{{username:String, socketId: socket.id}}}}
 let gameDatas = {}; // see Class for detailed info
-let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, isInGame: Bool, currentGameName: String, isGuest: Bool}
+let connectedSockets = {}; // socketId: {currentRoom: String}, username: String, currentGameName: String, isGuest: Bool}
 let rankedQueue = {
   users: {},
   matchmakingInterval: null,

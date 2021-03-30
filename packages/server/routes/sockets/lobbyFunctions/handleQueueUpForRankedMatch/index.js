@@ -7,7 +7,7 @@ const User = require("../../../../models/User");
 
 async function clientClicksRanked({ application }) {
   const { socket, connectedSockets, rankedQueue } = application;
-  if (connectedSockets[socket.id].isInGame) return socket.emit("errorMessage", "You are already in a game");
+  if (connectedSockets[socket.id].currentGameName) return socket.emit("errorMessage", "You are already in a game");
   const user = await User.findOne({ name: connectedSockets[socket.id].username });
   if (!user) return socket.emit("errorMessage", "Log in or create an account to play ranked games");
   let userBattleRoomRecord = await fetchOrCreateBattleRoomRecord(user)

@@ -77,14 +77,24 @@ export default function (state = initialState, action) {
         preGameScreen: { isOpen: false },
       };
     case SET_CURRENT_GAME:
+      console.log("payload", payload)
+      console.log({
+        ...state,
+        currentGameName: payload?.gameName || null,
+        playersInGame: payload?.players || null,
+        playersReady: payload?.playersReady || null,
+        countdownNumber: payload?.countdown || null,
+        gameStatus: payload?.gameStatus || null,
+        isRanked: payload?.isRanked || null,
+      })
       return {
         ...state,
-        currentGameName: payload && payload.gameName,
-        playersInGame: payload && payload.players,
-        playersReady: payload && payload.playersReady,
-        countdownNumber: payload && payload.countdown,
-        gameStatus: payload && payload.gameStatus,
-        isRanked: payload && payload.isRanked,
+        currentGameName: payload?.gameName || null,
+        playersInGame: payload?.players || null,
+        playersReady: payload?.playersReady || null,
+        countdownNumber: payload?.countdown || null,
+        gameStatus: payload?.gameStatus || null,
+        isRanked: payload?.isRanked || null,
       };
     case UPDATE_PLAYERS:
       return {

@@ -7,7 +7,7 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
   try {
     if (!gameRoom)
       return socket.emit("errorMessage", "No game by that name exists");
-    if (!isDisconnecting && !connectedSockets[socket.id].isInGame)
+    if (!isDisconnecting && !connectedSockets[socket.id].currentGameName)
       return console.log("tried to leave a game when they weren't in one");
     if (
       gameRoom.gameStatus === "inLobby" ||
