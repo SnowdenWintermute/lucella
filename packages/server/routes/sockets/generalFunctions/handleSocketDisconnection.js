@@ -1,9 +1,9 @@
-const removeSocketFromRoom = require("./removeSocketFromRoom");
+const removeSocketFromRoom = require("../lobbyFunctions/removeSocketFromRoom");
 const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
 
 module.exports = ({ application, gameName }) => {
   const { socket, connectedSockets } = application;
-  console.log("gameName: ", gameName)
+  console.log(socket.id + " disconnected");
   if (gameName)
     clientLeavesGame({
       application,

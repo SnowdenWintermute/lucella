@@ -13,5 +13,4 @@ module.exports = ({ application, nameOfRoomToLeave }) => {
         userToRemoveFromRoom.connectedSockets = newSocketList;
       }
   });
-  console.log("user's sockets in that room: ", userToRemoveFromRoom.connectedSockets)
 };

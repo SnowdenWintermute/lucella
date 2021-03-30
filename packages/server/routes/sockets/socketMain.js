@@ -1,6 +1,6 @@
 const io = require("../../expressServer").io;
-const handleNewSocketConnection = require("./generalFunctions/handleNewSocketConnection");
-const socketDisconnect = require("./generalFunctions/socketDisconnect");
+const registerNewSocket = require("./generalFunctions/registerNewSocket");
+const handleSocketDisconnection = require("./generalFunctions/handleSocketDisconnection");
 const makeRandomAnonUsername = require("../../utils/makeRandomAnonUsername");
 
 const chatListeners = require("./listeners/chatListeners");
@@ -24,7 +24,7 @@ io.sockets.on("connect", async (socket) => {
     currentRoom: null,
     socketId: socket.id,
   };
-  await handleNewSocketConnection({ socket, connectedSockets });
+  await registerNewSocket({ socket, connectedSockets });
   const application = {
     io,
     socket,
@@ -46,13 +46,10 @@ io.sockets.on("connect", async (socket) => {
   gameUiListeners({ application });
   battleRoomGameListeners({ application });
 
-  socket.on("disconnect", () => {
-    console.log(socket.id + " disconnected");
-    socketDisconnect({
-      application,
-      gameName: connectedSockets[socket.id].currentGameName,
-    });
-  });
+  socket.on("disconnect", () => handleSocketDisconnection({
+    application,
+    gameName: connectedSockets[socket.id].currentGameName,
+  }));
 });
 
 const games = io.of("/games");

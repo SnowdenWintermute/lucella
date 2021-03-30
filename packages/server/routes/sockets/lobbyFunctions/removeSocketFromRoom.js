@@ -1,7 +1,7 @@
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
-const updateRoomUsernameList = require("./updateRoomUsernameList/updateRoomUsernameList");
+const updateRoomUsernameList = require("./updateRoomUsernameList");
 
-function removeSocketFromRoom({ application }) {
+module.exports = ({ application }) => {
   const { io, socket, connectedSockets, chatRooms } = application;
   if (!socket) return;
   if (!connectedSockets[socket.id].currentRoom) return;
@@ -15,4 +15,3 @@ function removeSocketFromRoom({ application }) {
   });
   io.in(nameOfRoomToLeave).emit("updateChatRoom", roomForClient);
 }
-module.exports = removeSocketFromRoom;

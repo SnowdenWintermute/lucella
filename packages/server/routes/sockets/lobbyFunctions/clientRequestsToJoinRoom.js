@@ -1,7 +1,7 @@
 const generateRoomForClient = require("../../../utils/generateRoomForClient");
-const removeSocketFromRoom = require("../generalFunctions/removeSocketFromRoom");
+const removeSocketFromRoom = require("./removeSocketFromRoom");
 const ChatMessage = require("../../../classes/chat/ChatMessage");
-const updateRoomUsernameList = require("../generalFunctions/updateRoomUsernameList/updateRoomUsernameList");
+const updateRoomUsernameList = require("./updateRoomUsernameList");
 
 const clientRequestsToJoinRoom = ({
   application,

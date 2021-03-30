@@ -1,4 +1,4 @@
-const removeSocketFromRoom = require("../../generalFunctions/removeSocketFromRoom");
+const removeSocketFromRoom = require("../../lobbyFunctions/removeSocketFromRoom");
 
 module.exports = ({ application, gameName }) => {
   const { socket, connectedSockets, gameRooms } = application;
