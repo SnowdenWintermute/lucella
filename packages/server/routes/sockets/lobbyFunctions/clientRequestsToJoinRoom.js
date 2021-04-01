@@ -20,8 +20,7 @@ const clientRequestsToJoinRoom = ({
   if (!chatRooms[roomName])
     chatRooms[roomName] = { roomName, connectedUsers: {} };
   updateRoomUsernameList({ application, nameOfRoomToJoin: roomName });
-  const roomForClient = generateRoomForClient({ chatRooms, roomName });
-  io.in(roomName).emit("updateChatRoom", roomForClient);
+  io.in(roomName).emit("updateChatRoom", generateRoomForClient({ chatRooms, roomName }));
   socket.emit(
     "newMessage",
     new ChatMessage({

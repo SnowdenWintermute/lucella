@@ -7,11 +7,10 @@ module.exports = ({ application }) => {
   if (!connectedSockets[socket.id].currentRoom) return;
   const nameOfRoomToLeave = connectedSockets[socket.id].currentRoom;
   connectedSockets[socket.id].previousRoomName = nameOfRoomToLeave;
-  updateRoomUsernameList({ application, nameOfRoomToLeave });
+  updateRoomUsernameList({ application, nameOfRoomToLeave })
   socket.leave(nameOfRoomToLeave)
-  const roomForClient = generateRoomForClient({
+  io.in(nameOfRoomToLeave).emit("updateChatRoom", generateRoomForClient({
     chatRooms,
     roomName: nameOfRoomToLeave,
-  });
-  io.in(nameOfRoomToLeave).emit("updateChatRoom", roomForClient);
+  }));
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import {
   handleKeypress,
@@ -13,39 +13,20 @@ import {
   touchEndHandler,
 } from "./user-input-listeners/userInputListeners";
 import draw from "./canvas-functions/canvasMain";
-import * as gameUiActions from "../../../../store/actions/game-ui";
 import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
-import cloneDeep from 'lodash.clonedeep'
-import { convertBufferToGameStateObject } from "./game-functions/convertBufferToGameStateObject";
+import MouseData from "./classes/MouseData";
+import GameListener from "../socket-manager/GameListener";
 
 const BattleRoomGameInstance = ({ socket }) => {
-  const dispatch = useDispatch();
-  const mouseData = {
-    leftPressedAtX: null,
-    leftPressedAtY: null,
-    leftReleasedAtX: null,
-    leftReleasedAtY: null,
-    leftCurrentlyPressed: false,
-    rightReleasedAtX: null,
-    rightReleasedAtY: null,
-    touchStartX: null,
-    touchStartY: null,
-    xPos: 0,
-    yPos: 0,
-    mouseOnScreen: true,
-  };
-  let [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
-  console.log(lastServerGameUpdate)
+  const mouseData = new MouseData()
+  const [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
   const numberOfLastServerUpdateApplied = useRef(null);
-  let currentGameData = useRef();
-  let commandQueue = useRef({ counter: 0, queue: [] });
-  let gameStateQueue = useRef([]);
-  const playerDesignation = useSelector((state) => state.gameUi.playerDesignation);
-  const playersInGame = useSelector((state) => state.gameUi.playersInGame);
-  const gameStatus = useSelector((state) => state.gameUi.gameStatus);
-  const winner = useSelector((state) => state.gameUi.winner);
+  const currentGameData = useRef();
+  const commandQueue = useRef({ counter: 0, queue: [] });
+  const gameStateQueue = useRef([]);
+  const gameUi = useSelector((state) => state.gameUi);
+  const { playerDesignation, playersInGame, gameStatus, winner } = gameUi
   const [clientPlayer, setClientPlayer] = useState([]);
-
   const canvasRef = useRef();
   const [canvasInfo, setCanvasInfo] = useState({});
   const drawRef = useRef();
@@ -54,39 +35,6 @@ const BattleRoomGameInstance = ({ socket }) => {
   useEffect(() => {
     setClientPlayer(playersInGame[playerDesignation]);
   }, [playerDesignation, playersInGame]);
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("serverInitsGame", (data) => {
-      console.log("gameInit");
-      currentGameData.current = cloneDeep(data);
-      setLastServerGameUpdate(cloneDeep(data));
-    });
-    socket.on("bufferTickFromServer", (data) => {
-      if (!lastServerGameUpdate) return;
-      const decodedPacket = convertBufferToGameStateObject({ data });
-      let newUpdate = lastServerGameUpdate;
-      Object.keys(decodedPacket).forEach((key) => {
-        newUpdate[key] = cloneDeep(decodedPacket[key]);
-        setLastServerGameUpdate(newUpdate);
-      });
-      gameStateQueue.current.push(newUpdate);
-    });
-    socket.on("serverSendsWinnerInfo", (data) => {
-      dispatch(gameUiActions.setGameWinner(data));
-    });
-    socket.on("gameEndingCountdown", (data) => {
-      return (gameOverCountdownText.current = data);
-    });
-    return () => {
-      socket.off("serverInitsGame");
-      socket.off("tickFromServer");
-      socket.off("bufferTickFromServer");
-      socket.off("gameEndingCountdown");
-      socket.off("serverSendsWinnerInfo");
-      dispatch(gameUiActions.clearGameUiData());
-    };
-  }, [socket, dispatch]);
 
   useEffect(() => {
     const gameWidthRatio = window.innerHeight * 0.6;
@@ -181,6 +129,14 @@ const BattleRoomGameInstance = ({ socket }) => {
       className="battle-room-canvas-holder"
       onContextMenu={(e) => e.preventDefault()}
     >
+      <GameListener
+        socket={socket}
+        currentGameData={currentGameData}
+        lastServerGameUpdate={lastServerGameUpdate}
+        setLastServerGameUpdate={setLastServerGameUpdate}
+        gameStateQueue={gameStateQueue}
+        gameOverCountdownText={gameOverCountdownText}
+      />
       {currentGameData.current && <canvas
         height={canvasInfo.height}
         width={canvasInfo.width}

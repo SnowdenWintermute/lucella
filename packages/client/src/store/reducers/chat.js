@@ -1,7 +1,6 @@
 import {
   NEW_CHAT_MESSAGE,
-  SET_CURRENT_CHAT_ROOM_USERS,
-  SET_CURRENT_CHAT_ROOM_NAME,
+  UPDATE_CURRENT_CHAT_ROOM,
   SET_NEW_CHAT_ROOM_LOADING,
 } from "../actions/types";
 
@@ -33,15 +32,11 @@ export default function (state = initialState, action) {
           messages: [...state.messages, message],
         };
       }
-    case SET_CURRENT_CHAT_ROOM_NAME:
+    case UPDATE_CURRENT_CHAT_ROOM:
       return {
         ...state,
-        currentChatRoomName: payload,
-      };
-    case SET_CURRENT_CHAT_ROOM_USERS:
-      return {
-        ...state,
-        currentChatRoomUsers: payload,
+        currentChatRoomName: payload.roomName,
+        currentChatRoomUsers: payload.connectedUsers,
       };
     default:
       return state;
