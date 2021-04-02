@@ -1,17 +1,15 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import {
-  handleKeypress,
-  mouseUpHandler,
-  mouseDownHandler,
-  mouseMoveHandler,
-  mouseLeaveHandler,
-  mouseEnterHandler,
-  touchStartHandler,
-  touchMoveHandler,
-  touchEndHandler,
-} from "./user-input-listeners/userInputListeners";
+import mouseEnterHandler from './user-input-handlers/mouseEnterHandler'
+import mouseLeaveHandler from './user-input-handlers/mouseLeaveHandler'
+import mouseMoveHandler from './user-input-handlers/mouseMoveHandler'
+import mouseDownHandler from './user-input-handlers/mouseDownHandler'
+import mouseUpHandler from './user-input-handlers/mouseUpHandler'
+import keyPressHandler from './user-input-handlers/keyPressHandler'
+import touchMoveHandler from './user-input-handlers/touchMoveHandler'
+import touchStartHandler from './user-input-handlers/touchStartHandler'
+import touchEndHandler from './user-input-handlers/touchEndHandler'
 import draw from "./canvas-functions/canvasMain";
 import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
 import MouseData from "./classes/MouseData";
@@ -79,28 +77,6 @@ const BattleRoomGameInstance = ({ socket }) => {
     };
   });
 
-  const onKeyPress = useCallback(
-    (e) => {
-      handleKeypress({
-        e,
-        socket,
-        currentGameData: currentGameData.current,
-        clientPlayer,
-        playersInGame,
-        mouseData,
-        commandQueue: commandQueue.current,
-      });
-    },
-    [socket, playersInGame, clientPlayer, mouseData, commandQueue]
-  );
-  useEffect(() => {
-    window.addEventListener("keydown", onKeyPress);
-    return () => {
-      window.removeEventListener("keydown", onKeyPress);
-    };
-  }, [onKeyPress]);
-
-  // physics interval
   useEffect(() => {
     const physicsInterval = createGamePhysicsInterval({
       lastServerGameUpdate,
@@ -113,16 +89,28 @@ const BattleRoomGameInstance = ({ socket }) => {
     return () => clearInterval(physicsInterval);
   }, [lastServerGameUpdate, commandQueue]);
 
-  // draw interval
   useEffect(() => {
-    function currentDrawFunction() {
-      drawRef.current();
-    }
-    const drawInterval = setInterval(() => {
-      currentDrawFunction();
-    }, 33);
+    function currentDrawFunction() { drawRef.current() }
+    const drawInterval = setInterval(currentDrawFunction, 33);
     return () => clearInterval(drawInterval);
   }, [drawRef]);
+
+  const commonEventHandlerProps = {
+    socket,
+    canvasInfo,
+    currentGameData: currentGameData.current,
+    mouseData,
+    clientPlayer,
+    playersInGame,
+    commandQueue: commandQueue.current,
+  }
+
+  const onKeyPress = useCallback((e) => { keyPressHandler({ e, commonEventHandlerProps }) }, [commonEventHandlerProps]);
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyPress);
+    return () => { window.removeEventListener("keydown", onKeyPress) };
+  }, [onKeyPress]);
 
   return (
     <div
@@ -137,83 +125,21 @@ const BattleRoomGameInstance = ({ socket }) => {
         gameStateQueue={gameStateQueue}
         gameOverCountdownText={gameOverCountdownText}
       />
-      {currentGameData.current && <canvas
+      {currentGameData.current ? <canvas
         height={canvasInfo.height}
         width={canvasInfo.width}
         className="battle-room-canvas"
         ref={canvasRef}
-        onTouchStart={(e) => {
-          mouseData.touchStartTime = touchStartHandler({
-            e,
-            canvasInfo,
-            currentGameData: currentGameData.current,
-            mouseData,
-          });
-        }}
-        onTouchMove={(e) => {
-          touchMoveHandler({
-            e,
-            canvasInfo,
-            currentGameData: currentGameData.current,
-            mouseData,
-          });
-        }}
-        onTouchEnd={(e) => {
-          touchEndHandler({
-            e,
-            canvasInfo,
-            currentGameData: currentGameData.current,
-            mouseData,
-            socket,
-            clientPlayer,
-            playersInGame,
-            commandQueue: commandQueue.current,
-          });
-        }}
-        onMouseDown={(e) => {
-          mouseDownHandler({
-            e,
-            mouseData,
-            currentGameData: currentGameData.current,
-            canvasInfo,
-          });
-        }}
-        onMouseUp={(e) => {
-          mouseUpHandler({
-            e,
-            socket,
-            currentGameData: currentGameData.current,
-            canvasInfo,
-            clientPlayer,
-            mouseData,
-            playersInGame,
-            commandQueue: commandQueue.current,
-          });
-        }}
+        onTouchStart={(e) => { touchStartHandler({ e, commonEventHandlerProps }) }}
+        onTouchMove={(e) => { touchMoveHandler({ e, commonEventHandlerProps }) }}
+        onTouchEnd={(e) => { touchEndHandler({ e, commonEventHandlerProps }) }}
+        onMouseDown={(e) => { mouseDownHandler({ e, mouseData }) }}
+        onMouseUp={(e) => { mouseUpHandler({ e, commonEventHandlerProps }) }}
         onContextMenu={(e) => e.preventDefault()}
-        onMouseMove={(e) => {
-          mouseMoveHandler({
-            e,
-            mouseData,
-            canvasInfo,
-            currentGameData: currentGameData.current,
-          });
-        }}
-        onMouseLeave={(e) => {
-          mouseLeaveHandler({
-            socket,
-            currentGameData: currentGameData.current,
-            canvasInfo,
-            clientPlayer,
-            playersInGame,
-            mouseData,
-            commandQueue: commandQueue.current,
-          });
-        }}
-        onMouseEnter={(e) => {
-          mouseEnterHandler({ mouseData });
-        }}
-      />}
+        onMouseMove={(e) => { mouseMoveHandler({ e, commonEventHandlerProps }) }}
+        onMouseLeave={() => { mouseLeaveHandler({ commonEventHandlerProps }) }}
+        onMouseEnter={() => { mouseEnterHandler({ mouseData }) }}
+      /> : "Loading..."}
     </div>
   );
 };
