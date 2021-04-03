@@ -1,8 +1,8 @@
-import selectOrbs from "../game-functions/selectOrbs";
+import selectOrbs from "../game-functions/selectOrbs/selectOrbs";
 import orbMoveCommand from "../game-functions/orbMoveCommand";
 
 export default ({ e, commonEventHandlerProps }) => {
-  const { canvasInfo, currentGameData, mouseData, socket, clientPlayer, playersInGame, commandQueue } = commonEventHandlerProps
+  const { canvasInfo, currentGameData, mouseData, } = commonEventHandlerProps
   mouseData.leftCurrentlyPressed = false;
   const { touchStartX, touchStartY } = mouseData;
 
@@ -24,26 +24,16 @@ export default ({ e, commonEventHandlerProps }) => {
     Math.abs(adjustedOffsetY - touchStartY) > 8
   ) {
     selectOrbs({
-      socket,
-      currentGameData,
-      playersInGame,
-      clientPlayer,
       startX: touchStartX,
       startY: touchStartY,
       currX: mouseData.xPos,
       currY: mouseData.yPos,
-      commandQueue,
+      commonEventHandlerProps
     });
-  } else {
-    const data = orbMoveCommand({
-      socket,
-      currentGameData,
-      clientPlayer,
-      playersInGame,
+  } else
+    orbMoveCommand({
       headingX: (offsetX / canvasInfo.width) * currentGameData.width,
       headingY: (offsetY / canvasInfo.height) * currentGameData.height,
-      commandQueue,
+      commonEventHandlerProps
     });
-    socket.emit("clientSubmitsMoveCommand", data);
-  }
 };

@@ -1,45 +1,28 @@
-const orbMoveCommand = ({
-  currentGameData,
-  clientPlayer,
-  playersInGame,
-  headingX,
-  headingY,
-  commandQueue,
-  isPartOfSelectAndMoveCommand,
-}) => {
-  let hostOrChallenger;
-  if (playersInGame.host.uuid === clientPlayer.uuid)
-    hostOrChallenger = "hostOrbs";
-  if (playersInGame.challenger.uuid === clientPlayer.uuid)
-    hostOrChallenger = "challengerOrbs";
-  currentGameData.gameState.orbs[hostOrChallenger].forEach((orb) => {
+export default ({ headingX, headingY, commonEventHandlerProps, isPartOfSelectAndMoveCommand }) => {
+  const { socket, currentGameData, commandQueue, playerDesignation } = commonEventHandlerProps
+  const playerOrbs = currentGameData.gameState.orbs[playerDesignation + "Orbs"]
+  playerOrbs.forEach((orb) => {
     if (orb.isSelected) {
       orb.heading.xPos = headingX;
       orb.heading.yPos = headingY;
     }
   });
+  console.log(headingX, headingY)
+  console.log(playerOrbs)
 
-  // update client log of issued commands
-  commandQueue.counter++;
-  const commandPositionInQueue = commandQueue.counter;
-  // only send new headings
-  const newOrbHeadings = currentGameData.gameState.orbs[hostOrChallenger].map(
-    (orb) => {
-      const orbHeadingInfo = { heading: orb.heading };
-      return orbHeadingInfo;
-    },
-  );
-  const data = {
-    newOrbHeadings,
-    commandPositionInQueue,
-  };
-  if (!isPartOfSelectAndMoveCommand)
+  const newOrbHeadings = playerOrbs.map((orb) => {
+    console.log(orb.heading)
+    return { heading: orb.heading }
+  });
+
+  const data = { newOrbHeadings, commandPositionInQueue: ++commandQueue.counter };
+  if (!isPartOfSelectAndMoveCommand) {
     commandQueue.queue.push({
       type: "orbMove",
       data,
     });
+    socket.emit("clientSubmitsMoveCommand", data);
+  }
 
-  return data;
+  return data
 };
-
-export default orbMoveCommand;

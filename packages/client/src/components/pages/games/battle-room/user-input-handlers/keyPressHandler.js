@@ -2,7 +2,6 @@ import selectOrbAndIssueMoveCommand from "../game-functions/selectOrbAndIssueMov
 import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps }) => {
-  const { socket, currentGameData, clientPlayer, playersInGame, mouseData, commandQueue } = commonEventHandlerProps
   let keyPressed;
   switch (e.keyCode) {
     case 49: // 1
@@ -23,16 +22,6 @@ export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps })
     default:
       return;
   }
-  if (keyPressed > 0 && keyPressed < 6) {
-    selectOrbAndIssueMoveCommand({
-      socket,
-      currentGameData,
-      clientPlayer,
-      playersInGame,
-      keyPressed,
-      mouseData,
-      commandQueue,
-    });
-  }
+  if (keyPressed > 0 && keyPressed < 6) { selectOrbAndIssueMoveCommand({ keyPressed, commonEventHandlerProps }); }
 },
 );

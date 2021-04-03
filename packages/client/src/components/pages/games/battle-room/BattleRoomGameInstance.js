@@ -30,9 +30,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   const drawRef = useRef();
   const gameOverCountdownText = useRef();
 
-  useEffect(() => {
-    setClientPlayer(playersInGame[playerDesignation]);
-  }, [playerDesignation, playersInGame]);
+  useEffect(() => { setClientPlayer(playersInGame[playerDesignation]) }, [playerDesignation, playersInGame]);
 
   useEffect(() => {
     const gameWidthRatio = window.innerHeight * 0.6;
@@ -87,7 +85,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       playerRole: playerDesignation,
     });
     return () => clearInterval(physicsInterval);
-  }, [lastServerGameUpdate, commandQueue]);
+  }, [lastServerGameUpdate, commandQueue, playerDesignation]);
 
   useEffect(() => {
     function currentDrawFunction() { drawRef.current() }
@@ -103,6 +101,7 @@ const BattleRoomGameInstance = ({ socket }) => {
     clientPlayer,
     playersInGame,
     commandQueue: commandQueue.current,
+    playerDesignation
   }
 
   const onKeyPress = useCallback((e) => { keyPressHandler({ e, commonEventHandlerProps }) }, [commonEventHandlerProps]);

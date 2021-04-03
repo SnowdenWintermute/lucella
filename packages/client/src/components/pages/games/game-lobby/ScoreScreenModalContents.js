@@ -55,7 +55,9 @@ const ScoreScreenModalContents = () => {
       setEloAnimatedChangeClass("elo-animate-3");
     }, 3000);
     return () => {
-      clearTimeout(animateTimeoutOne, animateTimeoutTwo, animateTimeoutThree);
+      clearTimeout(animateTimeoutOne);
+      clearTimeout(animateTimeoutTwo);
+      clearTimeout(animateTimeoutThree);
     };
   }, [eloDiff, playerNewElo]);
   console.log(scoreScreenData.eloUpdates);

@@ -1,4 +1,4 @@
-function setOrbHeadings({ playerRole, gameData, data }) {
+module.exports = ({ playerRole, gameData, data }) => {
   const { newOrbHeadings } = data;
   let whichPlayerOrbs;
   if (playerRole === "host") whichPlayerOrbs = "hostOrbs";
@@ -8,5 +8,3 @@ function setOrbHeadings({ playerRole, gameData, data }) {
     orb.heading = newOrbHeadings[i].heading;
   });
 }
-
-module.exports = setOrbHeadings;

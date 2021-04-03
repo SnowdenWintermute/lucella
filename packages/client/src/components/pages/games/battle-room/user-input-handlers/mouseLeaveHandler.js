@@ -1,20 +1,16 @@
-import selectOrbs from "../game-functions/selectOrbs";
+import selectOrbs from "../game-functions/selectOrbs/selectOrbs";
 
 export default ({ commonEventHandlerProps }) => {
-  const { socket, currentGameData, clientPlayer, playersInGame, mouseData, commandQueue } = commonEventHandlerProps
+  const { mouseData, } = commonEventHandlerProps
   mouseData.mouseOnScreen = false;
   if (mouseData.leftCurrentlyPressed) {
     const { leftPressedAtX, leftPressedAtY, xPos, yPos } = mouseData;
     selectOrbs({
-      socket,
-      currentGameData,
-      playersInGame,
-      clientPlayer,
       startX: leftPressedAtX,
       startY: leftPressedAtY,
       currX: xPos,
       currY: yPos,
-      commandQueue,
+      commonEventHandlerProps
     });
   }
 };

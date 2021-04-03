@@ -1,73 +1,36 @@
 import orbMoveCommand from "./orbMoveCommand";
 
-const selectOrbAndIssueMoveCommand = async ({
-  socket,
-  currentGameData,
-  clientPlayer,
-  playersInGame,
-  keyPressed,
-  mouseData,
-  commandQueue,
-}) => {
+export default async ({ keyPressed, commonEventHandlerProps }) => {
+  const { socket, currentGameData, clientPlayer, mouseData, commandQueue, playerDesignation } = commonEventHandlerProps
   if (!currentGameData) return;
-  let playerOrbsToSelect;
-  if (clientPlayer.uuid === playersInGame.host.uuid)
-    playerOrbsToSelect = "hostOrbs";
-  else playerOrbsToSelect = "challengerOrbs";
-  currentGameData.gameState.orbs[playerOrbsToSelect].forEach((orb) => {
-    orb.isSelected = false;
-  });
-  if (
-    currentGameData.gameState.orbs[playerOrbsToSelect][keyPressed - 1].owner ===
-    clientPlayer.uuid
-  ) {
-    currentGameData.gameState.orbs[playerOrbsToSelect][
-      keyPressed - 1
-    ].isSelected = true;
-    currentGameData.gameState.orbs[playerOrbsToSelect][
-      keyPressed - 1
-    ].heading.xPos = mouseData.xPos;
-    currentGameData.gameState.orbs[playerOrbsToSelect][
-      keyPressed - 1
-    ].heading.yPos = mouseData.yPos;
+  currentGameData.gameState.orbs[playerDesignation + "Orbs"].forEach((orb) => { orb.isSelected = false });
+
+  const selectedOrb = currentGameData.gameState.orbs[playerDesignation + "Orbs"][keyPressed - 1]
+  if (selectedOrb.owner === clientPlayer.uuid) {
+    selectedOrb.isSelected = true;
+    selectedOrb.heading.xPos = mouseData.xPos;
+    selectedOrb.heading.yPos = mouseData.yPos;
   }
 
-  const orbsToBeUpdated = currentGameData.gameState.orbs[
-    playerOrbsToSelect
-  ].map((orb) => {
-    return { num: orb.num, isSelected: orb.isSelected };
-  });
+  const orbsToBeUpdated = currentGameData.gameState.orbs[playerDesignation + "Orbs"]
+    .map((orb) => {
+      return { num: orb.num, isSelected: orb.isSelected };
+    });
 
-  // update client log of issued commands
-  commandQueue.counter++;
-  const commandPositionInQueue = commandQueue.counter;
+
   const selectCommandData = {
-    ownerOfOrbs: playerOrbsToSelect,
+    ownerOfOrbs: playerDesignation + "Orbs",
     orbsToBeUpdated,
   };
 
   const moveCommandData = orbMoveCommand({
-    currentGameData,
-    clientPlayer,
-    playersInGame,
-    headingX: (currentGameData.gameState.orbs[playerOrbsToSelect][
-      keyPressed - 1
-    ].heading.xPos = mouseData.xPos),
-    headingY: (currentGameData.gameState.orbs[playerOrbsToSelect][
-      keyPressed - 1
-    ].heading.yPos = mouseData.yPos),
-    commandQueue,
     isPartOfSelectAndMoveCommand: true,
+    headingX: (selectedOrb.heading.xPos = mouseData.xPos),
+    headingY: (selectedOrb.heading.yPos = mouseData.yPos),
+    commonEventHandlerProps
   });
 
-  const data = { selectCommandData, moveCommandData, commandPositionInQueue };
-
-  commandQueue.queue.push({
-    type: "selectAndMoveOrb",
-    data,
-  });
-
+  const data = { selectCommandData, moveCommandData, commandPositionInQueue: ++commandQueue.counter };
+  commandQueue.queue.push({ type: "selectAndMoveOrb", data });
   socket.emit("selectAndMoveOrb", data);
 };
-
-export default selectOrbAndIssueMoveCommand;

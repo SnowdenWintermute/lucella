@@ -65,10 +65,6 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     }
   }, [authenticating, defaultChatRoom]);
 
-  useEffect(() => {
-    console.log(gameStatus);
-  }, [gameStatus]);
-
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
   const setChannelModalParentDisplay = (status) => {
     setDisplayChangeChannelModal(status);
