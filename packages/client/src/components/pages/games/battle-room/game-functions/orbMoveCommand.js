@@ -7,8 +7,6 @@ export default ({ headingX, headingY, commonEventHandlerProps, isPartOfSelectAnd
       orb.heading.yPos = headingY;
     }
   });
-  console.log(headingX, headingY)
-  console.log(playerOrbs)
 
   const newOrbHeadings = playerOrbs.map((orb) => {
     console.log(orb.heading)
@@ -22,7 +20,5 @@ export default ({ headingX, headingY, commonEventHandlerProps, isPartOfSelectAnd
       data,
     });
     socket.emit("clientSubmitsMoveCommand", data);
-  }
-
-  return data
+  } else return data
 };

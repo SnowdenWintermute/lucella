@@ -4,6 +4,7 @@ const clientPredictOwnOrbPositions = require("./clientPredictOwnOrbPositions");
 const { syncGameState } = require("./syncGameState");
 const { showOpponentOrbsInPast } = require("./showOpponentOrbsInPast");
 const handleOrbInEndzone = require('@lucella/common/battleRoomGame/handleOrbInEndzone')
+const removeCommandsAlreadyProcessedByServer = require('./removeCommandsAlreadyProcessedByServer')
 
 function createGamePhysicsInterval({
   lastServerGameUpdate,
@@ -14,11 +15,11 @@ function createGamePhysicsInterval({
   gameStateQueue,
 }) {
   return setInterval(() => {
-    if (!gameData) return;
-    if (Object.keys(gameData).length < 1) return;
-    const numberOfLastCommandUpdateFromServer = lastServerGameUpdate.gameState
-      ? lastServerGameUpdate.gameState.lastProcessedCommandNumbers[playerRole]
-      : null;
+    if (!gameData || Object.keys(gameData).length < 1) return;
+
+    const numberOfLastCommandUpdateFromServer =
+      lastServerGameUpdate?.lastProcessedCommandNumbers ? lastServerGameUpdate.lastProcessedCommandNumbers[playerRole] : null
+    console.log("numberOfLastCommandUpdateFromServer", numberOfLastCommandUpdateFromServer)
 
     // set gameState to last received state
     syncGameState({
@@ -28,23 +29,9 @@ function createGamePhysicsInterval({
       numberOfLastCommandUpdateFromServer,
       playerRole,
     });
-
-    // find command to discard (since the state from that command has been synced to last server update)
-    const commandToDiscard = commandQueue.queue.find((commandInQueue) => {
-      return (
-        commandInQueue.data.commandPositionInQueue ===
-        numberOfLastCommandUpdateFromServer
-      );
-    });
-    // discard corresponding command in client's queue
-    commandQueue.queue.splice(commandQueue.queue.indexOf(commandToDiscard));
-
+    removeCommandsAlreadyProcessedByServer(commandQueue, numberOfLastCommandUpdateFromServer)
     clientPredictOwnOrbPositions({ commandQueue, gameData, playerRole });
-
-    // go through gameData queue and show opponent positions in the past
     showOpponentOrbsInPast({ gameStateQueue, gameData, playerRole });
-
-    if (!gameData) return;
     moveOrbs({ gameData });
     handleOrbCollisions({ gameData });
     handleOrbInEndzone(gameData);

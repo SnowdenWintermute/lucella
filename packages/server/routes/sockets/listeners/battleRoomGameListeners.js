@@ -5,36 +5,34 @@ const battleRoomGameListeners = ({ application }) => {
   const { socket, connectedSockets, gameRooms, gameDatas } = application;
   const gameName = connectedSockets[socket.id].currentGameName;
   socket.on("clientSendsOrbSelections", (data) => {
-    console.log("clientSendsOrbSelections", data)
-    if (!gameRooms[gameName]) return;
+    if (!gameRooms[connectedSockets[socket.id].currentGameName]) return;
     queueUpGameCommand({
       application,
-      gameName,
+      gameName: connectedSockets[socket.id].currentGameName,
       data,
       commandType: "orbSelect",
     });
   });
   socket.on("clientSubmitsMoveCommand", (data) => {
-    console.log("clientSubmitsMoveCommand", data)
-    if (!gameRooms[gameName]) return;
+    if (!gameRooms[connectedSockets[socket.id].currentGameName]) return;
     queueUpGameCommand({
       application,
-      gameName,
+      gameName: connectedSockets[socket.id].currentGameName,
       data,
       commandType: "orbMove",
     });
   });
   socket.on("selectAndMoveOrb", (data) => {
-    console.log("selectAndMoveOrb", data)
+    if (!gameRooms[connectedSockets[socket.id].currentGameName]) return;
     queueUpGameCommand({
       application,
-      gameName,
+      gameName: connectedSockets[socket.id].currentGameName,
       data,
       commandType: "orbSelectAndMove",
     });
   });
   socket.on("clientRequestsGameData", () => {
-    console.log("clientRequestsGameData")
+    if(!gameName) return
     socket.emit(
       "serverSendsFullGameData",
       generateGameDataForClient({ gameData: gameDatas[gameName] })

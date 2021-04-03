@@ -60,7 +60,7 @@ const ScoreScreenModalContents = () => {
       clearTimeout(animateTimeoutThree);
     };
   }, [eloDiff, playerNewElo]);
-  console.log(scoreScreenData.eloUpdates);
+
   if (!scoreScreenData.gameData) return <div />;
   return (
     <div>

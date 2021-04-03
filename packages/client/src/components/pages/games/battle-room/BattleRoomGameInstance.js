@@ -76,16 +76,19 @@ const BattleRoomGameInstance = ({ socket }) => {
   });
 
   useEffect(() => {
+    console.log("creating physics interval")
+    console.log(currentGameData.current)
+    if (!currentGameData.current) socket.emit("clientRequestsGameData")
     const physicsInterval = createGamePhysicsInterval({
       lastServerGameUpdate,
-      numberOfLastServerUpdateApplied: numberOfLastServerUpdateApplied.current,
+      numberOfLastServerUpdateApplied,
       gameData: currentGameData.current,
       commandQueue: commandQueue.current,
       gameStateQueue: gameStateQueue.current,
       playerRole: playerDesignation,
     });
     return () => clearInterval(physicsInterval);
-  }, [lastServerGameUpdate, commandQueue, playerDesignation]);
+  }, [socket, lastServerGameUpdate, commandQueue, playerDesignation]);
 
   useEffect(() => {
     function currentDrawFunction() { drawRef.current() }
