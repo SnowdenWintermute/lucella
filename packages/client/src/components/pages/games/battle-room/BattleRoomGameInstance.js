@@ -29,6 +29,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   const [canvasInfo, setCanvasInfo] = useState({});
   const drawRef = useRef();
   const gameOverCountdownText = useRef();
+  const [numberOfFullGameDataRequests, setNumberOfFullGameDataRequests] = useState(0)
 
   useEffect(() => { setClientPlayer(playersInGame[playerDesignation]) }, [playerDesignation, playersInGame]);
 
@@ -76,9 +77,13 @@ const BattleRoomGameInstance = ({ socket }) => {
   });
 
   useEffect(() => {
-    console.log("creating physics interval")
-    console.log(currentGameData.current)
-    if (!currentGameData.current) socket.emit("clientRequestsGameData")
+    console.log("creating physics interval", currentGameData.current)
+    if (!currentGameData.current || typeof currentGameData.current === 'undefined') {
+      socket.emit("clientRequestsGameData")
+      const newNumberOfFullGameDataRequests = numberOfFullGameDataRequests + 1
+      setNumberOfFullGameDataRequests(newNumberOfFullGameDataRequests)
+    }
+
     const physicsInterval = createGamePhysicsInterval({
       lastServerGameUpdate,
       numberOfLastServerUpdateApplied,
@@ -88,7 +93,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       playerRole: playerDesignation,
     });
     return () => clearInterval(physicsInterval);
-  }, [socket, lastServerGameUpdate, commandQueue, playerDesignation]);
+  }, [socket, lastServerGameUpdate, commandQueue, playerDesignation, numberOfFullGameDataRequests]);
 
   useEffect(() => {
     function currentDrawFunction() { drawRef.current() }

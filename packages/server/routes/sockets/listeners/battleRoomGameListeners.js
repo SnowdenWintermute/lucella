@@ -10,7 +10,7 @@ const battleRoomGameListeners = ({ application }) => {
       application,
       gameName: connectedSockets[socket.id].currentGameName,
       data,
-      commandType: "orbSelect",
+      type: "orbSelect",
     });
   });
   socket.on("clientSubmitsMoveCommand", (data) => {
@@ -19,7 +19,7 @@ const battleRoomGameListeners = ({ application }) => {
       application,
       gameName: connectedSockets[socket.id].currentGameName,
       data,
-      commandType: "orbMove",
+      type: "orbMove",
     });
   });
   socket.on("selectAndMoveOrb", (data) => {
@@ -28,10 +28,11 @@ const battleRoomGameListeners = ({ application }) => {
       application,
       gameName: connectedSockets[socket.id].currentGameName,
       data,
-      commandType: "orbSelectAndMove",
+      type: "orbSelectAndMove",
     });
   });
   socket.on("clientRequestsGameData", () => {
+    console.log("clientRequestsGameData, gameName: ", gameName)
     if(!gameName) return
     socket.emit(
       "serverSendsFullGameData",

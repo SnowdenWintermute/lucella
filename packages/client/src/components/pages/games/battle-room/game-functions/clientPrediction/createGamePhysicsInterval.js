@@ -16,12 +16,8 @@ function createGamePhysicsInterval({
 }) {
   return setInterval(() => {
     if (!gameData || Object.keys(gameData).length < 1) return;
-
     const numberOfLastCommandUpdateFromServer =
       lastServerGameUpdate?.lastProcessedCommandNumbers ? lastServerGameUpdate.lastProcessedCommandNumbers[playerRole] : null
-    console.log("numberOfLastCommandUpdateFromServer", numberOfLastCommandUpdateFromServer)
-
-    // set gameState to last received state
     syncGameState({
       gameData,
       lastServerGameUpdate,

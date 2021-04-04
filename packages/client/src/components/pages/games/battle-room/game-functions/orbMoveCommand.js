@@ -3,13 +3,12 @@ export default ({ headingX, headingY, commonEventHandlerProps, isPartOfSelectAnd
   const playerOrbs = currentGameData.gameState.orbs[playerDesignation + "Orbs"]
   playerOrbs.forEach((orb) => {
     if (orb.isSelected) {
-      orb.heading.xPos = headingX;
-      orb.heading.yPos = headingY;
+      orb.heading.xPos = Math.round(headingX);
+      orb.heading.yPos = Math.round(headingY);
     }
   });
 
   const newOrbHeadings = playerOrbs.map((orb) => {
-    console.log(orb.heading)
     return { heading: orb.heading }
   });
 

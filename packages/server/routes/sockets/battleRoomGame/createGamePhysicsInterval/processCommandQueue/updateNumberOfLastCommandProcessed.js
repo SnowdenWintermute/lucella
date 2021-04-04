@@ -1,5 +1,5 @@
 module.exports = ({ gameData, playerRole, commandInQueue }) => {
-  gameData.commandQueue[playerRole][commandInQueue].data.commandPositionInQueue
+  if(gameData.commandQueue[playerRole][commandInQueue])
   gameData.gameState.lastProcessedCommandNumbers[playerRole] =
-    gameData.commandQueue[playerRole][commandInQueue].data.commandPositionInQueue;
+    gameData.commandQueue[playerRole][commandInQueue].data.commandPositionInQueue
 }

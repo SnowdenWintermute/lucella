@@ -19,8 +19,6 @@ import Ladder from "./components/pages/ladder/Ladder";
 import Forum from "./components/pages/forum/Forum";
 import Profile from "./components/profile/Profile";
 import BattleRoomShell from "./components/pages/games/battle-room/BattleRoomShell";
-import commonFunction from '@lucella/common'
-
 
 // actions
 import { loadUser } from "./store/actions/auth";
@@ -28,12 +26,9 @@ import { loadUser } from "./store/actions/auth";
 // utils
 import setAuthToken from "./utils/setAuthToken";
 
-if (localStorage.token) {
-  setAuthToken(localStorage.token);
-}
+if (localStorage.token) { setAuthToken(localStorage.token) }
 
 function App() {
-  commonFunction()
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);

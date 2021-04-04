@@ -2,9 +2,9 @@ const setOrbHeadings = require("@lucella/common/battleRoomGame/setOrbHeadings");
 
 module.exports = ({ gameData, commandInQueue, playerRole }) => {
   if (!gameData.commandQueue[playerRole][commandInQueue]) return;
-  const { commandType } = commandInQueue;
+  const { type } = commandInQueue;
 
-  if (commandType === "orbSelect") {
+  if (type === "orbSelect") {
     const { orbsToBeUpdated } = commandInQueue.data;
     gameData.gameState.orbs[playerRole + "Orbs"].forEach((orb) => {
       orbsToBeUpdated.forEach((selectedOrb) => {
@@ -15,14 +15,14 @@ module.exports = ({ gameData, commandInQueue, playerRole }) => {
     });
   }
 
-  if (commandType === "orbMove")
+  if (type === "orbMove")
     setOrbHeadings({
       playerRole,
       gameData,
       data: commandInQueue.data,
     });
 
-  if (commandType === "selectAndMoveOrb") {
+  if (type === "selectAndMoveOrb") {
     const { orbsToBeUpdated } = commandInQueue.data.selectCommandData;
     gameData.gameState.orbs[playerRole + "Orbs"].forEach((orb) => {
       orbsToBeUpdated.forEach((selectedOrb) => {
