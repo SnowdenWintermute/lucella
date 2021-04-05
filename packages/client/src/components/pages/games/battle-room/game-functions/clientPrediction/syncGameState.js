@@ -10,15 +10,15 @@ export const syncGameState = ({
 }) => {
   if (lastServerGameUpdate) {
     Object.keys(lastServerGameUpdate).forEach((key) => {
-      if (!isEqual(lastServerGameUpdate[key], gameData.gameState[key]))
-        if (key === "orbs")
-          gameData.gameState.orbs[playerRole + "Orbs"].forEach((orb, i) => {
-            Object.keys(orb).forEach(property => {
-              const lastUpdateOrbProp = lastServerGameUpdate.orbs[playerRole + "Orbs"][i][property]
-              if (lastUpdateOrbProp) orb[property] = lastUpdateOrbProp
-            })
+      if (isEqual(lastServerGameUpdate[key], gameData.gameState[key])) return
+      if (key === "orbs")
+        lastServerGameUpdate.orbs[playerRole + "Orbs"].forEach((updateOrb, i) => {
+          Object.keys(gameData.gameState.orbs[playerRole + "Orbs"][i]).forEach(prop => {
+            if (updateOrb.hasOwnProperty(prop))
+              gameData.gameState.orbs[playerRole + "Orbs"][i][prop] = updateOrb[prop]
           })
-        else gameData.gameState[key] = cloneDeep(lastServerGameUpdate[key])
+        })
+      else gameData.gameState[key] = cloneDeep(lastServerGameUpdate[key])
     });
     numberOfLastServerUpdateApplied.current = numberOfLastCommandUpdateFromServer;
   }

@@ -9,8 +9,6 @@ module.exports = ({ application, gameName }) => {
   return setInterval(() => {
     if (!gameData) return;
     processCommandQueue({ gameData })
-    console.log("LUT: ", gameData.gameState.lastUpdateTimestamp)
-    console.log(Date.now() - gameData.gameState.lastUpdateTimestamp)
     moveOrbs({ gameData, deltaT: Date.now() - gameData.gameState.lastUpdateTimestamp });
     handleOrbCollisions({ gameData });
     handleScoringPoints({ application, gameName });

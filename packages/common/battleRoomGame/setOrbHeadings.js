@@ -6,5 +6,6 @@ module.exports = ({ playerRole, gameData, data }) => {
 
   gameData.gameState.orbs[whichPlayerOrbs].forEach((orb, i) => {
     orb.heading = newOrbHeadings[i].heading;
+    orb.timeNewHeadingReceived = Date.now()
   });
 }
