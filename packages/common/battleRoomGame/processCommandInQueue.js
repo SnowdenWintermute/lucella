@@ -4,7 +4,6 @@ const setOrbHeadings = require("./setOrbHeadings");
 module.exports = ({ gameData, commandInQueue, playerRole }) => {
   if (!commandInQueue) return;
   const { type } = commandInQueue
-  console.log("processing command, type: " + type)
   switch (type) {
     case "orbSelect":
       handleOrbSelect({ gameData, orbsToBeUpdated: commandInQueue.data.orbsToBeUpdated, playerRole })
