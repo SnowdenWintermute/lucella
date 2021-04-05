@@ -16,7 +16,7 @@ const selectOrbs = ({ startX, startY, currX, currY, commonEventHandlerProps }) =
     orbsToBeUpdated,
     commandPositionInQueue: ++commandQueue.counter,
   }
-  commandQueue.queue.push({ type: "orbSelect", data });
+  commandQueue.queue.push({ type: "orbSelect", data, timeAdded: Date.now() });
   socket.emit("clientSendsOrbSelections", data);
 };
 

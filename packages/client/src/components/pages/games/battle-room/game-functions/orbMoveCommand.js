@@ -17,6 +17,7 @@ export default ({ headingX, headingY, commonEventHandlerProps, isPartOfSelectAnd
     commandQueue.queue.push({
       type: "orbMove",
       data,
+      timeAdded: Date.now()
     });
     socket.emit("clientSubmitsMoveCommand", data);
   } else return data

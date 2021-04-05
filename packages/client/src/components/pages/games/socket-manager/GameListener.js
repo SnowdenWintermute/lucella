@@ -20,6 +20,7 @@ const GameListener = ({ socket, currentGameData, lastServerGameUpdate, setLastSe
       let newUpdate = lastServerGameUpdate;
       Object.keys(decodedPacket).forEach((key) => {
         newUpdate[key] = cloneDeep(decodedPacket[key]);
+        newUpdate["timeReceived"] = Date.now()
         setLastServerGameUpdate(newUpdate);
       });
       gameStateQueue.current.push(newUpdate);

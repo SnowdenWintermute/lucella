@@ -1,6 +1,6 @@
 const moveOrbs = require("@lucella/common/battleRoomGame/moveOrbs/index.js")
 const handleOrbCollisions = require("@lucella/common/battleRoomGame/handleOrbCollisions");
-const clientPredictOwnOrbPositions = require("./clientPredictOwnOrbPositions");
+const processNewClientCommands = require("./processNewClientCommands");
 const { syncGameState } = require("./syncGameState");
 const { showOpponentOrbsInPast } = require("./showOpponentOrbsInPast");
 const handleOrbInEndzone = require('@lucella/common/battleRoomGame/handleOrbInEndzone')
@@ -25,10 +25,14 @@ function createGamePhysicsInterval({
       numberOfLastCommandUpdateFromServer,
       playerRole,
     });
+    // sync game to last known state
+    // update any new orb headings
+    // update orb pos based on time since last sync and headings
     removeCommandsAlreadyProcessedByServer(commandQueue, numberOfLastCommandUpdateFromServer)
-    clientPredictOwnOrbPositions({ commandQueue, gameData, playerRole });
+    processNewClientCommands({ commandQueue, gameData, playerRole });
     showOpponentOrbsInPast({ gameStateQueue, gameData, playerRole });
-    moveOrbs({ gameData });
+    console.log("lastServerGameUpdate", lastServerGameUpdate)
+    moveOrbs({ gameData, lastServerGameUpdate });
     handleOrbCollisions({ gameData });
     handleOrbInEndzone(gameData);
   }, 33);

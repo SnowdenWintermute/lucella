@@ -32,6 +32,6 @@ export default async ({ keyPressed, commonEventHandlerProps }) => {
   });
 
   const data = { selectCommandData, moveCommandData, commandPositionInQueue: ++commandQueue.counter };
-  commandQueue.queue.push({ type: "selectAndMoveOrb", data });
+  commandQueue.queue.push({ type: "selectAndMoveOrb", data, timeAdded: Date.now() });
   socket.emit("selectAndMoveOrb", data);
 };

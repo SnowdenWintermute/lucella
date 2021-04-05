@@ -14,7 +14,8 @@ export const syncGameState = ({
         if (key === "orbs")
           gameData.gameState.orbs[playerRole + "Orbs"].forEach((orb, i) => {
             Object.keys(orb).forEach(property => {
-              if (lastServerGameUpdate.orbs[playerRole + "Orbs"][i][property]) orb[property] = lastServerGameUpdate.orbs[playerRole + "Orbs"][i][property]
+              const lastUpdateOrbProp = lastServerGameUpdate.orbs[playerRole + "Orbs"][i][property]
+              if (lastUpdateOrbProp) orb[property] = lastUpdateOrbProp
             })
           })
         else gameData.gameState[key] = cloneDeep(lastServerGameUpdate[key])
