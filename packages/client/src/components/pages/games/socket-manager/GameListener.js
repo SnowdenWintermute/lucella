@@ -11,17 +11,25 @@ const GameListener = ({ socket, currentGameData, lastServerGameUpdate, setLastSe
   useEffect(() => {
     if (!socket) return;
     socket.on("serverInitsGame", (data) => {
-      currentGameData.current = cloneDeep(data); // do I need to cloneDeep this one?
+      currentGameData.current = data; // do I need to cloneDeep this one?
       setLastServerGameUpdate(cloneDeep(data));
     });
     socket.on("bufferTickFromServer", (data) => {
+      // sync client orbs to server positions, then
+      //    calculate client orb positions based on time the most recently processed server command was issued by client,
+      //    plus all commands and collision events not yet processed.
+      // add opponent orb movements to a queue for interpolating them 
+      // removeOldCommandsAndEvents({gameData, eventQueue})
+      // syncClientOrbs({gameData, decodedPacket, playerRole })
+      // predictClientOrbs({gameData, eventQueue, playerRole})
+      // queueOpponentOrbMovements({})
       if (!lastServerGameUpdate) return;
       const decodedPacket = convertBufferToGameStateObject({ data });
       let newUpdate = lastServerGameUpdate;
       Object.keys(decodedPacket).forEach((key) => {
         newUpdate[key] = cloneDeep(decodedPacket[key]);
-        setLastServerGameUpdate(newUpdate);
       });
+      setLastServerGameUpdate(newUpdate);
       gameStateQueue.current.push(newUpdate);
     });
     socket.on("serverSendsWinnerInfo", (data) => {

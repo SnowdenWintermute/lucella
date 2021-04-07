@@ -14,47 +14,35 @@ import draw from "./canvas-functions/canvasMain";
 import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
 import MouseData from "./classes/MouseData";
 import GameListener from "../socket-manager/GameListener";
+import fitCanvasToScreen from "./canvas-functions/fitCanvasToScreen";
 
 const BattleRoomGameInstance = ({ socket }) => {
+  const gameUi = useSelector((state) => state.gameUi);
+  const { playerDesignation, playersInGame, gameStatus, winner } = gameUi
   const mouseData = new MouseData()
+  //
   const [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
   const numberOfLastServerUpdateApplied = useRef(null);
   const currentGameData = useRef();
   const commandQueue = useRef({ counter: 0, queue: [] });
-  const gameStateQueue = useRef([]);
-  const gameUi = useSelector((state) => state.gameUi);
-  const { playerDesignation, playersInGame, gameStatus, winner } = gameUi
-  const [clientPlayer, setClientPlayer] = useState([]);
+  const gameStateQueue = useRef([]); // opponent orb pos queue
+  //
+  const [clientPlayer, setClientPlayer] = useState({});
+  const [canvasSize, setCanvasSize] = useState({});
   const canvasRef = useRef();
-  const [canvasInfo, setCanvasInfo] = useState({});
   const drawRef = useRef();
   const gameOverCountdownText = useRef();
   const [numberOfFullGameDataRequests, setNumberOfFullGameDataRequests] = useState(0)
+  const gameWidthRatio = useRef(window.innerHeight * 0.6)
 
   useEffect(() => { setClientPlayer(playersInGame[playerDesignation]) }, [playerDesignation, playersInGame]);
 
   useEffect(() => {
-    const gameWidthRatio = window.innerHeight * 0.6;
-    setCanvasInfo({
-      height: window.innerHeight,
-      width:
-        gameWidthRatio > window.innerWidth ? window.innerWidth : gameWidthRatio,
-    });
-  }, [setCanvasInfo]);
-
-  useEffect(() => {
-    function handleResize() {
-      const gameWidthRatio = window.innerHeight * 0.6;
-      setCanvasInfo({
-        height: window.innerHeight,
-        width:
-          gameWidthRatio > window.innerWidth
-            ? window.innerWidth
-            : gameWidthRatio,
-      });
-    }
+    fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio })
+    function handleResize() { fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio }) }
     window.addEventListener("resize", handleResize);
-  }, [setCanvasInfo]);
+    return () => window.removeEventListener("resize", handleResize)
+  }, [setCanvasSize, gameWidthRatio]);
 
   // set up a ref to the current draw function so it's interval can have access to it having current proporties
   useEffect(() => {
@@ -68,7 +56,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         clientPlayer,
         currentGameData: currentGameData.current,
         lastServerGameUpdate,
-        canvasInfo,
+        canvasSize,
         gameOverCountdownText: gameOverCountdownText.current,
         gameStatus,
         winner,
@@ -77,7 +65,11 @@ const BattleRoomGameInstance = ({ socket }) => {
   });
 
   useEffect(() => {
-    console.log("creating physics interval", currentGameData.current)
+    // request new full copy of gameState if none was received
+    // gameLoop:
+    // interpolate opponent orbs between 2nd to last and last known locations
+    // move all client orbs toward headings
+    // detect collisions and add them to event queue
     if (!currentGameData.current || typeof currentGameData.current === 'undefined') {
       socket.emit("clientRequestsGameData")
       const newNumberOfFullGameDataRequests = numberOfFullGameDataRequests + 1
@@ -103,7 +95,7 @@ const BattleRoomGameInstance = ({ socket }) => {
 
   const commonEventHandlerProps = {
     socket,
-    canvasInfo,
+    canvasSize,
     currentGameData: currentGameData.current,
     mouseData,
     clientPlayer,
@@ -133,8 +125,8 @@ const BattleRoomGameInstance = ({ socket }) => {
         gameOverCountdownText={gameOverCountdownText}
       />
       {currentGameData.current ? <canvas
-        height={canvasInfo.height}
-        width={canvasInfo.width}
+        height={canvasSize.height}
+        width={canvasSize.width}
         className="battle-room-canvas"
         ref={canvasRef}
         onTouchStart={(e) => { touchStartHandler({ e, commonEventHandlerProps }) }}
