@@ -1,12 +1,12 @@
 export default (stackedOrbHighestIndex, orb, playerOrbs) => {
-  if (!stackedOrbHighestIndex) {
-    stackedOrbHighestIndex = orb.num;
+  if (!stackedOrbHighestIndex.current) {
+    stackedOrbHighestIndex.current = orb.num;
     orb.isSelected = true;
-  } else if (orb.num > stackedOrbHighestIndex) {
+  } else if (orb.num > stackedOrbHighestIndex.current) {
     playerOrbs.forEach((orb) => {
       orb.isSelected = false;
     });
-    stackedOrbHighestIndex = orb.num;
+    stackedOrbHighestIndex.current = orb.num;
     orb.isSelected = true;
   }
 }

@@ -5,7 +5,7 @@ const selectOrbs = ({ startX, startY, currX, currY, commonEventHandlerProps }) =
   if (!currentGameData) return;
   if (!currentGameData.gameState) return;
   const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
-  let stackedOrbHighestIndex;
+  const stackedOrbHighestIndex = { current: null };
   const selectionCoordinates = { startX, startY, currX, currY, }
   playerOrbs.forEach(orb => { selectOrbIfAppropriate(orb, selectionCoordinates, stackedOrbHighestIndex, playerOrbs) });
   const orbsToBeUpdated = playerOrbs.map((orb) => {

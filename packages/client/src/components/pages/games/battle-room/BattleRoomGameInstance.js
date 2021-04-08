@@ -11,7 +11,7 @@ import touchMoveHandler from './user-input-handlers/touchMoveHandler'
 import touchStartHandler from './user-input-handlers/touchStartHandler'
 import touchEndHandler from './user-input-handlers/touchEndHandler'
 import draw from "./canvas-functions/canvasMain";
-import createGamePhysicsInterval from "./game-functions/clientPrediction/createGamePhysicsInterval";
+import createGameInterval from "./game-functions/createGameInterval";
 import MouseData from "./classes/MouseData";
 import GameListener from "../socket-manager/GameListener";
 import fitCanvasToScreen from "./canvas-functions/fitCanvasToScreen";
@@ -22,7 +22,8 @@ const BattleRoomGameInstance = ({ socket }) => {
   const mouseData = new MouseData()
   //
   const [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
-  const numberOfLastServerUpdateApplied = useRef(null);
+  const numberOfLastUpdateReceived = useRef(0);
+  const numberOfLastUpdateApplied = useRef(0);
   const currentGameData = useRef();
   const commandQueue = useRef({ counter: 0, queue: [] });
   const gameStateQueue = useRef([]); // opponent orb pos queue
@@ -65,38 +66,19 @@ const BattleRoomGameInstance = ({ socket }) => {
   });
 
   useEffect(() => {
-    // request new full copy of gameState if none was received
-    // gameLoop:
-    // if there is a new update:
-    // sync client orbs to server positions, then
-    //    calculate client orb positions based on time the most recently processed server command was issued by client,
-    //    plus all commands and collision events not yet processed.
-    // add opponent orb movements to a queue for interpolating them 
-    // removeOldCommandsAndEvents({gameData, eventQueue})
-    // syncClientOrbs({gameData, decodedPacket, playerRole })
-    // predictClientOrbs({gameData, eventQueue, playerRole})
-    // queueOpponentOrbMovements({})
-    // Always:
-    // interpolate opponent orbs between 2nd to last and last known locations
-    // move all client orbs toward headings
-    // detect collisions and add them to event queue
-
-    const physicsInterval = createGamePhysicsInterval({
+    function currentDrawFunction() { drawRef.current() }
+    const gameInterval = createGameInterval({
+      currentDrawFunction,
       lastServerGameUpdate,
-      numberOfLastServerUpdateApplied,
+      numberOfLastUpdateReceived,
+      numberOfLastUpdateApplied,
       gameData: currentGameData.current,
       commandQueue: commandQueue.current,
       gameStateQueue: gameStateQueue.current,
       playerRole: playerDesignation,
     });
-    return () => clearInterval(physicsInterval);
+    return () => clearInterval(gameInterval);
   }, [socket, lastServerGameUpdate, commandQueue, playerDesignation]);
-
-  useEffect(() => {
-    function currentDrawFunction() { drawRef.current() }
-    const drawInterval = setInterval(currentDrawFunction, 33);
-    return () => clearInterval(drawInterval);
-  }, [drawRef]);
 
   const commonEventHandlerProps = {
     socket,
@@ -110,7 +92,6 @@ const BattleRoomGameInstance = ({ socket }) => {
   }
 
   const onKeyPress = useCallback((e) => { keyPressHandler({ e, commonEventHandlerProps }) }, [commonEventHandlerProps]);
-
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);
     return () => { window.removeEventListener("keydown", onKeyPress) };

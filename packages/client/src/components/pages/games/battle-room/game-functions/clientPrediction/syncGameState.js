@@ -4,7 +4,7 @@ import isEqual from 'lodash.isequal'
 export const syncGameState = ({
   gameData,
   lastServerGameUpdate,
-  numberOfLastServerUpdateApplied,
+  numberOfLastUpdateReceived,
   numberOfLastCommandUpdateFromServer,
   playerRole,
 }) => {
@@ -20,6 +20,6 @@ export const syncGameState = ({
         })
       else gameData.gameState[key] = cloneDeep(lastServerGameUpdate[key])
     });
-    numberOfLastServerUpdateApplied.current = numberOfLastCommandUpdateFromServer;
+    numberOfLastUpdateReceived.current = numberOfLastCommandUpdateFromServer;
   }
 };

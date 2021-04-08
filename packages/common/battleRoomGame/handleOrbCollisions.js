@@ -16,7 +16,7 @@ function handleOrbCollisions({ gameData }) {
       );
     }
     if (orbsCollidedNums[0]) {
-      gameData.gameState.orbs.challengerOrbs[
+      gameData.gameState.orbs.challenger[
         orbsCollidedNums[0] - 1
       ].isGhost = true;
       orb.isGhost = true;
