@@ -1,13 +1,13 @@
 import orbMoveCommand from "./orbMoveCommand";
 
 export default async ({ keyPressed, commonEventHandlerProps }) => {
-  const { socket, currentGameData, clientPlayer, mouseData, commandQueue, playerDesignation } = commonEventHandlerProps
+  const { socket, currentGameData, mouseData, commandQueue, playerDesignation } = commonEventHandlerProps
   if (!currentGameData) return;
-  const playerOrbs = currentGameData.gameState.orbs[playerDesignation + "Orbs"]
+  const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
   playerOrbs.forEach((orb) => { orb.isSelected = false });
 
   const selectedOrb = playerOrbs[keyPressed - 1]
-  if (selectedOrb.owner === clientPlayer.uuid) {
+  if (selectedOrb.owner === playerDesignation) {
     selectedOrb.isSelected = true;
     selectedOrb.heading.xPos = mouseData.xPos;
     selectedOrb.heading.yPos = mouseData.yPos;
@@ -20,7 +20,7 @@ export default async ({ keyPressed, commonEventHandlerProps }) => {
 
 
   const selectCommandData = {
-    ownerOfOrbs: playerDesignation + "Orbs",
+    ownerOfOrbs: playerDesignation,
     orbsToBeUpdated,
   };
 

@@ -1,14 +1,14 @@
 import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps }) => {
-  const { canvasInfo, currentGameData, mouseData } = commonEventHandlerProps
+  const { canvasSize, currentGameData, mouseData } = commonEventHandlerProps
   e.preventDefault()
   const { touchStartX, touchStartY } = mouseData;
   const rect = e.target.getBoundingClientRect();
   const offsetX = e.targetTouches[0].pageX - rect.left;
   const offsetY = e.targetTouches[0].pageY - rect.top;
-  mouseData.xPos = (offsetX / canvasInfo.width) * currentGameData.width;
-  mouseData.yPos = (offsetY / canvasInfo.height) * currentGameData.height;
+  mouseData.xPos = (offsetX / canvasSize.width) * currentGameData.width;
+  mouseData.yPos = (offsetY / canvasSize.height) * currentGameData.height;
   const touchLength = Date.now() - mouseData.touchStartTime;
   if (
     touchLength > 500 ||

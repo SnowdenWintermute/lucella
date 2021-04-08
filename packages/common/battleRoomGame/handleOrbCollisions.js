@@ -1,8 +1,8 @@
 function handleOrbCollisions({ gameData }) {
-  gameData.gameState.orbs["hostOrbs"].forEach((orb) => {
+  gameData.gameState.orbs.host.forEach((orb) => {
     let orbsCollidedNums = [];
     if (!orb.isGhost) {
-      gameData.gameState.orbs["challengerOrbs"].forEach(
+      gameData.gameState.orbs.challenger.forEach(
         (orbToCheckCollisionWith) => {
           if (
             (Math.abs(orb.xPos - orbToCheckCollisionWith.xPos) <=
@@ -16,7 +16,7 @@ function handleOrbCollisions({ gameData }) {
       );
     }
     if (orbsCollidedNums[0]) {
-      gameData.gameState.orbs["challengerOrbs"][
+      gameData.gameState.orbs.challengerOrbs[
         orbsCollidedNums[0] - 1
       ].isGhost = true;
       orb.isGhost = true;

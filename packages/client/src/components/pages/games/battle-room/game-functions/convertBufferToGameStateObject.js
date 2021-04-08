@@ -7,7 +7,7 @@ export const convertBufferToGameStateObject = ({ data, gameState }) => {
       challenger: packet[1],
     },
     orbs: {
-      hostOrbs: [
+      host: [
         {
           xPos: packet[2],
           yPos: packet[3],
@@ -44,7 +44,7 @@ export const convertBufferToGameStateObject = ({ data, gameState }) => {
           isSelected: packet[31],
         },
       ],
-      challengerOrbs: [
+      challenger: [
         {
           xPos: packet[32],
           yPos: packet[33],

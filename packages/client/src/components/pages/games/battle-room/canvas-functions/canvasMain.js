@@ -7,8 +7,9 @@ function draw({
   context,
   mouseData,
   clientPlayer,
+  playerRole,
   currentGameData,
-  canvasInfo,
+  canvasSize,
   gameOverCountdownText,
   gameStatus,
   winner,
@@ -17,19 +18,19 @@ function draw({
     if (!currentGameData) return;
     if (Object.keys(currentGameData).length === 0) return;
     // clear it out
-    context.clearRect(0, 0, canvasInfo.width, canvasInfo.height);
+    context.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
-    const canvasXDrawFraction = canvasInfo.width / currentGameData.width;
-    const canvasYDrawFraction = canvasInfo.height / currentGameData.height;
+    const canvasXDrawFraction = canvasSize.width / currentGameData.width;
+    const canvasYDrawFraction = canvasSize.height / currentGameData.height;
 
     // endzones
     let x = currentGameData.gameState.endzones.host.x;
     let y = currentGameData.gameState.endzones.host.y;
-    let width = canvasInfo.width;
+    let width = canvasSize.width;
     let height =
       (currentGameData.gameState.endzones.host.height /
         currentGameData.height) *
-      canvasInfo.height;
+      canvasSize.height;
     context.beginPath();
     context.fillStyle = "rgb(50,50,70)";
     context.fillRect(x, y, width, height);
@@ -37,18 +38,18 @@ function draw({
     y =
       (currentGameData.gameState.endzones.challenger.y /
         currentGameData.height) *
-      canvasInfo.height;
-    width = canvasInfo.width;
+      canvasSize.height;
+    width = canvasSize.width;
     height =
       (currentGameData.gameState.endzones.challenger.height /
         currentGameData.height) *
-      canvasInfo.height;
+      canvasSize.height;
     context.beginPath();
     context.fillStyle = "rgb(50,70,50)";
     context.fillRect(x, y, width, height);
 
-    drawScore({ context, clientPlayer, currentGameData, canvasInfo });
-    drawOrbs({ context, clientPlayer, currentGameData, canvasInfo });
+    drawScore({ context, clientPlayer, currentGameData, canvasSize });
+    drawOrbs({ context, playerRole, currentGameData, canvasSize });
     gameOverText({
       context,
       currentGameData,

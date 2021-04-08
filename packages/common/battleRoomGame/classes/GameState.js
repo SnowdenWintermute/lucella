@@ -1,13 +1,15 @@
+const generateStartingOrbs = require('./generateStartingOrbs')
+
 class GameState {
-  constructor({ width, height }) {
+  constructor({ width, height, startingOrbRadius, hostUuid, challengerUuid }) {
     this.lastUpdateTimestamp = null;
     this.lastProcessedCommandNumbers = {
       host: null,
       challenger: null,
     };
     this.orbs = {
-      hostOrbs: [],
-      challengerOrbs: [],
+      host: [],
+      challenger: [],
     };
     this.score = {
       host: 0,
@@ -41,6 +43,8 @@ class GameState {
       },
     };
     this.speed = 4;
+
+    generateStartingOrbs({ orbs: this.orbs, startingOrbRadius, hostUuid, challengerUuid })
   }
 }
 

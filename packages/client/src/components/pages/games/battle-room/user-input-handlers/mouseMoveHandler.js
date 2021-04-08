@@ -1,10 +1,10 @@
 import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps }) => {
-  const { mouseData, currentGameData, canvasInfo } = commonEventHandlerProps
+  const { mouseData, currentGameData, canvasSize } = commonEventHandlerProps
   mouseData.xPos =
-    (e.nativeEvent.offsetX / canvasInfo.width) * currentGameData.width;
+    (e.nativeEvent.offsetX / canvasSize.width) * currentGameData.width;
   mouseData.yPos =
-    (e.nativeEvent.offsetY / canvasInfo.height) * currentGameData.height;
+    (e.nativeEvent.offsetY / canvasSize.height) * currentGameData.height;
 }
 );

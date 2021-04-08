@@ -15,10 +15,10 @@ export const syncOwnOrbPositions = ({
   if (lastServerUpdateAppliedInfo.clientPlayer.number < numberOfLastCommandUpdateFromServer || timeSinceLastUpdateApplied > 1200) {
     Object.keys(lastServerGameUpdate).forEach((key) => {
       if (key === "orbs") {
-        gameData.gameState.orbs[playerRole + "Orbs"].forEach((orb, i) => {
-          Object.keys(lastServerGameUpdate.orbs[playerRole + "Orbs"][i]).forEach(orbKey => {
+        gameData.gameState.orbs[playerRole].forEach((orb, i) => {
+          Object.keys(lastServerGameUpdate.orbs[playerRole][i]).forEach(orbKey => {
             if (orb.hasOwnProperty(orbKey)) {
-              orb[orbKey] = cloneDeep(lastServerGameUpdate.orbs[playerRole + "Orbs"][i][orbKey])
+              orb[orbKey] = cloneDeep(lastServerGameUpdate.orbs[playerRole][i][orbKey])
             }
           })
           // move orbs based on how long it has been since that update

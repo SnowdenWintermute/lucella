@@ -40,6 +40,7 @@ const Login = () => {
           name="email"
           value={email}
           onChange={(e) => onChange(e)}
+          autoFocus
         ></input>
         <input
           className="simple-text-input"

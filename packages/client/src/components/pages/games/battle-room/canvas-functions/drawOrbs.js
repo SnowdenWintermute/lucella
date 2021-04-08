@@ -1,15 +1,15 @@
 // draw all orbs
 const drawOrbs = ({
   context,
-  clientPlayer,
+  playerRole,
   currentGameData,
-  canvasInfo,
+  canvasSize,
   testColor,
 }) => {
-  const orbRadiusFractionX = canvasInfo.width / 450;
-  const orbRadiusFractionY = canvasInfo.height / 750;
-  const widthFraction = canvasInfo.width / currentGameData.width;
-  const heightFraction = canvasInfo.height / currentGameData.height;
+  const orbRadiusFractionX = canvasSize.width / 450;
+  const orbRadiusFractionY = canvasSize.height / 750;
+  const widthFraction = canvasSize.width / currentGameData.width;
+  const heightFraction = canvasSize.height / currentGameData.height;
 
   for (let orbSet in currentGameData.gameState.orbs) {
     currentGameData.gameState.orbs[orbSet].forEach((orb) => {
@@ -29,7 +29,7 @@ const drawOrbs = ({
       testColor ? context.stroke() : context.fill();
       context.lineWidth = 3;
       // orb number
-      if (orb.owner === clientPlayer.uuid) {
+      if (orb.owner === playerRole) {
         context.fillStyle = "rgb(200,200,200)";
         context.textAlign = "center";
         context.textBaseline = "middle";

@@ -4,7 +4,7 @@ const selectOrbs = ({ startX, startY, currX, currY, commonEventHandlerProps }) =
   const { socket, currentGameData, commandQueue, playerDesignation } = commonEventHandlerProps
   if (!currentGameData) return;
   if (!currentGameData.gameState) return;
-  const playerOrbs = currentGameData.gameState.orbs[playerDesignation + "Orbs"]
+  const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
   let stackedOrbHighestIndex;
   const selectionCoordinates = { startX, startY, currX, currY, }
   playerOrbs.forEach(orb => { selectOrbIfAppropriate(orb, selectionCoordinates, stackedOrbHighestIndex, playerOrbs) });
@@ -12,7 +12,7 @@ const selectOrbs = ({ startX, startY, currX, currY, commonEventHandlerProps }) =
     return { num: orb.num, isSelected: orb.isSelected };
   });
   const data = {
-    ownerOfOrbs: playerDesignation + "Orbs",
+    ownerOfOrbs: playerDesignation,
     orbsToBeUpdated,
     commandPositionInQueue: ++commandQueue.counter,
   }

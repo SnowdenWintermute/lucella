@@ -1,7 +1,7 @@
 module.exports = ({ orb, gameData, deltaT }) => {
   // console.log("deltaT: ", deltaT)
   let timeSinceOrbHeadingSet = Date.now() - orb.timeNewHeadingReceived
-  if (orb.timeNewHeadingReceived) console.log("orb.timeNewHeadingReceived: ", orb.timeNewHeadingReceived)
+  // if (orb.timeNewHeadingReceived) console.log("orb.timeNewHeadingReceived: ", orb.timeNewHeadingReceived)
   // console.log("timeSinceOrbHeadingSet: ", timeSinceOrbHeadingSet)
   let gameSpeedAdjustedForDeltaT
   if (deltaT) gameSpeedAdjustedForDeltaT = gameData.gameState.speed / deltaT * 33

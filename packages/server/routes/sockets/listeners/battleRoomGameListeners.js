@@ -31,14 +31,6 @@ const battleRoomGameListeners = ({ application }) => {
       type: "orbSelectAndMove",
     });
   });
-  socket.on("clientRequestsGameData", () => {
-    console.log("clientRequestsGameData, gameName: ", gameName)
-    if(!gameName) return
-    socket.emit(
-      "serverSendsFullGameData",
-      generateGameDataForClient({ gameData: gameDatas[gameName] })
-    );
-  });
 };
 
 module.exports = battleRoomGameListeners;

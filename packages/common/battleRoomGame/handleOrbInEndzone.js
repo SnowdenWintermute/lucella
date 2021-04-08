@@ -13,11 +13,11 @@ function handleOrbInEndzone(gameData) {
     gameState.orbs[orbSet].forEach((orb) => {
       if (orb.isGhost) return;
       switch (orbSet) {
-        case "hostOrbs":
+        case "host":
           if (orb.yPos >= challengerEndzoneY)
             incrementScoreAndGameSpeed(orb, score, speed, 'host')
           break;
-        case "challengerOrbs":
+        case "challenger":
           if (orb.yPos <= hostEndzoneY)
             incrementScoreAndGameSpeed(orb, score, speed, 'challenger')
           break;

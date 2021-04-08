@@ -1,4 +1,4 @@
-const drawScore = ({ context, currentGameData, canvasInfo }) => {
+const drawScore = ({ context, currentGameData, canvasSize }) => {
   context.beginPath();
   context.fillStyle = "rgb(255,255,255)";
   context.textAlign = "center";
@@ -8,7 +8,7 @@ const drawScore = ({ context, currentGameData, canvasInfo }) => {
   context.fillText(
     `${currentGameData.gameState.score.challenger}`,
     20,
-    canvasInfo.height - 20,
+    canvasSize.height - 20,
   );
 };
 

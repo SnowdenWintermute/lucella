@@ -48,6 +48,7 @@ const Register = ({ setAlert, register, isAuthenticated }) => {
           name="email"
           value={email}
           onChange={(e) => onChange(e)}
+          autoFocus
         ></input>
         <input
           className="simple-text-input"

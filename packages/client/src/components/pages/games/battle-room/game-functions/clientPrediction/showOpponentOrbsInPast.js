@@ -5,20 +5,19 @@ export const showOpponentOrbsInPast = ({
   gameData,
   playerRole,
 }) => {
-  const opponentOrbsRole =
-    playerRole === "host" ? "challengerOrbs" : "hostOrbs";
+  console.log(gameStateQueue)
 
   if (gameStateQueue.length > 1) {
-    gameData.gameState.orbs[opponentOrbsRole].forEach((orb, i) => {
+    gameData.gameState.orbs[playerRole].forEach((orb, i) => {
       Object.keys(orb).forEach((key) => {
         if (
-          gameStateQueue[gameStateQueue.length - 2].orbs[opponentOrbsRole][
+          gameStateQueue[gameStateQueue.length - 2].orbs[playerRole][
             i
           ].hasOwnProperty(key)
         ) {
           orb[key] = cloneDeep(
-            gameStateQueue[gameStateQueue.length - 2].orbs[opponentOrbsRole][i][
-              key
+            gameStateQueue[gameStateQueue.length - 2].orbs[playerRole][i][
+            key
             ],
           );
         }
@@ -26,11 +25,11 @@ export const showOpponentOrbsInPast = ({
     });
     gameStateQueue.shift();
   } else if (gameStateQueue.length > 0) {
-    gameData.gameState.orbs[opponentOrbsRole].forEach((orb, i) => {
+    gameData.gameState.orbs[playerRole].forEach((orb, i) => {
       Object.keys(orb).forEach((key) => {
-        if (gameStateQueue[0].orbs[opponentOrbsRole][i].hasOwnProperty(key)) {
+        if (gameStateQueue[0].orbs[playerRole][i].hasOwnProperty(key)) {
           orb[key] = cloneDeep(
-            gameStateQueue[0].orbs[opponentOrbsRole][i][key],
+            gameStateQueue[0].orbs[playerRole][i][key],
           );
         }
       });

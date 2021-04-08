@@ -32,7 +32,6 @@ const BattleRoomGameInstance = ({ socket }) => {
   const canvasRef = useRef();
   const drawRef = useRef();
   const gameOverCountdownText = useRef();
-  const [numberOfFullGameDataRequests, setNumberOfFullGameDataRequests] = useState(0)
   const gameWidthRatio = useRef(window.innerHeight * 0.6)
 
   useEffect(() => { setClientPlayer(playersInGame[playerDesignation]) }, [playerDesignation, playersInGame]);
@@ -54,6 +53,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         context,
         mouseData,
         clientPlayer,
+        playerRole: playerDesignation,
         currentGameData: currentGameData.current,
         lastServerGameUpdate,
         canvasSize,
@@ -67,14 +67,19 @@ const BattleRoomGameInstance = ({ socket }) => {
   useEffect(() => {
     // request new full copy of gameState if none was received
     // gameLoop:
+    // if there is a new update:
+    // sync client orbs to server positions, then
+    //    calculate client orb positions based on time the most recently processed server command was issued by client,
+    //    plus all commands and collision events not yet processed.
+    // add opponent orb movements to a queue for interpolating them 
+    // removeOldCommandsAndEvents({gameData, eventQueue})
+    // syncClientOrbs({gameData, decodedPacket, playerRole })
+    // predictClientOrbs({gameData, eventQueue, playerRole})
+    // queueOpponentOrbMovements({})
+    // Always:
     // interpolate opponent orbs between 2nd to last and last known locations
     // move all client orbs toward headings
     // detect collisions and add them to event queue
-    if (!currentGameData.current || typeof currentGameData.current === 'undefined') {
-      socket.emit("clientRequestsGameData")
-      const newNumberOfFullGameDataRequests = numberOfFullGameDataRequests + 1
-      setNumberOfFullGameDataRequests(newNumberOfFullGameDataRequests)
-    }
 
     const physicsInterval = createGamePhysicsInterval({
       lastServerGameUpdate,
@@ -85,7 +90,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       playerRole: playerDesignation,
     });
     return () => clearInterval(physicsInterval);
-  }, [socket, lastServerGameUpdate, commandQueue, playerDesignation, numberOfFullGameDataRequests]);
+  }, [socket, lastServerGameUpdate, commandQueue, playerDesignation]);
 
   useEffect(() => {
     function currentDrawFunction() { drawRef.current() }
@@ -118,6 +123,7 @@ const BattleRoomGameInstance = ({ socket }) => {
     >
       <GameListener
         socket={socket}
+        gameUi={gameUi}
         currentGameData={currentGameData}
         lastServerGameUpdate={lastServerGameUpdate}
         setLastServerGameUpdate={setLastServerGameUpdate}

@@ -1,6 +1,6 @@
 export default ({ headingX, headingY, commonEventHandlerProps, isPartOfSelectAndMoveCommand }) => {
   const { socket, currentGameData, commandQueue, playerDesignation } = commonEventHandlerProps
-  const playerOrbs = currentGameData.gameState.orbs[playerDesignation + "Orbs"]
+  const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
   playerOrbs.forEach((orb) => {
     if (orb.isSelected) {
       orb.heading.xPos = Math.round(headingX);

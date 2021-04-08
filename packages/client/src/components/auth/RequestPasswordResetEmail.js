@@ -42,6 +42,7 @@ const RequestPasswordResetEmail = ({
           name="email"
           value={email}
           onChange={(e) => onChange(e)}
+          autoFocus
         ></input>
         <div className="forgot-password">
           Enter your email to request a password reset.

@@ -3,26 +3,20 @@ import { useDispatch } from 'react-redux'
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import cloneDeep from 'lodash.clonedeep'
 import { convertBufferToGameStateObject } from "../battle-room/game-functions/convertBufferToGameStateObject";
+const GameData = require("@lucella/common/battleRoomGame/classes/GameData")
 
 
-const GameListener = ({ socket, currentGameData, lastServerGameUpdate, setLastServerGameUpdate, gameStateQueue, gameOverCountdownText }) => {
+const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, setLastServerGameUpdate, gameStateQueue, gameOverCountdownText }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("serverInitsGame", (data) => {
-      currentGameData.current = data; // do I need to cloneDeep this one?
-      setLastServerGameUpdate(cloneDeep(data));
+    socket.on("serverInitsGame", () => {
+      currentGameData.current = new GameData({ gameName: gameUi.currentGameName });
+      setLastServerGameUpdate(cloneDeep(currentGameData.current));
     });
     socket.on("bufferTickFromServer", (data) => {
-      // sync client orbs to server positions, then
-      //    calculate client orb positions based on time the most recently processed server command was issued by client,
-      //    plus all commands and collision events not yet processed.
-      // add opponent orb movements to a queue for interpolating them 
-      // removeOldCommandsAndEvents({gameData, eventQueue})
-      // syncClientOrbs({gameData, decodedPacket, playerRole })
-      // predictClientOrbs({gameData, eventQueue, playerRole})
-      // queueOpponentOrbMovements({})
+      // create new update
       if (!lastServerGameUpdate) return;
       const decodedPacket = convertBufferToGameStateObject({ data });
       let newUpdate = lastServerGameUpdate;

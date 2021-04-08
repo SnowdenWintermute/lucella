@@ -43,6 +43,7 @@ const PasswordReset = ({ setAlert, resetPassword, match, history }) => {
           placeholder="Password"
           value={password}
           onChange={(e) => onChange(e)}
+          autoFocus
         ></input>
         <input
           className="simple-text-input"
