@@ -6,7 +6,7 @@ import { convertBufferToGameStateObject } from "../battle-room/game-functions/co
 const GameData = require("@lucella/common/battleRoomGame/classes/GameData")
 
 
-const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, setLastServerGameUpdate, gameStateQueue, gameOverCountdownText, numberOfLastUpdateReceived }) => {
+const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, setLastServerGameUpdate, gameStateQueue, gameOverCountdownText }) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -17,7 +17,6 @@ const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, s
     });
     socket.on("bufferTickFromServer", (data) => {
       // create new update
-      numberOfLastUpdateReceived.current += 1
       if (!lastServerGameUpdate) return;
       const decodedPacket = convertBufferToGameStateObject({ data });
       let newUpdate = lastServerGameUpdate;
