@@ -1,26 +1,27 @@
 const handleOrbSelect = require("./commandHandlers/handleOrbSelect");
 const setOrbHeadings = require("./setOrbHeadings");
+const GameEventTypes = require('./consts/GameEventTypes')
 
 module.exports = ({ gameData, commandInQueue, playerRole }) => {
   if (!commandInQueue) return;
   const { type } = commandInQueue
   switch (type) {
-    case "orbSelect":
+    case GameEventTypes.ORB_SELECT:
       handleOrbSelect({ gameData, orbsToBeUpdated: commandInQueue.data.orbsToBeUpdated, playerRole })
       break
-    case "orbMove":
+    case GameEventTypes.ORB_MOVE:
       setOrbHeadings({
         gameData,
-        data: commandInQueue.data,
+        newOrbHeadings: commandInQueue.data,
         playerRole,
       });
       break
-    case "orbSelectAndMove":
+    case GameEventTypes.ORB_SELECT_AND_MOVE:
       const { orbsToBeUpdated } = commandInQueue.data.selectCommandData;
       handleOrbSelect({ gameData, orbsToBeUpdated, playerRole })
       setOrbHeadings({
         gameData,
-        data: commandInQueue.data.moveCommandData,
+        newOrbHeadings: commandInQueue.data.moveCommandData,
         playerRole,
       });
       break;

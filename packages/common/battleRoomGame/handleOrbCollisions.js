@@ -1,9 +1,11 @@
-function handleOrbCollisions({ gameData }) {
-  gameData.gameState.orbs.host.forEach((orb) => {
-    let orbsCollidedNums = [];
+const GameEventTypes = require('./consts/GameEventTypes')
+
+function handleOrbCollisions({ gameData, handleAndQueueNewGameEvent }) {
+  gameData.gameState.orbs.host.forEach((orb, i) => {
+    let orbsCollidedIndices = [];
     if (!orb.isGhost) {
       gameData.gameState.orbs.challenger.forEach(
-        (orbToCheckCollisionWith) => {
+        (orbToCheckCollisionWith, i) => {
           if (
             (Math.abs(orb.xPos - orbToCheckCollisionWith.xPos) <=
               orb.radius + orbToCheckCollisionWith.radius &&
@@ -11,15 +13,19 @@ function handleOrbCollisions({ gameData }) {
               orb.radius + orbToCheckCollisionWith.radius) &&
             !orbToCheckCollisionWith.isGhost
           )
-            orbsCollidedNums.push(orbToCheckCollisionWith.num);
+            orbsCollidedIndices.push(i);
         }
       );
     }
-    if (orbsCollidedNums[0]) {
+    if (orbsCollidedIndices[0]) {
       gameData.gameState.orbs.challenger[
-        orbsCollidedNums[0] - 1
+        orbsCollidedIndices[0]
       ].isGhost = true;
       orb.isGhost = true;
+      if (handleAndQueueNewGameEvent) handleAndQueueNewGameEvent({
+        type: GameEventTypes.ORB_COLLISION,
+        props: { hostOrbIndex: i, challengerOrbIndex: orbsCollidedIndices[0] }
+      })
     }
   });
 }

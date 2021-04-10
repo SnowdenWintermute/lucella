@@ -1,5 +1,5 @@
-import selectOrbs from "../game-functions/selectOrbs/selectOrbs";
-import orbMoveCommand from "../game-functions/orbMoveCommand";
+const handleAndQueueNewGameEvent = require("../game-functions/handleAndQueueNewGameEvent");
+const GameEventTypes = require('@lucella/common/battleRoomGame/consts/GameEventTypes')
 
 export default ({ e, commonEventHandlerProps }) => {
   const { canvasSize, currentGameData, mouseData, } = commonEventHandlerProps
@@ -18,22 +18,30 @@ export default ({ e, commonEventHandlerProps }) => {
   mouseData.leftReleasedAtY = adjustedOffsetY;
 
   const touchLength = Date.now() - mouseData.touchStartTime;
+  let type, props
   if (
     touchLength > 500 ||
     Math.abs(adjustedOffsetX - touchStartX) > 8 ||
     Math.abs(adjustedOffsetY - touchStartY) > 8
   ) {
-    selectOrbs({
+    type = GameEventTypes.ORB_SELECT
+    props = {
       startX: touchStartX,
       startY: touchStartY,
       currX: mouseData.xPos,
       currY: mouseData.yPos,
-      commonEventHandlerProps
-    });
-  } else
-    orbMoveCommand({
+    }
+  } else {
+    type = GameEventTypes.ORB_MOVE
+    props = {
       headingX: (offsetX / canvasSize.width) * currentGameData.width,
       headingY: (offsetY / canvasSize.height) * currentGameData.height,
-      commonEventHandlerProps
-    });
+    }
+  }
+
+  handleAndQueueNewGameEvent({
+    type,
+    props,
+    commonEventHandlerProps
+  })
 };

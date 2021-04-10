@@ -1,7 +1,8 @@
 const processCommandInQueue = require("@lucella/common/battleRoomGame/processCommandInQueue")
 
-module.exports = ({ commandQueue, gameData, playerRole }) => {
-  commandQueue.queue.forEach((commandInQueue) => {
+module.exports = ({ eventQueue, gameData, playerRole }) => {
+  eventQueue.queue.forEach((commandInQueue) => {
+    console.log(commandInQueue)
     processCommandInQueue({ gameData, playerRole, commandInQueue })
   })
 }

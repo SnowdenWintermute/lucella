@@ -1,4 +1,4 @@
-export default (stackedOrbHighestIndex, orb, playerOrbs) => {
+module.exports = (stackedOrbHighestIndex, orb, playerOrbs) => {
   if (!stackedOrbHighestIndex.current) {
     stackedOrbHighestIndex.current = orb.num;
     orb.isSelected = true;

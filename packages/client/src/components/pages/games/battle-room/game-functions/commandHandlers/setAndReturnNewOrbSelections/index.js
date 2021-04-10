@@ -1,7 +1,8 @@
-import selectOrbIfAppropriate from './selectOrbIfAppropriate'
+const selectOrbIfAppropriate = require('./selectOrbIfAppropriate')
 
-const selectOrbs = ({ startX, startY, currX, currY, commonEventHandlerProps }) => {
-  const { socket, currentGameData, commandQueue, playerDesignation } = commonEventHandlerProps
+module.exports = ({ props, commonEventHandlerProps }) => {
+  const { startX, startY, currX, currY, } = props
+  const { currentGameData, playerDesignation } = commonEventHandlerProps
   if (!currentGameData) return;
   if (!currentGameData.gameState) return;
   const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
@@ -11,13 +12,8 @@ const selectOrbs = ({ startX, startY, currX, currY, commonEventHandlerProps }) =
   const orbsToBeUpdated = playerOrbs.map((orb) => {
     return { num: orb.num, isSelected: orb.isSelected };
   });
-  const data = {
+  return {
     ownerOfOrbs: playerDesignation,
     orbsToBeUpdated,
-    commandPositionInQueue: ++commandQueue.counter,
   }
-  commandQueue.queue.push({ type: "orbSelect", data, timeAdded: Date.now() });
-  socket.emit("clientSendsOrbSelections", data);
 };
-
-export default selectOrbs;

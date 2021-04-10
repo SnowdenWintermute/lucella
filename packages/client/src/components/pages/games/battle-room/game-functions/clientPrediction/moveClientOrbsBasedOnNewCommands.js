@@ -1,8 +1,8 @@
 const moveOrbs = require("@lucella/common/battleRoomGame/moveOrbs/index.js")
 
-module.exports = ({ gameData, commandQueue }) => {
-  commandQueue.queue.forEach((command, i) => {
-    const nextCommand = commandQueue.queue[i + 1]
+module.exports = ({ gameData, eventQueue }) => {
+  eventQueue.queue.forEach((command, i) => {
+    const nextCommand = eventQueue.queue[i + 1]
     let nextCommandAddedTime = null
     if (nextCommand) nextCommandAddedTime = nextCommand.timeAdded
     const deltaT = nextCommandAddedTime ? nextCommandAddedTime - command.timeAdded : null

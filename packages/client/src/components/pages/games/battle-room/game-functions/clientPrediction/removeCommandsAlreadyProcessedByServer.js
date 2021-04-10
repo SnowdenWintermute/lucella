@@ -1,6 +1,6 @@
-module.exports = (commandQueue, numberOfLastCommandUpdateFromServer) => {
-  commandQueue.queue.forEach((command, i) => {
-    if (command.data.commandPositionInQueue <=
-      numberOfLastCommandUpdateFromServer) commandQueue.queue.splice(i, 1);
+module.exports = (eventQueue, numberOfLastCommandUpdateFromServer) => {
+  eventQueue.queue.forEach((command, i) => {
+    if (command.number <=
+      numberOfLastCommandUpdateFromServer) eventQueue.queue.splice(i, 1);
   })
 }

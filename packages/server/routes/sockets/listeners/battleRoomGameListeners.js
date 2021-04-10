@@ -1,34 +1,16 @@
 const queueUpGameCommand = require("../battleRoomGame/queueUpGameCommand");
 
-const battleRoomGameListeners = ({ application }) => {
-  const { socket, connectedSockets, gameRooms, gameDatas } = application;
-  socket.on("clientSendsOrbSelections", (data) => {
+module.exports = ({ application }) => {
+  const { socket, connectedSockets, gameRooms } = application;
+  socket.on("newCommand", (data) => {
     if (!gameRooms[connectedSockets[socket.id].currentGameName]) return;
+    const { type, eventData, number } = data
     queueUpGameCommand({
       application,
       gameName: connectedSockets[socket.id].currentGameName,
-      data,
-      type: "orbSelect",
-    });
-  });
-  socket.on("clientSubmitsMoveCommand", (data) => {
-    if (!gameRooms[connectedSockets[socket.id].currentGameName]) return;
-    queueUpGameCommand({
-      application,
-      gameName: connectedSockets[socket.id].currentGameName,
-      data,
-      type: "orbMove",
-    });
-  });
-  socket.on("selectAndMoveOrb", (data) => {
-    if (!gameRooms[connectedSockets[socket.id].currentGameName]) return;
-    queueUpGameCommand({
-      application,
-      gameName: connectedSockets[socket.id].currentGameName,
-      data,
-      type: "orbSelectAndMove",
+      type,
+      data: eventData,
+      number
     });
   });
 };
-
-module.exports = battleRoomGameListeners;

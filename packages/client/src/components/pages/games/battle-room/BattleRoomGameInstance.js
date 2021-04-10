@@ -24,8 +24,9 @@ const BattleRoomGameInstance = ({ socket }) => {
   const [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
   const numberOfLastUpdateReceived = useRef(0);
   const numberOfLastUpdateApplied = useRef(0);
+  const numberOfLastCommandIssued = useRef(0)
+  const eventQueue = useRef({ queue: [] });
   const currentGameData = useRef();
-  const commandQueue = useRef({ counter: 0, queue: [] });
   const gameStateQueue = useRef([]); // opponent orb pos queue
   //
   const [clientPlayer, setClientPlayer] = useState({});
@@ -73,12 +74,13 @@ const BattleRoomGameInstance = ({ socket }) => {
       numberOfLastUpdateReceived,
       numberOfLastUpdateApplied,
       gameData: currentGameData.current,
-      commandQueue: commandQueue.current,
+      eventQueue: eventQueue.current,
+      numberOfLastCommandIssued: numberOfLastCommandIssued,
       gameStateQueue: gameStateQueue.current,
       playerRole: playerDesignation,
     });
     return () => clearInterval(gameInterval);
-  }, [socket, lastServerGameUpdate, commandQueue, playerDesignation]);
+  }, [socket, lastServerGameUpdate, eventQueue, playerDesignation]);
 
   const commonEventHandlerProps = {
     socket,
@@ -87,7 +89,8 @@ const BattleRoomGameInstance = ({ socket }) => {
     mouseData,
     clientPlayer,
     playersInGame,
-    commandQueue: commandQueue.current,
+    eventQueue: eventQueue.current,
+    numberOfLastCommandIssued,
     playerDesignation
   }
 

@@ -11,17 +11,18 @@ const syncText = require('./syncText')
 export default ({
   currentDrawFunction,
   lastServerGameUpdate,
-  numberOfLastUpdateReceived,
   numberOfLastUpdateApplied,
   gameData,
-  commandQueue,
+  eventQueue,
+  numberOfLastCommandIssued,
   playerRole,
   gameStateQueue,
 }) => {
   return setInterval(() => {
     if (!gameData || Object.keys(gameData).length < 1) return;
-    const numberOfLastCommandUpdateFromServer = lastServerGameUpdate.lastProcessedCommandNumbers[playerRole]
-    if (numberOfLastCommandUpdateFromServer > commandQueue[0].number) {
+    const numberOfLastCommandUpdateFromServer =
+      lastServerGameUpdate.lastProcessedCommandNumbers ? lastServerGameUpdate.lastProcessedCommandNumbers[playerRole] : null
+    if (!eventQueue[0] || numberOfLastCommandUpdateFromServer > eventQueue[0].number) {
       // removeOldCommandsAndEvents({gameData, eventQueue})
       syncClientOrbs({ gameData, lastServerGameUpdate, playerRole });
       //    calculate client orb positions based on time the most recently processed server command was issued by client,
@@ -40,9 +41,9 @@ export default ({
     // sync game to last known state
     // update any new orb headings
     // update orb pos based on time since last sync and headings
-    removeCommandsAlreadyProcessedByServer(commandQueue, numberOfLastCommandUpdateFromServer)
-    processNewClientCommands({ gameData, commandQueue, playerRole });
-    moveClientOrbsBasedOnNewCommands({ gameData, commandQueue, playerRole })
+    removeCommandsAlreadyProcessedByServer(eventQueue, numberOfLastCommandUpdateFromServer)
+    processNewClientCommands({ gameData, eventQueue, playerRole });
+    moveClientOrbsBasedOnNewCommands({ gameData, eventQueue, playerRole })
     moveOrbs({ gameData });
     showOpponentOrbsInPast({ gameStateQueue, gameData, playerRole });
     handleOrbCollisions({ gameData });

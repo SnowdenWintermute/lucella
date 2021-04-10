@@ -1,5 +1,6 @@
-import selectOrbAndIssueMoveCommand from "../game-functions/selectOrbAndIssueMoveCommand";
-import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator";
+import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator"
+const GameEventTypes = require('@lucella/common/battleRoomGame/consts/GameEventTypes')
+const handleAndQueueNewGameEvent = require("../game-functions/handleAndQueueNewGameEvent")
 
 export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps }) => {
   let keyPressed;
@@ -22,6 +23,7 @@ export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps })
     default:
       return;
   }
-  if (keyPressed > 0 && keyPressed < 6) { selectOrbAndIssueMoveCommand({ keyPressed, commonEventHandlerProps }); }
+  if (keyPressed > 0 && keyPressed < 6)
+    handleAndQueueNewGameEvent({ type: GameEventTypes.ORB_SELECT_AND_MOVE, props: { keyPressed }, commonEventHandlerProps })
 },
 );

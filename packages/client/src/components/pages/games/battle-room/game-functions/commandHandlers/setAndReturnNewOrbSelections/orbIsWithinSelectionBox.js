@@ -1,4 +1,4 @@
-export default (orb, selectionCoordinates) => {
+module.exports = (orb, selectionCoordinates) => {
   const { currX, currY, startX, startY } = selectionCoordinates
   return ((orb.xPos + orb.radius >= startX &&
     orb.xPos - orb.radius <= currX &&

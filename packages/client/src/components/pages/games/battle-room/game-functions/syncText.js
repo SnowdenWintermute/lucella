@@ -1,12 +1,11 @@
-import cloneDeep from "lodash.clonedeep";
+const cloneDeep = require("lodash.clonedeep")
 
-export default ({
+module.exports = ({
   gameData,
   lastServerGameUpdate,
-  playerRole,
 }) => {
-  if (lastServerGameUpdate) 
+  if (lastServerGameUpdate)
     Object.keys(lastServerGameUpdate).forEach((key) => {
       if (key !== "orbs") gameData.gameState[key] = cloneDeep(lastServerGameUpdate[key])
-  }
+    })
 }
