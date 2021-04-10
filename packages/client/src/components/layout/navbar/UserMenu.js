@@ -32,10 +32,7 @@ export const UserMenu = ({ isAuthenticated }) => {
         className="user-icon-circle"
         name="profile-icon"
         alt="profile icon"
-        onClick={(e) => {
-          console.log(e.target.getAttribute("name"));
-          toggleUserDropdown(!showUserDropdown);
-        }}
+        onClick={(e) => { toggleUserDropdown(!showUserDropdown) }}
       >
         <div className="user-icon-letter" name="profile-icon">
           {username && username.slice(0, 1)}

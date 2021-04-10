@@ -5,7 +5,6 @@ export const showOpponentOrbsInPast = ({
   gameData,
   playerRole,
 }) => {
-  console.log(gameStateQueue)
 
   if (gameStateQueue.length > 1) {
     gameData.gameState.orbs[playerRole].forEach((orb, i) => {

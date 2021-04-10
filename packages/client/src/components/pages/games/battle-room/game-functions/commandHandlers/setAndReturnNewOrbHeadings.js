@@ -12,6 +12,5 @@ module.exports = ({ props, commonEventHandlerProps }) => {
   const newOrbHeadings = playerOrbs.map((orb) => {
     return { heading: orb.heading }
   });
-  console.log("newOrbHeadings: ", newOrbHeadings)
   return newOrbHeadings
 };

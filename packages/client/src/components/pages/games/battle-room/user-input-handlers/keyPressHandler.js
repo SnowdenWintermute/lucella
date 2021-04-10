@@ -3,6 +3,9 @@ const GameEventTypes = require('@lucella/common/battleRoomGame/consts/GameEventT
 const handleAndQueueNewGameEvent = require("../game-functions/handleAndQueueNewGameEvent")
 
 export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps }) => {
+  const { mouseData } = commonEventHandlerProps
+  const headingX = mouseData.xPos
+  const headingY = mouseData.yPos
   let keyPressed;
   switch (e.keyCode) {
     case 49: // 1
@@ -24,6 +27,6 @@ export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps })
       return;
   }
   if (keyPressed > 0 && keyPressed < 6)
-    handleAndQueueNewGameEvent({ type: GameEventTypes.ORB_SELECT_AND_MOVE, props: { keyPressed }, commonEventHandlerProps })
+    handleAndQueueNewGameEvent({ type: GameEventTypes.ORB_SELECT_AND_MOVE, props: { keyPressed, headingX, headingY }, commonEventHandlerProps })
 },
 );

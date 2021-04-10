@@ -52,22 +52,17 @@ const InGameButtons = ({ socket }) => {
     isRanked,
   ]);
 
-  // go back from list
   const onViewGamesListBackClick = () => {
     dispatch(gameUiActions.cancelViewGamesList());
-    // request update of rooms list (this is needed to see rooms that were created before this socket joined)
     socket.emit("clientRequestsUpdateOfGameRoomList");
   };
 
-  // cancel game setup
   const onCancelGameSetupClick = () => {
     dispatch(gameUiActions.closePreGameScreen());
   };
 
-  // leave current game
   const onLeaveGameClick = () => {
     dispatch(gameUiActions.closePreGameScreen());
-    console.log("client requested to leave game " + currentGameName);
     socket.emit("clientLeavesGame", currentGameName);
   };
 

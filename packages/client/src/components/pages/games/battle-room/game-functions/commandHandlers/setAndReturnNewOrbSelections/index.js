@@ -12,8 +12,9 @@ module.exports = ({ props, commonEventHandlerProps }) => {
   const orbsToBeUpdated = playerOrbs.map((orb) => {
     return { num: orb.num, isSelected: orb.isSelected };
   });
-  return {
+  const newOrbSelections = {
     ownerOfOrbs: playerDesignation,
     orbsToBeUpdated,
   }
+  return newOrbSelections
 };

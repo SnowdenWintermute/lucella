@@ -120,7 +120,6 @@ export default function (state = initialState, action) {
     case CLEAR_GAME_UI:
       return initialState;
     case SET_SCORE_SCREEN_DATA:
-      console.log(payload);
       return {
         ...state,
         scoreScreenData: { ...payload },

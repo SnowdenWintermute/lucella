@@ -1,4 +1,4 @@
-module.exports = async ({ keyPressed, commonEventHandlerProps }) => {
+module.exports = ({ keyPressed, commonEventHandlerProps }) => {
   const { currentGameData, mouseData, playerDesignation } = commonEventHandlerProps
   if (!currentGameData) return;
   const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
@@ -16,8 +16,10 @@ module.exports = async ({ keyPressed, commonEventHandlerProps }) => {
       return { num: orb.num, isSelected: orb.isSelected };
     });
 
-  return {
+  const data = {
     ownerOfOrbs: playerDesignation,
     orbsToBeUpdated,
-  };
+  }
+
+  return data;
 };

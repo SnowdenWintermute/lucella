@@ -13,4 +13,4 @@ module.exports = ({ application }) => {
       number
     });
   });
-};
+}

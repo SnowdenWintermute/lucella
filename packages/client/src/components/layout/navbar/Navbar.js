@@ -13,10 +13,8 @@ const Navbar = () => {
   const history = useHistory()
   const [activeTab, setActiveTab] = useState(history.location)
   useEffect(() => {
-    console.log(history.location)
     const { pathname } = history.location
     setActiveTab(pathname)
-    console.log(pathname)
   }, [history])
   // state
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);

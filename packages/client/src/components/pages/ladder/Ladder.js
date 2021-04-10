@@ -18,12 +18,10 @@ const Ladder = (props) => {
 
   const onSearchUserRecord = (e) => {
     e.preventDefault();
-    console.log(searchText);
     dispatch(getBattleRoomUserRecord(searchText));
   };
 
   const onTurnPage = (e, direction) => {
-    console.log(direction);
     let newPageVewing =
       ladder.currentPage + (direction === "foreward" ? 1 : -1);
     if (newPageVewing === 0) newPageVewing = ladder.totalNumberOfPages;
