@@ -1,7 +1,7 @@
 module.exports = ({ keyPressed, commonEventHandlerProps }) => {
   const { currentGameData, mouseData, playerDesignation } = commonEventHandlerProps
-  if (!currentGameData) return;
-  const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
+  if (!currentGameData.current) return;
+  const playerOrbs = currentGameData.current.gameState.orbs[playerDesignation]
   playerOrbs.forEach((orb) => { orb.isSelected = false });
 
   const selectedOrb = playerOrbs[keyPressed - 1]

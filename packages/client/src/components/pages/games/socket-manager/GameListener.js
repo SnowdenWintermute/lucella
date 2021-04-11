@@ -12,6 +12,7 @@ const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, s
   useEffect(() => {
     if (!socket) return;
     socket.on("serverInitsGame", () => {
+      console.log("serverInitsGame")
       currentGameData.current = new GameData({ gameName: gameUi.currentGameName });
       setLastServerGameUpdate(cloneDeep(currentGameData.current));
     });

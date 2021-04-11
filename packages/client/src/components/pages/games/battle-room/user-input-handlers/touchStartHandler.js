@@ -4,8 +4,8 @@ export default ({ e, commonEventHandlerProps }) => {
   const offsetX = e.targetTouches[0].pageX - rect.left;
   const offsetY = e.targetTouches[0].pageY - rect.top;
   mouseData.touchStartX = mouseData.leftPressedAtX =
-    (offsetX / canvasSize.width) * currentGameData.width;
+    (offsetX / canvasSize.width) * currentGameData.current.width;
   mouseData.touchStartY = mouseData.leftPressedAtY =
-    (offsetY / canvasSize.height) * currentGameData.height;
+    (offsetY / canvasSize.height) * currentGameData.current.height;
   mouseData.touchStartTime = Date.now();
 };

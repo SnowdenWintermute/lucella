@@ -7,8 +7,8 @@ export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps })
   const rect = e.target.getBoundingClientRect();
   const offsetX = e.targetTouches[0].pageX - rect.left;
   const offsetY = e.targetTouches[0].pageY - rect.top;
-  mouseData.xPos = (offsetX / canvasSize.width) * currentGameData.width;
-  mouseData.yPos = (offsetY / canvasSize.height) * currentGameData.height;
+  mouseData.xPos = (offsetX / canvasSize.width) * currentGameData.current.width;
+  mouseData.yPos = (offsetY / canvasSize.height) * currentGameData.current.height;
   const touchLength = Date.now() - mouseData.touchStartTime;
   if (
     touchLength > 500 ||

@@ -66,6 +66,7 @@ function convertGameStateIntoPacket({ gameState }) {
     gameState.score.challenger,
     gameState.score.neededToWin,
     gameState.speed * 10,
+    gameState.lastUpdateTimestamp,
   ];
   return new Int32Array(packetArray);
 }

@@ -1,12 +1,9 @@
 module.exports = ({ orb, gameData, deltaT }) => {
-  // console.log("deltaT: ", deltaT)
   let timeSinceOrbHeadingSet = Date.now() - orb.timeNewHeadingReceived
-  // if (orb.timeNewHeadingReceived) console.log("orb.timeNewHeadingReceived: ", orb.timeNewHeadingReceived)
-  // console.log("timeSinceOrbHeadingSet: ", timeSinceOrbHeadingSet)
   let gameSpeedAdjustedForDeltaT
   if (deltaT) gameSpeedAdjustedForDeltaT = gameData.gameState.speed / deltaT * 33
   else gameSpeedAdjustedForDeltaT = gameData.gameState.speed / timeSinceOrbHeadingSet * 33
-  // console.log("adjusted speed: ", gameSpeedAdjustedForDeltaT)
+  if (orb.num === 1) console.log(orb.xPos, orb.yPos)
   let tx = orb.heading.xPos - orb.xPos
   let ty = orb.heading.yPos - orb.yPos;
   let dist = Math.sqrt(tx * tx + ty * ty);

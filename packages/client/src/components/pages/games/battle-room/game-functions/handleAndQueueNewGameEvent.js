@@ -36,10 +36,10 @@ module.exports = ({ type, props, commonEventHandlerProps }) => {
     default:
   }
 
-  eventQueue.queue.push({
+  eventQueue.push({
     type,
     data: eventData,
     number: newCommandNumber,
-    timeAdded: Date.now()
+    timestamp: Date.now()
   });
 }

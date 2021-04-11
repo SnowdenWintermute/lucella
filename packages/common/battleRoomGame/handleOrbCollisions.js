@@ -1,6 +1,6 @@
 const GameEventTypes = require('./consts/GameEventTypes')
 
-function handleOrbCollisions({ gameData, handleAndQueueNewGameEvent }) {
+module.exports = ({ gameData, handleAndQueueNewGameEvent, commonEventHandlerProps }) => {
   gameData.gameState.orbs.host.forEach((orb, i) => {
     let orbsCollidedIndices = [];
     if (!orb.isGhost) {
@@ -22,12 +22,15 @@ function handleOrbCollisions({ gameData, handleAndQueueNewGameEvent }) {
         orbsCollidedIndices[0]
       ].isGhost = true;
       orb.isGhost = true;
-      if (handleAndQueueNewGameEvent) handleAndQueueNewGameEvent({
-        type: GameEventTypes.ORB_COLLISION,
-        props: { hostOrbIndex: i, challengerOrbIndex: orbsCollidedIndices[0] }
-      })
+
+      if (handleAndQueueNewGameEvent) {
+        console.log("adding collision to event queue")
+        handleAndQueueNewGameEvent({ // for client prediction
+          type: GameEventTypes.ORB_COLLISION,
+          props: { hostOrbIndex: i, challengerOrbIndex: orbsCollidedIndices[0] },
+          commonEventHandlerProps
+        })
+      }
     }
   });
 }
-
-module.exports = handleOrbCollisions;

@@ -1,7 +1,7 @@
 module.exports = ({ props, commonEventHandlerProps }) => {
   const { headingX, headingY } = props
   const { currentGameData, playerDesignation } = commonEventHandlerProps
-  const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
+  const playerOrbs = currentGameData.current.gameState.orbs[playerDesignation]
   playerOrbs.forEach((orb) => {
     if (orb.isSelected) {
       orb.heading.xPos = Math.round(headingX);

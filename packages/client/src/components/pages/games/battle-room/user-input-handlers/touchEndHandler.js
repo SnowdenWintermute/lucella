@@ -10,9 +10,9 @@ export default ({ e, commonEventHandlerProps }) => {
   const offsetX = e.changedTouches[0].pageX - rect.left;
   const offsetY = e.changedTouches[0].pageY - rect.top;
 
-  const adjustedOffsetX = (offsetX / canvasSize.width) * currentGameData.width;
+  const adjustedOffsetX = (offsetX / canvasSize.width) * currentGameData.current.width;
   const adjustedOffsetY =
-    (offsetY / canvasSize.height) * currentGameData.height;
+    (offsetY / canvasSize.height) * currentGameData.current.height;
 
   mouseData.leftReleasedAtX = adjustedOffsetX;
   mouseData.leftReleasedAtY = adjustedOffsetY;
@@ -34,8 +34,8 @@ export default ({ e, commonEventHandlerProps }) => {
   } else {
     type = GameEventTypes.ORB_MOVE
     props = {
-      headingX: (offsetX / canvasSize.width) * currentGameData.width,
-      headingY: (offsetY / canvasSize.height) * currentGameData.height,
+      headingX: (offsetX / canvasSize.width) * currentGameData.current.width,
+      headingY: (offsetY / canvasSize.height) * currentGameData.current.height,
     }
   }
 

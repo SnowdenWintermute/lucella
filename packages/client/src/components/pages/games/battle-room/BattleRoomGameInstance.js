@@ -22,10 +22,9 @@ const BattleRoomGameInstance = ({ socket }) => {
   const mouseData = new MouseData()
   //
   const [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
-  const numberOfLastUpdateReceived = useRef(0);
   const numberOfLastUpdateApplied = useRef(0);
   const numberOfLastCommandIssued = useRef(0)
-  const eventQueue = useRef({ queue: [] });
+  const eventQueue = useRef([]);
   const currentGameData = useRef();
   const gameStateQueue = useRef([]); // opponent orb pos queue
   //
@@ -66,26 +65,10 @@ const BattleRoomGameInstance = ({ socket }) => {
     };
   });
 
-  useEffect(() => {
-    function currentDrawFunction() { drawRef.current() }
-    const gameInterval = createGameInterval({
-      currentDrawFunction,
-      lastServerGameUpdate,
-      numberOfLastUpdateReceived,
-      numberOfLastUpdateApplied,
-      gameData: currentGameData.current,
-      eventQueue: eventQueue.current,
-      numberOfLastCommandIssued: numberOfLastCommandIssued,
-      gameStateQueue: gameStateQueue.current,
-      playerRole: playerDesignation,
-    });
-    return () => clearInterval(gameInterval);
-  }, [socket, lastServerGameUpdate, eventQueue, playerDesignation]);
-
   const commonEventHandlerProps = {
     socket,
     canvasSize,
-    currentGameData: currentGameData.current,
+    currentGameData,
     mouseData,
     clientPlayer,
     playersInGame,
@@ -93,6 +76,21 @@ const BattleRoomGameInstance = ({ socket }) => {
     numberOfLastCommandIssued,
     playerDesignation
   }
+
+  useEffect(() => {
+    function currentDrawFunction() { drawRef.current() }
+    const gameInterval = createGameInterval({
+      currentDrawFunction,
+      lastServerGameUpdate,
+      numberOfLastUpdateApplied,
+      gameData: currentGameData,
+      eventQueue,
+      gameStateQueue: gameStateQueue.current,
+      playerRole: playerDesignation,
+      commonEventHandlerProps
+    });
+    return () => clearInterval(gameInterval);
+  }, [socket, lastServerGameUpdate, eventQueue, playerDesignation, commonEventHandlerProps]);
 
   const onKeyPress = useCallback((e) => { keyPressHandler({ e, commonEventHandlerProps }) }, [commonEventHandlerProps]);
   useEffect(() => {

@@ -1,12 +1,12 @@
 const handleOrbCollisions = require("@lucella/common/battleRoomGame/handleOrbCollisions");
-const processNewClientCommands = require("./clientPrediction/processNewClientCommands");
 const syncClientOrbs = require("./clientPrediction/syncClientOrbs");
 const { showOpponentOrbsInPast } = require("./clientPrediction/showOpponentOrbsInPast");
 const handleOrbInEndzone = require('@lucella/common/battleRoomGame/handleOrbInEndzone')
-const removeCommandsAlreadyProcessedByServer = require('./clientPrediction/removeCommandsAlreadyProcessedByServer')
-const moveClientOrbsBasedOnNewCommands = require('./clientPrediction/moveClientOrbsBasedOnNewCommands')
+const removeOldEvents = require('./clientPrediction/removeOldEvents')
 const moveOrbs = require("@lucella/common/battleRoomGame/moveOrbs/index.js")
 const syncText = require('./syncText')
+const handleAndQueueNewGameEvent = require('./handleAndQueueNewGameEvent')
+const predictClientOrbs = require('./clientPrediction/predictClientOrbs')
 
 export default ({
   currentDrawFunction,
@@ -14,40 +14,41 @@ export default ({
   numberOfLastUpdateApplied,
   gameData,
   eventQueue,
-  numberOfLastCommandIssued,
   playerRole,
   gameStateQueue,
+  commonEventHandlerProps
 }) => {
+  let lastClientGameLoopUpdate = Date.now()
   return setInterval(() => {
-    if (!gameData || Object.keys(gameData).length < 1) return;
+    if (!gameData.current || Object.keys(gameData.current).length < 1) return;
     const numberOfLastCommandUpdateFromServer =
       lastServerGameUpdate.lastProcessedCommandNumbers ? lastServerGameUpdate.lastProcessedCommandNumbers[playerRole] : null
-    if (!eventQueue[0] || numberOfLastCommandUpdateFromServer > eventQueue[0].number) {
-      // removeOldCommandsAndEvents({gameData, eventQueue})
-      syncClientOrbs({ gameData, lastServerGameUpdate, playerRole });
+    if (eventQueue.current.length <= 0 || numberOfLastCommandUpdateFromServer > eventQueue.current[0].number) {
+      console.log("numberOfLastUpdateAppliedByServer: ", numberOfLastCommandUpdateFromServer)
+      if (eventQueue.current[0]) console.log("eventQueue.current[0].number: ", eventQueue.current[0].number)
+      if (eventQueue.current.length > 0) removeOldEvents({ eventQueue, numberOfLastCommandUpdateFromServer })
+      syncClientOrbs({ gameData: gameData.current, lastServerGameUpdate, playerRole });
+      predictClientOrbs({ gameData: gameData.current, eventQueue, playerRole })
       //    calculate client orb positions based on time the most recently processed server command was issued by client,
       //    plus all commands and collision events not yet processed.
-      // predictClientOrbs({gameData, eventQueue, playerRole})
       // queueOpponentOrbMovements({}) // add opponent orb movements to a queue for interpolating them 
       numberOfLastUpdateApplied.current = numberOfLastCommandUpdateFromServer;
     }
     // Always:
-    syncText({ gameData, lastServerGameUpdate, playerRole })
+    // syncText({ gameData: gameData.current, lastServerGameUpdate, playerRole })
     // interpolate opponent orbs between 2nd to last and last known locations
     // move all client orbs toward headings
     // detect collisions and add them to event queue
     // draw
-    console.log("numberOfLastUpdateAppliedByServer: ", numberOfLastCommandUpdateFromServer)
     // sync game to last known state
     // update any new orb headings
     // update orb pos based on time since last sync and headings
-    removeCommandsAlreadyProcessedByServer(eventQueue, numberOfLastCommandUpdateFromServer)
-    processNewClientCommands({ gameData, eventQueue, playerRole });
-    moveClientOrbsBasedOnNewCommands({ gameData, eventQueue, playerRole })
-    moveOrbs({ gameData });
-    showOpponentOrbsInPast({ gameStateQueue, gameData, playerRole });
-    handleOrbCollisions({ gameData });
-    handleOrbInEndzone(gameData);
+    const deltaT = Date.now() - lastClientGameLoopUpdate
+    moveOrbs({ gameData: gameData.current, deltaT });
+    // showOpponentOrbsInPast({ gameStateQueue, gameData: gameData.current, playerRole });
+    // handleOrbCollisions({ gameData: gameData.current, handleAndQueueNewGameEvent, commonEventHandlerProps });
+    // handleOrbInEndzone(gameData.current);
     currentDrawFunction()
+    lastClientGameLoopUpdate = Date.now()
   }, 33);
 }

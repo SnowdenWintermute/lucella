@@ -1,5 +1,3 @@
-const isEqual = require("lodash.isequal");
-const cloneDeep = require("lodash.clonedeep");
 const convertGameStateIntoPacket = require("./convertGameStateIntoPacket");
 
 function createGameUpdateInterval({ io, gameData }) {

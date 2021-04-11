@@ -3,9 +3,9 @@ const selectOrbIfAppropriate = require('./selectOrbIfAppropriate')
 module.exports = ({ props, commonEventHandlerProps }) => {
   const { startX, startY, currX, currY, } = props
   const { currentGameData, playerDesignation } = commonEventHandlerProps
-  if (!currentGameData) return;
-  if (!currentGameData.gameState) return;
-  const playerOrbs = currentGameData.gameState.orbs[playerDesignation]
+  if (!currentGameData.current) return;
+  if (!currentGameData.current.gameState) return;
+  const playerOrbs = currentGameData.current.gameState.orbs[playerDesignation]
   const stackedOrbHighestIndex = { current: null };
   const selectionCoordinates = { startX, startY, currX, currY, }
   playerOrbs.forEach(orb => { selectOrbIfAppropriate(orb, selectionCoordinates, stackedOrbHighestIndex, playerOrbs) });
