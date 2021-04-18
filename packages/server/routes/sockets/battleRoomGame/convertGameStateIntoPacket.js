@@ -1,4 +1,5 @@
 function convertGameStateIntoPacket({ gameState }) {
+  console.log(gameState.lastUpdateTimestamp)
   const packetArray = [
     gameState.lastProcessedCommandNumbers.host,
     gameState.lastProcessedCommandNumbers.challenger,
@@ -66,9 +67,8 @@ function convertGameStateIntoPacket({ gameState }) {
     gameState.score.challenger,
     gameState.score.neededToWin,
     gameState.speed * 10,
-    gameState.lastUpdateTimestamp,
   ];
-  return new Int32Array(packetArray);
+  return new Int32Array(packetArray)
 }
 
 module.exports = convertGameStateIntoPacket;

@@ -1,24 +1,25 @@
 /* eslint-disable no-fallthrough */
 const GameEventTypes = require('@lucella/common/battleRoomGame/consts/GameEventTypes')
-const setAndReturnNewOrbHeadings = require("./commandHandlers/setAndReturnNewOrbHeadings");
-const setAndReturnNewOrbSelections = require("./commandHandlers/setAndReturnNewOrbSelections");
-const setAndReturnNewOrbSelectionByKeypress = require("./commandHandlers/setAndReturnNewOrbSelectionByKeypress");
+const newOrbHeadings = require("./commandHandlers/newOrbHeadings");
+const newOrbSelections = require("./commandHandlers/newOrbSelections");
+const newOrbSelectionByKeypress = require("./commandHandlers/newOrbSelectionByKeypress");
+const processEvent = require("@lucella/common/battleRoomGame/processEvent");
 
 module.exports = ({ type, props, commonEventHandlerProps }) => {
-  const { socket, eventQueue, numberOfLastCommandIssued } = commonEventHandlerProps
+  // create the event data
+  // process event
+  // emit event
+  // queue event
+  const { socket, eventQueue, numberOfLastCommandIssued, currentGameData, playerRole } = commonEventHandlerProps
   let eventData
   let newCommandNumber = null
   switch (type) {
     case GameEventTypes.ORB_MOVE:
-      eventData = setAndReturnNewOrbHeadings({ props, commonEventHandlerProps })
+      eventData = newOrbHeadings({ props, commonEventHandlerProps })
       break
     case GameEventTypes.ORB_SELECT:
-      eventData = setAndReturnNewOrbSelections({ props, commonEventHandlerProps })
-      break
-    case GameEventTypes.ORB_SELECT_AND_MOVE:
-      const selectCommandData = setAndReturnNewOrbSelectionByKeypress({ keyPressed: props.keyPressed, commonEventHandlerProps })
-      const moveCommandData = setAndReturnNewOrbHeadings({ props, commonEventHandlerProps })
-      eventData = { moveCommandData, selectCommandData }
+      if (props.keyPressed) eventData = newOrbSelectionByKeypress({ keyPressed: props.keyPressed, commonEventHandlerProps })
+      else eventData = newOrbSelections({ props, commonEventHandlerProps })
       break
     case GameEventTypes.ORB_COLLISION:
       eventData = props
@@ -29,17 +30,20 @@ module.exports = ({ type, props, commonEventHandlerProps }) => {
   switch (type) {
     case GameEventTypes.ORB_MOVE:
     case GameEventTypes.ORB_SELECT:
-    case GameEventTypes.ORB_SELECT_AND_MOVE:
       newCommandNumber = ++numberOfLastCommandIssued.current
       socket.emit("newCommand", { type, eventData, number: newCommandNumber });
       break
     default:
   }
 
-  eventQueue.push({
+  const event = {
     type,
     data: eventData,
     number: newCommandNumber,
     timestamp: Date.now()
-  });
+  }
+
+  processEvent({ gameData: currentGameData.current, playerRole, event })
+
+  eventQueue.current.push(event);
 }

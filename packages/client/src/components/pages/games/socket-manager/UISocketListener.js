@@ -27,8 +27,8 @@ const UISocketListener = ({ socket }) => {
     socket.on("updateOfCurrentRoomPlayerReadyStatus", (playersReady) => {
       dispatch(gameUiActions.updatePlayersReady(playersReady));
     });
-    socket.on("serverSendsPlayerDesignation", (data) => {
-      dispatch(gameUiActions.updatePlayerDesignation(data));
+    socket.on("serverSendsPlayerRole", (data) => {
+      dispatch(gameUiActions.updatePlayerRole(data));
     });
     socket.on("currentGameStatusUpdate", (gameStatus) => {
       dispatch(gameUiActions.setCurrentGameStatus(gameStatus));
@@ -54,7 +54,7 @@ const UISocketListener = ({ socket }) => {
       socket.off("currentGameRoomUpdate");
       socket.off("gameClosedByHost");
       socket.off("updateOfCurrentRoomPlayerReadyStatus");
-      socket.off("serverSendsPlayerDesignation");
+      socket.off("serverSendsPlayerRole");
       socket.off("currentGameStatusUpdate");
       socket.off("currentGameCountdownUpdate");
       socket.off("showEndScreen");

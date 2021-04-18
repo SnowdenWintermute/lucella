@@ -9,7 +9,7 @@ import {
   UPDATE_GAME_STATUS,
   UPDATE_GAME_COUNTDOWN,
   UPDATE_GAMES_LIST,
-  UPDATE_PLAYER_DESIGNATION,
+  UPDATE_PLAYER_ROLE,
   CLEAR_GAME_UI,
   SET_GAME_WINNER,
   SET_MATCHMAKING_WINDOW_VISIBLE,
@@ -72,9 +72,9 @@ export const setCurrentGameCountdown = (countdownNumber) => (dispatch) => {
     payload: countdownNumber,
   });
 };
-export const updatePlayerDesignation = (hostOrClient) => (dispatch) => {
+export const updatePlayerRole = (hostOrClient) => (dispatch) => {
   dispatch({
-    type: UPDATE_PLAYER_DESIGNATION,
+    type: UPDATE_PLAYER_ROLE,
     payload: hostOrClient,
   });
 };

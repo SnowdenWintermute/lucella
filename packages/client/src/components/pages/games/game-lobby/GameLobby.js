@@ -81,7 +81,6 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     joinRoom(joinNewRoomInput);
   };
   const joinRoom = (roomToJoin) => {
-    // if (roomToJoin.toLowerCase() !== currentChatRoom) setNewRoomLoading(true);
     setDisplayChangeChannelModal(false);
     setJoinNewRoomInput("");
     socket.emit("clientRequestsToJoinRoom", { roomToJoin, username });

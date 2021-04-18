@@ -17,13 +17,13 @@ const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, s
       setLastServerGameUpdate(cloneDeep(currentGameData.current));
     });
     socket.on("bufferTickFromServer", (data) => {
-      // create new update
       if (!lastServerGameUpdate) return;
       const decodedPacket = convertBufferToGameStateObject({ data });
       let newUpdate = lastServerGameUpdate;
       Object.keys(decodedPacket).forEach((key) => {
         newUpdate[key] = cloneDeep(decodedPacket[key]);
       });
+      newUpdate.timestamp = Date.now()
       setLastServerGameUpdate(newUpdate);
       gameStateQueue.current.push(newUpdate);
     });

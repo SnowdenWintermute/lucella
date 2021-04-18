@@ -1,5 +1,12 @@
 module.exports = ({ eventQueue, numberOfLastCommandUpdateFromServer }) => {
-  eventQueue.current.forEach((event, i) => {
-    if (event.number <= numberOfLastCommandUpdateFromServer) eventQueue.current.splice(0, i);
+  let newEventQueue = []
+  console.log("numberOfLastCommandUpdateFromServer ", numberOfLastCommandUpdateFromServer)
+  console.log("removing events", eventQueue.current)
+  eventQueue.current.forEach(event => {
+    if (event.number > numberOfLastCommandUpdateFromServer)
+      newEventQueue.push(event)
   })
+  eventQueue.current = newEventQueue
+  console.log("afyter removed events", eventQueue.current)
+
 }

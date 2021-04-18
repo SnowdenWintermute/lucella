@@ -9,7 +9,8 @@ module.exports = ({ application, gameName }) => {
   return setInterval(() => {
     if (!gameData) return;
     processCommandQueue({ gameData })
-    moveOrbs({ gameData, deltaT: Date.now() - gameData.gameState.lastUpdateTimestamp });
+    const deltaT = Date.now() - gameData.gameState.lastUpdateTimestamp
+    moveOrbs({ gameData, deltaT });
     handleOrbCollisions({ gameData });
     handleScoringPoints({ application, gameName });
     gameData.gameState.lastUpdateTimestamp = Date.now();

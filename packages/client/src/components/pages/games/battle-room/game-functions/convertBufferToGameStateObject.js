@@ -86,7 +86,6 @@ export const convertBufferToGameStateObject = ({ data, gameState }) => {
       host: packet[62],
       challenger: packet[63],
     },
-    lastUpdateTimestamp: packet[65]
   };
 
   return decodedPacket;

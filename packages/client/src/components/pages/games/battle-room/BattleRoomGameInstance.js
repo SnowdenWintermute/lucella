@@ -15,10 +15,12 @@ import createGameInterval from "./game-functions/createGameInterval";
 import MouseData from "./classes/MouseData";
 import GameListener from "../socket-manager/GameListener";
 import fitCanvasToScreen from "./canvas-functions/fitCanvasToScreen";
+import GameData from "@lucella/common/battleRoomGame/classes/GameData";
+import cloneDeep from 'lodash.clonedeep'
 
 const BattleRoomGameInstance = ({ socket }) => {
   const gameUi = useSelector((state) => state.gameUi);
-  const { playerDesignation, playersInGame, gameStatus, winner } = gameUi
+  const { playerRole, playersInGame, gameStatus, winner, currentGameName } = gameUi
   const mouseData = new MouseData()
   //
   const [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
@@ -35,7 +37,14 @@ const BattleRoomGameInstance = ({ socket }) => {
   const gameOverCountdownText = useRef();
   const gameWidthRatio = useRef(window.innerHeight * 0.6)
 
-  useEffect(() => { setClientPlayer(playersInGame[playerDesignation]) }, [playerDesignation, playersInGame]);
+  useEffect(() => { setClientPlayer(playersInGame[playerRole]) }, [playerRole, playersInGame]);
+  useEffect(() => {
+    if ((gameStatus === "ending" || gameStatus === "inProgress") && !currentGameData.current) {
+      console.log("creating new blank GameData")
+      currentGameData.current = new GameData({ gameName: currentGameName });
+      setLastServerGameUpdate(cloneDeep(currentGameData.current));
+    }
+  }, [currentGameName, gameStatus])
 
   useEffect(() => {
     fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio })
@@ -54,7 +63,7 @@ const BattleRoomGameInstance = ({ socket }) => {
         context,
         mouseData,
         clientPlayer,
-        playerRole: playerDesignation,
+        playerRole,
         currentGameData: currentGameData.current,
         lastServerGameUpdate,
         canvasSize,
@@ -72,9 +81,9 @@ const BattleRoomGameInstance = ({ socket }) => {
     mouseData,
     clientPlayer,
     playersInGame,
-    eventQueue: eventQueue.current,
+    eventQueue,
     numberOfLastCommandIssued,
-    playerDesignation
+    playerRole
   }
 
   useEffect(() => {
@@ -86,11 +95,11 @@ const BattleRoomGameInstance = ({ socket }) => {
       gameData: currentGameData,
       eventQueue,
       gameStateQueue: gameStateQueue.current,
-      playerRole: playerDesignation,
+      playerRole,
       commonEventHandlerProps
     });
     return () => clearInterval(gameInterval);
-  }, [socket, lastServerGameUpdate, eventQueue, playerDesignation, commonEventHandlerProps]);
+  }, [socket, lastServerGameUpdate, eventQueue, playerRole, commonEventHandlerProps]);
 
   const onKeyPress = useCallback((e) => { keyPressHandler({ e, commonEventHandlerProps }) }, [commonEventHandlerProps]);
   useEffect(() => {

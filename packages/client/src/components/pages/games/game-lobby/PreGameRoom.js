@@ -19,8 +19,8 @@ const PreGameRoom = ({ socket }) => {
   const currentGameName = useSelector((state) => state.gameUi.currentGameName);
   const countdownNumber = useSelector((state) => state.gameUi.countdownNumber);
   const isRanked = useSelector((state) => state.gameUi.isRanked);
-  const playerDesignation = useSelector(
-    (state) => state.gameUi.playerDesignation,
+  const playerRole = useSelector(
+    (state) => state.gameUi.playerRole,
   );
 
   const channelNameInput = useRef();
@@ -55,7 +55,7 @@ const PreGameRoom = ({ socket }) => {
     <Fragment>
       <h3>
         {!isRanked &&
-          (playerDesignation && playerDesignation === "host"
+          (playerRole && playerRole === "host"
             ? "You are the host of "
             : "You are challinging the host of ")}
         game: {currentGameName}

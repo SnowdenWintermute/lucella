@@ -1,16 +1,14 @@
 const orbIsWithinSelectionBox = require('./orbIsWithinSelectionBox')
 const mouseIsDirectlyOverOrb = require('./mouseIsDirectlyOverOrb')
 const selectionBoxBelowSizeThreshold = require('./selectionBoxBelowSizeThreshold')
-const selectClickedOrb = require('./selectClickedOrb')
+const singleOrbWasClicked = require('./singleOrbWasClicked')
 
-module.exports = (orb, selectionCoordinates, stackedOrbHighestIndex, playerOrbs) => {
+module.exports = (orb, selectionCoordinates, orbHasBeenSelectedByDirectClick, playerOrbs) => {
   if (
     mouseIsDirectlyOverOrb(orb, selectionCoordinates) &&
     selectionBoxBelowSizeThreshold(selectionCoordinates)
   )
-    selectClickedOrb(stackedOrbHighestIndex, orb, playerOrbs)
-  else if (orbIsWithinSelectionBox(orb, selectionCoordinates))
-    orb.isSelected = true;
-  else
-    orb.isSelected = false;
+    return singleOrbWasClicked(orbHasBeenSelectedByDirectClick, orb, playerOrbs)
+  else if (orbIsWithinSelectionBox(orb, selectionCoordinates)) return true;
+  else return false;
 }

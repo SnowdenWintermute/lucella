@@ -13,7 +13,7 @@ module.exports = ({ application, gameName }) => {
     if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit("errorMessage", "That game is currently full");
     if (gameRoom.players.host && gameRoom.players.host.username === username) return socket.emit("errorMessage", "You can not join a game hosted by yourself");
     const playerRole = assignPlayerRole({ application, gameRoom })
-    socket.emit("serverSendsPlayerDesignation", playerRole);
+    socket.emit("serverSendsPlayerRole", playerRole);
     chatRooms = clientRequestsToJoinRoom({
       application,
       username,

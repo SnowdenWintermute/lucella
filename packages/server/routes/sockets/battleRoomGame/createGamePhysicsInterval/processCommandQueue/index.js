@@ -1,23 +1,16 @@
-const processCommandInQueue = require("@lucella/common/battleRoomGame/processCommandInQueue");
+const processEvent = require("@lucella/common/battleRoomGame/processEvent");
 const removeCommandFromQueue = require("./removeCommandFromQueue");
 const updateNumberOfLastCommandProcessed = require("./updateNumberOfLastCommandProcessed");
 
 module.exports = ({ gameData }) => {
   Object.keys(gameData.commandQueue).forEach((playerRole) => {
-    Object.keys(gameData.commandQueue[playerRole]).forEach(
-      (commandInQueue) => {
-        processCommandInQueue({
-          gameData,
-          playerRole,
-          commandInQueue: gameData.commandQueue[playerRole][commandInQueue],
-        });
-        updateNumberOfLastCommandProcessed({
-          gameData,
-          playerRole,
-          commandInQueue,
-        });
-        removeCommandFromQueue({ gameData, playerRole, commandInQueue });
+    gameData.commandQueue[playerRole].forEach(
+      (commandInQueue, i) => {
+        console.log("command: ", commandInQueue)
+        processEvent({ gameData, playerRole, event: commandInQueue });
+        updateNumberOfLastCommandProcessed({ gameData, playerRole, i });
+        removeCommandFromQueue({ gameData, playerRole, i });
       }
     );
-  });
+  })
 }

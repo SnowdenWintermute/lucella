@@ -9,7 +9,7 @@ import {
   UPDATE_PLAYERS_READY,
   UPDATE_GAME_COUNTDOWN,
   UPDATE_GAME_STATUS,
-  UPDATE_PLAYER_DESIGNATION,
+  UPDATE_PLAYER_ROLE,
   CLEAR_GAME_UI,
   SET_GAME_WINNER,
   SET_SCORE_SCREEN_DATA,
@@ -38,7 +38,7 @@ const initialState = {
   },
   countdownNumber: null,
   gameStatus: "inLobby",
-  playerDesignation: null,
+  playerRole: null,
   winner: null,
   scoreScreenData: {},
   scoreScreenDisplayed: false,
@@ -107,10 +107,10 @@ export default function (state = initialState, action) {
         ...state,
         gameStatus: payload,
       };
-    case UPDATE_PLAYER_DESIGNATION:
+    case UPDATE_PLAYER_ROLE:
       return {
         ...state,
-        playerDesignation: payload,
+        playerRole: payload,
       };
     case SET_GAME_WINNER:
       return {

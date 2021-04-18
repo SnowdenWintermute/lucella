@@ -5,7 +5,6 @@ const handleOrbInEndzone = require('@lucella/common/battleRoomGame/handleOrbInEn
 const removeOldEvents = require('./clientPrediction/removeOldEvents')
 const moveOrbs = require("@lucella/common/battleRoomGame/moveOrbs/index.js")
 const syncText = require('./syncText')
-const handleAndQueueNewGameEvent = require('./handleAndQueueNewGameEvent')
 const predictClientOrbs = require('./clientPrediction/predictClientOrbs')
 
 export default ({
@@ -23,12 +22,13 @@ export default ({
     if (!gameData.current || Object.keys(gameData.current).length < 1) return;
     const numberOfLastCommandUpdateFromServer =
       lastServerGameUpdate.lastProcessedCommandNumbers ? lastServerGameUpdate.lastProcessedCommandNumbers[playerRole] : null
-    if (eventQueue.current.length <= 0 || numberOfLastCommandUpdateFromServer > eventQueue.current[0].number) {
-      console.log("numberOfLastUpdateAppliedByServer: ", numberOfLastCommandUpdateFromServer)
-      if (eventQueue.current[0]) console.log("eventQueue.current[0].number: ", eventQueue.current[0].number)
+    if (!numberOfLastCommandUpdateFromServer || (eventQueue.current[0] && numberOfLastCommandUpdateFromServer > eventQueue.current[0].number)) {
       if (eventQueue.current.length > 0) removeOldEvents({ eventQueue, numberOfLastCommandUpdateFromServer })
       syncClientOrbs({ gameData: gameData.current, lastServerGameUpdate, playerRole });
-      predictClientOrbs({ gameData: gameData.current, eventQueue, playerRole })
+      if (eventQueue.current.length > 0) {
+        console.log("numberOfLastCommandUpdateFromServer: ", numberOfLastCommandUpdateFromServer, eventQueue.current[0].number)
+        predictClientOrbs({ gameData: gameData.current, eventQueue, playerRole, lastServerGameUpdate })
+      }
       //    calculate client orb positions based on time the most recently processed server command was issued by client,
       //    plus all commands and collision events not yet processed.
       // queueOpponentOrbMovements({}) // add opponent orb movements to a queue for interpolating them 
