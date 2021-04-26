@@ -27,7 +27,6 @@ export default throttledEventHandlerCreator(333, ({ e, commonEventHandlerProps }
       return;
   }
   if (keyPressed > 0 && keyPressed < 6) {
-    console.log("headingX: ", headingX, "headingY: ", headingY)
     handleAndQueueNewGameEvent({ type: GameEventTypes.ORB_SELECT, props: { keyPressed }, commonEventHandlerProps })
     handleAndQueueNewGameEvent({ type: GameEventTypes.ORB_MOVE, props: { headingX, headingY }, commonEventHandlerProps })
   }

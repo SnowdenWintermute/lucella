@@ -5,7 +5,7 @@ module.exports = ({ application, gameName, eloUpdates }) => {
   const gameRoom = gameRooms[gameName];
   const gameData = gameDatas[gameName];
   return setInterval(() => {
-    if (gameData.endingStateCountdown < 2) {
+    if (gameData.endingStateCountdown < 1) {
       clearInterval(gameData.intervals.endingCountdown);
       const host = connectedSockets[gameRoom.players.host.socketId];
       const challenger = connectedSockets[gameRoom.players.challenger.socketId];

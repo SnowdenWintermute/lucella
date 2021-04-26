@@ -43,7 +43,7 @@ class GameState {
       },
     };
     this.speed = 4;
-
+    this.lastCommandProcessedAt = Date.now()
     generateStartingOrbs({ orbs: this.orbs, startingOrbRadius, hostUuid, challengerUuid })
   }
 }

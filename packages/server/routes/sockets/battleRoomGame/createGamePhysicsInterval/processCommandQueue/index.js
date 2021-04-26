@@ -6,10 +6,10 @@ module.exports = ({ gameData }) => {
   Object.keys(gameData.commandQueue).forEach((playerRole) => {
     gameData.commandQueue[playerRole].forEach(
       (commandInQueue, i) => {
-        console.log("command: ", commandInQueue)
         processEvent({ gameData, playerRole, event: commandInQueue });
         updateNumberOfLastCommandProcessed({ gameData, playerRole, i });
         removeCommandFromQueue({ gameData, playerRole, i });
+        gameData.gameState.lastCommandProcessedAt = Date.now()
       }
     );
   })

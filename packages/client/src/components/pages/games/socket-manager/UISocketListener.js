@@ -31,6 +31,7 @@ const UISocketListener = ({ socket }) => {
       dispatch(gameUiActions.updatePlayerRole(data));
     });
     socket.on("currentGameStatusUpdate", (gameStatus) => {
+      console.log("new game status: ", gameStatus)
       dispatch(gameUiActions.setCurrentGameStatus(gameStatus));
     });
     socket.on("currentGameCountdownUpdate", (countdown) => {
@@ -39,6 +40,7 @@ const UISocketListener = ({ socket }) => {
     });
     socket.on("showEndScreen", (data) => {
       dispatch(lobbyUiActions.setScoreScreenData(data));
+      dispatch(gameUiActions.clearGameUiData())
     });
     socket.on("matchmakningQueueJoined", () => {
       dispatch(gameUiActions.setMatchmakingWindowVisible(true));

@@ -54,7 +54,7 @@ const Modal = ({
 
   const modalToShow = displayModal ? (
     <Fragment>
-      <div className={`modal-screen ${screenClass}`} id="modal-screen"></div>
+      <div className={`modal-screen ${screenClass || ""}`} id="modal-screen"></div>
       <div className={`modal-frame ${frameClass}`}>
         <div className="modal-top-bar">
           <div className="modal-title">{title}</div>

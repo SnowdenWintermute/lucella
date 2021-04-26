@@ -16,18 +16,17 @@ import MouseData from "./classes/MouseData";
 import GameListener from "../socket-manager/GameListener";
 import fitCanvasToScreen from "./canvas-functions/fitCanvasToScreen";
 import GameData from "@lucella/common/battleRoomGame/classes/GameData";
-import cloneDeep from 'lodash.clonedeep'
 
 const BattleRoomGameInstance = ({ socket }) => {
   const gameUi = useSelector((state) => state.gameUi);
-  const { playerRole, playersInGame, gameStatus, winner, currentGameName } = gameUi
+  const { playerRole, playersInGame, gameStatus, winner } = gameUi
   const mouseData = new MouseData()
   //
   const [lastServerGameUpdate, setLastServerGameUpdate] = useState({});
   const numberOfLastUpdateApplied = useRef(0);
   const numberOfLastCommandIssued = useRef(0)
   const eventQueue = useRef([]);
-  const currentGameData = useRef();
+  const currentGameData = useRef(new GameData({ gameName: gameUi.currentGameName }));
   const gameStateQueue = useRef([]); // opponent orb pos queue
   //
   const [clientPlayer, setClientPlayer] = useState({});
@@ -38,13 +37,6 @@ const BattleRoomGameInstance = ({ socket }) => {
   const gameWidthRatio = useRef(window.innerHeight * 0.6)
 
   useEffect(() => { setClientPlayer(playersInGame[playerRole]) }, [playerRole, playersInGame]);
-  useEffect(() => {
-    if ((gameStatus === "ending" || gameStatus === "inProgress") && !currentGameData.current) {
-      console.log("creating new blank GameData")
-      currentGameData.current = new GameData({ gameName: currentGameName });
-      setLastServerGameUpdate(cloneDeep(currentGameData.current));
-    }
-  }, [currentGameName, gameStatus])
 
   useEffect(() => {
     fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio })
@@ -107,6 +99,8 @@ const BattleRoomGameInstance = ({ socket }) => {
     return () => { window.removeEventListener("keydown", onKeyPress) };
   }, [onKeyPress]);
 
+  console.log("currentGameData.current", currentGameData.current)
+
   return (
     <div
       className="battle-room-canvas-holder"
@@ -121,21 +115,23 @@ const BattleRoomGameInstance = ({ socket }) => {
         gameStateQueue={gameStateQueue}
         gameOverCountdownText={gameOverCountdownText}
       />
-      {currentGameData.current ? <canvas
-        height={canvasSize.height}
-        width={canvasSize.width}
-        className="battle-room-canvas"
-        ref={canvasRef}
-        onTouchStart={(e) => { touchStartHandler({ e, commonEventHandlerProps }) }}
-        onTouchMove={(e) => { touchMoveHandler({ e, commonEventHandlerProps }) }}
-        onTouchEnd={(e) => { touchEndHandler({ e, commonEventHandlerProps }) }}
-        onMouseDown={(e) => { mouseDownHandler({ e, mouseData }) }}
-        onMouseUp={(e) => { mouseUpHandler({ e, commonEventHandlerProps }) }}
-        onContextMenu={(e) => e.preventDefault()}
-        onMouseMove={(e) => { mouseMoveHandler({ e, commonEventHandlerProps }) }}
-        onMouseLeave={() => { mouseLeaveHandler({ commonEventHandlerProps }) }}
-        onMouseEnter={() => { mouseEnterHandler({ mouseData }) }}
-      /> : "Loading..."}
+      {gameStatus === "inProgress" || gameStatus === "ending" ?
+        <canvas
+          height={canvasSize.height}
+          width={canvasSize.width}
+          className="battle-room-canvas"
+          ref={canvasRef}
+          onTouchStart={(e) => { touchStartHandler({ e, commonEventHandlerProps }) }}
+          onTouchMove={(e) => { touchMoveHandler({ e, commonEventHandlerProps }) }}
+          onTouchEnd={(e) => { touchEndHandler({ e, commonEventHandlerProps }) }}
+          onMouseDown={(e) => { mouseDownHandler({ e, mouseData }) }}
+          onMouseUp={(e) => { mouseUpHandler({ e, commonEventHandlerProps }) }}
+          onContextMenu={(e) => e.preventDefault()}
+          onMouseMove={(e) => { mouseMoveHandler({ e, commonEventHandlerProps }) }}
+          onMouseLeave={() => { mouseLeaveHandler({ commonEventHandlerProps }) }}
+          onMouseEnter={() => { mouseEnterHandler({ mouseData }) }}
+        /> :
+        "Loading..."}
     </div>
   );
 };

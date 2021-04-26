@@ -4,7 +4,7 @@ const setGameRoomWinnerName = require("./setGameRoomWinnerName");
 const createGameEndingCountdownInterval = require("./createGameEndingCountdownInterval");
 
 async function endGameCleanup({ application, gameName, isDisconnecting }) {
-  const { io, socket, gameRooms, connectedSockets } = application;
+  const { io } = application;
   const gameRoom = application.gameRooms[gameName];
   const gameData = application.gameDatas[gameName];
   if (gameRoom.gameStatus === "ending") return;

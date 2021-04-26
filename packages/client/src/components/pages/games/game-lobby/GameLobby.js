@@ -85,12 +85,13 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     setJoinNewRoomInput("");
     socket.emit("clientRequestsToJoinRoom", { roomToJoin, username });
   };
-
+  useEffect(() => {
+    console.log("gameStatus", gameStatus)
+  }, [gameStatus])
   return (
     <Fragment>
       <SocketManager socket={socket} />
       <Modal
-        screenClass=""
         frameClass="modal-frame-dark"
         isOpen={displayChangeChannelModal}
         setParentDisplay={setChannelModalParentDisplay}
@@ -104,7 +105,6 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
         />
       </Modal>
       <Modal
-        screenClass=""
         frameClass="modal-frame-dark"
         isOpen={scoreScreenDisplayed}
         setParentDisplay={setScoreScreenModalParentDisplay}
