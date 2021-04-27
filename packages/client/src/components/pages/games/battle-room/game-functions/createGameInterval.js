@@ -15,17 +15,16 @@ export default ({
   eventQueue,
   playerRole,
   gameStateQueue,
-  commonEventHandlerProps
+  commonEventHandlerProps,
+  numberOfUpdatesApplied
 }) => {
   let lastClientGameLoopUpdate = Date.now()
   return setInterval(() => {
     if (!lastServerGameUpdate) return
     if (!gameData.current || Object.keys(gameData.current).length < 1) return;
-    const numberOfLastCommandUpdateFromServer =
-      lastServerGameUpdate.lastProcessedCommandNumbers ? lastServerGameUpdate.lastProcessedCommandNumbers[playerRole] : null
-    console.log(numberOfLastCommandUpdateFromServer)
-    console.log(eventQueue.current, (eventQueue.current[0] && numberOfLastCommandUpdateFromServer > eventQueue.current[0].number))
+    const numberOfLastCommandUpdateFromServer = lastServerGameUpdate?.lastProcessedCommandNumbers && lastServerGameUpdate.lastProcessedCommandNumbers[playerRole]
     if (!numberOfLastCommandUpdateFromServer || (eventQueue.current[0] && numberOfLastCommandUpdateFromServer > eventQueue.current[0].number)) {
+      numberOfUpdatesApplied.current++
       if (eventQueue.current.length > 0) removeOldEvents({ eventQueue, numberOfLastCommandUpdateFromServer })
       syncClientOrbs({ gameData, lastServerGameUpdate, playerRole });
       if (eventQueue.current.length > 0) {

@@ -10,7 +10,6 @@ const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, s
   useEffect(() => {
     if (!socket) return;
     socket.on("serverInitsGame", () => {
-      dispatch(gameUiActions.setCurrentGameStatus("inProgress"))
       setLastServerGameUpdate(cloneDeep(currentGameData.current.gameState))
     });
     socket.on("bufferTickFromServer", async (data) => {

@@ -26,6 +26,7 @@ const BattleRoomGameInstance = ({ socket }) => {
   const numberOfLastUpdateApplied = useRef(0);
   const numberOfLastCommandIssued = useRef(0)
   const eventQueue = useRef([]);
+  const numberOfUpdatesApplied = useRef(0)
   const currentGameData = useRef(new GameData({ gameName: gameUi.currentGameName }));
   const gameStateQueue = useRef([]); // opponent orb pos queue
   //
@@ -62,6 +63,9 @@ const BattleRoomGameInstance = ({ socket }) => {
         gameOverCountdownText: gameOverCountdownText.current,
         gameStatus,
         winner,
+        eventQueue,
+        numberOfLastCommandUpdateFromServer: lastServerGameUpdate?.lastProcessedCommandNumbers[playerRole],
+        numberOfUpdatesApplied
       });
     };
   });
@@ -88,7 +92,8 @@ const BattleRoomGameInstance = ({ socket }) => {
       eventQueue,
       gameStateQueue: gameStateQueue.current,
       playerRole,
-      commonEventHandlerProps
+      commonEventHandlerProps,
+      numberOfUpdatesApplied
     });
     return () => clearInterval(gameInterval);
   }, [socket, lastServerGameUpdate, eventQueue, playerRole, commonEventHandlerProps]);

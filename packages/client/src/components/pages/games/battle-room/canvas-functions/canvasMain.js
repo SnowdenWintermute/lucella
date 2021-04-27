@@ -13,6 +13,9 @@ function draw({
   gameOverCountdownText,
   gameStatus,
   winner,
+  eventQueue,
+  numberOfLastCommandUpdateFromServer,
+  numberOfUpdatesApplied
 }) {
   return requestAnimationFrame(() => {
     if (!currentGameData) return;
@@ -81,6 +84,19 @@ function draw({
       context.lineWidth = 3;
       context.stroke();
     }
+
+    // event queue
+    const eventQueueDisplay = []
+    eventQueue.current.forEach(event => eventQueueDisplay.push(event.type))
+    context.beginPath();
+    context.fillStyle = "rgb(255,255,255)";
+    context.textAlign = "left";
+    context.textBaseline = "top";
+    context.font = "bold 12px Arial";
+    context.fillText(JSON.stringify("[" + eventQueueDisplay + "]"), 0, 0)
+    context.fillText(numberOfLastCommandUpdateFromServer + " " + eventQueue.current[0]?.number, 0, 26)
+    context.fillText(eventQueue.current[0] && numberOfLastCommandUpdateFromServer > eventQueue.current[0].number, 0, 46)
+    context.fillText(numberOfUpdatesApplied.current, 0, 66)
   });
 }
 
