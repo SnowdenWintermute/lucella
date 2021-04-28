@@ -14,7 +14,7 @@ function draw({
   gameStatus,
   winner,
   eventQueue,
-  numberOfLastCommandUpdateFromServer,
+  lastServerGameUpdate,
   numberOfUpdatesApplied
 }) {
   return requestAnimationFrame(() => {
@@ -86,6 +86,7 @@ function draw({
     }
 
     // event queue
+    const numberOfLastCommandUpdateFromServer = lastServerGameUpdate?.lastProcessedCommandNumbers && lastServerGameUpdate.lastProcessedCommandNumbers[playerRole]
     const eventQueueDisplay = []
     eventQueue.current.forEach(event => eventQueueDisplay.push(event.type))
     context.beginPath();
@@ -95,7 +96,7 @@ function draw({
     context.font = "bold 12px Arial";
     context.fillText(JSON.stringify("[" + eventQueueDisplay + "]"), 0, 0)
     context.fillText(numberOfLastCommandUpdateFromServer + " " + eventQueue.current[0]?.number, 0, 26)
-    context.fillText(eventQueue.current[0] && numberOfLastCommandUpdateFromServer > eventQueue.current[0].number, 0, 46)
+    // context.fillText(eventQueue.current[0] && numberOfLastCommandUpdateFromServer > eventQueue.current[0].number, 0, 46)
     context.fillText(numberOfUpdatesApplied.current, 0, 66)
   });
 }

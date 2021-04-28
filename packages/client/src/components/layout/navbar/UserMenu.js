@@ -1,8 +1,8 @@
 import React, { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
-import userIcon from "../../../img/menuIcons/user.png";
+// import userIcon from "../../../img/menuIcons/user.png";
 import profileIcon from "../../../img/profile.png";
-import walletIcon from "../../../img/menuIcons/wallet.png";
+// import walletIcon from "../../../img/menuIcons/wallet.png";
 import { ReactComponent as SettingsIcon } from "../../../img/menuIcons/settings.svg";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";

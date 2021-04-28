@@ -64,7 +64,6 @@ const BattleRoomGameInstance = ({ socket }) => {
         gameStatus,
         winner,
         eventQueue,
-        numberOfLastCommandUpdateFromServer: lastServerGameUpdate?.lastProcessedCommandNumbers[playerRole],
         numberOfUpdatesApplied
       });
     };
@@ -93,7 +92,7 @@ const BattleRoomGameInstance = ({ socket }) => {
       gameStateQueue: gameStateQueue.current,
       playerRole,
       commonEventHandlerProps,
-      numberOfUpdatesApplied
+      numberOfUpdatesApplied,
     });
     return () => clearInterval(gameInterval);
   }, [socket, lastServerGameUpdate, eventQueue, playerRole, commonEventHandlerProps]);

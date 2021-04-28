@@ -9,7 +9,6 @@ module.exports = ({ gameData }) => {
         processEvent({ gameData, playerRole, event: commandInQueue });
         updateNumberOfLastCommandProcessed({ gameData, playerRole, i });
         removeCommandFromQueue({ gameData, playerRole, i });
-        gameData.gameState.lastCommandProcessedAt = Date.now()
       }
     );
   })

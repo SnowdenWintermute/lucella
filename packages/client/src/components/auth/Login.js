@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
-import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../../store/actions/auth";
 
