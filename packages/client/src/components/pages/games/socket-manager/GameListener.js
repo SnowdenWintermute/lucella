@@ -17,7 +17,6 @@ const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, s
       const decodedPacket = JSON.parse(data)
       let newUpdate = lastServerGameUpdate;
       Object.keys(decodedPacket).forEach((key) => {
-        if (key === "lastProcessedCommandNumbers") console.log(decodedPacket[key])
         newUpdate[key] = cloneDeep(decodedPacket[key]);
       });
       setLastServerGameUpdate(newUpdate);

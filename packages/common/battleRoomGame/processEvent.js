@@ -24,4 +24,5 @@ module.exports = ({ gameData, event, playerRole }) => {
       break;
     default:
   }
+  gameData.gameState.lastCommandProcessedAt = Date.now()
 }

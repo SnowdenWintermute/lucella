@@ -1,16 +1,13 @@
 const moveOrbs = require("@lucella/common/battleRoomGame/moveOrbs")
 const processEvent = require("@lucella/common/battleRoomGame/processEvent");
 
-module.exports = ({ gameData, eventQueue, playerRole, lastServerGameUpdate }) => {
+module.exports = ({ gameData, eventQueue, playerRole }) => {
   if (!eventQueue.current || eventQueue.current.length < 1) return
-  let lastEventTimestamp
   eventQueue.current.forEach((event, i) => {
     processEvent({ gameData, playerRole, event })
     let deltaT
-    if (!lastEventTimestamp) deltaT = Date.now() - lastServerGameUpdate.lastUpdateTimestamp
-    else deltaT = event.timestamp - lastEventTimestamp
-    console.log("event " + i + " prediction deltaT: ", deltaT)
+    if (eventQueue.current[i + 1]) deltaT = eventQueue.current[i + 1].timestamp - event.timestamp
+    else deltaT = Date.now() - event.timestamp
     moveOrbs({ gameData, deltaT })
-    lastEventTimestamp = event.timestamp
   })
 };

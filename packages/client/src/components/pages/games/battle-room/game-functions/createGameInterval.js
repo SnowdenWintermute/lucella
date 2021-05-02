@@ -23,18 +23,18 @@ export default ({
     if (!lastServerGameUpdate) return
     if (!gameData.current || Object.keys(gameData.current).length < 1) return;
     const numberOfLastCommandUpdateFromServer = lastServerGameUpdate?.lastProcessedCommandNumbers && lastServerGameUpdate.lastProcessedCommandNumbers[playerRole]
-    syncClientOrbs({ gameData, lastServerGameUpdate, playerRole });
+    // console.log("numberOfLastCommandUpdateFromServer: ", numberOfLastCommandUpdateFromServer, "numberOfLastUpdateApplied.current: ", numberOfLastUpdateApplied.current)
     if (numberOfLastCommandUpdateFromServer > numberOfLastUpdateApplied.current) {
+      console.log("numberOfLastCommandUpdateFromServer > numberOfLastUpdateApplied.current")
+      syncClientOrbs({ gameData, lastServerGameUpdate, playerRole });
+      moveOrbs({ gameData: gameData.current, deltaT: Date.now() - lastServerGameUpdate.lastCommandProcessedAt })
       removeOldEvents({ eventQueue, numberOfLastCommandUpdateFromServer })
+      gameData.current.gameState.lastCommandProcessedAt = Date.now()
       if (eventQueue.current.length > 0) {
-        console.log("Predicting orbs, numberOfLastCommandUpdateFromServer: ", numberOfLastCommandUpdateFromServer, eventQueue.current[0].number)
         predictClientOrbs({ gameData: gameData.current, eventQueue, playerRole, lastServerGameUpdate, numberOfLastCommandUpdateFromServer })
       }
       numberOfUpdatesApplied.current++
       numberOfLastUpdateApplied.current = numberOfLastCommandUpdateFromServer;
-    } else {
-      const deltaT = Date.now() - lastClientGameLoopUpdate.lastUpdateTimestamp
-      moveOrbs({ gameData: gameData.current, deltaT })
     }
     // queueOpponentOrbMovements({}) // add opponent orb movements to a queue for interpolating them 
     // Always:
