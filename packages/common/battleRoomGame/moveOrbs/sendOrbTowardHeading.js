@@ -13,4 +13,4 @@ module.exports = ({ orb, gameData, deltaT }) => {
   else orb.xPos = orb.heading.xPos
   if (Math.abs(orb.yPos + velY - orb.heading.yPos) >= gameSpeedAdjustedForDeltaT) orb.yPos = Math.floor(orb.yPos + velY)
   else orb.yPos = orb.heading.yPos
-}
+};
