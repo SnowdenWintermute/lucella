@@ -1,5 +1,5 @@
 const moveOrbs = require("@lucella/common/battleRoomGame/moveOrbs");
-const handleOrbCollisions = require("@lucella/common/battleRoomGame/handleOrbCollisions");
+const handleOrbCollisions = require("@lucella/common/battleRoomGame/handleOrbCollisions/index");
 const handleScoringPoints = require("./handleScoringPoints");
 const processCommandQueue = require('./processCommandQueue')
 
@@ -14,5 +14,5 @@ module.exports = ({ application, gameName }) => {
     handleOrbCollisions({ gameData });
     handleScoringPoints({ application, gameName });
     gameData.gameState.lastUpdateTimestamp = Date.now();
-  }, 33);
+  }, 33)
 }

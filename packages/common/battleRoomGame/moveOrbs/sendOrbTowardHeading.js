@@ -3,9 +3,9 @@ module.exports = ({ orb, gameData, deltaT }) => {
   if (deltaT) gameSpeedAdjustedForDeltaT = gameData.gameState.speed * deltaT / 33
   else if (deltaT === 0) gameSpeedAdjustedForDeltaT = 0
 
-  let tx = orb.heading.xPos - orb.xPos
-  let ty = orb.heading.yPos - orb.yPos;
-  let dist = Math.sqrt(tx * tx + ty * ty);
+  const tx = orb.heading.xPos - orb.xPos
+  const ty = orb.heading.yPos - orb.yPos;
+  const dist = Math.sqrt(tx * tx + ty * ty);
   const velX = Math.floor((tx / dist) * (gameSpeedAdjustedForDeltaT))
   const velY = Math.floor((ty / dist) * (gameSpeedAdjustedForDeltaT))
 

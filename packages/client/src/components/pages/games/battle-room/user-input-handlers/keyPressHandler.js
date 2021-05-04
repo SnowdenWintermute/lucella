@@ -2,7 +2,7 @@ import throttledEventHandlerCreator from "../../util-functions/throttledEventHan
 const GameEventTypes = require('@lucella/common/battleRoomGame/consts/GameEventTypes')
 const handleAndQueueNewGameEvent = require("../game-functions/handleAndQueueNewGameEvent")
 
-export default throttledEventHandlerCreator(333, ({ e, commonEventHandlerProps }) => {
+export default throttledEventHandlerCreator(33, ({ e, commonEventHandlerProps }) => {
   const { mouseData } = commonEventHandlerProps
   const headingX = mouseData.xPos
   const headingY = mouseData.yPos

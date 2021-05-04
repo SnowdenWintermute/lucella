@@ -1,6 +1,7 @@
 const handleOrbSelect = require("./commandHandlers/handleOrbSelect");
 const setOrbHeadings = require("./setOrbHeadings");
-const GameEventTypes = require('./consts/GameEventTypes')
+const GameEventTypes = require('./consts/GameEventTypes');
+const handleOrbInEndzone = require("./handleOrbInEndzone");
 
 module.exports = ({ gameData, event, playerRole }) => {
   if (!event) return;
@@ -17,10 +18,10 @@ module.exports = ({ gameData, event, playerRole }) => {
       });
       break
     case GameEventTypes.ORB_COLLISION:
-      // 
+      handleOrbCollisions({ gameData })
       break;
     case GameEventTypes.ORB_ENTERS_ENDZONE:
-      //
+      handleOrbInEndzone({ gameData })
       break;
     default:
   }

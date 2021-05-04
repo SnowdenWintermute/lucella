@@ -12,7 +12,7 @@ const gameOverText = ({
     context.fillStyle = "rgb(255,255,255)";
     context.textAlign = "center";
     context.textBaseline = "middle";
-    context.font = "bold 12px Arial";
+    context.font = `bold ${currentGameData.width / 25}px Arial`;
     context.fillText(
       `Winner: ${winner ? winner : "..."}`,
       (currentGameData.width * canvasXDrawFraction) / 2,

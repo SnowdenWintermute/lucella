@@ -1,7 +1,7 @@
 module.exports = ({ gameData, orbSet, orb }) => {
   if (!gameData) return
   const { endzones } = gameData.gameState
-  if (orb.isGhosting) {
+  if (orb.isGhost) {
     orb.heading.xPos = orb.xPos;
     switch (orbSet) {
       case "host":
@@ -14,7 +14,7 @@ module.exports = ({ gameData, orbSet, orb }) => {
           endzones.host.height +
           orb.radius
         )
-          orb.isGhosting = false;
+          orb.isGhost = false;
         break;
       case "challenger":
         orb.heading.yPos = endzones.challenger.y;
@@ -22,7 +22,7 @@ module.exports = ({ gameData, orbSet, orb }) => {
           orb.yPos >=
           endzones.challenger.y - orb.radius
         )
-          orb.isGhosting = false;
+          orb.isGhost = false;
         break;
       default:
         break;

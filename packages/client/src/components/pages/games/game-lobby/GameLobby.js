@@ -51,7 +51,6 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
 
   useEffect(() => {
     socket.on("authenticationFinished", () => {
-      console.log("authenticationFinished");
       setAuthenticating(false);
     });
   });
@@ -85,9 +84,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     setJoinNewRoomInput("");
     socket.emit("clientRequestsToJoinRoom", { roomToJoin, username });
   };
-  useEffect(() => {
-    console.log("gameStatus", gameStatus)
-  }, [gameStatus])
+
   return (
     <Fragment>
       <SocketManager socket={socket} />

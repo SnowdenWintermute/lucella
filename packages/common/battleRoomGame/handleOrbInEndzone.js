@@ -1,7 +1,7 @@
-const incrementScoreAndGameSpeed = (orb, score, speed, playerRole) => {
+const incrementScoreAndGameSpeed = (orb, score, gameState, playerRole) => {
   score[playerRole] += 1;
   orb.isGhost = true;
-  speed += .5
+  gameState.speed += .5
 }
 
 function handleOrbInEndzone(gameData) {
@@ -15,11 +15,11 @@ function handleOrbInEndzone(gameData) {
       switch (orbSet) {
         case "host":
           if (orb.yPos >= challengerEndzoneY)
-            incrementScoreAndGameSpeed(orb, score, speed, 'host')
+            incrementScoreAndGameSpeed(orb, score, gameState, 'host')
           break;
         case "challenger":
           if (orb.yPos <= hostEndzoneY)
-            incrementScoreAndGameSpeed(orb, score, speed, 'challenger')
+            incrementScoreAndGameSpeed(orb, score, gameState, 'challenger')
           break;
         default:
           return

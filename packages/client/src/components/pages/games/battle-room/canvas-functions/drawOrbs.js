@@ -14,7 +14,7 @@ const drawOrbs = ({
   for (let orbSet in currentGameData.gameState.orbs) {
     currentGameData.gameState.orbs[orbSet].forEach((orb) => {
       context.beginPath();
-      context.fillStyle = orb.isGhosting
+      context.fillStyle = orb.isGhost
         ? `rgba(${orb.color},.3)`
         : `rgb(${orb.color})`;
       context.ellipse(

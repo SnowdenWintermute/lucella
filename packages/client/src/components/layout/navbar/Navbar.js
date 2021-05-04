@@ -12,15 +12,14 @@ import { useEffect } from "react";
 const Navbar = () => {
   const history = useHistory()
   const [activeTab, setActiveTab] = useState(history.location)
-  useEffect(() => {
-    const { pathname } = history.location
-    setActiveTab(pathname)
-  }, [history])
-  // state
+
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus); // used to hide navbar in game
 
+  useEffect(() => {
+    setActiveTab(history.location.pathname)
+  }, [history.location.pathname])
 
   return (
     gameStatus !== "inProgress" &&
@@ -41,6 +40,7 @@ const Navbar = () => {
               <Link
                 to="/battle-room"
                 className={`nav-tab ${activeTab === "/battle-room" && "tab-active"}`}
+                onClick={() => setActiveTab("/battle-room")}
                 name="games"
               >
                 <span className="tab-title-text">GAME</span>
@@ -49,6 +49,7 @@ const Navbar = () => {
               <Link
                 to="/ladder"
                 className={`nav-tab ${activeTab === "/ladder" && "tab-active"}`}
+                onClick={() => setActiveTab("/ladder")}
                 name="ladder"
               >
                 <span className="tab-title-text">LADDER</span>

@@ -5,7 +5,7 @@ const assignWinner = require("./assignWinner");
 
 function handleScoringPoints({ application, gameName }) {
   const gameData = application.gameDatas[gameName];
-  handleOrbInEndzone(gameData);
+  handleOrbInEndzone(gameData)
   updateScoreNeededToWin(gameData); // players must win by at least 2 points
   assignWinner(gameData);
   if (gameData.winner) endGameCleanup({ application, gameName });

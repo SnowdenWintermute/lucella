@@ -5,7 +5,7 @@ function createGameUpdateInterval({ io, gameData }) {
       "bufferTickFromServer",
       JSON.stringify(gameState)
     );
-  }, 1450); //45
+  }, 45); //45
 }
 
 module.exports = createGameUpdateInterval;

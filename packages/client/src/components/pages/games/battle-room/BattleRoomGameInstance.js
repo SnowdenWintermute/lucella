@@ -41,7 +41,10 @@ const BattleRoomGameInstance = ({ socket }) => {
 
   useEffect(() => {
     fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio })
-    function handleResize() { fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio }) }
+    function handleResize() {
+      gameWidthRatio.current = window.innerHeight * 0.6
+      fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio })
+    }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize)
   }, [setCanvasSize, gameWidthRatio]);

@@ -13,7 +13,7 @@ import Login from "./components/auth/Login";
 import Settings from "./components/dashboard/Settings";
 import RequestPasswordResetEmail from "./components/auth/RequestPasswordResetEmail";
 import PasswordReset from "./components/auth/PasswordReset";
-import Landing from "./components/layout/Landing";
+// import Landing from "./components/layout/Landing";
 import Games from "./components/pages/games/Games";
 import Ladder from "./components/pages/ladder/Ladder";
 import Forum from "./components/pages/forum/Forum";
@@ -38,7 +38,7 @@ function App() {
         <Navbar></Navbar>
         <Alerts></Alerts>
         <Switch>
-          <Route exact path="/" component={Landing}></Route>
+          <Route exact path="/" component={BattleRoomShell}></Route>
           <Route exact path="/register" component={Register}></Route>
           <Route exact path="/login" component={Login}></Route>
           <Route

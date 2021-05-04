@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import cloneDeep from 'lodash.clonedeep'
-import lagGenerator from '../util-functions/lagGenerator';
+// import lagGenerator from '../util-functions/lagGenerator';
 
 
 const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, setLastServerGameUpdate, gameStateQueue, gameOverCountdownText }) => {
@@ -13,7 +13,7 @@ const GameListener = ({ socket, gameUi, currentGameData, lastServerGameUpdate, s
       setLastServerGameUpdate(cloneDeep(currentGameData.current.gameState))
     });
     socket.on("bufferTickFromServer", async (data) => {
-      await lagGenerator(1000)
+      // await lagGenerator(1000)
       const decodedPacket = JSON.parse(data)
       let newUpdate = lastServerGameUpdate;
       Object.keys(decodedPacket).forEach((key) => {
