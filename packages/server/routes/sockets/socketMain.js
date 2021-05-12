@@ -19,6 +19,7 @@ let rankedQueue = {
 }; // {users:{socketId:socket.id,record:BattleRoomRecord}, matchmakingInterval, currentEloDiffThreshold}
 
 io.sockets.on("connect", async (socket) => {
+  console.log("socket connected " + socket.id)
   connectedSockets[socket.id] = {
     username: null,
     currentRoom: null,

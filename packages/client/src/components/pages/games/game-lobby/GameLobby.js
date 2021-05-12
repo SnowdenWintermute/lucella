@@ -18,7 +18,8 @@ import * as gameUiActions from "../../../../store/actions/game-ui";
 import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
-const socketAddress = process.env.REACT_APP_DEV_MODE ? process.env.REACT_APP_SOCKET_API_DEV : process.env.REACT_APP_SOCKET_API
+// const socketAddress = process.env.REACT_APP_DEV_MODE ? process.env.REACT_APP_SOCKET_API_DEV : process.env.REACT_APP_SOCKET_API
+const socketAddress = "http://45.77.203.192"
 
 const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
       query.token = authToken;
     }
     socket = io.connect(socketAddress, { query });
+    console.log(socket)
     return () => {
       socket.disconnect();
       dispatch(gameUiActions.setCurrentGame(null));
@@ -50,7 +52,9 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   }, [localStorage.token]);
 
   useEffect(() => {
+    console.log("authenticating")
     socket.on("authenticationFinished", () => {
+      console.log("auth finished")
       setAuthenticating(false);
     });
   });

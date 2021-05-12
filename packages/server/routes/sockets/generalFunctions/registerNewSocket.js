@@ -8,9 +8,11 @@ module.exports = async ({ socket, connectedSockets }) => {
   let userToReturn;
   let isGuest;
   if (token !== "null") {
+    console.log("token not null")
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET);
       userToReturn = await User.findById(decoded.user.id).select("-password");
+      console.log("userToReturn ", userToReturn)
       isGuest = false;
     } catch (error) {
       console.log(error);

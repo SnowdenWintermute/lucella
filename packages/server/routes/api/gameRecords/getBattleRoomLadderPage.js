@@ -11,6 +11,7 @@ module.exports = async (req, res) => {
         select: "name",
       },
     });
+    if (!ladder) return res.json("no ladder yet")
     const page = req.params.page;
     const pageSize = 10;
     const startIndex = (page - 1) * pageSize;

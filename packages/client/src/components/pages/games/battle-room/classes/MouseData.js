@@ -15,4 +15,4 @@ class MouseData {
   }
 }
 
-module.exports = MouseData
+export default MouseData

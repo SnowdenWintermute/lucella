@@ -30,7 +30,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy-production": "react-scripts build && scp -r ./build/* root@lucella.org:/var/www/lucella.org/html"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -47,8 +48,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://localhost:8080",
-  "productionProxy": "http://lucella.org",
+  "proxy": "http://45.77.203.192",
+  "productionProxy": "http://45.77.203.192",
+  "devProxy": "http://localhost:8080",
   "main": "index.js",
   "license": "MIT"
 }

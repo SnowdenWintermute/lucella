@@ -5,9 +5,11 @@ import {
   GET_BATTLE_ROOM_USER_RECORD,
 } from "./types";
 import { setAlert } from "./alert";
-const apiUrl = process.env.REACT_APP_DEV_MODE
-  ? process.env.REACT_APP_SOCKET_API_DEV
-  : process.env.REACT_APP_SOCKET_API;
+// const apiUrl = process.env.REACT_APP_DEV_MODE
+//   ? process.env.REACT_APP_SOCKET_API_DEV
+//   : process.env.REACT_APP_SOCKET_API;
+
+const apiUrl = "http://45.77.203.192"
 
 // get a ladder page
 export const getLadderPage = (pageNumber) => async (dispatch) => {
