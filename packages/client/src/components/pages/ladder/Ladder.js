@@ -18,7 +18,8 @@ const Ladder = (props) => {
 
   const onSearchUserRecord = (e) => {
     e.preventDefault();
-    dispatch(getBattleRoomUserRecord(searchText));
+    if (!searchText) dispatch(getLadderPage(1))
+    else dispatch(getBattleRoomUserRecord(searchText));
   };
 
   const onTurnPage = (e, direction) => {
@@ -58,7 +59,7 @@ const Ladder = (props) => {
     </tr>
   );
 
-  const searchedUserToShow = ladder.searchedUserRecord ? (
+  const searchedUserToShow = ladder.searchedUserRecord?.user ? (
     <tr key={ladder.searchedUserRecord.user.name} className="ladder-table-row">
       <td className="ladder-table-datum">{ladder.searchedUserRecord.rank}</td>
       <td className="ladder-table-datum">

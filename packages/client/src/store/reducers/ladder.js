@@ -22,6 +22,7 @@ export default function (state = initialState, action) {
           ...state.ladderPages,
           [payload.pageNumber]: payload.pageData,
         },
+        viewingSearchedUser: false,
       };
     case CHANGE_LADDER_PAGE_VIEWING:
       return {

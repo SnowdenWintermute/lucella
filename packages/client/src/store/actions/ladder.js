@@ -49,12 +49,11 @@ export const getBattleRoomUserRecord = (username) => async (dispatch) => {
       payload: res.data,
     });
   } catch (error) {
-    if (error.response.status === 404)
-      dispatch(
-        setAlert(
-          "User not found. Please note that names are case sensitive",
-          "danger"
-        )
-      );
+    dispatch(
+      setAlert(
+        "User not found. Please note that names are case sensitive",
+        "danger"
+      )
+    );
   }
 };
