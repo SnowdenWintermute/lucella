@@ -15,4 +15,4 @@ class MouseData {
   }
 }
 
-export default MouseData
+export default MouseData;

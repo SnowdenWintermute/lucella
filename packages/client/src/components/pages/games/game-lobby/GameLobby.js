@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import PropTypes from "prop-types";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { setAlert } from "../../../../store/actions/alert";
@@ -18,32 +18,26 @@ import * as gameUiActions from "../../../../store/actions/game-ui";
 import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
 // import { serverIp } from "../../../../config/config";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
-// const socketAddress = process.env.REACT_APP_DEV_MODE ? process.env.REACT_APP_SOCKET_API_DEV : process.env.REACT_APP_SOCKET_API
-const socketAddress = "http://45.77.203.192"
+const socketAddress = process.env.REACT_APP_DEV_MODE
+  ? process.env.REACT_APP_SOCKET_API_DEV
+  : process.env.REACT_APP_SOCKET_API;
+// const socketAddress = "http://45.77.203.192"
 
 const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   const dispatch = useDispatch();
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
-  const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(
-    false,
-  );
-  const scoreScreenDisplayed = useSelector(
-    (state) => state.lobbyUi.scoreScreenDisplayed,
-  );
+  const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(false);
+  const scoreScreenDisplayed = useSelector((state) => state.lobbyUi.scoreScreenDisplayed);
   const [authenticating, setAuthenticating] = useState(true);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
   const username = user ? user.name : "Anon";
-  let authToken = null;
+  const authToken = useRef(localStorage.token);
 
   // setup socket
   useEffect(() => {
-    authToken = localStorage.token;
     let query = { token: null };
-    if (authToken) {
-      query.token = authToken;
-    }
+    if (authToken.current) query.token = authToken.current;
     socket = io.connect(socketAddress, { query });
-    console.log(socket)
     return () => {
       socket.disconnect();
       dispatch(gameUiActions.setCurrentGame(null));
@@ -52,20 +46,17 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
   }, [localStorage.token]);
 
   useEffect(() => {
-    console.log("authenticating")
     socket.on("authenticationFinished", () => {
-      console.log("auth finished")
       setAuthenticating(false);
     });
   });
 
   // join initial room
   useEffect(() => {
-    if (!authenticating) {
-      socket.emit("clientRequestsToJoinRoom", {
-        roomToJoin: defaultChatRoom,
-      });
-    }
+    if (authenticating) return;
+    socket.emit("clientRequestsToJoinRoom", {
+      roomToJoin: defaultChatRoom,
+    });
   }, [authenticating, defaultChatRoom]);
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
@@ -116,10 +107,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
       {gameStatus !== "inProgress" && gameStatus !== "ending" ? (
         <Fragment>
           <div className={`game-lobby`}>
-            <MainButtons
-              socket={socket}
-              showChangeChannelModal={showChangeChannelModal}
-            />
+            <MainButtons socket={socket} showChangeChannelModal={showChangeChannelModal} />
             <ChannelBar socket={socket} defaultChatRoom={defaultChatRoom} />
             <div className="game-lobby-main-window">
               <PreGameRoom socket={socket} />
