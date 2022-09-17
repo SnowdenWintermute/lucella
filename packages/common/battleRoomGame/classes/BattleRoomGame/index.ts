@@ -1,72 +1,66 @@
-import GameState from "../GameState";
 import MouseData from "../MouseData";
+import { Orb } from "../Orb";
+import { Point } from "../Point";
+import { Rectangle } from "../Rectangles";
+import { generateStartingOrbs } from "./generateStartingOrbs";
 
-class BattleRoomGame {
+export class BattleRoomGame {
   gameName: string;
-  mouseData: MouseData;
+  isRanked: boolean;
   intervals: { physics: NodeJS.Timer | null; broadcast: NodeJS.Timer | null };
+  mouseData: MouseData;
+  gameOverCountdown: { duration: number; current: number | null };
+  queues: {
+    client: { receivedUpdates: any[]; unsentInputs: any[]; localInputs: any[] };
+    server: { receivedInputs: { host: any[]; challenger: any[] } };
+  };
+  idOfLastUpdateApplied: number;
+  idOfLastInputIssued: number;
+  lastProcessedInputIds: { host: number | null; challenger: number | null }; // server only
+  winner: string | null;
+  orbs: { host: Orb[]; challenger: Orb[] };
+  endzones: { host: Rectangle; challenger: Rectangle };
+  score: { host: number; challenger: number; neededToWin: number };
+  speedModifier: number;
   static baseWindowDimensions: { width: number; height: number };
+  static baseEndzoneHeight: number;
   static baseOrbRadius: number;
-  constructor({ gameName, isRanked, hostUuid, challengerUuid }) {
+  static baseSpeedModifier: number;
+  static initialScoreNeededToWin: number;
+  constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
+    this.isRanked = isRanked || false;
     this.intervals = { physics: null, broadcast: null };
     this.mouseData = new MouseData();
-    this.gameOverCountdownText = null;
-    this.gameOverCountdownDuration = 1;
-    this.lastServerGameUpdate = {};
-    this.opponentEntityStatesQueue = [];
-    this.unappliedInputQueue = [];
-    this.numberOfUpdatesApplied = 0;
+    this.gameOverCountdown = { duration: 1, current: null };
+    this.queues = {
+      client: { receivedUpdates: [], unsentInputs: [], localInputs: [] }, // client only
+      server: { receivedInputs: { host: [], challenger: [] } }, // server only
+    };
     this.idOfLastUpdateApplied = 0;
-    this.idOfLastCommandIssued = 0;
-    this.commandQueue = { host: [], challenger: [] };
-    this.isRanked = isRanked;
+    this.idOfLastInputIssued = 0;
     this.winner = null;
-    this.lastUpdateTimestamp = null;
-    this.lastProcessedCommandNumbers = {
-      host: null,
-      challenger: null,
-    };
-    this.orbs = {
-      host: [],
-      challenger: [],
-    };
+    this.lastProcessedInputIds = { host: null, challenger: null }; // server only
+    this.orbs = { host: [], challenger: [] };
     this.score = {
       host: 0,
       challenger: 0,
-      neededToWin: 5,
-    };
-    this.dashes = {
-      host: {
-        dashes: 3,
-        recharging: false,
-        cooldown: 3,
-      },
-      challenger: {
-        dashes: 3,
-        recharging: false,
-        cooldown: 3,
-      },
+      neededToWin: BattleRoomGame.initialScoreNeededToWin,
     };
     this.endzones = {
-      host: {
-        x: 0,
-        y: 0,
-        width: BattleRoomGame.baseWindowDimensions.width,
-        height: 60,
-      },
-      challenger: {
-        x: 0,
-        y: BattleRoomGame.baseWindowDimensions.height - 60,
-        width: BattleRoomGame.baseWindowDimensions.width,
-        height: 60,
-      },
+      host: new Rectangle(new Point(0, 0), BattleRoomGame.baseWindowDimensions.width, BattleRoomGame.baseEndzoneHeight),
+      challenger: new Rectangle(
+        new Point(0, BattleRoomGame.baseWindowDimensions.height - BattleRoomGame.baseEndzoneHeight),
+        BattleRoomGame.baseWindowDimensions.width,
+        BattleRoomGame.baseEndzoneHeight
+      ),
     };
-    this.speed = 4;
-    this.lastCommandProcessedAt = Date.now();
-    generateStartingOrbs({ orbs: this.orbs, startingOrbRadius, hostUuid, challengerUuid });
+    this.speedModifier = BattleRoomGame.baseSpeedModifier;
+    generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
   }
   baseWindowDimensions = { width: 450, height: 750 };
+  baseEndzoneHeight = 60;
   baseOrbRadius = 15;
+  baseSpeedModifier = 4;
+  initialScoreNeededToWin = 5;
 }
-module.exports = BattleRoomGame;

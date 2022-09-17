@@ -11,81 +11,58 @@ import touchMoveHandler from "./user-input-handlers/touchMoveHandler";
 import touchStartHandler from "./user-input-handlers/touchStartHandler";
 import touchEndHandler from "./user-input-handlers/touchEndHandler";
 import draw from "./canvas-functions/canvasMain";
-import createGameInterval from "./game-functions/createGameInterval";
+import { createGameInterval } from "./game-functions/createGameInterval";
 import GameListener from "../socket-manager/GameListener";
 import fitCanvasToScreen from "./canvas-functions/fitCanvasToScreen";
-import BattleRoomGame from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import { Socket } from "socket.io-client";
+import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
 
-const BattleRoomGameInstance = ({ socket }) => {
+interface Props {
+  socket: Socket;
+}
+
+const BattleRoomGameInstance = (props: Props) => {
+  const { socket } = props;
   const gameUi = useSelector((state) => state.gameUi);
   const { playerRole, playersInGame, gameStatus, winner } = gameUi;
-  const [canvasSize, setCanvasSize] = useState({});
-  const currentGameData = useRef(new BattleRoomGame({ gameName: gameUi.currentGameName }));
-  const canvasRef = useRef();
-  const drawRef = useRef();
-
+  const [canvasSize, setCanvasSize] = useState<WidthAndHeight>({
+    width: BattleRoomGame.baseWindowDimensions.width,
+    height: BattleRoomGame.baseWindowDimensions.height,
+  });
   const gameWidthRatio = useRef(window.innerHeight * 0.6);
+  const currentGame = useRef(new BattleRoomGame(gameUi.currentGameName));
+  const canvasRef = useRef<HTMLCanvasElement>();
+  const drawRef = useRef<() => void>();
 
   useEffect(() => {
-    fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio });
+    fitCanvasToScreen(window, setCanvasSize, gameWidthRatio.current);
     function handleResize() {
       gameWidthRatio.current = window.innerHeight * 0.6;
-      fitCanvasToScreen({ window, setCanvasSize, gameWidthRatio });
+      fitCanvasToScreen(window, setCanvasSize, gameWidthRatio.current);
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, [setCanvasSize, gameWidthRatio]);
 
-  // set up a ref to the current draw function so it's interval can have access to it having current proporties
+  // something to make canvas work in react
   useEffect(() => {
     drawRef.current = function () {
-      if (!currentGameData.current) return;
       const canvas = canvasRef.current;
+      if (!currentGame.current) return;
+      if (!canvas) return;
       const context = canvas.getContext("2d");
-      draw({
-        context,
-        mouseData,
-        playerRole,
-        currentGameData: currentGameData.current,
-        lastServerGameUpdate,
-        canvasSize,
-        gameOverCountdownText: gameOverCountdownText.current,
-        gameStatus,
-        winner,
-        eventQueue,
-        numberOfUpdatesApplied,
-      });
+      context && draw(context, canvasSize, playerRole, currentGame.current, gameStatus);
     };
   });
 
-  const commonEventHandlerProps = {
-    socket,
-    canvasSize,
-    currentGameData,
-    mouseData,
-    playersInGame,
-    eventQueue,
-    numberOfLastCommandIssued,
-    playerRole,
-  };
-
   useEffect(() => {
     function currentDrawFunction() {
-      drawRef.current();
+      drawRef.current ? drawRef.current() : null;
     }
-    const gameInterval = createGameInterval({
-      currentDrawFunction,
-      lastServerGameUpdate,
-      numberOfLastUpdateApplied,
-      gameData: currentGameData,
-      eventQueue,
-      gameStateQueue: gameStateQueue.current,
-      playerRole,
-      commonEventHandlerProps,
-      numberOfUpdatesApplied,
-    });
+    const gameInterval = createGameInterval(currentDrawFunction, currentGame);
     return () => clearInterval(gameInterval);
-  }, [socket, lastServerGameUpdate, eventQueue, playerRole, commonEventHandlerProps]);
+  }, [socket, currentGame]);
 
   const onKeyPress = useCallback(
     (e) => {
@@ -102,15 +79,7 @@ const BattleRoomGameInstance = ({ socket }) => {
 
   return (
     <div className="battle-room-canvas-holder" onContextMenu={(e) => e.preventDefault()}>
-      <GameListener
-        socket={socket}
-        gameUi={gameUi}
-        currentGameData={currentGameData}
-        lastServerGameUpdate={lastServerGameUpdate}
-        setLastServerGameUpdate={setLastServerGameUpdate}
-        gameStateQueue={gameStateQueue}
-        gameOverCountdownText={gameOverCountdownText}
-      />
+      <GameListener socket={socket} gameUi={gameUi} currentGame={currentGame.current} />
       {gameStatus === "inProgress" || gameStatus === "ending" ? (
         <canvas
           height={canvasSize.height}
