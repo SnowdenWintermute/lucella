@@ -1,11 +1,20 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 const cloneDeep = require("lodash.clonedeep");
 import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import { AppState } from "../../../../store/reducers";
+import { Socket } from "socket.io-client";
 // import lagGenerator from '../util-functions/lagGenerator';
+const gameUi = useSelector((state: AppState) => state.gameUi);
 
-const GameListener = (socket, gameUi, currentGame: BattleRoomGame) => {
+interface Props {
+  socket: Socket;
+  currentGame: BattleRoomGame;
+}
+
+const GameListener = (props: Props) => {
+  const { socket, currentGame } = props;
   const dispatch = useDispatch();
   useEffect(() => {
     if (!socket) return;
@@ -13,7 +22,6 @@ const GameListener = (socket, gameUi, currentGame: BattleRoomGame) => {
       setLastServerGameUpdate(cloneDeep(currentGameData.current.gameState));
     });
     socket.on("bufferTickFromServer", async (data) => {
-      // await lagGenerator(1000)
       const decodedPacket = JSON.parse(data);
       let newUpdate = lastServerGameUpdate;
       Object.keys(decodedPacket).forEach((key) => {

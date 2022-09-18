@@ -6,12 +6,8 @@ import * as alertActions from "../../../../store/actions/alert";
 
 const PreGameRoom = ({ socket }) => {
   const dispatch = useDispatch();
-  const preGameScreen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen,
-  );
-  const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState(
-    "height-0-hidden",
-  );
+  const preGameScreen = useSelector((state) => state.gameUi.preGameScreen.isOpen);
+  const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState("height-0-hidden");
   const [gameNameInput, setGameNameInput] = useState("");
   const gameStatus = useSelector((state) => state.gameUi.gameStatus);
   const playersReady = useSelector((state) => state.gameUi.playersReady);
@@ -19,9 +15,7 @@ const PreGameRoom = ({ socket }) => {
   const currentGameName = useSelector((state) => state.gameUi.currentGameName);
   const countdownNumber = useSelector((state) => state.gameUi.countdownNumber);
   const isRanked = useSelector((state) => state.gameUi.isRanked);
-  const playerRole = useSelector(
-    (state) => state.gameUi.playerRole,
-  );
+  const playerRole = useSelector((state) => state.gameUi.playerRole);
 
   const channelNameInput = useRef();
 
@@ -55,9 +49,7 @@ const PreGameRoom = ({ socket }) => {
     <Fragment>
       <h3>
         {!isRanked &&
-          (playerRole && playerRole === "host"
-            ? "You are the host of "
-            : "You are challinging the host of ")}
+          (playerRole && playerRole === "host" ? "You are the host of " : "You are challinging the host of ")}
         game: {currentGameName}
       </h3>
       <div>Players:</div>
@@ -65,35 +57,20 @@ const PreGameRoom = ({ socket }) => {
         <tbody>
           <tr>
             <td>{playersInGame.host.username}</td>
-            <td>
-              {playersReady.host && (
-                <SuccessIcon className="alert-icon"></SuccessIcon>
-              )}
-            </td>
+            <td>{playersReady.host && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
           </tr>
           <tr>
-            <td>
-              {playersInGame.challenger
-                ? playersInGame.challenger.username
-                : "Awaiting challenger..."}
-            </td>
-            <td>
-              {playersReady.challenger && (
-                <SuccessIcon className="alert-icon"></SuccessIcon>
-              )}
-            </td>
+            <td>{playersInGame.challenger ? playersInGame.challenger.username : "Awaiting challenger..."}</td>
+            <td>{playersReady.challenger && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
           </tr>
           <tr>
             <td>{gameStatus}</td>
-            <td>{gameStatus === "countingDown" && countdownNumber}</td>
+            <td>{gameStatus === GameStatus.COUNTING_DOWN && countdownNumber}</td>
           </tr>
         </tbody>
       </table>
       {!isRanked && (
-        <button
-          className="button button-standard-size button-primary"
-          onClick={onReadyClick}
-        >
+        <button className="button button-standard-size button-primary" onClick={onReadyClick}>
           READY
         </button>
       )}
@@ -115,9 +92,7 @@ const PreGameRoom = ({ socket }) => {
           setGameNameInput(e.target.value);
         }}
       />
-      <button className="button button-standard-size button-primary">
-        Make Public
-      </button>
+      <button className="button button-standard-size button-primary">Make Public</button>
     </form>
   );
 

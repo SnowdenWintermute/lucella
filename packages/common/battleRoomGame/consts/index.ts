@@ -6,3 +6,5 @@ export const colors = {
   inGameTextLight: "rgb(200,200,200)",
 };
 export const renderRate = 33;
+export const eventLimiterRate = 33;
+export const touchHoldSelectionBoxStartThreshold = 500;

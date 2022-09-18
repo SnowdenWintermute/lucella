@@ -10,30 +10,26 @@ import { ReactComponent as LadderIcon } from "../../../img/menuIcons/podium.svg"
 import { useEffect } from "react";
 
 const Navbar = () => {
-  const history = useHistory()
-  const [activeTab, setActiveTab] = useState(history.location)
+  const history = useHistory();
+  const [activeTab, setActiveTab] = useState(history.location);
 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const loading = useSelector((state) => state.auth.loading);
   const gameStatus = useSelector((state) => state.gameUi.gameStatus); // used to hide navbar in game
 
   useEffect(() => {
-    setActiveTab(history.location.pathname)
-  }, [history.location.pathname])
+    setActiveTab(history.location.pathname);
+  }, [history.location.pathname]);
 
   return (
-    gameStatus !== "inProgress" &&
-    gameStatus !== "ending" && (
+    gameStatus !== GameStatus.IN_PROGRESS &&
+    gameStatus !== GameStatus.ENDING && (
       <Fragment>
         <nav className="nav">
           {/* Nav tabs */}
           <div className="nav-right-holder">
             <img className="logo-img" alt="lucella logo" src={logo} />
-            <Link
-              to="/"
-              className="brand-text"
-              name="landing"
-            >
+            <Link to="/" className="brand-text" name="landing">
               <h1>Lucella.org</h1>
             </Link>
             <div className="nav-tabs">
@@ -66,15 +62,7 @@ const Navbar = () => {
             </div>
           </div>
           {/* User menu */}
-          <div className="user-menu-holder">
-            {!loading ? (
-              <UserMenu
-                isAuthenticated={isAuthenticated}
-              />
-            ) : (
-              "..."
-            )}
-          </div>
+          <div className="user-menu-holder">{!loading ? <UserMenu isAuthenticated={isAuthenticated} /> : "..."}</div>
         </nav>
         <div className="nav-tab-thin-bar"></div>
       </Fragment>

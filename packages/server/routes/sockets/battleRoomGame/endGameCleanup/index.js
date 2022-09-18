@@ -7,16 +7,10 @@ async function endGameCleanup({ application, gameName, isDisconnecting }) {
   const { io } = application;
   const gameRoom = application.gameRooms[gameName];
   const gameData = application.gameDatas[gameName];
-  if (gameRoom.gameStatus === "ending") return;
-  gameRoom.gameStatus = "ending";
-  io.in(`game-${gameName}`).emit(
-    "currentGameStatusUpdate",
-    gameRoom.gameStatus
-  );
-  io.to(`game-${gameName}`).emit(
-    "gameEndingCountdown",
-    gameData.endingStateCountdown
-  );
+  if (gameRoom.gameStatus === GameStatus.ENDING) return;
+  gameRoom.gameStatus = GameStatus.ENDING;
+  io.in(`game-${gameName}`).emit("currentGameStatusUpdate", gameRoom.gameStatus);
+  io.to(`game-${gameName}`).emit("gameEndingCountdown", gameData.endingStateCountdown);
   clearInterval(gameData.intervals.physics);
   clearInterval(gameData.intervals.updates);
   if (!isDisconnecting) setGameRoomWinnerName({ gameRoom, gameData });

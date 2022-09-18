@@ -38,15 +38,10 @@ const GameList = ({ socket }) => {
         <tr className="game-list-item" key={gameList[game].gameName}>
           <td>{gameName}</td>
           <td>Host: {host?.username}</td>
+          <td>Challenger: {challenger ? challenger.username : "Awaiting Opponent"}</td>
           <td>
-            Challenger: {challenger ? challenger.username : "Awaiting Opponent"}
-          </td>
-          <td>
-            {gameList[game].gameStatus === "inLobby" && (
-              <button
-                className="button button-standard-size button-primary"
-                onClick={() => onJoinGameClick(gameName)}
-              >
+            {gameList[game].gameStatus === GameStatus.IN_LOBBY && (
+              <button className="button button-standard-size button-primary" onClick={() => onJoinGameClick(gameName)}>
                 Join
               </button>
             )}
@@ -56,7 +51,7 @@ const GameList = ({ socket }) => {
               Watch
             </button>
           </td> */}
-        </tr>,
+        </tr>
       );
     }
   }

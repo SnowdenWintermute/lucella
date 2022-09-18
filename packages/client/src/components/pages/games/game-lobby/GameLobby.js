@@ -104,7 +104,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
       >
         <ScoreScreenModalContents />
       </Modal>
-      {gameStatus !== "inProgress" && gameStatus !== "ending" ? (
+      {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? (
         <Fragment>
           <div className={`game-lobby`}>
             <MainButtons socket={socket} showChangeChannelModal={showChangeChannelModal} />

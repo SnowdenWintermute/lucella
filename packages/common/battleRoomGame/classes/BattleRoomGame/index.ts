@@ -11,7 +11,7 @@ export class BattleRoomGame {
   mouseData: MouseData;
   gameOverCountdown: { duration: number; current: number | null };
   queues: {
-    client: { receivedUpdates: any[]; unsentInputs: any[]; localInputs: any[] };
+    client: { receivedUpdates: any[]; inputsToSend: any[]; localInputs: any[] };
     server: { receivedInputs: { host: any[]; challenger: any[] } };
   };
   idOfLastUpdateApplied: number;
@@ -34,7 +34,7 @@ export class BattleRoomGame {
     this.mouseData = new MouseData();
     this.gameOverCountdown = { duration: 1, current: null };
     this.queues = {
-      client: { receivedUpdates: [], unsentInputs: [], localInputs: [] }, // client only
+      client: { receivedUpdates: [], inputsToSend: [], localInputs: [] }, // client only
       server: { receivedInputs: { host: [], challenger: [] } }, // server only
     };
     this.idOfLastUpdateApplied = 0;

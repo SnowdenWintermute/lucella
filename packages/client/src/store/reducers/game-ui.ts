@@ -1,22 +1,5 @@
-import {
-  VIEW_GAMES_LIST_CLICKED,
-  UPDATE_GAMES_LIST,
-  CLOSE_PRE_GAME_SCREEN,
-  OPEN_PRE_GAME_SCREEN,
-  SET_CURRENT_GAME,
-  CLOSE_GAME_LIST,
-  UPDATE_PLAYERS,
-  UPDATE_PLAYERS_READY,
-  UPDATE_GAME_COUNTDOWN,
-  UPDATE_GAME_STATUS,
-  UPDATE_PLAYER_ROLE,
-  CLEAR_GAME_UI,
-  SET_GAME_WINNER,
-  SET_SCORE_SCREEN_DATA,
-  CLOSE_SCORE_SCREEN,
-  SET_MATCHMAKING_DATA,
-  SET_MATCHMAKING_WINDOW_VISIBLE,
-} from "../actions/types";
+import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import * as actions from "../actions/types";
 
 const initialState = {
   gameList: {
@@ -37,7 +20,7 @@ const initialState = {
     challenger: false,
   },
   countdownNumber: null,
-  gameStatus: "inLobby",
+  gameStatus: GameStatus.IN_LOBBY,
   playerRole: null,
   winner: null,
   scoreScreenData: {},
@@ -45,15 +28,15 @@ const initialState = {
   isRanked: null,
 };
 
-export default function (state = initialState, action) {
+export default function (state: typeof initialState = initialState, action: { type: string; payload: any }) {
   const { type, payload } = action;
   switch (type) {
-    case VIEW_GAMES_LIST_CLICKED:
+    case actions.VIEW_GAMES_LIST_CLICKED:
       return {
         ...state,
         gameList: { isOpen: true },
       };
-    case UPDATE_GAMES_LIST:
+    case actions.UPDATE_GAMES_LIST:
       return {
         ...state,
         gameList: {
@@ -61,22 +44,22 @@ export default function (state = initialState, action) {
           games: payload,
         },
       };
-    case CLOSE_GAME_LIST:
+    case actions.CLOSE_GAME_LIST:
       return {
         ...state,
         gameList: { isOpen: false },
       };
-    case OPEN_PRE_GAME_SCREEN:
+    case actions.OPEN_PRE_GAME_SCREEN:
       return {
         ...state,
         preGameScreen: { isOpen: true },
       };
-    case CLOSE_PRE_GAME_SCREEN:
+    case actions.CLOSE_PRE_GAME_SCREEN:
       return {
         ...state,
         preGameScreen: { isOpen: false },
       };
-    case SET_CURRENT_GAME:
+    case actions.SET_CURRENT_GAME:
       return {
         ...state,
         currentGameName: payload?.gameName || null,
@@ -86,51 +69,51 @@ export default function (state = initialState, action) {
         gameStatus: payload?.gameStatus || null,
         isRanked: payload?.isRanked || null,
       };
-    case UPDATE_PLAYERS:
+    case actions.UPDATE_PLAYERS:
       return {
         ...state,
         playersInGame: { ...payload },
       };
 
-    case UPDATE_PLAYERS_READY:
+    case actions.UPDATE_PLAYERS_READY:
       return {
         ...state,
         playersReady: { ...payload },
       };
-    case UPDATE_GAME_COUNTDOWN:
+    case actions.UPDATE_GAME_COUNTDOWN:
       return {
         ...state,
         countdownNumber: payload,
       };
-    case UPDATE_GAME_STATUS:
+    case actions.UPDATE_GAME_STATUS:
       return {
         ...state,
         gameStatus: payload,
       };
-    case UPDATE_PLAYER_ROLE:
+    case actions.UPDATE_PLAYER_ROLE:
       return {
         ...state,
         playerRole: payload,
       };
-    case SET_GAME_WINNER:
+    case actions.SET_GAME_WINNER:
       return {
         ...state,
         winner: payload,
       };
-    case CLEAR_GAME_UI:
+    case actions.CLEAR_GAME_UI:
       return initialState;
-    case SET_SCORE_SCREEN_DATA:
+    case actions.SET_SCORE_SCREEN_DATA:
       return {
         ...state,
         scoreScreenData: { ...payload },
         scoreScreenDisplayed: true,
       };
-    case CLOSE_SCORE_SCREEN:
+    case actions.CLOSE_SCORE_SCREEN:
       return {
         ...state,
         scoreScreenDisplayed: false,
       };
-    case SET_MATCHMAKING_WINDOW_VISIBLE:
+    case actions.SET_MATCHMAKING_WINDOW_VISIBLE:
       return {
         ...state,
         matchmakingScreen: {
@@ -138,7 +121,7 @@ export default function (state = initialState, action) {
           isOpen: payload,
         },
       };
-    case SET_MATCHMAKING_DATA:
+    case actions.SET_MATCHMAKING_DATA:
       return {
         ...state,
         matchmakingScreen: {

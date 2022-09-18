@@ -1,4 +1,3 @@
-// root reducer
 import { combineReducers } from "redux";
 import alert from "./alert";
 import auth from "./auth";
@@ -8,7 +7,7 @@ import gameUi from "./game-ui";
 import lobbyUi from "./lobby-ui";
 import ladder from "./ladder";
 
-export default combineReducers({
+export const rootReducer = combineReducers({
   alert,
   auth,
   profile,
@@ -17,3 +16,5 @@ export default combineReducers({
   lobbyUi,
   ladder,
 });
+
+// export type AppState = ReturnType<typeof rootReducer>;

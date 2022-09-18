@@ -1,1 +1,0 @@
-export default ({ mouseData }) => (mouseData.mouseOnScreen = true);
