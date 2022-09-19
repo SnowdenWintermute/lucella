@@ -1,25 +1,23 @@
 import React, { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
-// import userIcon from "../../../img/menuIcons/user.png";
-import profileIcon from "../../../img/profile.png";
-// import walletIcon from "../../../img/menuIcons/wallet.png";
 import { ReactComponent as SettingsIcon } from "../../../img/menuIcons/settings.svg";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/actions/auth";
+import { RootState } from "../../../store";
 
-export const UserMenu = ({ isAuthenticated }) => {
+export const UserMenu = () => {
   const dispatch = useDispatch();
+  const authState = useSelector((state: RootState) => state.auth);
+  const { isAuthenticated, user } = authState;
   const [showUserDropdown, toggleUserDropdown] = useState(false);
-  const username = useSelector(
-    (state) => state.auth.user && state.auth.user.name,
-  );
+  const username = user && user.name;
 
   // show/hide menu
   useEffect(() => {
-    const clearUserDropdown = (e) => {
-      if (e.target.getAttribute("name") !== "profile-icon")
-        toggleUserDropdown(false);
+    const clearUserDropdown = (e: MouseEvent) => {
+      const node = e.target as HTMLElement;
+      if (node.getAttribute("data-name") !== "profile-icon") toggleUserDropdown(false);
     };
     window.addEventListener("click", (e) => clearUserDropdown(e));
     return () => window.removeEventListener("click", clearUserDropdown);
@@ -28,43 +26,28 @@ export const UserMenu = ({ isAuthenticated }) => {
   const loggedInUserMenu = (
     <Fragment>
       <div
-        src={profileIcon}
         className="user-icon-circle"
-        name="profile-icon"
-        alt="profile icon"
-        onClick={(e) => { toggleUserDropdown(!showUserDropdown) }}
+        data-name="profile-icon"
+        onClick={(e) => {
+          toggleUserDropdown(!showUserDropdown);
+        }}
       >
-        <div className="user-icon-letter" name="profile-icon">
+        <div className="user-icon-letter" data-name="profile-icon">
           {username && username.slice(0, 1)}
         </div>
       </div>
       {showUserDropdown && (
         <ul className="user-menu">
-          {/* <Link
-            to="/profile"
-            className="user-menu-item"
-          >
-            <img alt="user icon" src={userIcon} />
-            Profile
-          </Link> */}
-          {/* <Link
-            to="/wallet"
-            className="user-menu-item"
-          >
-            <img alt="wallet icon" src={walletIcon} />
-            Wallet
-          </Link> */}
-          <Link
-            to="/settings"
-            className="user-menu-item"
-          >
+          <Link to="/settings" className="user-menu-item">
             <SettingsIcon className="menu-icon-svg"></SettingsIcon>
             Settings
           </Link>
           <Link
             to="/login"
             className="user-menu-item"
-            onClick={(e) => { dispatch(logout()); }}
+            onClick={(e) => {
+              dispatch(logout());
+            }}
           >
             <img alt="logout icon" src={logoutIcon} />
             Logout
@@ -75,9 +58,7 @@ export const UserMenu = ({ isAuthenticated }) => {
   );
 
   const guestMenu = (
-    <Link
-      to="/login"
-      className="button button-standard-size button-basic">
+    <Link to="/login" className="button button-standard-size button-basic">
       LOGIN
     </Link>
   );

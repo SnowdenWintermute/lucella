@@ -2,17 +2,14 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import DefaultButtons from "./DefaultButtons";
-import InGameButtons from "./InGameButtons";
+import InGameRoomButtons from "./InGameRoomButtons";
 import MatchmakingButtons from "./MatchmakingButtons";
 
 const MainButtons = ({ socket, showChangeChannelModal }) => {
   return (
     <div className="game-lobby-top-buttons">
-      <DefaultButtons
-        socket={socket}
-        showChangeChannelModal={showChangeChannelModal}
-      />
-      <InGameButtons socket={socket} />
+      <DefaultButtons socket={socket} showChangeChannelModal={showChangeChannelModal} />
+      <InGameRoomButtons socket={socket} />
       <MatchmakingButtons socket={socket} />
     </div>
   );

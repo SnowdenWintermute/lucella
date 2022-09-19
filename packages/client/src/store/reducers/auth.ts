@@ -13,7 +13,7 @@ const initialState: AuthState = {
   user: null,
 };
 
-export default function (state = initialState, action: Action) {
+export default function (state: AuthState = initialState, action: Action) {
   const { type, payload } = action;
 
   switch (type) {

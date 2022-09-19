@@ -1,18 +1,24 @@
 import React, { useState, useEffect, Fragment } from "react";
-import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import * as gameUiActions from "../../../../../store/actions/game-ui";
 import Modal from "../../../../common/modal/Modal";
+import { Socket } from "socket.io-client";
+import { RootState } from "../../../../../store";
+import { GameUIState } from "../../../../../store/reducers/game-ui";
+import GameLobbyTopButton from "./GameLobbyTopButton";
+import GameLobbyModalButton from "./GameLobbyModalButton";
 
-const DefaultButtons = ({ showChangeChannelModal, socket }) => {
+interface Props {
+  showChangeChannelModal: () => void;
+  socket: Socket;
+}
+
+const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
   const dispatch = useDispatch();
-  const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
-  const matchmakingScreenIsOpen = useSelector(
-    (state) => state.gameUi.matchmakingScreen.isOpen,
-  );
-  const preGameScreenIsOpen = useSelector(
-    (state) => state.gameUi.preGameScreen.isOpen,
-  );
+  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
+  const gameListIsOpen = gameUiState.gameList.isOpen;
+  const matchmakingScreenIsOpen = gameUiState.matchmakingScreen.isOpen;
+  const preGameScreenIsOpen = gameUiState.preGameScreen.isOpen;
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
   const [mobileViewActive, setMobileViewActive] = useState(false);
@@ -30,13 +36,11 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
     }
   }, [gameListIsOpen, preGameScreenIsOpen, matchmakingScreenIsOpen]);
 
-  // change chat channel
   const onChannelClick = () => {
     showChangeChannelModal();
     setMenuModalDisplayed(false);
   };
 
-  // view list of games
   const onViewGamesListClick = () => {
     if (!socket) return;
     socket.emit("clientRequestsUpdateOfGameRoomList");
@@ -44,20 +48,18 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
     setMenuModalDisplayed(false);
   };
 
-  // pre-game host screen
   const onSetupNewGameClick = () => {
     dispatch(gameUiActions.openPreGameScreen());
     setMenuModalDisplayed(false);
   };
 
-  // join ranked
   const onRankedClick = () => {
     if (!socket) return;
     socket.emit("clientStartsSeekingRankedGame");
     setMenuModalDisplayed(false);
   };
 
-  // open mobile menu
+  // for mobile view
   const onMenuClick = () => {
     setMenuModalDisplayed(true);
   };
@@ -79,47 +81,21 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
   return !mobileViewActive ? (
     <ul className={`chat-buttons-list ${chatButtonsDisplayClass}`}>
       <li>
-        <button
-          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
-          onClick={onChannelClick}
-        >
-          Channel
-        </button>
+        <GameLobbyTopButton title="Channel" onClick={onChannelClick} displayClass={chatButtonDisplayClass} />
       </li>
       <li>
-        <button
-          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
-          onClick={onRankedClick}
-        >
-          Ranked
-        </button>
+        <GameLobbyTopButton title="Ranked" onClick={onRankedClick} displayClass={chatButtonDisplayClass} />
       </li>
       <li>
-        <button
-          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
-          onClick={onSetupNewGameClick}
-        >
-          Host
-        </button>
+        <GameLobbyTopButton title="Host" onClick={onSetupNewGameClick} displayClass={chatButtonDisplayClass} />
       </li>
       <li>
-        <button
-          className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
-          onClick={onViewGamesListClick}
-        >
-          Join
-        </button>
+        <GameLobbyTopButton title="Join" onClick={onViewGamesListClick} displayClass={chatButtonDisplayClass} />
       </li>
     </ul>
   ) : (
     <Fragment>
-      <button
-        className={`button button-standard-size button-basic game-lobby-top-buttons__button ${chatButtonDisplayClass}`}
-        onClick={onMenuClick}
-      >
-        ≡
-      </button>
-
+      <GameLobbyTopButton title="≡" onClick={onMenuClick} displayClass={chatButtonDisplayClass} />
       <Modal
         screenClass=""
         frameClass="modal-frame-dark"
@@ -129,45 +105,21 @@ const DefaultButtons = ({ showChangeChannelModal, socket }) => {
       >
         <ul className={`chat-buttons-modal-list`}>
           <li>
-            <button
-              className={`button button-standard-size button-basic game-lobby-top-buttons__button game-lobby-menu-modal-button`}
-              onClick={onChannelClick}
-            >
-              Channel
-            </button>
+            <GameLobbyModalButton title="Channel" onClick={onChannelClick} />
           </li>
           <li>
-            <button
-              className={`button button-standard-size button-basic game-lobby-top-buttons__button game-lobby-menu-modal-button`}
-              onClick={onRankedClick}
-            >
-              Ranked
-            </button>
+            <GameLobbyModalButton title="Ranked" onClick={onRankedClick} />
           </li>
           <li>
-            <button
-              className={`button button-standard-size button-basic game-lobby-top-buttons__button game-lobby-menu-modal-button`}
-              onClick={onSetupNewGameClick}
-            >
-              Host
-            </button>
+            <GameLobbyModalButton title="Host" onClick={onSetupNewGameClick} />
           </li>
           <li>
-            <button
-              className={`button button-standard-size button-basic game-lobby-top-buttons__button game-lobby-menu-modal-button`}
-              onClick={onViewGamesListClick}
-            >
-              Join
-            </button>
+            <GameLobbyModalButton title="Join" onClick={onViewGamesListClick} />
           </li>
         </ul>
       </Modal>
     </Fragment>
   );
-};
-
-DefaultButtons.propTypes = {
-  showChangeChannelModal: PropTypes.func.isRequired,
 };
 
 export default DefaultButtons;

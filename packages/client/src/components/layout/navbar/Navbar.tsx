@@ -7,6 +7,7 @@ import { ReactComponent as GamesIcon } from "../../../img/menuIcons/queen.svg";
 import { ReactComponent as LadderIcon } from "../../../img/menuIcons/podium.svg";
 import { RootState } from "../../../store";
 import { History } from "history";
+import { GameStatus } from "@lucella/common/battleRoomGame/enums";
 
 const Navbar = () => {
   const history: History = useHistory();
@@ -28,7 +29,7 @@ const Navbar = () => {
           {/* Nav tabs */}
           <div className="nav-right-holder">
             <img className="logo-img" alt="lucella logo" src={logo} />
-            <Link to="/" className="brand-text" name="landing">
+            <Link to="/" className="brand-text">
               <h1>Lucella.org</h1>
             </Link>
             <div className="nav-tabs">
@@ -36,7 +37,6 @@ const Navbar = () => {
                 to="/battle-room"
                 className={`nav-tab ${activeTab === "/battle-room" && "tab-active"}`}
                 onClick={() => setActiveTab("/battle-room")}
-                name="games"
               >
                 <span className="tab-title-text">GAME</span>
                 <GamesIcon className="tab-icon-svg" />
@@ -45,19 +45,10 @@ const Navbar = () => {
                 to="/ladder"
                 className={`nav-tab ${activeTab === "/ladder" && "tab-active"}`}
                 onClick={() => setActiveTab("/ladder")}
-                name="ladder"
               >
                 <span className="tab-title-text">LADDER</span>
                 <LadderIcon className="tab-icon-svg" />
               </Link>
-              {/* <Link
-                to="/forum"
-                className={`nav-tab ${activeTab === "/forum" && "tab-active"}`}
-                name="forum"
-              >
-                <span className="tab-title-text">FORUM</span>
-                <ForumIcon className="tab-icon-svg" />
-              </Link> */}
             </div>
           </div>
           {/* User menu */}
