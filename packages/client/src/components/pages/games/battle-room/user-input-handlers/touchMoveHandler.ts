@@ -1,5 +1,9 @@
 import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { touchHoldSelectionBoxStartThreshold } from "@lucella/common/battleRoomGame/consts";
+import { Point } from "@lucella/common/battleRoomGame/classes/Point";
+import {
+  minimumQuickTouchSelectionBoxSize,
+  touchHoldSelectionBoxStartThreshold,
+} from "@lucella/common/battleRoomGame/consts";
 import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
 import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator";
 
@@ -13,13 +17,15 @@ export default throttledEventHandlerCreator(
     const rect = node.getBoundingClientRect();
     const offsetX = e.targetTouches[0].pageX - rect.left;
     const offsetY = e.targetTouches[0].pageY - rect.top;
-    mouseData.xPos = (offsetX / canvasSize.width) * BattleRoomGame.baseWindowDimensions.width;
-    mouseData.yPos = (offsetY / canvasSize.height) * BattleRoomGame.baseWindowDimensions.height;
-    const touchLength = Date.now() - mouseData.touchStartTime;
+    mouseData.position = new Point(
+      (offsetX / canvasSize.width) * BattleRoomGame.baseWindowDimensions.width,
+      (offsetY / canvasSize.height) * BattleRoomGame.baseWindowDimensions.height
+    );
+    const touchLength = mouseData.touchStartTime ? Date.now() - mouseData.touchStartTime : 0;
     if (
       touchLength > touchHoldSelectionBoxStartThreshold ||
-      Math.abs(offsetX - touchStart.x) > 8 ||
-      Math.abs(offsetY - touchStart.y) > 8
+      Math.abs(offsetX - (touchStart?.x || 0)) > minimumQuickTouchSelectionBoxSize ||
+      Math.abs(offsetY - (touchStart?.y || 0)) > minimumQuickTouchSelectionBoxSize
     ) {
       mouseData.leftCurrentlyPressed = true;
     }

@@ -36,7 +36,7 @@ const PreGameRoom = ({ socket }) => {
     if (gameName && socket) {
       socket.emit("clientHostsNewGame", { gameName });
     } else {
-      dispatch(alertActions.setAlert("Please enter a game name", "danger"));
+      dispatch(alertActions.setAlert("Please enter a game name", AlertType.DANGER));
     }
   };
 

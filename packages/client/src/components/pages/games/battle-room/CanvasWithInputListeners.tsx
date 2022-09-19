@@ -16,7 +16,7 @@ interface Props {
   canvasSize: WidthAndHeight;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   currentGame: BattleRoomGame;
-  playerRole: PlayerRole;
+  playerRole: PlayerRole | null;
 }
 
 const Canvas = (props: Props) => {
@@ -39,30 +39,30 @@ const Canvas = (props: Props) => {
       width={canvasSize.width}
       className="battle-room-canvas"
       ref={canvasRef}
+      onContextMenu={(e) => e.preventDefault()}
       onTouchStart={(e) => {
         touchStartHandler(e, canvasSize, currentGame);
       }}
       onTouchMove={(e) => {
-        touchMoveHandler( e, currentGame );
+        touchMoveHandler(e, currentGame);
       }}
       onTouchEnd={(e) => {
-        touchEndHandler( e, currentGame );
+        touchEndHandler(e, currentGame, canvasSize);
       }}
       onMouseDown={(e) => {
-        mouseDownHandler(e, mouseData );
+        mouseDownHandler(e, currentGame.mouseData);
       }}
       onMouseUp={(e) => {
-        mouseUpHandler( e, currentGame );
+        mouseUpHandler(e, currentGame);
       }}
-      onContextMenu={(e) => e.preventDefault()}
       onMouseMove={(e) => {
-        mouseMoveHandler( e, currentGame );
+        mouseMoveHandler(e, currentGame);
       }}
       onMouseLeave={() => {
-        mouseLeaveHandler({ currentGame );
+        mouseLeaveHandler(currentGame);
       }}
       onMouseEnter={() => {
-        mouseEnterHandler({ mouseData });
+        mouseEnterHandler(currentGame.mouseData);
       }}
     />
   );

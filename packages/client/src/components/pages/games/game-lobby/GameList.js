@@ -25,7 +25,7 @@ const GameList = ({ socket }) => {
     if (gameName) {
       socket.emit("clientJoinsGame", { gameName });
     } else {
-      dispatch(alertActions.setAlert("No game by that name exists", "danger"));
+      dispatch(alertActions.setAlert("No game by that name exists", AlertType.DANGER));
     }
   };
 

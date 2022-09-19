@@ -2,7 +2,7 @@ import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoo
 import { UserInput } from "@lucella/common/battleRoomGame/classes/UserInput";
 const GameEventTypes = require("@lucella/common/battleRoomGame/consts/GameEventTypes");
 
-export default (e: MouseEvent, currentGame: BattleRoomGame) => {
+export default (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, currentGame: BattleRoomGame) => {
   if (!(e.button === 0 || e.button === 2)) return;
   const { mouseData } = currentGame;
   let type, data;

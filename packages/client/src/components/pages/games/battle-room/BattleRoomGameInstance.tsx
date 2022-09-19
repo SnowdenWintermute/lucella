@@ -10,6 +10,7 @@ import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
 import { GameStatus } from "@lucella/common/battleRoomGame/enums";
 import { RootState } from "../../../../store";
+import { GameUIState } from "../../../../store/reducers/game-ui";
 
 interface Props {
   socket: Socket;
@@ -17,7 +18,7 @@ interface Props {
 
 const BattleRoomGameInstance = (props: Props) => {
   const { socket } = props;
-  const gameUi = useSelector((state: RootState) => state.gameUi);
+  const gameUi: GameUIState = useSelector((state: RootState) => state.gameUi);
   const { playerRole, gameStatus } = gameUi;
   const [canvasSize, setCanvasSize] = useState<WidthAndHeight>({
     width: BattleRoomGame.baseWindowDimensions.width,

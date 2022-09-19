@@ -1,7 +1,34 @@
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
-import * as actions from "../actions/types";
+import { GameStatus, PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { Action, ActionType } from "../actions/types";
 
-const initialState = {
+export interface GameUIState {
+  gameList: {
+    games: {};
+    isOpen: boolean;
+  };
+  preGameScreen: {
+    isOpen: boolean;
+  };
+  matchmakingScreen: {
+    isOpen: boolean;
+    currentData: {};
+  };
+  currentGameName: string;
+  playersInGame: {};
+  playersReady: {
+    host: boolean;
+    challenger: boolean;
+  };
+  countdownNumber: null;
+  gameStatus: GameStatus;
+  playerRole: PlayerRole | null;
+  winner: PlayerRole | null;
+  scoreScreenData: {};
+  scoreScreenDisplayed: boolean;
+  isRanked: boolean | null;
+}
+
+const initialState: GameUIState = {
   gameList: {
     games: {},
     isOpen: false,
@@ -28,15 +55,15 @@ const initialState = {
   isRanked: null,
 };
 
-export default function (state: typeof initialState = initialState, action: { type: string; payload: any }) {
+export default function (state = initialState, action: Action) {
   const { type, payload } = action;
   switch (type) {
-    case actions.VIEW_GAMES_LIST_CLICKED:
+    case ActionType.VIEW_GAMES_LIST_CLICKED:
       return {
         ...state,
         gameList: { isOpen: true },
       };
-    case actions.UPDATE_GAMES_LIST:
+    case ActionType.UPDATE_GAMES_LIST:
       return {
         ...state,
         gameList: {
@@ -44,22 +71,22 @@ export default function (state: typeof initialState = initialState, action: { ty
           games: payload,
         },
       };
-    case actions.CLOSE_GAME_LIST:
+    case ActionType.CLOSE_GAME_LIST:
       return {
         ...state,
         gameList: { isOpen: false },
       };
-    case actions.OPEN_PRE_GAME_SCREEN:
+    case ActionType.OPEN_PRE_GAME_SCREEN:
       return {
         ...state,
         preGameScreen: { isOpen: true },
       };
-    case actions.CLOSE_PRE_GAME_SCREEN:
+    case ActionType.CLOSE_PRE_GAME_SCREEN:
       return {
         ...state,
         preGameScreen: { isOpen: false },
       };
-    case actions.SET_CURRENT_GAME:
+    case ActionType.SET_CURRENT_GAME:
       return {
         ...state,
         currentGameName: payload?.gameName || null,
@@ -69,51 +96,51 @@ export default function (state: typeof initialState = initialState, action: { ty
         gameStatus: payload?.gameStatus || null,
         isRanked: payload?.isRanked || null,
       };
-    case actions.UPDATE_PLAYERS:
+    case ActionType.UPDATE_PLAYERS:
       return {
         ...state,
         playersInGame: { ...payload },
       };
 
-    case actions.UPDATE_PLAYERS_READY:
+    case ActionType.UPDATE_PLAYERS_READY:
       return {
         ...state,
         playersReady: { ...payload },
       };
-    case actions.UPDATE_GAME_COUNTDOWN:
+    case ActionType.UPDATE_GAME_COUNTDOWN:
       return {
         ...state,
         countdownNumber: payload,
       };
-    case actions.UPDATE_GAME_STATUS:
+    case ActionType.UPDATE_GAME_STATUS:
       return {
         ...state,
         gameStatus: payload,
       };
-    case actions.UPDATE_PLAYER_ROLE:
+    case ActionType.UPDATE_PLAYER_ROLE:
       return {
         ...state,
         playerRole: payload,
       };
-    case actions.SET_GAME_WINNER:
+    case ActionType.SET_GAME_WINNER:
       return {
         ...state,
         winner: payload,
       };
-    case actions.CLEAR_GAME_UI:
+    case ActionType.CLEAR_GAME_UI:
       return initialState;
-    case actions.SET_SCORE_SCREEN_DATA:
+    case ActionType.SET_SCORE_SCREEN_DATA:
       return {
         ...state,
         scoreScreenData: { ...payload },
         scoreScreenDisplayed: true,
       };
-    case actions.CLOSE_SCORE_SCREEN:
+    case ActionType.CLOSE_SCORE_SCREEN:
       return {
         ...state,
         scoreScreenDisplayed: false,
       };
-    case actions.SET_MATCHMAKING_WINDOW_VISIBLE:
+    case ActionType.SET_MATCHMAKING_WINDOW_VISIBLE:
       return {
         ...state,
         matchmakingScreen: {
@@ -121,7 +148,7 @@ export default function (state: typeof initialState = initialState, action: { ty
           isOpen: payload,
         },
       };
-    case actions.SET_MATCHMAKING_DATA:
+    case ActionType.SET_MATCHMAKING_DATA:
       return {
         ...state,
         matchmakingScreen: {
@@ -130,6 +157,6 @@ export default function (state: typeof initialState = initialState, action: { ty
         },
       };
     default:
-      return state;
+      return { ...state };
   }
 }

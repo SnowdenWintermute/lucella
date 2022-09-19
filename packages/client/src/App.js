@@ -5,14 +5,13 @@ import { Provider } from "react-redux";
 import store from "./store";
 import PrivateRoute from "./components/routing/PrivateRoute";
 import Navbar from "./components/layout/navbar/Navbar";
-import Alerts from "./components/layout/alerts/Alerts";
+import AlertsHolder from "./components/layout/alerts/AlertsHolder";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Settings from "./components/dashboard/Settings";
 import RequestPasswordResetEmail from "./components/auth/RequestPasswordResetEmail";
 import PasswordReset from "./components/auth/PasswordReset";
 import Ladder from "./components/pages/ladder/Ladder";
-import Profile from "./components/profile/Profile";
 import BattleRoomShell from "./components/pages/games/battle-room/BattleRoomShell";
 import { loadUser } from "./store/actions/auth";
 import setAuthToken from "./utils/setAuthToken";
@@ -26,8 +25,8 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Navbar></Navbar>
-        <Alerts></Alerts>
+        <Navbar />
+        <AlertsHolder />
         <Switch>
           <Redirect exact from="/" to="/battle-room" />
           <Route exact path="/register" component={Register} />
@@ -36,7 +35,6 @@ function App() {
           <Route exact path="/password-reset/:token" component={PasswordReset} />
           <Route exact path="/battle-room" component={BattleRoomShell} />
           <Route exact path="/ladder" component={Ladder} />
-          <Route exact path="/profile" component={Profile} />
           <PrivateRoute exact path="/settings" component={Settings}></PrivateRoute>
         </Switch>
       </Router>

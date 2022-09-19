@@ -8,3 +8,4 @@ export const colors = {
 export const renderRate = 33;
 export const eventLimiterRate = 33;
 export const touchHoldSelectionBoxStartThreshold = 500;
+export const minimumQuickTouchSelectionBoxSize = 8;

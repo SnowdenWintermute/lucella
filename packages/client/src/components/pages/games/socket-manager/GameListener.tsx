@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 const cloneDeep = require("lodash.clonedeep");
 import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { AppState } from "../../../../store/reducers";
+import { RootState } from "../../../../store";
 import { Socket } from "socket.io-client";
 // import lagGenerator from '../util-functions/lagGenerator';
-const gameUi = useSelector((state: AppState) => state.gameUi);
+const gameUi = useSelector((state: RootState) => state.gameUi);
 
 interface Props {
   socket: Socket;
@@ -44,18 +44,9 @@ const GameListener = (props: Props) => {
       socket.off("gameEndingCountdown");
       socket.off("serverSendsWinnerInfo");
     };
-  }, [
-    socket,
-    dispatch,
-    gameStateQueue,
-    currentGameData,
-    gameOverCountdownText,
-    gameUi.currentGameName,
-    setLastServerGameUpdate,
-    lastServerGameUpdate,
-  ]);
+  }, [socket, dispatch]);
 
-  return <div />;
+  return <div id="socket-listener-for-battle-room-game" />;
 };
 
 export default GameListener;
