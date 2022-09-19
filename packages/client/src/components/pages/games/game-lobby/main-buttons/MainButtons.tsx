@@ -1,11 +1,15 @@
 import React from "react";
-import PropTypes from "prop-types";
-
+import { Socket } from "socket.io-client";
 import DefaultButtons from "./DefaultButtons";
 import InGameRoomButtons from "./InGameRoomButtons";
 import MatchmakingButtons from "./MatchmakingButtons";
 
-const MainButtons = ({ socket, showChangeChannelModal }) => {
+interface Props {
+  socket: Socket;
+  showChangeChannelModal: () => void;
+}
+
+const MainButtons = ({ socket, showChangeChannelModal }: Props) => {
   return (
     <div className="game-lobby-top-buttons">
       <DefaultButtons socket={socket} showChangeChannelModal={showChangeChannelModal} />
@@ -13,10 +17,6 @@ const MainButtons = ({ socket, showChangeChannelModal }) => {
       <MatchmakingButtons socket={socket} />
     </div>
   );
-};
-
-MainButtons.propTypes = {
-  showChangeChannelModal: PropTypes.func.isRequired,
 };
 
 export default MainButtons;

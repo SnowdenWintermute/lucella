@@ -4,7 +4,7 @@ export interface AuthState {
   token: string | null;
   isAuthenticated: boolean | null;
   loading: boolean;
-  user: string | null;
+  user: { name: string; socketId: string } | null;
 }
 const initialState: AuthState = {
   token: localStorage.getItem("token"),

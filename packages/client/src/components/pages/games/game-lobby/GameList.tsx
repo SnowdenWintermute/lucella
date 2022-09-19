@@ -1,14 +1,23 @@
+import { GameStatus } from "@lucella/common/battleRoomGame/enums";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import PropTypes from "prop-types";
+import { Socket } from "socket.io-client";
+import { AlertType } from "../../../../enums";
+import { RootState } from "../../../../store";
 import * as alertActions from "../../../../store/actions/alert";
 import * as gameUiActions from "../../../../store/actions/game-ui";
+import { GameUIState } from "../../../../store/reducers/game-ui";
 
-const GameList = ({ socket }) => {
+interface Props {
+  socket: Socket;
+}
+
+const GameList = ({ socket }: Props) => {
   const dispatch = useDispatch();
-  const gameList = useSelector((state) => state.gameUi.gameList.games);
-  const currentGameName = useSelector((state) => state.gameUi.currentGameName);
-  const gameListIsOpen = useSelector((state) => state.gameUi.gameList.isOpen);
+  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
+  const gameList = gameUiState.gameList.games;
+  const gameListIsOpen = gameUiState.gameList.isOpen;
+  const { currentGameName } = gameUiState;
   const gameListDisplayClass = gameListIsOpen ? "" : "height-0-hidden";
 
   // cancel viewing game list if in a game
@@ -19,9 +28,7 @@ const GameList = ({ socket }) => {
     }
   }, [currentGameName, dispatch]);
 
-  // join games
-  const onJoinGameClick = (gameName) => {
-    console.log("clicked to join game " + gameName);
+  const onJoinGameClick = (gameName: string) => {
     if (gameName) {
       socket.emit("clientJoinsGame", { gameName });
     } else {
@@ -46,11 +53,6 @@ const GameList = ({ socket }) => {
               </button>
             )}
           </td>
-          {/* <td>
-            <button className="button button-standard-size button-basic">
-              Watch
-            </button>
-          </td> */}
         </tr>
       );
     }
@@ -66,7 +68,5 @@ const GameList = ({ socket }) => {
     </div>
   );
 };
-
-GameList.propTypes = { currentGames: PropTypes.object };
 
 export default GameList;

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { requestPasswordResetEmail } from "../../store/actions/auth";
-import { RootState } from "../../store";
+import { requestPasswordResetEmail } from "../../../store/actions/auth";
+import { RootState } from "../../../store";
 
 const RequestPasswordResetEmail = () => {
   const authState = useSelector((state: RootState) => state.auth);

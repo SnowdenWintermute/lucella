@@ -1,7 +1,5 @@
 import React, { Fragment, useEffect, useState, useRef } from "react";
-import PropTypes from "prop-types";
-import { connect, useSelector, useDispatch } from "react-redux";
-import { setAlert } from "../../../../store/actions/alert";
+import { useSelector, useDispatch } from "react-redux";
 import GameLobbyChat from "./GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
 import ChannelBar from "./channel-bar/ChannelBar";
@@ -11,56 +9,68 @@ import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import ScoreScreenModalContents from "./ScoreScreenModalContents";
 import Modal from "../../../common/modal/Modal";
-import io from "socket.io-client";
+import io, { Socket } from "socket.io-client";
 import SocketManager from "../socket-manager/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
-// import { serverIp } from "../../../../config/config";
+import { AuthState } from "../../../../store/reducers/auth";
+import { RootState } from "../../../../store";
+import { GameUIState } from "../../../../store/reducers/game-ui";
+import { GameStatus } from "@lucella/common/battleRoomGame/enums";
 let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 const socketAddress = process.env.REACT_APP_DEV_MODE
   ? process.env.REACT_APP_SOCKET_API_DEV
   : process.env.REACT_APP_SOCKET_API;
-// const socketAddress = "http://45.77.203.192"
 
-const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
+interface Props {
+  defaultChatRoom: string;
+}
+
+const GameLobby = ({ defaultChatRoom }: Props) => {
   const dispatch = useDispatch();
+  const authState: AuthState = useSelector((state: RootState) => state.auth);
+  const { loading, user } = authState;
+  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
+  const { gameStatus } = gameUiState;
+  const scoreScreenDisplayed = useSelector((state: RootState) => state.lobbyUi.scoreScreenDisplayed);
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(false);
-  const scoreScreenDisplayed = useSelector((state) => state.lobbyUi.scoreScreenDisplayed);
   const [authenticating, setAuthenticating] = useState(true);
-  const gameStatus = useSelector((state) => state.gameUi.gameStatus);
   const username = user ? user.name : "Anon";
   const authToken = useRef(localStorage.token);
+  const socket = useRef<Socket>();
 
   // setup socket
   useEffect(() => {
     let query = { token: null };
     if (authToken.current) query.token = authToken.current;
-    socket = io.connect(socketAddress, { query });
+    socket.current = io(socketAddress || "", { transports: ["websocket"], query });
     return () => {
-      socket.disconnect();
+      socket.current && socket.current.disconnect();
       dispatch(gameUiActions.setCurrentGame(null));
       dispatch(gameUiActions.closePreGameScreen());
     };
   }, [localStorage.token]);
 
   useEffect(() => {
-    socket.on("authenticationFinished", () => {
-      setAuthenticating(false);
-    });
+    socket.current &&
+      socket.current.on("authenticationFinished", () => {
+        setAuthenticating(false);
+      });
   });
 
   // join initial room
   useEffect(() => {
     if (authenticating) return;
-    socket.emit("clientRequestsToJoinRoom", {
-      roomToJoin: defaultChatRoom,
-    });
+    socket.current &&
+      socket.current.emit("clientRequestsToJoinRoom", {
+        roomToJoin: defaultChatRoom,
+      });
   }, [authenticating, defaultChatRoom]);
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
-  const setChannelModalParentDisplay = (status) => {
+  const setChannelModalParentDisplay = (status: boolean) => {
     setDisplayChangeChannelModal(status);
   };
   const setScoreScreenModalParentDisplay = () => {
@@ -70,20 +80,23 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
     setDisplayChangeChannelModal(true);
   };
   // joining new rooms
-  const onJoinRoomSubmit = (e) => {
+  const onJoinRoomSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     joinRoom(joinNewRoomInput);
   };
-  const joinRoom = (roomToJoin) => {
+  const joinRoom = (roomToJoin: string) => {
     setDisplayChangeChannelModal(false);
     setJoinNewRoomInput("");
-    socket.emit("clientRequestsToJoinRoom", { roomToJoin, username });
+    socket.current && socket.current.emit("clientRequestsToJoinRoom", { roomToJoin, username });
   };
+
+  if (!socket.current) return <p>Awaiting socket connection...</p>;
 
   return (
     <Fragment>
-      <SocketManager socket={socket} />
+      <SocketManager socket={socket.current} />
       <Modal
+        screenClass=""
         frameClass="modal-frame-dark"
         isOpen={displayChangeChannelModal}
         setParentDisplay={setChannelModalParentDisplay}
@@ -97,6 +110,7 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
         />
       </Modal>
       <Modal
+        screenClass=""
         frameClass="modal-frame-dark"
         isOpen={scoreScreenDisplayed}
         setParentDisplay={setScoreScreenModalParentDisplay}
@@ -107,30 +121,21 @@ const GameLobby = ({ auth: { loading, user }, defaultChatRoom }) => {
       {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? (
         <Fragment>
           <div className={`game-lobby`}>
-            <MainButtons socket={socket} showChangeChannelModal={showChangeChannelModal} />
-            <ChannelBar socket={socket} defaultChatRoom={defaultChatRoom} />
+            <MainButtons socket={socket.current} showChangeChannelModal={showChangeChannelModal} />
+            <ChannelBar />
             <div className="game-lobby-main-window">
-              <PreGameRoom socket={socket} />
+              <PreGameRoom socket={socket.current} />
               <MatchmakingQueueDisplay />
-              <GameList socket={socket} />
-              <GameLobbyChat socket={socket} username={username} />
+              <GameList socket={socket.current} />
+              <GameLobbyChat socket={socket.current} username={username} />
             </div>
           </div>
         </Fragment>
       ) : (
-        <BattleRoomGameInstance socket={socket} />
+        <BattleRoomGameInstance socket={socket.current} />
       )}
     </Fragment>
   );
 };
 
-GameLobby.propTypes = {
-  defaultChatRoom: PropTypes.string,
-};
-
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-  chat: state.chat,
-});
-
-export default connect(mapStateToProps, { setAlert })(GameLobby);
+export default GameLobby;

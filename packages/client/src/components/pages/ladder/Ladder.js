@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getLadderPage,
-  changeLadderPageViewing,
-  getBattleRoomUserRecord,
-} from "../../../store/actions/ladder";
+import { getLadderPage, changeLadderPageViewing, getBattleRoomUserRecord } from "../../../store/actions/ladder";
 
 const Ladder = (props) => {
   const dispatch = useDispatch();
@@ -18,18 +14,16 @@ const Ladder = (props) => {
 
   const onSearchUserRecord = (e) => {
     e.preventDefault();
-    if (!searchText) dispatch(getLadderPage(1))
+    if (!searchText) dispatch(getLadderPage(1));
     else dispatch(getBattleRoomUserRecord(searchText));
   };
 
   const onTurnPage = (e, direction) => {
-    let newPageVewing =
-      ladder.currentPage + (direction === "foreward" ? 1 : -1);
+    let newPageVewing = ladder.currentPage + (direction === "foreward" ? 1 : -1);
     if (newPageVewing === 0) newPageVewing = ladder.totalNumberOfPages;
     if (newPageVewing > ladder.totalNumberOfPages) newPageVewing = 1;
     dispatch(changeLadderPageViewing(newPageVewing));
-    if (!ladder.ladderPages[newPageVewing])
-      dispatch(getLadderPage(newPageVewing));
+    if (!ladder.ladderPages[newPageVewing]) dispatch(getLadderPage(newPageVewing));
     setPageNumberAnimateClass("ladder-current-page-number-animate");
     setTimeout(() => {
       setPageNumberAnimateClass("");
@@ -41,9 +35,7 @@ const Ladder = (props) => {
       return (
         <tr key={entry.user.name} className="ladder-table-row">
           <td className="ladder-table-datum">
-            {ladder.ladderPages[ladder.currentPage].indexOf(entry) +
-              (ladder.currentPage - 1) * 10 +
-              1}
+            {ladder.ladderPages[ladder.currentPage].indexOf(entry) + (ladder.currentPage - 1) * 10 + 1}
           </td>
           <td className="ladder-table-datum">{entry.user.name}</td>
           <td className="ladder-table-datum">{entry.elo}</td>
@@ -62,15 +54,11 @@ const Ladder = (props) => {
   const searchedUserToShow = ladder.searchedUserRecord?.user ? (
     <tr key={ladder.searchedUserRecord.user.name} className="ladder-table-row">
       <td className="ladder-table-datum">{ladder.searchedUserRecord.rank}</td>
-      <td className="ladder-table-datum">
-        {ladder.searchedUserRecord.user.name}
-      </td>
+      <td className="ladder-table-datum">{ladder.searchedUserRecord.user.name}</td>
       <td className="ladder-table-datum">{ladder.searchedUserRecord.elo}</td>
       <td className="ladder-table-datum">{ladder.searchedUserRecord.wins}</td>
       <td className="ladder-table-datum">{ladder.searchedUserRecord.losses}</td>
-      <td className="ladder-table-datum">
-        {Math.round(ladder.searchedUserRecord.winrate)}%
-      </td>
+      <td className="ladder-table-datum">{Math.round(ladder.searchedUserRecord.winrate)}%</td>
     </tr>
   ) : (
     <tr>
@@ -100,9 +88,7 @@ const Ladder = (props) => {
               placeholder={"Enter a username..."}
             ></input>
             <label htmlFor="ladder-search-input">
-              <button className={"button button-primary ladder-search-button"}>
-                Search
-              </button>
+              <button className={"button button-primary ladder-search-button"}>Search</button>
             </label>
           </form>
           <div className="ladder-page-buttons">
@@ -113,11 +99,7 @@ const Ladder = (props) => {
               }}
             >{`<`}</button>
             <span className={"ladder-current-page-number-holder"}>
-              <div
-                className={`ladder-current-page-number ${pageNumberAnimateClass}`}
-              >
-                {ladder.currentPage}
-              </div>
+              <div className={`ladder-current-page-number ${pageNumberAnimateClass}`}>{ladder.currentPage}</div>
             </span>
             <button
               className={"button button-basic ladder-page-button"}
@@ -137,9 +119,7 @@ const Ladder = (props) => {
               <td className="ladder-table-datum">Losses</td>
               <td className="ladder-table-datum">Win Rate</td>
             </tr>
-            {!ladder.viewingSearchedUser
-              ? ladderEntriesToShow
-              : searchedUserToShow}
+            {!ladder.viewingSearchedUser ? ladderEntriesToShow : searchedUserToShow}
           </tbody>
         </table>
       </div>
