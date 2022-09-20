@@ -1,36 +1,38 @@
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { ReactComponent as SuccessIcon } from "../../../../img/alertIcons/success.svg";
-import PropTypes from "prop-types";
 import * as alertActions from "../../../../store/actions/alert";
+import { Socket } from "socket.io-client";
+import { RootState } from "../../../../store";
+import { GameUIState } from "../../../../store/reducers/game-ui";
+import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { AlertType } from "../../../../enums";
 
-const PreGameRoom = ({ socket }) => {
+interface Props {
+  socket: Socket;
+}
+
+const PreGameRoom = ({ socket }: Props) => {
   const dispatch = useDispatch();
-  const preGameScreen = useSelector((state) => state.gameUi.preGameScreen.isOpen);
+  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
+  const preGameScreenIsOpen = gameUiState.preGameScreen.isOpen;
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState("height-0-hidden");
   const [gameNameInput, setGameNameInput] = useState("");
-  const gameStatus = useSelector((state) => state.gameUi.gameStatus);
-  const playersReady = useSelector((state) => state.gameUi.playersReady);
-  const playersInGame = useSelector((state) => state.gameUi.playersInGame);
-  const currentGameName = useSelector((state) => state.gameUi.currentGameName);
-  const countdownNumber = useSelector((state) => state.gameUi.countdownNumber);
-  const isRanked = useSelector((state) => state.gameUi.isRanked);
-  const playerRole = useSelector((state) => state.gameUi.playerRole);
+  const { gameStatus, playersReady, playersInGame, currentGameName, countdownNumber, isRanked, playerRole } =
+    gameUiState;
+  const channelNameInput = useRef<HTMLInputElement>(null);
 
-  const channelNameInput = useRef();
-
-  // element's own visibility/showclass
   useEffect(() => {
-    if (preGameScreen) {
+    if (preGameScreenIsOpen) {
       setPreGameRoomDisplayClass("");
       if (!channelNameInput.current) return;
       channelNameInput.current.focus();
     }
-    if (!preGameScreen) setPreGameRoomDisplayClass("height-0-hidden");
-  }, [preGameScreen]);
+    if (!preGameScreenIsOpen) setPreGameRoomDisplayClass("height-0-hidden");
+  }, [preGameScreenIsOpen]);
 
   // 'make public' actually request to server to host a game
-  const makeGamePublic = (e) => {
+  const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const gameName = gameNameInput;
     if (gameName && socket) {
@@ -40,7 +42,6 @@ const PreGameRoom = ({ socket }) => {
     }
   };
 
-  // ready up
   const onReadyClick = () => {
     socket.emit("clientClicksReady", { gameName: currentGameName });
   };
@@ -56,11 +57,11 @@ const PreGameRoom = ({ socket }) => {
       <table className="pre-game-room-player-list">
         <tbody>
           <tr>
-            <td>{playersInGame.host.username}</td>
+            <td>{playersInGame?.host.username}</td>
             <td>{playersReady.host && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
           </tr>
           <tr>
-            <td>{playersInGame.challenger ? playersInGame.challenger.username : "Awaiting challenger..."}</td>
+            <td>{playersInGame?.challenger ? playersInGame.challenger.username : "Awaiting challenger..."}</td>
             <td>{playersReady.challenger && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
           </tr>
           <tr>
@@ -103,10 +104,6 @@ const PreGameRoom = ({ socket }) => {
       </div>
     </div>
   );
-};
-
-PreGameRoom.propTypes = {
-  socket: PropTypes.object,
 };
 
 export default PreGameRoom;

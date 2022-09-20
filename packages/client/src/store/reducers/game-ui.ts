@@ -11,10 +11,20 @@ export interface GameUIState {
   };
   matchmakingScreen: {
     isOpen: boolean;
-    currentData: {};
+    currentData: {
+      currentEloDiffThreshold: number | null;
+      queueSize: number | null;
+    };
   };
   currentGameName: string;
-  playersInGame: {};
+  playersInGame: {
+    host: {
+      username: string;
+    };
+    challenger: {
+      username: string;
+    } | null;
+  } | null;
   playersReady: {
     host: boolean;
     challenger: boolean;
@@ -38,10 +48,13 @@ const initialState: GameUIState = {
   },
   matchmakingScreen: {
     isOpen: false,
-    currentData: {},
+    currentData: {
+      queueSize: null,
+      currentEloDiffThreshold: null,
+    },
   },
   currentGameName: "",
-  playersInGame: {},
+  playersInGame: null,
   playersReady: {
     host: false,
     challenger: false,

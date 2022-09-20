@@ -1,9 +1,12 @@
+import { UserRecord } from "../../classes/UserRecord";
 import { Action, ActionType } from "../actions/types";
 
 export interface LadderState {
-  ladderPages: { [pageNumber: number]: {} };
+  ladderPages: {
+    [pageNumber: number]: [UserRecord];
+  };
   totalNumberOfPages: number | null;
-  searchedUserRecord: boolean | null;
+  searchedUserRecord: UserRecord | null;
   currentPage: number;
   viewingSearchedUser: boolean;
 }

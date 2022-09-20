@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store";
 import { getLadderPage, changeLadderPageViewing, getBattleRoomUserRecord } from "../../../store/actions/ladder";
+import { LadderState } from "../../../store/reducers/ladder";
 
-const Ladder = (props) => {
+const Ladder = () => {
   const dispatch = useDispatch();
-  const ladder = useSelector((state) => state.ladder);
+  const ladder: LadderState = useSelector((state: RootState) => state.ladder);
   const [searchText, setSearchText] = useState("");
   const [pageNumberAnimateClass, setPageNumberAnimateClass] = useState("");
 
@@ -12,14 +14,15 @@ const Ladder = (props) => {
     if (!ladder.ladderPages["1"]) dispatch(getLadderPage(1));
   }, [ladder, dispatch]);
 
-  const onSearchUserRecord = (e) => {
+  const onSearchUserRecord = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!searchText) dispatch(getLadderPage(1));
     else dispatch(getBattleRoomUserRecord(searchText));
   };
 
-  const onTurnPage = (e, direction) => {
+  const onTurnPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, direction: string) => {
     let newPageVewing = ladder.currentPage + (direction === "foreward" ? 1 : -1);
+    if (!ladder.totalNumberOfPages) return;
     if (newPageVewing === 0) newPageVewing = ladder.totalNumberOfPages;
     if (newPageVewing > ladder.totalNumberOfPages) newPageVewing = 1;
     dispatch(changeLadderPageViewing(newPageVewing));
