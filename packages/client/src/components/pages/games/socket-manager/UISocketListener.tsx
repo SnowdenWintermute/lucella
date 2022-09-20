@@ -30,7 +30,7 @@ const UISocketListener = ({ socket }: Props) => {
     socket.on("gameClosedByHost", () => {
       dispatch(gameUiActions.closePreGameScreen());
     });
-    socket.on("updateOfCurrentRoomPlayerReadyStatus", (playersReady) => {
+    socket.on("updateOfcurrentChatChannelPlayerReadyStatus", (playersReady) => {
       dispatch(gameUiActions.updatePlayersReady(playersReady));
     });
     socket.on("serverSendsPlayerRole", (data) => {
@@ -61,7 +61,7 @@ const UISocketListener = ({ socket }: Props) => {
       socket.off("gameListUpdate");
       socket.off("currentGameRoomUpdate");
       socket.off("gameClosedByHost");
-      socket.off("updateOfCurrentRoomPlayerReadyStatus");
+      socket.off("updateOfcurrentChatChannelPlayerReadyStatus");
       socket.off("serverSendsPlayerRole");
       socket.off("currentGameStatusUpdate");
       socket.off("currentGameCountdownUpdate");

@@ -4,7 +4,7 @@ export class GameRoom {
   gameName: string;
   players: { host: string | null; challenger: string | null };
   spectators: [];
-  gameStatus: GameStatus.inLobby;
+  gameStatus: GameStatus.IN_LOBBY;
   countdown: 1;
   countdownStartsAt: 1;
   countdownInterval: null;
@@ -16,7 +16,7 @@ export class GameRoom {
     this.gameName = gameName;
     this.players = { host: null, challenger: null };
     this.spectators = [];
-    this.gameStatus = GameStatus.inLobby;
+    this.gameStatus = GameStatus.IN_LOBBY;
     this.countdown = 1;
     this.countdownStartsAt = 1;
     this.countdownInterval = null;

@@ -64,8 +64,8 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   useEffect(() => {
     if (authenticating) return;
     socket.current &&
-      socket.current.emit("clientRequestsToJoinRoom", {
-        roomToJoin: defaultChatRoom,
+      socket.current.emit("clientRequestsToJoinChatChannel", {
+        chatChannelToJoin: defaultChatRoom,
       });
   }, [authenticating, defaultChatRoom]);
 
@@ -84,10 +84,10 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
     e.preventDefault();
     joinRoom(joinNewRoomInput);
   };
-  const joinRoom = (roomToJoin: string) => {
+  const joinRoom = (chatChannelToJoin: string) => {
     setDisplayChangeChannelModal(false);
     setJoinNewRoomInput("");
-    socket.current && socket.current.emit("clientRequestsToJoinRoom", { roomToJoin, username });
+    socket.current && socket.current.emit("clientRequestsToJoinChatChannel", { chatChannelToJoin, username });
   };
 
   if (!socket.current) return <p>Awaiting socket connection...</p>;
