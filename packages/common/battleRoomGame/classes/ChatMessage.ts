@@ -1,12 +1,16 @@
 export class ChatMessage {
+  author: string;
+  text: string;
   style: string;
   timeStamp: number;
-  text: string;
-  author: string;
-  constructor(style: string, timeStamp: number, text: string, author: string) {
+  constructor(author: string, text: string, style: string) {
     this.style = style;
-    this.timeStamp = timeStamp;
+    this.timeStamp = +Date.now();
     this.text = text;
     this.author = author;
   }
+}
+
+export enum ChatMessageStyles {
+  PRIVATE = "private",
 }

@@ -1,8 +1,11 @@
+import { Server } from "socket.io";
+import ServerState from "../../../../interfaces/ServerState";
+
 const removeNonHostPlayers = require("./removeNonHostPlayers");
 const ChatMessage = require("../../../../classes/chat/ChatMessage");
 
-module.exports = ({ application, gameName }) => {
-  const { io, gameRooms } = application;
+export default function (io: Server, serverState: ServerState, gameName: string) {
+  const { gameRooms } = serverState;
   const gameRoom = gameRooms[gameName];
   const { players } = gameRoom;
   io.to(`game-${gameName}`).emit("currentGameRoomUpdate", null);
@@ -15,7 +18,7 @@ module.exports = ({ application, gameName }) => {
       messageText: `Game ${gameName} closed by host.`,
     })
   );
-  removeNonHostPlayers({ application, players })
+  removeNonHostPlayers({ serverState, players });
   players.host = null;
   players.challenger = null;
-};
+}

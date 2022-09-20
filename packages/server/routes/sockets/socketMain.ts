@@ -1,4 +1,4 @@
-import ServerState from "../../types/ServerState";
+import ServerState from "../../interfaces/ServerState";
 import { io } from "../../expressServer";
 import handleNewSocketConnection from "./generalFunctions/handleNewSocketConnection";
 const handleSocketDisconnection = require("./generalFunctions/handleSocketDisconnection");

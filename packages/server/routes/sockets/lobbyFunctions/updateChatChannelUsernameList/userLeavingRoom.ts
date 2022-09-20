@@ -1,8 +1,11 @@
-export default function ({ application, nameOfChatChannelToLeave }) {
-  const { socket, connectedSockets, chatChannels } = application;
+import { Socket } from "socket.io";
+import ServerState from "../../../../interfaces/ServerState";
+
+export default function (socket: Socket, serverState: ServerState, nameOfChatChannelToLeave) {
+  const { connectedSockets, chatChannels } = serverState;
   const chatChannelToLeave = chatChannels[nameOfChatChannelToLeave];
   if (!chatChannelToLeave) return;
-  const userNameLeaving = connectedSockets[socket.id].username;
+  const userNameLeaving = connectedSockets[socket.id].associatedUser.username;
   const userToRemoveFromRoom = chatChannelToLeave.connectedUsers[userNameLeaving];
   userToRemoveFromRoom.connectedSockets.forEach((userConnectedSocket, i) => {
     if (userConnectedSocket.toString() === socket.id.toString())

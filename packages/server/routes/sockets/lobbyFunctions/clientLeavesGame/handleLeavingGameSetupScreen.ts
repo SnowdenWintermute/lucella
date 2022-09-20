@@ -1,29 +1,33 @@
-const clientRequestsToJoinChatChannel = require("../clientRequestsToJoinChatChannel");
-const generateGameRoomForClient = require("../../../../utils/generateGameRoomForClient");
-const generateRoomForClient = require("../../../../utils/generateRoomForClient");
-const handleHostLeavingGameSetup = require("./handleHostLeavingGameSetup");
-const handleChallengerLeavingGameSetup = require("./handleChallengerLeavingGameSetup");
-const handleDisconnectionFromGameSetup = require("./handleDisconnectionFromGameSetup");
+import clientRequestsToJoinChatChannel from "../clientRequestsToJoinChatChannel";
+import generateGameRoomForClient from "../../../../utils/generateGameRoomForClient";
+import sanitizeChatChannelForClient from "../../../../utils/sanitizeChatChannelForClient";
+import handleHostLeavingGameSetup from "./handleHostLeavingGameSetup";
+import handleChallengerLeavingGameSetup from "./handleChallengerLeavingGameSetup";
+import handleDisconnectionFromGameSetup from "./handleDisconnectionFromGameSetup";
+import { Server, Socket } from "socket.io";
+import ServerState from "../../../../interfaces/ServerState";
 
-module.exports = ({ application, gameName, isDisconnecting }) => {
-  const { io, socket, connectedSockets, chatChannels, gameRooms } = application;
-  const username = connectedSockets[socket.id].username;
+export default function (
+  io: Server,
+  socket: Socket,
+  serverState: ServerState,
+  gameName: string,
+  isDisconnecting: boolean | undefined
+) {
+  const { connectedSockets, chatChannels, gameRooms } = serverState;
+  const username = connectedSockets[socket.id].associatedUser.username;
   const gameRoom = gameRooms[gameName];
   const { players } = gameRoom;
-  if (isDisconnecting) handleDisconnectionFromGameSetup({ application, gameRoom });
+  if (isDisconnecting) handleDisconnectionFromGameSetup({ serverState, gameRoom });
   else {
     connectedSockets[socket.id].currentGameName = null;
     socket.emit("currentGameRoomUpdate", null);
-    const prevRoom = connectedSockets[socket.id].\previousChatChannelName;
-    clientRequestsToJoinChatChannel({
-      application,
-      username,
-      roomName: prevRoom ? prevRoom : "the void",
-    });
+    const prevRoom = connectedSockets[socket.id].previousChatChannelName;
+    clientRequestsToJoinChatChannel(io, socket, serverState, prevRoom ? prevRoom : "the void");
   }
-  if (players.host.username === username) handleHostLeavingGameSetup({ application, gameName });
-  else if (players.challenger.username === username)
-    handleChallengerLeavingGameSetup({ application, gameName, players });
+  if (players.host?.username === username) handleHostLeavingGameSetup({ serverState, gameName });
+  else if (players.challenger?.username === username)
+    handleChallengerLeavingGameSetup({ serverState, gameName, players });
   if (!players.host) {
     delete gameRooms[gameName];
     delete chatChannels[gameName];
@@ -32,9 +36,9 @@ module.exports = ({ application, gameName, isDisconnecting }) => {
   io.in(`game-${gameName}`).emit("currentGameRoomUpdate", generateGameRoomForClient({ gameRoom }));
   io.in(`game-${gameName}`).emit(
     "updateChatRoom",
-    generateRoomForClient({
+    sanitizeChatChannelForClient({
       chatChannels,
       roomName: `game-${gameName}`,
     })
   );
-};
+}

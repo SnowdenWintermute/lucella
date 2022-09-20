@@ -2,7 +2,10 @@ import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoo
 import { GameStatus } from "../../enums";
 export class GameRoom {
   gameName: string;
-  players: { host: string | null; challenger: string | null };
+  players: {
+    host: { username: string; isReady: boolean } | null;
+    challenger: { username: string; isReady: boolean } | null;
+  };
   spectators: [];
   gameStatus: GameStatus.IN_LOBBY;
   countdown: 1;

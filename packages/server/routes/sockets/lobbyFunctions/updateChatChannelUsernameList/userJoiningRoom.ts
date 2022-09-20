@@ -1,6 +1,9 @@
-export default function ({ application, nameOfchatChannelToJoin }) {
-  const { socket, connectedSockets, chatChannels } = application;
-  const username = connectedSockets[socket.id].username;
+import { Socket } from "socket.io";
+import ServerState from "../../../../interfaces/ServerState";
+
+export default function (socket: Socket, serverState: ServerState, nameOfchatChannelToJoin: string) {
+  const { connectedSockets, chatChannels } = serverState;
+  const username = connectedSockets[socket.id].associatedUser.username;
   const chatChannelToJoin = chatChannels[nameOfchatChannelToJoin];
   if (!chatChannelToJoin.connectedUsers[username])
     chatChannelToJoin.connectedUsers[username] = {
