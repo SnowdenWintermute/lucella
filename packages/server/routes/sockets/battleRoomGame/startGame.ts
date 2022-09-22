@@ -1,20 +1,16 @@
-const GameData = require("@lucella/common/battleRoomGame/classes/GameData");
-const createGamePhysicsInterval = require("./createGamePhysicsInterval");
-const createGameUpdateInterval = require("./createGameUpdateInterval");
+import { Server } from "socket.io";
+import ServerState from "../../../interfaces/ServerState";
+import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import createGamePhysicsInterval from "./createGamePhysicsInterval";
+import createGameUpdateInterval from "./createGameUpdateInterval";
 
-function startGame({ application, gameName }) {
-  const { io, gameRooms, gameDatas } = application;
+export default function startGame(io: Server, serverState: ServerState, gameName: string) {
+  const { gameRooms, games } = serverState;
   const gameRoom = gameRooms[gameName];
   if (!gameRoom) return;
-  // initializing the game
-  gameDatas[gameName] = new GameData({ gameName });
-  const gameData = gameDatas[gameName];
+  games[gameName] = new BattleRoomGame(gameName);
+  const game = games[gameName];
   io.to(`game-${gameName}`).emit("serverInitsGame");
-  gameData.intervals.physics = createGamePhysicsInterval({
-    application,
-    gameName,
-  });
-  gameData.intervals.updates = createGameUpdateInterval({ io, gameData });
+  game.intervals.physics = createGamePhysicsInterval(serverState, gameName);
+  game.intervals.broadcast = createGameUpdateInterval(io, game);
 }
-
-module.exports = startGame;

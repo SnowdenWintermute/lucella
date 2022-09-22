@@ -1,21 +1,24 @@
-startGameCountdown = require("../startGameCountdown");
-cancelGameCountdown = require("../cancelGameCountdown");
-const togglePlayerReadyState = require("./togglePlayerReadyState");
+import startGameCountdown from "../startGameCountdown";
+import cancelGameCountdown from "../cancelGameCountdown";
+import togglePlayerReadyState from "./togglePlayerReadyState";
+import ServerState from "../../../../interfaces/ServerState";
+import { Server, Socket } from "socket.io";
+import { GameStatus } from "@lucella/common/battleRoomGame/enums";
 
-module.exports = ({ application, gameName }) => {
+export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string) {
   try {
-    const { io, socket, connectedSockets, gameRooms } = application;
+    const { connectedSockets, gameRooms } = serverState;
     const gameRoom = gameRooms[gameName];
     const { players, playersReady } = gameRoom;
     if (!connectedSockets[socket.id].currentGameName) throw new Error("Already in game");
     if (!gameRoom) throw new Error("No such game exists");
     if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked)
       throw new Error("Can't unready from ranked game");
-    togglePlayerReadyState({ application, players, playersReady });
+    togglePlayerReadyState(socket, serverState, players, playersReady);
     io.to(`game-${gameName}`).emit("updateOfcurrentChatChannelPlayerReadyStatus", playersReady);
-    if (playersReady.host && playersReady.challenger) startGameCountdown({ application, gameName });
-    else cancelGameCountdown({ io, gameRoom });
+    if (playersReady.host && playersReady.challenger) startGameCountdown(io, serverState, gameName);
+    else cancelGameCountdown(io, gameRoom);
   } catch (error) {
     console.log(error);
   }
-};
+}

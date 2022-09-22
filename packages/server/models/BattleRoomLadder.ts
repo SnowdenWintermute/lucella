@@ -1,7 +1,13 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
+import { IBattleRoomRecord } from "./BattleRoomRecord";
 
-const BattleRoomLadderSchema = new mongoose.Schema({
-  ladder: [{ type: mongoose.Schema.Types.ObjectId, ref: "battleRoomRecord" }],
+export interface IBattleRoomLadder {
+  ladder: [IBattleRoomRecord];
+}
+
+const BattleRoomLadderSchema = new Schema<IBattleRoomLadder>({
+  ladder: [{ type: Schema.Types.ObjectId, ref: "battleRoomRecord" }],
 });
 
-export default mongoose.model("battleRoomLadder", BattleRoomLadderSchema);
+const BattleRoomLadder = model<IBattleRoomLadder>("battleRoomLadder", BattleRoomLadderSchema);
+export default BattleRoomLadder;

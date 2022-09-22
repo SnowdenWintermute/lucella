@@ -1,29 +1,20 @@
-const BattleRoomLadder = require("../../../../models/BattleRoomLadder");
+import { IBattleRoomRecord } from "../../../../models/BattleRoomRecord";
 
-module.exports = async ({
-  hostBattleRoomRecord,
-  challengerBattleRoomRecord,
-}) => {
-  let ladder = await BattleRoomLadder.findOne({}).populate("ladder");
-  let oldHostRank, oldChallengerRank, newHostRank, newChallengerRank;
-  if (!ladder) ladder = new BattleRoomLadder();
-  oldHostRank = ladder.ladder.findIndex(
-    (i) => i.id === hostBattleRoomRecord.id
-  );
-  oldChallengerRank = ladder.ladder.findIndex(
-    (i) => i.id === challengerBattleRoomRecord.id
-  );
+import BattleRoomLadder, { IBattleRoomLadder } from "../../../../models/BattleRoomLadder";
+import { HydratedDocument } from "mongoose";
+
+export default async function (hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord) {
+  let ladder: HydratedDocument<IBattleRoomLadder> =
+    (await BattleRoomLadder.findOne({}).populate("ladder")) || new BattleRoomLadder<IBattleRoomLadder>();
+  let oldHostRank: number, oldChallengerRank: number, newHostRank: number, newChallengerRank: number;
+  oldHostRank = ladder.ladder.findIndex((i) => i.id === hostBattleRoomRecord.id);
+  oldChallengerRank = ladder.ladder.findIndex((i) => i.id === challengerBattleRoomRecord.id);
   if (oldHostRank === -1) ladder.ladder.push(hostBattleRoomRecord.id);
-  if (oldChallengerRank === -1)
-    ladder.ladder.push(challengerBattleRoomRecord.id);
+  if (oldChallengerRank === -1) ladder.ladder.push(challengerBattleRoomRecord.id);
   ladder.ladder.sort((a, b) => b.elo - a.elo);
-  newHostRank = ladder.ladder.findIndex(
-    (i) => i.id === hostBattleRoomRecord.id
-  );
-  newChallengerRank = ladder.ladder.findIndex(
-    (i) => i.id === challengerBattleRoomRecord.id
-  );
+  newHostRank = ladder.ladder.findIndex((i) => i.id === hostBattleRoomRecord.id);
+  newChallengerRank = ladder.ladder.findIndex((i) => i.id === challengerBattleRoomRecord.id);
 
   await ladder.save();
-  return [oldHostRank, oldChallengerRank, newHostRank, newChallengerRank];
-};
+  return { oldHostRank, oldChallengerRank, newHostRank, newChallengerRank };
+}

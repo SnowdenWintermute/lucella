@@ -1,37 +1,34 @@
-const clientRequestsToJoinChatChannel = require("../lobbyFunctions/clientRequestsToJoinChatChannel");
-const clientHostsNewGame = require("../lobbyFunctions/clientHostsNewGame");
-const clientJoinsGame = require("../lobbyFunctions/clientJoinsGame");
-const handleReadyClick = require("../lobbyFunctions/handleReadyClick");
-const clientLeavesGame = require("../lobbyFunctions/clientLeavesGame");
-const handleQueueUpForRankedMatch = require("../lobbyFunctions/handleQueueUpForRankedMatch");
+import clientRequestsToJoinChatChannel from "../lobbyFunctions/clientRequestsToJoinChatChannel";
+import clientHostsNewGame from "../lobbyFunctions/clientHostsNewGame";
+import clientJoinsGame from "../lobbyFunctions/clientJoinsGame";
+import handleReadyClick from "../lobbyFunctions/handleReadyClick";
+import clientLeavesGame from "../lobbyFunctions/clientLeavesGame";
+import handleQueueUpForRankedMatch from "../lobbyFunctions/handleQueueUpForRankedMatch";
+import { Server, Socket } from "socket.io";
+import ServerState from "../../../interfaces/ServerState";
 
-const gameUiListeners = ({ application }) => {
-  const { socket, connectedSockets, gameRooms, rankedQueue } = application;
+const gameUiListeners = (io: Server, socket: Socket, serverState: ServerState) => {
+  const { connectedSockets, gameRooms, rankedQueue } = serverState;
   socket.on("clientRequestsUpdateOfGameRoomList", () => {
     socket.emit("gameListUpdate", gameRooms);
   });
   socket.on("clientRequestsToJoinChatChannel", (data) => {
-    clientRequestsToJoinChatChannel({
-      application,
-      username: connectedSockets[socket.id].username,
-      roomName: data.chatChannelToJoin.toLowerCase(),
-    });
+    clientRequestsToJoinChatChannel(io, socket, serverState, data.chatChannelToJoin.toLowerCase());
   });
   socket.on("clientHostsNewGame", ({ gameName }) => {
-    clientHostsNewGame({ application, gameName, isRanked: false });
+    clientHostsNewGame(io, socket, serverState, gameName, false);
   });
   socket.on("clientLeavesGame", (gameName) => {
-    clientLeavesGame({ application, gameName });
+    clientLeavesGame(io, socket, serverState, gameName);
   });
-  socket.on("clientJoinsGame", (data) => {
-    const { gameName } = data;
-    clientJoinsGame({ application, gameName });
+  socket.on("clientJoinsGame", ({ gameName }) => {
+    clientJoinsGame(io, socket, serverState, gameName);
   });
   socket.on("clientClicksReady", ({ gameName }) => {
-    handleReadyClick({ application, gameName });
+    handleReadyClick(io, socket, serverState, gameName);
   });
   socket.on("clientStartsSeekingRankedGame", async () => {
-    await handleQueueUpForRankedMatch({ application });
+    await handleQueueUpForRankedMatch({ serverState });
   });
   socket.on("clientCancelsMatchmakingSearch", () => {
     delete rankedQueue.users[socket.id];

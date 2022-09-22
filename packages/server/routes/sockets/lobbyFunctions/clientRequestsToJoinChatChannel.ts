@@ -10,7 +10,7 @@ export default function clientRequestsToJoinChatChannel(
   io: Server,
   socket: Socket,
   serverState: ServerState,
-  channelName: string,
+  channelName: string | null,
   authorizedForGameChannel?: boolean
 ) {
   const { connectedSockets, chatChannels } = serverState;

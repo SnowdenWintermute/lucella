@@ -1,15 +1,14 @@
-const removeSocketFromChatChannel = require("../../lobbyFunctions/removeSocketFromChatChannel");
+import { Server, Socket } from "socket.io";
+import ServerState from "../../../../interfaces/ServerState";
+import removeSocketFromChatChannel from "../../lobbyFunctions/removeSocketFromChatChannel";
 
-module.exports = ({ application, gameName }) => {
-  const { socket, connectedSockets, gameRooms } = application;
+export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string) {
+  const { connectedSockets, gameRooms } = serverState;
   const gameRoom = gameRooms[gameName];
   const userThatDisconnected = connectedSockets[socket.id];
-  removeSocketFromChatChannel({
-    application,
-    nameOfChatChannelToLeave: `game-${gameName}`,
-  });
+  removeSocketFromChatChannel(io, socket, serverState);
   gameRoom.winner =
-    gameRoom.players.host.username === userThatDisconnected.username
-      ? gameRoom.players.challenger.username
-      : gameRoom.players.host.username;
-};
+    (gameRoom.players.host?.username === userThatDisconnected.associatedUser.username
+      ? gameRoom.players.challenger?.username
+      : gameRoom.players.host?.username) || null;
+}

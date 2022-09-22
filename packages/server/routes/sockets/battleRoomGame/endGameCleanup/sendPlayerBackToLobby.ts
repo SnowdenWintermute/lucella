@@ -1,15 +1,22 @@
-const clientRequestsToJoinChatChannel = require("../../lobbyFunctions/clientRequestsToJoinChatChannel");
+import { Server } from "socket.io";
+import SocketMetadata from "../../../../classes/SocketMetadata";
+import ServerState from "../../../../interfaces/ServerState";
+import clientRequestsToJoinChatChannel from "../../lobbyFunctions/clientRequestsToJoinChatChannel";
 
-module.exports = ({ application, player }) => {
-  if (!player) return;
-  const { io, connectedSockets } = application;
+export default function (
+  io: Server,
+  serverState: ServerState,
+  socketId: string | undefined,
+  player: SocketMetadata | null
+) {
+  if (!player) return new Error("tried to send player back to lobby but no player found");
+  if (!socketId) return new Error("tried to send player back to lobby but no sockedId found");
+  const { connectedSockets } = serverState;
   player.currentGameName = null;
-  clientRequestsToJoinChatChannel({
-    application: {
-      ...application,
-      socket: io.sockets.sockets[player.socketId],
-    },
-    username: player.username,
-    roomName: connectedSockets[player.socketId].\previousChatChannelName,
-  });
-};
+  clientRequestsToJoinChatChannel(
+    io,
+    io.sockets.sockets[socketId],
+    serverState,
+    connectedSockets[socketId].previousChatChannelName
+  );
+}

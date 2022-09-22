@@ -1,17 +1,18 @@
 import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import SocketMetadata from "../../../../server/classes/SocketMetadata";
 import { GameStatus } from "../../enums";
+
 export class GameRoom {
   gameName: string;
   players: {
-    host: { username: string; isReady: boolean } | null;
-    challenger: { username: string; isReady: boolean } | null;
+    host: SocketMetadata | null;
+    challenger: SocketMetadata | null;
   };
   spectators: [];
-  gameStatus: GameStatus.IN_LOBBY;
-  countdown: 1;
-  countdownStartsAt: 1;
-  countdownInterval: null;
-  playersReady: { host: false; challenger: false };
+  gameStatus: GameStatus;
+  countdown: { duration: number; current: number };
+  countdownInterval: NodeJS.Timeout | null;
+  playersReady: { host: boolean; challenger: boolean };
   score: { host: number; challenger: number; neededToWin: number };
   winner: string | null;
   isRanked: boolean;
@@ -20,8 +21,7 @@ export class GameRoom {
     this.players = { host: null, challenger: null };
     this.spectators = [];
     this.gameStatus = GameStatus.IN_LOBBY;
-    this.countdown = 1;
-    this.countdownStartsAt = 1;
+    this.countdown = { duration: 1, current: 1 };
     this.countdownInterval = null;
     this.playersReady = { host: false, challenger: false };
     this.score = { host: 0, challenger: 0, neededToWin: BattleRoomGame.initialScoreNeededToWin };

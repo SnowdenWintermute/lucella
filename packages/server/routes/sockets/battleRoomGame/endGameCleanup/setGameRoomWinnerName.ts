@@ -1,6 +1,10 @@
-module.exports = ({ gameRoom, gameData }) => {
+import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import { GameRoom } from "@lucella/common/battleRoomGame/classes/BattleRoomGame/GameRoom";
+import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
+
+export default function (gameRoom: GameRoom, game: BattleRoomGame) {
   gameRoom.winner =
-    gameData.winner === "host"
-      ? gameRoom.players.host.username
-      : gameRoom.players.challenger.username;
-};
+    game.winner === PlayerRole.HOST
+      ? gameRoom.players?.host?.username || null
+      : gameRoom.players?.challenger?.username || null;
+}

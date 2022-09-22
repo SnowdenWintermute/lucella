@@ -1,30 +1,39 @@
-const User = require("../../../../models/User");
-const BattleRoomRecord = require("../../../../models/BattleRoomRecord");
-const BattleRoomGameRecord = require("../../../../models/BattleRoomGameRecord");
-const updateWinLossRecords = require("./updateWinLossRecords");
-const updateElos = require("./updateElos");
-const updateLadder = require("./updateLadder");
+import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import { GameRoom } from "@lucella/common/battleRoomGame/classes/BattleRoomGame/GameRoom";
+import User from "../../../../models/User";
+import BattleRoomRecord from "../../../../models/BattleRoomRecord";
+import BattleRoomGameRecord from "../../../../models/BattleRoomGameRecord";
+import updateWinLossRecords from "./updateWinLossRecords";
+import updateElos from "./updateElos";
+import updateLadder from "./updateLadder";
+import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
 
-module.exports = async ({ winner, loser, gameRoom, gameData, isRanked }) => {
+export default async function (
+  winner: string,
+  loser: string,
+  gameRoom: GameRoom,
+  game: BattleRoomGame,
+  isRanked: boolean
+) {
   if (!isRanked)
     return {
       casualGame: true,
     };
 
-  const winnerRole =
-    gameRoom.players.host.username === winner ? "host" : "challenger";
-  const loserRole =
-    gameRoom.players.challenger.username === winner ? "host" : "challenger";
-  const winnerScore = gameData.gameState.score[winnerRole];
-  const loserScore = gameData.gameState.score[loserRole];
+  const winnerRole = gameRoom.players.host?.username === winner ? PlayerRole.HOST : PlayerRole.CHALLENGER;
+  const loserRole = gameRoom.players.challenger?.username === winner ? PlayerRole.HOST : PlayerRole.CHALLENGER;
+  const winnerScore = game.score[winnerRole];
+  const loserScore = game.score[loserRole];
 
   // determine if both players have accounts in the database
   const hostDbRecord = await User.findOne({
-    name: gameRoom.players.host.username,
+    name: gameRoom.players.host?.username,
   });
   const challengerDbRecord = await User.findOne({
-    name: gameRoom.players.challenger.username,
+    name: gameRoom.players.challenger?.username,
   });
+  if (!challengerDbRecord || !hostDbRecord)
+    return new Error("tried to update ranked game record in a game in which at least one user wasn't registered");
   // if both players are registered users, update their win loss records
   let hostBattleRoomRecord = await BattleRoomRecord.findOne({
     user: hostDbRecord.id,
@@ -32,20 +41,16 @@ module.exports = async ({ winner, loser, gameRoom, gameData, isRanked }) => {
   let challengerBattleRoomRecord = await BattleRoomRecord.findOne({
     user: challengerDbRecord.id,
   });
-
-  const [hostElo, challengerElo, newHostElo, newChallengerElo] = updateElos({
+  if (!hostBattleRoomRecord || !challengerBattleRoomRecord) return;
+  const { hostElo, challengerElo, newHostElo, newChallengerElo } = updateElos(
     hostBattleRoomRecord,
     challengerBattleRoomRecord,
-    winnerRole,
-  });
+    winnerRole
+  );
   hostBattleRoomRecord.elo = newHostElo;
   challengerBattleRoomRecord.elo = newChallengerElo;
 
-  updateWinLossRecords({
-    winnerRole,
-    hostBattleRoomRecord,
-    challengerBattleRoomRecord,
-  });
+  updateWinLossRecords(winnerRole, hostBattleRoomRecord, challengerBattleRoomRecord);
 
   await hostBattleRoomRecord.save();
   await challengerBattleRoomRecord.save();
@@ -66,15 +71,10 @@ module.exports = async ({ winner, loser, gameRoom, gameData, isRanked }) => {
   });
   await gameRecord.save();
 
-  const [
-    oldHostRank,
-    oldChallengerRank,
-    newHostRank,
-    newChallengerRank,
-  ] = await updateLadder({
+  const { oldHostRank, oldChallengerRank, newHostRank, newChallengerRank } = await updateLadder(
     hostBattleRoomRecord,
-    challengerBattleRoomRecord,
-  });
+    challengerBattleRoomRecord
+  );
 
   return {
     hostElo,
@@ -86,4 +86,4 @@ module.exports = async ({ winner, loser, gameRoom, gameData, isRanked }) => {
     oldChallengerRank,
     newChallengerRank,
   };
-};
+}

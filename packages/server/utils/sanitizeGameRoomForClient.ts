@@ -1,6 +1,8 @@
+import { GameRoom } from "@lucella/common/battleRoomGame/classes/BattleRoomGame/GameRoom";
+
 // makes a gameRoom (lobby object) for client without socketIds
 const cloneDeep = require("lodash.clonedeep");
-export default function ({ gameRoom }) {
+export default function (gameRoom: GameRoom) {
   if (!gameRoom) return null;
   let gameRoomForClient = cloneDeep(gameRoom);
   Object.keys(gameRoomForClient.players).forEach((player) => {

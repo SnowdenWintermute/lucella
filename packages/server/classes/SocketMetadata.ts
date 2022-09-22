@@ -8,8 +8,10 @@ export default class SocketMetadata {
     username: string;
     isGuest: boolean;
   };
+  socketId: string;
   uuid: string;
   constructor(
+    socketId: string,
     associatedUser: {
       username: string;
       isGuest: boolean;
@@ -17,6 +19,7 @@ export default class SocketMetadata {
     currentChatChannel?: string,
     currentGameName?: string
   ) {
+    this.socketId = socketId;
     this.associatedUser = associatedUser;
     this.currentGameName = currentGameName || null;
     this.currentChatChannel = currentChatChannel || null;

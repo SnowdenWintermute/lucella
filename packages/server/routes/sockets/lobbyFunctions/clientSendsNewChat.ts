@@ -1,15 +1,13 @@
-const ChatMessage = require("../../../classes/chat/ChatMessage");
+import { ChatMessage } from "@lucella/common/battleRoomGame/classes/ChatMessage";
+import { Server, Socket } from "socket.io";
+import ServerState from "../../../interfaces/ServerState";
 
-function clientSendsNewChat({ application, data }) {
-  const { io, socket, connectedSockets } = application;
-  const { currentChatRoomName, style, messageText } = data;
+export default function clientSendsNewChat(io: Server, socket: Socket, serverState: ServerState, data) {
+  const { currentChatRoomName, style, text } = data;
+  const { connectedSockets } = serverState;
   io.in(currentChatRoomName).emit(
     "newMessage",
-    new ChatMessage({
-      author: connectedSockets[socket.id].username,
-      style,
-      messageText,
-    })
+    new ChatMessage(connectedSockets[socket.id].associatedUser.username, text, style)
   );
 }
 

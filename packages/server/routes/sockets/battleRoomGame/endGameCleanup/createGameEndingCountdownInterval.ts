@@ -1,31 +1,32 @@
-const sendPlayerBackToLobby = require("./sendPlayerBackToLobby");
+import { Server } from "socket.io";
+import ServerState from "../../../../interfaces/ServerState";
+import sendPlayerBackToLobby from "./sendPlayerBackToLobby";
 
-module.exports = ({ application, gameName, eloUpdates }) => {
-  const { io, connectedSockets, gameRooms, gameDatas } = application;
+export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates) {
+  const { connectedSockets, gameRooms, games } = serverState;
   const gameRoom = gameRooms[gameName];
-  const gameData = gameDatas[gameName];
+  const game = games[gameName];
+  // if (!game) return new Error("tried to create game ending countdown interval but no game was fonud");
   return setInterval(() => {
-    if (gameData.endingStateCountdown < 1) {
-      clearInterval(gameData.intervals.endingCountdown);
-      const host = connectedSockets[gameRoom.players.host.socketId];
-      const challenger = connectedSockets[gameRoom.players.challenger.socketId];
+    if (!game.gameOverCountdown.current) game.gameOverCountdown.current = game.gameOverCountdown.duration;
+    if (game.gameOverCountdown.current < 1) {
+      if (game.intervals.endingCountdown) clearInterval(game.intervals.endingCountdown);
+      const host = gameRoom.players.host ? connectedSockets[gameRoom.players.host.socketId] : null;
+      const challenger = gameRoom.players.challenger ? connectedSockets[gameRoom.players.challenger.socketId] : null;
       io.in(`game-${gameName}`).emit("showEndScreen", {
         gameRoom,
-        gameData,
+        game,
         eloUpdates,
       });
       io.in(`game-${gameName}`).emit("currentGameRoomUpdate", null);
-      sendPlayerBackToLobby({ application, player: host });
-      sendPlayerBackToLobby({ application, player: challenger });
-      delete gameDatas[gameName];
+      sendPlayerBackToLobby(io, serverState, gameRoom.players.host?.socketId, host);
+      sendPlayerBackToLobby(io, serverState, gameRoom.players.challenger?.socketId, challenger);
+      delete games[gameName];
       delete gameRooms[gameName];
       io.sockets.emit("gameListUpdate", gameRooms);
     } else {
-      gameData.endingStateCountdown -= 1;
-      io.to(`game-${gameName}`).emit(
-        "gameEndingCountdown",
-        gameData.endingStateCountdown
-      );
+      game.gameOverCountdown.current -= 1;
+      io.to(`game-${gameName}`).emit("gameEndingCountdown", game.gameOverCountdown.current);
     }
   }, 1000);
-};
+}

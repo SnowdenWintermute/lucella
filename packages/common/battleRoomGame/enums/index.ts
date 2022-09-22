@@ -7,8 +7,8 @@ export enum GameStatus {
 }
 
 export enum PlayerRole {
-  host = "host",
-  challenger = "challenger",
+  HOST = "host",
+  CHALLENGER = "challenger",
 }
 
 export enum GameEvents {

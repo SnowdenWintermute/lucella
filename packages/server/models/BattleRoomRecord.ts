@@ -1,8 +1,18 @@
-const mongoose = require("mongoose");
+import { Types, Schema, model } from "mongoose";
+import { startingLadderRating } from "@lucella/common/battleRoomGame/consts";
 
-const BattleRoomRecordSchema = new mongoose.Schema({
+export interface IBattleRoomRecord {
+  user: Types.ObjectId;
+  wins: number;
+  losses: number;
+  disconnects: number;
+  winrate: number;
+  elo: number;
+}
+
+const BattleRoomRecordSchema = new Schema<IBattleRoomRecord>({
   user: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "user",
   },
   wins: { type: Number, default: 0 },
@@ -11,8 +21,10 @@ const BattleRoomRecordSchema = new mongoose.Schema({
   winrate: { type: Number, default: 0 },
   elo: {
     type: Number,
-    default: 1500,
+    default: startingLadderRating,
   },
 });
 
-export default mongoose.model("battleRoomRecord", BattleRoomRecordSchema);
+const BattleRoomRecord = model<IBattleRoomRecord>("battleRoomRecord", BattleRoomRecordSchema);
+
+export default BattleRoomRecord;

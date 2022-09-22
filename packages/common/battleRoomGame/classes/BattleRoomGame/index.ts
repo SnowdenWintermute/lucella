@@ -7,7 +7,11 @@ import { generateStartingOrbs } from "./generateStartingOrbs";
 export class BattleRoomGame {
   gameName: string;
   isRanked: boolean;
-  intervals: { physics: NodeJS.Timer | null; broadcast: NodeJS.Timer | null };
+  intervals: {
+    physics: NodeJS.Timeout | null;
+    broadcast: NodeJS.Timeout | null;
+    endingCountdown: NodeJS.Timeout | null;
+  };
   mouseData: MouseData;
   gameOverCountdown: { duration: number; current: number | null };
   queues: {
@@ -30,7 +34,7 @@ export class BattleRoomGame {
   constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
-    this.intervals = { physics: null, broadcast: null };
+    this.intervals = { physics: null, broadcast: null, endingCountdown: null };
     this.mouseData = new MouseData();
     this.gameOverCountdown = { duration: 1, current: null };
     this.queues = {

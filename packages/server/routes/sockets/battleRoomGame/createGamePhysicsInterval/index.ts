@@ -1,18 +1,20 @@
-const moveOrbs = require("@lucella/common/battleRoomGame/moveOrbs");
-const handleOrbCollisions = require("@lucella/common/battleRoomGame/handleOrbCollisions/index");
-const handleScoringPoints = require("./handleScoringPoints");
-const processCommandQueue = require('./processCommandQueue')
+import { physicsTickRate } from "../../../../consts";
 
-module.exports = ({ application, gameName }) => {
-  const { gameDatas } = application;
-  const gameData = gameDatas[gameName];
+import moveOrbs from "@lucella/common/battleRoomGame/moveOrbs";
+import handleOrbCollisions from "@lucella/common/battleRoomGame/handleOrbCollisions/index";
+import ServerState from "../../../../interfaces/ServerState";
+// import handleScoringPoints from "./handleScoringPoints"
+// import processCommandQueue from "./processCommandQueue'
+
+export default function (serverState: ServerState, gameName: string) {
+  const game = serverState.games[gameName];
   return setInterval(() => {
-    if (!gameData) return;
-    processCommandQueue({ gameData })
-    const deltaT = Date.now() - gameData.gameState.lastUpdateTimestamp
-    moveOrbs({ gameData, deltaT });
-    handleOrbCollisions({ gameData });
-    handleScoringPoints({ application, gameName });
-    gameData.gameState.lastUpdateTimestamp = Date.now();
-  }, 33)
+    if (!game) return new Error("tried to update physics in a game that wasn't found");
+    // processCommandQueue({ gameData })
+    // const deltaT = Date.now() - gameData.gameState.lastUpdateTimestamp
+    // moveOrbs({ gameData, deltaT });
+    // handleOrbCollisions({ gameData });
+    // handleScoringPoints({ application, gameName });
+    // gameData.gameState.lastUpdateTimestamp = Date.now();
+  }, physicsTickRate);
 }

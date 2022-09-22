@@ -1,11 +1,24 @@
-const cancelGameCountdown = require("../cancelGameCountdown");
+import { Server, Socket } from "socket.io";
+import SocketMetadata from "../../../../classes/SocketMetadata";
+import ServerState from "../../../../interfaces/ServerState";
 
-module.exports = ({ application, gameName, players }) => {
-  const { io, socket, gameRooms } = application;
+import cancelGameCountdown from "../cancelGameCountdown";
+
+export default function (
+  io: Server,
+  socket: Socket,
+  serverState: ServerState,
+  gameName: string,
+  players: {
+    host: SocketMetadata | null;
+    challenger: SocketMetadata | null;
+  }
+) {
+  const { gameRooms } = serverState;
   const gameRoom = gameRooms[gameName];
   players.challenger = null;
   socket.emit("currentGameRoomUpdate", null);
-  cancelGameCountdown({ io, gameRoom });
+  cancelGameCountdown(io, gameRoom);
   gameRoom.playersReady = { host: false, challenger: false };
   io.in(`game-${gameName}`).emit("updateOfcurrentChatChannelPlayerReadyStatus", gameRoom.playersReady);
-};
+}

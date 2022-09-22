@@ -1,10 +1,11 @@
-const clientSendsNewChat = require("../lobbyFunctions/clientSendsNewChat");
+import { Server, Socket } from "socket.io";
+import ServerState from "../../../interfaces/ServerState";
+import clientSendsNewChat from "../lobbyFunctions/clientSendsNewChat";
 
-const chatListeners = ({ application }) => {
-  const { socket } = application
+export default function chatListeners(io: Server, socket: Socket, serverState: ServerState) {
   socket.on("clientSendsNewChat", (data) => {
-    clientSendsNewChat({ application, data });
+    clientSendsNewChat(io, socket, serverState, data);
   });
-};
+}
 
 module.exports = chatListeners;

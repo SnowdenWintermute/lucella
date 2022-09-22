@@ -1,8 +1,11 @@
-module.exports = ({ application, gameName }) => {
-  const { socket, connectedSockets, gameRooms } = application;
+import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { Socket } from "socket.io";
+import ServerState from "../../../../interfaces/ServerState";
+
+export default function (socket: Socket, serverState: ServerState, gameName: string) {
+  const { connectedSockets, gameRooms } = serverState;
   const socketUuid = connectedSockets[socket.id].uuid;
-  if (socketUuid === gameRooms[gameName].players.host.uuid) return "host";
-  else if (socketUuid === gameRooms[gameName].players.challenger.uuid)
-    return "challenger";
+  if (socketUuid === gameRooms[gameName].players.host?.uuid) return PlayerRole.HOST;
+  else if (socketUuid === gameRooms[gameName].players.challenger?.uuid) return PlayerRole.CHALLENGER;
   else return null;
-};
+}

@@ -1,8 +1,11 @@
-module.exports = ({
-  winnerRole,
-  hostBattleRoomRecord,
-  challengerBattleRoomRecord,
-}) => {
+import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { IBattleRoomRecord } from "../../../../models/BattleRoomRecord";
+
+export default function (
+  winnerRole: PlayerRole,
+  hostBattleRoomRecord: IBattleRoomRecord,
+  challengerBattleRoomRecord: IBattleRoomRecord
+) {
   if (winnerRole === "host") {
     hostBattleRoomRecord.wins = hostBattleRoomRecord.wins + 1;
     challengerBattleRoomRecord.losses = challengerBattleRoomRecord.losses + 1;
@@ -13,11 +16,7 @@ module.exports = ({
   }
 
   hostBattleRoomRecord.winrate =
-    (hostBattleRoomRecord.wins /
-      (hostBattleRoomRecord.losses + hostBattleRoomRecord.wins)) *
-    100;
+    (hostBattleRoomRecord.wins / (hostBattleRoomRecord.losses + hostBattleRoomRecord.wins)) * 100;
   challengerBattleRoomRecord.winrate =
-    (challengerBattleRoomRecord.wins /
-      (challengerBattleRoomRecord.losses + challengerBattleRoomRecord.wins)) *
-    100;
-};
+    (challengerBattleRoomRecord.wins / (challengerBattleRoomRecord.losses + challengerBattleRoomRecord.wins)) * 100;
+}

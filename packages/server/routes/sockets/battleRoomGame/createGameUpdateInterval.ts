@@ -1,11 +1,8 @@
-function createGameUpdateInterval({ io, gameData }) {
+import { BattleRoomGame } from "../../../../common/battleRoomGame/classes/BattleRoomGame";
+import { broadcastRate } from "../../../consts";
+import { Server } from "socket.io";
+export default function createGameUpdateInterval(io: Server, game: BattleRoomGame) {
   return setInterval(() => {
-    const { gameState } = gameData;
-    io.to(`game-${gameData.gameName}`).emit(
-      "bufferTickFromServer",
-      JSON.stringify(gameState)
-    );
-  }, 45); //45
+    io.to(`game-${game.gameName}`).emit("bufferTickFromServer", JSON.stringify(game));
+  }, broadcastRate);
 }
-
-module.exports = createGameUpdateInterval;

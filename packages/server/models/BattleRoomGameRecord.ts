@@ -1,6 +1,26 @@
-import mongoose from "mongoose";
+import { Schema, model } from "mongoose";
 
-const BattleRoomGameRecordSchema = new mongoose.Schema({
+interface BRGameRecordUserEntry {
+  name: {
+    type: string;
+  };
+  oldElo: {
+    type: number;
+  };
+  newElo: {
+    type: number;
+  };
+}
+
+export interface IBattleRoomGameRecord {
+  date: Date;
+  winner: BRGameRecordUserEntry;
+  loser: BRGameRecordUserEntry;
+  winnerScore: number;
+  loserScore: number;
+}
+
+const BattleRoomGameRecordSchema = new Schema<IBattleRoomGameRecord>({
   date: {
     type: Date,
     default: Date.now(),
@@ -35,4 +55,5 @@ const BattleRoomGameRecordSchema = new mongoose.Schema({
   },
 });
 
-export default mongoose.model("battleRoomGameRecord", BattleRoomGameRecordSchema);
+const BattleRoomGameRecord = model<IBattleRoomGameRecord>("battleRoomGameRecord", BattleRoomGameRecordSchema);
+export default BattleRoomGameRecord;

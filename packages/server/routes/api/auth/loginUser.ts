@@ -1,18 +1,16 @@
-const User = require("../../../models/User");
+import User from "../../../models/User";
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 
 module.exports = async (req, res) => {
   const errors = validationResult(req);
-  if (!errors.isEmpty())
-    return res.status(400).json({ errors: errors.array() });
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
   const { email, password } = req.body;
 
   try {
     let user = await User.findOne({ email: email.toLowerCase() });
-    if (!user)
-      return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
+    if (!user) return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
 
     const isMatch = await bcrypt.compare(password, user.password);
 

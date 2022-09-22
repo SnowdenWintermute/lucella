@@ -1,27 +1,28 @@
-module.exports = ({
-  hostBattleRoomRecord,
-  challengerBattleRoomRecord,
-  winnerRole,
-}) => {
+import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { IBattleRoomRecord } from "../../../../models/BattleRoomRecord";
+
+export default function (
+  hostBattleRoomRecord: IBattleRoomRecord,
+  challengerBattleRoomRecord: IBattleRoomRecord,
+  winnerRole: PlayerRole
+) {
   const hostElo = hostBattleRoomRecord.elo;
   const challengerElo = challengerBattleRoomRecord.elo;
-  let newHostElo, newChallengerElo;
+  let newHostElo: number, newChallengerElo: number;
   let hostS, challengerS;
   const hostR = 10 ^ (hostElo / 400);
   const challengerR = 10 ^ (challengerElo / 400);
   const hostE = hostR / (hostR + challengerR);
   const challengerE = challengerR / (hostR + challengerR);
-  if (winnerRole === "host") {
+  if (winnerRole === PlayerRole.HOST) {
     hostS = 1;
     challengerS = 0;
   }
-  if (winnerRole === "challenger") {
+  if (winnerRole === PlayerRole.CHALLENGER) {
     hostS = 0;
     challengerS = 1;
   }
   newHostElo = Math.round(hostElo + 32 * (hostS - hostE));
-  newChallengerElo = Math.round(
-    challengerElo + 32 * (challengerS - challengerE)
-  );
-  return [hostElo, challengerElo, newHostElo, newChallengerElo];
-};
+  newChallengerElo = Math.round(challengerElo + 32 * (challengerS - challengerE));
+  return { hostElo, challengerElo, newHostElo, newChallengerElo };
+}
