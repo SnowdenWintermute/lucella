@@ -1,0 +1,56 @@
+@import "../abstracts/variables";
+#root,
+html {
+  height: 100%;
+  min-height: 100%;
+  min-width: $minAppWidth;
+}
+body {
+  min-width: $minAppWidth;
+  height: 100%;
+  background-color: color(primary);
+}
+.page-frame {
+  height: calc(100vh - #{$navHeight});
+  min-height: 400px;
+  width: 100%;
+  padding-top: 30px;
+  padding-bottom: 36px;
+  background-color: color(primary);
+  @media (max-width: 800px) {
+    padding-top: $navThinBarHeight;
+    padding-bottom: 0px;
+  }
+}
+.page-basic {
+  max-width: 800px;
+  border: 1px solid color(textPrimary);
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 100px;
+  padding-left: 20px;
+  padding-right: 20px;
+  @media (max-width: 800px) {
+    min-height: 100%;
+  }
+}
+.header-basic {
+  margin-bottom: 5px;
+}
+.page-divider-line {
+  height: 2px;
+  width: 100%;
+  margin-right: 5px;
+  margin-left: -20px;
+  margin-bottom: 6px;
+  background-color: color(textPrimary);
+}
+.page-basic li {
+  margin-bottom: 22px;
+}
+.page-icon {
+  height: 18px;
+  width: 18px;
+  fill: color(textPrimary);
+  margin-right: 10px;
+}

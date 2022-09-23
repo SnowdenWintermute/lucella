@@ -1,0 +1,23 @@
+$colors: (
+  primary: #162229,
+  dark: #080b11,
+  textPrimary: #9ba8b8,
+  textLight: #bcd2e8,
+  textDark: #656b72,
+  menuPrimary: #3c5766,
+  buttonPrimary: #2f5f5c,
+  oldDanger: #972121,
+  danger: #ac1a21,
+  success: #2d6a2d,
+  chatMessagePrivate: pink,
+);
+
+@function color($color-name) {
+  @return map-get($colors, $color-name);
+}
+
+$navHeight: 56px;
+$minAppWidth: 370px;
+$navThinBarHeight: 6px;
+$mobileNavWidth: 786px;
+$navTinyWidth: 450px;

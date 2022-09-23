@@ -1,6 +1,6 @@
 import express from "express";
-import passwordResetAuth from "../../../middleware/passwordResetAuth";
-import auth from "../../../middleware/auth";
+import passwordResetAuth from "../../middleware/passwordResetAuth";
+import auth from "../../middleware/auth";
 import { check } from "express-validator";
 const usersMainRouter = express.Router();
 

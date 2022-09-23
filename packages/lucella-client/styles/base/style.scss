@@ -1,0 +1,49 @@
+@import "../abstracts/variables";
+@import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
+// IBM Plex Sans Condensed
+// Public Sans
+// DM Sans
+// Nunito Sans
+* {
+  padding: 0px;
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: "DM Sans";
+  color: color(textPrimary);
+}
+.height-0-hidden {
+  height: 0px !important;
+  overflow: hidden;
+  padding: 0px !important;
+}
+a {
+  text-decoration: none;
+  color: color(textPrimary);
+}
+p {
+  margin-bottom: 10px;
+}
+h3 {
+  font-weight: 100;
+  font-size: 18px;
+}
+ul {
+  list-style: none;
+}
+
+.link-simple {
+  cursor: pointer;
+  width: fit-content;
+  &:hover {
+    color: color(textLight);
+  }
+}
+.link-simple-unblinked {
+  cursor: pointer;
+  width: fit-content;
+}
+.link-simple-blink {
+  cursor: pointer;
+  width: fit-content;
+  color: color(textLight);
+}

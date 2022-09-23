@@ -1,0 +1,71 @@
+@import "../abstracts/variables";
+$modalSidePadding: 20px;
+
+.modal-screen {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+}
+.modal-screen-dim {
+  opacity: 0.7;
+  background-color: color(dark);
+}
+.modal-frame {
+  border: 1px solid color(textPrimary);
+  padding-left: $modalSidePadding;
+  padding-right: $modalSidePadding;
+  padding-bottom: 20px;
+  width: 500px;
+  max-width: 94%;
+  position: fixed;
+  z-index: 11;
+  top: 25%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: color(primary);
+  // transform: translateY(-50%);
+  @media (max-height: 600px) {
+    top: 10%;
+  }
+}
+.modal-frame-dark {
+  background: color(dark);
+}
+.modal-top-bar {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-divider-bar {
+  height: 1px;
+  width: calc(100% + #{$modalSidePadding} * 2);
+  transform: translateX(-$modalSidePadding);
+  background-color: color(textPrimary);
+  margin-bottom: 15px;
+}
+.modal-title {
+  width: fit-content;
+}
+.modal-x-button {
+  width: 40px;
+  height: 40px;
+  background: color(menuPrimary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  margin-right: -$modalSidePadding;
+  cursor: pointer;
+}
+.modal-submit-button {
+  float: right;
+}
+.modal-option-buttons-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 5px;
+}

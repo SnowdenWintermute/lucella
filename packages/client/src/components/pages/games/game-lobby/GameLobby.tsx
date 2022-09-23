@@ -18,7 +18,6 @@ import { AuthState } from "../../../../store/reducers/auth";
 import { RootState } from "../../../../store";
 import { GameUIState } from "../../../../store/reducers/game-ui";
 import { GameStatus } from "@lucella/common/battleRoomGame/enums";
-let socket; // { transports: ["websocket"] } // some reason had to type this in directly, not use config file variable
 const socketAddress = process.env.REACT_APP_DEV_MODE
   ? process.env.REACT_APP_SOCKET_API_DEV
   : process.env.REACT_APP_SOCKET_API;
@@ -30,7 +29,7 @@ interface Props {
 const GameLobby = ({ defaultChatRoom }: Props) => {
   const dispatch = useDispatch();
   const authState: AuthState = useSelector((state: RootState) => state.auth);
-  const { loading, user } = authState;
+  const { user } = authState;
   const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
   const { gameStatus } = gameUiState;
   const scoreScreenDisplayed = useSelector((state: RootState) => state.lobbyUi.scoreScreenDisplayed);

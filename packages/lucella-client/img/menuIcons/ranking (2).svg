@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="512px" height="512px" viewBox="0 0 512 512" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <desc>Created with Lunacy</desc>
+  <g id="ranking">
+    <path d="M0 0L511.999 0L511.999 511.999L0 511.999L0 0Z" id="Background" fill="none" stroke="none" />
+    <g id="XMLID_311_" transform="translate(18.035 0)">
+      <path d="M321.297 165.785L321.297 88.813L175.648 88.813L175.648 0L0 0L0 295.776L467.396 295.776L467.396 165.785L321.297 165.785ZM30 265.777L145.648 265.777L145.648 30.001L30 30.001L30 265.777ZM291.296 265.777L175.648 265.777L175.648 118.814L291.296 118.814L291.296 265.777ZM321.748 265.777L437.396 265.777L437.396 195.786L321.748 195.786L321.748 265.777Z" transform="translate(5.945 213.634)" id="XMLID_336_" fill="#000000" fill-rule="evenodd" stroke="none" />
+      <path d="M93.769 147.892L35.816 178.36L46.885 113.828L0 68.127L64.793 58.712L93.769 0L122.746 58.712L187.539 68.127L140.654 113.828L151.722 178.36L93.769 147.892ZM93.769 67.786L84.715 86.132L64.468 89.074L79.118 103.354L75.66 123.519L93.769 113.998L111.878 123.519L108.42 103.354L123.07 89.074L102.824 86.132L93.769 67.786Z" id="XMLID_343_" fill="#000000" fill-rule="evenodd" stroke="none" />
+      <path d="M0 30L8.669 30L8.669 125.737L38.669 125.737L38.669 0L0 0L0 30Z" transform="translate(74.09999 297.363)" id="XMLID_345_" fill="#000000" stroke="none" />
+    </g>
+  </g>
+</svg>

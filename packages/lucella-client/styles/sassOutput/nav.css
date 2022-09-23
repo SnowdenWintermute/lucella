@@ -1,0 +1,183 @@
+@import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
+.nav {
+  height: 56px;
+  width: 100%;
+  background-color: #162229;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 2rem;
+}
+
+@media (max-width: 450px) {
+  .nav {
+    padding: 5px 10px;
+  }
+}
+
+.nav ul {
+  display: flex;
+  list-style: none;
+}
+
+.nav-tab-thin-bar {
+  height: 6px;
+  width: 100%;
+  min-width: 370px;
+  background-color: #3c5766;
+  position: absolute;
+  top: 56px;
+}
+
+.nav-right-holder {
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  display: block;
+  width: 36px;
+  height: 28px;
+  margin-right: 10px;
+}
+
+.brand-text {
+  font-family: "Nunito Sans";
+  margin-right: 64px;
+}
+
+@media (max-width: 786px) {
+  .brand-text {
+    display: none;
+  }
+}
+
+.nav-tabs {
+  height: 56px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.nav-tab {
+  width: 133px;
+  height: 46px;
+  color: #9ba8b8;
+  background-color: #080b11;
+  font-size: 18px;
+  margin-right: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 786px) {
+  .nav-tab {
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+.tab-active {
+  background-color: #3c5766;
+}
+
+@media (max-width: 450px) {
+  .tab-title-text {
+    display: none;
+  }
+}
+
+.user-menu-holder {
+  position: relative;
+}
+
+.user-icon-circle {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #2f5f5c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-icon-letter {
+  font-size: 20px;
+  font-weight: bold;
+  color: #bcd2e8;
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  /* Safari */
+  /* Konqueror HTML */
+  /* Old versions of Firefox */
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently
+                                supported by Chrome, Edge, Opera and Firefox */
+}
+
+.user-menu {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 44px;
+  width: 300px;
+  background-color: #162229;
+  border: 1px solid #9ba8b8;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-menu-item {
+  width: 100%;
+  height: 52px;
+  line-height: 50px;
+  color: #9ba8b8;
+  font-size: 22px;
+  border-bottom: 1px solid #9ba8b8;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  cursor: pointer;
+  background-clip: border-box;
+}
+
+.user-menu-item:hover {
+  background-color: #080b11;
+}
+
+.user-menu-item:last-child {
+  border-bottom: 0px;
+}
+
+.user-menu-item img {
+  margin-right: 10px;
+}
+
+.menu-icon-svg {
+  fill: #2f5f5c;
+  margin-right: 10px;
+  height: 23px;
+  width: 23px;
+}
+
+.tab-icon-svg {
+  fill: #9ba8b8;
+  margin: 0 auto;
+  height: 70%;
+  width: auto;
+}
+
+@media (min-width: 450px) {
+  .tab-icon-svg {
+    display: none;
+  }
+}
+
+.nav-logo-mobile {
+  align-self: center;
+}
+/*# sourceMappingURL=nav.css.map */

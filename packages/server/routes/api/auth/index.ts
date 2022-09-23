@@ -1,5 +1,5 @@
 import express from "express";
-import auth from "../../../middleware/auth";
+import auth from "../middleware/auth";
 import { check } from "express-validator";
 const authMainRouter = express.Router();
 

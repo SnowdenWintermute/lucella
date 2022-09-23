@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "AAEA,AAAA,cAAc,CAAC;EACb,UAAU,EAAE,EAAE;CACf;;AACD,AAAA,kBAAkB,CAAC;EACjB,KAAK,ECII,OAAO;EDHhB,UAAU,EAAE,IAAI;CACjB;;AACD,AAAA,mBAAmB,CAAC;EAClB,KAAK,ECDG,OAAO;EDEf,UAAU,EAAE,IAAI;CACjB;;AACD,AAAA,cAAc,CAAC;EACb,KAAK,ECXQ,OAAO;EDYpB,UAAU,EAAE,EAAE;CACf",
+    "sources": [
+        "../components/score-screen.scss",
+        "../abstracts/_variables.scss"
+    ],
+    "names": [],
+    "file": "score-screen.css"
+}

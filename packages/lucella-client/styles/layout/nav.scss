@@ -1,0 +1,158 @@
+@import "../abstracts/variables";
+@import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
+// IBM Plex Sans Condensed
+// Public Sans
+// DM Sans
+// Nunito Sans
+.nav {
+  height: $navHeight;
+  width: 100%;
+  background-color: color(primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 2rem;
+  @media (max-width: $navTinyWidth) {
+    padding: 5px 10px;
+  }
+}
+
+.nav ul {
+  display: flex;
+  list-style: none;
+}
+
+.nav-tab-thin-bar {
+  height: $navThinBarHeight;
+  width: 100%;
+  min-width: $minAppWidth;
+  background-color: color(menuPrimary);
+  position: absolute;
+  top: $navHeight;
+}
+.nav-right-holder {
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+.logo-img {
+  display: block;
+  width: 36px;
+  height: 28px;
+  margin-right: 10px;
+}
+.brand-text {
+  font-family: "Nunito Sans";
+  margin-right: 64px;
+  @media (max-width: $mobileNavWidth) {
+    display: none;
+  }
+}
+.nav-tabs {
+  height: 56px;
+  display: flex;
+  align-items: flex-end;
+}
+.nav-tab {
+  width: 133px;
+  height: 46px;
+  color: color(textPrimary);
+  background-color: color(dark);
+  font-size: 18px;
+  margin-right: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: $mobileNavWidth) {
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+.tab-active {
+  background-color: color(menuPrimary);
+}
+.tab-title-text {
+  @media (max-width: $navTinyWidth) {
+    display: none;
+  }
+}
+.user-menu-holder {
+  position: relative;
+}
+.user-icon-circle {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: color(buttonPrimary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.user-icon-letter {
+  font-size: 20px;
+  font-weight: bold;
+  color: color(textLight);
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                supported by Chrome, Edge, Opera and Firefox */
+}
+.user-menu {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 44px;
+  width: 300px;
+  // height: 300px;
+  background-color: color(primary);
+  border: 1px solid color(textPrimary);
+  display: flex;
+  flex-direction: column;
+}
+.user-menu-item {
+  width: 100%;
+  height: 52px;
+  line-height: 50px;
+  color: color(textPrimary);
+  font-size: 22px;
+  border-bottom: 1px solid color(textPrimary);
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  cursor: pointer;
+  background-clip: border-box;
+  &:hover {
+    background-color: color(dark);
+  }
+  &:last-child {
+    border-bottom: 0px;
+  }
+}
+.user-menu-item img {
+  margin-right: 10px;
+}
+.menu-icon-svg {
+  fill: color(buttonPrimary);
+  margin-right: 10px;
+  height: 23px;
+  width: 23px;
+}
+.tab-icon-svg {
+  fill: color(textPrimary);
+  margin: 0 auto;
+  height: 70%;
+  width: auto;
+  @media (min-width: 450px) {
+    display: none;
+  }
+}
+
+// mobile
+.nav-logo-mobile {
+  align-self: center;
+}

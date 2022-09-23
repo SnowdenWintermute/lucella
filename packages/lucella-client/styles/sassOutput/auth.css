@@ -1,0 +1,61 @@
+.auth-frame {
+  width: 100%;
+  max-width: 448px;
+  margin: 0 auto;
+  margin-top: 100px;
+  background-color: #080b11;
+  padding: 38px;
+  padding-bottom: 70px;
+}
+
+@media (max-width: 460px) {
+  .auth-frame {
+    margin-top: 0px;
+    min-height: 100%;
+  }
+}
+
+.auth-brand-header,
+.auth-header {
+  display: block;
+  text-align: center;
+}
+
+.auth-brand-header {
+  color: #bcd2e8;
+  margin-bottom: 14px;
+  font-size: 24px;
+}
+
+.auth-header {
+  margin-bottom: 34px;
+}
+
+.auth-form {
+  width: 100%;
+}
+
+.forgot-password {
+  margin-bottom: 35px;
+}
+
+.auth-bottom-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: #9ba8b8;
+  -webkit-box-shadow: 0 0 0px 1000px #080b11 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+/*# sourceMappingURL=auth.css.map */

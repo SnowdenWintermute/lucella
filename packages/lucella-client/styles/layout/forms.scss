@@ -1,0 +1,49 @@
+@import "../abstracts/variables";
+
+.simple-text-input {
+  height: 54px;
+  width: 100%;
+  margin-bottom: 14px;
+  padding-left: 14px;
+  background-color: color(dark) !important;
+  border: 1px solid color(textPrimary);
+  font-size: 18px;
+}
+
+.simple-text-input::placeholder {
+  background-color: color(dark);
+  color: color(textDark);
+  font-size: 18px;
+}
+
+.text-input-transparent {
+  height: 40px;
+  width: 100%;
+  padding-left: 14px;
+  background-color: transparent;
+  border: 1px solid color(textPrimary);
+  color: color(textPrimary);
+  font-size: 18px;
+}
+
+.text-input-transparent::placeholder {
+  background-color: transparent;
+  color: color(textPrimary);
+  font-size: 18px;
+}
+
+.text-input-small {
+  height: 30px;
+  width: 220px;
+  background-color: transparent;
+  padding-left: 10px;
+  border: 1px solid color(textPrimary);
+  color: color(textPrimary);
+  font-size: 16px;
+}
+
+.text-input-small::placeholder {
+  background-color: transparent;
+  color: color(textPrimary);
+  font-size: 16px;
+}
