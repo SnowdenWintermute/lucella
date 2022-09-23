@@ -10,6 +10,7 @@ interface BRGameRecordUserEntry {
   newElo: {
     type: number;
   };
+  id: string;
 }
 
 export interface IBattleRoomGameRecord {

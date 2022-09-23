@@ -8,6 +8,7 @@ export interface IBattleRoomRecord {
   disconnects: number;
   winrate: number;
   elo: number;
+  id: string;
 }
 
 const BattleRoomRecordSchema = new Schema<IBattleRoomRecord>({

@@ -1,37 +1,18 @@
-const clientJoinsGame = require("../clientJoinsGame");
-const clientHostsNewGame = require("../clientHostsNewGame");
-const handleReadyClick = require("../handleReadyClick");
+import clientJoinsGame from "../clientJoinsGame";
+import clientHostsNewGame from "../clientHostsNewGame";
+import handleReadyClick from "../handleReadyClick";
+import { Server } from "socket.io";
+import ServerState, { RankedQueueUser } from "../../../../interfaces/ServerState";
 
-module.exports = ({ application, players }) => {
-  const { io, rankedQueue } = application
+export default function (
+  io: Server,
+  serverState: ServerState,
+  players: { host: RankedQueueUser; challenger: RankedQueueUser }
+) {
+  const { rankedQueue } = serverState;
   const gameName = `ranked-${rankedQueue.rankedGameCurrentNumber}`;
-  clientHostsNewGame({
-    application: {
-      ...application,
-      socket: io.sockets.sockets[players.host.socketId],
-    },
-    gameName,
-    isRanked: true,
-  })
-  clientJoinsGame({
-    application: {
-      ...application,
-      socket: io.sockets.sockets[players.challenger.socketId],
-    },
-    gameName,
-  });
-  handleReadyClick({
-    application: {
-      ...application,
-      socket: io.sockets.sockets[players.host.socketId],
-    },
-    gameName,
-  });
-  handleReadyClick({
-    application: {
-      ...application,
-      socket: io.sockets.sockets[players.challenger.socketId],
-    },
-    gameName,
-  });
+  clientHostsNewGame(io, io.sockets.sockets[players.host.socketId], serverState, gameName, true);
+  clientJoinsGame(io, io.sockets.sockets[players.challenger.socketId], serverState, gameName);
+  handleReadyClick(io, io.sockets.sockets[players.host.socketId], serverState, gameName);
+  handleReadyClick(io, io.sockets.sockets[players.challenger.socketId], serverState, gameName);
 }

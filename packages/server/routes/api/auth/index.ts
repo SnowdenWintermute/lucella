@@ -1,7 +1,7 @@
-const express = require("express");
+import express from "express";
+import auth from "../../../middleware/auth";
+import { check } from "express-validator";
 const authMainRouter = express.Router();
-const auth = require("../../../middleware/auth");
-const { check } = require("express-validator");
 
 // @access  Private
 authMainRouter.get("/", auth, require("./getUser"));
@@ -18,4 +18,4 @@ authMainRouter.post(
   require("./requestPasswordReset")
 );
 
-module.exports = authMainRouter;
+export default authMainRouter;

@@ -1,7 +1,7 @@
-const User = require("../../../models/User");
-const { validationResult } = require("express-validator");
+import User from "../../../models/User";
+import { validationResult } from "express-validator";
 
-module.exports = async (req, res) => {
+export default async function (req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     }
     if (user.email !== req.body.email) {
       return res.status(400).json({
-        errors: [{ msg: "Email entered does not match account email address" }]
+        errors: [{ msg: "Email entered does not match account email address" }],
       });
     } else {
       await User.findOneAndRemove({ _id: req.user.id });
@@ -24,4 +24,4 @@ module.exports = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
-};
+}

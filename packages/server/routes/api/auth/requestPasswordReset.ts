@@ -1,13 +1,12 @@
-const User = require("../../../models/User");
-const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
-const nodemailer = require("nodemailer");
+import User from "../../../models/User";
+import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
+import nodemailer from "nodemailer";
 
-module.exports = async (req, res) => {
+export default async function (req, res) {
   let errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
   try {
     // get the user trying to reset password
     let user = await User.findOne({ email: req.body.email });
@@ -17,14 +16,14 @@ module.exports = async (req, res) => {
     // create their token to be put in link
     const payload = {
       user: {
-        id: user.id
-      }
+        id: user.id,
+      },
     };
     const passwordResetToken = jwt.sign(
       payload,
       process.env.JWT_SECRET,
       {
-        expiresIn: 3600
+        expiresIn: 3600,
       },
       { algorithm: "RS256" }
     );
@@ -43,8 +42,8 @@ module.exports = async (req, res) => {
       secure: true, // true for 465, false for other ports
       auth: {
         user: "no-reply@lucella.org", // generated ethereal user
-        pass: emailPass // generated ethereal password
-      }
+        pass: emailPass, // generated ethereal password
+      },
     });
 
     // send mail with defined transport object
@@ -53,18 +52,18 @@ module.exports = async (req, res) => {
       to: req.body.email, // list of receivers
       subject: "Lucella - Password Reset", // Subject line
       text: textOutput, // plain text body
-      html: output // html body
+      html: output, // html body
     });
 
     console.log("Message sent: %s", info.messageId);
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
     res.status(200).json({
-      msg: "An email has been sent with a link to reset your password."
+      msg: "An email has been sent with a link to reset your password.",
     });
   } catch (error) {
     console.log("error sending email");
     console.error(error.message);
     res.status(500).send("Server error");
   }
-};
+}

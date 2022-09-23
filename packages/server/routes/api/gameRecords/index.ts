@@ -11,4 +11,4 @@ gameRecordsMainRouter.get("/battle-room-ladder-page/:page", require("./getBattle
 // @access  Public
 gameRecordsMainRouter.get("/battle-room-ladder/:username", require("./getBattleRoomUserRecord"));
 
-module.exports = gameRecordsMainRouter;
+export default gameRecordsMainRouter;

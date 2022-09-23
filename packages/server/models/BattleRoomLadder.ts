@@ -3,6 +3,7 @@ import { IBattleRoomRecord } from "./BattleRoomRecord";
 
 export interface IBattleRoomLadder {
   ladder: [IBattleRoomRecord];
+  id: string;
 }
 
 const BattleRoomLadderSchema = new Schema<IBattleRoomLadder>({

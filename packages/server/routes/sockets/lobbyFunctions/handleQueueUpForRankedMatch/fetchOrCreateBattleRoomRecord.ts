@@ -1,8 +1,9 @@
-const BattleRoomRecord = require("../../../../models/BattleRoomRecord");
+import BattleRoomRecord from "../../../../models/BattleRoomRecord";
+import { IUser } from "../../../../models/User";
 
-module.exports = async (user) => {
+export default async function (user) {
   let record = await BattleRoomRecord.findOne({ user: user.id });
   if (!record) record = new BattleRoomRecord({ user: user.id });
   await record.save();
-  return record
+  return record;
 }

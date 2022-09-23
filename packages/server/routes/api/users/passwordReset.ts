@@ -1,20 +1,20 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
-const User = require("../../../models/User");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
+import User from "../../../models/User";
 
-module.exports = async (req, res) => {
-  let errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
+export default async function (req, res) {
+  const expressErrors = validationResult(req);
+  if (!expressErrors.isEmpty()) {
+    return res.status(400).json({ errors: expressErrors.array() });
   }
   if (req.body.password !== req.body.password2) {
-    errors = [
+    const errors = [
       {
         location: "body",
         msg: "Passwords do not match",
-        param: "password"
-      }
+        param: "password",
+      },
     ];
     return res.status(400).json({ errors: errors });
   }
@@ -23,6 +23,7 @@ module.exports = async (req, res) => {
     const user = await User.findById(req.user.id);
     const salt = await bcrypt.genSalt(10);
     const newPassword = req.body.password;
+    if (!user) return console.log("tried to reset password on a user that didn't exist");
     user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
 
@@ -30,15 +31,15 @@ module.exports = async (req, res) => {
 
     const payload = {
       user: {
-        id: user.id
-      }
+        id: user.id,
+      },
     };
 
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
       {
-        expiresIn: 360000
+        expiresIn: 360000,
       },
       (err, token) => {
         if (err) throw err;
@@ -49,4 +50,4 @@ module.exports = async (req, res) => {
     console.log(err);
     res.status(500).send("Server error");
   }
-};
+}

@@ -1,9 +1,9 @@
-const bcrypt = require("bcryptjs");
-const User = require("../../../models/User");
-const BattleRoomRecord = require("../../../models/BattleRoomRecord");
-const BattleRoomLadder = require("../../../models/BattleRoomLadder");
+import bcrypt from "bcryptjs";
+import User, { IUser } from "../../../models/User";
+import BattleRoomRecord from "../../../models/BattleRoomRecord";
+import BattleRoomLadder from "../../../models/BattleRoomLadder";
 
-async function createUsersAndBattleRoomData(req, res) {
+export default async function createUsersAndBattleRoomData(req, res) {
   const { numUsersToCreate } = req.body;
   try {
     for (let i = 0; i < numUsersToCreate; i++) {
@@ -20,10 +20,9 @@ async function createUsersAndBattleRoomData(req, res) {
         newUser.password = await bcrypt.hash(password, salt);
         await newUser.save();
       }
-
-      const battleRoomRecordIdToCheck = userExists
-        ? userExists.id
-        : await User.findOne({ name }).id;
+      const newlyCreatedUser = await User.findOne<IUser>({ name });
+      const newlyCreatedUserId = newlyCreatedUser?.id;
+      const battleRoomRecordIdToCheck = userExists ? userExists.id : newlyCreatedUserId;
       const battleRoomRecordExists = await BattleRoomRecord.findOne({
         user: battleRoomRecordIdToCheck,
       });
@@ -35,12 +34,8 @@ async function createUsersAndBattleRoomData(req, res) {
         newBattleRoomRecord.losses = Math.floor(Math.random() * 100);
         newBattleRoomRecord.disconnects = 0;
         newBattleRoomRecord.winrate =
-          (newBattleRoomRecord.wins /
-            (newBattleRoomRecord.losses + newBattleRoomRecord.wins)) *
-          100;
-        newBattleRoomRecord.elo = Math.floor(
-          Math.random() * (2400 - 800 + 1) + 800,
-        );
+          (newBattleRoomRecord.wins / (newBattleRoomRecord.losses + newBattleRoomRecord.wins)) * 100;
+        newBattleRoomRecord.elo = Math.floor(Math.random() * (2400 - 800 + 1) + 800);
 
         await newBattleRoomRecord.save();
       }
@@ -60,5 +55,3 @@ async function createUsersAndBattleRoomData(req, res) {
     console.log(err);
   }
 }
-
-module.exports = createUsersAndBattleRoomData;

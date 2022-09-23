@@ -1,9 +1,9 @@
-const User = require("../../../models/User");
-const BattleRoomLadder = require("../../../models/BattleRoomLadder");
+import User from "../../../models/User";
+import BattleRoomLadder, { IBattleRoomLadder } from "../../../models/BattleRoomLadder";
 
-module.exports = async (req, res) => {
+export default async function (req, res) {
   try {
-    const ladder = await BattleRoomLadder.findOne({}).populate({
+    const ladder = await BattleRoomLadder.findOne<IBattleRoomLadder>({}).populate({
       path: "ladder",
       populate: {
         path: "user",
@@ -11,19 +11,19 @@ module.exports = async (req, res) => {
         select: "name",
       },
     });
-    if (!ladder) return res.json("no ladder yet")
+    if (!ladder) return res.json("no ladder yet");
     const page = req.params.page;
     const pageSize = 10;
     const startIndex = (page - 1) * pageSize;
-    let endIndex
+    let endIndex;
     if (startIndex + pageSize > ladder.ladder.length) {
       if (page == 1) {
-        endIndex = ladder.ladder.length
+        endIndex = ladder.ladder.length;
       } else {
-        endIndex = ladder.ladder.length - pageSize * page
+        endIndex = ladder.ladder.length - pageSize * page;
       }
     } else {
-      endIndex = startIndex + pageSize
+      endIndex = startIndex + pageSize;
     }
 
     const ladderPageToSend = ladder.ladder.slice(startIndex, endIndex);
@@ -34,4 +34,4 @@ module.exports = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
-};
+}

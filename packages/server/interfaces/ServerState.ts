@@ -2,6 +2,23 @@ import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoo
 import { GameRoom } from "@lucella/common/battleRoomGame/classes/BattleRoomGame/GameRoom";
 import ChatChannel from "../classes/ChatChannel";
 import SocketMetadata from "../classes/SocketMetadata";
+import { IBattleRoomRecord } from "../models/BattleRoomRecord";
+
+export interface RankedQueueUser {
+  userId: string;
+  record: IBattleRoomRecord;
+  socketId: string;
+  username: string;
+}
+
+export interface RankedQueue {
+  users: {
+    [socketId: string]: RankedQueueUser;
+  };
+  matchmakingInterval: NodeJS.Timeout | null;
+  currentEloDiffThreshold: number;
+  rankedGameCurrentNumber: number;
+}
 
 export default interface ServerState {
   chatChannels: { [name: string]: ChatChannel };
@@ -10,16 +27,5 @@ export default interface ServerState {
   connectedSockets: {
     [socketId: string]: SocketMetadata;
   };
-  rankedQueue: {
-    users: {
-      [socketId: string]: {
-        // record: BattleRoomRecord;
-        matchmakingInterval: NodeJS.Timer;
-        currentEloDiffThreshold: number;
-      };
-    };
-    matchmakingInterval: number | null;
-    currentEloDiffThreshold: number;
-    rankedGameCurrentNumber: number;
-  };
+  rankedQueue: RankedQueue;
 }

@@ -1,9 +1,9 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { validationResult } = require("express-validator");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
 import User from "../../../models/User";
 
-module.exports = async (req, res) => {
+export default async function (req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -13,17 +13,9 @@ module.exports = async (req, res) => {
   console.log(name);
   try {
     let user = await User.findOne({ email: email.toLowerCase() });
-    if (user) {
-      return res.status(400).json({ errors: [{ msg: "User already exists" }] });
-    }
+    if (user) return res.status(400).json({ errors: [{ msg: "User already exists" }] });
     let findByName = await User.findOne({ name });
-    if (findByName) {
-      return res.status(400).json({ errors: [{ msg: "Name is already taken" }] });
-    }
-    console.log(findByName);
-
-    console.log("attempt register");
-
+    if (findByName) return res.status(400).json({ errors: [{ msg: "Name is already taken" }] });
     user = new User({
       email: email.toLowerCase(),
       name,
@@ -32,7 +24,6 @@ module.exports = async (req, res) => {
 
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
-
     await user.save();
 
     const payload = {
@@ -56,4 +47,4 @@ module.exports = async (req, res) => {
     console.error(err.message);
     res.status(500).send("Server error");
   }
-};
+}
