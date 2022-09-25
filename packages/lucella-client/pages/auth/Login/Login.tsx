@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, Redirect } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../../../store";
-import { login } from "../../../store/actions/auth";
+import { useAppSelector, useAppDispatch } from "../../../redux";
+import { login } from "../../../redux/actions/auth";
 
 const Login = () => {
   const dispatch = useAppDispatch();

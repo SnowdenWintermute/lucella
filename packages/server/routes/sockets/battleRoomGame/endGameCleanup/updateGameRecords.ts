@@ -1,12 +1,13 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { GameRoom } from "@lucella/common/battleRoomGame/classes/BattleRoomGame/GameRoom";
+import { BattleRoomGame } from "../../../../../common/classes/BattleRoomGame";
+import { GameRoom } from "../../../../../common/classes/BattleRoomGame/GameRoom";
 import User from "../../../../models/User";
 import BattleRoomRecord from "../../../../models/BattleRoomRecord";
 import BattleRoomGameRecord from "../../../../models/BattleRoomGameRecord";
 import updateWinLossRecords from "./updateWinLossRecords";
 import updateElos from "./updateElos";
 import updateLadder from "./updateLadder";
-import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { PlayerRole } from "../../../../../common/enums";
+import { EloUpdates } from "../../../../../common/types";
 
 export default async function (
   winner: string,
@@ -14,7 +15,7 @@ export default async function (
   gameRoom: GameRoom,
   game: BattleRoomGame,
   isRanked: boolean
-) {
+): Promise<EloUpdates | Error | void> {
   if (!isRanked)
     return {
       casualGame: true,

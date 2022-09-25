@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import { setAlert } from "../../../store/actions/alert";
-import { register } from "../../../store/actions/auth";
-import { RootState } from "../../../store";
+import { setAlert } from "../../../redux/actions/alert";
+import { register } from "../../../redux/actions/auth";
+import { RootState } from "../../../redux";
 import { AlertType } from "../../../enums";
 
 const Register = () => {

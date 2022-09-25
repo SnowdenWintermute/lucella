@@ -1,4 +1,4 @@
-const uuid = require("uuid");
+import uuid from "uuid";
 
 export default class SocketMetadata {
   currentChatChannel: string | null;
@@ -8,7 +8,7 @@ export default class SocketMetadata {
     username: string;
     isGuest: boolean;
   };
-  socketId: string;
+  socketId: string | null;
   uuid: string;
   constructor(
     socketId: string,

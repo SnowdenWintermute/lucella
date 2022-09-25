@@ -2,7 +2,7 @@ import updateGameRecords from "./updateGameRecords";
 import handleDisconnectionFromGame from "./handleDisconnectionFromGame";
 import setGameRoomWinnerName from "./setGameRoomWinnerName";
 import createGameEndingCountdownInterval from "./createGameEndingCountdownInterval";
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus } from "../../../../../common/enums";
 import ServerState from "../../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
 

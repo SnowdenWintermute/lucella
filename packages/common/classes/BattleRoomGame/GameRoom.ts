@@ -1,5 +1,5 @@
 import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import SocketMetadata from "../../../../server/classes/SocketMetadata";
+import SocketMetadata from "../../../server/classes/SocketMetadata";
 import { GameStatus } from "../../enums";
 
 export class GameRoom {

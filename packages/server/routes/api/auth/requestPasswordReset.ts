@@ -28,7 +28,7 @@ export default async function (req, res) {
       { algorithm: "RS256" }
     );
 
-    const rootUrl = "localhost:3000/";
+    const rootUrl = process.env.DEV_MODE ? process.env.EMAIL_ROOT_URL_DEV : process.env.EMAIL_ROOT_URL;
     const emailPass = process.env.EMAIL_PASSWORD;
 
     const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://${rootUrl}password-reset/${passwordResetToken}" target="_blank">https://${rootUrl}password-reset/${passwordResetToken}</a></p>`;

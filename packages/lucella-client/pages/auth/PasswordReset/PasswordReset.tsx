@@ -2,8 +2,8 @@ import React, { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import { AlertType } from "../../../enums";
-import { setAlert } from "../../../store/actions/alert";
-import { resetPassword } from "../../../store/actions/auth";
+import { setAlert } from "../../../redux/actions/alert";
+import { resetPassword } from "../../../redux/actions/auth";
 
 interface Props {
   match: { params: { token: string } };

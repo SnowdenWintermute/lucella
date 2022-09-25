@@ -1,8 +1,9 @@
 import { Server } from "socket.io";
+import { EloUpdates } from "../../../../../common/types";
 import ServerState from "../../../../interfaces/ServerState";
 import sendPlayerBackToLobby from "./sendPlayerBackToLobby";
 
-export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates) {
+export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates: EloUpdates) {
   const { connectedSockets, gameRooms, games } = serverState;
   const gameRoom = gameRooms[gameName];
   const game = games[gameName];

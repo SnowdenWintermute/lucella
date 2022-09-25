@@ -1,13 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IUser } from "./types";
 
-export interface AuthState {
+export interface IAuthState {
   token: string | null;
   isAuthenticated: boolean | null;
   loading: boolean;
-  user: { name: string; socketId: string } | null;
+  user: IUser | null;
 }
 
-const initialState: AuthState = {
+const initialState: IAuthState = {
   token: localStorage.getItem("token"),
   isAuthenticated: null,
   loading: true,
@@ -15,14 +16,12 @@ const initialState: AuthState = {
 };
 
 const authSlice = createSlice({
-  name: "counter",
+  name: "auth",
   initialState,
   reducers: {
-    logout(state) {
+    logout() {
       localStorage.removeItem("token");
-      state.token = null;
-      state.isAuthenticated = false;
-      state.loading = false;
+      return initialState;
     },
     setCredentials(state, action: PayloadAction<string>) {
       localStorage.setItem("token", action.payload);
@@ -30,8 +29,13 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.loading = false;
     },
+    setUser(state, action: PayloadAction<IUser>) {
+      state.isAuthenticated = true;
+      state.loading = false;
+      state.user = action.payload;
+    },
   },
 });
 
-export const { logout, setCredentials } = authSlice.actions;
+export const { logout, setCredentials, setUser } = authSlice.actions;
 export default authSlice.reducer;

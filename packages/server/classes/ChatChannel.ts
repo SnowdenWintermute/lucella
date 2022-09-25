@@ -1,4 +1,4 @@
-import { ChatMessage } from "@lucella/common/battleRoomGame/classes/ChatMessage";
+import { ChatMessage } from "../../common/classes/ChatMessage";
 
 export default class ChatChannel {
   name: string;
