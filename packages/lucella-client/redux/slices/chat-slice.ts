@@ -1,6 +1,6 @@
-import { ChatMessage } from "../../../common/classes/ChatMessage";
-import ChatChannel from "../../../server/classes/ChatChannel";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ChatMessage } from "../../../common/src/classes/ChatMessage";
+import { bindActionCreators, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import ChatChannel from "../../../common/src/classes/ChatChannel";
 
 export interface IChatState {
   currentChatRoomName: string;
@@ -20,8 +20,8 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setNewChatRoomLoading(state) {
-      state.newChatRoomLoading = true;
+    setNewChatRoomLoading(state, action: PayloadAction<boolean>) {
+      state.newChatRoomLoading = action.payload;
     },
     newChatMessage(state, action: PayloadAction<ChatMessage>) {
       state.messages.push(action.payload);

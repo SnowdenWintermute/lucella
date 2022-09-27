@@ -1,7 +1,7 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
 
 const handleAndQueueNewGameEvent = require("../game-functions/queueInput");
-const GameEventTypes = require("@lucella/common/battleRoomGame/consts/GameEventTypes");
+const GameEventTypes = require("../common/src/consts/GameEventTypes");
 
 export default (currentGame: BattleRoomGame) => {
   const { mouseData } = currentGame;

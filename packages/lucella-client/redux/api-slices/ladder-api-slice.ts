@@ -29,7 +29,7 @@ export const ladderApiSlice = createApi({
   baseQuery: baseQuery,
   endpoints(builder) {
     return {
-      getLadderPage: builder.mutation<ILadderPageResponse, number>({
+      getLadderPage: builder.query<ILadderPageResponse, number>({
         query(pageNumber) {
           return {
             url: `/gameRecords/battle-room-ladder-page/${pageNumber}`,
@@ -46,7 +46,7 @@ export const ladderApiSlice = createApi({
           }
         },
       }),
-      getUserBattleRoomRecord: builder.mutation<UserRecord, string>({
+      getUserBattleRoomRecord: builder.query<UserRecord, string>({
         query(username) {
           return {
             url: `/gameRecords/battle-room-ladder/${username}`,
@@ -68,3 +68,5 @@ export const ladderApiSlice = createApi({
     };
   },
 });
+
+export const { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } = ladderApiSlice;

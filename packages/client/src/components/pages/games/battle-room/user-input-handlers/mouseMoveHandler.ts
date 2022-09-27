@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { Point } from "@lucella/common/battleRoomGame/classes/Point";
-import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { Point } from "../common/src/classes/Point";
+import { WidthAndHeight } from "../common/src/types";
 import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(

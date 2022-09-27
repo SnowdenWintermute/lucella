@@ -1,4 +1,4 @@
-import { Orb } from "@lucella/common/battleRoomGame/classes/Orb";
+import { Orb } from "../common/src/classes/Orb";
 
 export default function drawSelectionRing(context: CanvasRenderingContext2D, orb: Orb) {
   if (!orb.isSelected) return;

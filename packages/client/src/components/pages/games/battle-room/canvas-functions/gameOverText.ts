@@ -1,5 +1,5 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { Point } from "@lucella/common/battleRoomGame/classes/Point";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { Point } from "../common/src/classes/Point";
 
 const gameOverText = (context: CanvasRenderingContext2D, currentGame: BattleRoomGame, canvasDrawFractions: Point) => {
   const fontSize = 25;

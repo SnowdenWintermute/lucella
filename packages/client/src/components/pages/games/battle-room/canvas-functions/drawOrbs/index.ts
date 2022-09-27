@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { Point } from "@lucella/common/battleRoomGame/classes/Point";
-import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { Point } from "../common/src/classes/Point";
+import { PlayerRole } from "../common/src/enums";
 import drawOrb from "./drawOrb";
 import drawOrbNumber from "./drawOrbNumber";
 import drawSelectionRing from "./drawSelectionRing";

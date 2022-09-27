@@ -1,7 +1,8 @@
+import { GameStatus, PlayerRole } from "@lucella/common/src/enums";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BattleRoomGame } from "../../../common/classes/BattleRoomGame";
-import { GameRoom } from "../../../common/classes/BattleRoomGame/GameRoom";
-import { EloUpdates } from "../../../common/types";
+import { BattleRoomGame } from "../../../common/src/classes/BattleRoomGame";
+import { GameRoom } from "../../../common/src/classes/BattleRoomGame/GameRoom";
+import { EloUpdates } from "../../../common/src/types";
 
 export interface IGameScoreScreen {
   gameRoom: GameRoom;
@@ -18,7 +19,20 @@ export interface ILobbyUIState {
   };
   scoreScreenData: IGameScoreScreen | null;
   scoreScreenDisplayed: boolean;
+  preGameScreen: {
+    isOpen: boolean;
+  };
+  matchmakingScreen: {
+    isOpen: boolean;
+    currentData: {
+      currentEloDiffThreshold: number | null;
+      queueSize: number | null;
+    };
+  };
+  currentGameRoom: GameRoom | null;
+  playerRole: PlayerRole | null;
 }
+
 const initialState: ILobbyUIState = {
   gameList: {
     games: {},
@@ -26,12 +40,54 @@ const initialState: ILobbyUIState = {
   },
   scoreScreenData: null,
   scoreScreenDisplayed: false,
+  preGameScreen: {
+    isOpen: false,
+  },
+  matchmakingScreen: {
+    isOpen: false,
+    currentData: {
+      queueSize: null,
+      currentEloDiffThreshold: null,
+    },
+  },
+  currentGameRoom: null,
+  playerRole: null,
 };
 
 const ladderSlice = createSlice({
   name: "lobbyUi",
   initialState,
   reducers: {
+    clearLobbyUi(state) {
+      state = initialState;
+    },
+    setPreGameScreenDisplayed(state, action: PayloadAction<boolean>) {
+      state.preGameScreen.isOpen = action.payload;
+    },
+    setCurrentGameRoom(state, action: PayloadAction<GameRoom | null>) {
+      state.currentGameRoom = action.payload;
+    },
+    updatePlayersReady(state, action: PayloadAction<{ host: boolean; challenger: boolean }>) {
+      if (state.currentGameRoom) state.currentGameRoom.playersReady = action.payload;
+    },
+    updateGameCountdown(state, action: PayloadAction<number>) {
+      if (state.currentGameRoom) state.currentGameRoom.countdown.current = action.payload;
+    },
+    updateGameStatus(state, action: PayloadAction<GameStatus>) {
+      if (state.currentGameRoom) state.currentGameRoom.gameStatus = action.payload;
+    },
+    updatePlayerRole(state, action: PayloadAction<PlayerRole>) {
+      if (state.currentGameRoom) state.playerRole = action.payload;
+    },
+    setGameWinner(state, action: PayloadAction<string>) {
+      if (state.currentGameRoom) state.currentGameRoom.winner = action.payload;
+    },
+    setMatchmakingWindowVisible(state, action: PayloadAction<boolean>) {
+      state.matchmakingScreen.isOpen = action.payload;
+    },
+    setMatchmakingData(state, action: PayloadAction<{ queueSize: number; currentEloDiffThreshold: number }>) {
+      state.matchmakingScreen.currentData = action.payload;
+    },
     setViewingGamesList(state, action: PayloadAction<boolean>) {
       state.gameList.isOpen = action.payload;
     },
@@ -53,5 +109,21 @@ const ladderSlice = createSlice({
   },
 });
 
-export const { setScoreScreenData, closeScoreScreen } = ladderSlice.actions;
+export const {
+  clearLobbyUi,
+  setPreGameScreenDisplayed,
+  setCurrentGameRoom,
+  updatePlayersReady,
+  updateGameCountdown,
+  updateGameStatus,
+  updatePlayerRole,
+  setGameWinner,
+  setMatchmakingWindowVisible,
+  setMatchmakingData,
+  setViewingGamesList,
+  updateGameList,
+  setScoreScreenData,
+  closeScoreScreen,
+} = ladderSlice.actions;
+
 export default ladderSlice.reducer;

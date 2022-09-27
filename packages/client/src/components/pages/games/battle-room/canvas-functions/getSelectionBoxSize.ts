@@ -1,5 +1,5 @@
-import MouseData from "@lucella/common/battleRoomGame/classes/MouseData";
-import { Point } from "@lucella/common/battleRoomGame/classes/Point";
+import MouseData from "../common/src/classes/MouseData";
+import { Point } from "../common/src/classes/Point";
 
 const getSelectionBoxSize = (mouseData: MouseData, canvasDrawFractions: Point) => {
   if (!mouseData.mouseOnScreen) mouseData.leftCurrentlyPressed = false;

@@ -1,38 +1,37 @@
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus } from "../../../common/src/enums";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Socket } from "socket.io-client";
-import { AlertType } from "../../../../enums";
-import { RootState } from "../../../../store";
-import * as alertActions from "../../../../store/actions/alert";
-import * as gameUiActions from "../../../../store/actions/game-ui";
-import { GameUIState } from "../../../../store/reducers/game-ui";
+import { AlertType } from "../../enums";
+import { useAppDispatch, useAppSelector } from "../../redux";
+import { setPreGameScreenDisplayed, setViewingGamesList } from "../../redux/slices/lobby-ui-slice";
+import { Alert } from "../../classes/Alert";
+import { setAlert } from "../../redux/slices/alerts-slice";
 
 interface Props {
   socket: Socket;
 }
 
 const GameList = ({ socket }: Props) => {
-  const dispatch = useDispatch();
-  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
-  const gameList = gameUiState.gameList.games;
-  const gameListIsOpen = gameUiState.gameList.isOpen;
-  const { currentGameName } = gameUiState;
+  const dispatch = useAppDispatch();
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const gameList = lobbyUiState.gameList.games;
+  const gameListIsOpen = lobbyUiState.gameList.isOpen;
+  const { gameName } = lobbyUiState.currentGameRoom!;
   const gameListDisplayClass = gameListIsOpen ? "" : "height-0-hidden";
 
   // cancel viewing game list if in a game
   useEffect(() => {
-    if (currentGameName) {
-      dispatch(gameUiActions.cancelViewGamesList());
-      dispatch(gameUiActions.openPreGameScreen());
+    if (gameName) {
+      dispatch(setViewingGamesList(false));
+      dispatch(setPreGameScreenDisplayed(true));
     }
-  }, [currentGameName, dispatch]);
+  }, [gameName, dispatch]);
 
   const onJoinGameClick = (gameName: string) => {
     if (gameName) {
       socket.emit("clientJoinsGame", { gameName });
     } else {
-      dispatch(alertActions.setAlert("No game by that name exists", AlertType.DANGER));
+      dispatch(setAlert(new Alert("No game by that name exists", AlertType.DANGER)));
     }
   };
 
@@ -44,8 +43,8 @@ const GameList = ({ socket }: Props) => {
       gamesToDisplay.push(
         <tr className="game-list-item" key={gameList[game].gameName}>
           <td>{gameName}</td>
-          <td>Host: {host?.username}</td>
-          <td>Challenger: {challenger ? challenger.username : "Awaiting Opponent"}</td>
+          <td>Host: {host?.associatedUser.username}</td>
+          <td>Challenger: {challenger ? challenger.associatedUser.username : "Awaiting Opponent"}</td>
           <td>
             {gameList[game].gameStatus === GameStatus.IN_LOBBY && (
               <button className="button button-standard-size button-primary" onClick={() => onJoinGameClick(gameName)}>

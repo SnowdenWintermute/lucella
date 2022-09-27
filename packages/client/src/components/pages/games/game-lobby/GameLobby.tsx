@@ -8,7 +8,7 @@ import MatchmakingQueueDisplay from "./MatchmakingQueueDisplay";
 import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import ScoreScreenModalContents from "./ScoreScreenModalContents";
-import Modal from "../../../common/modal/Modal";
+import Modal from "../../../common/src/modal/Modal";
 import io, { Socket } from "socket.io-client";
 import SocketManager from "../socket-manager/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
@@ -17,7 +17,7 @@ import * as lobbyUiActions from "../../../../store/actions/lobby-ui";
 import { AuthState } from "../../../../store/reducers/auth";
 import { RootState } from "../../../../store";
 import { GameUIState } from "../../../../store/reducers/game-ui";
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus } from "../common/src/enums";
 const socketAddress = process.env.REACT_APP_DEV_MODE
   ? process.env.REACT_APP_SOCKET_API_DEV
   : process.env.REACT_APP_SOCKET_API;

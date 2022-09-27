@@ -1,7 +1,7 @@
-import { Orb } from "@lucella/common/battleRoomGame/classes/Orb";
-import { Point } from "@lucella/common/battleRoomGame/classes/Point";
-import { colors, inGameFontSizes } from "@lucella/common/battleRoomGame/consts";
-import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { Orb } from "../common/src/classes/Orb";
+import { Point } from "../common/src/classes/Point";
+import { colors, inGameFontSizes } from "../common/src/consts";
+import { PlayerRole } from "../common/src/enums";
 
 export default function drawOrbNumber(
   context: CanvasRenderingContext2D,

@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Socket } from "socket.io-client";
-import { RootState } from "../../../../../store";
-import * as gameUiActions from "../../../../../store/actions/game-ui";
-import { GameUIState } from "../../../../../store/reducers/game-ui";
-import GameLobbyTopButton from "../../../../common/buttons/GameLobbyTopButton";
+import GameLobbyTopButton from "../../../components/common/buttons/GameLobbyTopButton";
+import { useAppSelector, useAppDispatch } from "../../../redux";
+import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 
 interface Props {
   socket: Socket;
 }
 
 const InGameButtons = ({ socket }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [buttonsDisplayClass, setButtonsDisplayClass] = useState("");
   const [cancelGameSetupButtonDisplayClass, setCancelGameSetupButtonDisplayClass] = useState("chat-button-hidden");
   const [goBackButtonDisplayClass, setGoBackButtonDisplayClass] = useState("chat-button-hidden");
   const [leaveGameButtonDisplayClass, setLeaveGameButtonDisplayClass] = useState("chat-button-hidden");
-  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
-  const { currentGameName, isRanked } = gameUiState;
-  const gameListIsOpen = gameUiState.gameList.isOpen;
-  const matchmakingScreenIsOpen = gameUiState.matchmakingScreen.isOpen;
-  const preGameScreenIsOpen = gameUiState.preGameScreen.isOpen;
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const { gameName, isRanked } = lobbyUiState.currentGameRoom!;
+  const gameListIsOpen = lobbyUiState.gameList.isOpen;
+  const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
+  const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
 
   // button visibility
   useEffect(() => {
@@ -28,30 +26,30 @@ const InGameButtons = ({ socket }: Props) => {
     if (!gameListIsOpen) setGoBackButtonDisplayClass("chat-button-hidden");
     if (preGameScreenIsOpen) setCancelGameSetupButtonDisplayClass("");
     if (!preGameScreenIsOpen) setCancelGameSetupButtonDisplayClass("chat-button-hidden");
-    if (currentGameName) {
+    if (gameName) {
       if (!isRanked) {
         setLeaveGameButtonDisplayClass("");
       }
       setGoBackButtonDisplayClass("chat-button-hidden");
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     }
-    if (!currentGameName) setLeaveGameButtonDisplayClass("chat-button-hidden");
+    if (!gameName) setLeaveGameButtonDisplayClass("chat-button-hidden");
     if (matchmakingScreenIsOpen) setButtonsDisplayClass("chat-button-hidden");
     if (!matchmakingScreenIsOpen) setButtonsDisplayClass("");
-  }, [gameListIsOpen, preGameScreenIsOpen, currentGameName, matchmakingScreenIsOpen, isRanked]);
+  }, [gameListIsOpen, preGameScreenIsOpen, gameName, matchmakingScreenIsOpen, isRanked]);
 
   const onViewGamesListBackClick = () => {
-    dispatch(gameUiActions.cancelViewGamesList());
+    dispatch(setViewingGamesList(false));
     socket.emit("clientRequestsUpdateOfGameRoomList");
   };
 
   const onCancelGameSetupClick = () => {
-    dispatch(gameUiActions.closePreGameScreen());
+    dispatch(setPreGameScreenDisplayed(false));
   };
 
   const onLeaveGameClick = () => {
-    dispatch(gameUiActions.closePreGameScreen());
-    socket.emit("clientLeavesGame", currentGameName);
+    dispatch(setPreGameScreenDisplayed(false));
+    socket.emit("clientLeavesGame", gameName);
   };
 
   return (

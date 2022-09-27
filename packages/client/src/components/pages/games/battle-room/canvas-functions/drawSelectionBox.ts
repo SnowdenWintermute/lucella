@@ -1,5 +1,5 @@
-import MouseData from "@lucella/common/battleRoomGame/classes/MouseData";
-import { Point } from "@lucella/common/battleRoomGame/classes/Point";
+import MouseData from "../common/src/classes/MouseData";
+import { Point } from "../common/src/classes/Point";
 
 export default function first(
   context: CanvasRenderingContext2D,

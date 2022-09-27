@@ -1,4 +1,4 @@
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus } from "../common/src/enums";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Socket } from "socket.io-client";

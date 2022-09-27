@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { inGameFontSizes } from "@lucella/common/battleRoomGame/consts";
-import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { inGameFontSizes } from "../common/src/consts";
+import { WidthAndHeight } from "../common/src/types";
 
 const drawScore = (context: CanvasRenderingContext2D, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) => {
   const fontSize = inGameFontSizes.large;

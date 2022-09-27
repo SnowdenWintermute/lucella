@@ -1,9 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { useSelector } from "react-redux";
 import { Socket } from "socket.io-client";
-import { RootState } from "../../../../store";
-import { ChatState } from "../../../../store/reducers/chat";
-import { GameUIState } from "../../../../store/reducers/game-ui";
+import { useAppSelector } from "../../redux";
 
 interface Props {
   socket: Socket;
@@ -13,11 +10,11 @@ interface Props {
 const GameLobbyChat = ({ socket, username }: Props) => {
   const [chatInput, setChatInput] = useState("");
   const [chatClass, setChatClass] = useState("");
-  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
-  const gameListIsOpen = gameUiState.gameList.isOpen;
-  const preGameScreenIsOpen = gameUiState.preGameScreen.isOpen;
-  const matchmakingScreenIsOpen = gameUiState.matchmakingScreen.isOpen;
-  const chatState: ChatState = useSelector((state: RootState) => state.chat);
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const gameListIsOpen = lobbyUiState.gameList.isOpen;
+  const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
+  const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
+  const chatState = useAppSelector((state) => state.chat);
   const { currentChatRoomName, messages } = chatState;
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus } from "../common/src/enums";
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";

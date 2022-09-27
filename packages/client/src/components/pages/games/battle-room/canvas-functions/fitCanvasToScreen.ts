@@ -1,4 +1,4 @@
-import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
+import { WidthAndHeight } from "../common/src/types";
 
 export default function fitCanvasToScreen(
   window: Window,

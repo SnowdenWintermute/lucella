@@ -7,7 +7,7 @@ import { ReactComponent as GamesIcon } from "../../../img/menuIcons/queen.svg";
 import { ReactComponent as LadderIcon } from "../../../img/menuIcons/podium.svg";
 import { RootState } from "../../../store";
 import { History } from "history";
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus } from "../common/src/enums";
 
 const Navbar = () => {
   const history: History = useHistory();

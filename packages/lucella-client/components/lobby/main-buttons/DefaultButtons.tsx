@@ -1,12 +1,10 @@
 import React, { useState, useEffect, Fragment } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as gameUiActions from "../../../../../store/actions/game-ui";
-import Modal from "../../../../common/modal/Modal";
+import Modal from "../../../components/common/modal/Modal";
 import { Socket } from "socket.io-client";
-import { RootState } from "../../../../../store";
-import { GameUIState } from "../../../../../store/reducers/game-ui";
-import GameLobbyTopButton from "../../../../common/buttons/GameLobbyTopButton";
-import GameLobbyModalButton from "../../../../common/buttons/GameLobbyModalButton";
+import GameLobbyTopButton from "../../../components/common/buttons/GameLobbyTopButton";
+import GameLobbyModalButton from "../../../components/common/buttons/GameLobbyModalButton";
+import { useAppSelector, useAppDispatch } from "../../../redux";
+import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 
 interface Props {
   showChangeChannelModal: () => void;
@@ -14,11 +12,11 @@ interface Props {
 }
 
 const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
-  const dispatch = useDispatch();
-  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
-  const gameListIsOpen = gameUiState.gameList.isOpen;
-  const matchmakingScreenIsOpen = gameUiState.matchmakingScreen.isOpen;
-  const preGameScreenIsOpen = gameUiState.preGameScreen.isOpen;
+  const dispatch = useAppDispatch();
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const gameListIsOpen = lobbyUiState.gameList.isOpen;
+  const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
+  const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
   const [mobileViewActive, setMobileViewActive] = useState(false);
@@ -44,12 +42,12 @@ const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
   const onViewGamesListClick = () => {
     if (!socket) return;
     socket.emit("clientRequestsUpdateOfGameRoomList");
-    dispatch(gameUiActions.viewGamesListClicked());
+    dispatch(setViewingGamesList(true));
     setMenuModalDisplayed(false);
   };
 
   const onSetupNewGameClick = () => {
-    dispatch(gameUiActions.openPreGameScreen());
+    dispatch(setPreGameScreenDisplayed(true));
     setMenuModalDisplayed(false);
   };
 

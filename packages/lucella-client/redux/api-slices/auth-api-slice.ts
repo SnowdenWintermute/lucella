@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Router } from "next/router";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { setAlert } from "../slices/alerts-slice";
@@ -63,7 +62,7 @@ export const authApiSlice = createApi({
           }
         },
       }),
-      getUser: builder.mutation<IUser, null>({
+      getUser: builder.query<IUser, null>({
         query() {
           return {
             url: "",
@@ -98,7 +97,7 @@ export const authApiSlice = createApi({
           }
         },
       }),
-      resetPassword: builder.mutation<string, { password: string; password2: string; token: string; router: Router }>({
+      resetPassword: builder.mutation<string, { password: string; password2: string; token: string }>({
         query(data) {
           const { password, password2, token } = data;
           return {
@@ -108,11 +107,9 @@ export const authApiSlice = createApi({
           };
         },
         async onQueryStarted(args, { dispatch, queryFulfilled }) {
-          const { data } = await queryFulfilled;
           try {
+            const { data } = await queryFulfilled;
             dispatch(setCredentials(data)); // token
-            const { router } = args;
-            router.push("/battle-room");
           } catch (error: any) {
             console.log(error);
             dispatch(setAlert(new Alert(error.toString(), AlertType.DANGER)));
@@ -141,3 +138,12 @@ export const authApiSlice = createApi({
     };
   },
 });
+
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useGetUserQuery,
+  useDeleteAccountMutation,
+  useRequestPasswordResetEmailMutation,
+  useResetPasswordMutation,
+} = authApiSlice;

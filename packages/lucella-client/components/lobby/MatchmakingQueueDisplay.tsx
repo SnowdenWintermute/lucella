@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../store";
-import { GameUIState } from "../../../../store/reducers/game-ui";
+import { useAppSelector } from "../../redux";
 
 const MatchmakingQueueDisplay = () => {
   const [hideClass, setHideClass] = useState("height-0-hidden");
-  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
-  const matchmakingQueueScreen = gameUiState.matchmakingScreen;
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const matchmakingQueueScreen = lobbyUiState.matchmakingScreen;
   useEffect(() => {
     if (matchmakingQueueScreen) {
       if (matchmakingQueueScreen.isOpen) setHideClass("");

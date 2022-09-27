@@ -1,12 +1,12 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as gameUiActions from "../../../../../store/actions/game-ui";
-import Modal from "../../../../common/modal/Modal";
+import Modal from "../../../../common/src/modal/Modal";
 import { Socket } from "socket.io-client";
 import { RootState } from "../../../../../store";
 import { GameUIState } from "../../../../../store/reducers/game-ui";
-import GameLobbyTopButton from "../../../../common/buttons/GameLobbyTopButton";
-import GameLobbyModalButton from "../../../../common/buttons/GameLobbyModalButton";
+import GameLobbyTopButton from "../../../../common/src/buttons/GameLobbyTopButton";
+import GameLobbyModalButton from "../../../../common/src/buttons/GameLobbyModalButton";
 
 interface Props {
   showChangeChannelModal: () => void;

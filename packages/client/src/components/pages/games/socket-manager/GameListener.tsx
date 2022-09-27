@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as gameUiActions from "../../../../store/actions/game-ui";
 const cloneDeep = require("lodash.clonedeep");
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
 import { RootState } from "../../../../store";
 import { Socket } from "socket.io-client";
 // import lagGenerator from '../util-functions/lagGenerator';

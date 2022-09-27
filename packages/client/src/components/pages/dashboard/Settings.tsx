@@ -2,8 +2,8 @@ import React, { useState, Fragment } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { requestPasswordResetEmail, deleteAccount } from "../../../store/actions/auth";
-import FlashingClickableText from "../../common/FlashingClickableText";
-import Modal from "../../common/modal/Modal";
+import FlashingClickableText from "../../common/src/FlashingClickableText";
+import Modal from "../../common/src/modal/Modal";
 
 const Settings = () => {
   const authState = useSelector((state: RootState) => state.auth);

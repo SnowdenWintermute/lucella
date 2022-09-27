@@ -1,25 +1,25 @@
 import React, { Fragment, useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { ReactComponent as SuccessIcon } from "../../../../img/alertIcons/success.svg";
-import * as alertActions from "../../../../store/actions/alert";
+import SuccessIcon from "../../../../img/alertIcons/success.svg";
 import { Socket } from "socket.io-client";
-import { RootState } from "../../../../store";
-import { GameUIState } from "../../../../store/reducers/game-ui";
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
-import { AlertType } from "../../../../enums";
+import { AlertType } from "../../enums";
+import { useAppDispatch, useAppSelector } from "../../redux";
+import { Alert } from "../../classes/Alert";
+import { setAlert } from "../../redux/slices/alerts-slice";
+import { GameStatus } from "../../../common/src/enums";
 
 interface Props {
   socket: Socket;
 }
 
 const PreGameRoom = ({ socket }: Props) => {
-  const dispatch = useDispatch();
-  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
-  const preGameScreenIsOpen = gameUiState.preGameScreen.isOpen;
+  const dispatch = useAppDispatch();
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState("height-0-hidden");
   const [gameNameInput, setGameNameInput] = useState("");
-  const { gameStatus, playersReady, playersInGame, currentGameName, countdownNumber, isRanked, playerRole } =
-    gameUiState;
+  const { gameStatus, playersReady, players, countdown, isRanked } = lobbyUiState.currentGameRoom!;
+  const currentGameName = lobbyUiState.currentGameRoom!.gameName;
+  const { playerRole } = lobbyUiState;
   const channelNameInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -34,11 +34,11 @@ const PreGameRoom = ({ socket }: Props) => {
   // 'make public' actually request to server to host a game
   const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const gameName = gameNameInput;
-    if (gameName && socket) {
-      socket.emit("clientHostsNewGame", { gameName });
+    const gameNameToCreate = gameNameInput;
+    if (gameNameToCreate && socket) {
+      socket.emit("clientHostsNewGame", { gameName: gameNameToCreate });
     } else {
-      dispatch(alertActions.setAlert("Please enter a game name", AlertType.DANGER));
+      dispatch(setAlert(new Alert("Please enter a game name", AlertType.DANGER)));
     }
   };
 
@@ -57,16 +57,16 @@ const PreGameRoom = ({ socket }: Props) => {
       <table className="pre-game-room-player-list">
         <tbody>
           <tr>
-            <td>{playersInGame?.host.username}</td>
+            <td>{players?.host?.associatedUser.username}</td>
             <td>{playersReady.host && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
           </tr>
           <tr>
-            <td>{playersInGame?.challenger ? playersInGame.challenger.username : "Awaiting challenger..."}</td>
+            <td>{players?.challenger ? players.challenger.associatedUser.username : "Awaiting challenger..."}</td>
             <td>{playersReady.challenger && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
           </tr>
           <tr>
             <td>{gameStatus}</td>
-            <td>{gameStatus === GameStatus.COUNTING_DOWN && countdownNumber}</td>
+            <td>{gameStatus === GameStatus.COUNTING_DOWN && countdown.current}</td>
           </tr>
         </tbody>
       </table>

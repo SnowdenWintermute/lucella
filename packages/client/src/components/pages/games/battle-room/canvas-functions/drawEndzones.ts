@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { colors } from "@lucella/common/battleRoomGame/consts";
-import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { colors } from "../common/src/consts";
+import { WidthAndHeight } from "../common/src/types";
 
 export default function drawEndzones(
   context: CanvasRenderingContext2D,

@@ -5,7 +5,7 @@ import * as gameUiActions from "../../../../../store/actions/game-ui";
 import { Socket } from "socket.io-client";
 import { RootState } from "../../../../../store";
 import { GameUIState } from "../../../../../store/reducers/game-ui";
-import GameLobbyTopButton from "../../../../common/buttons/GameLobbyTopButton";
+import GameLobbyTopButton from "../../../../common/src/buttons/GameLobbyTopButton";
 
 interface Props {
   socket: Socket;

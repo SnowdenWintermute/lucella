@@ -4,11 +4,11 @@ import draw from "./canvas-functions/canvasMain";
 import { createGameInterval } from "./game-functions/createGameInterval";
 import GameListener from "../socket-manager/GameListener";
 import fitCanvasToScreen from "./canvas-functions/fitCanvasToScreen";
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
 import { Socket } from "socket.io-client";
-import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
+import { WidthAndHeight } from "../common/src/types";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus } from "../common/src/enums";
 import { RootState } from "../../../../store";
 import { GameUIState } from "../../../../store/reducers/game-ui";
 

@@ -1,38 +1,37 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../redux";
 
 const ScoreScreenModalContents = () => {
-  const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState(
-    "elo-animate-1"
-  );
-  const [eloAnimatedChange, setEloAnimatedChange] = useState();
-  const scoreScreenData = useSelector((state) => state.lobbyUi.scoreScreenData);
-  const username = useSelector((state) =>
-    state.auth.user ? state.auth.user.name : null
-  );
+  const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState("elo-animate-1");
+  const [eloAnimatedChange, setEloAnimatedChange] = useState<number | null>();
+  const scoreScreenData = useAppSelector((state) => state.lobbyUi.scoreScreenData);
+  const username = useAppSelector((state) => (state.auth.user ? state.auth.user.name : null));
 
-  let playerOldElo, playerNewElo, playerOldRank, playerNewRank;
+  let playerOldElo: number | null = null;
+  let playerNewElo: number | null = null;
+  let playerOldRank = null;
+  let playerNewRank = null;
+  let eloDiff: number | null = null;
 
-  if (scoreScreenData.eloUpdates) {
+  if (scoreScreenData && scoreScreenData.gameRoom) {
     playerOldElo =
-      scoreScreenData.gameRoom.players.challenger.username === username
-        ? scoreScreenData.eloUpdates.challengerElo
+      scoreScreenData.gameRoom!.players!.challenger!.associatedUser.username === username
+        ? scoreScreenData.eloUpdates!.challengerElo
         : scoreScreenData.eloUpdates.hostElo;
     playerNewElo =
-      scoreScreenData.gameRoom.players.challenger.username === username
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === username
         ? scoreScreenData.eloUpdates.newChallengerElo
         : scoreScreenData.eloUpdates.newHostElo;
     playerOldRank =
-      scoreScreenData.gameRoom.players.challenger.username === username
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === username
         ? scoreScreenData.eloUpdates.oldChallengerRank
         : scoreScreenData.eloUpdates.oldHostRank;
     playerNewRank =
-      scoreScreenData.gameRoom.players.challenger.username === username
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === username
         ? scoreScreenData.eloUpdates.newChallengerRank
         : scoreScreenData.eloUpdates.newHostRank;
+    eloDiff = playerNewElo - playerOldElo;
   }
-
-  const eloDiff = playerNewElo - playerOldElo;
 
   useEffect(() => {
     let didCancel = false;
@@ -44,8 +43,8 @@ const ScoreScreenModalContents = () => {
 
   useEffect(() => {
     const animateTimeoutOne = setTimeout(() => {
-      const newEloAnimateClass =
-        Math.sign(eloDiff) === 1 ? "elo-animate-2-win" : "elo-animate-2-loss";
+      if (!eloDiff) return;
+      const newEloAnimateClass = Math.sign(eloDiff) === 1 ? "elo-animate-2-win" : "elo-animate-2-loss";
       setEloAnimatedChangeClass(newEloAnimateClass);
     }, 1000);
     const animateTimeoutTwo = setTimeout(() => {
@@ -61,32 +60,31 @@ const ScoreScreenModalContents = () => {
     };
   }, [eloDiff, playerNewElo]);
 
-  if (!scoreScreenData.gameData) return <div />;
+  if (!scoreScreenData) return <div />;
   return (
     <div>
-      <h3>Game {scoreScreenData.gameRoom.gameName} final score:</h3>
+      <h3>Game {scoreScreenData!.gameRoom.gameName} final score:</h3>
       <table>
         <tbody>
           <tr>
-            <td>{scoreScreenData.gameRoom.players.host.username}:</td>
-            <td>{scoreScreenData.gameData.gameState.score.host}</td>
+            <td>{scoreScreenData!.gameRoom!.players!.host!.associatedUser.username}:</td>
+            <td>{scoreScreenData!.game.score.host}</td>
           </tr>
           <tr>
-            <td>{scoreScreenData.gameRoom.players.challenger.username}:</td>
-            <td>{scoreScreenData.gameData.gameState.score.challenger}</td>
+            <td>{scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username}:</td>
+            <td>{scoreScreenData!.game.score.challenger}</td>
           </tr>
-          {scoreScreenData.eloUpdates.casualGame ? (
+          {!scoreScreenData!.eloUpdates ? (
             <tr>
               <td>No changes to ladder rating</td>
             </tr>
           ) : (
             <Fragment>
               <tr>
+                <td className={eloAnimatedChangeClass}>Elo: {eloAnimatedChange}</td>
                 <td className={eloAnimatedChangeClass}>
-                  Elo: {eloAnimatedChange}
-                </td>
-                <td className={eloAnimatedChangeClass}>
-                  {`(${Math.sign(eloDiff) === 1 ? "+" : ""}
+                  {eloDiff &&
+                    `(${Math.sign(eloDiff) === 1 ? "+" : ""}
               ${eloDiff})`}
                 </td>
               </tr>
@@ -94,16 +92,16 @@ const ScoreScreenModalContents = () => {
                 <tr>
                   <td className={""}>Rank:</td>
                   <td className={""}>
-                    {playerOldRank + 1 === 0 ? "Unranked" : playerOldRank + 1}
+                    {playerOldRank && playerOldRank + 1 === 0 ? "Unranked" : playerOldRank && playerOldRank + 1}
                     {` -> `}
-                    {playerNewRank + 1}
+                    {playerNewRank && playerNewRank + 1}
                   </td>
                 </tr>
               ) : (
                 <tr>
                   <td>Rank:</td>
                   <td>
-                    {playerOldRank + 1}
+                    {playerOldRank && playerOldRank + 1}
                     {` (unchanged)`}
                   </td>
                 </tr>

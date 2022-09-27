@@ -1,5 +1,5 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { renderRate } from "@lucella/common/battleRoomGame/consts";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { renderRate } from "../common/src/consts";
 
 export function createGameInterval(currentDrawFunction: () => void, currentGame: BattleRoomGame) {
   // let lastClientGameLoopUpdate = Date.now()

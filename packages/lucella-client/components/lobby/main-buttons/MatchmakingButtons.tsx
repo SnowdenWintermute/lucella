@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import * as gameUiActions from "../../../../../store/actions/game-ui";
 import { Socket } from "socket.io-client";
-import { RootState } from "../../../../../store";
-import { GameUIState } from "../../../../../store/reducers/game-ui";
-import GameLobbyTopButton from "../../../../common/buttons/GameLobbyTopButton";
+import GameLobbyTopButton from "../../../components/common/buttons/GameLobbyTopButton";
+import { useAppSelector, useAppDispatch } from "../../../redux";
+import { setMatchmakingWindowVisible } from "../../../redux/slices/lobby-ui-slice";
 
 interface Props {
   socket: Socket;
 }
 
 const MatchmakingButtons = ({ socket }: Props) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [cancelMatchmakingButtonDisplayClass, setCancelMatchmakingButtonDisplayClass] = useState("chat-button-hidden");
-  const gameUiState: GameUIState = useSelector((state: RootState) => state.gameUi);
-  const matchmakingScreenIsOpen = gameUiState.matchmakingScreen.isOpen;
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
 
   // button visibility
   useEffect(() => {
@@ -25,7 +22,7 @@ const MatchmakingButtons = ({ socket }: Props) => {
 
   const onCancelMatchmakingSearch = () => {
     socket.emit("clientCancelsMatchmakingSearch");
-    dispatch(gameUiActions.setMatchmakingWindowVisible(false));
+    dispatch(setMatchmakingWindowVisible(false));
   };
 
   return (

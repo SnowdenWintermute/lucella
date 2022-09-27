@@ -1,7 +1,7 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { UserInput, UserInputs } from "@lucella/common/battleRoomGame/classes/UserInput";
-import { eventLimiterRate } from "@lucella/common/battleRoomGame/consts";
-import { PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { UserInput, UserInputs } from "../common/src/classes/UserInput";
+import { eventLimiterRate } from "../common/src/consts";
+import { PlayerRole } from "../common/src/enums";
 import throttledEventHandlerCreator from "../../util-functions/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(

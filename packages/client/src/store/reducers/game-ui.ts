@@ -1,4 +1,4 @@
-import { GameStatus, PlayerRole } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus, PlayerRole } from "../common/src/enums";
 import { Action, ActionType } from "../actions/types";
 
 export interface GameUIState {

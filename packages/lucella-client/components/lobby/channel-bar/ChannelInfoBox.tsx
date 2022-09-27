@@ -1,14 +1,13 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../store";
+import { useAppSelector } from "../../../redux";
 
 const ChannelInfoBox = () => {
-  const chatState = useSelector((state: RootState) => state.chat);
-  const { newRoomLoading, currentChatRoomName, currentChatRoomUsers } = chatState;
+  const chatState = useAppSelector((state) => state.chat);
+  const { newChatRoomLoading, currentChatRoomName, currentChatRoomUsers } = chatState;
   const numUsers = Object.keys(currentChatRoomUsers).length;
   return (
     <div className="game-lobby-info-box">
-      {currentChatRoomName} ({newRoomLoading ? "..." : numUsers})
+      {currentChatRoomName} ({newChatRoomLoading ? "..." : numUsers})
     </div>
   );
 };

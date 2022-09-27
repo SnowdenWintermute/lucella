@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { WidthAndHeight } from "../common/src/types";
+import { GameStatus } from "../common/src/enums";
 import { drawOrbs } from "./drawOrbs";
 import drawScore from "./drawScore";
 import drawSelectionBox from "./drawSelectionBox";

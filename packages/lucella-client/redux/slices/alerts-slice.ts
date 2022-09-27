@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Alert } from "../classes/Alert";
+import { Alert } from "../../classes/Alert";
 
 const initialState: Alert[] = [];
 

@@ -1,6 +1,6 @@
-import { Orb } from "@lucella/common/battleRoomGame/classes/Orb";
-import { Point } from "@lucella/common/battleRoomGame/classes/Point";
-import { ghostTransparency } from "@lucella/common/battleRoomGame/consts";
+import { Orb } from "../common/src/classes/Orb";
+import { Point } from "../common/src/classes/Point";
+import { ghostTransparency } from "../common/src/consts";
 
 export default function drawOrb(
   context: CanvasRenderingContext2D,

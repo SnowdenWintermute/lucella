@@ -5,7 +5,7 @@ import * as alertActions from "../../../../store/actions/alert";
 import { Socket } from "socket.io-client";
 import { RootState } from "../../../../store";
 import { GameUIState } from "../../../../store/reducers/game-ui";
-import { GameStatus } from "@lucella/common/battleRoomGame/enums";
+import { GameStatus } from "../common/src/enums";
 import { AlertType } from "../../../../enums";
 
 interface Props {

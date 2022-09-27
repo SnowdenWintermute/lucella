@@ -1,12 +1,9 @@
-import { BattleRoomGame } from "@lucella/common/battleRoomGame/classes/BattleRoomGame";
-import { Point } from "@lucella/common/battleRoomGame/classes/Point";
-import {
-  minimumQuickTouchSelectionBoxSize,
-  touchHoldSelectionBoxStartThreshold,
-} from "@lucella/common/battleRoomGame/consts";
-import { WidthAndHeight } from "@lucella/common/battleRoomGame/types";
+import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { Point } from "../common/src/classes/Point";
+import { minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../common/src/consts";
+import { WidthAndHeight } from "../common/src/types";
 
-const GameEventTypes = require("@lucella/common/battleRoomGame/consts/GameEventTypes");
+const GameEventTypes = require("../common/src/consts/GameEventTypes");
 
 export default (e: React.TouchEvent<HTMLCanvasElement>, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) => {
   const { mouseData } = currentGame;
