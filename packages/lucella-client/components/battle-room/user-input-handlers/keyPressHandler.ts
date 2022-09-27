@@ -1,8 +1,7 @@
 import { BattleRoomGame } from "../../../../common";
-import { UserInput, UserInputs } from "../../../../common/UserInput";
 import { eventLimiterRate } from "../../../../common";
 import { PlayerRole } from "../../../../common";
-import throttledEventHandlerCreator from "../../../util-functions/throttledEventHandlerCreator";
+import throttledEventHandlerCreator from "../../../utils/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(
   eventLimiterRate,
@@ -28,9 +27,9 @@ export default throttledEventHandlerCreator(
         return;
     }
     if (keyPressed > 0 && keyPressed < 6) {
-      const input = new UserInput(UserInputs.SELECT_ORB, {});
-      currentGame.queues.client.localInputs.push(input);
-      currentGame.queues.client.inputsToSend.push(input);
+      // const input = new UserInput(UserInputs.SELECT_ORB, {});
+      // currentGame.queues.client.localInputs.push(input);
+      // currentGame.queues.client.inputsToSend.push(input);
     }
   }
 );

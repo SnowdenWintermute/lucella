@@ -1,10 +1,10 @@
 import ServerState from "../../interfaces/ServerState";
 import { io } from "../../expressServer";
 import handleNewSocketConnection from "./generalFunctions/handleNewSocketConnection";
-const handleSocketDisconnection = require("./generalFunctions/handleSocketDisconnection");
-const chatListeners = require("./listeners/chatListeners");
-const gameUiListeners = require("./listeners/gameUiListeners");
-const battleRoomGameListeners = require("./listeners/battleRoomGameListeners");
+import handleSocketDisconnection from "./generalFunctions/handleSocketDisconnection";
+import chatListeners from "./listeners/chatListeners";
+import gameUiListeners from "./listeners/gameUiListeners";
+import battleRoomGameListeners from "./listeners/battleRoomGameListeners";
 import clientRequestsToJoinChatChannel from "./lobbyFunctions/clientRequestsToJoinChatChannel";
 
 const serverState: ServerState = {
@@ -27,14 +27,16 @@ io.sockets.on("connect", async (socket) => {
   socket.emit("authenticationFinished", null);
   socket.emit("gameListUpdate", serverState.gameRooms);
   socket.emit("currentGameRoomUpdate", null);
-  chatListeners({ serverState });
-  gameUiListeners({ serverState });
-  battleRoomGameListeners({ serverState });
+  chatListeners(io, socket, serverState);
+  gameUiListeners(io, socket, serverState);
+  battleRoomGameListeners(socket, serverState);
 
   socket.on("disconnect", () =>
-    handleSocketDisconnection({
+    handleSocketDisconnection(
+      io,
+      socket,
       serverState,
-      gameName: serverState.connectedSockets[socket.id].currentGameName,
-    })
+      serverState?.connectedSockets[socket.id]?.currentGameName || undefined
+    )
   );
 });

@@ -1,8 +1,8 @@
 import { BattleRoomGame } from "../../../../common";
-import { Point } from "../../../../common/Point";
+import { Point } from "../../../../common";
 import { minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../../../../common";
 import { WidthAndHeight } from "../../../../common";
-import throttledEventHandlerCreator from "../../../util-functions/throttledEventHandlerCreator";
+import throttledEventHandlerCreator from "../../../utils/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(
   33,

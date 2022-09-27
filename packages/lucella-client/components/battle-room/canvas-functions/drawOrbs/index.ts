@@ -1,5 +1,5 @@
 import { BattleRoomGame } from "../../../../../common";
-import { Point } from "../../../../../common/Point";
+import { Point } from "../../../../../common";
 import { PlayerRole } from "../../../../../common";
 import drawOrb from "./drawOrb";
 import drawOrbNumber from "./drawOrbNumber";

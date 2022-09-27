@@ -1,5 +1,5 @@
-import { MouseData } from "../../../../common/MouseData";
-import { Point } from "../../../../common/Point";
+import { MouseData } from "../../../../common";
+import { Point } from "../../../../common";
 
 export default (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, mouseData: MouseData) => {
   if (!(e.button === 0)) return;

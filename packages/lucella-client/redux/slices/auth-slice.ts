@@ -7,9 +7,11 @@ export interface IAuthState {
   loading: boolean;
   user: IUser | null;
 }
+let localToken = null;
+if (typeof window !== "undefined") localStorage.getItem("token");
 
 const initialState: IAuthState = {
-  token: localStorage.getItem("token"),
+  token: localToken,
   isAuthenticated: null,
   loading: true,
   user: null,

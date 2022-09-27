@@ -1,8 +1,5 @@
 import { BattleRoomGame } from "../../../../common";
 
-const handleAndQueueNewGameEvent = require("../game-functions/queueInput");
-const GameEventTypes = require("../../../../common/GameEventTypes");
-
 export default (currentGame: BattleRoomGame) => {
   const { mouseData } = currentGame;
   mouseData.mouseOnScreen = false;

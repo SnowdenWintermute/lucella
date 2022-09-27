@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useRef } from "react";
-import SuccessIcon from "../../../../img/alertIcons/success.svg";
+import SuccessIcon from "../../img/alertIcons/success.svg";
 import { Socket } from "socket.io-client";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux";
@@ -17,8 +17,13 @@ const PreGameRoom = ({ socket }: Props) => {
   const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState("height-0-hidden");
   const [gameNameInput, setGameNameInput] = useState("");
-  const { gameStatus, playersReady, players, countdown, isRanked } = lobbyUiState.currentGameRoom!;
-  const currentGameName = lobbyUiState.currentGameRoom!.gameName;
+  const gameStatus = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.gameStatus;
+  const playersReady = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.playersReady;
+  const players = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.players;
+  const isRanked = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.isRanked;
+  const currentGameName = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.gameName;
+  const countdown = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.countdown;
+
   const { playerRole } = lobbyUiState;
   const channelNameInput = useRef<HTMLInputElement>(null);
 
@@ -58,15 +63,15 @@ const PreGameRoom = ({ socket }: Props) => {
         <tbody>
           <tr>
             <td>{players?.host?.associatedUser.username}</td>
-            <td>{playersReady.host && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
+            <td>{playersReady?.host && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
           </tr>
           <tr>
             <td>{players?.challenger ? players.challenger.associatedUser.username : "Awaiting challenger..."}</td>
-            <td>{playersReady.challenger && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
+            <td>{playersReady?.challenger && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
           </tr>
           <tr>
             <td>{gameStatus}</td>
-            <td>{gameStatus === GameStatus.COUNTING_DOWN && countdown.current}</td>
+            <td>{gameStatus === GameStatus.COUNTING_DOWN && countdown?.current}</td>
           </tr>
         </tbody>
       </table>

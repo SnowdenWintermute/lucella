@@ -16,7 +16,7 @@ const GameList = ({ socket }: Props) => {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const gameList = lobbyUiState.gameList.games;
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
-  const { gameName } = lobbyUiState.currentGameRoom!;
+  const gameName = lobbyUiState.currentGameRoom?.gameName;
   const gameListDisplayClass = gameListIsOpen ? "" : "height-0-hidden";
 
   // cancel viewing game list if in a game

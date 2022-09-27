@@ -9,8 +9,8 @@
     "start": "node servers",
     "server": "nodemon server",
     "servers": "nodemon servers",
-    "client": "yarn develop --prefix ../lucella-client",
-    "dev": "concurrently \"yarn run servers\" \"yarn run client\""
+    "client": "yarn --cwd ../lucella-client develop",
+    "dev": "concurrently \"yarn serve\" \"yarn client\""
   },
   "author": "Mike Silverman",
   "license": "ISC",

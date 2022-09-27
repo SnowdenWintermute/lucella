@@ -1,4 +1,4 @@
-import uuid from "uuid";
+import { v4 } from "uuid";
 
 export class SocketMetadata {
   currentChatChannel: string | null;
@@ -24,6 +24,6 @@ export class SocketMetadata {
     this.currentGameName = currentGameName || null;
     this.currentChatChannel = currentChatChannel || null;
     this.previousChatChannelName = null;
-    this.uuid = uuid.v4();
+    this.uuid = v4();
   }
 }

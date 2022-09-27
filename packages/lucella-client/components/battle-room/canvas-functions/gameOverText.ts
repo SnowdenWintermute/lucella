@@ -1,5 +1,5 @@
 import { BattleRoomGame } from "../../../../common";
-import { Point } from "../../../../common/Point";
+import { Point } from "../../../../common";
 
 const gameOverText = (context: CanvasRenderingContext2D, currentGame: BattleRoomGame, canvasDrawFractions: Point) => {
   const fontSize = 25;

@@ -1,5 +1,5 @@
 import { BattleRoomGame } from "../../../../common";
-import { Point } from "../../../../common/Point";
+import { Point } from "../../../../common";
 import { WidthAndHeight } from "../../../../common";
 
 export default (e: React.TouchEvent<HTMLCanvasElement>, canvasSize: WidthAndHeight, currentGame: BattleRoomGame) => {

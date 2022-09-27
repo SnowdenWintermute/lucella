@@ -15,7 +15,8 @@ const InGameButtons = ({ socket }: Props) => {
   const [goBackButtonDisplayClass, setGoBackButtonDisplayClass] = useState("chat-button-hidden");
   const [leaveGameButtonDisplayClass, setLeaveGameButtonDisplayClass] = useState("chat-button-hidden");
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { gameName, isRanked } = lobbyUiState.currentGameRoom!;
+  const gameName = lobbyUiState.currentGameRoom ? lobbyUiState.currentGameRoom.gameName : null;
+  const isRanked = lobbyUiState.currentGameRoom ? lobbyUiState.currentGameRoom.isRanked : null;
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
   const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
   const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;

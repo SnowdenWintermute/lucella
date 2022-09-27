@@ -1,5 +1,5 @@
 import { Orb } from "../../../../../common/Orb";
-import { Point } from "../../../../../common/Point";
+import { Point } from "../../../../../common";
 import { colors, inGameFontSizes } from "../../../../../common";
 import { PlayerRole } from "../../../../../common";
 

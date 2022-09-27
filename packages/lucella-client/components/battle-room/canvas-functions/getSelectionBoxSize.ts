@@ -1,5 +1,5 @@
-import { MouseData } from "../../../../common/MouseData";
-import { Point } from "../../../../common/Point";
+import { MouseData } from "../../../../common";
+import { Point } from "../../../../common";
 
 const getSelectionBoxSize = (mouseData: MouseData, canvasDrawFractions: Point) => {
   if (!mouseData.mouseOnScreen) mouseData.leftCurrentlyPressed = false;

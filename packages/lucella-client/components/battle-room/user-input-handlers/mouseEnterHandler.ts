@@ -1,4 +1,4 @@
-import { MouseData } from "../../../../common/MouseData";
+import { MouseData } from "../../../../common";
 
 export default (mouseData: MouseData) => {
   mouseData.mouseOnScreen = true;

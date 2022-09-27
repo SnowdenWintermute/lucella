@@ -23,7 +23,7 @@ const BattleRoomGameInstance = (props: Props) => {
     height: BattleRoomGame.baseWindowDimensions.height,
   });
   const gameWidthRatio = useRef(window.innerHeight * 0.6);
-  const currentGame = useRef(new BattleRoomGame(lobbyUiState.currentGameRoom!.gameName));
+  const currentGame = useRef(lobbyUiState.currentGameRoom && new BattleRoomGame(lobbyUiState.currentGameRoom.gameName));
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawRef = useRef<() => void>();
 
@@ -52,18 +52,20 @@ const BattleRoomGameInstance = (props: Props) => {
     function currentDrawFunction() {
       drawRef.current ? drawRef.current() : null;
     }
+    if (!currentGame.current) return;
     const gameInterval = createGameInterval(currentDrawFunction, currentGame.current);
     return () => clearInterval(gameInterval);
   }, [socket, currentGame]);
 
   return (
     <div className="battle-room-canvas-holder" onContextMenu={(e) => e.preventDefault()}>
-      <GameListener socket={socket} currentGame={currentGame.current} />
-      {currentGameRoom?.gameStatus === GameStatus.IN_PROGRESS || currentGameRoom?.gameStatus === GameStatus.ENDING ? (
+      {currentGame.current && <GameListener socket={socket} currentGame={currentGame.current} />}
+      {(currentGame.current && currentGameRoom?.gameStatus === GameStatus.IN_PROGRESS) ||
+      currentGameRoom?.gameStatus === GameStatus.ENDING ? (
         <CanvasWithInputListeners
           canvasSize={canvasSize}
           canvasRef={canvasRef}
-          currentGame={currentGame.current}
+          currentGame={currentGame.current!}
           playerRole={playerRole}
         />
       ) : (

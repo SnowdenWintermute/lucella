@@ -24,8 +24,8 @@ interface Props {
 
 const UISocketListener = ({ socket }: Props) => {
   const dispatch = useAppDispatch();
-  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { gameName } = lobbyUiState.currentGameRoom!;
+  const { currentGameRoom } = useAppSelector((state) => state.lobbyUi);
+  const gameName = currentGameRoom && currentGameRoom.gameName ? currentGameRoom.gameName : null;
 
   useEffect(() => {
     if (!socket) return;

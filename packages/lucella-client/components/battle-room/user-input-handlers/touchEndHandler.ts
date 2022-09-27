@@ -1,9 +1,7 @@
 import { BattleRoomGame } from "../../../../common";
-import { Point } from "../../../../common/Point";
+import { Point } from "../../../../common";
 import { minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../../../../common";
 import { WidthAndHeight } from "../../../../common";
-
-const GameEventTypes = require("../../../../common/GameEventTypes");
 
 export default (e: React.TouchEvent<HTMLCanvasElement>, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) => {
   const { mouseData } = currentGame;
@@ -27,7 +25,7 @@ export default (e: React.TouchEvent<HTMLCanvasElement>, currentGame: BattleRoomG
     Math.abs(adjustedOffsetX - touchStart.x) > minimumQuickTouchSelectionBoxSize ||
     Math.abs(adjustedOffsetY - touchStart.y) > minimumQuickTouchSelectionBoxSize
   ) {
-    type = GameEventTypes.ORB_SELECT;
+    // type = GameEventTypes.ORB_SELECT;
     if (!mouseData.position) return;
     props = {
       startX: touchStart.x,
@@ -36,7 +34,7 @@ export default (e: React.TouchEvent<HTMLCanvasElement>, currentGame: BattleRoomG
       currY: mouseData.position.y,
     };
   } else {
-    type = GameEventTypes.ORB_MOVE;
+    // type = GameEventTypes.ORB_MOVE;
     props = {
       headingX: (offsetX / canvasSize.width) * BattleRoomGame.baseWindowDimensions.width,
       headingY: (offsetY / canvasSize.height) * BattleRoomGame.baseWindowDimensions.height,

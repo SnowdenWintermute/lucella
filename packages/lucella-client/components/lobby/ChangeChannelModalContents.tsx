@@ -24,7 +24,7 @@ const ChangeChannelModalContents = ({ setJoinNewRoomInput, joinNewRoomInput, onJ
       ></input>
       <div className="modal-option-buttons-grid">
         {defaultChannelNames.map((name) => (
-          <ButtonBasic title={name} onClick={() => joinRoom(name.toLowerCase())} />
+          <ButtonBasic title={name} key={name} onClick={() => joinRoom(name.toLowerCase())} />
         ))}
       </div>
     </form>

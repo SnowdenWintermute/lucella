@@ -3,9 +3,11 @@ import React from "react";
 import GameLobby from "../../components/lobby/GameLobby";
 import { useAppSelector } from "../../redux";
 
-const BattleRoomShell = () => {
+const BattleRoom = () => {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { gameStatus } = lobbyUiState.currentGameRoom!;
+  const { currentGameRoom } = lobbyUiState;
+  const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
+
   const inGameShellClass =
     gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING ? "game-shell-in-game" : "";
 
@@ -23,4 +25,4 @@ const BattleRoomShell = () => {
   );
 };
 
-export default BattleRoomShell;
+export default BattleRoom;

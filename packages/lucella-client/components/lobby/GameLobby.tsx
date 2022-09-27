@@ -14,9 +14,9 @@ import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import { GameStatus } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
-const socketAddress = process.env.REACT_APP_DEV_MODE
-  ? process.env.REACT_APP_SOCKET_API_DEV
-  : process.env.REACT_APP_SOCKET_API;
+const socketAddress = process.env.NEXT_PUBLIC_DEV_MODE
+  ? process.env.NEXT_PUBLIC_SOCKET_API_DEV
+  : process.env.NEXT_PUBLIC_SOCKET_API;
 
 interface Props {
   defaultChatRoom: string;
@@ -27,25 +27,26 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   const user = useAppSelector((state) => state.auth.user);
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { scoreScreenDisplayed } = lobbyUiState;
-  const { gameStatus } = lobbyUiState.currentGameRoom!;
+  const { currentGameRoom } = lobbyUiState;
+  const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(false);
   const [authenticating, setAuthenticating] = useState(true);
   const username = user ? user.name : "Anon";
-  const authToken = useRef(localStorage.token);
+  const authToken = useRef(typeof window !== "undefined" && localStorage.token);
   const socket = useRef<Socket>();
 
   // setup socket
   useEffect(() => {
     let query = { token: null };
     if (authToken.current) query.token = authToken.current;
-    socket.current = io(socketAddress || "", { transports: ["websocket"], query });
+    socket.current = io(socketAddress || "", { transports: ["websocket"], query, reconnectionAttempts: 2 });
     return () => {
       socket.current && socket.current.disconnect();
       dispatch(setCurrentGameRoom(null));
       dispatch(setPreGameScreenDisplayed(false));
     };
-  }, [localStorage.token]);
+  }, [authToken]);
 
   useEffect(() => {
     socket.current &&

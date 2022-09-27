@@ -4,7 +4,7 @@ import { AlertType } from "../../enums";
 import { setAlert } from "../slices/alerts-slice";
 import { IAuthState, setCredentials, setUser, logout } from "../slices/auth-slice";
 import { IUser, LoginInput, RegisterInput } from "../types";
-const API_URL = process.env.REACT_APP_DEV_MODE ? process.env.REACT_APP_API_DEV : process.env.REACT_APP_API;
+const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${API_URL}/api/auth`,
