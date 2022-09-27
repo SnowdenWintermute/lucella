@@ -1,7 +1,9 @@
-export default function (rankedQueue) {
+import { RankedQueue } from "../../../../interfaces/ServerState";
+
+export default function clearIntervalIfQueueEmpty(rankedQueue: RankedQueue) {
   if (Object.keys(rankedQueue.users).length < 1) {
-    clearInterval(rankedQueue.matchmakingInterval);
-    delete rankedQueue.matchmakingInterval;
+    rankedQueue.matchmakingInterval && clearInterval(rankedQueue.matchmakingInterval);
+    rankedQueue.matchmakingInterval = null;
     return;
   }
 }

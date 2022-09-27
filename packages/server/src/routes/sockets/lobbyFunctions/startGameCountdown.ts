@@ -1,4 +1,4 @@
-import { GameStatus } from "../common/src/enums";
+import { GameStatus } from "../../../../../common";
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import startGame from "../battleRoomGame/startGame";

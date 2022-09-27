@@ -3,10 +3,11 @@ import cancelGameCountdown from "../cancelGameCountdown";
 import togglePlayerReadyState from "./togglePlayerReadyState";
 import ServerState from "../../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
-import { GameStatus } from "../common/src/enums";
+import { GameStatus } from "../../../../../../common";
 
-export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string) {
+export default function (io: Server, socket: Socket | undefined, serverState: ServerState, gameName: string) {
   try {
+    if (!socket) return new Error("client tried to ready up but their socket wasn't found");
     const { connectedSockets, gameRooms } = serverState;
     const gameRoom = gameRooms[gameName];
     const { players, playersReady } = gameRoom;

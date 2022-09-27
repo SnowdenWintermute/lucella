@@ -3,7 +3,7 @@ import { RankedQueue } from "../../../../interfaces/ServerState";
 import { IBattleRoomRecord } from "../../../../models/BattleRoomRecord";
 import { IUser } from "../../../../models/User";
 
-export default function (
+export default function putUserInRankedMatchmakingQueue(
   socket: Socket,
   rankedQueue: RankedQueue,
   user: IUser,
@@ -13,6 +13,7 @@ export default function (
     userId: user.id,
     record: userBattleRoomRecord,
     socketId: socket.id,
+    username: user.name,
   };
   socket.join("ranked-queue");
   socket.emit("matchmakningQueueJoined");

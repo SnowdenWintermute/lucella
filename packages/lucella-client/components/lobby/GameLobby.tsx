@@ -11,7 +11,7 @@ import Modal from "../../components/common/modal/Modal";
 import io, { Socket } from "socket.io-client";
 import SocketManager from "../socket-manager/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
-import { GameStatus } from "../../../common/src/enums";
+import { GameStatus } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 const socketAddress = process.env.REACT_APP_DEV_MODE

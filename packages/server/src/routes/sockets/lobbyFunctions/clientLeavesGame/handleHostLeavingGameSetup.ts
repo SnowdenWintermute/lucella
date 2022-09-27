@@ -1,4 +1,4 @@
-import { ChatMessage } from "../common/src/classes/ChatMessage";
+import { ChatMessage } from "../../../../../../common";
 import { Server } from "socket.io";
 import ServerState from "../../../../interfaces/ServerState";
 import removeNonHostPlayers from "./removeNonHostPlayers";

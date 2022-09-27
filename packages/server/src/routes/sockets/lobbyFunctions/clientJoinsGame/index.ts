@@ -5,8 +5,9 @@ import assignPlayerRole from "./assignPlayerRole";
 import ServerState from "../../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
 
-export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string) {
+export default function (io: Server, socket: Socket | undefined, serverState: ServerState, gameName: string) {
   const { connectedSockets, gameRooms } = serverState;
+  if (!socket) return new Error("client tried to join a game but their socket wasn't found");
   const username = connectedSockets[socket.id].associatedUser.username;
   const gameRoom = gameRooms[gameName];
   try {

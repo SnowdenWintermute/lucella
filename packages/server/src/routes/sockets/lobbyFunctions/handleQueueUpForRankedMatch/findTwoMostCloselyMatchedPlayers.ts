@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 import ServerState, { RankedQueueUser } from "../../../../interfaces/ServerState";
 import compareAllPlayersElo from "./compareAllPlayersElo";
 
-export default function (io: Server, serverState: ServerState) {
+export default function findTwoMostCloselyMatchedPlayers(io: Server, serverState: ServerState) {
   const { rankedQueue } = serverState;
   const bestMatch: {
     players: { host: RankedQueueUser; challenger: RankedQueueUser } | null;
@@ -13,7 +13,7 @@ export default function (io: Server, serverState: ServerState) {
   };
   const { players, eloDiff } = bestMatch;
   Object.keys(rankedQueue.users).forEach((socketId) => {
-    if (!io.sockets.sockets[socketId]) return delete rankedQueue.users[socketId];
+    if (!io.sockets.sockets.get(socketId)) return delete rankedQueue.users[socketId];
     const currentBestMatch = compareAllPlayersElo(io, serverState, socketId);
     if (currentBestMatch.eloDiff && eloDiff) {
       if (currentBestMatch.player && (players === null || currentBestMatch.eloDiff < eloDiff)) {

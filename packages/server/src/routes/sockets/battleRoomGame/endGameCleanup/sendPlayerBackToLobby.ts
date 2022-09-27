@@ -1,5 +1,5 @@
+import { SocketMetadata } from "../../../../../../common";
 import { Server } from "socket.io";
-import SocketMetadata from "../../../../classes/SocketMetadata";
 import ServerState from "../../../../interfaces/ServerState";
 import clientRequestsToJoinChatChannel from "../../lobbyFunctions/clientRequestsToJoinChatChannel";
 
@@ -13,10 +13,8 @@ export default function (
   if (!socketId) return new Error("tried to send player back to lobby but no sockedId found");
   const { connectedSockets } = serverState;
   player.currentGameName = null;
-  clientRequestsToJoinChatChannel(
-    io,
-    io.sockets.sockets[socketId],
-    serverState,
-    connectedSockets[socketId].previousChatChannelName
-  );
+  const socketToSend = io.sockets.sockets.get(socketId);
+  if (socketToSend)
+    clientRequestsToJoinChatChannel(io, socketToSend, serverState, connectedSockets[socketId].previousChatChannelName);
+  else throw new Error("tried to send player back to lobby but their socket id wasn't registered with the io server");
 }

@@ -1,7 +1,8 @@
 import User from "../../../models/User";
 import BattleRoomLadder, { IBattleRoomLadder } from "../../../models/BattleRoomLadder";
+import { Request, Response } from "express";
 
-export default async function (req, res) {
+export default async function (req: Request, res: Response) {
   try {
     const ladder = await BattleRoomLadder.findOne<IBattleRoomLadder>({}).populate({
       path: "ladder",
@@ -12,7 +13,7 @@ export default async function (req, res) {
       },
     });
     if (!ladder) return res.json("no ladder yet");
-    const page = req.params.page;
+    const page = parseInt(req.params.page);
     const pageSize = 10;
     const startIndex = (page - 1) * pageSize;
     let endIndex;
@@ -30,7 +31,7 @@ export default async function (req, res) {
     const totalNumberOfPages = Math.ceil(ladder.ladder.length / pageSize);
 
     res.json({ pageData: ladderPageToSend, totalNumberOfPages });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err.message);
     res.status(500).send("Server error");
   }

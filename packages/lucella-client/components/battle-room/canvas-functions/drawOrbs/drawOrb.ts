@@ -1,6 +1,6 @@
-import { Orb } from "../../../../../common/src/classes/Orb";
-import { Point } from "../../../../../common/src/classes/Point";
-import { ghostTransparency } from "../../../../../common/src/consts";
+import { Orb } from "../../../../../common/Orb";
+import { Point } from "../../../../../common/Point";
+import { ghostTransparency } from "../../../../../common";
 
 export default function drawOrb(
   context: CanvasRenderingContext2D,

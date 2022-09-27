@@ -1,4 +1,4 @@
-import { WidthAndHeight } from "../../../common/src/types";
+import { WidthAndHeight } from "../../../common";
 import React, { useCallback, useEffect } from "react";
 import mouseDownHandler from "./user-input-handlers/mouseDownHandler";
 import mouseEnterHandler from "./user-input-handlers/mouseEnterHandler";
@@ -8,8 +8,8 @@ import mouseUpHandler from "./user-input-handlers/mouseUpHandler";
 import touchMoveHandler from "./user-input-handlers/touchMoveHandler";
 import touchStartHandler from "./user-input-handlers/touchStartHandler";
 import touchEndHandler from "./user-input-handlers/touchEndHandler";
-import { BattleRoomGame } from "../../../common/src/classes/BattleRoomGame";
-import { PlayerRole } from "../../../common/src/enums";
+import { BattleRoomGame } from "../../../common";
+import { PlayerRole } from "../../../common";
 import keyPressHandler from "./user-input-handlers/keyPressHandler";
 
 interface Props {

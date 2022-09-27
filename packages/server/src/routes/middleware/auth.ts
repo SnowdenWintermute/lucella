@@ -1,6 +1,7 @@
+import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-export default function (req, res, next) {
+export default function (req: Request, res: Response, next: () => any) {
   const token = req.header("x-auth-token");
   if (!token)
     return res.status(401).json({
@@ -8,7 +9,9 @@ export default function (req, res, next) {
     });
 
   try {
+    if (!process.env.JWT_SECRET) return new Error("no jwt secret found");
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // @ts-ignore
     req.user = decoded.user;
     next();
   } catch (err) {

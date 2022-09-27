@@ -1,11 +1,17 @@
-import { GameStatus } from "../common/src/enums";
+import { GameStatus } from "../../../../../../common";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../../../interfaces/ServerState";
 
 import endGameCleanup from "../../battleRoomGame/endGameCleanup";
 import handleLeavingGameSetupScreen from "./handleLeavingGameSetupScreen";
 
-export default function (io: Server, socket: Socket, serverState: ServerState, gameName, isDisconnecting?: boolean) {
+export default function (
+  io: Server,
+  socket: Socket,
+  serverState: ServerState,
+  gameName: string,
+  isDisconnecting?: boolean
+) {
   const { connectedSockets, gameRooms } = serverState;
   const gameRoom = gameRooms[gameName];
   if (!gameRoom) return socket.emit("errorMessage", "No game by that name exists");

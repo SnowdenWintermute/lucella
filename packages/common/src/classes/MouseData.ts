@@ -1,6 +1,6 @@
 import { Point } from "./Point";
 
-class MouseData {
+export class MouseData {
   leftPressedAt: Point | null;
   leftReleasedAt: Point | null;
   rightReleasedAt: Point | null;
@@ -20,5 +20,3 @@ class MouseData {
     this.touchStartTime = null;
   }
 }
-
-export default MouseData;

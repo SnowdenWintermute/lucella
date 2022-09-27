@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
-import { Point } from "../../../../common/src/classes/Point";
-import { WidthAndHeight } from "../../../../common/src/types";
+import { BattleRoomGame } from "../../../../common";
+import { Point } from "../../../../common/Point";
+import { WidthAndHeight } from "../../../../common";
 
 export default (e: React.TouchEvent<HTMLCanvasElement>, canvasSize: WidthAndHeight, currentGame: BattleRoomGame) => {
   if (!e.target) return;

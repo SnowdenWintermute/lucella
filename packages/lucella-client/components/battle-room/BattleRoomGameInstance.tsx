@@ -4,11 +4,11 @@ import draw from "./canvas-functions/canvasMain";
 import { createGameInterval } from "./game-functions/createGameInterval";
 import GameListener from "../socket-manager/GameListener";
 import fitCanvasToScreen from "./canvas-functions/fitCanvasToScreen";
-import { BattleRoomGame } from "../../../common/src/classes/BattleRoomGame";
+import { BattleRoomGame } from "../../../common";
 import { Socket } from "socket.io-client";
-import { WidthAndHeight } from "../../../common/src/types";
+import { WidthAndHeight } from "../../../common";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
-import { GameStatus } from "../../../common/src/enums";
+import { GameStatus } from "../../../common";
 
 interface Props {
   socket: Socket;

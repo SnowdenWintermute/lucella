@@ -1,7 +1,7 @@
-import { Orb } from "../../../../../common/src/classes/Orb";
-import { Point } from "../../../../../common/src/classes/Point";
-import { colors, inGameFontSizes } from "../../../../../common/src/consts";
-import { PlayerRole } from "../../../../../common/src/enums";
+import { Orb } from "../../../../../common/Orb";
+import { Point } from "../../../../../common/Point";
+import { colors, inGameFontSizes } from "../../../../../common";
+import { PlayerRole } from "../../../../../common";
 
 export default function drawOrbNumber(
   context: CanvasRenderingContext2D,

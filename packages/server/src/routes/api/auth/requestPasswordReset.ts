@@ -2,8 +2,9 @@ import User from "../../../models/User";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 import nodemailer from "nodemailer";
+import { Request, Response } from "express";
 
-export default async function (req, res) {
+export default async function (req: Request, res: Response) {
   let errors = validationResult(req);
   if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
 
@@ -19,14 +20,11 @@ export default async function (req, res) {
         id: user.id,
       },
     };
-    const passwordResetToken = jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      {
-        expiresIn: 3600,
-      },
-      { algorithm: "RS256" }
-    );
+    if (!process.env.JWT_SECRET) return new Error("no jwt secret found");
+    const passwordResetToken = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: 3600,
+      algorithm: "RS256",
+    });
 
     const rootUrl = process.env.DEV_MODE ? process.env.EMAIL_ROOT_URL_DEV : process.env.EMAIL_ROOT_URL;
     const emailPass = process.env.EMAIL_PASSWORD;
@@ -61,7 +59,7 @@ export default async function (req, res) {
     res.status(200).json({
       msg: "An email has been sent with a link to reset your password.",
     });
-  } catch (error) {
+  } catch (error: any) {
     console.log("error sending email");
     console.error(error.message);
     res.status(500).send("Server error");

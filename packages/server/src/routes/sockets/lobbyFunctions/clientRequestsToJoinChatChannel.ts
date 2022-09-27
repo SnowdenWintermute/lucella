@@ -1,10 +1,10 @@
 import { Server, Socket } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import removeSocketFromChatChannel from "./removeSocketFromChatChannel";
-import { ChatMessage, ChatMessageStyles } from "../../../../common/src/classes/ChatMessage";
+import { ChatMessage, ChatMessageStyles } from "../../../../../common";
 import updateRoomUsernameList from "./updateChatChannelUsernameList";
-import ChatChannel from "../../../classes/ChatChannel";
 import sanitizeChatChannelForClient from "../../../utils/sanitizeChatChannelForClient";
+import { ChatChannel } from "@lucella/common";
 
 export default function clientRequestsToJoinChatChannel(
   io: Server,

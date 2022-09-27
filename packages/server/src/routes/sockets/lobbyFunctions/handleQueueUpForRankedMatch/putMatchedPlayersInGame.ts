@@ -11,8 +11,8 @@ export default function (
 ) {
   const { rankedQueue } = serverState;
   const gameName = `ranked-${rankedQueue.rankedGameCurrentNumber}`;
-  clientHostsNewGame(io, io.sockets.sockets[players.host.socketId], serverState, gameName, true);
-  clientJoinsGame(io, io.sockets.sockets[players.challenger.socketId], serverState, gameName);
-  handleReadyClick(io, io.sockets.sockets[players.host.socketId], serverState, gameName);
-  handleReadyClick(io, io.sockets.sockets[players.challenger.socketId], serverState, gameName);
+  clientHostsNewGame(io, io.sockets.sockets.get(players.host.socketId), serverState, gameName, true);
+  clientJoinsGame(io, io.sockets.sockets.get(players.challenger.socketId), serverState, gameName);
+  handleReadyClick(io, io.sockets.sockets.get(players.host.socketId), serverState, gameName);
+  handleReadyClick(io, io.sockets.sockets.get(players.challenger.socketId), serverState, gameName);
 }

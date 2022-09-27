@@ -1,9 +1,9 @@
+import { EloUpdates } from "../../../../../../common";
 import { Server } from "socket.io";
-import { EloUpdates } from "../../../../../common/src/types";
 import ServerState from "../../../../interfaces/ServerState";
 import sendPlayerBackToLobby from "./sendPlayerBackToLobby";
 
-export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates: EloUpdates) {
+export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates: EloUpdates | null) {
   const { connectedSockets, gameRooms, games } = serverState;
   const gameRoom = gameRooms[gameName];
   const game = games[gameName];
@@ -12,16 +12,16 @@ export default function (io: Server, serverState: ServerState, gameName: string,
     if (!game.gameOverCountdown.current) game.gameOverCountdown.current = game.gameOverCountdown.duration;
     if (game.gameOverCountdown.current < 1) {
       if (game.intervals.endingCountdown) clearInterval(game.intervals.endingCountdown);
-      const host = gameRoom.players.host ? connectedSockets[gameRoom.players.host.socketId] : null;
-      const challenger = gameRoom.players.challenger ? connectedSockets[gameRoom.players.challenger.socketId] : null;
+      const host = connectedSockets[gameRoom.players.host!.socketId!];
+      const challenger = gameRoom.players.challenger ? connectedSockets[gameRoom.players.challenger.socketId!] : null;
       io.in(`game-${gameName}`).emit("showEndScreen", {
         gameRoom,
         game,
         eloUpdates,
       });
       io.in(`game-${gameName}`).emit("currentGameRoomUpdate", null);
-      sendPlayerBackToLobby(io, serverState, gameRoom.players.host?.socketId, host);
-      sendPlayerBackToLobby(io, serverState, gameRoom.players.challenger?.socketId, challenger);
+      sendPlayerBackToLobby(io, serverState, gameRoom.players.host!.socketId!, host);
+      sendPlayerBackToLobby(io, serverState, gameRoom.players.challenger!.socketId!, challenger);
       delete games[gameName];
       delete gameRooms[gameName];
       io.sockets.emit("gameListUpdate", gameRooms);

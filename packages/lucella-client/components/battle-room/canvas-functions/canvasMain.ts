@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
-import { WidthAndHeight } from "../../../../common/src/types";
-import { GameStatus } from "../../../../common/src/enums";
+import { BattleRoomGame } from "../../../../common";
+import { WidthAndHeight } from "../../../../common";
+import { GameStatus } from "../../../../common";
 import { drawOrbs } from "./drawOrbs";
 import drawScore from "./drawScore";
 import drawSelectionBox from "./drawSelectionBox";

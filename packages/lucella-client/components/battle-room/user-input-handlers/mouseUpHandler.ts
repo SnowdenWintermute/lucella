@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
-import { UserInput } from "../../../../common/src/classes/UserInput";
-const GameEventTypes = require("../../../../common/src/consts/GameEventTypes");
+import { BattleRoomGame } from "../../../../common";
+import { UserInput } from "../../../../common/UserInput";
+const GameEventTypes = require("../../../../common/GameEventTypes");
 
 export default (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, currentGame: BattleRoomGame) => {
   if (!(e.button === 0 || e.button === 2)) return;

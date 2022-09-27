@@ -1,6 +1,6 @@
 import { ChatMessage } from "./ChatMessage";
 
-export default class ChatChannel {
+export class ChatChannel {
   name: string;
   parentGameRoom: string | null;
   messageHistory: ChatMessage[];

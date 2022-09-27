@@ -1,4 +1,4 @@
-import { GameStatus } from "../../../common/src/enums";
+import { GameStatus } from "../../../common";
 import React from "react";
 import GameLobby from "../../components/lobby/GameLobby";
 import { useAppSelector } from "../../redux";

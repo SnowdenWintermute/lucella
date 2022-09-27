@@ -2,7 +2,12 @@ import express from "express";
 import passwordResetAuth from "../../middleware/passwordResetAuth";
 import auth from "../../middleware/auth";
 import { check } from "express-validator";
-const usersMainRouter = express.Router();
+import Router from "express";
+import registerUser from "./registerUser";
+import passwordReset from "./passwordReset";
+import deleteAccount from "./deleteAccount";
+
+const usersMainRouter = Router();
 
 // @route   POST api/users
 // @desc    Register user
@@ -21,7 +26,7 @@ usersMainRouter.post(
       min: 6,
     }),
   ],
-  require("./registerUser")
+  registerUser
 );
 
 // @route   POST api/users/reset-password
@@ -35,7 +40,7 @@ usersMainRouter.post(
     }),
     passwordResetAuth,
   ],
-  require("./passwordReset")
+  passwordReset
 );
 
 // @route   POST api/users/delete-account
@@ -44,12 +49,12 @@ usersMainRouter.post(
 usersMainRouter.post(
   "/delete-account",
   [check("email", "Please enter the email associated with this account").isEmail(), auth],
-  require("./deleteAccount")
+  deleteAccount
 );
 
 // @route   POST api/users/create-dummy-users
 // @desc    Create many user datas
 // @access  Public
-usersMainRouter.post("/create-dummy-users", require("./createUsersAndBattleRoomData"));
+// usersMainRouter.post("/create-dummy-users", require("./createUsersAndBattleRoomData"));
 
 export default usersMainRouter;

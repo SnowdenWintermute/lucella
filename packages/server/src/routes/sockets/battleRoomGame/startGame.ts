@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
-import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
+import { BattleRoomGame } from "../../../../../common";
 import createGamePhysicsInterval from "./createGamePhysicsInterval";
 import createGameUpdateInterval from "./createGameUpdateInterval";
 

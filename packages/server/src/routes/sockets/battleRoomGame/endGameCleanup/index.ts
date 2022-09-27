@@ -1,10 +1,11 @@
-import updateGameRecords from "./updateGameRecords";
+// import updateGameRecords from "./updateGameRecords";
 import handleDisconnectionFromGame from "./handleDisconnectionFromGame";
 import setGameRoomWinnerName from "./setGameRoomWinnerName";
 import createGameEndingCountdownInterval from "./createGameEndingCountdownInterval";
-import { GameStatus } from "../../../../../common/src/enums";
 import ServerState from "../../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
+import { GameStatus } from "../../../../../../common";
+import { EloUpdates } from "../../../../../../common";
 
 export default async function endGameCleanup(
   io: Server,
@@ -29,10 +30,10 @@ export default async function endGameCleanup(
       ? gameRoom.players.challenger?.associatedUser.username
       : gameRoom.players.host?.associatedUser.username;
 
-  let eloUpdates;
+  let eloUpdates: EloUpdates | null = null;
   if (!gameRoom.winner || !loser)
     throw new Error("Tried to update game records but either winner or loser wasn't found");
-  else eloUpdates = await updateGameRecords(gameRoom.winner, loser, gameRoom, game, gameRoom.isRanked);
+  // else eloUpdates = await updateGameRecords(gameRoom.winner, loser, gameRoom, game, gameRoom.isRanked);
 
   io.in(`game-${gameName}`).emit("serverSendsWinnerInfo", gameRoom.winner);
   game.intervals.endingCountdown = createGameEndingCountdownInterval(io, serverState, gameName, eloUpdates);

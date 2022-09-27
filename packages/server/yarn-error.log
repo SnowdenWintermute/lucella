@@ -41,7 +41,6 @@ npm manifest:
     "author": "Mike Silverman",
     "license": "ISC",
     "dependencies": {
-      "@lucella/common": "1.0.0",
       "bcryptjs": "^2.4.3",
       "config": "^3.2.5",
       "cors": "^2.8.5",

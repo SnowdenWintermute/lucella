@@ -1,5 +1,5 @@
 import { BattleRoomGame } from "../BattleRoomGame";
-import SocketMetadata from "../SocketMetadata";
+import { SocketMetadata } from "../SocketMetadata";
 import { GameStatus } from "../../enums";
 
 export class GameRoom {

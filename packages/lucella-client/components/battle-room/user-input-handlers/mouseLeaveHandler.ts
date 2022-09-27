@@ -1,7 +1,7 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
+import { BattleRoomGame } from "../../../../common";
 
 const handleAndQueueNewGameEvent = require("../game-functions/queueInput");
-const GameEventTypes = require("../../../../common/src/consts/GameEventTypes");
+const GameEventTypes = require("../../../../common/GameEventTypes");
 
 export default (currentGame: BattleRoomGame) => {
   const { mouseData } = currentGame;

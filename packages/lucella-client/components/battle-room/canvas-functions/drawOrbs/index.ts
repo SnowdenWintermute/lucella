@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "../../../../../common/src/classes/BattleRoomGame";
-import { Point } from "../../../../../common/src/classes/Point";
-import { PlayerRole } from "../../../../../common/src/enums";
+import { BattleRoomGame } from "../../../../../common";
+import { Point } from "../../../../../common/Point";
+import { PlayerRole } from "../../../../../common";
 import drawOrb from "./drawOrb";
 import drawOrbNumber from "./drawOrbNumber";
 import drawSelectionRing from "./drawSelectionRing";

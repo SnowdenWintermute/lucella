@@ -1,5 +1,5 @@
-import { GameRoom } from "../common/src/classes/BattleRoomGame/GameRoom";
-import { GameStatus } from "../common/src/enums";
+import { GameRoom } from "../../../../../common";
+import { GameStatus } from "../../../../../common";
 import { Server } from "socket.io";
 
 export default function (io: Server, gameRoom: GameRoom) {
@@ -7,6 +7,6 @@ export default function (io: Server, gameRoom: GameRoom) {
   gameRoom.gameStatus = GameStatus.IN_LOBBY;
   io.to(`game-${gameRoom.gameName}`).emit("currentGameStatusUpdate", gameRoom.gameStatus);
   clearInterval(gameRoom.countdownInterval);
-  gameRoom.countdownCurrentValue = gameRoom.countdownStartsAt; // need to reset because it might have changed if someone started then cancelled ready
-  io.to(`game-${gameRoom.gameName}`).emit("currentGameCountdownUpdate", gameRoom.countdownCurrentValue);
+  gameRoom.countdown.current = gameRoom.countdown.duration; // need to reset because it might have changed if someone started then cancelled ready
+  io.to(`game-${gameRoom.gameName}`).emit("currentGameCountdownUpdate", gameRoom.countdown.current);
 }

@@ -1,9 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
-import User from "../../../models/User";
+import User, { IUser } from "../../../models/User";
+import { Request, Response } from "express";
 
-export default async function (req, res) {
+export default async function (req: Request, res: Response) {
   const expressErrors = validationResult(req);
   if (!expressErrors.isEmpty()) {
     return res.status(400).json({ errors: expressErrors.array() });
@@ -20,6 +21,7 @@ export default async function (req, res) {
   }
 
   try {
+    //@ts-ignore
     const user = await User.findById(req.user.id);
     const salt = await bcrypt.genSalt(10);
     const newPassword = req.body.password;
@@ -35,6 +37,7 @@ export default async function (req, res) {
       },
     };
 
+    if (!process.env.JWT_SECRET) return new Error("no jwt secret found");
     jwt.sign(
       payload,
       process.env.JWT_SECRET,

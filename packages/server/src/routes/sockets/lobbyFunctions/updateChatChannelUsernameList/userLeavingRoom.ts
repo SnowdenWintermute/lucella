@@ -1,7 +1,7 @@
 import { Socket } from "socket.io";
 import ServerState from "../../../../interfaces/ServerState";
 
-export default function (socket: Socket, serverState: ServerState, nameOfChatChannelToLeave) {
+export default function (socket: Socket, serverState: ServerState, nameOfChatChannelToLeave: string) {
   const { connectedSockets, chatChannels } = serverState;
   const chatChannelToLeave = chatChannels[nameOfChatChannelToLeave];
   if (!chatChannelToLeave) return;

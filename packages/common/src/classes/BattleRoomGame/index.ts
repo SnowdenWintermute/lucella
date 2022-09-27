@@ -1,4 +1,4 @@
-import MouseData from "../MouseData";
+import { MouseData } from "../MouseData";
 import { Orb } from "../Orb";
 import { Point } from "../Point";
 import { Rectangle } from "../Rectangles";

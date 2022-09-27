@@ -1,8 +1,8 @@
-import { GameStatus, PlayerRole } from "@lucella/common/src/enums";
+import { GameStatus, PlayerRole } from "@lucella/common";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BattleRoomGame } from "../../../common/src/classes/BattleRoomGame";
-import { GameRoom } from "../../../common/src/classes/BattleRoomGame/GameRoom";
-import { EloUpdates } from "../../../common/src/types";
+import { BattleRoomGame } from "../../../common";
+import { GameRoom } from "../../../common";
+import { EloUpdates } from "../../../common";
 
 export interface IGameScoreScreen {
   gameRoom: GameRoom;

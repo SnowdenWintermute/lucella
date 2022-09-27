@@ -19,7 +19,7 @@ export default function (io: Server, serverState: ServerState) {
     const bestMatch = findTwoMostCloselyMatchedPlayers(io, serverState);
     const { players, eloDiff } = bestMatch;
     if (players !== null && eloDiff !== null && eloDiff < rankedQueue.currentEloDiffThreshold) {
-      if (!io.sockets.sockets[players.host.socketId] || !io.sockets.sockets[players.challenger.socketId]) {
+      if (!io.sockets.sockets.get(players.host.socketId) || !io.sockets.sockets.get(players.challenger.socketId)) {
         handleDisconnectionFromQueue(io, rankedQueue, players);
       } else {
         putMatchedPlayersInGame(io, serverState, players);

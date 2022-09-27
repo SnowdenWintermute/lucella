@@ -5,7 +5,7 @@ import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
-import { GameStatus } from "../../../common/src/enums";
+import { GameStatus } from "../../../common";
 
 interface Props {
   socket: Socket;

@@ -1,6 +1,6 @@
 import uuid from "uuid";
 
-export default class SocketMetadata {
+export class SocketMetadata {
   currentChatChannel: string | null;
   previousChatChannelName: string | null;
   currentGameName: string | null;
@@ -8,8 +8,8 @@ export default class SocketMetadata {
     username: string;
     isGuest: boolean;
   };
-  socketId: string | null;
   uuid: string;
+  socketId?: string | null;
   constructor(
     socketId: string,
     associatedUser: {
@@ -19,7 +19,7 @@ export default class SocketMetadata {
     currentChatChannel?: string,
     currentGameName?: string
   ) {
-    this.socketId = socketId;
+    this.socketId = socketId || null;
     this.associatedUser = associatedUser;
     this.currentGameName = currentGameName || null;
     this.currentChatChannel = currentChatChannel || null;

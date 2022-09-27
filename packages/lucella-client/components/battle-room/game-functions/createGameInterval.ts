@@ -1,5 +1,5 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
-import { renderRate } from "../../../../common/src/consts";
+import { BattleRoomGame } from "../../../../common";
+import { renderRate } from "../../../../common";
 
 export function createGameInterval(currentDrawFunction: () => void, currentGame: BattleRoomGame) {
   // let lastClientGameLoopUpdate = Date.now()

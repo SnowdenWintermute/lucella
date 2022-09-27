@@ -1,6 +1,6 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
-import { inGameFontSizes } from "../../../../common/src/consts";
-import { WidthAndHeight } from "../../../../common/src/types";
+import { BattleRoomGame } from "../../../../common";
+import { inGameFontSizes } from "../../../../common";
+import { WidthAndHeight } from "../../../../common";
 
 const drawScore = (context: CanvasRenderingContext2D, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) => {
   const fontSize = inGameFontSizes.large;

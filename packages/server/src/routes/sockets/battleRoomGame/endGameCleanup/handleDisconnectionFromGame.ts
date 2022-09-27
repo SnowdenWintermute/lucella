@@ -8,7 +8,7 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
   const userThatDisconnected = connectedSockets[socket.id];
   removeSocketFromChatChannel(io, socket, serverState);
   gameRoom.winner =
-    (gameRoom.players.host?.username === userThatDisconnected.associatedUser.username
-      ? gameRoom.players.challenger?.username
-      : gameRoom.players.host?.username) || null;
+    (gameRoom.players.host?.associatedUser.username === userThatDisconnected.associatedUser.username
+      ? gameRoom.players.challenger?.associatedUser.username
+      : gameRoom.players.host?.associatedUser.username) || null;
 }

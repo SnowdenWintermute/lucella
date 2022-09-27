@@ -1,7 +1,7 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
-import { Point } from "../../../../common/src/classes/Point";
-import { minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../../../../common/src/consts";
-import { WidthAndHeight } from "../../../../common/src/types";
+import { BattleRoomGame } from "../../../../common";
+import { Point } from "../../../../common/Point";
+import { minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../../../../common";
+import { WidthAndHeight } from "../../../../common";
 import throttledEventHandlerCreator from "../../../util-functions/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(

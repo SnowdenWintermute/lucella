@@ -1,4 +1,4 @@
-import { PlayerRole } from "../common/src/enums";
+import { PlayerRole } from "../../../../../../common";
 import { IBattleRoomRecord } from "../../../../models/BattleRoomRecord";
 
 export default function (
@@ -9,7 +9,7 @@ export default function (
   const hostElo = hostBattleRoomRecord.elo;
   const challengerElo = challengerBattleRoomRecord.elo;
   let newHostElo: number, newChallengerElo: number;
-  let hostS, challengerS;
+  let hostS: number, challengerS: number;
   const hostR = 10 ^ (hostElo / 400);
   const challengerR = 10 ^ (challengerElo / 400);
   const hostE = hostR / (hostR + challengerR);
@@ -22,7 +22,7 @@ export default function (
     hostS = 0;
     challengerS = 1;
   }
-  newHostElo = Math.round(hostElo + 32 * (hostS - hostE));
-  newChallengerElo = Math.round(challengerElo + 32 * (challengerS - challengerE));
+  newHostElo = Math.round(hostElo + 32 * (hostS! - hostE));
+  newChallengerElo = Math.round(challengerElo + 32 * (challengerS! - challengerE));
   return { hostElo, challengerElo, newHostElo, newChallengerElo };
 }

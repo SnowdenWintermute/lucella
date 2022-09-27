@@ -1,7 +1,7 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
-import { UserInput, UserInputs } from "../../../../common/src/classes/UserInput";
-import { eventLimiterRate } from "../../../../common/src/consts";
-import { PlayerRole } from "../../../../common/src/enums";
+import { BattleRoomGame } from "../../../../common";
+import { UserInput, UserInputs } from "../../../../common/UserInput";
+import { eventLimiterRate } from "../../../../common";
+import { PlayerRole } from "../../../../common";
 import throttledEventHandlerCreator from "../../../util-functions/throttledEventHandlerCreator";
 
 export default throttledEventHandlerCreator(

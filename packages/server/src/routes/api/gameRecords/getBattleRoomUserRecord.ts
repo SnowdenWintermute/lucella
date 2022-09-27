@@ -1,8 +1,9 @@
 import User, { IUser } from "../../../models/User";
 import BattleRoomRecord from "../../../models/BattleRoomRecord";
 import BattleRoomLadder from "../../../models/BattleRoomLadder";
+import { Request, Response } from "express";
 
-export default async function (req, res) {
+export default async function (req: Request, res: Response) {
   const { username } = req.params;
   try {
     let dataToSend;
@@ -24,7 +25,7 @@ export default async function (req, res) {
     dataToSend = { ...userBattleRoomRecord.toObject() };
     dataToSend.rank = calculatedRank;
     res.status(200).json(dataToSend);
-  } catch (err) {
+  } catch (err: any) {
     console.error(err.message);
     res.status(404).send("User not found. Please note that names are case sensitive.");
   }

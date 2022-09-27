@@ -1,6 +1,6 @@
-import { ChatMessage } from "../../../common/src/classes/ChatMessage";
-import { bindActionCreators, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import ChatChannel from "../../../common/src/classes/ChatChannel";
+import { ChatMessage } from "../../../common";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { ChatChannel } from "../../../common";
 
 export interface IChatState {
   currentChatRoomName: string;

@@ -1,4 +1,4 @@
-import { PlayerRole } from "../common/src/enums";
+import { PlayerRole } from "../../../../../../common";
 import { Socket } from "socket.io";
 import ServerState from "../../../../interfaces/ServerState";
 

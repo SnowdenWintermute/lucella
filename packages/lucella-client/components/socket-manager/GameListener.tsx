@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 const cloneDeep = require("lodash.clonedeep");
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { BattleRoomGame } from "@lucella/common/src/classes/BattleRoomGame";
+import { BattleRoomGame } from "@lucella/common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 
 interface Props {

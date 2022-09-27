@@ -1,10 +1,10 @@
-import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
-import { GameRoom } from "../common/src/classes/BattleRoomGame/GameRoom";
-import { PlayerRole } from "../common/src/enums";
+import { BattleRoomGame } from "../../../../../../common";
+import { GameRoom } from "../../../../../../common";
+import { PlayerRole } from "../../../../../../common";
 
-export default function (gameRoom: GameRoom, game: BattleRoomGame) {
+export default function setGameRoomWinnerName(gameRoom: GameRoom, game: BattleRoomGame) {
   gameRoom.winner =
     game.winner === PlayerRole.HOST
-      ? gameRoom.players?.host?.username || null
-      : gameRoom.players?.challenger?.username || null;
+      ? gameRoom.players!.host!.associatedUser.username
+      : gameRoom.players!.challenger!.associatedUser.username;
 }

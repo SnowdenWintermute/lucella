@@ -1,7 +1,11 @@
-const express = require("express");
+import express from "express";
 const helmet = require("helmet");
-const connectDB = require("./config/db");
+import connectDB from "./config/db";
+import { Request, Response } from "express";
 import { Server } from "socket.io";
+import usersMainRouter from "./routes/api/users";
+import authMainRouter from "./routes/api/auth";
+import gameRecordsMainRouter from "./routes/api/gameRecords";
 const cors = require("cors");
 require("dotenv").config();
 
@@ -11,19 +15,18 @@ export const app = express();
 connectDB();
 
 // init middleware
-app.use(express.json({ extended: false }));
+app.use(express.json());
 app.use(helmet());
 
 app.use(cors());
 // define routes
-app.use("/api/users", require("./routes/api/users"));
-app.use("/api/auth", require("./routes/api/auth"));
-app.use("/api/profile", require("./routes/api/profile"));
-app.use("/api/gameRecords", require("./routes/api/gameRecords"));
+app.use("/api/users", usersMainRouter);
+app.use("/api/auth", authMainRouter);
+app.use("/api/gameRecords", gameRecordsMainRouter);
 
 const path = require("path");
 app.use(express.static(path.join(__dirname, "../client/build")));
-app.get("*", function (req, res) {
+app.get("*", function (req: Request, res: Response) {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 

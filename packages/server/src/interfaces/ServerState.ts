@@ -1,7 +1,7 @@
-import { BattleRoomGame } from "../common/src/classes/BattleRoomGame";
-import { GameRoom } from "../common/src/classes/BattleRoomGame/GameRoom";
-import ChatChannel from "../classes/ChatChannel";
-import SocketMetadata from "../classes/SocketMetadata";
+import { BattleRoomGame } from "../../../common";
+import { GameRoom } from "../../../common";
+import { ChatChannel } from "../../../common";
+import { SocketMetadata } from "../../../common";
 import { IBattleRoomRecord } from "../models/BattleRoomRecord";
 
 export interface RankedQueueUser {

@@ -1,4 +1,4 @@
-import { WidthAndHeight } from "../../../../common/src/types";
+import { WidthAndHeight } from "../../../../common";
 
 export default function fitCanvasToScreen(
   window: Window,

@@ -1,4 +1,4 @@
-import { PlayerRole } from "../common/src/enums";
+import { PlayerRole } from "../../../../../../common";
 import { IBattleRoomRecord } from "../../../../models/BattleRoomRecord";
 
 export default function (

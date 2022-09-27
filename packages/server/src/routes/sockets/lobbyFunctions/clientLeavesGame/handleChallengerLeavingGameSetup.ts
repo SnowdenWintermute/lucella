@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import SocketMetadata from "../../../../classes/SocketMetadata";
+import { SocketMetadata } from "../../../../../../common";
 import ServerState from "../../../../interfaces/ServerState";
 
 import cancelGameCountdown from "../cancelGameCountdown";

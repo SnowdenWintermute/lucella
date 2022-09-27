@@ -1,4 +1,4 @@
-import { BattleRoomGame } from "../../../../common/src/classes/BattleRoomGame";
+import { BattleRoomGame } from "../../../../../common";
 import { broadcastRate } from "../../../consts";
 import { Server } from "socket.io";
 export default function createGameUpdateInterval(io: Server, game: BattleRoomGame) {

@@ -1,4 +1,4 @@
-import { startingLadderRating } from "../common/src/consts";
+import { startingLadderRating } from "../../../../../../common";
 import { Server } from "socket.io";
 import ServerState, { RankedQueueUser } from "../../../../interfaces/ServerState";
 
@@ -11,7 +11,7 @@ export default function (io: Server, serverState: ServerState, socketIdOfPlayerI
   const { player, eloDiff } = currentBestMatch;
   const currPlayerElo = rankedQueue.users[socketIdOfPlayerInQueue].record.elo;
   Object.keys(rankedQueue.users).forEach((socketIdOfUserToCompare) => {
-    if (!io.sockets.sockets[socketIdOfUserToCompare]) return delete rankedQueue.users[socketIdOfUserToCompare];
+    if (!io.sockets.sockets.get(socketIdOfUserToCompare)) return delete rankedQueue.users[socketIdOfUserToCompare];
     if (
       socketIdOfUserToCompare === socketIdOfPlayerInQueue &&
       connectedSockets[socketIdOfPlayerInQueue].associatedUser.username ===

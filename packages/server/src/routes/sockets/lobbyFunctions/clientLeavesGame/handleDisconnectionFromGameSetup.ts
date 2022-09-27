@@ -1,4 +1,4 @@
-import { GameRoom } from "../common/src/classes/BattleRoomGame/GameRoom";
+import { GameRoom } from "../../../../../../common";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../../../interfaces/ServerState";
 import removeSocketFromChatChannel from "../removeSocketFromChatChannel";

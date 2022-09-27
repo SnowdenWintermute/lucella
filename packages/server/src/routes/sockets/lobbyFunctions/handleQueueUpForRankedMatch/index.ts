@@ -5,7 +5,7 @@ import User from "../../../../models/User";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../../../interfaces/ServerState";
 
-export default async function clientClicksRanked(io: Server, socket: Socket, serverState: ServerState) {
+export default async function handleQueueUpForRankedMatch(io: Server, socket: Socket, serverState: ServerState) {
   const { connectedSockets, rankedQueue } = serverState;
   if (connectedSockets[socket.id].currentGameName) return socket.emit("errorMessage", "You are already in a game");
   const user = await User.findOne({ name: connectedSockets[socket.id].associatedUser.username });

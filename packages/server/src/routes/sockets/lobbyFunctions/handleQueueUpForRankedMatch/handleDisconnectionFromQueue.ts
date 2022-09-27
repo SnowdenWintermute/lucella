@@ -6,7 +6,6 @@ export default function (
   rankedQueue: RankedQueue,
   players: { host: RankedQueueUser; challenger: RankedQueueUser }
 ) {
-  if (!io.sockets.sockets[players.host.socketId]) delete rankedQueue.users[io.sockets.sockets[players.host.socketId]];
-  if (!io.sockets.sockets[players.challenger.socketId])
-    delete rankedQueue.users[io.sockets.sockets[players.challenger.socketId]];
+  if (!io.sockets.sockets.get(players.host.socketId)) delete rankedQueue.users[players.host.socketId];
+  if (!io.sockets.sockets.get(players.challenger.socketId)) delete rankedQueue.users[players.challenger.socketId];
 }
