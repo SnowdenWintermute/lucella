@@ -1,41 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } from "../../redux/api-slices/ladder-api-slice";
-import { setLadderPageViewing } from "../../redux/slices/ladder-slice";
+import { setViewingSearchedUser } from "../../redux/slices/ladder-slice";
 
 const Ladder = () => {
   const dispatch = useAppDispatch();
   const ladder = useAppSelector((state) => state.ladder);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [searchText, setSearchText] = useState("");
+  const [submittedSearchText, setSubmittedSearchText] = useState("");
   const [pageNumberAnimateClass, setPageNumberAnimateClass] = useState("");
-  useGetLadderPageQuery(ladder.currentPage);
+  const [currentPageViewing, setCurrentPageViewing] = useState(1);
+  const { isLoading: ladderPageIsLoading, data: ladderPageData } = useGetLadderPageQuery(currentPageViewing);
+  const { isLoading: searchedUserIsLoading, data: searchedUserData } = useGetUserBattleRoomRecordQuery(
+    submittedSearchText,
+    { skip: !submittedSearchText }
+  );
+
+  useEffect(() => {
+    searchInputRef.current!.focus();
+  }, []);
 
   const onSearchUserRecord = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // if (!searchText) useGetLadderPageQuery(ladder.currentPage);
-    // else useGetUserBattleRoomRecordQuery(searchText);
+    if (!searchText) return dispatch(setViewingSearchedUser(false));
+    dispatch(setViewingSearchedUser(true));
+    setSubmittedSearchText(searchText);
   };
 
   const onTurnPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, direction: string) => {
-    let newPageVewing = ladder.currentPage + (direction === "foreward" ? 1 : -1);
+    let newPageVewing = currentPageViewing + (direction === "foreward" ? 1 : -1);
     if (!ladder.totalNumberOfPages) return;
     if (newPageVewing === 0) newPageVewing = ladder.totalNumberOfPages;
     if (newPageVewing > ladder.totalNumberOfPages) newPageVewing = 1;
-    dispatch(setLadderPageViewing(newPageVewing));
-    if (!ladder.ladderPages[newPageVewing]) useGetLadderPageQuery(newPageVewing);
+    setCurrentPageViewing(newPageVewing);
     setPageNumberAnimateClass("ladder-current-page-number-animate");
     setTimeout(() => {
       setPageNumberAnimateClass("");
     }, 100);
   };
 
-  const ladderEntriesToShow = ladder.ladderPages[ladder.currentPage] ? (
-    ladder.ladderPages[ladder.currentPage].map((entry) => {
+  const ladderEntriesToShow = ladderPageIsLoading ? (
+    <tr>
+      <td>{`...`}</td>
+    </tr>
+  ) : (
+    ladderPageData &&
+    ladderPageData.pageData &&
+    ladderPageData.pageData.map((entry) => {
       return (
         <tr key={entry.user.name} className="ladder-table-row">
-          <td className="ladder-table-datum">
-            {ladder.ladderPages[ladder.currentPage].indexOf(entry) + (ladder.currentPage - 1) * 10 + 1}
-          </td>
+          <td className="ladder-table-datum">{"test"}</td>
           <td className="ladder-table-datum">{entry.user.name}</td>
           <td className="ladder-table-datum">{entry.elo}</td>
           <td className="ladder-table-datum">{entry.wins}</td>
@@ -44,25 +59,23 @@ const Ladder = () => {
         </tr>
       );
     })
-  ) : (
-    <tr>
-      <td>{`...`}</td>
-    </tr>
   );
 
-  const searchedUserToShow = ladder.searchedUserRecord?.user ? (
-    <tr key={ladder.searchedUserRecord.user.name} className="ladder-table-row">
-      <td className="ladder-table-datum">{ladder.searchedUserRecord.rank}</td>
-      <td className="ladder-table-datum">{ladder.searchedUserRecord.user.name}</td>
-      <td className="ladder-table-datum">{ladder.searchedUserRecord.elo}</td>
-      <td className="ladder-table-datum">{ladder.searchedUserRecord.wins}</td>
-      <td className="ladder-table-datum">{ladder.searchedUserRecord.losses}</td>
-      <td className="ladder-table-datum">{Math.round(ladder.searchedUserRecord.winrate)}%</td>
-    </tr>
-  ) : (
+  const searchedUserToShow = searchedUserIsLoading ? (
     <tr>
       <td>{`...`}</td>
     </tr>
+  ) : (
+    searchedUserData?.user && (
+      <tr key={searchedUserData.user.name} className="ladder-table-row">
+        <td className="ladder-table-datum">{searchedUserData.rank.toString()}</td>
+        <td className="ladder-table-datum">{searchedUserData.user.name}</td>
+        <td className="ladder-table-datum">{searchedUserData.elo}</td>
+        <td className="ladder-table-datum">{searchedUserData.wins}</td>
+        <td className="ladder-table-datum">{searchedUserData.losses}</td>
+        <td className="ladder-table-datum">{Math.round(searchedUserData.winrate)}%</td>
+      </tr>
+    )
   );
 
   return (
@@ -85,6 +98,7 @@ const Ladder = () => {
                 setSearchText(e.target.value);
               }}
               placeholder={"Enter a username..."}
+              ref={searchInputRef}
             ></input>
             <label htmlFor="ladder-search-input">
               <button className={"button button-primary ladder-search-button"}>Search</button>
@@ -98,7 +112,7 @@ const Ladder = () => {
               }}
             >{`<`}</button>
             <span className={"ladder-current-page-number-holder"}>
-              <div className={`ladder-current-page-number ${pageNumberAnimateClass}`}>{ladder.currentPage}</div>
+              <div className={`ladder-current-page-number ${pageNumberAnimateClass}`}>{currentPageViewing}</div>
             </span>
             <button
               className={"button button-basic ladder-page-button"}

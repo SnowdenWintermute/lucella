@@ -3,7 +3,11 @@ import { Point } from "../../../../common";
 import { minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../../../../common";
 import { WidthAndHeight } from "../../../../common";
 
-export default (e: React.TouchEvent<HTMLCanvasElement>, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) => {
+export default function touchEndHandler(
+  e: React.TouchEvent<HTMLCanvasElement>,
+  currentGame: BattleRoomGame,
+  canvasSize: WidthAndHeight
+) {
   const { mouseData } = currentGame;
   mouseData.leftCurrentlyPressed = false;
   const { touchStart, touchStartTime } = mouseData;
@@ -41,4 +45,4 @@ export default (e: React.TouchEvent<HTMLCanvasElement>, currentGame: BattleRoomG
     };
   }
   // queue input
-};
+}

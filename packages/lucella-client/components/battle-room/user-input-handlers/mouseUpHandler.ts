@@ -1,6 +1,9 @@
 import { BattleRoomGame } from "../../../../common";
 
-export default (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, currentGame: BattleRoomGame) => {
+export default function mouseUpHandler(
+  e: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
+  currentGame: BattleRoomGame
+) {
   // if (!(e.button === 0 || e.button === 2)) return;
   // const { mouseData } = currentGame;
   // let type, data;
@@ -30,4 +33,4 @@ export default (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, currentGame:
   //     currY: mouseData.position.y,
   //   };
   // }
-};
+}

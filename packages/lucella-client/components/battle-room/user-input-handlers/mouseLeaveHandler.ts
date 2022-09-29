@@ -1,6 +1,6 @@
 import { BattleRoomGame } from "../../../../common";
 
-export default (currentGame: BattleRoomGame) => {
+export default function mouseLeaveHandler(currentGame: BattleRoomGame) {
   const { mouseData } = currentGame;
   mouseData.mouseOnScreen = false;
   if (mouseData.leftCurrentlyPressed) {
@@ -16,4 +16,4 @@ export default (currentGame: BattleRoomGame) => {
     //   commonEventHandlerProps,
     // });
   }
-};
+}

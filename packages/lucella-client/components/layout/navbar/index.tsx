@@ -6,6 +6,7 @@ import GamesIcon from "../../../img/menuIcons/queen.svg";
 import LadderIcon from "../../../img/menuIcons/podium.svg";
 import { useAppSelector } from "../../../redux";
 import { GameStatus } from "../../../../common";
+import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
@@ -20,7 +21,7 @@ const Navbar = () => {
       <nav className="nav">
         {/* Nav tabs */}
         <div className="nav-right-holder">
-          <img className="logo-img" alt="lucella logo" src={logo.src} />
+          <Image className="logo-img" alt="lucella logo" src={logo} />
           <Link href="/">
             <a className="brand-text">
               <h1>Lucella.org</h1>

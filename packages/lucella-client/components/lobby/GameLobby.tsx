@@ -46,7 +46,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
       dispatch(setCurrentGameRoom(null));
       dispatch(setPreGameScreenDisplayed(false));
     };
-  }, [authToken]);
+  }, [authToken, dispatch]);
 
   useEffect(() => {
     socket.current &&

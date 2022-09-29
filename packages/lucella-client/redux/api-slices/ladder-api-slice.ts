@@ -4,7 +4,7 @@ import { UserRecord } from "../../classes/UserRecord";
 import { AlertType } from "../../enums";
 import { setAlert } from "../slices/alerts-slice";
 import { IAuthState } from "../slices/auth-slice";
-import { setLadderPageData, setSearchedUserData } from "../slices/ladder-slice";
+import { setViewingSearchedUser } from "../slices/ladder-slice";
 const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
 
 export interface ILadderPageResponse {
@@ -39,8 +39,7 @@ export const ladderApiSlice = createApi({
         async onQueryStarted(args, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
-            console.log(data);
-            dispatch(setLadderPageData(data));
+            dispatch(setViewingSearchedUser(false));
           } catch (error: any) {
             console.log(error);
             dispatch(setAlert(new Alert("Error fetching ladder data", AlertType.DANGER)));
@@ -57,7 +56,7 @@ export const ladderApiSlice = createApi({
         async onQueryStarted(args, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
-            dispatch(setSearchedUserData(data));
+            dispatch(setViewingSearchedUser(true));
           } catch (error: any) {
             console.log(error);
             dispatch(

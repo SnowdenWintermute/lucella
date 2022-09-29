@@ -33,7 +33,7 @@ const Register = () => {
   useEffect(() => {
     if (isLoading) return;
     if (isSuccess) {
-      useGetUserQuery(null);
+      // useGetUserQuery(null);
       router.push("/battle-room");
     }
   }, [isLoading, isSuccess, error, isError]);

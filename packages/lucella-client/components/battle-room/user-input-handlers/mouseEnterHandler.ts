@@ -1,5 +1,5 @@
 import { MouseData } from "../../../../common";
 
-export default (mouseData: MouseData) => {
+export default function mouseEnterHandler(mouseData: MouseData) {
   mouseData.mouseOnScreen = true;
-};
+}

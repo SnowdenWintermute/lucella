@@ -2,7 +2,11 @@ import { BattleRoomGame } from "../../../../common";
 import { Point } from "../../../../common";
 import { WidthAndHeight } from "../../../../common";
 
-export default (e: React.TouchEvent<HTMLCanvasElement>, canvasSize: WidthAndHeight, currentGame: BattleRoomGame) => {
+export default function touchStartHandler(
+  e: React.TouchEvent<HTMLCanvasElement>,
+  canvasSize: WidthAndHeight,
+  currentGame: BattleRoomGame
+) {
   if (!e.target) return;
   const { mouseData } = currentGame;
   const node = e.target as HTMLElement;
@@ -16,4 +20,4 @@ export default (e: React.TouchEvent<HTMLCanvasElement>, canvasSize: WidthAndHeig
   mouseData.touchStart.y = mouseData.leftPressedAt.y =
     (offsetY / canvasSize.height) * BattleRoomGame.baseWindowDimensions.height;
   mouseData.touchStartTime = Date.now();
-};
+}

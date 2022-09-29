@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
@@ -50,7 +51,7 @@ export const UserMenu = () => {
             }}
           >
             <>
-              <img alt="logout icon" src={logoutIcon.src} />
+              <Image alt="logout icon" src={logoutIcon} />
               Logout
             </>
           </Link>
