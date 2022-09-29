@@ -1,9 +1,11 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { Link, Redirect } from "react-router-dom";
 import { useAppSelector } from "../../../redux";
 import { useLoginUserMutation } from "../../../redux/api-slices/auth-api-slice";
 
 const Login = () => {
+  const router = useRouter();
   const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
   const authState = useAppSelector((state) => state.auth);
   const { isAuthenticated } = authState;
@@ -23,8 +25,7 @@ const Login = () => {
     loginUser({ email, password });
   };
 
-  // @ts-ignore
-  if (isAuthenticated) return <Redirect to="/battle-room"></Redirect>;
+  if (isAuthenticated) router.push("/battle-room");
 
   return (
     <div className="auth-frame">
@@ -49,10 +50,10 @@ const Login = () => {
           onChange={(e) => onChange(e)}
         ></input>
         <div className="forgot-password">
-          <Link to="request-password-reset">Forgot password?</Link>
+          <Link href="/request-password-reset">Forgot password?</Link>
         </div>
         <div className="auth-bottom-links">
-          <Link to="/register">Create account</Link>
+          <Link href="/register">Create account</Link>
           <input type="submit" className="button button-standard-size button-primary" value="SIGN" />
         </div>
       </form>

@@ -1,8 +1,10 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
-import { Link, Redirect } from "react-router-dom";
 import { useAppSelector } from "../../../redux";
 import { useRequestPasswordResetEmailMutation } from "../../../redux/api-slices/auth-api-slice";
 const RequestPasswordResetEmail = () => {
+  const router = useRouter();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [requestPasswordResetEmail, { isLoading, isSuccess, error, isError }] = useRequestPasswordResetEmailMutation();
   const [formData, setFormData] = useState({
@@ -21,8 +23,7 @@ const RequestPasswordResetEmail = () => {
     requestPasswordResetEmail(email);
   };
 
-  // @ts-ignore
-  if (isAuthenticated) return <Redirect to="/battle-room" />;
+  if (isAuthenticated) router.push("/battle-room");
 
   return (
     <div className="auth-frame">
@@ -44,7 +45,7 @@ const RequestPasswordResetEmail = () => {
             ></input>
             <div className="forgot-password">Enter your email to request a password reset.</div>
             <div className="auth-bottom-links">
-              <Link to="/login">Back to login</Link>
+              <Link href="/login">Back to login</Link>
               <input type="submit" className="button button-standard-size button-primary" value="SEND" />
             </div>
           </Fragment>

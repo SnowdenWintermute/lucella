@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Alert } from "../../../classes/Alert";
 import { AlertType } from "../../../enums";
 import { useResetPasswordMutation } from "../../../redux/api-slices/auth-api-slice";
-
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import { useAppDispatch } from "../../../redux";
 

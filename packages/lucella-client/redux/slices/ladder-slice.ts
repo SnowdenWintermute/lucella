@@ -25,6 +25,7 @@ const ladderSlice = createSlice({
   reducers: {
     setLadderPageData(state, action: PayloadAction<ILadderPageResponse>) {
       const { payload } = action;
+      console.log(payload);
       state.currentPage = payload.pageNumber;
       state.totalNumberOfPages = payload.totalNumberOfPages;
       state.ladderPages[payload.pageNumber] = payload.pageData;

@@ -8,15 +8,12 @@ const Ladder = () => {
   const ladder = useAppSelector((state) => state.ladder);
   const [searchText, setSearchText] = useState("");
   const [pageNumberAnimateClass, setPageNumberAnimateClass] = useState("");
-
-  useEffect(() => {
-    if (!ladder.ladderPages["1"]) useGetLadderPageQuery(1);
-  }, [ladder, dispatch]);
+  useGetLadderPageQuery(ladder.currentPage);
 
   const onSearchUserRecord = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!searchText) useGetLadderPageQuery(ladder.currentPage);
-    else useGetUserBattleRoomRecordQuery(searchText);
+    // if (!searchText) useGetLadderPageQuery(ladder.currentPage);
+    // else useGetUserBattleRoomRecordQuery(searchText);
   };
 
   const onTurnPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, direction: string) => {

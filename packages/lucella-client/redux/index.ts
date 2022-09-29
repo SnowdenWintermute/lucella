@@ -19,8 +19,8 @@ const store = configureStore({
     lobbyUi: lobbyUiSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([authApiSlice.middleware, ladderApiSlice.middleware]),
-});
+    getDefaultMiddleware({ serializableCheck: false }).concat([authApiSlice.middleware, ladderApiSlice.middleware]),
+}); // disabled serializable check because we are using instances of classes for alerts, game rooms etc
 
 export default store;
 // Infer the `RootState` and `AppDispatch` types from the store itself

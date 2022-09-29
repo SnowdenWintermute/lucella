@@ -15,8 +15,8 @@ export interface ILadderPageResponse {
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${API_URL}/api`,
-  credentials: "include",
   prepareHeaders(headers, { getState }) {
+    console.log(API_URL);
     const { auth } = getState() as { auth: IAuthState };
     const { token } = auth;
     if (token) headers.set("x-auth-token", token);
@@ -39,10 +39,11 @@ export const ladderApiSlice = createApi({
         async onQueryStarted(args, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
+            console.log(data);
             dispatch(setLadderPageData(data));
           } catch (error: any) {
             console.log(error);
-            dispatch(setAlert(new Alert(error.toString(), AlertType.DANGER)));
+            dispatch(setAlert(new Alert("Error fetching ladder data", AlertType.DANGER)));
           }
         },
       }),

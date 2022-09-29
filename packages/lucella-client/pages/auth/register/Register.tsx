@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux";
-import { Link, Redirect } from "react-router-dom";
 import { AlertType } from "../../../enums";
 import { Alert } from "../../../classes/Alert";
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import { useGetUserQuery, useRegisterUserMutation } from "../../../redux/api-slices/auth-api-slice";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -38,8 +38,7 @@ const Register = () => {
     }
   }, [isLoading, isSuccess, error, isError]);
 
-  // @ts-ignore
-  if (isAuthenticated) return <Redirect to="/battle-room" />;
+  if (isAuthenticated) router.push("/battle-room");
 
   return (
     <div className="auth-frame">
@@ -80,7 +79,7 @@ const Register = () => {
           onChange={(e) => onChange(e)}
         ></input>
         <div className="auth-bottom-links">
-          <Link to="/login">Log in to existing account</Link>
+          <Link href="/login">Log in to existing account</Link>
           <input type="submit" className="button button-standard-size button-primary" value="CREATE" />
         </div>
       </form>

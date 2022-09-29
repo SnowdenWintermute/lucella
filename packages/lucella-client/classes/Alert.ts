@@ -1,5 +1,5 @@
 import { AlertType } from "../enums";
-import uuid from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 export class Alert {
   message: string;
@@ -8,6 +8,6 @@ export class Alert {
   constructor(message: string, type: AlertType) {
     this.message = message;
     this.type = type;
-    this.id = uuid.v4.toString();
+    this.id = uuidv4();
   }
 }

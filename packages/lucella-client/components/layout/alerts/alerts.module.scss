@@ -1,4 +1,4 @@
-@import "../abstracts/variables";
+@import "../../../styles/abstracts/variables";
 
 .alerts-holder {
   position: fixed;
@@ -17,6 +17,7 @@
   color: color(textLight);
   opacity: 0;
   transition: 0.3s ease-out;
+  cursor: pointer;
   // pointer-events: none;
 }
 .alert-animate {
