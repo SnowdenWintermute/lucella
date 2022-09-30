@@ -24,13 +24,6 @@ app.use(
   })
 );
 
-// UnKnown Routes
-app.all("*", (req: Request, res: Response, next: NextFunction) => {
-  const err = new Error(`Route ${req.originalUrl} not found`) as any;
-  err.statusCode = 404;
-  next(err);
-});
-
 // Global Error Handler
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   err.status = err.status || "error";
@@ -45,14 +38,22 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 
-app.use(express.static(path.join(__dirname, "../client/build")));
-app.get("*", function (req: Request, res: Response) {
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+// app.use(express.static(path.join(__dirname, "../client/build")));
+// app.get("*", function (req: Request, res: Response) {
+//   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+// });
+
+// UnKnown Routes
+app.all("*", (req: Request, res: Response, next: NextFunction) => {
+  const err = new Error(`Route ${req.originalUrl} not found`) as any;
+  err.statusCode = 404;
+  next(err);
 });
 
 const PORT = process.env.PORT;
 const expressServer = app.listen(PORT, () => {
   console.log(`express server on port ${PORT}`);
+
   connectDB();
 });
 
