@@ -4,11 +4,13 @@ import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
 import { useAppDispatch, useAppSelector } from "../../../redux";
-import { logout } from "../../../redux/slices/auth-slice";
+import { useGetUserQuery } from "../../../redux/api-slices/auth-api-slice";
+import { logOut } from "../../../redux/slices/auth-slice";
 
 export const UserMenu = () => {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, user } = useAppSelector((state) => state.auth);
+  const { token } = useAppSelector((state) => state.auth);
+  const { isLoading: userIsLoading, data: user } = useGetUserQuery(null);
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const username = user && user.name;
 
@@ -37,23 +39,22 @@ export const UserMenu = () => {
       </div>
       {showUserDropdown && (
         <ul className="user-menu">
-          <Link href="/settings" className="user-menu-item">
-            <>
+          <Link href="/settings">
+            <a className="user-menu-item">
               <SettingsIcon className="menu-icon-svg" />
               Settings
-            </>
+            </a>
           </Link>
           <Link
             href="/login"
-            className="user-menu-item"
             onClick={(e) => {
-              dispatch(logout());
+              dispatch(logOut());
             }}
           >
-            <>
+            <a className="user-menu-item">
               <Image alt="logout icon" src={logoutIcon} />
               Logout
-            </>
+            </a>
           </Link>
         </ul>
       )}
@@ -61,12 +62,12 @@ export const UserMenu = () => {
   );
 
   const guestMenu = (
-    <Link href="/login" className="button button-standard-size button-basic">
-      LOGIN
+    <Link href="/login">
+      <a className="button button-standard-size button-basic">LOGIN</a>
     </Link>
   );
 
-  const userMenu = isAuthenticated ? loggedInUserMenu : guestMenu;
+  const userMenu = user ? loggedInUserMenu : guestMenu;
 
   return userMenu;
 };

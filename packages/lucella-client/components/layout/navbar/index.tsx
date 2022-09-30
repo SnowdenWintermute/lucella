@@ -10,7 +10,6 @@ import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
-  const { isAuthenticated, loading } = useAppSelector((state) => state.auth);
   const lobbyUIState = useAppSelector((state) => state.lobbyUi);
   const { gameStatus } = lobbyUIState.currentGameRoom || { gameStatus: null }; // used to hide navbar in game
 
@@ -43,7 +42,7 @@ const Navbar = () => {
           </div>
         </div>
         {/* User menu */}
-        <div className="user-menu-holder">{!loading ? <UserMenu /> : "..."}</div>
+        <div className="user-menu-holder">{<UserMenu />}</div>
       </nav>
       <div className="nav-tab-thin-bar"></div>
     </>

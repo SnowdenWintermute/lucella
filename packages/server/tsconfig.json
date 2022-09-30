@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2016",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "module": "commonjs",
-    "moduleResolution": "node",
-    "declaration": true,
+    "esModuleInterop": true,
     "rootDir": "src",
     "outDir": "dist",
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "strictPropertyInitialization": false,
+    "skipLibCheck": true
   },
+  // "include": ["/src"],
+  // "include": ["src/**/*.ts", "environment.d.ts"],
   "references": [{ "path": "../common" }]
 }

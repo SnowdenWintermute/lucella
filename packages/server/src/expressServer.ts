@@ -1,44 +1,67 @@
-import express from "express";
+import * as dotenv from "dotenv";
+const config = dotenv.config();
 const helmet = require("helmet");
-import connectDB from "./config/db";
+import express, { NextFunction } from "express";
+import connectDB from "./utils/connectDB";
 import { Request, Response } from "express";
 import { Server } from "socket.io";
-import usersMainRouter from "./routes/api/users";
-import authMainRouter from "./routes/api/auth";
-import gameRecordsMainRouter from "./routes/api/gameRecords";
-const cors = require("cors");
-require("dotenv").config();
-
+import userRouter from "./routes/user.route";
+import authRouter from "./routes/auth.route";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+const path = require("path");
 export const app = express();
-
-// connect database
-connectDB();
-
-// init middleware
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
+app.use(cookieParser());
 app.use(helmet());
 
+if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.ORIGIN,
+    credentials: true,
   })
 );
-// define routes
-app.use("/api/users", usersMainRouter);
-app.use("/api/auth", authMainRouter);
-app.use("/api/gameRecords", gameRecordsMainRouter);
 
-const path = require("path");
+// UnKnown Routes
+app.all("*", (req: Request, res: Response, next: NextFunction) => {
+  const err = new Error(`Route ${req.originalUrl} not found`) as any;
+  err.statusCode = 404;
+  next(err);
+});
+
+// Global Error Handler
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  err.status = err.status || "error";
+  err.statusCode = err.statusCode || 500;
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+  });
+});
+
+app.use("/api/users", userRouter);
+app.use("/api/auth", authRouter);
+
 app.use(express.static(path.join(__dirname, "../client/build")));
 app.get("*", function (req: Request, res: Response) {
   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 });
 
-const PORT = process.env.PORT || 8080;
-const expressServer = app.listen(PORT, () => console.log(`express server on port ${PORT}`));
-export const io = new Server(expressServer, {
-  cors: {
-    methods: ["GET", "PATCH", "POST", "PUT"],
-    origin: true,
-  },
+const PORT = process.env.PORT;
+const expressServer = app.listen(PORT, () => {
+  console.log(`express server on port ${PORT}`);
+  connectDB();
 });
+
+export const io = new Server(
+  expressServer
+  // {
+  // cors: {
+  //   methods: ["GET", "PATCH", "POST", "PUT"],
+  //   origin: true,
+  // },
+  // }
+);

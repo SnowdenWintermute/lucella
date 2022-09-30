@@ -7,6 +7,7 @@ import alertsSlice from "./slices/alerts-slice";
 import chatSlice from "./slices/chat-slice";
 import ladderSlice from "./slices/ladder-slice";
 import lobbyUiSlice from "./slices/lobby-ui-slice";
+import userSlice from "./slices/user-slice";
 
 const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ const store = configureStore({
     alerts: alertsSlice,
     chat: chatSlice,
     lobbyUi: lobbyUiSlice,
+    user: userSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat([authApiSlice.middleware, ladderApiSlice.middleware]),

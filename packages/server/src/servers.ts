@@ -1,2 +1,2 @@
 require("./expressServer");
-require("./routes/sockets/socketMain");
+require("./sockets/socketMain");

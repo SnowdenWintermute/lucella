@@ -10,7 +10,7 @@ const Alerts = () => {
   if (alerts.length) {
     alerts.forEach((alert: Alert) => {
       const { message, type, id } = alert;
-      alertsToDisplay.push(<AlertElement message={message} type={type} key={message} id={id} />);
+      alertsToDisplay.push(<AlertElement message={message} type={type} key={id} id={id} />);
     });
   }
 

@@ -1,17 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { RootState } from "..";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { setAlert } from "../slices/alerts-slice";
-import { IAuthState, setCredentials, setUser, logout } from "../slices/auth-slice";
+import { setCredentials, logOut } from "../slices/auth-slice";
 import { IUser, LoginInput, RegisterInput } from "../types";
 const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `${API_URL}/api/auth`,
-  credentials: "include",
   prepareHeaders(headers, { getState }) {
-    const { auth } = getState() as { auth: IAuthState };
-    const { token } = auth;
+    const token = (getState() as RootState).auth.token;
+    console.log("prepare headers token: ", token);
     if (token) headers.set("x-auth-token", token);
     return headers;
   },
@@ -44,17 +44,19 @@ export const authApiSlice = createApi({
       }),
       loginUser: builder.mutation<string, LoginInput>({
         query(data) {
+          console.log(data);
           return {
-            url: "/login",
+            url: "",
             method: "POST",
             body: data,
+            credentials: "include",
           };
         },
         async onQueryStarted(args, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
+            console.log("login response (should be a token)", data);
             dispatch(setCredentials(data)); // token
-            await dispatch(authApiSlice.endpoints.getUser.initiate(null));
             dispatch(setAlert(new Alert("Welcome back", AlertType.SUCCESS)));
           } catch (error: any) {
             console.log(error);
@@ -72,7 +74,7 @@ export const authApiSlice = createApi({
         async onQueryStarted(args, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
-            dispatch(setUser(data));
+            console.log(data);
           } catch (error: any) {
             console.log(error);
             dispatch(setAlert(new Alert(error.toString(), AlertType.DANGER)));
@@ -127,7 +129,7 @@ export const authApiSlice = createApi({
         async onQueryStarted(args, { dispatch, queryFulfilled }) {
           try {
             const { data } = await queryFulfilled;
-            dispatch(logout());
+            dispatch(logOut());
             dispatch(setAlert(new Alert(data.msg, AlertType.SUCCESS)));
           } catch (error: any) {
             console.log(error);
