@@ -13,7 +13,7 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
     else if (req.cookies.access_token) access_token = req.cookies.access_token;
 
     if (!access_token) return next(new AppError("You are not logged in", 401));
-    const decoded = verifyJwt<{ sub: string }>(access_token);
+    const decoded = verifyJwt<{ sub: string }>(access_token, "accessTokenPublicKey");
     if (!decoded) return next(new AppError(`Invalid token or user doesn't exist`, 401));
 
     const session = await redisClient.get(decoded.sub);

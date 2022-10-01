@@ -2,13 +2,14 @@ import { BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from "@re
 import { Mutex } from "async-mutex";
 import { logOut } from "../slices/auth-slice";
 
-const baseUrl = `${process.env.NEXT_APP_API_DEV}/api/`;
+const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
+const baseUrl = `${API_URL}}/api/`;
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({
   baseUrl,
 });
 
-const customFetchBase: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
+const baseQueryWithRefetch: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
   api,
   extraOptions
@@ -38,4 +39,4 @@ const customFetchBase: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryEr
   return result;
 };
 
-export default customFetchBase;
+export default baseQueryWithRefetch;

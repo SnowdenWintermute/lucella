@@ -26,17 +26,18 @@ export const findUser = async (query: FilterQuery<User>, options: QueryOptions =
 };
 
 export const signTokenAndCreateSession = async (user: DocumentType<User>) => {
-  const access_token = signJwt(
-    { sub: user._id },
-    {
-      expiresIn: `${process.env.ACCESS_TOKEN_EXPIRES_IN}m`,
-    }
-  );
-
-  // Create a Session
-  redisClient.set(user._id, JSON.stringify(user), {
-    EX: 60 * 60,
+  const access_token = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
+    expiresIn: `${parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) / 60 / 60}m`,
   });
 
-  return { access_token };
+  const refresh_token = signJwt({ sub: user._id }, "refreshTokenPrivateKey", {
+    expiresIn: `${parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN!) / 60 / 60}m`,
+  });
+
+  // Create a Session
+  redisClient.set(user._id.toString(), JSON.stringify(user), {
+    EX: parseInt(process.env.REDIS_SESSION_EXPIRATION!),
+  });
+
+  return { access_token, refresh_token };
 };
