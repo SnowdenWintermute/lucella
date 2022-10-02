@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { useAppSelector } from "../../redux";
+import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import { useLoginUserMutation } from "../../redux/api-slices/auth-api-slice";
+import { LoginInput } from "../../redux/types";
 
 const Login = () => {
+  const [cookies] = useCookies(["logged_in"]);
   const router = useRouter();
   const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
-  const authState = useAppSelector((state) => state.auth);
-  const { token } = authState;
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginInput>({
     email: "",
     password: "",
   });
@@ -25,7 +25,10 @@ const Login = () => {
     loginUser({ email, password });
   };
 
-  if (token) router.push("/battle-room");
+  useEffect(() => {
+    console.log("effect in login.tsx", logged_in);
+    if (logged_in) router.push("/battle-room");
+  }, [logged_in]);
 
   return (
     <div className="auth-frame">

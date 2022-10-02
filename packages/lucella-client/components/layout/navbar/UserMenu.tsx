@@ -4,15 +4,22 @@ import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
 import { useAppDispatch, useAppSelector } from "../../../redux";
-import { useGetUserQuery } from "../../../redux/api-slices/auth-api-slice";
-import { logOut } from "../../../redux/slices/auth-slice";
+import { useCookies } from "react-cookie";
+import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 
 export const UserMenu = () => {
-  const dispatch = useAppDispatch();
-  const { token } = useAppSelector((state) => state.auth);
-  const { isLoading: userIsLoading, data: user } = useGetUserQuery(null);
+  const user = useAppSelector((state) => state.user.user);
+  const [showUserMenu, setShowUserMenu] = useState<boolean | null>(null);
+  const [cookies] = useCookies(["logged_in"]);
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const username = user && user.name;
+  const [logoutUser, { isLoading, isSuccess, error, isError }] = useLogoutUserMutation();
+
+  useEffect(() => {
+    console.log(cookies.logged_in);
+    if (cookies.logged_in) setShowUserMenu(true);
+    else setShowUserMenu(false);
+  }, [cookies.logged_in]);
 
   // show/hide menu
   useEffect(() => {
@@ -45,13 +52,8 @@ export const UserMenu = () => {
               Settings
             </a>
           </Link>
-          <Link
-            href="/login"
-            onClick={(e) => {
-              dispatch(logOut());
-            }}
-          >
-            <a className="user-menu-item">
+          <Link href="/login">
+            <a className="user-menu-item" onClick={(e) => logoutUser()}>
               <Image alt="logout icon" src={logoutIcon} />
               Logout
             </a>
@@ -67,7 +69,7 @@ export const UserMenu = () => {
     </Link>
   );
 
-  const userMenu = user ? loggedInUserMenu : guestMenu;
+  const userMenu = showUserMenu ? loggedInUserMenu : guestMenu;
 
   return userMenu;
 };

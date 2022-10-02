@@ -10,16 +10,16 @@ import authRouter from "./routes/auth.route";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-const path = require("path");
 export const app = express();
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 app.use(helmet());
 
+console.log(process.env.ORIGIN);
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin: "http://localhost:3000",
     credentials: true,
   })
 );
@@ -38,6 +38,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 
+// const path = require("path");
 // app.use(express.static(path.join(__dirname, "../client/build")));
 // app.get("*", function (req: Request, res: Response) {
 //   res.sendFile(path.join(__dirname, "../client/build", "index.html"));

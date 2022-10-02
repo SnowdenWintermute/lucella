@@ -14,6 +14,7 @@ import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import { GameStatus } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
+import { useCookies } from "react-cookie";
 const socketAddress = process.env.NEXT_PUBLIC_DEV_MODE
   ? process.env.NEXT_PUBLIC_SOCKET_API_DEV
   : process.env.NEXT_PUBLIC_SOCKET_API;
@@ -24,7 +25,8 @@ interface Props {
 
 const GameLobby = ({ defaultChatRoom }: Props) => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth.user);
+  const [cookies] = useCookies(["access_token"]);
+  const user = useAppSelector((state) => state.user.user);
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { scoreScreenDisplayed } = lobbyUiState;
   const { currentGameRoom } = lobbyUiState;
@@ -33,20 +35,19 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(false);
   const [authenticating, setAuthenticating] = useState(true);
   const username = user ? user.name : "Anon";
-  const authToken = useRef(typeof window !== "undefined" && localStorage.token);
   const socket = useRef<Socket>();
 
   // setup socket
   useEffect(() => {
     let query = { token: null };
-    if (authToken.current) query.token = authToken.current;
+    // if(cookies.access_token) query.token = cookiesaccess_token;
     socket.current = io(socketAddress || "", { transports: ["websocket"], query, reconnectionAttempts: 2 });
     return () => {
       socket.current && socket.current.disconnect();
       dispatch(setCurrentGameRoom(null));
       dispatch(setPreGameScreenDisplayed(false));
     };
-  }, [authToken, dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     socket.current &&

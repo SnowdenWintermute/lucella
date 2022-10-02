@@ -60,7 +60,7 @@ export const loginHandler = async (req: Request<{}, {}, LoginUserInput>, res: Re
       return next(new AppError("Invalid email or password", 401));
 
     const { access_token, refresh_token } = await signTokenAndCreateSession(user);
-    res.cookie("accessToken", access_token, accessTokenCookieOptions);
+    res.cookie("access_token", access_token, accessTokenCookieOptions);
     res.cookie("refresh_token", refresh_token, refreshTokenCookieOptions);
     res.cookie("logged_in", true, {
       ...accessTokenCookieOptions,
@@ -118,7 +118,7 @@ const logout = (res: Response) => {
 export const logoutHandler = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = res.locals.user;
-    await redisClient.del(user._id);
+    await redisClient.del(user._id.toString());
     logout(res);
     return res.status(200).json({ status: "success" });
   } catch (err: any) {

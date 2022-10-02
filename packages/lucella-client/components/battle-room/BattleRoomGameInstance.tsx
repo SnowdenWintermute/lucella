@@ -22,12 +22,12 @@ const BattleRoomGameInstance = (props: Props) => {
     width: BattleRoomGame.baseWindowDimensions.width,
     height: BattleRoomGame.baseWindowDimensions.height,
   });
-  const gameWidthRatio = useRef(window.innerHeight * 0.6);
   const currentGame = useRef(lobbyUiState.currentGameRoom && new BattleRoomGame(lobbyUiState.currentGameRoom.gameName));
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawRef = useRef<() => void>();
 
   useEffect(() => {
+    const gameWidthRatio = useRef(window.innerHeight * 0.6);
     fitCanvasToScreen(window, setCanvasSize, gameWidthRatio.current);
     function handleResize() {
       gameWidthRatio.current = window.innerHeight * 0.6;
@@ -35,7 +35,7 @@ const BattleRoomGameInstance = (props: Props) => {
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [setCanvasSize, gameWidthRatio]);
+  }, [setCanvasSize]);
 
   // something to make canvas work in react
   useEffect(() => {

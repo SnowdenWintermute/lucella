@@ -3,7 +3,7 @@ import { Mutex } from "async-mutex";
 import { logOut } from "../slices/auth-slice";
 
 const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
-const baseUrl = `${API_URL}}/api/`;
+const baseUrl = `${API_URL}/api/`;
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({
   baseUrl,

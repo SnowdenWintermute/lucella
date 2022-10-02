@@ -4,6 +4,7 @@ export interface IUser {
   role: string;
   token: string;
   _id: string;
+  id: string;
   createdAt: Date;
   updatedAt: Date;
   __v: number;
@@ -23,4 +24,5 @@ export interface RegisterInput {
   name: string;
   email: string;
   password: string;
+  password2: string;
 }

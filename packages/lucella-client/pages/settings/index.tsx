@@ -1,13 +1,14 @@
 import React, { useState, Fragment } from "react";
 import FlashingClickableText from "../../components/common/FlashingClickableText";
 import Modal from "../../components/common/modal/Modal";
+import RequireUser from "../../components/routing/RequireUser";
 import { useAppSelector } from "../../redux";
-import { useDeleteAccountMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
+// import { useDeleteAccountMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
 
 const Settings = () => {
-  const { user } = useAppSelector((state) => state.auth);
-  const [deleteAccount] = useDeleteAccountMutation();
-  const [requestPasswordResetEmail, { isLoading, isSuccess, error, isError }] = useRequestPasswordResetEmailMutation();
+  const { user } = useAppSelector((state) => state.user);
+  // const [deleteAccount] = useDeleteAccountMutation();
+  // const [requestPasswordResetEmail, { isLoading, isSuccess, error, isError }] = useRequestPasswordResetEmailMutation();
   const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(false);
   const [email, setEmail] = useState("");
 
@@ -22,16 +23,16 @@ const Settings = () => {
   };
 
   // DELETE ACCOUNT FORM
-  const onSubmitDeleteAccount = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    deleteAccount(email);
-  };
+  // const onSubmitDeleteAccount = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   deleteAccount(email);
+  // };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
   return (
-    <Fragment>
+    <RequireUser allowedRoles={["user", "admin"]}>
       <Modal
         screenClass="modal-screen-dim"
         frameClass="modal-frame-dark"
@@ -43,7 +44,7 @@ const Settings = () => {
           WARNING: This will delete your account, including all profile and ranking info. If you are certain of your
           decision, type your email address into the input and click Confirm Delete.
         </p>
-        <form onSubmit={(e) => onSubmitDeleteAccount(e)}>
+        <form onSubmit={(e) => /* onSubmitDeleteAccount(e)*/ console.log(e)}>
           <input
             className="simple-text-input"
             onChange={(e) => onChange(e)}
@@ -65,17 +66,20 @@ const Settings = () => {
             <span>Logged in as {accountEmail}</span>
           </li>
           <li>
-            {isLoading ? (
-              <span>loading...</span>
-            ) : (
-              <FlashingClickableText
-                onClick={function () {
-                  requestPasswordResetEmail(accountEmail);
-                }}
-              >
-                Change Password
-              </FlashingClickableText>
-            )}
+            {
+              /*emailResetIsLoading*/ false ? (
+                <span>loading...</span>
+              ) : (
+                <FlashingClickableText
+                  onClick={function () {
+                    console.log("clicked");
+                    // requestPasswordResetEmail(accountEmail);
+                  }}
+                >
+                  Change Password
+                </FlashingClickableText>
+              )
+            }
           </li>
           <li>
             <div className="link-simple" onClick={showDeleteAccountModal}>
@@ -84,7 +88,7 @@ const Settings = () => {
           </li>
         </ul>
       </div>
-    </Fragment>
+    </RequireUser>
   );
 };
 

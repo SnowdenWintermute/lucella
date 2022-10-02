@@ -6,13 +6,14 @@ import { setAlert } from "../../redux/slices/alerts-slice";
 import { useGetUserQuery, useRegisterUserMutation } from "../../redux/api-slices/auth-api-slice";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { RegisterInput } from "../../redux/types";
 
 const Register = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [registerUser, { isLoading, isSuccess, error, isError }] = useRegisterUserMutation();
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<RegisterInput>({
     email: "",
     name: "",
     password: "",

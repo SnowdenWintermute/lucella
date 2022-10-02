@@ -1,13 +1,11 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { LoginInput } from "../../pages/login.page";
-import { RegisterInput } from "../../pages/register.page";
-import customFetchBase from "./customFetchBase";
-import { IUser } from "./types";
-import { userApi } from "./userApi";
+import baseQueryWithRefetch from "./baseQueryWithRefetch";
+import { IUser, LoginInput, RegisterInput } from "../types";
+import { userApi } from "./user-api-slice";
 
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: customFetchBase,
+  baseQuery: baseQueryWithRefetch,
   endpoints: (builder) => ({
     registerUser: builder.mutation<IUser, RegisterInput>({
       query(data) {
@@ -41,6 +39,9 @@ export const authApi = createApi({
           url: "auth/logout",
           credentials: "include",
         };
+      },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        console.log("logout mutation dispatched");
       },
     }),
   }),
