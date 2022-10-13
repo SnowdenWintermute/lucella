@@ -1,18 +1,18 @@
-import React, { useState, Fragment } from "react";
+import { useRouter } from "next/router";
+import React, { useState, useEffect, Fragment } from "react";
 import FlashingClickableText from "../../components/common/FlashingClickableText";
 import Modal from "../../components/common/modal/Modal";
-import RequireUser from "../../components/routing/RequireUser";
 import { useAppSelector } from "../../redux";
 // import { useDeleteAccountMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
 
 const Settings = () => {
-  const { user } = useAppSelector((state) => state.user);
+  const router = useRouter();
   // const [deleteAccount] = useDeleteAccountMutation();
   // const [requestPasswordResetEmail, { isLoading, isSuccess, error, isError }] = useRequestPasswordResetEmailMutation();
   const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(false);
   const [email, setEmail] = useState("");
 
-  const accountEmail = user ? user.email : "...";
+  // const accountEmail = session?.user?.email ? session.user.email : "...";
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
   const setParentDisplay = (status: boolean) => {
@@ -31,8 +31,10 @@ const Settings = () => {
     setEmail(e.target.value);
   };
 
+  if (status === "loading" || status === "unauthenticated") return <p>...</p>;
+
   return (
-    <RequireUser allowedRoles={["user", "admin"]}>
+    <Fragment>
       <Modal
         screenClass="modal-screen-dim"
         frameClass="modal-frame-dark"
@@ -63,7 +65,7 @@ const Settings = () => {
           <h1 className="header-basic">SETTINGS </h1>
           <div className="page-divider-line"></div>
           <li>
-            <span>Logged in as {accountEmail}</span>
+            <span>Logged in as {"accountEmail"}</span>
           </li>
           <li>
             {
@@ -88,7 +90,7 @@ const Settings = () => {
           </li>
         </ul>
       </div>
-    </RequireUser>
+    </Fragment>
   );
 };
 

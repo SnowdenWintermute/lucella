@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "../../redux";
 import { AlertType } from "../../enums";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
-import { useGetUserQuery, useRegisterUserMutation } from "../../redux/api-slices/auth-api-slice";
+import { useRegisterUserMutation } from "../../redux/api-slices/auth-api-slice";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { RegisterInput } from "../../redux/types";
@@ -12,7 +12,6 @@ const Register = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [registerUser, { isLoading, isSuccess, error, isError }] = useRegisterUserMutation();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [formData, setFormData] = useState<RegisterInput>({
     email: "",
     name: "",
@@ -25,27 +24,25 @@ const Register = () => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== password2) dispatch(setAlert(new Alert("Passwords do not match.", AlertType.DANGER)));
-    else registerUser({ name, email, password });
-  };
-
-  useEffect(() => {
-    if (isLoading) return;
-    if (isSuccess) {
-      // useGetUserQuery(null);
-      router.push("/battle-room");
+    else {
+      const result = await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        password2: formData.password2,
+      });
+      console.log(result);
     }
-  }, [isLoading, isSuccess, error, isError]);
-
-  if (isAuthenticated) router.push("/battle-room");
+  };
 
   return (
     <div className="auth-frame">
       <h1 className="auth-brand-header">Lucella.org</h1>
       <h3 className="auth-header">Create Account</h3>
-      <form className="auth-form" onSubmit={(e) => onSubmit(e)}>
+      <form className="auth-form" onSubmit={(e) => submitHandler(e)}>
         <input
           className="simple-text-input"
           type="email"

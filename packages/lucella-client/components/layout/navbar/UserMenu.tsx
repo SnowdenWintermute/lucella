@@ -3,23 +3,9 @@ import Link from "next/link";
 import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
-import { useAppDispatch, useAppSelector } from "../../../redux";
-import { useCookies } from "react-cookie";
-import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 
 export const UserMenu = () => {
-  const user = useAppSelector((state) => state.user.user);
-  const [showUserMenu, setShowUserMenu] = useState<boolean | null>(null);
-  const [cookies] = useCookies(["logged_in"]);
   const [showUserDropdown, toggleUserDropdown] = useState(false);
-  const username = user && user.name;
-  const [logoutUser, { isLoading, isSuccess, error, isError }] = useLogoutUserMutation();
-
-  useEffect(() => {
-    console.log(cookies.logged_in);
-    if (cookies.logged_in) setShowUserMenu(true);
-    else setShowUserMenu(false);
-  }, [cookies.logged_in]);
 
   // show/hide menu
   useEffect(() => {
@@ -31,6 +17,10 @@ export const UserMenu = () => {
     return () => window.removeEventListener("click", clearUserDropdown);
   }, [showUserDropdown]);
 
+  const handleLogout = () => {
+    // signOut({ callbackUrl: "/login" });
+  };
+
   const loggedInUserMenu = (
     <Fragment>
       <div
@@ -41,7 +31,7 @@ export const UserMenu = () => {
         }}
       >
         <div className="user-icon-letter" data-name="profile-icon">
-          {username && username.slice(0, 1)}
+          {/* {session?.user?.name && session.user.name.slice(0, 1)} */}
         </div>
       </div>
       {showUserDropdown && (
@@ -53,7 +43,7 @@ export const UserMenu = () => {
             </a>
           </Link>
           <Link href="/login">
-            <a className="user-menu-item" onClick={(e) => logoutUser()}>
+            <a className="user-menu-item" onClick={(e) => handleLogout()}>
               <Image alt="logout icon" src={logoutIcon} />
               Logout
             </a>
@@ -69,7 +59,8 @@ export const UserMenu = () => {
     </Link>
   );
 
-  const userMenu = showUserMenu ? loggedInUserMenu : guestMenu;
+  // if (status === "loading") return <p>...</p>;
+  const userMenu = false ? loggedInUserMenu : guestMenu;
 
   return userMenu;
 };

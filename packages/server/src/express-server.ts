@@ -18,7 +18,9 @@ app.use(helmet());
 console.log(process.env.ORIGIN);
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(
+  // cors()
   cors({
+    methods: ["GET", "PATCH", "POST", "PUT"],
     origin: "http://localhost:3000",
     credentials: true,
   })

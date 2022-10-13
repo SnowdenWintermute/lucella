@@ -23,8 +23,9 @@ const RequireUser = ({ allowedRoles, children }: Props) => {
   });
 
   useEffect(() => {
-    if ((!logged_in && !user) || !allowedRoles.includes(user?.role as string)) {
-      if (logged_in && user)
+    if (loading) return;
+    if ((!cookies.logged_in && !user) || !allowedRoles.includes(user?.role as string)) {
+      if (cookies.logged_in && user)
         router.replace({
           pathname: "/unauthorized",
           query: { from: location },
@@ -35,7 +36,7 @@ const RequireUser = ({ allowedRoles, children }: Props) => {
           query: { from: location },
         });
     }
-  }, [logged_in]);
+  }, [loading, cookies.logged_in]);
 
   if (loading) return <p>...</p>;
   return <Fragment>{children}</Fragment>;

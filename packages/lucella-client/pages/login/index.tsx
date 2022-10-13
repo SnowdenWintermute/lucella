@@ -1,18 +1,28 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import { GetServerSideProps } from "next/types";
+import React, { useState } from "react";
 import { useLoginUserMutation } from "../../redux/api-slices/auth-api-slice";
 import { LoginInput } from "../../redux/types";
 
-const Login = () => {
-  const [cookies] = useCookies(["logged_in"]);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  // get the cookies
+  const cookies = ctx.req.headers.cookie;
+  console.log(cookies);
+  // set the cookies
+  // ctx.res.setHeader('Set-Cookie', 'foo=bar; HttpOnly');
+
+  return { props: {} };
+};
+
+const Login = (props: { allCookies: { logged_in: boolean } }) => {
   const router = useRouter();
-  const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
   const [formData, setFormData] = useState<LoginInput>({
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
 
   const { email, password } = formData;
 
@@ -21,14 +31,10 @@ const Login = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { email, password } = formData;
-    loginUser({ email, password });
+    setLoading(true);
+    await loginUser(formData);
+    setLoading(false);
   };
-
-  useEffect(() => {
-    console.log("effect in login.tsx", logged_in);
-    if (logged_in) router.push("/battle-room");
-  }, [logged_in]);
 
   return (
     <div className="auth-frame">
@@ -57,7 +63,12 @@ const Login = () => {
         </div>
         <div className="auth-bottom-links">
           <Link href="/register">Create account</Link>
-          <input type="submit" className="button button-standard-size button-primary" value="SIGN" />
+          <input
+            type="submit"
+            className="button button-standard-size button-primary"
+            value={"SIGN"}
+            disabled={loading}
+          />
         </div>
       </form>
     </div>

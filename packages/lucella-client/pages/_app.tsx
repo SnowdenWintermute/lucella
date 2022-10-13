@@ -19,11 +19,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
   return getLayout(
     <Provider store={store}>
-      <AuthMiddleware>
-        <LayoutWithHeader>
-          <Component {...pageProps} />
-        </LayoutWithHeader>
-      </AuthMiddleware>
+      {/* <AuthMiddleware> */}
+      <LayoutWithHeader>
+        <Component {...pageProps} />
+      </LayoutWithHeader>
+      {/* </AuthMiddleware> */}
     </Provider>
   );
 }

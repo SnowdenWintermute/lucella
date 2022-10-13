@@ -25,9 +25,9 @@ const AlertElement = ({ message, type, id }: Props) => {
 
   const alertIcon =
     type === AlertType.DANGER ? (
-      <DangerIcon className="alert-icon"></DangerIcon>
+      <DangerIcon className={styles["alert-icon"]}></DangerIcon>
     ) : (
-      <SuccessIcon className="alert-icon"></SuccessIcon>
+      <SuccessIcon className={styles["alert-icon"]}></SuccessIcon>
     );
 
   const removeAlert = (id: string) => {

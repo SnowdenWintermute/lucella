@@ -2,6 +2,7 @@ import React from "react";
 import { Alert } from "../../../classes/Alert";
 import { useAppSelector } from "../../../redux";
 import AlertElement from "./AlertElement";
+import styles from "./alerts.module.scss";
 
 const Alerts = () => {
   const { alerts } = useAppSelector((state) => state.alerts);
@@ -14,7 +15,7 @@ const Alerts = () => {
     });
   }
 
-  return <ul className="alerts-holder">{alertsToDisplay}</ul>;
+  return <ul className={styles["alerts-holder"]}>{alertsToDisplay}</ul>;
 };
 
 export default Alerts;
