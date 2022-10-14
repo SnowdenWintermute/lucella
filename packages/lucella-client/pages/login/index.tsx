@@ -1,19 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next/types";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLoginUserMutation } from "../../redux/api-slices/auth-api-slice";
 import { LoginInput } from "../../redux/types";
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  // get the cookies
-  const cookies = ctx.req.headers.cookie;
-  console.log(cookies);
-  // set the cookies
-  // ctx.res.setHeader('Set-Cookie', 'foo=bar; HttpOnly');
-
-  return { props: {} };
-};
+import Cookies from "js-cookie";
 
 const Login = (props: { allCookies: { logged_in: boolean } }) => {
   const router = useRouter();
@@ -35,6 +26,10 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
     await loginUser(formData);
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (Cookies.get("logged_in")) router.push("/battle-room");
+  });
 
   return (
     <div className="auth-frame">

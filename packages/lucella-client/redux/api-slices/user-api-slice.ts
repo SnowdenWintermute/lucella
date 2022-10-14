@@ -10,6 +10,7 @@ export const userApi = createApi({
   endpoints: (builder) => ({
     getMe: builder.query<IUser, null>({
       query() {
+        console.log("get self redux query ");
         return {
           url: "users/me",
           credentials: "include",

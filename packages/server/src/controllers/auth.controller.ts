@@ -60,10 +60,13 @@ export const loginHandler = async (req: Request<{}, {}, LoginUserInput>, res: Re
       return next(new AppError("Invalid email or password", 401));
 
     const { access_token, refresh_token } = await signTokenAndCreateSession(user);
-    console.log("created access token: ", access_token);
     res.cookie("access_token", access_token, accessTokenCookieOptions);
     res.cookie("refresh_token", refresh_token, refreshTokenCookieOptions);
     res.cookie("logged_in", true, {
+      ...accessTokenCookieOptions,
+      httpOnly: false,
+    });
+    res.cookie("user_role", user.role, {
       ...accessTokenCookieOptions,
       httpOnly: false,
     });
@@ -112,6 +115,9 @@ const logout = (res: Response) => {
   res.cookie("access_token", "", { maxAge: 1 });
   res.cookie("refresh_token", "", { maxAge: 1 });
   res.cookie("logged_in", "", {
+    maxAge: 1,
+  });
+  res.cookie("user_role", "", {
     maxAge: 1,
   });
 };

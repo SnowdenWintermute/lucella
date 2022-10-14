@@ -1,11 +1,14 @@
+import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
+import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 
 export const UserMenu = () => {
   const [showUserDropdown, toggleUserDropdown] = useState(false);
+  const [logoutUser, { isLoading, isSuccess, error, isError }] = useLogoutUserMutation();
 
   // show/hide menu
   useEffect(() => {
@@ -18,6 +21,7 @@ export const UserMenu = () => {
   }, [showUserDropdown]);
 
   const handleLogout = () => {
+    logoutUser();
     // signOut({ callbackUrl: "/login" });
   };
 
@@ -60,7 +64,7 @@ export const UserMenu = () => {
   );
 
   // if (status === "loading") return <p>...</p>;
-  const userMenu = false ? loggedInUserMenu : guestMenu;
+  const userMenu = Cookies.get("logged_in") ? loggedInUserMenu : guestMenu;
 
   return userMenu;
 };

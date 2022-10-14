@@ -4,6 +4,7 @@ import { findAllUsers } from "../services/user.service";
 export const getMeHandler = (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = res.locals.user; // assigned in deserializeUser middleware
+    console.log("got user, ", user);
     res.status(200).json({
       status: "success",
       data: {
