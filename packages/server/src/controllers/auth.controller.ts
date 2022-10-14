@@ -1,6 +1,6 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
 import { CreateUserInput, LoginUserInput } from "../schema/user.schema";
-import { createUser, findUser, findUserById, signTokenAndCreateSession } from "../services/user.service";
+import { createUser, deleteUser, findUser, findUserById, signTokenAndCreateSession } from "../services/user.service";
 import AppError from "../classes/AppError";
 import { signJwt, verifyJwt } from "../utils/jwt";
 import redisClient from "../utils/connectRedis";
@@ -38,9 +38,6 @@ export const registerHandler = async (req: Request<{}, {}, CreateUserInput>, res
 
     res.status(201).json({
       status: "success",
-      data: {
-        user,
-      },
     });
   } catch (err: any) {
     // mongodb specific code for duplicate entry
@@ -71,10 +68,7 @@ export const loginHandler = async (req: Request<{}, {}, LoginUserInput>, res: Re
       httpOnly: false,
     });
 
-    res.status(200).json({
-      status: "success",
-      access_token: process.env.NODE_ENV === "development" ? access_token : "",
-    });
+    res.status(200).json({ status: "success" });
   } catch (err: any) {
     next(err);
   }
@@ -130,5 +124,19 @@ export const logoutHandler = async (req: Request, res: Response, next: NextFunct
     return res.status(200).json({ status: "success" });
   } catch (err: any) {
     next(err);
+  }
+};
+
+export const deleteAccountHandler = async (req: Request, res: Response, next: NextFunction) => {
+  const user = res.locals.user;
+  try {
+    console.log("delete user route called for user ", user.name);
+    await deleteUser(user.email);
+    await redisClient.del(user._id.toString());
+    logout(res);
+    return res.status(200).json({ status: "success" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "internal server error" });
   }
 };

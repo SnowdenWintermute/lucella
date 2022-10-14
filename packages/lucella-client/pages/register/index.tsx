@@ -7,11 +7,25 @@ import { useRegisterUserMutation } from "../../redux/api-slices/auth-api-slice";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { RegisterInput } from "../../redux/types";
+import Cookies from "js-cookie";
+import { userApi } from "../../redux/api-slices/user-api-slice";
 
 const Register = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [registerUser, { isLoading, isSuccess, error, isError }] = useRegisterUserMutation();
+  const [redirecting, setRedirecting] = useState(false);
+  const { isLoading: userIsLoading, isFetching: userIsFetching } = userApi.endpoints.getMe.useQuery(null, {
+    skip: false,
+    refetchOnMountOrArgChange: true,
+  });
+  const [registerUser, { isLoading: registerUserIsLoading, isSuccess: registerUserIsSuccess, error, isError }] =
+    useRegisterUserMutation();
+  const {
+    data: userState,
+    isLoading: getSelfIsLoading,
+    isSuccess: getSelfIsSuccess,
+    isFetching: getSelfIsFetching,
+  } = userApi.endpoints.getMe.useQueryState(null);
   const [formData, setFormData] = useState<RegisterInput>({
     email: "",
     name: "",
@@ -28,15 +42,26 @@ const Register = () => {
     e.preventDefault();
     if (password !== password2) dispatch(setAlert(new Alert("Passwords do not match.", AlertType.DANGER)));
     else {
-      const result = await registerUser({
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        password2: formData.password2,
-      });
-      console.log(result);
+      try {
+        const res = await registerUser({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          password2: formData.password2,
+        });
+      } catch (error) {
+        console.log(error);
+        dispatch(setAlert(new Alert("Error creating account", AlertType.DANGER)));
+      }
     }
   };
+
+  useEffect(() => {
+    if (getSelfIsSuccess && !getSelfIsFetching && !getSelfIsLoading) {
+      setRedirecting(true);
+      router.push("/battle-room");
+    }
+  }, [getSelfIsSuccess, getSelfIsFetching, getSelfIsLoading]);
 
   return (
     <div className="auth-frame">

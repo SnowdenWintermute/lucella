@@ -1,18 +1,25 @@
+import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, Fragment } from "react";
 import FlashingClickableText from "../../components/common/FlashingClickableText";
 import Modal from "../../components/common/modal/Modal";
-import { useAppSelector } from "../../redux";
-// import { useDeleteAccountMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
-
+import { userApi } from "../../redux/api-slices/user-api-slice";
+import { useDeleteAccountMutation } from "../../redux/api-slices/auth-api-slice";
+import { useAppDispatch } from "../../redux";
+import { setAlert } from "../../redux/slices/alerts-slice";
+import { Alert } from "../../classes/Alert";
+import { AlertType } from "../../enums";
+// useRequestPasswordResetEmailMutation
 const Settings = () => {
   const router = useRouter();
-  // const [deleteAccount] = useDeleteAccountMutation();
+  const dispatch = useAppDispatch();
+  const [redirecting, setRedirecting] = useState(false);
+  const [deleteAccount] = useDeleteAccountMutation();
   // const [requestPasswordResetEmail, { isLoading, isSuccess, error, isError }] = useRequestPasswordResetEmailMutation();
   const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(false);
   const [email, setEmail] = useState("");
-
-  // const accountEmail = session?.user?.email ? session.user.email : "...";
+  const { data: userState, isLoading, isSuccess, isFetching } = userApi.endpoints.getMe.useQueryState(null);
+  const accountEmail = userState?.email ? userState.email : "...";
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
   const setParentDisplay = (status: boolean) => {
@@ -22,16 +29,24 @@ const Settings = () => {
     setDisplayDeleteAccountModal(true);
   };
 
-  // DELETE ACCOUNT FORM
-  // const onSubmitDeleteAccount = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   deleteAccount(email);
-  // };
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
+  const handleSubmitDeleteAccount = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (email !== userState?.email)
+      dispatch(setAlert(new Alert("Email address typed did not match your account's email", AlertType.DANGER)));
+    else {
+      deleteAccount(email);
+      router.push("/register");
+    }
   };
 
-  if (status === "loading" || status === "unauthenticated") return <p>...</p>;
+  useEffect(() => {
+    if (!isSuccess && !isLoading && !isFetching && !redirecting) {
+      setRedirecting(true);
+      router.push("/login");
+    }
+  }, [isSuccess, isLoading, isFetching]);
+
+  if (!isSuccess || isLoading || isFetching) return <p>...</p>;
 
   return (
     <Fragment>
@@ -46,13 +61,14 @@ const Settings = () => {
           WARNING: This will delete your account, including all profile and ranking info. If you are certain of your
           decision, type your email address into the input and click Confirm Delete.
         </p>
-        <form onSubmit={(e) => /* onSubmitDeleteAccount(e)*/ console.log(e)}>
+        <form onSubmit={(e) => handleSubmitDeleteAccount(e)}>
           <input
             className="simple-text-input"
-            onChange={(e) => onChange(e)}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
             name="email"
             value={email}
+            autoFocus
           ></input>
           {/* @ts-ignore */}
           <button className="button button-standard-size button-danger modal-submit-button" action="submit">
@@ -65,7 +81,7 @@ const Settings = () => {
           <h1 className="header-basic">SETTINGS </h1>
           <div className="page-divider-line"></div>
           <li>
-            <span>Logged in as {"accountEmail"}</span>
+            <span>{!isSuccess ? "..." : "Logged in as " + accountEmail}</span>
           </li>
           <li>
             {
@@ -74,7 +90,6 @@ const Settings = () => {
               ) : (
                 <FlashingClickableText
                   onClick={function () {
-                    console.log("clicked");
                     // requestPasswordResetEmail(accountEmail);
                   }}
                 >

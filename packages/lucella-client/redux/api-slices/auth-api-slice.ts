@@ -11,7 +11,7 @@ export const authApi = createApi({
   baseQuery: baseQueryWithRefetch,
   endpoints: (builder) => ({
     // REGISTER
-    registerUser: builder.mutation<IUser, RegisterInput>({
+    registerUser: builder.mutation<Response, RegisterInput>({
       query(data) {
         return {
           url: "/auth/register",
@@ -19,18 +19,19 @@ export const authApi = createApi({
           body: data,
         };
       },
-      async onQueryStarted(ards, { dispatch, queryFulfilled }) {
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           dispatch(setAlert(new Alert("Account created!", AlertType.SUCCESS)));
+          await dispatch(authApi.endpoints.loginUser.initiate({ email: args.email, password: args.password }));
         } catch (error) {
-          dispatch(setAlert(new Alert("registration failed", AlertType.DANGER)));
+          dispatch(setAlert(new Alert("Registration failed", AlertType.DANGER)));
         }
       },
-      transformResponse: (result: { data: { user: IUser } }) => result.data.user,
+      // transformResponse: (result: { data: { user: IUser } }) => result.data.user,
     }),
     // LOGIN
-    loginUser: builder.mutation<{ access_token: string; status: string }, LoginInput>({
+    loginUser: builder.mutation<{ status: string }, LoginInput>({
       query(data) {
         return {
           url: "auth/login",
@@ -42,10 +43,8 @@ export const authApi = createApi({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const data = await queryFulfilled;
-          console.log("login data: ", data);
           await dispatch(userApi.endpoints.getMe.initiate(null));
         } catch (error: any) {
-          // console.log(error.error.data.error);
           console.log(error);
           dispatch(setAlert(new Alert("non-specific login error", AlertType.DANGER)));
         }
@@ -59,11 +58,28 @@ export const authApi = createApi({
           credentials: "include",
         };
       },
+    }),
+    // DELETE ACCOUNT
+    deleteAccount: builder.mutation<void, string>({
+      query() {
+        return {
+          url: "auth/delete-account",
+          credentials: "include",
+        };
+      },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        console.log("logout mutation dispatched");
+        try {
+          await queryFulfilled;
+          dispatch(setAlert(new Alert("Account deleted", AlertType.DANGER)));
+          await dispatch(authApi.endpoints.logoutUser.initiate());
+        } catch (error: any) {
+          console.log(error);
+          dispatch(setAlert(new Alert("Server error", AlertType.DANGER)));
+        }
       },
     }),
   }),
 });
 
-export const { useLoginUserMutation, useRegisterUserMutation, useLogoutUserMutation } = authApi;
+export const { useLoginUserMutation, useRegisterUserMutation, useLogoutUserMutation, useDeleteAccountMutation } =
+  authApi;

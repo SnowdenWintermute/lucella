@@ -12,6 +12,13 @@ export const createUser = async (input: Partial<User>) => {
   return omit(user.toJSON(), excludedFields);
 };
 
+export const deleteUser = async (email: string) => {
+  userModel
+    .deleteOne({ email })
+    .then(() => console.log(`user with email ${email} deleted`))
+    .catch((error) => console.log(error));
+};
+
 export const findUserById = async (id: string) => {
   const user = await userModel.findById(id).lean();
   return omit(user, excludedFields);

@@ -4,6 +4,7 @@ import {
   logoutHandler,
   refreshAccessTokenHandler,
   registerHandler,
+  deleteAccountHandler,
 } from "../controllers/auth.controller";
 import { requireUser } from "../middleware/requireUser";
 import { deserializeUser } from "../middleware/deserializeUser";
@@ -17,5 +18,6 @@ router.post("/login", validate(loginUserSchema), loginHandler);
 router.get("/refresh", refreshAccessTokenHandler);
 router.use(deserializeUser, requireUser);
 router.get("/logout", logoutHandler);
+router.get("/delete-account", deleteAccountHandler);
 
 export default router;
