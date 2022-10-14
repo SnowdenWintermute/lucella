@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQueryWithRefetch from "./baseQueryWithRefetch";
-import { IUser, LoginInput, RegisterInput } from "../types";
+import { LoginInput, RegisterInput } from "../types";
 import { userApi } from "./user-api-slice";
 import { setAlert } from "../slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
@@ -28,7 +28,6 @@ export const authApi = createApi({
           dispatch(setAlert(new Alert("Registration failed", AlertType.DANGER)));
         }
       },
-      // transformResponse: (result: { data: { user: IUser } }) => result.data.user,
     }),
     // LOGIN
     loginUser: builder.mutation<{ status: string }, LoginInput>({
@@ -64,6 +63,7 @@ export const authApi = createApi({
       query() {
         return {
           url: "auth/delete-account",
+          method: "DELETE",
           credentials: "include",
         };
       },

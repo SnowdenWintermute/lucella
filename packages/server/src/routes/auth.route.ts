@@ -18,6 +18,7 @@ router.post("/login", validate(loginUserSchema), loginHandler);
 router.get("/refresh", refreshAccessTokenHandler);
 router.use(deserializeUser, requireUser);
 router.get("/logout", logoutHandler);
-router.get("/delete-account", deleteAccountHandler);
+router.delete("/delete-account", deleteAccountHandler);
+// router.post("/request-password-reset-email", passwordResetEmailRequestHandler);
 
 export default router;

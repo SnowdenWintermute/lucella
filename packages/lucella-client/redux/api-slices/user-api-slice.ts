@@ -1,5 +1,4 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
-import { setUser } from "../slices/user-slice";
 import baseQueryWithRefetch from "./baseQueryWithRefetch";
 import { IUser } from "../types";
 
@@ -16,12 +15,6 @@ export const userApi = createApi({
         };
       },
       transformResponse: (result: { data: { user: IUser } }) => result.data.user,
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setUser(data));
-        } catch (error) {}
-      },
     }),
   }),
 });

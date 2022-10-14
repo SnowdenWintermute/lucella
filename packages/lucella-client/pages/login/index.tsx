@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 
 const Login = (props: { allCookies: { logged_in: boolean } }) => {
   const router = useRouter();
+  const [redirecting, setRedirecting] = useState(false);
   const [formData, setFormData] = useState<LoginInput>({
     email: "",
     password: "",
@@ -28,7 +29,10 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
   };
 
   useEffect(() => {
-    if (Cookies.get("logged_in")) router.push("/battle-room");
+    if (Cookies.get("logged_in") && !redirecting) {
+      setRedirecting(true);
+      router.push("/battle-room");
+    }
   });
 
   return (

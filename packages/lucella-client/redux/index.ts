@@ -7,14 +7,12 @@ import alertsSlice from "./slices/alerts-slice";
 import chatSlice from "./slices/chat-slice";
 import ladderSlice from "./slices/ladder-slice";
 import lobbyUiSlice from "./slices/lobby-ui-slice";
-import userSlice from "./slices/user-slice";
 
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [ladderApiSlice.reducerPath]: ladderApiSlice.reducer,
-    user: userSlice,
     ladder: ladderSlice,
     alerts: alertsSlice,
     chat: chatSlice,

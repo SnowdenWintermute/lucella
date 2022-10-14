@@ -1,5 +1,4 @@
 import Cookies from "js-cookie";
-import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
@@ -27,6 +26,7 @@ export const UserMenu = () => {
   }, [showUserDropdown]);
 
   const handleLogout = () => {
+    Cookies.remove("logged_in");
     logoutUser();
   };
 

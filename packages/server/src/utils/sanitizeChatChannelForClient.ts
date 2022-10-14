@@ -1,5 +1,4 @@
 import { ChatChannel } from "../../../common";
-import { IUser } from "../models/User";
 
 export default function sanitizeChatChannelForClient(
   chatChannels: { [channelName: string]: ChatChannel },

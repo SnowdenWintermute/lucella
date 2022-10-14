@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, Fragment } from "react";
 import FlashingClickableText from "../../components/common/FlashingClickableText";
@@ -9,6 +8,7 @@ import { useAppDispatch } from "../../redux";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
+import Cookies from "js-cookie";
 // useRequestPasswordResetEmailMutation
 const Settings = () => {
   const router = useRouter();
@@ -35,6 +35,8 @@ const Settings = () => {
       dispatch(setAlert(new Alert("Email address typed did not match your account's email", AlertType.DANGER)));
     else {
       deleteAccount(email);
+      setRedirecting(true);
+      Cookies.remove("logged_in");
       router.push("/register");
     }
   };

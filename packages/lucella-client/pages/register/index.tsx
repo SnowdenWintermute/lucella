@@ -14,18 +14,8 @@ const Register = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [redirecting, setRedirecting] = useState(false);
-  const { isLoading: userIsLoading, isFetching: userIsFetching } = userApi.endpoints.getMe.useQuery(null, {
-    skip: false,
-    refetchOnMountOrArgChange: true,
-  });
   const [registerUser, { isLoading: registerUserIsLoading, isSuccess: registerUserIsSuccess, error, isError }] =
     useRegisterUserMutation();
-  const {
-    data: userState,
-    isLoading: getSelfIsLoading,
-    isSuccess: getSelfIsSuccess,
-    isFetching: getSelfIsFetching,
-  } = userApi.endpoints.getMe.useQueryState(null);
   const [formData, setFormData] = useState<RegisterInput>({
     email: "",
     name: "",
@@ -57,11 +47,11 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (getSelfIsSuccess && !getSelfIsFetching && !getSelfIsLoading) {
+    if (registerUserIsSuccess || (Cookies.get("logged_in") && !redirecting)) {
       setRedirecting(true);
       router.push("/battle-room");
     }
-  }, [getSelfIsSuccess, getSelfIsFetching, getSelfIsLoading]);
+  });
 
   return (
     <div className="auth-frame">
