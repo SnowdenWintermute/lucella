@@ -1,11 +1,13 @@
 import omit = require("lodash.omit");
 import { FilterQuery, QueryOptions } from "mongoose";
-import { excludedFields } from "../controllers/auth.controller";
 import { signJwt } from "../utils/jwt";
 import { DocumentType } from "@typegoose/typegoose";
 import userModel, { User } from "../models/user.model";
 
 import redisClient from "../utils/connectRedis";
+
+// Exclude this fields from the response
+export const excludedFields = ["password"];
 
 export const createUser = async (input: Partial<User>) => {
   const user = await userModel.create(input);
@@ -33,12 +35,12 @@ export const findUser = async (query: FilterQuery<User>, options: QueryOptions =
 };
 
 export const signTokenAndCreateSession = async (user: DocumentType<User>) => {
-  const access_token = signJwt({ sub: user._id }, "accessTokenPrivateKey", {
-    expiresIn: `${parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) / 60 / 60}m`,
+  const access_token = signJwt({ sub: user._id }, process.env.ACCESS_TOKEN_PRIVATE_KEY!, {
+    expiresIn: `${parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) / 1000 / 60}m`,
   });
 
-  const refresh_token = signJwt({ sub: user._id }, "refreshTokenPrivateKey", {
-    expiresIn: `${parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN!) / 60 / 60}m`,
+  const refresh_token = signJwt({ sub: user._id }, process.env.REFRESH_TOKEN_PRIVATE_KEY!, {
+    expiresIn: `${parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN!) / 1000 / 60}m`,
   });
 
   // Create a Session

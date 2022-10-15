@@ -70,9 +70,27 @@ export const authApi = createApi({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          dispatch(setAlert(new Alert("Account deleted", AlertType.DANGER)));
+          dispatch(setAlert(new Alert("Account deleted", AlertType.SUCCESS)));
           await dispatch(authApi.endpoints.logoutUser.initiate());
         } catch (error: any) {
+          console.log(error);
+          dispatch(setAlert(new Alert("Server error", AlertType.DANGER)));
+        }
+      },
+    }),
+    // REQUEST PASSWORD RESET EMAIL
+    requestPasswordResetEmail: builder.mutation<void, string>({
+      query() {
+        return {
+          url: "auth/request-password-reset-email",
+          method: "POST",
+        };
+      },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(setAlert(new Alert("An email has been sent with a link to reset your password", AlertType.SUCCESS)));
+        } catch (error) {
           console.log(error);
           dispatch(setAlert(new Alert("Server error", AlertType.DANGER)));
         }
@@ -81,5 +99,10 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLoginUserMutation, useRegisterUserMutation, useLogoutUserMutation, useDeleteAccountMutation } =
-  authApi;
+export const {
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useLogoutUserMutation,
+  useDeleteAccountMutation,
+  useRequestPasswordResetEmailMutation,
+} = authApi;

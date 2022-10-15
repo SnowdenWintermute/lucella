@@ -1,18 +1,8 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 
-export const signJwt = (
-  payload: Object,
-  key: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
-  options: SignOptions = {}
-) => {
+export const signJwt = (payload: Object, key: string, options: SignOptions = {}) => {
   try {
-    const keyToUse =
-      key === "accessTokenPrivateKey"
-        ? process.env.ACCESS_TOKEN_PRIVATE_KEY
-        : key === "refreshTokenPrivateKey"
-        ? process.env.REFRESH_TOKEN_PRIVATE_KEY
-        : "";
-    const privateKey = Buffer.from(keyToUse!, "base64").toString("ascii");
+    const privateKey = Buffer.from(key, "base64").toString("ascii");
     if (privateKey)
       return jwt.sign(payload, privateKey, {
         ...(options && options),
@@ -24,15 +14,9 @@ export const signJwt = (
   }
 };
 
-export const verifyJwt = <T>(token: string, key: "accessTokenPublicKey" | "refreshTokenPublicKey"): T | null => {
+export const verifyJwt = <T>(token: string, key: string): T | null => {
   try {
-    const keyToUse =
-      key === "accessTokenPublicKey"
-        ? process.env.ACCESS_TOKEN_PUBLIC_KEY
-        : key === "refreshTokenPublicKey"
-        ? process.env.REFRESH_TOKEN_PUBLIC_KEY
-        : "";
-    const publicKey = Buffer.from(keyToUse!, "base64").toString("ascii");
+    const publicKey = Buffer.from(key, "base64").toString("ascii");
     return jwt.verify(token, publicKey) as T;
   } catch (error) {
     return null;

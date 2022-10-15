@@ -13,7 +13,6 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
     email: "",
     password: "",
   });
-  const [loading, setLoading] = useState(false);
   const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
 
   const { email, password } = formData;
@@ -23,9 +22,7 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
     await loginUser(formData);
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -47,6 +44,7 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
           name="email"
           value={email}
           onChange={(e) => onChange(e)}
+          disabled={isLoading || isSuccess}
           autoFocus
         ></input>
         <input
@@ -56,6 +54,7 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
           placeholder="Password"
           value={password}
           onChange={(e) => onChange(e)}
+          disabled={isLoading || isSuccess}
         ></input>
         <div className="forgot-password">
           <Link href="/request-password-reset">Forgot password?</Link>
@@ -65,8 +64,8 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
           <input
             type="submit"
             className="button button-standard-size button-primary"
-            value={"SIGN"}
-            disabled={loading}
+            value={isLoading || isSuccess ? "..." : "SIGN"}
+            disabled={isLoading || isSuccess}
           />
         </div>
       </form>

@@ -3,22 +3,30 @@ import React, { useState, useEffect, Fragment } from "react";
 import FlashingClickableText from "../../components/common/FlashingClickableText";
 import Modal from "../../components/common/modal/Modal";
 import { userApi } from "../../redux/api-slices/user-api-slice";
-import { useDeleteAccountMutation } from "../../redux/api-slices/auth-api-slice";
+import { useDeleteAccountMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
 import { useAppDispatch } from "../../redux";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import Cookies from "js-cookie";
-// useRequestPasswordResetEmailMutation
+
 const Settings = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [redirecting, setRedirecting] = useState(false);
   const [deleteAccount] = useDeleteAccountMutation();
-  // const [requestPasswordResetEmail, { isLoading, isSuccess, error, isError }] = useRequestPasswordResetEmailMutation();
+  const [
+    requestPasswordResetEmail,
+    { isLoading: passwordResetIsLoading, isSuccess: passwordResetIsSuccess, isError: passwordResetIsError },
+  ] = useRequestPasswordResetEmailMutation();
   const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(false);
   const [email, setEmail] = useState("");
-  const { data: userState, isLoading, isSuccess, isFetching } = userApi.endpoints.getMe.useQueryState(null);
+  const {
+    data: userState,
+    isLoading: userQueryIsLoading,
+    isSuccess: userQueryIsSuccess,
+    isFetching: userQueryIsFetching,
+  } = userApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
   const accountEmail = userState?.email ? userState.email : "...";
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
@@ -42,13 +50,13 @@ const Settings = () => {
   };
 
   useEffect(() => {
-    if (!isSuccess && !isLoading && !isFetching && !redirecting) {
+    if (!userQueryIsSuccess && !userQueryIsLoading && !userQueryIsFetching && !redirecting) {
       setRedirecting(true);
       router.push("/login");
     }
-  }, [isSuccess, isLoading, isFetching]);
+  }, [userQueryIsSuccess, userQueryIsLoading, userQueryIsFetching]);
 
-  if (!isSuccess || isLoading || isFetching) return <p>...</p>;
+  if (!userQueryIsSuccess || userQueryIsLoading || userQueryIsFetching) return <p>...</p>;
 
   return (
     <Fragment>
@@ -83,18 +91,14 @@ const Settings = () => {
           <h1 className="header-basic">SETTINGS </h1>
           <div className="page-divider-line"></div>
           <li>
-            <span>{!isSuccess ? "..." : "Logged in as " + accountEmail}</span>
+            <span>{!userQueryIsSuccess ? "..." : "Logged in as " + accountEmail}</span>
           </li>
           <li>
             {
               /*emailResetIsLoading*/ false ? (
                 <span>loading...</span>
               ) : (
-                <FlashingClickableText
-                  onClick={function () {
-                    // requestPasswordResetEmail(accountEmail);
-                  }}
-                >
+                <FlashingClickableText onClick={() => requestPasswordResetEmail(accountEmail)}>
                   Change Password
                 </FlashingClickableText>
               )

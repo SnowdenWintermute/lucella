@@ -1,41 +1,28 @@
 import { Request, Response } from "express";
 import userModel from "../../models/user.model";
 import nodemailer from "nodemailer";
-import jwt from "jsonwebtoken";
+import { signJwt } from "../../utils/jwt";
 
-const { validationResult } = require("express-validator");
-
-export default async function (req: Request, res: Response) {
-  let errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+export default async function passwordResetEmailRequestHandler(req: Request, res: Response) {
   try {
-    // get the user trying to reset password
-    let user = await userModel.findOne({ email: req.body.email });
-    if (!user) {
-      return;
-    }
+    const user = await userModel.findOne({ email: req.body.email });
+    if (!user) return res.status(500).json({ error: "No user found with that email" });
     // create their token to be put in link
     const payload = {
       user: {
-        id: user.id,
+        id: user._id,
       },
     };
-    const passwordResetToken = jwt.sign(
-      payload,
-      process.env.JWT_SECRET,
-      {
-        expiresIn: 3600,
-      },
-      { algorithm: "RS256" }
-    );
+    const password_reset_token = signJwt(payload, process.env.PASSWORD_RESET_TOKEN_PRIVATE_KEY!, {
+      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!) / 1000 / 60}m`,
+    });
 
-    const rootUrl = "localhost:3000/";
+    const rootUrl =
+      process.env.NODE_ENV === "development" ? process.env.EMAIL_ROOT_URL_DEV : process.env.EMAIL_ROOT_URL;
     const emailPass = process.env.EMAIL_PASSWORD;
 
-    const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://${rootUrl}password-reset/${passwordResetToken}" target="_blank">https://${rootUrl}password-reset/${passwordResetToken}</a></p>`;
-    const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: https://${rootUrl}password-reset/${passwordResetToken}`;
+    const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://${rootUrl}/password-reset/${password_reset_token}" target="_blank">https://${rootUrl}/password-reset/${password_reset_token}</a></p>`;
+    const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: https://${rootUrl}/password-reset/${password_reset_token}`;
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
