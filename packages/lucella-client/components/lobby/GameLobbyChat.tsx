@@ -1,6 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "../../redux";
+import { SocketEventsFromClient } from "../../../common";
 
 interface Props {
   socket: Socket;
@@ -18,10 +19,8 @@ const GameLobbyChat = ({ socket, username }: Props) => {
   const { currentChatRoomName, messages } = chatState;
 
   useEffect(() => {
-    if (gameListIsOpen) setChatClass("chat-stream-top-border");
-    if (preGameScreenIsOpen) setChatClass("chat-stream-top-border");
-    if (matchmakingScreenIsOpen) setChatClass("chat-stream-top-border");
-    if (!gameListIsOpen && !preGameScreenIsOpen && !matchmakingScreenIsOpen) setChatClass("");
+    if (gameListIsOpen || preGameScreenIsOpen || matchmakingScreenIsOpen) setChatClass("chat-stream-top-border");
+    else setChatClass("");
   }, [gameListIsOpen, preGameScreenIsOpen, matchmakingScreenIsOpen]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,14 +29,12 @@ const GameLobbyChat = ({ socket, username }: Props) => {
 
   const sendNewMessage = (message: string) => {
     if (message === "") return;
-    const author = username;
     const messageToSend = {
       currentChatRoomName,
-      author,
       style: "normal",
-      messageText: message,
+      text: message,
     };
-    socket.emit("clientSendsNewChat", messageToSend);
+    socket.emit(SocketEventsFromClient.NEW_CHAT_MESSAGE, messageToSend);
   };
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

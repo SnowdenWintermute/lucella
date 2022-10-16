@@ -24,6 +24,7 @@ const chatSlice = createSlice({
       state.newChatRoomLoading = action.payload;
     },
     newChatMessage(state, action: PayloadAction<ChatMessage>) {
+      console.log("new chat message redux store action called");
       state.messages.push(action.payload);
     },
     updateCurrentChatRoom(state, action: PayloadAction<ChatChannel>) {

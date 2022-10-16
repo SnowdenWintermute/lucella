@@ -41,7 +41,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
     socket.current = io(socketAddress || "", {
       transports: ["websocket"],
       withCredentials: true,
-      reconnectionAttempts: 3,
+      // reconnectionAttempts: 3,
     });
     return () => {
       socket.current && socket.current.disconnect();

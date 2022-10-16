@@ -4,7 +4,8 @@ import removeSocketFromChatChannel from "./removeSocketFromChatChannel";
 import { ChatMessage, ChatMessageStyles } from "../../../../common";
 import updateRoomUsernameList from "./updateChatChannelUsernameList";
 import sanitizeChatChannelForClient from "../../utils/sanitizeChatChannelForClient";
-import { ChatChannel } from "@lucella/common";
+import { ChatChannel } from "../../../../common";
+import { SocketEventsFromServer } from "../../../../common";
 
 export default function clientRequestsToJoinChatChannel(
   io: Server,
@@ -25,5 +26,8 @@ export default function clientRequestsToJoinChatChannel(
   if (!chatChannels[channelName]) chatChannels[channelName] = new ChatChannel(channelName);
   updateRoomUsernameList(socket, serverState, undefined, channelName);
   io.in(channelName).emit("updateChatRoom", sanitizeChatChannelForClient(chatChannels, channelName));
-  socket.emit("newMessage", new ChatMessage("Server", `Welcome to ${channelName}.`, ChatMessageStyles.PRIVATE));
+  socket.emit(
+    SocketEventsFromServer.NEW_CHAT_MESSAGE,
+    new ChatMessage("Server", `Welcome to ${channelName}.`, ChatMessageStyles.PRIVATE)
+  );
 }

@@ -1,3 +1,4 @@
+import { SocketEventsFromServer } from "../../../common";
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
@@ -17,19 +18,14 @@ const ChatSocketListener = ({ socket }: Props) => {
       dispatch(setNewChatRoomLoading(false));
       dispatch(updateCurrentChatRoom(data));
     });
-    return () => {
-      socket.off("updateChatRoom");
-    };
-  }, [socket, dispatch]);
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("newMessage", async (message) => {
+    socket.on(SocketEventsFromServer.NEW_CHAT_MESSAGE, async (message) => {
+      console.log(message);
       const msgForReduxStore = message;
       dispatch(newChatMessage(msgForReduxStore));
     });
     return () => {
-      socket.off("newMessage");
+      socket.off("updateChatRoom");
+      socket.off(SocketEventsFromServer.NEW_CHAT_MESSAGE);
     };
   }, [socket, currentChatRoomName, dispatch]);
 

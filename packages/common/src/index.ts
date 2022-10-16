@@ -19,3 +19,4 @@ export { Point } from "./classes/Point";
 export { Rectangle, DetailedRectangle } from "./classes/Rectangles";
 export { SocketMetadata } from "./classes/SocketMetadata";
 export { UserInput } from "./classes/UserInput";
+export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
