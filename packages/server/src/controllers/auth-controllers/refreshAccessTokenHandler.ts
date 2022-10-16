@@ -32,10 +32,6 @@ export default async function refreshAccessTokenHandler(req: Request, res: Respo
     });
 
     res.cookie("access_token", access_token, accessTokenCookieOptions);
-    res.cookie("logged_in", true, {
-      ...accessTokenCookieOptions,
-      httpOnly: false,
-    });
 
     res.status(200).json({
       status: "success",

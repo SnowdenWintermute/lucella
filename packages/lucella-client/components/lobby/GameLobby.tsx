@@ -38,9 +38,11 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
 
   // setup socket
   useEffect(() => {
-    let query = { token: null };
-    // if(cookies.access_token) query.token = cookiesaccess_token;
-    socket.current = io(socketAddress || "", { transports: ["websocket"], query, reconnectionAttempts: 2 });
+    socket.current = io(socketAddress || "", {
+      transports: ["websocket"],
+      withCredentials: true,
+      reconnectionAttempts: 3,
+    });
     return () => {
       socket.current && socket.current.disconnect();
       dispatch(setCurrentGameRoom(null));

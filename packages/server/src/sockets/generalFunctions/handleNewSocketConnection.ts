@@ -1,33 +1,33 @@
-// import { Socket } from "socket.io";
-// import { SocketMetadata } from "../../../../common";
-// import ServerState from "../../interfaces/ServerState";
-// import makeRandomAnonUsername from "../../utils/makeRandomAnonUsername";
-// import jwt from "jsonwebtoken";
-// import userModel, { User } from "../../models/user.model";
-// import { findUser } from "../../services/user.service";
+import { Socket } from "socket.io";
+import { SocketMetadata } from "../../../../common";
+import ServerState from "../../interfaces/ServerState";
+import makeRandomAnonUsername from "../../utils/makeRandomAnonUsername";
+import { findUserById } from "../../services/user.service";
+import cookie from "cookie";
+import { verifyJwt } from "../../utils/jwt";
+import redisClient from "../../utils/connectRedis";
 
-// export default async function handleNewSocketConnection(socket: Socket, serverState: ServerState) {
-//   let token = socket.handshake.query.token;
-//   let decoded: { user: User };
-//   let userToReturn;
-//   let isGuest = true;
-//   try {
-//     if (!token) throw new Error("no token found from new socket connection");
-//     if (!process.env.JWT_SECRET) throw new Error("no jwt secret found");
-//     decoded = jwt.verify(token.toString(), process.env.JWT_SECRET) as { user: User };
-//     userToReturn = await userModel.findById(decoded.user.id).select("-password");
-//     isGuest = false;
-//   } catch (error) {
-//     console.log(error);
-//   }
+export default async function handleNewSocketConnection(socket: Socket, serverState: ServerState) {
+  let userToReturn;
+  let isGuest = true;
 
-//   if (!userToReturn) {
-//     const randomAnonUsername = makeRandomAnonUsername();
-//     userToReturn = { name: randomAnonUsername, isGuest: true };
-//   }
+  const token = cookie.parse(socket.handshake.headers.cookie || "").access_token || null;
+  let decoded;
+  if (token) decoded = verifyJwt<{ sub: string }>(token.toString(), process.env.ACCESS_TOKEN_PUBLIC_KEY!);
+  if (decoded) {
+    const session = await redisClient.get(decoded.sub);
+    if (!session) return new Error(`User session has expired`);
+    userToReturn = await findUserById(JSON.parse(session)._id);
+    isGuest = false;
+  }
 
-//   serverState.connectedSockets[socket.id] = new SocketMetadata(socket.id, { username: userToReturn.name, isGuest });
+  if (!userToReturn) {
+    const randomAnonUsername = makeRandomAnonUsername();
+    userToReturn = { name: randomAnonUsername, isGuest: true };
+  }
 
-//   console.log("socket " + socket.id + " connected");
-//   return userToReturn;
-// }
+  serverState.connectedSockets[socket.id] = new SocketMetadata(socket.id, { username: userToReturn.name!, isGuest });
+
+  console.log("socket " + socket.id + " connected");
+  return userToReturn;
+}

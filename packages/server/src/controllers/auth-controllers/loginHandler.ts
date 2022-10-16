@@ -31,10 +31,6 @@ export default async function loginHandler(req: Request<{}, {}, LoginUserInput>,
     const { access_token, refresh_token } = await signTokenAndCreateSession(user);
     res.cookie("access_token", access_token, accessTokenCookieOptions);
     res.cookie("refresh_token", refresh_token, refreshTokenCookieOptions);
-    res.cookie("logged_in", true, {
-      ...accessTokenCookieOptions,
-      httpOnly: false,
-    });
     res.cookie("user_role", user.role, {
       ...accessTokenCookieOptions,
       httpOnly: false,
