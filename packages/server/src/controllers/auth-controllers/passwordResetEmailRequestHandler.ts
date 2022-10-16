@@ -21,8 +21,14 @@ export default async function passwordResetEmailRequestHandler(req: Request, res
       process.env.NODE_ENV === "development" ? process.env.EMAIL_ROOT_URL_DEV : process.env.EMAIL_ROOT_URL;
     const emailPass = process.env.EMAIL_PASSWORD;
 
-    const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="https://${rootUrl}/password-reset/${password_reset_token}" target="_blank">https://${rootUrl}/password-reset/${password_reset_token}</a></p>`;
-    const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: https://${rootUrl}/password-reset/${password_reset_token}`;
+    const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="http${
+      process.env.NODE_ENV === "production" ? "s" : ""
+    }://${rootUrl}/password-reset/${password_reset_token}" target="_blank">http${
+      process.env.NODE_ENV === "production" ? "s" : ""
+    }://${rootUrl}/password-reset/${password_reset_token}</a></p>`;
+    const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: http${
+      process.env.NODE_ENV === "production" ? "s" : ""
+    }://${rootUrl}/password-reset/${password_reset_token}`;
 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({

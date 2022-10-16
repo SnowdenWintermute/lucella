@@ -1,14 +1,11 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useLoginUserMutation } from "../../redux/api-slices/auth-api-slice";
+import { authApi, useLoginUserMutation } from "../../redux/api-slices/auth-api-slice";
 import { LoginInput } from "../../redux/types";
-import Cookies from "js-cookie";
-import { userApi } from "../../redux/api-slices/user-api-slice";
 
 const Login = () => {
   const router = useRouter();
-  const loggedInCookie = Cookies.get("logged_in");
   const [redirecting, setRedirecting] = useState(false);
   const [formData, setFormData] = useState<LoginInput>({
     email: "",
@@ -21,7 +18,7 @@ const Login = () => {
     isLoading: userQueryIsLoading,
     isSuccess: userQueryIsSuccess,
     isFetching: userQueryIsFetching,
-  } = userApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
+  } = authApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
 
   const { email, password } = formData;
 
@@ -34,10 +31,10 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (loginUserIsLoading || !loginUserIsSuccess || !userQueryIsSuccess || !loggedInCookie || redirecting) return;
+    if (!userQueryIsSuccess || redirecting) return;
     setRedirecting(true);
     router.push("/battle-room");
-  }, [loginUserIsLoading, loginUserIsSuccess, loggedInCookie, userQueryIsSuccess]);
+  }, [loginUserIsLoading, loginUserIsSuccess, userQueryIsSuccess]);
 
   return (
     <div className="auth-frame">

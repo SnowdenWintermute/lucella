@@ -2,13 +2,15 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, Fragment } from "react";
 import FlashingClickableText from "../../components/common/FlashingClickableText";
 import Modal from "../../components/common/modal/Modal";
-import { userApi } from "../../redux/api-slices/user-api-slice";
-import { useDeleteAccountMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
+import {
+  authApi,
+  useDeleteAccountMutation,
+  useRequestPasswordResetEmailMutation,
+} from "../../redux/api-slices/auth-api-slice";
 import { useAppDispatch } from "../../redux";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
-import Cookies from "js-cookie";
 
 const Settings = () => {
   const router = useRouter();
@@ -29,7 +31,7 @@ const Settings = () => {
     isLoading: userQueryIsLoading,
     isSuccess: userQueryIsSuccess,
     isFetching: userQueryIsFetching,
-  } = userApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
+  } = authApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
   const accountEmail = userState?.email ? userState.email : "...";
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
@@ -52,7 +54,6 @@ const Settings = () => {
   useEffect(() => {
     if (!deleteAccountIsSuccess) return;
     setRedirecting(true);
-    Cookies.remove("logged_in");
     router.push("/register");
   }, [deleteAccountIsSuccess]);
 
@@ -104,8 +105,10 @@ const Settings = () => {
               /*emailResetIsLoading*/ false ? (
                 <span>loading...</span>
               ) : (
-                <FlashingClickableText onClick={() => requestPasswordResetEmail(accountEmail)}>
-                  Change Password
+                <FlashingClickableText
+                  onClick={() => (passwordResetIsLoading ? null : requestPasswordResetEmail(accountEmail))}
+                >
+                  {passwordResetIsLoading ? "Senging email..." : "Change Password"}
                 </FlashingClickableText>
               )
             }

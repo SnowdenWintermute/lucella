@@ -1,7 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import baseQueryWithRefetch from "./baseQueryWithRefetch";
-import { LoginInput, RegisterInput } from "../types";
-import { userApi } from "./user-api-slice";
+import { IUser, LoginInput, RegisterInput } from "../types";
 import { setAlert } from "../slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
@@ -9,7 +8,19 @@ import { AlertType } from "../../enums";
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: baseQueryWithRefetch,
+  tagTypes: ["User"],
   endpoints: (builder) => ({
+    // GET SELF
+    getMe: builder.query<IUser, null>({
+      query() {
+        return {
+          url: "auth/me",
+          credentials: "include",
+        };
+      },
+      providesTags: ["User"],
+      transformResponse: (result: { data: { user: IUser } }) => result.data.user,
+    }),
     // REGISTER
     registerUser: builder.mutation<Response, RegisterInput>({
       query(data) {
@@ -42,7 +53,7 @@ export const authApi = createApi({
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           const data = await queryFulfilled;
-          await dispatch(userApi.endpoints.getMe.initiate(null));
+          await dispatch(authApi.endpoints.getMe.initiate(null));
         } catch (error: any) {
           console.log(error);
           dispatch(setAlert(new Alert("non-specific login error", AlertType.DANGER)));
@@ -57,6 +68,7 @@ export const authApi = createApi({
           credentials: "include",
         };
       },
+      invalidatesTags: ["User"],
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         await queryFulfilled;
         dispatch(authApi.util.resetApiState());
@@ -71,11 +83,12 @@ export const authApi = createApi({
           credentials: "include",
         };
       },
+      invalidatesTags: ["User"],
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           dispatch(setAlert(new Alert("Account deleted", AlertType.SUCCESS)));
-          await dispatch(authApi.endpoints.logoutUser.initiate());
+          await dispatch(authApi.util.resetApiState());
         } catch (error: any) {
           console.log(error);
           dispatch(setAlert(new Alert("Server error", AlertType.DANGER)));
@@ -116,9 +129,9 @@ export const authApi = createApi({
         try {
           await queryFulfilled;
           dispatch(setAlert(new Alert("Password changed", AlertType.SUCCESS)));
-        } catch (error) {
+        } catch (error: any) {
           console.log(error);
-          dispatch(setAlert(new Alert("Server error", AlertType.DANGER)));
+          dispatch(setAlert(new Alert(error.error?.data?.error, AlertType.DANGER)));
         }
       },
     }),

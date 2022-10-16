@@ -2,7 +2,6 @@ import { useDispatch, TypedUseSelectorHook, useSelector } from "react-redux";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { ladderApiSlice } from "./api-slices/ladder-api-slice";
 import { authApi } from "./api-slices/auth-api-slice";
-import { userApi } from "./api-slices/user-api-slice";
 import alertsSlice from "./slices/alerts-slice";
 import chatSlice from "./slices/chat-slice";
 import ladderSlice from "./slices/ladder-slice";
@@ -11,7 +10,6 @@ import lobbyUiSlice from "./slices/lobby-ui-slice";
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
-    [userApi.reducerPath]: userApi.reducer,
     [ladderApiSlice.reducerPath]: ladderApiSlice.reducer,
     ladder: ladderSlice,
     alerts: alertsSlice,
@@ -19,11 +17,7 @@ const store = configureStore({
     lobbyUi: lobbyUiSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat([
-      authApi.middleware,
-      userApi.middleware,
-      ladderApiSlice.middleware,
-    ]),
+    getDefaultMiddleware({ serializableCheck: false }).concat([authApi.middleware, ladderApiSlice.middleware]),
 }); // disabled serializable check because we are using instances of classes for alerts, game rooms etc
 
 export default store;

@@ -10,7 +10,7 @@ import { useAppDispatch } from "../../redux";
 const PasswordReset = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [resetPassword, { isLoading, isSuccess, error, isError }] = usePasswordResetMutation();
+  const [resetPassword, { isLoading, isSuccess, error, isError, startedTimeStamp }] = usePasswordResetMutation();
 
   const [formData, setFormData] = useState({
     password: "",
@@ -38,9 +38,9 @@ const PasswordReset = () => {
   };
 
   useEffect(() => {
-    if (isLoading) return;
-    router.push("/battle-room");
-  }, [isLoading, isSuccess, error, isError]);
+    if (isLoading || !startedTimeStamp) return;
+    if (isSuccess) router.push("/battle-room");
+  }, [isLoading, isSuccess, error, isError, startedTimeStamp]);
 
   return (
     <div className="auth-frame">

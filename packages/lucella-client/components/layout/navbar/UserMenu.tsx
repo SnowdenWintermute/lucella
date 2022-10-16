@@ -1,22 +1,21 @@
-import Cookies from "js-cookie";
 import Link from "next/link";
 import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
 import { useAppDispatch } from "../../../redux";
-import { useLoginUserMutation, useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
-import { userApi } from "../../../redux/api-slices/user-api-slice";
+import { authApi, useLoginUserMutation, useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 
 export const UserMenu = () => {
   const dispatch = useAppDispatch();
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const [logoutUser] = useLogoutUserMutation();
-  const [loginUser, { reset: resetLoginMutationCache }] = useLoginUserMutation();
-  const { isLoading: userIsLoading, isFetching: userIsFetching } = userApi.endpoints.getMe.useQuery(null, {
-    skip: false,
-    refetchOnMountOrArgChange: true,
-  });
-  const user = userApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
+  const {
+    data: userState,
+    isLoading: userQueryIsLoading,
+    isSuccess: userQueryIsSuccess,
+    isFetching: userQueryIsFetching,
+  } = authApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
+  const user = authApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
 
   // show/hide menu
   useEffect(() => {
@@ -29,10 +28,7 @@ export const UserMenu = () => {
   }, [showUserDropdown]);
 
   const handleLogout = async () => {
-    Cookies.remove("logged_in");
-    // await resetLoginMutationCache();
     logoutUser();
-    dispatch(userApi.util.resetApiState());
   };
 
   const loggedInUserMenu = (
@@ -73,8 +69,8 @@ export const UserMenu = () => {
     </Link>
   );
 
-  if (userIsLoading || userIsFetching) return <p>...</p>;
-  const userMenu = Cookies.get("logged_in") ? loggedInUserMenu : guestMenu;
+  // if (userIsLoading || userIsFetching) return <p>...</p>;
+  const userMenu = user ? loggedInUserMenu : guestMenu;
 
   return userMenu;
 };

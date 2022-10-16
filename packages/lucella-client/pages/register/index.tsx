@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch } from "../../redux";
 import { AlertType } from "../../enums";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
@@ -7,8 +7,6 @@ import { useRegisterUserMutation } from "../../redux/api-slices/auth-api-slice";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { RegisterInput } from "../../redux/types";
-import Cookies from "js-cookie";
-import { userApi } from "../../redux/api-slices/user-api-slice";
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -47,10 +45,9 @@ const Register = () => {
   };
 
   useEffect(() => {
-    if (registerUserIsSuccess || (Cookies.get("logged_in") && !redirecting)) {
-      setRedirecting(true);
-      router.push("/battle-room");
-    }
+    if (!registerUserIsSuccess || redirecting) return;
+    setRedirecting(true);
+    router.push("/battle-room");
   });
 
   return (
