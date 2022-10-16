@@ -14,7 +14,10 @@ const Settings = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [redirecting, setRedirecting] = useState(false);
-  const [deleteAccount] = useDeleteAccountMutation();
+  const [
+    deleteAccount,
+    { isLoading: deleteAccountIsLoading, isSuccess: deleteAccountIsSuccess, isError: deleteAccountIsError },
+  ] = useDeleteAccountMutation();
   const [
     requestPasswordResetEmail,
     { isLoading: passwordResetIsLoading, isSuccess: passwordResetIsSuccess, isError: passwordResetIsError },
@@ -37,23 +40,26 @@ const Settings = () => {
     setDisplayDeleteAccountModal(true);
   };
 
-  const handleSubmitDeleteAccount = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitDeleteAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email !== userState?.email)
       dispatch(setAlert(new Alert("Email address typed did not match your account's email", AlertType.DANGER)));
     else {
       deleteAccount(email);
-      setRedirecting(true);
-      Cookies.remove("logged_in");
-      router.push("/register");
     }
   };
 
   useEffect(() => {
-    if (!userQueryIsSuccess && !userQueryIsLoading && !userQueryIsFetching && !redirecting) {
-      setRedirecting(true);
-      router.push("/login");
-    }
+    if (!deleteAccountIsSuccess) return;
+    setRedirecting(true);
+    Cookies.remove("logged_in");
+    router.push("/register");
+  }, [deleteAccountIsSuccess]);
+
+  useEffect(() => {
+    if (userQueryIsSuccess || userQueryIsLoading || userQueryIsFetching || redirecting) return;
+    setRedirecting(true);
+    router.push("/login");
   }, [userQueryIsSuccess, userQueryIsLoading, userQueryIsFetching]);
 
   if (!userQueryIsSuccess || userQueryIsLoading || userQueryIsFetching) return <p>...</p>;

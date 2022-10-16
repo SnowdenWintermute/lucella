@@ -11,6 +11,7 @@ export default async function resetPassword(req: Request, res: Response) {
       req.body.password_reset_token,
       process.env.PASSWORD_RESET_TOKEN_PUBLIC_KEY!
     );
+    console.log("decoded: ", decoded);
     if (!decoded) return res.status(400).json({ error: "Invalid password reset token" });
     const user = await userModel.findById(decoded.user.id);
     if (!user) return res.status(500).json({ error: "No such user account exists" });
@@ -22,6 +23,6 @@ export default async function resetPassword(req: Request, res: Response) {
     console.log("password updated");
   } catch (err) {
     console.log(err);
-    res.status(500).send("Server error");
+    res.status(500).json({ error: "Server error" });
   }
 }

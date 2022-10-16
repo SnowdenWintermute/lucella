@@ -3,14 +3,14 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
-import { useResetPasswordMutation } from "../../redux/api-slices/auth-api-slice";
+import { usePasswordResetMutation } from "../../redux/api-slices/auth-api-slice";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { useAppDispatch } from "../../redux";
 
 const PasswordReset = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [resetPassword, { isLoading, isSuccess, error, isError }] = useResetPasswordMutation();
+  const [resetPassword, { isLoading, isSuccess, error, isError }] = usePasswordResetMutation();
 
   const [formData, setFormData] = useState({
     password: "",
@@ -39,10 +39,7 @@ const PasswordReset = () => {
 
   useEffect(() => {
     if (isLoading) return;
-    if (isSuccess) {
-      router.push("/battle-room");
-      dispatch(new Alert("password reset!", AlertType.SUCCESS));
-    } else if (isError) dispatch(new Alert(error!.toString(), AlertType.DANGER));
+    router.push("/battle-room");
   }, [isLoading, isSuccess, error, isError]);
 
   return (

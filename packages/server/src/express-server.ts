@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(
   // cors()
   cors({
-    methods: ["GET", "PATCH", "POST", "PUT"],
+    methods: ["GET", "PATCH", "POST", "PUT", "DELETE"],
     origin: "http://localhost:3000",
     credentials: true,
   })

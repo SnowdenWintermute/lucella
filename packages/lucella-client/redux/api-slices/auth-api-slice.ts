@@ -57,6 +57,10 @@ export const authApi = createApi({
           credentials: "include",
         };
       },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        await queryFulfilled;
+        dispatch(authApi.util.resetApiState());
+      },
     }),
     // DELETE ACCOUNT
     deleteAccount: builder.mutation<void, string>({
@@ -80,16 +84,38 @@ export const authApi = createApi({
     }),
     // REQUEST PASSWORD RESET EMAIL
     requestPasswordResetEmail: builder.mutation<void, string>({
-      query() {
+      query(email) {
         return {
           url: "auth/request-password-reset-email",
           method: "POST",
+          body: { email },
+          credentials: "include",
         };
       },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
           dispatch(setAlert(new Alert("An email has been sent with a link to reset your password", AlertType.SUCCESS)));
+        } catch (error) {
+          console.log(error);
+          dispatch(setAlert(new Alert("Server error", AlertType.DANGER)));
+        }
+      },
+    }),
+    // RESET PASSWORD USING EMAILED TOKEN
+    passwordReset: builder.mutation<void, { password: string; password2: string; token: string }>({
+      query({ password, password2, token }) {
+        return {
+          url: "auth/password-reset",
+          method: "PUT",
+          body: { password, password2, token },
+          credentials: "include",
+        };
+      },
+      async onQueryStarted(args, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(setAlert(new Alert("Password changed", AlertType.SUCCESS)));
         } catch (error) {
           console.log(error);
           dispatch(setAlert(new Alert("Server error", AlertType.DANGER)));
@@ -105,4 +131,5 @@ export const {
   useLogoutUserMutation,
   useDeleteAccountMutation,
   useRequestPasswordResetEmailMutation,
+  usePasswordResetMutation,
 } = authApi;

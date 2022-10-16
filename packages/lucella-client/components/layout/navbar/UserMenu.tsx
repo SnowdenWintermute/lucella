@@ -3,12 +3,15 @@ import Link from "next/link";
 import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
-import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
+import { useAppDispatch } from "../../../redux";
+import { useLoginUserMutation, useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 import { userApi } from "../../../redux/api-slices/user-api-slice";
 
 export const UserMenu = () => {
+  const dispatch = useAppDispatch();
   const [showUserDropdown, toggleUserDropdown] = useState(false);
-  const [logoutUser, { isLoading, isSuccess, error, isError }] = useLogoutUserMutation();
+  const [logoutUser] = useLogoutUserMutation();
+  const [loginUser, { reset: resetLoginMutationCache }] = useLoginUserMutation();
   const { isLoading: userIsLoading, isFetching: userIsFetching } = userApi.endpoints.getMe.useQuery(null, {
     skip: false,
     refetchOnMountOrArgChange: true,
@@ -25,9 +28,11 @@ export const UserMenu = () => {
     return () => window.removeEventListener("click", clearUserDropdown);
   }, [showUserDropdown]);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     Cookies.remove("logged_in");
+    // await resetLoginMutationCache();
     logoutUser();
+    dispatch(userApi.util.resetApiState());
   };
 
   const loggedInUserMenu = (

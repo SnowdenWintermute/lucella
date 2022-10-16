@@ -1,19 +1,27 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next/types";
 import React, { useEffect, useState } from "react";
 import { useLoginUserMutation } from "../../redux/api-slices/auth-api-slice";
 import { LoginInput } from "../../redux/types";
 import Cookies from "js-cookie";
+import { userApi } from "../../redux/api-slices/user-api-slice";
 
-const Login = (props: { allCookies: { logged_in: boolean } }) => {
+const Login = () => {
   const router = useRouter();
+  const loggedInCookie = Cookies.get("logged_in");
   const [redirecting, setRedirecting] = useState(false);
   const [formData, setFormData] = useState<LoginInput>({
     email: "",
     password: "",
   });
-  const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
+  const [loginUser, { isLoading: loginUserIsLoading, isSuccess: loginUserIsSuccess, error, isError }] =
+    useLoginUserMutation();
+  const {
+    data: userState,
+    isLoading: userQueryIsLoading,
+    isSuccess: userQueryIsSuccess,
+    isFetching: userQueryIsFetching,
+  } = userApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
 
   const { email, password } = formData;
 
@@ -26,11 +34,10 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
   };
 
   useEffect(() => {
-    if (Cookies.get("logged_in") && !redirecting) {
-      setRedirecting(true);
-      router.push("/battle-room");
-    }
-  });
+    if (loginUserIsLoading || !loginUserIsSuccess || !userQueryIsSuccess || !loggedInCookie || redirecting) return;
+    setRedirecting(true);
+    router.push("/battle-room");
+  }, [loginUserIsLoading, loginUserIsSuccess, loggedInCookie, userQueryIsSuccess]);
 
   return (
     <div className="auth-frame">
@@ -44,7 +51,7 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
           name="email"
           value={email}
           onChange={(e) => onChange(e)}
-          disabled={isLoading || isSuccess}
+          disabled={loginUserIsLoading || loginUserIsSuccess}
           autoFocus
         ></input>
         <input
@@ -54,7 +61,7 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
           placeholder="Password"
           value={password}
           onChange={(e) => onChange(e)}
-          disabled={isLoading || isSuccess}
+          disabled={loginUserIsLoading || loginUserIsSuccess}
         ></input>
         <div className="forgot-password">
           <Link href="/request-password-reset">Forgot password?</Link>
@@ -64,8 +71,8 @@ const Login = (props: { allCookies: { logged_in: boolean } }) => {
           <input
             type="submit"
             className="button button-standard-size button-primary"
-            value={isLoading || isSuccess ? "..." : "SIGN"}
-            disabled={isLoading || isSuccess}
+            value={loginUserIsLoading || loginUserIsSuccess ? "..." : "SIGN"}
+            disabled={loginUserIsLoading || loginUserIsSuccess}
           />
         </div>
       </form>
