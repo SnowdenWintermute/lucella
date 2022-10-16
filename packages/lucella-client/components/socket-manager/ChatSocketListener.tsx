@@ -14,17 +14,15 @@ const ChatSocketListener = ({ socket }: Props) => {
   const { currentChatRoomName } = chatState;
   useEffect(() => {
     if (!socket) return;
-    socket.on("updateChatRoom", (data) => {
+    socket.on(SocketEventsFromServer.CHAT_ROOM_UPDATE, (data) => {
       dispatch(setNewChatRoomLoading(false));
       dispatch(updateCurrentChatRoom(data));
     });
-    socket.on(SocketEventsFromServer.NEW_CHAT_MESSAGE, async (message) => {
-      console.log(message);
-      const msgForReduxStore = message;
-      dispatch(newChatMessage(msgForReduxStore));
+    socket.on(SocketEventsFromServer.NEW_CHAT_MESSAGE, (message) => {
+      dispatch(newChatMessage(message));
     });
     return () => {
-      socket.off("updateChatRoom");
+      socket.off(SocketEventsFromServer.CHAT_ROOM_UPDATE);
       socket.off(SocketEventsFromServer.NEW_CHAT_MESSAGE);
     };
   }, [socket, currentChatRoomName, dispatch]);

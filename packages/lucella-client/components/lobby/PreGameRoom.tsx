@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../redux";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { GameStatus } from "../../../common";
+import styles from "./game-lobby.module.scss";
 
 interface Props {
   socket: Socket;
@@ -63,11 +64,15 @@ const PreGameRoom = ({ socket }: Props) => {
         <tbody>
           <tr>
             <td>{players?.host?.associatedUser.username}</td>
-            <td>{playersReady?.host && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
+            <td className={styles["ready-icon-holder"]}>
+              {playersReady?.host && <SuccessIcon className={styles["ready-icon"]}></SuccessIcon>}
+            </td>
           </tr>
           <tr>
             <td>{players?.challenger ? players.challenger.associatedUser.username : "Awaiting challenger..."}</td>
-            <td>{playersReady?.challenger && <SuccessIcon className="alert-icon"></SuccessIcon>}</td>
+            <td className={styles["ready-icon-holder"]}>
+              {playersReady?.challenger && <SuccessIcon className={styles["ready-icon"]}></SuccessIcon>}
+            </td>
           </tr>
           <tr>
             <td>{gameStatus}</td>

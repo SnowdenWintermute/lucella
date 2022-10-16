@@ -1,3 +1,4 @@
+import { SocketEventsFromServer } from "@lucella/common";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 import sanitizeChatChannelForClient from "../../utils/sanitizeChatChannelForClient";
@@ -12,7 +13,7 @@ export default function (io: Server, socket: Socket, serverState: ServerState) {
   updateChatChannelUsernameList(socket, serverState, nameOfChatChannelToLeave, undefined);
   socket.leave(nameOfChatChannelToLeave);
   io.in(nameOfChatChannelToLeave).emit(
-    "updateChatRoom",
+    SocketEventsFromServer.CHAT_ROOM_UPDATE,
     sanitizeChatChannelForClient(chatChannels, nameOfChatChannelToLeave)
   );
 }

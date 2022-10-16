@@ -25,7 +25,10 @@ export default function clientRequestsToJoinChatChannel(
   connectedSockets[socket.id].currentChatChannel = channelName;
   if (!chatChannels[channelName]) chatChannels[channelName] = new ChatChannel(channelName);
   updateRoomUsernameList(socket, serverState, undefined, channelName);
-  io.in(channelName).emit("updateChatRoom", sanitizeChatChannelForClient(chatChannels, channelName));
+  io.in(channelName).emit(
+    SocketEventsFromServer.CHAT_ROOM_UPDATE,
+    sanitizeChatChannelForClient(chatChannels, channelName)
+  );
   socket.emit(
     SocketEventsFromServer.NEW_CHAT_MESSAGE,
     new ChatMessage("Server", `Welcome to ${channelName}.`, ChatMessageStyles.PRIVATE)

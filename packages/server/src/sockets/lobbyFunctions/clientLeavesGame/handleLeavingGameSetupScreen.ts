@@ -6,6 +6,7 @@ import handleDisconnectionFromGameSetup from "./handleDisconnectionFromGameSetup
 import { Server, Socket } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import sanitizeGameRoomForClient from "../../../utils/sanitizeGameRoomForClient";
+import { SocketEventsFromServer } from "@lucella/common";
 
 export default function (
   io: Server,
@@ -34,5 +35,8 @@ export default function (
   }
 
   io.in(`game-${gameName}`).emit("currentGameRoomUpdate", sanitizeGameRoomForClient(gameRoom));
-  io.in(`game-${gameName}`).emit("updateChatRoom", sanitizeChatChannelForClient(chatChannels, `game-${gameName}`));
+  io.in(`game-${gameName}`).emit(
+    SocketEventsFromServer.CHAT_ROOM_UPDATE,
+    sanitizeChatChannelForClient(chatChannels, `game-${gameName}`)
+  );
 }

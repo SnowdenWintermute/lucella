@@ -4,8 +4,8 @@ export default function sanitizeChatChannelForClient(
   chatChannels: { [channelName: string]: ChatChannel },
   channelName: string
 ) {
-  let sanitizedChatChannel: { channelName: string; connectedUsers: { [userKey: string]: {} } } = {
-    channelName,
+  let sanitizedChatChannel: { name: string; connectedUsers: { [userKey: string]: {} } } = {
+    name: channelName,
     connectedUsers: {},
   };
   Object.keys(chatChannels[channelName].connectedUsers).forEach((userKey) => {
@@ -20,5 +20,6 @@ export default function sanitizeChatChannelForClient(
     }
     sanitizedChatChannel.connectedUsers[userKey] = sanitizedUser;
   });
+
   return sanitizedChatChannel;
 }
