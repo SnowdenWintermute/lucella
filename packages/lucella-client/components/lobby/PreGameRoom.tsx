@@ -5,7 +5,7 @@ import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
-import { GameStatus } from "../../../common";
+import { GameStatus, SocketEventsFromClient } from "../../../common";
 import styles from "./game-lobby.module.scss";
 
 interface Props {
@@ -41,15 +41,12 @@ const PreGameRoom = ({ socket }: Props) => {
   const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const gameNameToCreate = gameNameInput;
-    if (gameNameToCreate && socket) {
-      socket.emit("clientHostsNewGame", { gameName: gameNameToCreate });
-    } else {
-      dispatch(setAlert(new Alert("Please enter a game name", AlertType.DANGER)));
-    }
+    if (gameNameToCreate && socket) socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameNameToCreate);
+    else dispatch(setAlert(new Alert("Please enter a game name", AlertType.DANGER)));
   };
 
-  const onReadyClick = () => {
-    socket.emit("clientClicksReady", { gameName: currentGameName });
+  const handleReadyClick = () => {
+    socket.emit(SocketEventsFromClient.CLICKS_READY, currentGameName);
   };
 
   const preGameRoomMenu = currentGameName ? (
@@ -81,7 +78,7 @@ const PreGameRoom = ({ socket }: Props) => {
         </tbody>
       </table>
       {!isRanked && (
-        <button className="button button-standard-size button-primary" onClick={onReadyClick}>
+        <button className="button button-standard-size button-primary" onClick={handleReadyClick}>
           READY
         </button>
       )}

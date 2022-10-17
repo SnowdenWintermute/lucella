@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 const cloneDeep = require("lodash.clonedeep");
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { BattleRoomGame } from "@lucella/common";
+import { BattleRoomGame, SocketEventsFromServer } from "../../../common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 
 interface Props {
@@ -16,29 +16,29 @@ const GameListener = (props: Props) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!socket) return;
-    socket.on("serverInitsGame", () => {
+    socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
       // setLastServerGameUpdate(cloneDeep(currentGame));
     });
-    socket.on("bufferTickFromServer", async (data) => {
+    socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
       const decodedPacket = JSON.parse(data);
       // let newUpdate = lastServerGameUpdate;
       // Object.keys(decodedPacket).forEach((key) => {
       //   newUpdate[key] = cloneDeep(decodedPacket[key]);
       // });
     });
-    socket.on("serverSendsWinnerInfo", (data) => {
+    socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
     });
-    socket.on("gameEndingCountdown", (data) => {
+    socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
       currentGame.gameOverCountdown.current = data;
       // if (data === 0) dispatch(gameUiActions.clearGameUiData())
     });
     return () => {
-      socket.off("serverInitsGame");
-      socket.off("tickFromServer");
-      socket.off("bufferTickFromServer");
-      socket.off("gameEndingCountdown");
-      socket.off("serverSendsWinnerInfo");
+      socket.off(SocketEventsFromServer.GAME_INITIALIZATION);
+      socket.off(SocketEventsFromServer.GAME_PACKET);
+      socket.off(SocketEventsFromServer.COMPRESSED_GAME_PACKET);
+      socket.off(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE);
+      socket.off(SocketEventsFromServer.NAME_OF_GAME_WINNER);
     };
   }, [socket, dispatch]);
 

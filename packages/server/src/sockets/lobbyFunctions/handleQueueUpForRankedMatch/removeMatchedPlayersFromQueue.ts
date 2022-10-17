@@ -1,3 +1,4 @@
+import { SocketEventsFromServer } from "../../../../../common";
 import { Server } from "socket.io";
 import { RankedQueue, RankedQueueUser } from "../../../interfaces/ServerState";
 
@@ -13,8 +14,8 @@ export default function (
     return new Error("tried to remove host from matchmaking queue but their socket wasn't found");
   if (!io.sockets.sockets.get(players.challenger.socketId))
     return new Error("tried to remove challenger from matchmaking queue but their socket wasn't found");
-  io.sockets.sockets.get(players.host.socketId)!.emit("matchFound");
-  io.sockets.sockets.get(players.challenger.socketId)!.emit("matchFound");
+  io.sockets.sockets.get(players.host.socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
+  io.sockets.sockets.get(players.challenger.socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
   io.sockets.sockets.get(players.host.socketId)!.leave("ranked-queue");
   io.sockets.sockets.get(players.challenger.socketId)!.leave("ranked-queue");
 }

@@ -7,9 +7,9 @@
 
 // export default async function handleQueueUpForRankedMatch(io: Server, socket: Socket, serverState: ServerState) {
 //   const { connectedSockets, rankedQueue } = serverState;
-//   if (connectedSockets[socket.id].currentGameName) return socket.emit("errorMessage", "You are already in a game");
+//   if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, "You are already in a game");
 //   const user = await User.findOne({ name: connectedSockets[socket.id].associatedUser.username });
-//   if (!user) return socket.emit("errorMessage", "Log in or create an account to play ranked games");
+//   if (!user) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, "Log in or create an account to play ranked games");
 //   let userBattleRoomRecord = await fetchOrCreateBattleRoomRecord(user);
 //   putUserInRankedMatchmakingQueue(socket, rankedQueue, user, userBattleRoomRecord);
 //   rankedQueue.currentEloDiffThreshold = 0;

@@ -21,7 +21,7 @@ const MatchmakingButtons = ({ socket }: Props) => {
   }, [matchmakingScreenIsOpen]);
 
   const onCancelMatchmakingSearch = () => {
-    socket.emit("clientCancelsMatchmakingSearch");
+    socket.emit(SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE);
     dispatch(setMatchmakingWindowVisible(false));
   };
 

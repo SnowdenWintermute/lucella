@@ -18,7 +18,10 @@ export default function clientRequestsToJoinChatChannel(
   if (!socket) return;
   if (!channelName) channelName = "the void";
   if (channelName.slice(0, 5) === "game-" && !authorizedForGameChannel)
-    return socket.emit("errorMessage", `Channels prefixed with "game-" are reserved for that game's players`);
+    return socket.emit(
+      SocketEventsFromServer.ERROR_MESSAGE,
+      `Channels prefixed with "game-" are reserved for that game's players`
+    );
 
   removeSocketFromChatChannel(io, socket, serverState);
   socket.join(channelName);

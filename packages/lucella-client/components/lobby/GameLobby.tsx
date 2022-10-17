@@ -11,7 +11,7 @@ import Modal from "../../components/common/modal/Modal";
 import io, { Socket } from "socket.io-client";
 import SocketManager from "../socket-manager/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
-import { GameStatus } from "../../../common";
+import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { authApi } from "../../redux/api-slices/auth-api-slice";
@@ -52,7 +52,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
 
   useEffect(() => {
     socket.current &&
-      socket.current.on("authenticationFinished", () => {
+      socket.current.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
         setAuthenticating(false);
       });
   });
@@ -61,7 +61,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   useEffect(() => {
     if (authenticating) return;
     socket.current &&
-      socket.current.emit("clientRequestsToJoinChatChannel", {
+      socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, {
         chatChannelToJoin: defaultChatRoom,
       });
   }, [authenticating, defaultChatRoom]);
@@ -84,7 +84,8 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   const joinRoom = (chatChannelToJoin: string) => {
     setDisplayChangeChannelModal(false);
     setJoinNewRoomInput("");
-    socket.current && socket.current.emit("clientRequestsToJoinChatChannel", { chatChannelToJoin, username });
+    socket.current &&
+      socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, { chatChannelToJoin, username });
   };
 
   if (!socket.current) return <p>Awaiting socket connection...</p>;

@@ -16,5 +16,5 @@
 //     username: user.name,
 //   };
 //   socket.join("ranked-queue");
-//   socket.emit("matchmakningQueueJoined");
+//   socket.emit(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
 // }

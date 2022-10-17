@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import Modal from "../../../components/common/modal/Modal";
+import { SocketEventsFromClient } from "../../../../common";
 import { Socket } from "socket.io-client";
 import GameLobbyTopButton from "../../../components/common/buttons/GameLobbyTopButton";
 import GameLobbyModalButton from "../../../components/common/buttons/GameLobbyModalButton";
@@ -41,7 +42,7 @@ const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
 
   const onViewGamesListClick = () => {
     if (!socket) return;
-    socket.emit("clientRequestsUpdateOfGameRoomList");
+    socket.emit(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST);
     dispatch(setViewingGamesList(true));
     setMenuModalDisplayed(false);
   };
@@ -53,7 +54,7 @@ const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
 
   const onRankedClick = () => {
     if (!socket) return;
-    socket.emit("clientStartsSeekingRankedGame");
+    socket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
     setMenuModalDisplayed(false);
   };
 

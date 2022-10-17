@@ -6,31 +6,32 @@ import clientLeavesGame from "../lobbyFunctions/clientLeavesGame";
 // import handleQueueUpForRankedMatch from "../lobbyFunctions/handleQueueUpForRankedMatch";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
+import { SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
 
 export default function gameUiListeners(io: Server, socket: Socket, serverState: ServerState) {
   const { gameRooms, rankedQueue } = serverState;
-  socket.on("clientRequestsUpdateOfGameRoomList", () => {
-    socket.emit("gameListUpdate", gameRooms);
+  socket.on(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST, () => {
+    socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, gameRooms);
   });
-  socket.on("clientRequestsToJoinChatChannel", (data) => {
+  socket.on(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, (data) => {
     clientRequestsToJoinChatChannel(io, socket, serverState, data.chatChannelToJoin.toLowerCase());
   });
-  socket.on("clientHostsNewGame", ({ gameName }) => {
+  socket.on(SocketEventsFromClient.HOSTS_NEW_GAME, (gameName) => {
     clientHostsNewGame(io, socket, serverState, gameName, false);
   });
-  socket.on("clientLeavesGame", (gameName) => {
+  socket.on(SocketEventsFromClient.LEAVES_GAME, (gameName) => {
     clientLeavesGame(io, socket, serverState, gameName);
   });
-  socket.on("clientJoinsGame", ({ gameName }) => {
+  socket.on(SocketEventsFromClient.JOINS_GAME, (gameName) => {
     clientJoinsGame(io, socket, serverState, gameName);
   });
-  socket.on("clientClicksReady", ({ gameName }) => {
+  socket.on(SocketEventsFromClient.CLICKS_READY, (gameName) => {
     handleReadyClick(io, socket, serverState, gameName);
   });
-  socket.on("clientStartsSeekingRankedGame", async () => {
+  socket.on(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE, async () => {
     // await handleQueueUpForRankedMatch(io, socket, serverState);
   });
-  socket.on("clientCancelsMatchmakingSearch", () => {
+  socket.on(SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE, () => {
     delete rankedQueue.users[socket.id];
   });
 }

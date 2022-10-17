@@ -1,4 +1,4 @@
-import { GameStatus } from "../../../../common";
+import { GameStatus, SocketEventsFromServer } from "../../../../common";
 import { Server } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 import startGame from "../battleRoomGame/startGame";
@@ -7,16 +7,16 @@ export default function startGameCountdown(io: Server, serverState: ServerState,
   const { gameRooms } = serverState;
   const gameRoom = gameRooms[gameName];
   gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
-  io.to(`game-${gameRoom.gameName}`).emit("currentGameStatusUpdate", gameRoom.gameStatus);
+  io.to(`game-${gameRoom.gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
   gameRoom.countdownInterval = setInterval(() => {
     if (gameRoom.countdown.current === 0) {
       gameRoom.gameStatus = GameStatus.IN_PROGRESS;
-      io.to(`game-${gameRoom.gameName}`).emit("currentGameStatusUpdate", gameRoom.gameStatus);
+      io.to(`game-${gameRoom.gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
       startGame(io, serverState, gameName);
       gameRoom.countdownInterval && clearInterval(gameRoom.countdownInterval);
       return;
     }
     gameRoom.countdown.current--;
-    io.to(`game-${gameRoom.gameName}`).emit("currentGameCountdownUpdate", gameRoom.countdown);
+    io.to(`game-${gameRoom.gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown);
   }, 1000);
 }

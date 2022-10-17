@@ -3,7 +3,7 @@ import cancelGameCountdown from "../cancelGameCountdown";
 import togglePlayerReadyState from "./togglePlayerReadyState";
 import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
-import { GameStatus } from "../../../../../common";
+import { GameStatus, SocketEventsFromServer } from "../../../../../common";
 
 export default function (io: Server, socket: Socket | undefined, serverState: ServerState, gameName: string) {
   try {
@@ -16,7 +16,7 @@ export default function (io: Server, socket: Socket | undefined, serverState: Se
     if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked)
       throw new Error("Can't unready from ranked game");
     togglePlayerReadyState(socket, serverState, players, playersReady);
-    io.to(`game-${gameName}`).emit("updateOfcurrentChatChannelPlayerReadyStatus", playersReady);
+    io.to(`game-${gameName}`).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
     if (playersReady.host && playersReady.challenger) startGameCountdown(io, serverState, gameName);
     else cancelGameCountdown(io, gameRoom);
   } catch (error) {

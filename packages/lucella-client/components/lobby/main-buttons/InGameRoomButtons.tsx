@@ -1,3 +1,4 @@
+import { SocketEventsFromClient } from "../../../../common";
 import React, { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import GameLobbyTopButton from "../../../components/common/buttons/GameLobbyTopButton";
@@ -41,7 +42,7 @@ const InGameButtons = ({ socket }: Props) => {
 
   const onViewGamesListBackClick = () => {
     dispatch(setViewingGamesList(false));
-    socket.emit("clientRequestsUpdateOfGameRoomList");
+    socket.emit(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST);
   };
 
   const onCancelGameSetupClick = () => {
@@ -50,7 +51,7 @@ const InGameButtons = ({ socket }: Props) => {
 
   const onLeaveGameClick = () => {
     dispatch(setPreGameScreenDisplayed(false));
-    socket.emit("clientLeavesGame", gameName);
+    socket.emit(SocketEventsFromClient.LEAVES_GAME, gameName);
   };
 
   return (

@@ -22,7 +22,7 @@ export default function (
   if (isDisconnecting) handleDisconnectionFromGameSetup(io, socket, serverState, gameRoom);
   else {
     connectedSockets[socket.id].currentGameName = null;
-    socket.emit("currentGameRoomUpdate", null);
+    socket.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
     const prevRoom = connectedSockets[socket.id].previousChatChannelName;
     clientRequestsToJoinChatChannel(io, socket, serverState, prevRoom ? prevRoom : "the void");
   }
@@ -34,7 +34,7 @@ export default function (
     delete chatChannels[gameName];
   }
 
-  io.in(`game-${gameName}`).emit("currentGameRoomUpdate", sanitizeGameRoomForClient(gameRoom));
+  io.in(`game-${gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, sanitizeGameRoomForClient(gameRoom));
   io.in(`game-${gameName}`).emit(
     SocketEventsFromServer.CHAT_ROOM_UPDATE,
     sanitizeChatChannelForClient(chatChannels, `game-${gameName}`)

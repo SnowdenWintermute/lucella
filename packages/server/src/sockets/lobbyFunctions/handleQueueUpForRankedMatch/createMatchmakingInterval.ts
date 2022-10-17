@@ -6,13 +6,14 @@ import putMatchedPlayersInGame from "./putMatchedPlayersInGame";
 import removeMatchedPlayersFromQueue from "./removeMatchedPlayersFromQueue";
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
+import { SocketEventsFromServer } from "../../../../../common";
 
 export default function (io: Server, serverState: ServerState) {
   const { rankedQueue } = serverState;
   let currentIntervalIteration = 1;
   rankedQueue.matchmakingInterval = setInterval(() => {
     clearIntervalIfQueueEmpty(rankedQueue);
-    io.in("ranked-queue").emit("serverSendsMatchmakingQueueData", {
+    io.in("ranked-queue").emit(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, {
       queueSize: Object.keys(rankedQueue.users).length,
       currentEloDiffThreshold: rankedQueue.currentEloDiffThreshold,
     });

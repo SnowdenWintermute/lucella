@@ -9,7 +9,7 @@ export default function (
   players: { host: SocketMetadata | null; challenger: SocketMetadata | null }
 ) {
   const { connectedSockets } = serverState;
-  if (!players.challenger) return console.log("no other players to remove from host leaving");
+  if (!players.challenger) return;
   let socketIdToRemove = players.challenger.socketId || "";
   if (!connectedSockets[socketIdToRemove]) return console.log("tried to remove a socket that is no longer in our list");
   connectedSockets[socketIdToRemove].currentGameName = null;

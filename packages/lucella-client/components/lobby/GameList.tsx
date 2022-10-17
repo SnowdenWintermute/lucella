@@ -1,4 +1,4 @@
-import { GameStatus } from "../../../common";
+import { GameStatus, SocketEventsFromClient } from "../../../common";
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { AlertType } from "../../enums";
@@ -19,20 +19,15 @@ const GameList = ({ socket }: Props) => {
   const gameName = lobbyUiState.currentGameRoom?.gameName;
   const gameListDisplayClass = gameListIsOpen ? "" : "height-0-hidden";
 
-  // cancel viewing game list if in a game
   useEffect(() => {
-    if (gameName) {
-      dispatch(setViewingGamesList(false));
-      dispatch(setPreGameScreenDisplayed(true));
-    }
+    if (!gameName) return;
+    dispatch(setViewingGamesList(false));
+    dispatch(setPreGameScreenDisplayed(true));
   }, [gameName, dispatch]);
 
-  const onJoinGameClick = (gameName: string) => {
-    if (gameName) {
-      socket.emit("clientJoinsGame", { gameName });
-    } else {
-      dispatch(setAlert(new Alert("No game by that name exists", AlertType.DANGER)));
-    }
+  const handleJoinGameClick = (gameName: string) => {
+    if (gameName) socket.emit(SocketEventsFromClient.JOINS_GAME, gameName);
+    else dispatch(setAlert(new Alert("No game by that name exists", AlertType.DANGER)));
   };
 
   const gamesToDisplay = [];
@@ -47,7 +42,10 @@ const GameList = ({ socket }: Props) => {
           <td>Challenger: {challenger ? challenger.associatedUser.username : "Awaiting Opponent"}</td>
           <td>
             {gameList[game].gameStatus === GameStatus.IN_LOBBY && (
-              <button className="button button-standard-size button-primary" onClick={() => onJoinGameClick(gameName)}>
+              <button
+                className="button button-standard-size button-primary"
+                onClick={() => handleJoinGameClick(gameName)}
+              >
                 Join
               </button>
             )}

@@ -4,8 +4,7 @@ import setGameRoomWinnerName from "./setGameRoomWinnerName";
 import createGameEndingCountdownInterval from "./createGameEndingCountdownInterval";
 import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
-import { GameStatus } from "../../../../../common";
-import { EloUpdates } from "../../../../../common";
+import { GameStatus, SocketEventsFromServer, EloUpdates } from "../../../../../common";
 
 export default async function endGameCleanup(
   io: Server,
@@ -18,8 +17,8 @@ export default async function endGameCleanup(
   const game = serverState.games[gameName];
   if (gameRoom.gameStatus === GameStatus.ENDING) return;
   gameRoom.gameStatus = GameStatus.ENDING;
-  io.in(`game-${gameName}`).emit("currentGameStatusUpdate", gameRoom.gameStatus);
-  io.to(`game-${gameName}`).emit("gameEndingCountdown", game.gameOverCountdown.current);
+  io.in(`game-${gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+  io.to(`game-${gameName}`).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
   if (game.intervals.physics) clearInterval(game.intervals.physics);
   if (game.intervals.broadcast) clearInterval(game.intervals.broadcast);
   if (isDisconnecting) setGameRoomWinnerName(gameRoom, game);
@@ -35,6 +34,6 @@ export default async function endGameCleanup(
     throw new Error("Tried to update game records but either winner or loser wasn't found");
   // else eloUpdates = await updateGameRecords(gameRoom.winner, loser, gameRoom, game, gameRoom.isRanked);
 
-  io.in(`game-${gameName}`).emit("serverSendsWinnerInfo", gameRoom.winner);
+  io.in(`game-${gameName}`).emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
   game.intervals.endingCountdown = createGameEndingCountdownInterval(io, serverState, gameName, eloUpdates);
 }

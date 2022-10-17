@@ -6,11 +6,11 @@ export default function (
   hostBattleRoomRecord: IBattleRoomRecord,
   challengerBattleRoomRecord: IBattleRoomRecord
 ) {
-  if (winnerRole === "host") {
+  if (winnerRole === PlayerRole.HOST) {
     hostBattleRoomRecord.wins = hostBattleRoomRecord.wins + 1;
     challengerBattleRoomRecord.losses = challengerBattleRoomRecord.losses + 1;
   }
-  if (winnerRole === "challenger") {
+  if (winnerRole === PlayerRole.CHALLENGER) {
     challengerBattleRoomRecord.wins = challengerBattleRoomRecord.wins + 1;
     hostBattleRoomRecord.losses = hostBattleRoomRecord.losses + 1;
   }
