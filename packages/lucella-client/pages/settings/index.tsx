@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useState, useEffect, Fragment } from "react";
-import FlashingClickableText from "../../components/common/FlashingClickableText";
-import Modal from "../../components/common/modal/Modal";
+import FlashingClickableText from "../../components/common-components/FlashingClickableText";
+import Modal from "../../components/common-components/modal/Modal";
 import {
   authApi,
   useDeleteAccountMutation,

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, Fragment } from "react";
-import Modal from "../../../components/common/modal/Modal";
+import Modal from "../../common-components/modal/Modal";
 import { SocketEventsFromClient } from "../../../../common";
 import { Socket } from "socket.io-client";
-import GameLobbyTopButton from "../../../components/common/buttons/GameLobbyTopButton";
-import GameLobbyModalButton from "../../../components/common/buttons/GameLobbyModalButton";
+import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
+import GameLobbyModalButton from "../../common-components/buttons/GameLobbyModalButton";
 import { useAppSelector, useAppDispatch } from "../../../redux";
 import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 

@@ -1,14 +1,6 @@
 export { WidthAndHeight, EloUpdates } from "./types";
 export { GameStatus, PlayerRole, GameEvents } from "./enums";
-export {
-  ghostTransparency,
-  inGameFontSizes,
-  renderRate,
-  eventLimiterRate,
-  touchHoldSelectionBoxStartThreshold,
-  minimumQuickTouchSelectionBoxSize,
-  startingLadderRating,
-} from "./consts";
+export * from "./consts";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
 export { ChatChannel } from "./classes/ChatChannel";

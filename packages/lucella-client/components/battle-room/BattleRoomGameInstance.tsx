@@ -25,13 +25,21 @@ const BattleRoomGameInstance = (props: Props) => {
   const currentGame = useRef(lobbyUiState.currentGameRoom && new BattleRoomGame(lobbyUiState.currentGameRoom.gameName));
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawRef = useRef<() => void>();
+  const gameWidthRatio = useRef(window.innerHeight * 0.6);
 
   useEffect(() => {
-    const gameWidthRatio = useRef(window.innerHeight * 0.6);
-    fitCanvasToScreen(window, setCanvasSize, gameWidthRatio.current);
+    setCanvasSize({
+      height: window.innerHeight,
+      width: gameWidthRatio.current > window.innerWidth ? window.innerWidth : gameWidthRatio.current,
+    });
     function handleResize() {
+      console.log("resized");
+      console.log(canvasSize);
       gameWidthRatio.current = window.innerHeight * 0.6;
-      fitCanvasToScreen(window, setCanvasSize, gameWidthRatio.current);
+      setCanvasSize({
+        height: window.innerHeight,
+        width: gameWidthRatio.current > window.innerWidth ? window.innerWidth : gameWidthRatio.current,
+      });
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

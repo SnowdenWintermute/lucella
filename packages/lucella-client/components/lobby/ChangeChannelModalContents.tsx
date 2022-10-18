@@ -1,5 +1,5 @@
 import React from "react";
-import ButtonBasic from "../../components/common/buttons/ButtonBasic";
+import ButtonBasic from "../common-components/buttons/ButtonBasic";
 
 interface Props {
   setJoinNewRoomInput: (roomName: string) => void;

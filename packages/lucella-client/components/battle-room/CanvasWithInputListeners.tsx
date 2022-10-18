@@ -1,4 +1,4 @@
-import { WidthAndHeight } from "../../../common";
+import { eventLimiterRate, WidthAndHeight } from "../../../common";
 import React, { useCallback, useEffect } from "react";
 import mouseDownHandler from "./user-input-handlers/mouseDownHandler";
 import mouseEnterHandler from "./user-input-handlers/mouseEnterHandler";
@@ -11,6 +11,7 @@ import touchEndHandler from "./user-input-handlers/touchEndHandler";
 import { BattleRoomGame } from "../../../common";
 import { PlayerRole } from "../../../common";
 import keyPressHandler from "./user-input-handlers/keyPressHandler";
+import throttle from "../../utils/throttle";
 
 interface Props {
   canvasSize: WidthAndHeight;
@@ -23,7 +24,7 @@ const Canvas = (props: Props) => {
   const { canvasSize, canvasRef, currentGame, playerRole } = props;
 
   const onKeyPress = useCallback((e: KeyboardEvent) => {
-    keyPressHandler(e, currentGame, playerRole);
+    throttle(eventLimiterRate, keyPressHandler(e, currentGame, playerRole));
   }, []);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const Canvas = (props: Props) => {
         touchStartHandler(e, canvasSize, currentGame);
       }}
       onTouchMove={(e) => {
-        touchMoveHandler(e, currentGame);
+        throttle(eventLimiterRate, touchMoveHandler(e, currentGame, canvasSize));
       }}
       onTouchEnd={(e) => {
         touchEndHandler(e, currentGame, canvasSize);
@@ -56,7 +57,7 @@ const Canvas = (props: Props) => {
         mouseUpHandler(e, currentGame);
       }}
       onMouseMove={(e) => {
-        mouseMoveHandler(e, currentGame);
+        throttle(eventLimiterRate, mouseMoveHandler(e, currentGame, canvasSize));
       }}
       onMouseLeave={() => {
         mouseLeaveHandler(currentGame);

@@ -1,7 +1,7 @@
 import { SocketEventsFromClient } from "../../../../common";
 import React, { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
-import GameLobbyTopButton from "../../../components/common/buttons/GameLobbyTopButton";
+import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import { useAppSelector, useAppDispatch } from "../../../redux";
 import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 
