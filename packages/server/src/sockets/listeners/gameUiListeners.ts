@@ -7,6 +7,7 @@ import clientLeavesGame from "../lobbyFunctions/clientLeavesGame";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 import { SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
+import handleQueueUpForRankedMatch from "../lobbyFunctions/handleQueueUpForRankedMatch";
 
 export default function gameUiListeners(io: Server, socket: Socket, serverState: ServerState) {
   const { gameRooms, rankedQueue } = serverState;
@@ -28,8 +29,8 @@ export default function gameUiListeners(io: Server, socket: Socket, serverState:
   socket.on(SocketEventsFromClient.CLICKS_READY, (gameName) => {
     handleReadyClick(io, socket, serverState, gameName);
   });
-  socket.on(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE, async () => {
-    // await handleQueueUpForRankedMatch(io, socket, serverState);
+  socket.on(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE, () => {
+    handleQueueUpForRankedMatch(io, socket, serverState);
   });
   socket.on(SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE, () => {
     delete rankedQueue.users[socket.id];

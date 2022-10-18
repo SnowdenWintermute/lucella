@@ -26,11 +26,11 @@ export class BattleRoomGame {
   endzones: { host: Rectangle; challenger: Rectangle };
   score: { host: number; challenger: number; neededToWin: number };
   speedModifier: number;
-  static baseWindowDimensions: { width: number; height: number };
-  static baseEndzoneHeight: number;
-  static baseOrbRadius: number;
-  static baseSpeedModifier: number;
-  static initialScoreNeededToWin: number;
+  static baseWindowDimensions = { width: 450, height: 750 };
+  static baseEndzoneHeight = 60;
+  static baseOrbRadius = 15;
+  static baseSpeedModifier = 4;
+  static initialScoreNeededToWin = 5;
   constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
@@ -62,9 +62,4 @@ export class BattleRoomGame {
     this.speedModifier = BattleRoomGame.baseSpeedModifier;
     generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
   }
-  baseWindowDimensions = { width: 450, height: 750 };
-  baseEndzoneHeight = 60;
-  baseOrbRadius = 15;
-  baseSpeedModifier = 4;
-  initialScoreNeededToWin = 5;
 }

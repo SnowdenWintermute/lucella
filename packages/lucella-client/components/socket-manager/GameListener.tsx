@@ -17,14 +17,11 @@ const GameListener = (props: Props) => {
   useEffect(() => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
-      // setLastServerGameUpdate(cloneDeep(currentGame));
+      console.log("game initialized");
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
       const decodedPacket = JSON.parse(data);
-      // let newUpdate = lastServerGameUpdate;
-      // Object.keys(decodedPacket).forEach((key) => {
-      //   newUpdate[key] = cloneDeep(decodedPacket[key]);
-      // });
+      console.log(decodedPacket);
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

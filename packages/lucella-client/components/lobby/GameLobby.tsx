@@ -79,7 +79,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   // joining new rooms
   const onJoinRoomSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    joinRoom(joinNewRoomInput);
+    joinRoom(joinNewRoomInput.replace(/\s+/g, "-").toLowerCase());
   };
   const joinRoom = (chatChannelToJoin: string) => {
     setDisplayChangeChannelModal(false);

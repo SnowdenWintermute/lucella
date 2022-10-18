@@ -19,7 +19,7 @@ const BattleRoom = () => {
         ) : (
           ""
         )}
-        <GameLobby defaultChatRoom="battle room chat" />
+        <GameLobby defaultChatRoom="battle-room-chat" />
       </div>
     </section>
   );

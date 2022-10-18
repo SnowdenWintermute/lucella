@@ -1,30 +1,28 @@
 import { Server } from "socket.io";
 import ServerState, { RankedQueueUser } from "../../../interfaces/ServerState";
-import compareAllPlayersElo from "./compareAllPlayersElo";
+import compareCurrentPlayerEloToOthersInQueue from "./compareCurrentPlayerEloToOthersInQueue";
 
 export default function findTwoMostCloselyMatchedPlayers(io: Server, serverState: ServerState) {
   const { rankedQueue } = serverState;
-  const bestMatch: {
+  const twoBestMatchedPlayersInQueue: {
     players: { host: RankedQueueUser; challenger: RankedQueueUser } | null;
     eloDiff: number | null;
   } = {
     players: null,
     eloDiff: null,
   };
-  const { players, eloDiff } = bestMatch;
+  const { players, eloDiff } = twoBestMatchedPlayersInQueue;
   Object.keys(rankedQueue.users).forEach((socketId) => {
     if (!io.sockets.sockets.get(socketId)) return delete rankedQueue.users[socketId];
-    const currentBestMatch = compareAllPlayersElo(io, serverState, socketId);
-    if (currentBestMatch.eloDiff && eloDiff) {
-      if (currentBestMatch.player && (players === null || currentBestMatch.eloDiff < eloDiff)) {
-        bestMatch.eloDiff = currentBestMatch.eloDiff;
-        bestMatch.players = {
-          host: rankedQueue.users[socketId],
-          challenger: currentBestMatch.player,
-        };
-      }
+    const currentBestMatch = compareCurrentPlayerEloToOthersInQueue(io, serverState, socketId);
+    if ((currentBestMatch.eloDiff !== 0 && !currentBestMatch.eloDiff) || !currentBestMatch.player) return;
+    if (players === null || (eloDiff && currentBestMatch.eloDiff < eloDiff)) {
+      twoBestMatchedPlayersInQueue.eloDiff = currentBestMatch.eloDiff;
+      twoBestMatchedPlayersInQueue.players = {
+        host: rankedQueue.users[socketId],
+        challenger: currentBestMatch.player,
+      };
     }
   });
-
-  return bestMatch;
+  return twoBestMatchedPlayersInQueue;
 }

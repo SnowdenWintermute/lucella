@@ -2,7 +2,7 @@ import { startingLadderRating } from "../../../common";
 import { Types, Schema, model } from "mongoose";
 
 export interface IBattleRoomRecord {
-  user: Types.ObjectId;
+  userId: Types.ObjectId;
   wins: number;
   losses: number;
   disconnects: number;
@@ -12,7 +12,7 @@ export interface IBattleRoomRecord {
 }
 
 const BattleRoomRecordSchema = new Schema<IBattleRoomRecord>({
-  user: {
+  userId: {
     type: Schema.Types.ObjectId,
     ref: "user",
   },

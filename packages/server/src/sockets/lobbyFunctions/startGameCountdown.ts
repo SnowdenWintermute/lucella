@@ -17,6 +17,9 @@ export default function startGameCountdown(io: Server, serverState: ServerState,
       return;
     }
     gameRoom.countdown.current--;
-    io.to(`game-${gameRoom.gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown);
+    io.to(`game-${gameRoom.gameName}`).emit(
+      SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE,
+      gameRoom.countdown.current
+    );
   }, 1000);
 }

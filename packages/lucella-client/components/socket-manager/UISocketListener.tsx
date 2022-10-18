@@ -50,6 +50,7 @@ const UISocketListener = ({ socket }: Props) => {
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, (gameStatus) => {
       dispatch(updateGameStatus(gameStatus));
+      console.log("game status updated: ", gameStatus);
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, (countdown) => {
       if (!gameName) return;
