@@ -15,7 +15,14 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components", "src/custom.d.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/components",
+    "src/custom.d.ts",
+    "utils/throttledEventHandlerCreator.js"
+  ],
   "exclude": ["node_modules"],
   "references": [{ "path": "../common" }]
 }

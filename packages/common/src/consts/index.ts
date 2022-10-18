@@ -4,6 +4,8 @@ export const colors = {
   hostEndZone: "rgb(50,50,70)",
   challengerEndZone: "rgb(50,70,50)",
   inGameTextLight: "rgb(200,200,200)",
+  hostOrbs: "0, 153, 0",
+  challengerOrbs: "89,0,179",
 };
 export const renderRate = 33;
 export const eventLimiterRate = 33;

@@ -13,18 +13,11 @@ export default function compareCurrentPlayerEloToOthersInQueue(
     eloDiff: null,
   };
   const currPlayerElo = rankedQueue.users[socketIdOfPlayerInQueue].record.elo;
-  console.log("currPlayerElo: ", currPlayerElo);
   Object.keys(rankedQueue.users).forEach((socketIdOfUserToCompare) => {
     if (!io.sockets.sockets.get(socketIdOfUserToCompare)) return delete rankedQueue.users[socketIdOfUserToCompare];
-    if (
-      socketIdOfUserToCompare === socketIdOfPlayerInQueue &&
-      connectedSockets[socketIdOfPlayerInQueue].associatedUser.username ===
-        connectedSockets[socketIdOfUserToCompare].associatedUser.username
-    )
-      return;
+    if (socketIdOfUserToCompare === socketIdOfPlayerInQueue) return;
 
     const playerToCompare = rankedQueue.users[socketIdOfUserToCompare];
-    console.log("playerToCompare's elo: ", playerToCompare.record.elo);
     const comparedPlayerElo = playerToCompare.record ? playerToCompare.record.elo : startingLadderRating;
     const currEloDiff = Math.abs(currPlayerElo - comparedPlayerElo);
     if (

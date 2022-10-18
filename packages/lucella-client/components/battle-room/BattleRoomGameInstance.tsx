@@ -3,7 +3,6 @@ import { useAppSelector } from "../../redux";
 import draw from "./canvas-functions/canvasMain";
 import { createGameInterval } from "./game-functions/createGameInterval";
 import GameListener from "../socket-manager/GameListener";
-import fitCanvasToScreen from "./canvas-functions/fitCanvasToScreen";
 import { BattleRoomGame } from "../../../common";
 import { Socket } from "socket.io-client";
 import { WidthAndHeight } from "../../../common";
@@ -33,8 +32,6 @@ const BattleRoomGameInstance = (props: Props) => {
       width: gameWidthRatio.current > window.innerWidth ? window.innerWidth : gameWidthRatio.current,
     });
     function handleResize() {
-      console.log("resized");
-      console.log(canvasSize);
       gameWidthRatio.current = window.innerHeight * 0.6;
       setCanvasSize({
         height: window.innerHeight,
