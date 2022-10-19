@@ -1,9 +1,8 @@
 import { GameStatus, SocketEventsFromClient } from "../../../common";
-import React, { useEffect } from "react";
+import React from "react";
 import { Socket } from "socket.io-client";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { setPreGameScreenDisplayed, setViewingGamesList } from "../../redux/slices/lobby-ui-slice";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
 
@@ -16,14 +15,7 @@ const GameList = ({ socket }: Props) => {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const gameList = lobbyUiState.gameList.games;
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
-  const gameName = lobbyUiState.currentGameRoom?.gameName;
   const gameListDisplayClass = gameListIsOpen ? "" : "height-0-hidden";
-
-  useEffect(() => {
-    if (!gameName) return;
-    dispatch(setViewingGamesList(false));
-    dispatch(setPreGameScreenDisplayed(true));
-  }, [gameName, dispatch]);
 
   const handleJoinGameClick = (gameName: string) => {
     if (gameName) socket.emit(SocketEventsFromClient.JOINS_GAME, gameName);
@@ -54,6 +46,7 @@ const GameList = ({ socket }: Props) => {
       );
     }
   }
+
   return (
     <div className={`game-list-frame ${gameListDisplayClass}`}>
       <div className="p-10">

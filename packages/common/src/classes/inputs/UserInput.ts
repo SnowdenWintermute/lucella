@@ -1,8 +1,4 @@
-export enum UserInputs {
-  SELECT_ORB = "SELECT_ORB",
-  SELECT_ORBS = "SELECT_ORBS",
-  ISSUE_ORB_HEADING = "ISSUE_ORB_HEADING",
-}
+import { UserInputs } from "../../enums/UserInputs";
 
 export class UserInput {
   type: UserInputs;

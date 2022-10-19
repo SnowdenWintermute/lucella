@@ -21,7 +21,7 @@ export default async function endGameCleanup(
   io.to(`game-${gameName}`).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
   if (game.intervals.physics) clearInterval(game.intervals.physics);
   if (game.intervals.broadcast) clearInterval(game.intervals.broadcast);
-  if (isDisconnecting) setGameRoomWinnerName(gameRoom, game);
+  if (!isDisconnecting) setGameRoomWinnerName(gameRoom, game);
   else handleDisconnectionFromGame(io, socket, serverState, gameName);
 
   const loser =

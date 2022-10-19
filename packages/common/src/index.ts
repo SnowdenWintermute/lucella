@@ -1,5 +1,5 @@
 export { WidthAndHeight, EloUpdates } from "./types";
-export { GameStatus, PlayerRole, GameEvents } from "./enums";
+export { GameStatus, PlayerRole } from "./enums";
 export * from "./consts";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
@@ -10,5 +10,5 @@ export { Orb } from "./classes/Orb";
 export { Point } from "./classes/Point";
 export { Rectangle, DetailedRectangle } from "./classes/Rectangles";
 export { SocketMetadata } from "./classes/SocketMetadata";
-export { UserInput } from "./classes/UserInput";
+export { KeyPress } from "./classes/inputs/KeyPress";
 export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";

@@ -6,6 +6,7 @@ import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButt
 import GameLobbyModalButton from "../../common-components/buttons/GameLobbyModalButton";
 import { useAppSelector, useAppDispatch } from "../../../redux";
 import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
+import { mobileViewWidthThreshold } from "../../../consts";
 
 interface Props {
   showChangeChannelModal: () => void;
@@ -64,13 +65,10 @@ const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
   };
 
   useEffect(() => {
-    if (window.innerWidth < 786) setMobileViewActive(true);
+    if (window.innerWidth < mobileViewWidthThreshold) setMobileViewActive(true);
     else setMobileViewActive(false);
-  }, [setMobileViewActive]);
-
-  useEffect(() => {
     function handleResize() {
-      if (window.innerWidth < 786) setMobileViewActive(true);
+      if (window.innerWidth < mobileViewWidthThreshold) setMobileViewActive(true);
       else setMobileViewActive(false);
     }
     window.addEventListener("resize", handleResize);

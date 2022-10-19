@@ -1,4 +1,4 @@
-import { BattleRoomGame, eventLimiterRate, PlayerRole } from "../../../../common";
+import { BattleRoomGame, KeyPress, PlayerRole } from "../../../../common";
 
 export default (e: KeyboardEvent, currentGame: BattleRoomGame, playerRole: PlayerRole | null) => {
   let keyPressed;
@@ -22,8 +22,8 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, playerRole: Playe
       return;
   }
   if (keyPressed > 0 && keyPressed < 6) {
-    // const input = new UserInput(UserInputs.SELECT_ORB, {});
-    // currentGame.queues.client.localInputs.push(input);
-    // currentGame.queues.client.inputsToSend.push(input);
+    const input = new KeyPress({ keyPressed, mousePosition: currentGame.mouseData.position });
+    currentGame.queues.client.localInputs.push(input);
+    currentGame.queues.client.inputsToSend.push(input);
   }
 };

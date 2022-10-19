@@ -1,3 +1,9 @@
+import {
+  baseOrbRadius,
+  baseSpeedModifier,
+  gameOverCountdownDuration,
+  initialScoreNeededToWin,
+} from "../../consts/battle-room-game-config";
 import { MouseData } from "../MouseData";
 import { Orb } from "../Orb";
 import { Point } from "../Point";
@@ -28,15 +34,15 @@ export class BattleRoomGame {
   speedModifier: number;
   static baseWindowDimensions = { width: 450, height: 750 };
   static baseEndzoneHeight = 60;
-  static baseOrbRadius = 15;
-  static baseSpeedModifier = 4;
-  static initialScoreNeededToWin = 5;
+  static baseOrbRadius = baseOrbRadius;
+  static baseSpeedModifier = baseSpeedModifier;
+  static initialScoreNeededToWin = initialScoreNeededToWin;
   constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
     this.intervals = { physics: null, broadcast: null, endingCountdown: null };
     this.mouseData = new MouseData();
-    this.gameOverCountdown = { duration: 1, current: null };
+    this.gameOverCountdown = { duration: gameOverCountdownDuration, current: null };
     this.queues = {
       client: { receivedUpdates: [], inputsToSend: [], localInputs: [] }, // client only
       server: { receivedInputs: { host: [], challenger: [] } }, // server only

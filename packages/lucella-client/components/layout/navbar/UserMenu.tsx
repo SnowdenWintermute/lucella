@@ -3,7 +3,7 @@ import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
 import { useAppDispatch } from "../../../redux";
-import { authApi, useLoginUserMutation, useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
+import { authApi, useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 
 export const UserMenu = () => {
   const dispatch = useAppDispatch();

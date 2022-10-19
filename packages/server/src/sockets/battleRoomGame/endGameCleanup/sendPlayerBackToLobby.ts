@@ -11,6 +11,7 @@ export default function (
 ) {
   if (!player) return new Error("tried to send player back to lobby but no player found");
   if (!socketId) return new Error("tried to send player back to lobby but no sockedId found");
+  console.log("sending player back to lobby: ", player);
   const { connectedSockets } = serverState;
   player.currentGameName = null;
   const socketToSend = io.sockets.sockets.get(socketId);

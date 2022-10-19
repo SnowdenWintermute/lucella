@@ -46,10 +46,9 @@ const BattleRoomGameInstance = (props: Props) => {
   useEffect(() => {
     drawRef.current = function () {
       const canvas = canvasRef.current;
-      if (!currentGame.current) return;
-      if (!canvas) return;
+      if (!currentGame.current || !canvas || !currentGameRoom) return;
       const context = canvas.getContext("2d");
-      context && draw(context, canvasSize, playerRole, currentGame.current, currentGameRoom!.gameStatus);
+      context && draw(context, canvasSize, playerRole, currentGame.current, currentGameRoom);
     };
   });
 

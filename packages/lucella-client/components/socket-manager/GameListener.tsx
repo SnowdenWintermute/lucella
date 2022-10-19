@@ -24,6 +24,7 @@ const GameListener = (props: Props) => {
       console.log(decodedPacket);
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
+      console.log("NAME_OF_GAME_WINNER, ", data);
       dispatch(setGameWinner(data));
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {

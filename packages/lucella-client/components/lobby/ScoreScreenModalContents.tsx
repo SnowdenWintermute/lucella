@@ -1,11 +1,12 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useAppSelector } from "../../redux";
+import { authApi } from "../../redux/api-slices/auth-api-slice";
 
 const ScoreScreenModalContents = () => {
+  const user = authApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
   const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState("elo-animate-1");
   const [eloAnimatedChange, setEloAnimatedChange] = useState<number | null>();
   const scoreScreenData = useAppSelector((state) => state.lobbyUi.scoreScreenData);
-  const username = useAppSelector((state) => (state.auth.user ? state.auth.user.name : null));
 
   let playerOldElo: number | null = null;
   let playerNewElo: number | null = null;
@@ -15,21 +16,21 @@ const ScoreScreenModalContents = () => {
 
   if (scoreScreenData && scoreScreenData.gameRoom) {
     playerOldElo =
-      scoreScreenData.gameRoom!.players!.challenger!.associatedUser.username === username
-        ? scoreScreenData.eloUpdates!.challengerElo
-        : scoreScreenData.eloUpdates.hostElo;
+      scoreScreenData.gameRoom!.players!.challenger!.associatedUser.username == user?.name
+        ? scoreScreenData.eloUpdates?.challengerElo
+        : scoreScreenData.eloUpdates?.hostElo;
     playerNewElo =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === username
-        ? scoreScreenData.eloUpdates.newChallengerElo
-        : scoreScreenData.eloUpdates.newHostElo;
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username == user?.name
+        ? scoreScreenData.eloUpdates?.newChallengerElo
+        : scoreScreenData.eloUpdates?.newHostElo;
     playerOldRank =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === username
-        ? scoreScreenData.eloUpdates.oldChallengerRank
-        : scoreScreenData.eloUpdates.oldHostRank;
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username == user?.name
+        ? scoreScreenData.eloUpdates?.oldChallengerRank
+        : scoreScreenData.eloUpdates?.oldHostRank;
     playerNewRank =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === username
-        ? scoreScreenData.eloUpdates.newChallengerRank
-        : scoreScreenData.eloUpdates.newHostRank;
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username == user?.name
+        ? scoreScreenData.eloUpdates?.newChallengerRank
+        : scoreScreenData.eloUpdates?.newHostRank;
     eloDiff = playerNewElo - playerOldElo;
   }
 

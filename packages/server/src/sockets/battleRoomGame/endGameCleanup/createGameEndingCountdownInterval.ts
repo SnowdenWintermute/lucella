@@ -9,7 +9,7 @@ export default function (io: Server, serverState: ServerState, gameName: string,
   const game = games[gameName];
   // if (!game) return new Error("tried to create game ending countdown interval but no game was fonud");
   return setInterval(() => {
-    if (!game.gameOverCountdown.current) game.gameOverCountdown.current = game.gameOverCountdown.duration;
+    if (game.gameOverCountdown.current === null) game.gameOverCountdown.current = game.gameOverCountdown.duration;
     if (game.gameOverCountdown.current < 1) {
       if (game.intervals.endingCountdown) clearInterval(game.intervals.endingCountdown);
       const host = connectedSockets[gameRoom.players.host!.socketId!];

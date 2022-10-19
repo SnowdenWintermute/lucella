@@ -1,4 +1,4 @@
-import { BattleRoomGame } from "../../../../common";
+import { BattleRoomGame, GameRoom } from "../../../../common";
 import { WidthAndHeight } from "../../../../common";
 import { GameStatus } from "../../../../common";
 import { drawOrbs } from "./drawOrbs";
@@ -12,23 +12,23 @@ export default function draw(
   context: CanvasRenderingContext2D,
   canvasSize: WidthAndHeight,
   playerRole: any,
-  currentGame: BattleRoomGame,
-  gameStatus: string
+  game: BattleRoomGame,
+  gameRoom: GameRoom
 ) {
   return requestAnimationFrame(() => {
-    if (!currentGame) return;
-    const { mouseData } = currentGame;
+    if (!game) return;
+    const { mouseData } = game;
     const canvasDrawFractions = {
       x: canvasSize.width / BattleRoomGame.baseWindowDimensions.width,
       y: canvasSize.height / BattleRoomGame.baseWindowDimensions.height,
     };
 
     context.clearRect(0, 0, canvasSize.width, canvasSize.height);
-    drawEndzones(context, currentGame, canvasSize);
-    drawScore(context, currentGame, canvasSize);
-    drawOrbs(context, playerRole, currentGame, canvasDrawFractions);
-    if (gameStatus === GameStatus.ENDING) gameOverText(context, currentGame, canvasDrawFractions);
-    const selectionBoxSize = getSelectionBoxSize(currentGame.mouseData, canvasDrawFractions);
+    drawEndzones(context, game, canvasSize);
+    drawScore(context, game, canvasSize);
+    drawOrbs(context, playerRole, game, canvasDrawFractions);
+    if (gameRoom.gameStatus === GameStatus.ENDING) gameOverText(context, game, gameRoom, canvasDrawFractions);
+    const selectionBoxSize = getSelectionBoxSize(game.mouseData, canvasDrawFractions);
     if (selectionBoxSize) drawSelectionBox(context, mouseData, canvasDrawFractions, selectionBoxSize);
   });
 }

@@ -25,19 +25,17 @@ const InGameButtons = ({ socket }: Props) => {
   // button visibility
   useEffect(() => {
     if (gameListIsOpen) setGoBackButtonDisplayClass("");
-    if (!gameListIsOpen) setGoBackButtonDisplayClass("chat-button-hidden");
+    else setGoBackButtonDisplayClass("chat-button-hidden");
     if (preGameScreenIsOpen) setCancelGameSetupButtonDisplayClass("");
-    if (!preGameScreenIsOpen) setCancelGameSetupButtonDisplayClass("chat-button-hidden");
+    else setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     if (gameName) {
-      if (!isRanked) {
-        setLeaveGameButtonDisplayClass("");
-      }
+      if (!isRanked) setLeaveGameButtonDisplayClass("");
       setGoBackButtonDisplayClass("chat-button-hidden");
       setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     }
     if (!gameName) setLeaveGameButtonDisplayClass("chat-button-hidden");
     if (matchmakingScreenIsOpen) setButtonsDisplayClass("chat-button-hidden");
-    if (!matchmakingScreenIsOpen) setButtonsDisplayClass("");
+    else setButtonsDisplayClass("");
   }, [gameListIsOpen, preGameScreenIsOpen, gameName, matchmakingScreenIsOpen, isRanked]);
 
   const onViewGamesListBackClick = () => {
@@ -56,7 +54,6 @@ const InGameButtons = ({ socket }: Props) => {
 
   return (
     <ul className={`pre-game-buttons ${buttonsDisplayClass}`}>
-      <li>{isRanked && <h3>Ranked game starting...</h3>}</li>
       <li>
         <GameLobbyTopButton
           title="Cancel"

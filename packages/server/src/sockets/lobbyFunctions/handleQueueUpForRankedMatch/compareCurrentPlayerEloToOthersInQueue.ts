@@ -7,7 +7,7 @@ export default function compareCurrentPlayerEloToOthersInQueue(
   serverState: ServerState,
   socketIdOfPlayerInQueue: string
 ) {
-  const { connectedSockets, rankedQueue } = serverState;
+  const { rankedQueue } = serverState;
   const currentBestMatch: { player: null | RankedQueueUser; eloDiff: null | number } = {
     player: null,
     eloDiff: null,
