@@ -18,7 +18,7 @@ export class BattleRoomGame {
     broadcast: NodeJS.Timeout | null;
     endingCountdown: NodeJS.Timeout | null;
   };
-  mouseData: MouseData;
+  mouseData: MouseData; // client only
   gameOverCountdown: { duration: number; current: number | null };
   queues: {
     client: { receivedUpdates: any[]; localInputs: any[] };

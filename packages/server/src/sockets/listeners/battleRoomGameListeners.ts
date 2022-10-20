@@ -1,10 +1,10 @@
-import { PlayerRole, SocketEventsFromClient } from "../../../../common";
+import { PlayerRole, SocketEventsFromClient, UserInput } from "../../../../common";
 import { Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 
 export default function (socket: Socket, serverState: ServerState) {
   const { connectedSockets, games, gameRooms } = serverState;
-  socket.on(SocketEventsFromClient.NEW_INPUT, (data) => {
+  socket.on(SocketEventsFromClient.NEW_INPUT, (data: string) => {
     if (!connectedSockets[socket.id].currentGameName) return;
     if (!games[connectedSockets[socket.id].currentGameName!]) return;
     if (!gameRooms[connectedSockets[socket.id].currentGameName!]) return;

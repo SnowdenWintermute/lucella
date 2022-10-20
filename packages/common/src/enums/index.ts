@@ -10,3 +10,9 @@ export enum PlayerRole {
   HOST = "host",
   CHALLENGER = "challenger",
 }
+
+export enum UserInputs {
+  SELECT_ORBS = "SELECT_ORBS",
+  MOVE_SELECTED_ORBS = "MOVE_SELECTED_ORBS",
+  SELECT_AND_MOVE_ORB = "SELECT_AND_MOVE_ORB",
+}

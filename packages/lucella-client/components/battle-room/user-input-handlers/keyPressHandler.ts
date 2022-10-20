@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import { BattleRoomGame, KeyPress, SocketEventsFromClient } from "../../../../common";
+import { BattleRoomGame, SelectAndMoveOrb, SocketEventsFromClient } from "../../../../common";
 
 export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket) => {
   let keyPressed;
@@ -22,9 +22,11 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket) =
     default:
       return;
   }
-  if (keyPressed > 0 && keyPressed < 6) {
-    const input = new KeyPress({ keyPressed, mousePosition: currentGame.mouseData.position }, currentGame.currentTick);
-    currentGame.queues.client.localInputs.push(input);
-    socket.emit(SocketEventsFromClient.NEW_INPUT, JSON.stringify(input));
-  }
+  if (keyPressed < 1 || keyPressed > 5) return;
+  const input = new SelectAndMoveOrb(
+    { orbIds: [keyPressed], mousePosition: currentGame.mouseData.position },
+    currentGame.currentTick
+  );
+  currentGame.queues.client.localInputs.push(input);
+  socket.emit(SocketEventsFromClient.NEW_INPUT, JSON.stringify(input));
 };

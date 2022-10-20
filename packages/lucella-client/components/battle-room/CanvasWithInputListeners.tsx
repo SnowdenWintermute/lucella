@@ -1,4 +1,4 @@
-import { eventLimiterRate, WidthAndHeight, BattleRoomGame, PlayerRole } from "../../../common";
+import { eventLimiterRate, WidthAndHeight, BattleRoomGame } from "../../../common";
 import React, { useCallback, useEffect } from "react";
 import mouseDownHandler from "./user-input-handlers/mouseDownHandler";
 import mouseEnterHandler from "./user-input-handlers/mouseEnterHandler";
@@ -11,6 +11,7 @@ import touchEndHandler from "./user-input-handlers/touchEndHandler";
 import keyPressHandler from "./user-input-handlers/keyPressHandler";
 import throttle from "../../utils/throttle";
 import { Socket } from "socket.io-client";
+import { useAppSelector } from "../../redux";
 
 interface Props {
   canvasSize: WidthAndHeight;
@@ -21,6 +22,7 @@ interface Props {
 
 const Canvas = (props: Props) => {
   const { canvasSize, canvasRef, currentGame, socket } = props;
+  const { playerRole } = useAppSelector((state) => state.lobbyUi);
 
   const onKeyPress = useCallback((e: KeyboardEvent) => {
     throttle(eventLimiterRate, keyPressHandler(e, currentGame, socket));
@@ -59,7 +61,7 @@ const Canvas = (props: Props) => {
         throttle(eventLimiterRate, mouseMoveHandler(e, currentGame, canvasSize));
       }}
       onMouseLeave={() => {
-        mouseLeaveHandler(currentGame, socket);
+        mouseLeaveHandler(currentGame, socket, playerRole);
       }}
       onMouseEnter={() => {
         mouseEnterHandler(currentGame.mouseData);

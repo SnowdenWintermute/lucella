@@ -1,12 +1,14 @@
-import { UserInputs } from "../../enums/UserInputs";
+import { PlayerRole, UserInputs } from "../../enums";
 
 export class UserInput {
   type: UserInputs;
   data: any;
   tick: number;
-  constructor(type: UserInputs, data: any, tick: number) {
+  playerRole?: PlayerRole;
+  constructor(type: UserInputs, data: any, tick: number, playerRole?: PlayerRole) {
     this.type = type;
     this.data = data;
     this.tick = tick;
+    this.playerRole = playerRole;
   }
 }
