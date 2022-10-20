@@ -1,7 +1,10 @@
-import { BattleRoomGame } from "../../../../common";
-import { Point } from "../../../../common";
-import { minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../../../../common";
-import { WidthAndHeight } from "../../../../common";
+import {
+  WidthAndHeight,
+  Point,
+  BattleRoomGame,
+  minimumQuickTouchSelectionBoxSize,
+  touchHoldSelectionBoxStartThreshold,
+} from "../../../../common";
 
 export default function touchEndHandler(
   e: React.TouchEvent<HTMLCanvasElement>,

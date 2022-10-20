@@ -1,8 +1,7 @@
-import { ChatMessage } from "../../../../../common";
+import { ChatMessage, SocketEventsFromServer } from "../../../../../common";
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import removeNonHostPlayers from "./removeNonHostPlayers";
-import { SocketEventsFromServer } from "../../../../../common";
 
 export default function (io: Server, serverState: ServerState, gameName: string) {
   const { gameRooms } = serverState;

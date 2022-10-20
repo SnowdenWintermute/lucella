@@ -10,5 +10,5 @@ export { Orb } from "./classes/Orb";
 export { Point } from "./classes/Point";
 export { Rectangle, DetailedRectangle } from "./classes/Rectangles";
 export { SocketMetadata } from "./classes/SocketMetadata";
-export { KeyPress } from "./classes/inputs/KeyPress";
+export * from "./classes/inputs";
 export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";

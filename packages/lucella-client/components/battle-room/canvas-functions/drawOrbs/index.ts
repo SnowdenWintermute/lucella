@@ -1,6 +1,4 @@
-import { BattleRoomGame } from "../../../../../common";
-import { Point } from "../../../../../common";
-import { PlayerRole } from "../../../../../common";
+import { PlayerRole, Point, BattleRoomGame } from "../../../../../common";
 import drawOrb from "./drawOrb";
 import drawOrbNumber from "./drawOrbNumber";
 import drawSelectionRing from "./drawSelectionRing";

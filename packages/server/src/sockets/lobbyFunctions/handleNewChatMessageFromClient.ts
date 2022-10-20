@@ -1,5 +1,4 @@
-import { ChatMessage } from "../../../../common";
-import { SocketEventsFromServer } from "../../../../common";
+import { SocketEventsFromServer, ChatMessage } from "../../../../common";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 

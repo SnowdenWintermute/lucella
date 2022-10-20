@@ -1,6 +1,7 @@
-import { BattleRoomGame, KeyPress, PlayerRole } from "../../../../common";
+import { Socket } from "socket.io-client";
+import { BattleRoomGame, KeyPress, SocketEventsFromClient } from "../../../../common";
 
-export default (e: KeyboardEvent, currentGame: BattleRoomGame, playerRole: PlayerRole | null) => {
+export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket) => {
   let keyPressed;
   switch (e.key) {
     case "1": // 1
@@ -22,8 +23,8 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, playerRole: Playe
       return;
   }
   if (keyPressed > 0 && keyPressed < 6) {
-    const input = new KeyPress({ keyPressed, mousePosition: currentGame.mouseData.position });
+    const input = new KeyPress({ keyPressed, mousePosition: currentGame.mouseData.position }, currentGame.currentTick);
     currentGame.queues.client.localInputs.push(input);
-    currentGame.queues.client.inputsToSend.push(input);
+    socket.emit(SocketEventsFromClient.NEW_INPUT, JSON.stringify(input));
   }
 };

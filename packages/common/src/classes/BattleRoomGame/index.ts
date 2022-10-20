@@ -21,11 +21,11 @@ export class BattleRoomGame {
   mouseData: MouseData;
   gameOverCountdown: { duration: number; current: number | null };
   queues: {
-    client: { receivedUpdates: any[]; inputsToSend: any[]; localInputs: any[] };
-    server: { receivedInputs: { host: any[]; challenger: any[] } };
+    client: { receivedUpdates: any[]; localInputs: any[] };
+    server: { receivedInputs: any[] };
   };
-  idOfLastUpdateApplied: number;
-  idOfLastInputIssued: number;
+  mostRecentServerTick: number;
+  currentTick: number; // 65535 max then roll to 0
   lastProcessedInputIds: { host: number | null; challenger: number | null }; // server only
   winner: string | null;
   orbs: { host: Orb[]; challenger: Orb[] };
@@ -44,11 +44,11 @@ export class BattleRoomGame {
     this.mouseData = new MouseData();
     this.gameOverCountdown = { duration: gameOverCountdownDuration, current: null };
     this.queues = {
-      client: { receivedUpdates: [], inputsToSend: [], localInputs: [] }, // client only
-      server: { receivedInputs: { host: [], challenger: [] } }, // server only
+      client: { receivedUpdates: [], localInputs: [] }, // client only
+      server: { receivedInputs: [] }, // server only
     };
-    this.idOfLastUpdateApplied = 0;
-    this.idOfLastInputIssued = 0;
+    this.mostRecentServerTick = 0;
+    this.currentTick = 0;
     this.winner = null;
     this.lastProcessedInputIds = { host: null, challenger: null }; // server only
     this.orbs = { host: [], challenger: [] };

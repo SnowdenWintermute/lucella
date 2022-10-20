@@ -1,7 +1,4 @@
-import { Orb } from "../../../../../common/Orb";
-import { Point } from "../../../../../common";
-import { colors, inGameFontSizes } from "../../../../../common";
-import { PlayerRole } from "../../../../../common";
+import { PlayerRole, colors, inGameFontSizes, Orb, Point } from "../../../../../common";
 
 export default function drawOrbNumber(
   context: CanvasRenderingContext2D,

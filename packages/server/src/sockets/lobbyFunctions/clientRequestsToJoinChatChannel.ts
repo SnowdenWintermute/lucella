@@ -1,11 +1,9 @@
 import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 import removeSocketFromChatChannel from "./removeSocketFromChatChannel";
-import { ChatMessage, ChatMessageStyles } from "../../../../common";
+import { SocketEventsFromServer, ChatChannel, ChatMessage, ChatMessageStyles } from "../../../../common";
 import updateRoomUsernameList from "./updateChatChannelUsernameList";
 import sanitizeChatChannelForClient from "../../utils/sanitizeChatChannelForClient";
-import { ChatChannel } from "../../../../common";
-import { SocketEventsFromServer } from "../../../../common";
 
 export default function clientRequestsToJoinChatChannel(
   io: Server,

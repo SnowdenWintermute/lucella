@@ -1,5 +1,4 @@
-import { MouseData } from "../../../../common";
-import { Point } from "../../../../common";
+import { MouseData, Point } from "../../../../common";
 
 export default function first(
   context: CanvasRenderingContext2D,

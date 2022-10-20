@@ -1,6 +1,4 @@
-import { BattleRoomGame } from "../../../../common";
-import { Point } from "../../../../common";
-import { WidthAndHeight } from "../../../../common";
+import { BattleRoomGame, WidthAndHeight, Point } from "../../../../common";
 
 export default function touchStartHandler(
   e: React.TouchEvent<HTMLCanvasElement>,

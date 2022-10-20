@@ -1,7 +1,10 @@
-import { BattleRoomGame } from "../../../../common";
-import { Point } from "../../../../common";
-import { minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../../../../common";
-import { WidthAndHeight } from "../../../../common";
+import {
+  WidthAndHeight,
+  Point,
+  BattleRoomGame,
+  minimumQuickTouchSelectionBoxSize,
+  touchHoldSelectionBoxStartThreshold,
+} from "../../../../common";
 
 export default (e: React.TouchEvent<HTMLCanvasElement>, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) => {
   const { mouseData } = currentGame;

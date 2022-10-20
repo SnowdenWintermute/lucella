@@ -1,5 +1,4 @@
-import { BattleRoomGame, GameRoom } from "../../../../common";
-import { Point } from "../../../../common";
+import { BattleRoomGame, GameRoom, Point } from "../../../../common";
 
 const gameOverText = (
   context: CanvasRenderingContext2D,

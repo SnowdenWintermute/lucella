@@ -1,5 +1,4 @@
-import { BattleRoomGame, WidthAndHeight } from "../../../../common";
-import { colors } from "../../../../common";
+import { BattleRoomGame, WidthAndHeight, colors } from "../../../../common";
 
 export default function drawEndzones(
   context: CanvasRenderingContext2D,

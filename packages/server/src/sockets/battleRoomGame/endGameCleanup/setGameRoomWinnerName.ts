@@ -1,6 +1,4 @@
-import { BattleRoomGame } from "../../../../../common";
-import { GameRoom } from "../../../../../common";
-import { PlayerRole } from "../../../../../common";
+import { PlayerRole, GameRoom, BattleRoomGame } from "../../../../../common";
 
 export default function setGameRoomWinnerName(gameRoom: GameRoom, game: BattleRoomGame) {
   gameRoom.winner =

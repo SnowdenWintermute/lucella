@@ -8,6 +8,7 @@ export enum SocketEventsFromClient {
   JOINS_GAME = "JOINS_GAME",
   ENTERS_MATCHMAKING_QUEUE = "ENTERS_MATCHMAKING_QUEUE",
   LEAVES_MATCHMAKING_QUEUE = "LEAVES_MATCHMAKING_QUEUE",
+  NEW_INPUT = "NEW_INPUT",
 }
 
 export enum SocketEventsFromServer {

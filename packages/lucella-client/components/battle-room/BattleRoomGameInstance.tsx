@@ -1,13 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux";
 import draw from "./canvas-functions/canvasMain";
-import { createGameInterval } from "./game-functions/createGameInterval";
+import { createRenderInterval } from "./game-functions/createRenderInterval";
 import GameListener from "../socket-manager/GameListener";
-import { BattleRoomGame } from "../../../common";
+import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../common";
 import { Socket } from "socket.io-client";
-import { WidthAndHeight } from "../../../common";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
-import { GameStatus } from "../../../common";
 
 interface Props {
   socket: Socket;
@@ -57,9 +55,9 @@ const BattleRoomGameInstance = (props: Props) => {
       drawRef.current ? drawRef.current() : null;
     }
     if (!currentGame.current) return;
-    const gameInterval = createGameInterval(currentDrawFunction, currentGame.current);
+    const gameInterval = createRenderInterval(currentDrawFunction, currentGame.current);
     return () => clearInterval(gameInterval);
-  }, [socket, currentGame]);
+  }, [currentGame]);
 
   return (
     <div className="battle-room-canvas-holder" onContextMenu={(e) => e.preventDefault()}>
@@ -70,7 +68,7 @@ const BattleRoomGameInstance = (props: Props) => {
           canvasSize={canvasSize}
           canvasRef={canvasRef}
           currentGame={currentGame.current!}
-          playerRole={playerRole}
+          socket={socket}
         />
       ) : (
         "Loading..."

@@ -1,4 +1,4 @@
-import { eventLimiterRate, WidthAndHeight } from "../../../common";
+import { eventLimiterRate, WidthAndHeight, BattleRoomGame, PlayerRole } from "../../../common";
 import React, { useCallback, useEffect } from "react";
 import mouseDownHandler from "./user-input-handlers/mouseDownHandler";
 import mouseEnterHandler from "./user-input-handlers/mouseEnterHandler";
@@ -8,23 +8,22 @@ import mouseUpHandler from "./user-input-handlers/mouseUpHandler";
 import touchMoveHandler from "./user-input-handlers/touchMoveHandler";
 import touchStartHandler from "./user-input-handlers/touchStartHandler";
 import touchEndHandler from "./user-input-handlers/touchEndHandler";
-import { BattleRoomGame } from "../../../common";
-import { PlayerRole } from "../../../common";
 import keyPressHandler from "./user-input-handlers/keyPressHandler";
 import throttle from "../../utils/throttle";
+import { Socket } from "socket.io-client";
 
 interface Props {
   canvasSize: WidthAndHeight;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   currentGame: BattleRoomGame;
-  playerRole: PlayerRole | null;
+  socket: Socket;
 }
 
 const Canvas = (props: Props) => {
-  const { canvasSize, canvasRef, currentGame, playerRole } = props;
+  const { canvasSize, canvasRef, currentGame, socket } = props;
 
   const onKeyPress = useCallback((e: KeyboardEvent) => {
-    throttle(eventLimiterRate, keyPressHandler(e, currentGame, playerRole));
+    throttle(eventLimiterRate, keyPressHandler(e, currentGame, socket));
   }, []);
 
   useEffect(() => {
@@ -51,16 +50,16 @@ const Canvas = (props: Props) => {
         touchEndHandler(e, currentGame, canvasSize);
       }}
       onMouseDown={(e) => {
-        mouseDownHandler(e, currentGame.mouseData);
+        mouseDownHandler(e, currentGame, socket);
       }}
       onMouseUp={(e) => {
-        mouseUpHandler(e, currentGame);
+        mouseUpHandler(e, currentGame, socket);
       }}
       onMouseMove={(e) => {
         throttle(eventLimiterRate, mouseMoveHandler(e, currentGame, canvasSize));
       }}
       onMouseLeave={() => {
-        mouseLeaveHandler(currentGame);
+        mouseLeaveHandler(currentGame, socket);
       }}
       onMouseEnter={() => {
         mouseEnterHandler(currentGame.mouseData);
