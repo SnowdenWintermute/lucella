@@ -24,6 +24,7 @@ const GameListener = (props: Props) => {
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
       const decodedPacket = replicator.decode(data);
       currentGame.orbs = decodedPacket.orbs;
+      currentGame.score = decodedPacket.score;
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

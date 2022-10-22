@@ -2,6 +2,7 @@ import { BattleRoomGame } from "../classes/BattleRoomGame";
 import updateGhostOrb from "./updateGhostOrb";
 import moveOrb from "./moveOrb";
 import handleOrbCollisions from "./handleOrbCollisions";
+import handleOrbsInEndzone from "./handleOrbsInEndzone";
 
 export function updateOrbs(game: BattleRoomGame, deltaT?: number) {
   let playerRole: keyof typeof game.orbs;
@@ -12,4 +13,5 @@ export function updateOrbs(game: BattleRoomGame, deltaT?: number) {
     });
   }
   handleOrbCollisions(game);
+  handleOrbsInEndzone(game);
 }

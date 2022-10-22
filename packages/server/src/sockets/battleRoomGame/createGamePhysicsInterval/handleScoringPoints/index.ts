@@ -1,14 +1,17 @@
-const endGameCleanup = require("../../endGameCleanup");
-const handleOrbInEndzone = require("common/handleOrbInEndzone");
-const updateScoreNeededToWin = require("./updateScoreNeededToWin");
-const assignWinner = require("./assignWinner");
+import { BattleRoomGame } from "@lucella/common";
+import endGameCleanup from "../../endGameCleanup";
+import updateScoreNeededToWin from "./updateScoreNeededToWin";
+import assignWinner from "./assignWinner";
+import ServerState from "../../../../interfaces/ServerState";
+import { Server, Socket } from "socket.io";
 
-function handleScoringPoints() {
-  // const gameData = application.gameDatas[gameName];
-  // handleOrbInEndzone(gameData);
-  // updateScoreNeededToWin(gameData); // players must win by at least 2 points
-  // assignWinner(gameData);
-  // if (gameData.winner) endGameCleanup({ application, gameName });
+export default function handleScoringPoints(
+  io: Server,
+  socket: Socket,
+  serverState: ServerState,
+  game: BattleRoomGame
+) {
+  updateScoreNeededToWin(game); // players must win by at least 2 points
+  assignWinner(game);
+  if (game.winner) endGameCleanup(io, socket, serverState, game.gameName);
 }
-
-export default handleScoringPoints;

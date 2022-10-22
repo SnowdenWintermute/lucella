@@ -1,17 +1,9 @@
-// export default function assignWinner(gameData) {
-//   const { gameState } = gameData
-//   if (
-//     gameState.score.challenger >=
-//     gameState.score.neededToWin &&
-//     gameState.score.host >= gameState.score.neededToWin
-//   ) gameData.winner = "tie";
-//   else {
-//     if (
-//       gameState.score.challenger >=
-//       gameState.score.neededToWin
-//     )
-//       gameData.winner = "challenger";
-//     if (gameState.score.host >= gameState.score.neededToWin)
-//       gameData.winner = "host";
-//   }
-// }
+import { BattleRoomGame, PlayerRole } from "../../../../../../common";
+
+export default function assignWinner(game: BattleRoomGame) {
+  if (game.score.challenger >= game.score.neededToWin && game.score.host >= game.score.neededToWin) game.winner = "tie";
+  else {
+    if (game.score.challenger >= game.score.neededToWin) game.winner = PlayerRole.CHALLENGER;
+    if (game.score.host >= game.score.neededToWin) game.winner = PlayerRole.HOST;
+  }
+}

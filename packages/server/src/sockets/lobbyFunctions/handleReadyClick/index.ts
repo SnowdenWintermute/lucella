@@ -17,7 +17,7 @@ export default function (io: Server, socket: Socket | undefined, serverState: Se
       throw new Error("Can't unready from ranked game");
     togglePlayerReadyState(socket, serverState, players, playersReady);
     io.to(`game-${gameName}`).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
-    if (playersReady.host && playersReady.challenger) startGameCountdown(io, serverState, gameName);
+    if (playersReady.host && playersReady.challenger) startGameCountdown(io, socket, serverState, gameName);
     else cancelGameCountdown(io, gameRoom);
   } catch (error) {
     console.log(error);
