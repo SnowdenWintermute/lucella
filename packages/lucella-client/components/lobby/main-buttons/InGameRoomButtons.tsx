@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import { useAppSelector, useAppDispatch } from "../../../redux";
-import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
+import { clearLobbyUi, setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 
 interface Props {
   socket: Socket;
@@ -49,6 +49,7 @@ const InGameButtons = ({ socket }: Props) => {
 
   const onLeaveGameClick = () => {
     dispatch(setPreGameScreenDisplayed(false));
+    dispatch(clearLobbyUi());
     socket.emit(SocketEventsFromClient.LEAVES_GAME, gameName);
   };
 

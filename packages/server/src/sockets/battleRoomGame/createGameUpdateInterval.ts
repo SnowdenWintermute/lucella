@@ -1,9 +1,11 @@
 import { BattleRoomGame, SocketEventsFromServer } from "../../../../common";
 import { broadcastRate } from "../../consts";
 import { Server } from "socket.io";
+const replicator = new (require("replicator"))();
+
 export default function createGameUpdateInterval(io: Server, game: BattleRoomGame) {
   return setInterval(() => {
     // dequeue updates (probably just deltas)
-    // io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, JSON.stringify(game));
+    io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
   }, broadcastRate);
 }

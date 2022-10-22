@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-const cloneDeep = require("lodash.clonedeep");
 import { Socket } from "socket.io-client";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch } from "../../redux";
 import { BattleRoomGame, SocketEventsFromServer } from "../../../common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
+const replicator = new (require("replicator"))();
 
 interface Props {
   socket: Socket;
@@ -13,7 +13,7 @@ interface Props {
 
 const GameListener = (props: Props) => {
   const { socket, currentGame } = props;
-  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!socket) return;
@@ -22,8 +22,8 @@ const GameListener = (props: Props) => {
       currentGame.intervals.physics = createClientPhysicsInterval(currentGame);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
-      // const decodedPacket = JSON.parse(data);
-      // console.log(decodedPacket);
+      const decodedPacket = replicator.decode(data);
+      currentGame.orbs = decodedPacket.orbs;
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

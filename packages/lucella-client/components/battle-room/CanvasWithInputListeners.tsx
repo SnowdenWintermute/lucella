@@ -25,7 +25,7 @@ const Canvas = (props: Props) => {
   const { playerRole } = useAppSelector((state) => state.lobbyUi);
 
   const onKeyPress = useCallback((e: KeyboardEvent) => {
-    throttle(eventLimiterRate, keyPressHandler(e, currentGame, socket));
+    throttle(eventLimiterRate, keyPressHandler(e, currentGame, socket, playerRole));
   }, []);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const Canvas = (props: Props) => {
         mouseDownHandler(e, currentGame, socket);
       }}
       onMouseUp={(e) => {
-        mouseUpHandler(e, currentGame, socket);
+        mouseUpHandler(e, currentGame, socket, playerRole);
       }}
       onMouseMove={(e) => {
         throttle(eventLimiterRate, mouseMoveHandler(e, currentGame, canvasSize));

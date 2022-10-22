@@ -15,7 +15,12 @@ export default function compareCurrentPlayerEloToOthersInQueue(
   const currPlayerElo = rankedQueue.users[socketIdOfPlayerInQueue].record.elo;
   Object.keys(rankedQueue.users).forEach((socketIdOfUserToCompare) => {
     if (!io.sockets.sockets.get(socketIdOfUserToCompare)) return delete rankedQueue.users[socketIdOfUserToCompare];
-    if (socketIdOfUserToCompare === socketIdOfPlayerInQueue) return;
+    if (
+      socketIdOfUserToCompare === socketIdOfPlayerInQueue ||
+      serverState.connectedSockets[socketIdOfUserToCompare].associatedUser.username ===
+        serverState.connectedSockets[socketIdOfPlayerInQueue].associatedUser.username
+    )
+      return;
 
     const playerToCompare = rankedQueue.users[socketIdOfUserToCompare];
     const comparedPlayerElo = playerToCompare.record ? playerToCompare.record.elo : startingLadderRating;

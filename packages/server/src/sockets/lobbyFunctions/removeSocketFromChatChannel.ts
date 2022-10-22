@@ -6,7 +6,7 @@ import updateChatChannelUsernameList from "./updateChatChannelUsernameList";
 
 export default function (io: Server, socket: Socket, serverState: ServerState) {
   const { connectedSockets, chatChannels } = serverState;
-  if (!connectedSockets[socket.id].currentChatChannel) return;
+  if (!connectedSockets[socket.id] || !connectedSockets[socket.id].currentChatChannel) return;
   const nameOfChatChannelToLeave = connectedSockets[socket.id].currentChatChannel;
   if (!nameOfChatChannelToLeave) return;
   connectedSockets[socket.id].previousChatChannelName = nameOfChatChannelToLeave; // used for placing user back in their last chat channel after a game ends

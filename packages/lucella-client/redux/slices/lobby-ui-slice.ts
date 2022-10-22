@@ -75,7 +75,8 @@ const ladderSlice = createSlice({
       if (state.currentGameRoom) state.currentGameRoom.gameStatus = action.payload;
     },
     updatePlayerRole(state, action: PayloadAction<PlayerRole>) {
-      if (state.currentGameRoom) state.playerRole = action.payload;
+      console.log("player role received: ", action.payload);
+      state.playerRole = action.payload;
     },
     setGameWinner(state, action: PayloadAction<string>) {
       if (state.currentGameRoom) state.currentGameRoom.winner = action.payload;

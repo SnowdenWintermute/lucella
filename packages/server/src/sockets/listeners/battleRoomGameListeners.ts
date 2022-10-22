@@ -1,6 +1,7 @@
 import { PlayerRole, SocketEventsFromClient, UserInput } from "../../../../common";
 import { Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
+const replicator = new (require("replicator"))();
 
 export default function (socket: Socket, serverState: ServerState) {
   const { connectedSockets, games, gameRooms } = serverState;
@@ -15,8 +16,9 @@ export default function (socket: Socket, serverState: ServerState) {
         ? PlayerRole.CHALLENGER
         : null;
     if (!playerRole) return console.log("error: received an input from a user not in this game");
-    const inputToQueue = JSON.parse(data);
-    inputToQueue.playerRole = playerRole;
+    const inputToQueue = replicator.decode(data);
+    inputToQueue.data.playerRole = playerRole;
+    console.log("inputToQueue: ", inputToQueue);
     games[connectedSockets[socket.id].currentGameName!].queues.server.receivedInputs.push(inputToQueue);
   });
 }

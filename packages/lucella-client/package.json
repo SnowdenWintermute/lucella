@@ -26,6 +26,7 @@
     "react-redux": "^8.0.4",
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
+    "replicator": "^1.0.5",
     "socket.io-client": "^4.5.2",
     "uuid": "^9.0.0"
   },

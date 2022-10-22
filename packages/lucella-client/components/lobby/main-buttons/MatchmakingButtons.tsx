@@ -13,6 +13,8 @@ const MatchmakingButtons = ({ socket }: Props) => {
   const dispatch = useAppDispatch();
   const [cancelMatchmakingButtonDisplayClass, setCancelMatchmakingButtonDisplayClass] = useState("chat-button-hidden");
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const isRanked = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.isRanked;
+
   const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
 
   // button visibility
@@ -25,7 +27,7 @@ const MatchmakingButtons = ({ socket }: Props) => {
     socket.emit(SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE);
     dispatch(setMatchmakingWindowVisible(false));
   };
-
+  if (isRanked) return <span />;
   return (
     <ul className={`pre-game-buttons`}>
       <li>
