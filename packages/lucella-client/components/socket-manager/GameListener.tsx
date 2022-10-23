@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { useAppDispatch } from "../../redux";
-import { BattleRoomGame, SocketEventsFromServer } from "../../../common";
+import { useAppDispatch, useAppSelector } from "../../redux";
+import { BattleRoomGame, SocketEventsFromServer, randBetween } from "../../../common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 const replicator = new (require("replicator"))();
@@ -12,19 +12,26 @@ interface Props {
 }
 
 const GameListener = (props: Props) => {
+  const dispatch = useAppDispatch();
+  const { playerRole } = useAppSelector((state) => state.lobbyUi);
   const { socket, currentGame } = props;
 
-  const dispatch = useAppDispatch();
   useEffect(() => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
       console.log("game initialized");
-      currentGame.intervals.physics = createClientPhysicsInterval(currentGame);
+      currentGame.intervals.physics = createClientPhysicsInterval(currentGame, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
-      const decodedPacket = replicator.decode(data);
-      currentGame.orbs = decodedPacket.orbs;
-      currentGame.score = decodedPacket.score;
+      setTimeout(() => {
+        const decodedPacket = replicator.decode(data);
+        currentGame.lastUpdateFromServer = {
+          orbs: decodedPacket.orbs,
+          tick: decodedPacket.currentTick,
+          lastProcessedClientInputTicks: decodedPacket.lastProcessedClientInputTicks,
+        };
+        currentGame.score = decodedPacket.score;
+      }, randBetween(250, 450));
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
