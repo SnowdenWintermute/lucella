@@ -1,0 +1,20 @@
+import { BattleRoomGame } from "../classes/BattleRoomGame";
+import { Orb } from "../classes/Orb";
+import { PlayerRole } from "../enums";
+
+const incrementScoreAndGameSpeed = (orb: Orb, game: BattleRoomGame, playerRole: PlayerRole) => {
+  game.score[playerRole] += 1;
+  orb.isGhost = true;
+  game.speedModifier += 0.5;
+};
+
+export default function handleOrbInEndzone(orb: Orb, game: BattleRoomGame, playerRole: "host" | "challenger") {
+  if (orb.isGhost) return;
+  const { endzones } = game;
+  const challengerEndzoneY = endzones.challenger.origin.y;
+  const hostEndzoneY = endzones.host.origin.y + endzones.host.height;
+  if (playerRole === PlayerRole.HOST && orb.position.y >= challengerEndzoneY)
+    incrementScoreAndGameSpeed(orb, game, PlayerRole.HOST);
+  if (playerRole === PlayerRole.CHALLENGER && orb.position.y <= hostEndzoneY)
+    incrementScoreAndGameSpeed(orb, game, PlayerRole.CHALLENGER);
+}

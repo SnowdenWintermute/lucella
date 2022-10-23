@@ -5,6 +5,7 @@ import createGameEndingCountdownInterval from "./createGameEndingCountdownInterv
 import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
 import { GameStatus, SocketEventsFromServer, EloUpdates } from "../../../../../common";
+const replicator = new (require("replicator"))();
 
 export default async function endGameCleanup(
   io: Server,
@@ -21,6 +22,7 @@ export default async function endGameCleanup(
   io.to(`game-${gameName}`).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
   if (game.intervals.physics) clearInterval(game.intervals.physics);
   if (game.intervals.broadcast) clearInterval(game.intervals.broadcast);
+  io.to(`game-${gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game)); // since we stop the broadcast interval we need one last snapshot to show the winning point
   if (!isDisconnecting) setGameRoomWinnerName(gameRoom, game);
   else handleDisconnectionFromGame(io, socket, serverState, gameName);
 

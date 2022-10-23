@@ -2,7 +2,8 @@ import { BattleRoomGame } from "../classes/BattleRoomGame";
 import updateGhostOrb from "./updateGhostOrb";
 import moveOrb from "./moveOrb";
 import handleOrbCollisions from "./handleOrbCollisions";
-import handleOrbsInEndzone from "./handleOrbsInEndzone";
+import handleOrbInEndzone from "./handleOrbInEndzone";
+import { PlayerRole } from "../enums";
 
 export function updateOrbs(game: BattleRoomGame, deltaT?: number) {
   let playerRole: keyof typeof game.orbs;
@@ -10,8 +11,8 @@ export function updateOrbs(game: BattleRoomGame, deltaT?: number) {
     game.orbs[playerRole].forEach((orb) => {
       updateGhostOrb(game, playerRole, orb);
       moveOrb(orb, game, deltaT);
+      handleOrbInEndzone(orb, game, playerRole);
+      playerRole === PlayerRole.HOST && handleOrbCollisions(orb, game);
     });
   }
-  handleOrbCollisions(game);
-  handleOrbsInEndzone(game);
 }

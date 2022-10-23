@@ -13,12 +13,12 @@ const gameOverText = (
   context.textBaseline = "middle";
   context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px Arial`;
   context.fillText(
-    `Winner: ${gameRoom.winner ? gameRoom.winner : "..."}`,
+    `Winner: ${gameRoom.winner ? gameRoom.winner : "Game Over"}`,
     (BattleRoomGame.baseWindowDimensions.width * canvasDrawFractions.x) / 2,
     (BattleRoomGame.baseWindowDimensions.height * canvasDrawFractions.y) / 2
   );
   context.fillText(
-    typeof game.gameOverCountdown.current === "number" ? "Score screen in " + game.gameOverCountdown.current : "...",
+    typeof game.gameOverCountdown.current === "number" ? "Score screen in " + game.gameOverCountdown.current : "",
     (BattleRoomGame.baseWindowDimensions.width * canvasDrawFractions.x) / 2,
     (BattleRoomGame.baseWindowDimensions.height * canvasDrawFractions.y) / 2 + 20
   );
