@@ -1,6 +1,9 @@
 {
   "name": "@lucella/common",
+  "main": "dist/index",
   "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "replicator": "^1.0.5"
+  }
 }
