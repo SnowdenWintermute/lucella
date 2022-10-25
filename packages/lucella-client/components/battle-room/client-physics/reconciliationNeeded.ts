@@ -5,7 +5,7 @@ export default function reconciliationNeeded(
   currentGame: BattleRoomGame,
   playerRole: PlayerRole
 ) {
-  const lastProcessedClientInputTick = lastUpdateFromServer.lastProcessedClientInputTicks[playerRole];
+  const lastProcessedClientInputTick = lastUpdateFromServer.serverLastKnownClientTicks[playerRole];
 
   lastUpdateFromServer.orbs[playerRole].forEach((orb: Orb, i: number) => {
     const orbToCompare = currentGame.orbs[playerRole][i];

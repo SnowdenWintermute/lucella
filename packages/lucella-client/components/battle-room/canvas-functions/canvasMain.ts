@@ -28,7 +28,13 @@ export default function draw(
 
     context.fillStyle = "white";
     context.textAlign = "left";
-    context.fillText(game.clientPrediction.inputsToSimulate.map((item) => item.input.type).toString(), 10, 10);
+    context.fillText(
+      game.clientPrediction.inputsToSimulate
+        .map((item) => item.input.type.slice(0, 3) + " " + item.input.numberOfTicksToSimulate)
+        .toString(),
+      10,
+      10
+    );
     context.fillText(game.clientPrediction.ticksSinceLastConfirmedProcessedInput.toString(), 10, 25);
     context.fillText(game.clientPrediction.simulatingBetweenInputs.toString(), 10, 40);
     context.fillText(game.clientPrediction.clientServerTickDifference.toString(), 10, 55);

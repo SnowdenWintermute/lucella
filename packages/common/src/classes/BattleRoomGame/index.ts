@@ -26,7 +26,7 @@ export class BattleRoomGame {
   };
   lastUpdateFromServer: any;
   currentTick: number; // 65535 max then roll to 0
-  lastProcessedClientInputTicks: { host: number | null; challenger: number | null }; // server only
+  serverLastKnownClientTicks: { host: number | null; challenger: number | null }; // server only
   winner: string | null;
   orbs: { host: Orb[]; challenger: Orb[] };
   endzones: { host: Rectangle; challenger: Rectangle };
@@ -56,7 +56,7 @@ export class BattleRoomGame {
     this.lastUpdateFromServer = null;
     this.currentTick = 0;
     this.winner = null;
-    this.lastProcessedClientInputTicks = { host: null, challenger: null }; // server only
+    this.serverLastKnownClientTicks = { host: null, challenger: null }; // server only
     this.orbs = { host: [], challenger: [] };
     this.score = {
       host: 0,

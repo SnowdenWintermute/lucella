@@ -5,6 +5,7 @@ const replicator = new (require("replicator"))();
 
 export default function (socket: Socket, serverState: ServerState) {
   const { connectedSockets, games, gameRooms } = serverState;
+
   socket.on(SocketEventsFromClient.NEW_INPUT, (data: string) => {
     if (!connectedSockets[socket.id].currentGameName) return;
     if (!games[connectedSockets[socket.id].currentGameName!]) return;
@@ -19,5 +20,12 @@ export default function (socket: Socket, serverState: ServerState) {
     const inputToQueue = replicator.decode(data);
     inputToQueue.data.playerRole = playerRole;
     games[connectedSockets[socket.id].currentGameName!].queues.server.receivedInputs.push(inputToQueue);
+  });
+
+  socket.on(SocketEventsFromClient.CURRENT_TICK_NUMBER, (data: { playerRole: PlayerRole; tick: number }) => {
+    console.log("CURRENT_TICK_NUMBER: ", data);
+    if (!connectedSockets[socket.id].currentGameName) return;
+    if (!games[connectedSockets[socket.id].currentGameName!]) return;
+    games[connectedSockets[socket.id].currentGameName!].serverLastKnownClientTicks[data.playerRole] = data.tick;
   });
 }

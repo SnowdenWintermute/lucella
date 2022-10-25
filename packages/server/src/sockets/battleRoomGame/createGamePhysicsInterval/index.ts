@@ -12,7 +12,7 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
       const input: UserInput = game.queues.server.receivedInputs.shift();
       processPlayerInput(input, game);
       // @ts-ignore
-      game.lastProcessedClientInputTicks[input.data.playerRole!] = input.tick;
+      // game.serverLastKnownClientTicks[input.data.playerRole!] = input.tick;
     });
     updateOrbs(game, +Date.now() - timeOfLastTick);
     handleScoringPoints(io, socket, serverState, game);

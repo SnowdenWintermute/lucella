@@ -8,14 +8,17 @@ export default function createClientPhysicsInterval(currentGame: BattleRoomGame,
     const lastUpdateFromServerCopy = cloneDeep(currentGame.lastUpdateFromServer);
     const newGameState = cloneDeep(currentGame);
     if (!lastUpdateFromServerCopy || !playerRole) return;
-    const lastProcessedClientInputTick = lastUpdateFromServerCopy.lastProcessedClientInputTicks[playerRole];
+    const lastProcessedClientTick = lastUpdateFromServerCopy.serverLastKnownClientTicks[playerRole];
     const inputsToSimulate: any = [];
 
     currentGame.queues.client.localInputs.forEach((input, i) => {
-      if (input.tick <= lastProcessedClientInputTick) return currentGame.queues.client.localInputs.splice(i, 1);
+      if (input.tick <= lastProcessedClientTick) return currentGame.queues.client.localInputs.splice(i, 1);
       const nextInput = currentGame.queues.client.localInputs[i + 1];
       if (nextInput) inputsToSimulate.push({ input, numberOfTicksToSimulate: nextInput.tick - input.tick });
-      else inputsToSimulate.push({ input, numberOfTicksToSimulate: currentGame.currentTick - input.tick });
+      else {
+        inputsToSimulate.push({ input, numberOfTicksToSimulate: currentGame.currentTick - lastProcessedClientTick });
+        input.numberOfTicksToSimulate = currentGame.currentTick - lastProcessedClientTick;
+      }
     });
 
     currentGame.clientPrediction.inputsToSimulate = inputsToSimulate;
@@ -23,7 +26,7 @@ export default function createClientPhysicsInterval(currentGame: BattleRoomGame,
     newGameState.orbs[playerRole] = cloneDeep(lastUpdateFromServerCopy.orbs[playerRole]);
 
     const ticksSinceLastConfirmedProcessedInput =
-      currentGame.currentTick - lastUpdateFromServerCopy.lastProcessedClientInputTicks[playerRole];
+      currentGame.currentTick - lastUpdateFromServerCopy.serverLastKnownClientTicks[playerRole];
 
     currentGame.clientPrediction.ticksSinceLastConfirmedProcessedInput = ticksSinceLastConfirmedProcessedInput;
     currentGame.clientPrediction.clientServerTickDifference = lastUpdateFromServerCopy.tick - currentGame.currentTick;
@@ -32,8 +35,9 @@ export default function createClientPhysicsInterval(currentGame: BattleRoomGame,
       inputsToSimulate.forEach((inputWithTicks: any) => {
         currentGame.clientPrediction.simulatingBetweenInputs = true;
         processPlayerInput(inputWithTicks.input, newGameState);
-        for (let i = 0; i < inputWithTicks.numberOfTicksToSimulate; i++)
+        for (let i = 0; i < inputWithTicks.numberOfTicksToSimulate; i++) {
           updateOrbs(newGameState, undefined, playerRole);
+        }
       });
     else {
       for (let i = 0; i < ticksSinceLastConfirmedProcessedInput; i++) updateOrbs(newGameState, undefined, playerRole);

@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux";
 import { BattleRoomGame, SocketEventsFromServer, randBetween } from "../../../common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
+import createClientBroadcastInterval from "../battle-room/game-functions/createClientBroadcastInterval";
 const replicator = new (require("replicator"))();
 
 interface Props {
@@ -21,6 +22,7 @@ const GameListener = (props: Props) => {
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
       console.log("game initialized");
       currentGame.intervals.physics = createClientPhysicsInterval(currentGame, playerRole);
+      currentGame.intervals.broadcast = createClientBroadcastInterval(socket, currentGame, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
       setTimeout(() => {
@@ -28,7 +30,7 @@ const GameListener = (props: Props) => {
         currentGame.lastUpdateFromServer = {
           orbs: decodedPacket.orbs,
           tick: decodedPacket.currentTick,
-          lastProcessedClientInputTicks: decodedPacket.lastProcessedClientInputTicks,
+          serverLastKnownClientTicks: decodedPacket.serverLastKnownClientTicks,
         };
         currentGame.score = decodedPacket.score;
       }, 500);
@@ -36,10 +38,12 @@ const GameListener = (props: Props) => {
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
       clearInterval(currentGame.intervals.physics);
+      clearInterval(currentGame.intervals.broadcast);
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
       currentGame.gameOverCountdown.current = data;
       clearInterval(currentGame.intervals.physics);
+      clearInterval(currentGame.intervals.broadcast);
       // if (data === 0) dispatch(gameUiActions.clearGameUiData())
     });
     return () => {
