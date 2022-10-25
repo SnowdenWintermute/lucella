@@ -18,20 +18,27 @@ export default function createClientPhysicsInterval(currentGame: BattleRoomGame,
       else inputsToSimulate.push({ input, numberOfTicksToSimulate: currentGame.currentTick - input.tick });
     });
 
-    currentGame.inputsToSimulate = inputsToSimulate;
+    currentGame.clientPrediction.inputsToSimulate = inputsToSimulate;
 
     newGameState.orbs[playerRole] = cloneDeep(lastUpdateFromServerCopy.orbs[playerRole]);
 
-    const ticksSinceLastUpdate =
+    const ticksSinceLastConfirmedProcessedInput =
       currentGame.currentTick - lastUpdateFromServerCopy.lastProcessedClientInputTicks[playerRole];
+
+    currentGame.clientPrediction.ticksSinceLastConfirmedProcessedInput = ticksSinceLastConfirmedProcessedInput;
+    currentGame.clientPrediction.clientServerTickDifference = lastUpdateFromServerCopy.tick - currentGame.currentTick;
 
     if (inputsToSimulate.length > 0)
       inputsToSimulate.forEach((inputWithTicks: any) => {
+        currentGame.clientPrediction.simulatingBetweenInputs = true;
         processPlayerInput(inputWithTicks.input, newGameState);
         for (let i = 0; i < inputWithTicks.numberOfTicksToSimulate; i++)
           updateOrbs(newGameState, undefined, playerRole);
       });
-    else for (let i = 0; i < ticksSinceLastUpdate; i++) updateOrbs(newGameState, undefined, playerRole);
+    else {
+      for (let i = 0; i < ticksSinceLastConfirmedProcessedInput; i++) updateOrbs(newGameState, undefined, playerRole);
+      currentGame.clientPrediction.simulatingBetweenInputs = false;
+    }
 
     // reconciliationNeeded(lastUpdateFromServerCopy, currentGame, playerRole);
 
