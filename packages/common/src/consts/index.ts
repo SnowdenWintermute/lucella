@@ -6,6 +6,7 @@ export const colors = {
   inGameTextLight: "rgb(200,200,200)",
   hostOrbs: "0, 153, 0",
   challengerOrbs: "89,0,179",
+  selectionRingColor: "rgb(30,200,30)",
 };
 export const renderRate = 33;
 export const physicsTickRate = 50;

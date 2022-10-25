@@ -18,7 +18,6 @@ export default function (socket: Socket, serverState: ServerState) {
     if (!playerRole) return console.log("error: received an input from a user not in this game");
     const inputToQueue = replicator.decode(data);
     inputToQueue.data.playerRole = playerRole;
-    console.log("inputToQueue: ", inputToQueue);
     games[connectedSockets[socket.id].currentGameName!].queues.server.receivedInputs.push(inputToQueue);
   });
 }

@@ -25,6 +25,11 @@ export default function draw(
     drawEndzones(context, game, canvasSize);
     drawScore(context, game, canvasSize);
     drawOrbs(context, playerRole, game, canvasDrawFractions);
+
+    context.fillStyle = "white";
+    context.textAlign = "left";
+    context.fillText(game.inputsToSimulate.map((item) => item.input.type).toString(), 10, 10);
+
     if (gameRoom.gameStatus === GameStatus.ENDING) gameOverText(context, game, gameRoom, canvasDrawFractions);
     const selectionBoxSize = getSelectionBoxSize(game.mouseData, canvasDrawFractions);
     if (selectionBoxSize) drawSelectionBox(context, mouseData, canvasDrawFractions, selectionBoxSize);

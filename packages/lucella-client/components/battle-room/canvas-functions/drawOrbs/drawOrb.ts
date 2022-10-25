@@ -7,7 +7,9 @@ export default function drawOrb(
   showAsRing?: boolean
 ) {
   context.beginPath();
-  context.fillStyle = orb.isGhost ? `rgba(${orb.color},${ghostTransparency})` : `rgb(${orb.color})`;
+  context.fillStyle = context.strokeStyle = orb.isGhost
+    ? `rgba(${orb.color},${ghostTransparency})`
+    : `rgb(${orb.color})`;
   context.ellipse(
     orb.position.x * canvasDrawFractions.x,
     orb.position.y * canvasDrawFractions.y,

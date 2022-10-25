@@ -15,4 +15,4 @@ export { UserInput } from "./classes/inputs/UserInput";
 export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
 export { processPlayerInput } from "./processPlayerInput";
 export { updateOrbs } from "./updateOrbs";
-export { randBetween } from "./utils";
+export * from "./utils";

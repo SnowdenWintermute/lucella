@@ -1,5 +1,11 @@
 import { Socket } from "socket.io-client";
-import { BattleRoomGame, PlayerRole, SelectOrbAndAssignDestination, SocketEventsFromClient } from "../../../../common";
+import {
+  BattleRoomGame,
+  PlayerRole,
+  Point,
+  SelectOrbAndAssignDestination,
+  SocketEventsFromClient,
+} from "../../../../common";
 const replicator = new (require("replicator"))();
 
 export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, playerRole: PlayerRole | null) => {
@@ -25,10 +31,16 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, p
       return;
   }
   if (keyPressed < 1 || keyPressed > 5) return;
+  const { mouseData } = currentGame;
+
   const input = new SelectOrbAndAssignDestination(
-    { orbIds: [keyPressed], mousePosition: currentGame.mouseData.position, playerRole },
+    {
+      orbIds: [keyPressed],
+      mousePosition: new Point(mouseData.position?.x || 0, mouseData.position?.y || 0),
+      playerRole,
+    },
     currentGame.currentTick
   );
   currentGame.queues.client.localInputs.push(input);
-  socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
+  setTimeout(() => socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input)), 500);
 };

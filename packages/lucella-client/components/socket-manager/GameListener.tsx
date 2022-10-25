@@ -31,15 +31,15 @@ const GameListener = (props: Props) => {
           lastProcessedClientInputTicks: decodedPacket.lastProcessedClientInputTicks,
         };
         currentGame.score = decodedPacket.score;
-      }, randBetween(250, 450));
+      }, 500);
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
-      currentGame.intervals.physics && clearInterval(currentGame.intervals.physics);
+      clearInterval(currentGame.intervals.physics);
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
       currentGame.gameOverCountdown.current = data;
-      currentGame.intervals.physics && clearInterval(currentGame.intervals.physics);
+      clearInterval(currentGame.intervals.physics);
       // if (data === 0) dispatch(gameUiActions.clearGameUiData())
     });
     return () => {

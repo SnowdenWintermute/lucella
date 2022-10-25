@@ -14,9 +14,9 @@ export class BattleRoomGame {
   gameName: string;
   isRanked: boolean;
   intervals: {
-    physics: NodeJS.Timeout | null;
-    broadcast: NodeJS.Timeout | null;
-    endingCountdown: NodeJS.Timeout | null;
+    physics: NodeJS.Timeout | undefined;
+    broadcast: NodeJS.Timeout | undefined;
+    endingCountdown: NodeJS.Timeout | undefined;
   };
   mouseData: MouseData; // client only
   gameOverCountdown: { duration: number; current: number | null };
@@ -32,6 +32,7 @@ export class BattleRoomGame {
   endzones: { host: Rectangle; challenger: Rectangle };
   score: { host: number; challenger: number; neededToWin: number };
   speedModifier: number;
+  inputsToSimulate: any[];
   static baseWindowDimensions = { width: 450, height: 750 };
   static baseEndzoneHeight = 60;
   static baseOrbRadius = baseOrbRadius;
@@ -40,7 +41,7 @@ export class BattleRoomGame {
   constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
-    this.intervals = { physics: null, broadcast: null, endingCountdown: null };
+    this.intervals = { physics: undefined, broadcast: undefined, endingCountdown: undefined };
     this.mouseData = new MouseData();
     this.gameOverCountdown = { duration: gameOverCountdownDuration, current: null };
     this.queues = {
@@ -66,6 +67,7 @@ export class BattleRoomGame {
       ),
     };
     this.speedModifier = BattleRoomGame.baseSpeedModifier;
+    this.inputsToSimulate = [];
     generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
   }
 }
