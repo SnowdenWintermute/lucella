@@ -23,7 +23,6 @@ export default function (socket: Socket, serverState: ServerState) {
   });
 
   socket.on(SocketEventsFromClient.CURRENT_TICK_NUMBER, (data: { playerRole: PlayerRole; tick: number }) => {
-    console.log("CURRENT_TICK_NUMBER: ", data);
     if (!connectedSockets[socket.id].currentGameName) return;
     if (!games[connectedSockets[socket.id].currentGameName!]) return;
     games[connectedSockets[socket.id].currentGameName!].serverLastKnownClientTicks[data.playerRole] = data.tick;

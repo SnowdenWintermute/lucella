@@ -15,3 +15,4 @@ export const minimumSelectionBoxSize = 3;
 export const touchHoldSelectionBoxStartThreshold = 500;
 export const minimumQuickTouchSelectionBoxSize = 8;
 export const startingLadderRating = 1500;
+export const reconciliationThreshold = 10;

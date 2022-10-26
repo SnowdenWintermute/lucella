@@ -9,38 +9,33 @@ export default function createClientPhysicsInterval(currentGame: BattleRoomGame,
     const newGameState = cloneDeep(currentGame);
     if (!lastUpdateFromServerCopy || !playerRole) return;
     const lastProcessedClientTick = lastUpdateFromServerCopy.serverLastKnownClientTicks[playerRole];
+    const ticksSinceLastClientTickConfirmedByServer = currentGame.currentTick - lastProcessedClientTick;
     const inputsToSimulate: any = [];
 
     currentGame.queues.client.localInputs.forEach((input, i) => {
       if (input.tick <= lastProcessedClientTick) return currentGame.queues.client.localInputs.splice(i, 1);
       const nextInput = currentGame.queues.client.localInputs[i + 1];
       if (nextInput) inputsToSimulate.push({ input, numberOfTicksToSimulate: nextInput.tick - input.tick });
-      else {
-        inputsToSimulate.push({ input, numberOfTicksToSimulate: currentGame.currentTick - lastProcessedClientTick });
-        input.numberOfTicksToSimulate = currentGame.currentTick - lastProcessedClientTick;
-      }
+      else inputsToSimulate.push({ input, numberOfTicksToSimulate: ticksSinceLastClientTickConfirmedByServer });
     });
 
     currentGame.clientPrediction.inputsToSimulate = inputsToSimulate;
 
     newGameState.orbs[playerRole] = cloneDeep(lastUpdateFromServerCopy.orbs[playerRole]);
 
-    const ticksSinceLastConfirmedProcessedInput =
-      currentGame.currentTick - lastUpdateFromServerCopy.serverLastKnownClientTicks[playerRole];
-
-    currentGame.clientPrediction.ticksSinceLastConfirmedProcessedInput = ticksSinceLastConfirmedProcessedInput;
+    currentGame.clientPrediction.ticksSinceLastClientTickConfirmedByServer = ticksSinceLastClientTickConfirmedByServer;
     currentGame.clientPrediction.clientServerTickDifference = lastUpdateFromServerCopy.tick - currentGame.currentTick;
 
     if (inputsToSimulate.length > 0)
       inputsToSimulate.forEach((inputWithTicks: any) => {
         currentGame.clientPrediction.simulatingBetweenInputs = true;
         processPlayerInput(inputWithTicks.input, newGameState);
-        for (let i = 0; i < inputWithTicks.numberOfTicksToSimulate; i++) {
+        for (let i = 0; i < inputWithTicks.numberOfTicksToSimulate; i++)
           updateOrbs(newGameState, undefined, playerRole);
-        }
       });
     else {
-      for (let i = 0; i < ticksSinceLastConfirmedProcessedInput; i++) updateOrbs(newGameState, undefined, playerRole);
+      for (let i = 0; i < ticksSinceLastClientTickConfirmedByServer; i++)
+        updateOrbs(newGameState, undefined, playerRole);
       currentGame.clientPrediction.simulatingBetweenInputs = false;
     }
 

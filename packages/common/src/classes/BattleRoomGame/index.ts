@@ -34,7 +34,7 @@ export class BattleRoomGame {
   speedModifier: number;
   clientPrediction: {
     inputsToSimulate: any[];
-    ticksSinceLastConfirmedProcessedInput: number;
+    ticksSinceLastClientTickConfirmedByServer: number;
     simulatingBetweenInputs: boolean;
     clientServerTickDifference: number;
   };
@@ -74,7 +74,7 @@ export class BattleRoomGame {
     this.speedModifier = BattleRoomGame.baseSpeedModifier;
     this.clientPrediction = {
       inputsToSimulate: [],
-      ticksSinceLastConfirmedProcessedInput: 0,
+      ticksSinceLastClientTickConfirmedByServer: 0,
       simulatingBetweenInputs: false,
       clientServerTickDifference: 0,
     };
