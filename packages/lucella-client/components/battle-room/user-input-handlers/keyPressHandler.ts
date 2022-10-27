@@ -4,8 +4,10 @@ import {
   PlayerRole,
   Point,
   SelectOrbAndAssignDestination,
+  simulatedLagMs,
   SocketEventsFromClient,
 } from "../../../../common";
+import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 const replicator = new (require("replicator"))();
 
 export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, playerRole: PlayerRole | null) => {
@@ -42,5 +44,6 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, p
     currentGame.currentTick
   );
   currentGame.queues.client.localInputs.push(input);
-  setTimeout(() => socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input)), 500);
+  // socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input))
+  laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
 };

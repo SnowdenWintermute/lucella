@@ -22,7 +22,10 @@ export class BattleRoomGame {
   gameOverCountdown: { duration: number; current: number | null };
   queues: {
     client: { localInputs: any[] };
-    server: { receivedInputs: any[] };
+    server: {
+      receivedInputs: any[];
+      receivedLatestClientTickNumbers: { host: number | null; challenger: number | null };
+    };
   };
   lastUpdateFromServer: any;
   currentTick: number; // 65535 max then roll to 0
@@ -51,7 +54,7 @@ export class BattleRoomGame {
     this.gameOverCountdown = { duration: gameOverCountdownDuration, current: null };
     this.queues = {
       client: { localInputs: [] }, // client only
-      server: { receivedInputs: [] }, // server only
+      server: { receivedInputs: [], receivedLatestClientTickNumbers: { host: null, challenger: null } }, // server only
     };
     this.lastUpdateFromServer = null;
     this.currentTick = 0;

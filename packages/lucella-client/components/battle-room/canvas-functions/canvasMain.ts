@@ -5,6 +5,7 @@ import drawSelectionBox from "./drawSelectionBox";
 import gameOverText from "./gameOverText";
 import getSelectionBoxSize from "./getSelectionBoxSize";
 import drawEndzones from "./drawEndzones";
+import drawDebug from "./drawDebug";
 
 export default function draw(
   context: CanvasRenderingContext2D,
@@ -25,19 +26,7 @@ export default function draw(
     drawEndzones(context, game, canvasSize);
     drawScore(context, game, canvasSize);
     drawOrbs(context, playerRole, game, canvasDrawFractions);
-
-    context.fillStyle = "white";
-    context.textAlign = "left";
-    context.fillText(
-      game.clientPrediction.inputsToSimulate
-        .map((item) => item.input.type.slice(0, 1) + " " + item.numberOfTicksToSimulate)
-        .toString(),
-      10,
-      10
-    );
-    context.fillText(game.clientPrediction.ticksSinceLastClientTickConfirmedByServer.toString(), 10, 25);
-    context.fillText(game.clientPrediction.simulatingBetweenInputs.toString(), 10, 40);
-    context.fillText(game.clientPrediction.clientServerTickDifference.toString(), 10, 55);
+    drawDebug(context, game, canvasDrawFractions);
 
     if (gameRoom.gameStatus === GameStatus.ENDING) gameOverText(context, game, gameRoom, canvasDrawFractions);
     const selectionBoxSize = getSelectionBoxSize(game.mouseData, canvasDrawFractions);

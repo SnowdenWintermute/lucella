@@ -12,5 +12,5 @@ export default function startGame(io: Server, socket: Socket, serverState: Serve
   const game = games[gameName];
   io.to(`game-${gameName}`).emit(SocketEventsFromServer.GAME_INITIALIZATION);
   game.intervals.physics = createGamePhysicsInterval(io, socket, serverState, gameName);
-  game.intervals.broadcast = createGameBroadcastInterval(io, game);
+  // game.intervals.broadcast = createGameBroadcastInterval(io, game);
 }

@@ -7,9 +7,13 @@ export default function (socket: Socket, serverState: ServerState) {
   const { connectedSockets, games, gameRooms } = serverState;
 
   socket.on(SocketEventsFromClient.NEW_INPUT, (data: string) => {
-    if (!connectedSockets[socket.id].currentGameName) return;
-    if (!games[connectedSockets[socket.id].currentGameName!]) return;
-    if (!gameRooms[connectedSockets[socket.id].currentGameName!]) return;
+    if (
+      !connectedSockets[socket.id].currentGameName ||
+      !games[connectedSockets[socket.id].currentGameName!] ||
+      !gameRooms[connectedSockets[socket.id].currentGameName!]
+    )
+      return;
+
     const playerRole =
       gameRooms[connectedSockets[socket.id].currentGameName!].players.host?.socketId === socket.id
         ? PlayerRole.HOST
@@ -25,6 +29,7 @@ export default function (socket: Socket, serverState: ServerState) {
   socket.on(SocketEventsFromClient.CURRENT_TICK_NUMBER, (data: { playerRole: PlayerRole; tick: number }) => {
     if (!connectedSockets[socket.id].currentGameName) return;
     if (!games[connectedSockets[socket.id].currentGameName!]) return;
-    games[connectedSockets[socket.id].currentGameName!].serverLastKnownClientTicks[data.playerRole] = data.tick;
+    games[connectedSockets[socket.id].currentGameName!].queues.server.receivedLatestClientTickNumbers[data.playerRole] =
+      data.tick;
   });
 }

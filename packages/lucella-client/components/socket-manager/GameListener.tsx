@@ -47,6 +47,8 @@ const GameListener = (props: Props) => {
       // if (data === 0) dispatch(gameUiActions.clearGameUiData())
     });
     return () => {
+      clearInterval(currentGame.intervals.physics);
+      clearInterval(currentGame.intervals.broadcast);
       socket.off(SocketEventsFromServer.GAME_INITIALIZATION);
       socket.off(SocketEventsFromServer.GAME_PACKET);
       socket.off(SocketEventsFromServer.COMPRESSED_GAME_PACKET);

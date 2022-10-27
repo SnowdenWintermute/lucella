@@ -24,7 +24,7 @@ export function drawOrbs(
   let orbSet: keyof typeof currentGame.orbs;
   for (orbSet in currentGame.orbs) {
     currentGame.orbs[orbSet].forEach((orb) => {
-      drawOrb(context, orb, canvasDrawFractions, showAsRing);
+      drawOrb(context, orb, canvasDrawFractions, showAsRing, true);
       drawOrbNumber(context, orb, playerRole, canvasDrawFractions);
       drawSelectionRing(context, orb);
     });
