@@ -35,11 +35,13 @@ export class BattleRoomGame {
   endzones: { host: Rectangle; challenger: Rectangle };
   score: { host: number; challenger: number; neededToWin: number };
   speedModifier: number;
-  clientPrediction: {
-    inputsToSimulate: any[];
-    ticksSinceLastClientTickConfirmedByServer: number;
-    simulatingBetweenInputs: boolean;
-    clientServerTickDifference: number;
+  debug: {
+    clientPrediction: {
+      inputsToSimulate: any[];
+      ticksSinceLastClientTickConfirmedByServer: number;
+      simulatingBetweenInputs: boolean;
+      clientServerTickDifference: number;
+    };
   };
   static baseWindowDimensions = { width: 450, height: 750 };
   static baseEndzoneHeight = 60;
@@ -75,11 +77,13 @@ export class BattleRoomGame {
       ),
     };
     this.speedModifier = BattleRoomGame.baseSpeedModifier;
-    this.clientPrediction = {
-      inputsToSimulate: [],
-      ticksSinceLastClientTickConfirmedByServer: 0,
-      simulatingBetweenInputs: false,
-      clientServerTickDifference: 0,
+    this.debug = {
+      clientPrediction: {
+        inputsToSimulate: [],
+        ticksSinceLastClientTickConfirmedByServer: 0,
+        simulatingBetweenInputs: false,
+        clientServerTickDifference: 0,
+      },
     };
     generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
   }

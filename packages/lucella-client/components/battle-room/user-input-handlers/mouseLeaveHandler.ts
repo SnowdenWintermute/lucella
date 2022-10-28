@@ -11,8 +11,9 @@ export default function mouseLeaveHandler(currentGame: BattleRoomGame, socket: S
     mouseData.leftCurrentlyPressed = false;
     mouseData.leftReleasedAt = new Point(mouseData.position.x, mouseData.position.y);
     const input = new SelectOrbs(
-      { orbIds: newOrbSelections(mouseData, currentGame, playerRole), playerRole },
-      currentGame.currentTick
+      { orbIds: newOrbSelections(mouseData, currentGame, playerRole) },
+      currentGame.currentTick,
+      playerRole
     );
     currentGame.queues.client.localInputs.push(input);
     socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));

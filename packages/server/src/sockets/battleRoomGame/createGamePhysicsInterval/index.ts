@@ -1,12 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 import { Server, Socket } from "socket.io";
-import {
-  physicsTickRate,
-  processPlayerInput,
-  SocketEventsFromServer,
-  updateOrbs,
-  UserInput,
-} from "../../../../../common";
+import { physicsTickRate, processPlayerInput, SocketEventsFromServer, UserInput } from "../../../../../common";
 import ServerState from "../../../interfaces/ServerState";
 import handleScoringPoints from "./handleScoringPoints";
 const replicator = new (require("replicator"))();
@@ -18,15 +12,10 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
     if (!game) return new Error("tried to update physics in a game that wasn't found");
     game.queues.server.receivedInputs.forEach(() => {
       const input: UserInput = game.queues.server.receivedInputs.shift();
-      processPlayerInput(input, game);
-      // @ts-ignore
-      // game.serverLastKnownClientTicks[input.data.playerRole!] = input.tick;
+      game.serverLastKnownClientTicks[input.playerRole!] = input.tick;
+      processPlayerInput(input, game, +Date.now() - timeOfLastTick);
     });
-    updateOrbs(game, +Date.now() - timeOfLastTick);
-    serverState.games[gameName].orbs = game.orbs;
-
-    game.serverLastKnownClientTicks.host = game.queues.server.receivedLatestClientTickNumbers.host;
-    game.serverLastKnownClientTicks.challenger = game.queues.server.receivedLatestClientTickNumbers.challenger;
+    // serverState.games[gameName].orbs = game.orbs;
 
     timeOfLastTick = +Date.now();
     // rollback for lag comp

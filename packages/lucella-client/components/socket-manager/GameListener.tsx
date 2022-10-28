@@ -21,8 +21,8 @@ const GameListener = (props: Props) => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
       console.log("game initialized");
-      currentGame.intervals.physics = createClientPhysicsInterval(currentGame, playerRole);
-      currentGame.intervals.broadcast = createClientBroadcastInterval(socket, currentGame, playerRole);
+      currentGame.intervals.physics = createClientPhysicsInterval(socket, currentGame, playerRole);
+      // currentGame.intervals.broadcast = createClientBroadcastInterval(socket, currentGame, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
       setTimeout(() => {
@@ -38,12 +38,12 @@ const GameListener = (props: Props) => {
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
       clearInterval(currentGame.intervals.physics);
-      clearInterval(currentGame.intervals.broadcast);
+      // clearInterval(currentGame.intervals.broadcast);
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
       currentGame.gameOverCountdown.current = data;
       clearInterval(currentGame.intervals.physics);
-      clearInterval(currentGame.intervals.broadcast);
+      // clearInterval(currentGame.intervals.broadcast);
       // if (data === 0) dispatch(gameUiActions.clearGameUiData())
     });
     return () => {

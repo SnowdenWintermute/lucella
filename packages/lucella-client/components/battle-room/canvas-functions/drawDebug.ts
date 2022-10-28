@@ -15,13 +15,11 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
   context.textAlign = "left";
   context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px Arial`;
   context.fillText(
-    game.clientPrediction.inputsToSimulate
-      .map((item) => item.input.type.slice(0, 1) + " " + item.numberOfTicksToSimulate)
-      .toString(),
+    game.debug.clientPrediction.inputsToSimulate.map((item) => item.type.slice(0, 1) + " ").toString(),
     10,
     10
   );
-  context.fillText(game.clientPrediction.ticksSinceLastClientTickConfirmedByServer.toString(), 10, 25);
-  context.fillText(game.clientPrediction.simulatingBetweenInputs.toString(), 10, 40);
-  context.fillText(game.clientPrediction.clientServerTickDifference.toString(), 10, 55);
+  context.fillText(game.debug.clientPrediction.ticksSinceLastClientTickConfirmedByServer.toString(), 10, 25);
+  context.fillText(game.debug.clientPrediction.simulatingBetweenInputs.toString(), 10, 40);
+  context.fillText(game.debug.clientPrediction.clientServerTickDifference.toString(), 10, 55);
 }

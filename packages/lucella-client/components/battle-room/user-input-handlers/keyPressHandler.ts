@@ -39,9 +39,9 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, p
     {
       orbIds: [keyPressed],
       mousePosition: new Point(mouseData.position?.x || 0, mouseData.position?.y || 0),
-      playerRole,
     },
-    currentGame.currentTick
+    currentGame.currentTick,
+    playerRole
   );
   currentGame.queues.client.localInputs.push(input);
   // socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input))

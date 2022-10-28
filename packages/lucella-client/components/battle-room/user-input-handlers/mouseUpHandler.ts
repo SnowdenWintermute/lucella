@@ -22,7 +22,11 @@ export default function mouseUpHandler(
 
   if (e.button === 2) {
     mouseData.rightReleasedAt = new Point(mouseData.position.y, mouseData.position.x);
-    const input = new AssignOrbDestinations({ mousePosition: mouseData.position, playerRole }, currentGame.currentTick);
+    const input = new AssignOrbDestinations(
+      { mousePosition: new Point(mouseData.position.x, mouseData.position.y) },
+      currentGame.currentTick,
+      playerRole
+    );
     currentGame.queues.client.localInputs.push(input);
     socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
   }
@@ -30,8 +34,9 @@ export default function mouseUpHandler(
     mouseData.leftCurrentlyPressed = false;
     mouseData.leftReleasedAt = new Point(mouseData.position.x, mouseData.position.y);
     const input = new SelectOrbs(
-      { orbIds: newOrbSelections(mouseData, currentGame, playerRole), playerRole },
-      currentGame.currentTick
+      { orbIds: newOrbSelections(mouseData, currentGame, playerRole) },
+      currentGame.currentTick,
+      playerRole
     );
     currentGame.queues.client.localInputs.push(input);
     socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
