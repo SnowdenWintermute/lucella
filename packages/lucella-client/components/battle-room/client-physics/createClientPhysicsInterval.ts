@@ -8,6 +8,8 @@ import {
   simulatedLagMs,
   SocketEventsFromClient,
   updateOrbs,
+  UserInput,
+  UserInputs,
 } from "../../../../common";
 import reconciliationNeeded from "./reconciliationNeeded";
 import cloneDeep from "lodash.clonedeep";
@@ -35,10 +37,21 @@ export default function createClientPhysicsInterval(
     currentGame.queues.client.localInputs.push(input);
     laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
 
-    currentGame.queues.client.localInputs.forEach((input, i) => {
-      if (input.tick <= lastProcessedClientTick) return currentGame.queues.client.localInputs.splice(i, 1);
-      else processPlayerInput(input, newGameState);
+    currentGame.queues.client.localInputs.sort((a: UserInput, b: UserInput) => {
+      if (a.tick !== b.tick) return 0;
+      if (a.type === UserInputs.MOVE_ORBS_TOWARD_DESTINATIONS) return -1;
+      else return 1;
     });
+    const queueLength = currentGame.queues.client.localInputs.length;
+    let amountOfInputsToRemove = 0;
+    for (let i = 0; i < queueLength; i++) {
+      let currInput = currentGame.queues.client.localInputs[i];
+      if (currInput.tick <= lastProcessedClientTick) {
+        amountOfInputsToRemove = i + 1;
+        continue;
+      } else processPlayerInput(currInput, newGameState);
+    }
+    amountOfInputsToRemove && currentGame.queues.client.localInputs.splice(0, amountOfInputsToRemove);
 
     currentGame.debug.clientPrediction.inputsToSimulate = currentGame.queues.client.localInputs;
     currentGame.debug.clientPrediction.ticksSinceLastClientTickConfirmedByServer =

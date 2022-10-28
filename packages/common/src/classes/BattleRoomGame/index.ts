@@ -4,6 +4,7 @@ import {
   gameOverCountdownDuration,
   initialScoreNeededToWin,
 } from "../../consts/battle-room-game-config";
+import { UserInput } from "../inputs/UserInput";
 import { MouseData } from "../MouseData";
 import { Orb } from "../Orb";
 import { Point } from "../Point";
@@ -21,7 +22,7 @@ export class BattleRoomGame {
   mouseData: MouseData; // client only
   gameOverCountdown: { duration: number; current: number | null };
   queues: {
-    client: { localInputs: any[] };
+    client: { localInputs: UserInput[] };
     server: {
       receivedInputs: any[];
       receivedLatestClientTickNumbers: { host: number | null; challenger: number | null };
