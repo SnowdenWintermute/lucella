@@ -10,7 +10,12 @@ import {
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 const replicator = new (require("replicator"))();
 
-export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, playerRole: PlayerRole | null) => {
+export default (
+  e: KeyboardEvent,
+  currentGame: BattleRoomGame,
+  socket: Socket,
+  playerRole: PlayerRole | null
+) => {
   if (!playerRole) return;
   let keyPressed;
   switch (e.key) {
@@ -38,12 +43,21 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, p
   const input = new SelectOrbAndAssignDestination(
     {
       orbIds: [keyPressed],
-      mousePosition: new Point(mouseData.position?.x || 0, mouseData.position?.y || 0),
+      mousePosition: new Point(
+        mouseData.position?.x || 0,
+        mouseData.position?.y || 0
+      ),
     },
     currentGame.currentTick,
+    (currentGame.lastClientInputNumber += 1),
     playerRole
   );
   currentGame.queues.client.localInputs.push(input);
   // socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input))
-  laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
+  laggedSocketEmit(
+    socket,
+    SocketEventsFromClient.NEW_INPUT,
+    replicator.encode(input),
+    simulatedLagMs
+  );
 };

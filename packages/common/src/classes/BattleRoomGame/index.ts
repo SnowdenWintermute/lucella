@@ -25,12 +25,23 @@ export class BattleRoomGame {
     client: { localInputs: UserInput[] };
     server: {
       receivedInputs: any[];
-      receivedLatestClientTickNumbers: { host: number | null; challenger: number | null };
+      receivedLatestClientTickNumbers: {
+        host: number | null;
+        challenger: number | null;
+      };
     };
   };
   lastUpdateFromServer: any;
   currentTick: number; // 65535 max then roll to 0
-  serverLastKnownClientTicks: { host: number | null; challenger: number | null }; // server only
+  lastClientInputNumber: number;
+  serverLastKnownClientTicks: {
+    host: number | null;
+    challenger: number | null;
+  }; // server only
+  serverLastProcessedInputNumbers: {
+    host: number | null;
+    challenger: number | null;
+  };
   winner: string | null;
   orbs: { host: Orb[]; challenger: Orb[] };
   endzones: { host: Rectangle; challenger: Rectangle };
@@ -42,6 +53,7 @@ export class BattleRoomGame {
       ticksSinceLastClientTickConfirmedByServer: number;
       simulatingBetweenInputs: boolean;
       clientServerTickDifference: number;
+      lastProcessedClientInputNumber: number;
     };
   };
   static baseWindowDimensions = { width: 450, height: 750 };
@@ -52,17 +64,32 @@ export class BattleRoomGame {
   constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
-    this.intervals = { physics: undefined, broadcast: undefined, endingCountdown: undefined };
+    this.intervals = {
+      physics: undefined,
+      broadcast: undefined,
+      endingCountdown: undefined,
+    };
     this.mouseData = new MouseData();
-    this.gameOverCountdown = { duration: gameOverCountdownDuration, current: null };
+    this.gameOverCountdown = {
+      duration: gameOverCountdownDuration,
+      current: null,
+    };
     this.queues = {
       client: { localInputs: [] }, // client only
-      server: { receivedInputs: [], receivedLatestClientTickNumbers: { host: null, challenger: null } }, // server only
+      server: {
+        receivedInputs: [],
+        receivedLatestClientTickNumbers: { host: null, challenger: null },
+      }, // server only
     };
     this.lastUpdateFromServer = null;
     this.currentTick = 0;
+    this.lastClientInputNumber = 0;
     this.winner = null;
     this.serverLastKnownClientTicks = { host: null, challenger: null }; // server only
+    this.serverLastProcessedInputNumbers = {
+      host: null,
+      challenger: null,
+    };
     this.orbs = { host: [], challenger: [] };
     this.score = {
       host: 0,
@@ -70,9 +97,17 @@ export class BattleRoomGame {
       neededToWin: BattleRoomGame.initialScoreNeededToWin,
     };
     this.endzones = {
-      host: new Rectangle(new Point(0, 0), BattleRoomGame.baseWindowDimensions.width, BattleRoomGame.baseEndzoneHeight),
+      host: new Rectangle(
+        new Point(0, 0),
+        BattleRoomGame.baseWindowDimensions.width,
+        BattleRoomGame.baseEndzoneHeight
+      ),
       challenger: new Rectangle(
-        new Point(0, BattleRoomGame.baseWindowDimensions.height - BattleRoomGame.baseEndzoneHeight),
+        new Point(
+          0,
+          BattleRoomGame.baseWindowDimensions.height -
+            BattleRoomGame.baseEndzoneHeight
+        ),
         BattleRoomGame.baseWindowDimensions.width,
         BattleRoomGame.baseEndzoneHeight
       ),
@@ -84,6 +119,7 @@ export class BattleRoomGame {
         ticksSinceLastClientTickConfirmedByServer: 0,
         simulatingBetweenInputs: false,
         clientServerTickDifference: 0,
+        lastProcessedClientInputNumber: 0,
       },
     };
     generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);

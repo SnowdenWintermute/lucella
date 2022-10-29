@@ -25,11 +25,4 @@ export default function (socket: Socket, serverState: ServerState) {
     inputToQueue.playerRole = playerRole;
     games[connectedSockets[socket.id].currentGameName!].queues.server.receivedInputs.push(inputToQueue);
   });
-
-  // socket.on(SocketEventsFromClient.CURRENT_TICK_NUMBER, (data: { playerRole: PlayerRole; tick: number }) => {
-  //   if (!connectedSockets[socket.id].currentGameName) return;
-  //   if (!games[connectedSockets[socket.id].currentGameName!]) return;
-  //   games[connectedSockets[socket.id].currentGameName!].queues.server.receivedLatestClientTickNumbers[data.playerRole] =
-  //     data.tick;
-  // });
 }

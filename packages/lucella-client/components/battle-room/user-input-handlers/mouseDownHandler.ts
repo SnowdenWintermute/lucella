@@ -1,10 +1,8 @@
-import { Socket } from "socket.io-client";
-import { BattleRoomGame, Point, SocketEventsFromClient } from "../../../../common";
+import { BattleRoomGame, Point } from "../../../../common";
 
 export default function mouseDownHandler(
   e: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
-  currentGame: BattleRoomGame,
-  socket: Socket
+  currentGame: BattleRoomGame
 ) {
   if (!(e.button === 0)) return;
   const { mouseData } = currentGame;
