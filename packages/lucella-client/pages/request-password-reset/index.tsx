@@ -1,11 +1,8 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
-import { useAppSelector } from "../../redux";
 import { useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
 const RequestPasswordResetEmail = () => {
-  const router = useRouter();
-  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const [requestPasswordResetEmail, { isLoading, isSuccess, error, isError }] = useRequestPasswordResetEmailMutation();
   const [formData, setFormData] = useState({
     email: "",
@@ -22,8 +19,6 @@ const RequestPasswordResetEmail = () => {
     const { email } = formData;
     requestPasswordResetEmail(email);
   };
-
-  if (isAuthenticated) router.push("/battle-room");
 
   return (
     <div className="auth-frame">

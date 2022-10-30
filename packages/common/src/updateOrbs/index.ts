@@ -5,14 +5,15 @@ import handleOrbCollisions from "./handleOrbCollisions";
 import handleOrbInEndzone from "./handleOrbInEndzone";
 import { PlayerRole } from "../enums";
 
-export function updateOrbs(game: BattleRoomGame, deltaT?: number) {
-  let playerRole: keyof typeof game.orbs;
-  for (playerRole in game.orbs) {
-    game.orbs[playerRole].forEach((orb) => {
-      updateGhostOrb(game, playerRole, orb);
+export function updateOrbs(game: BattleRoomGame, deltaT?: number, playerRole?: PlayerRole) {
+  let playerOrbs: keyof typeof game.orbs;
+  for (playerOrbs in game.orbs) {
+    if (playerRole && playerOrbs !== playerRole) continue;
+    game.orbs[playerOrbs].forEach((orb) => {
+      updateGhostOrb(game, playerOrbs, orb);
       moveOrb(orb, game, deltaT);
-      handleOrbInEndzone(orb, game, playerRole);
-      playerRole === PlayerRole.HOST && handleOrbCollisions(orb, game);
+      handleOrbInEndzone(orb, game, playerOrbs);
+      playerOrbs === PlayerRole.HOST && handleOrbCollisions(orb, game);
     });
   }
 }

@@ -1,1 +1,1 @@
-export const broadcastRate = 45;
+export const broadcastRate = 200;

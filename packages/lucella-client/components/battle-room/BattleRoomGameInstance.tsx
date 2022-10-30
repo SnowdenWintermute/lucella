@@ -55,8 +55,8 @@ const BattleRoomGameInstance = (props: Props) => {
       drawRef.current ? drawRef.current() : null;
     }
     if (!currentGame.current) return;
-    const gameInterval = createRenderInterval(currentDrawFunction, currentGame.current);
-    return () => clearInterval(gameInterval);
+    const renderInterval = createRenderInterval(currentDrawFunction, currentGame.current);
+    return () => clearInterval(renderInterval);
   }, [currentGame]);
 
   return (

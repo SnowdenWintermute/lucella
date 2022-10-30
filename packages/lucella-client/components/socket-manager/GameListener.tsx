@@ -1,9 +1,14 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { useAppDispatch } from "../../redux";
-import { BattleRoomGame, SocketEventsFromServer } from "../../../common";
+import { useAppDispatch, useAppSelector } from "../../redux";
+import {
+  BattleRoomGame,
+  SocketEventsFromServer,
+  randBetween,
+} from "../../../common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
+import createClientBroadcastInterval from "../battle-room/game-functions/createClientBroadcastInterval";
 const replicator = new (require("replicator"))();
 
 interface Props {
@@ -12,30 +17,48 @@ interface Props {
 }
 
 const GameListener = (props: Props) => {
+  const dispatch = useAppDispatch();
+  const { playerRole } = useAppSelector((state) => state.lobbyUi);
   const { socket, currentGame } = props;
 
-  const dispatch = useAppDispatch();
   useEffect(() => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
       console.log("game initialized");
-      currentGame.intervals.physics = createClientPhysicsInterval(currentGame);
+      currentGame.intervals.physics = createClientPhysicsInterval(
+        socket,
+        currentGame,
+        playerRole
+      );
+      // currentGame.intervals.broadcast = createClientBroadcastInterval(socket, currentGame, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
-      const decodedPacket = replicator.decode(data);
-      currentGame.orbs = decodedPacket.orbs;
-      currentGame.score = decodedPacket.score;
+      setTimeout(() => {
+        const decodedPacket = replicator.decode(data);
+        currentGame.lastUpdateFromServer = {
+          orbs: decodedPacket.orbs,
+          tick: decodedPacket.currentTick,
+          serverLastKnownClientTicks: decodedPacket.serverLastKnownClientTicks,
+          serverLastProcessedInputNumbers:
+            decodedPacket.serverLastProcessedInputNumbers,
+        };
+        currentGame.score = decodedPacket.score;
+      }, 500);
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
-      currentGame.intervals.physics && clearInterval(currentGame.intervals.physics);
+      clearInterval(currentGame.intervals.physics);
+      // clearInterval(currentGame.intervals.broadcast);
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
       currentGame.gameOverCountdown.current = data;
-      currentGame.intervals.physics && clearInterval(currentGame.intervals.physics);
+      clearInterval(currentGame.intervals.physics);
+      // clearInterval(currentGame.intervals.broadcast);
       // if (data === 0) dispatch(gameUiActions.clearGameUiData())
     });
     return () => {
+      clearInterval(currentGame.intervals.physics);
+      clearInterval(currentGame.intervals.broadcast);
       socket.off(SocketEventsFromServer.GAME_INITIALIZATION);
       socket.off(SocketEventsFromServer.GAME_PACKET);
       socket.off(SocketEventsFromServer.COMPRESSED_GAME_PACKET);

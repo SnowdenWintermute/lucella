@@ -1,4 +1,4 @@
-import { SocketEventsFromServer } from "@lucella/common";
+import { SocketEventsFromServer } from "../../../../common";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 import sanitizeChatChannelForClient from "../../utils/sanitizeChatChannelForClient";
