@@ -24,8 +24,9 @@ export default function (
       return new Error("tried to update physics in a game that wasn't found");
 
     game.queues.server.receivedInputs.forEach(() => {
+      // @ todo - only accept an amount of move inputs from client that would be possible within the time since last server tick (or else they can speed hack)
       const input: UserInput = game.queues.server.receivedInputs.shift();
-      processPlayerInput(input, game, +Date.now() - timeOfLastTick);
+      processPlayerInput(input, game);
       game.serverLastKnownClientTicks[input.playerRole!] = input.tick;
       game.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
     });

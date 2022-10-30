@@ -1,9 +1,4 @@
-import {
-  baseOrbRadius,
-  baseSpeedModifier,
-  gameOverCountdownDuration,
-  initialScoreNeededToWin,
-} from "../../consts/battle-room-game-config";
+import { baseOrbRadius, baseSpeedModifier, gameOverCountdownDuration, initialScoreNeededToWin } from "../../consts/battle-room-game-config";
 import { UserInput } from "../inputs/UserInput";
 import { MouseData } from "../MouseData";
 import { Orb } from "../Orb";
@@ -36,6 +31,8 @@ export class BattleRoomGame {
   };
   lastUpdateFromServer: any;
   currentTick: number; // 65535 max then roll to 0
+  timeOfLastTick: number | null;
+  roundTripTime: number | null;
   lastClientInputNumber: number;
   serverLastKnownClientTicks: {
     host: number | null;
@@ -52,11 +49,14 @@ export class BattleRoomGame {
   speedModifier: number;
   debug: {
     clientPrediction: {
-      inputsToSimulate: any[];
-      ticksSinceLastClientTickConfirmedByServer: number;
-      simulatingBetweenInputs: boolean;
-      clientServerTickDifference: number;
-      lastProcessedClientInputNumber: number;
+      inputsToSimulate?: any[];
+      ticksSinceLastClientTickConfirmedByServer?: number;
+      simulatingBetweenInputs?: boolean;
+      clientServerTickDifference?: number;
+      lastProcessedClientInputNumber?: number;
+      frameTime?: number;
+      timeLastPacketSent?: number;
+      roundTripTime?: number;
     };
   };
   static baseWindowDimensions = { width: 450, height: 750 };
@@ -86,6 +86,8 @@ export class BattleRoomGame {
     };
     this.lastUpdateFromServer = null;
     this.currentTick = 0;
+    this.timeOfLastTick = null;
+    this.roundTripTime = null;
     this.lastClientInputNumber = 0;
     this.winner = null;
     this.serverLastKnownClientTicks = { host: null, challenger: null }; // server only
@@ -100,30 +102,16 @@ export class BattleRoomGame {
       neededToWin: BattleRoomGame.initialScoreNeededToWin,
     };
     this.endzones = {
-      host: new Rectangle(
-        new Point(0, 0),
-        BattleRoomGame.baseWindowDimensions.width,
-        BattleRoomGame.baseEndzoneHeight
-      ),
+      host: new Rectangle(new Point(0, 0), BattleRoomGame.baseWindowDimensions.width, BattleRoomGame.baseEndzoneHeight),
       challenger: new Rectangle(
-        new Point(
-          0,
-          BattleRoomGame.baseWindowDimensions.height -
-            BattleRoomGame.baseEndzoneHeight
-        ),
+        new Point(0, BattleRoomGame.baseWindowDimensions.height - BattleRoomGame.baseEndzoneHeight),
         BattleRoomGame.baseWindowDimensions.width,
         BattleRoomGame.baseEndzoneHeight
       ),
     };
     this.speedModifier = BattleRoomGame.baseSpeedModifier;
     this.debug = {
-      clientPrediction: {
-        inputsToSimulate: [],
-        ticksSinceLastClientTickConfirmedByServer: 0,
-        simulatingBetweenInputs: false,
-        clientServerTickDifference: 0,
-        lastProcessedClientInputNumber: 0,
-      },
+      clientPrediction: {},
     };
     generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
   }
