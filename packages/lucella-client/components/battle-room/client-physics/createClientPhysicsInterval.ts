@@ -1,17 +1,13 @@
 import {
   BattleRoomGame,
   MoveOrbsTowardDestinations,
-  Orb,
   physicsTickRate,
   PlayerRole,
   processPlayerInput,
   simulatedLagMs,
   SocketEventsFromClient,
-  updateOrbs,
   UserInput,
-  UserInputs,
 } from "../../../../common";
-import reconciliationNeeded from "./reconciliationNeeded";
 import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
@@ -55,15 +51,14 @@ export default function createClientPhysicsInterval(
       simulatedLagMs
     );
 
-    newGameState.queues.client.localInputs =
-      newGameState.queues.client.localInputs.filter(
-        (input) => input.number > lastProcessedClientInputNumber
-      );
-
+    const inputsToKeep: UserInput[] = [];
     newGameState.queues.client.localInputs.forEach((input) => {
-      // if (input.number <= lastProcessedClientInputNumber) return;
+      if (input.number <= lastProcessedClientInputNumber) return;
       processPlayerInput(input, newGameState);
+      inputsToKeep.push(input);
     });
+    currentGame.queues.client.localInputs = inputsToKeep;
+    currentGame.orbs[playerRole] = cloneDeep(newGameState.orbs[playerRole]);
 
     currentGame.debug.clientPrediction.inputsToSimulate =
       currentGame.queues.client.localInputs;
@@ -74,19 +69,19 @@ export default function createClientPhysicsInterval(
     currentGame.debug.clientPrediction.lastProcessedClientInputNumber =
       lastProcessedClientInputNumber;
 
-    // reconciliationNeeded(lastUpdateFromServerCopy, currentGame, playerRole);
-
     const opponentRole =
       playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
-    newGameState.orbs[opponentRole] = cloneDeep(
-      lastUpdateFromServerCopy.orbs[opponentRole]
+    const opponentPositionsToQueue = {
+      orbs: cloneDeep(lastUpdateFromServerCopy.orbs[opponentRole]),
+      tick: currentGame.currentTick,
+    };
+
+    currentGame.queues.client.receivedOpponentPositions.push(
+      opponentPositionsToQueue
     );
 
-    currentGame.queues.client.localInputs =
-      newGameState.queues.client.localInputs;
-    currentGame.orbs = cloneDeep(newGameState.orbs);
     currentGame.currentTick =
       currentGame.currentTick <= 65535 ? currentGame.currentTick + 1 : 0; // @ todo - change to ring buffer
-    // timeOfLastTick = +Date.now();
+    // timeOfLastTick = +Date.now()
   }, physicsTickRate);
 }

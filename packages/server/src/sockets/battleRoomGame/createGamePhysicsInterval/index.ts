@@ -36,9 +36,9 @@ export default function (
     // rollback for lag comp
     game.currentTick = game.currentTick <= 65535 ? game.currentTick + 1 : 0; // @todo fix this into ring buffer
     handleScoringPoints(io, socket, serverState, game);
-    io.to(`game-${game.gameName}`).emit(
-      SocketEventsFromServer.COMPRESSED_GAME_PACKET,
-      replicator.encode(game)
-    );
+    // io.to(`game-${game.gameName}`).emit(
+    //   SocketEventsFromServer.COMPRESSED_GAME_PACKET,
+    //   replicator.encode(game)
+    // );
   }, physicsTickRate);
 }

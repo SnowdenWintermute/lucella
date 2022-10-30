@@ -1,4 +1,9 @@
-import { Orb, ghostTransparency, Point, inGameFontSizes } from "../../../../../common";
+import {
+  Orb,
+  ghostTransparency,
+  Point,
+  inGameFontSizes,
+} from "../../../../../common";
 
 export default function drawOrb(
   context: CanvasRenderingContext2D,
@@ -24,7 +29,9 @@ export default function drawOrb(
   if (debug) {
     context.fillStyle = "white";
     context.textAlign = "center";
-    context.font = `bold ${inGameFontSizes.large * canvasDrawFractions.x}px Arial`;
+    context.font = `bold ${
+      inGameFontSizes.medium * canvasDrawFractions.x
+    }px Arial`;
     context.fillText(
       orb.destination!.x + ", " + orb.destination!.y,
       orb.position.x * canvasDrawFractions.x,

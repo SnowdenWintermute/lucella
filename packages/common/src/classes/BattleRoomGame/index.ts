@@ -22,7 +22,10 @@ export class BattleRoomGame {
   mouseData: MouseData; // client only
   gameOverCountdown: { duration: number; current: number | null };
   queues: {
-    client: { localInputs: UserInput[] };
+    client: {
+      localInputs: UserInput[];
+      receivedOpponentPositions: { orbs: Orb[]; tick: number }[];
+    };
     server: {
       receivedInputs: any[];
       receivedLatestClientTickNumbers: {
@@ -75,7 +78,7 @@ export class BattleRoomGame {
       current: null,
     };
     this.queues = {
-      client: { localInputs: [] }, // client only
+      client: { localInputs: [], receivedOpponentPositions: [] }, // client only
       server: {
         receivedInputs: [],
         receivedLatestClientTickNumbers: { host: null, challenger: null },
