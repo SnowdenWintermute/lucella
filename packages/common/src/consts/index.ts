@@ -9,11 +9,11 @@ export const colors = {
   selectionRingColor: "rgb(30,200,30)",
 };
 export const renderRate = 33;
-export const physicsTickRate = 50;
+export const physicsTickRate = 500;
 export const eventLimiterRate = 33;
 export const minimumSelectionBoxSize = 3;
 export const touchHoldSelectionBoxStartThreshold = 500;
 export const minimumQuickTouchSelectionBoxSize = 8;
 export const startingLadderRating = 1500;
 export const reconciliationThreshold = 10;
-export const simulatedLagMs = 500;
+export const simulatedLagMs = 1000;

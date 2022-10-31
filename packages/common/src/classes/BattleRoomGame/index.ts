@@ -30,6 +30,7 @@ export class BattleRoomGame {
     };
   };
   lastUpdateFromServer: any;
+  lastUpdateFromServerProcessedByLerperTimestamp: number | null;
   currentTick: number; // 65535 max then roll to 0
   timeOfLastTick: number | null;
   roundTripTime: number | null;
@@ -57,6 +58,8 @@ export class BattleRoomGame {
       frameTime?: number;
       timeLastPacketSent?: number;
       roundTripTime?: number;
+      entityPositionBuffer?: { position: Point; timestamp: number }[];
+      lerpFrameTime?: number;
     };
   };
   static baseWindowDimensions = { width: 450, height: 750 };
@@ -85,6 +88,7 @@ export class BattleRoomGame {
       }, // server only
     };
     this.lastUpdateFromServer = null;
+    this.lastUpdateFromServerProcessedByLerperTimestamp = null;
     this.currentTick = 0;
     this.timeOfLastTick = null;
     this.roundTripTime = null;
