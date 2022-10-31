@@ -15,25 +15,23 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
   newOpponentOrbPositions.forEach((orb: Orb, i: number) => {
     const { positionBuffer } = newGameState.orbs[opponentRole][i];
     if (processingNewUpdate) positionBuffer.push({ position: orb.position, timestamp: lastUpdateFromServerCopy.timeReceived });
-    while (positionBuffer.length >= 2 && positionBuffer[0].timestamp <= render_timestamp) positionBuffer.shift();
+    while (positionBuffer.length >= 2 && positionBuffer[1].timestamp <= render_timestamp) positionBuffer.shift();
 
     if (i === 0) game.debug.clientPrediction.entityPositionBuffer = positionBuffer;
     game.debug.clientPrediction.lerpFrameTime = render_timestamp;
 
-    console.log(positionBuffer[0]?.timestamp <= render_timestamp && render_timestamp <= positionBuffer[1]?.timestamp);
-    console.log(positionBuffer[0]?.timestamp, render_timestamp, positionBuffer[1]?.timestamp);
     if (positionBuffer.length >= 2 && positionBuffer[0].timestamp <= render_timestamp && render_timestamp <= positionBuffer[1].timestamp) {
-      console.log("calculating lerp");
       const lerpStartPosition = positionBuffer[0].position;
       const lerpEndPosition = positionBuffer[1].position;
       const lerpStartTime = positionBuffer[0].timestamp;
       const lerpEndTime = positionBuffer[1].timestamp;
-      if (i === 0)
-        console.log(lerpStartPosition.x + ((lerpEndPosition.x - lerpStartPosition.x) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime));
-      newGameState.orbs[opponentRole][i].position.x =
-        lerpStartPosition.x + ((lerpEndPosition.x - lerpStartPosition.x) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime);
-      newGameState.orbs[opponentRole][i].position.y =
-        lerpStartPosition.y + ((lerpEndPosition.y - lerpStartPosition.y) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime);
+
+      newGameState.orbs[opponentRole][i].position.x = Math.round(
+        lerpStartPosition.x + ((lerpEndPosition.x - lerpStartPosition.x) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime)
+      );
+      newGameState.orbs[opponentRole][i].position.y = Math.round(
+        lerpStartPosition.y + ((lerpEndPosition.y - lerpStartPosition.y) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime)
+      );
     }
   });
 

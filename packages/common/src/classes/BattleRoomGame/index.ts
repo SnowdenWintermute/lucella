@@ -49,6 +49,7 @@ export class BattleRoomGame {
   score: { host: number; challenger: number; neededToWin: number };
   speedModifier: number;
   debug: {
+    showDebug: boolean;
     clientPrediction: {
       inputsToSimulate?: any[];
       ticksSinceLastClientTickConfirmedByServer?: number;
@@ -115,6 +116,7 @@ export class BattleRoomGame {
     };
     this.speedModifier = BattleRoomGame.baseSpeedModifier;
     this.debug = {
+      showDebug: false,
       clientPrediction: {},
     };
     generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
