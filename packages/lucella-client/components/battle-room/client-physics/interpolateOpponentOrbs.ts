@@ -3,18 +3,19 @@ import { BattleRoomGame, Orb, physicsTickRate, PlayerRole, simulatedLagMs } from
 
 export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
   const opponentRole = playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
-  let processingNewUpdate = false;
+
+  let firstTimeProcessingThisUpdate = false;
   if (!game.lastUpdateFromServerProcessedByLerperTimestamp || game.lastUpdateFromServerProcessedByLerperTimestamp !== lastUpdateFromServerCopy.timeReceived) {
     game.lastUpdateFromServerProcessedByLerperTimestamp = lastUpdateFromServerCopy.timeReceived;
-    processingNewUpdate = true;
+    firstTimeProcessingThisUpdate = true;
   }
 
-  const newOpponentOrbPositions = cloneDeep(lastUpdateFromServerCopy.orbs[opponentRole]);
+  const mostRecentOpponentOrbUpdate = cloneDeep(lastUpdateFromServerCopy.orbs[opponentRole]);
   const render_timestamp = +Date.now() - physicsTickRate;
 
-  newOpponentOrbPositions.forEach((orb: Orb, i: number) => {
+  mostRecentOpponentOrbUpdate.forEach((orb: Orb, i: number) => {
     const { positionBuffer } = newGameState.orbs[opponentRole][i];
-    if (processingNewUpdate) positionBuffer.push({ position: orb.position, timestamp: lastUpdateFromServerCopy.timeReceived });
+    if (firstTimeProcessingThisUpdate) positionBuffer.push({ position: orb.position, timestamp: lastUpdateFromServerCopy.timeReceived });
     while (positionBuffer.length >= 2 && positionBuffer[1].timestamp <= render_timestamp) positionBuffer.shift();
 
     if (i === 0) game.debug.clientPrediction.entityPositionBuffer = positionBuffer;
@@ -33,6 +34,7 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
         lerpStartPosition.y + ((lerpEndPosition.y - lerpStartPosition.y) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime)
       );
     }
+    newGameState.orbs[opponentRole][i].isGhost = lastUpdateFromServerCopy.orbs[opponentRole][i].isGhost;
   });
 
   game.orbs[opponentRole] = newGameState.orbs[opponentRole];

@@ -1,16 +1,4 @@
-import {
-  BattleRoomGame,
-  MoveOrbsTowardDestinations,
-  Orb,
-  physicsTickRate,
-  PlayerRole,
-  processPlayerInput,
-  renderRate,
-  simulatedLagMs,
-  SocketEventsFromClient,
-  UserInput,
-  UserInputs,
-} from "../../../../common";
+import { BattleRoomGame, MoveOrbsTowardDestinations, PlayerRole, renderRate, simulatedLagMs, SocketEventsFromClient } from "../../../../common";
 import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
@@ -34,13 +22,13 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
     newGameState.queues.client.localInputs.push(input);
     laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
 
+    interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 
     const newRtt = determineRoundTripTime(game, lastUpdateFromServerCopy, playerRole);
     if (newRtt) game.roundTripTime = newRtt;
 
     assignDebugValues(game, lastUpdateFromServerCopy, playerRole, frameTime, newRtt);
-    interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 
     game.currentTick = game.currentTick <= 65535 ? game.currentTick + 1 : 0; // @ todo - change to ring buffer
     game.timeOfLastTick = +Date.now();
