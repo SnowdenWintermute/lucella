@@ -7,14 +7,6 @@ export function createRenderInterval(
   return setInterval(() => {
     if (!currentGame || Object.keys(currentGame).length < 1) return;
 
-    // if (currentGame.queues.client.receivedOpponentPositions.length < 1) {
-    //   currentGame.queues.client.receivedOpponentPositions.forEach(
-    //     (orbPositionsWithTick) => {
-    //       if()
-    //     }
-    //   );
-    // }
-
     currentDrawFunction();
   }, renderRate);
 }

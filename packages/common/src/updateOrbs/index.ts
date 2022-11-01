@@ -13,7 +13,9 @@ export function updateOrbs(game: BattleRoomGame, deltaT?: number, playerRole?: P
       updateGhostOrb(game, playerOrbs, orb);
       moveOrb(orb, game, deltaT);
       handleOrbInEndzone(orb, game, playerOrbs);
-      playerOrbs === PlayerRole.HOST && handleOrbCollisions(orb, game);
+      if (!playerRole)
+        playerRole !== PlayerRole.CHALLENGER && handleOrbCollisions(orb, game, PlayerRole.HOST); // so the server only has to check collisions once
+      else handleOrbCollisions(orb, game, playerRole); // so clients can correctly predict their collisions
     });
   }
 }

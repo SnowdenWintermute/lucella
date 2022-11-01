@@ -11,6 +11,7 @@ export class Orb {
   isGhost: boolean;
   isDashing: boolean;
   isSelected: boolean;
+  positionBuffer: { position: Point; timestamp: number }[];
   constructor(position: Point, radius: number, owner: string, id: number, color: string) {
     this.position = position;
     this.destination = position;
@@ -22,5 +23,6 @@ export class Orb {
     this.isGhost = false;
     this.isDashing = false;
     this.isSelected = false;
+    this.positionBuffer = [];
   }
 }

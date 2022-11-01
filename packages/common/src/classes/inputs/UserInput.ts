@@ -6,6 +6,7 @@ export class UserInput {
   tick: number;
   number: number;
   playerRole: PlayerRole | undefined;
+  timeCreated: number;
   constructor(
     type: UserInputs,
     data: any,
@@ -18,5 +19,6 @@ export class UserInput {
     this.tick = tick;
     this.number = number;
     this.playerRole = playerRole;
+    this.timeCreated = +Date.now();
   }
 }

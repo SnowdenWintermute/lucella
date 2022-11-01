@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import {
-  BattleRoomGame,
-  SocketEventsFromServer,
-  randBetween,
-} from "../../../common";
+import { BattleRoomGame, SocketEventsFromServer, randBetween } from "../../../common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import createClientBroadcastInterval from "../battle-room/game-functions/createClientBroadcastInterval";
@@ -25,11 +21,7 @@ const GameListener = (props: Props) => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
       console.log("game initialized");
-      currentGame.intervals.physics = createClientPhysicsInterval(
-        socket,
-        currentGame,
-        playerRole
-      );
+      currentGame.intervals.physics = createClientPhysicsInterval(socket, currentGame, playerRole);
       // currentGame.intervals.broadcast = createClientBroadcastInterval(socket, currentGame, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
@@ -39,8 +31,8 @@ const GameListener = (props: Props) => {
           orbs: decodedPacket.orbs,
           tick: decodedPacket.currentTick,
           serverLastKnownClientTicks: decodedPacket.serverLastKnownClientTicks,
-          serverLastProcessedInputNumbers:
-            decodedPacket.serverLastProcessedInputNumbers,
+          serverLastProcessedInputNumbers: decodedPacket.serverLastProcessedInputNumbers,
+          timeReceived: +Date.now(),
         };
         currentGame.score = decodedPacket.score;
       }, 500);

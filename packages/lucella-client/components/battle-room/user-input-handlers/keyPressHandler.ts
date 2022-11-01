@@ -1,23 +1,12 @@
 import { Socket } from "socket.io-client";
-import {
-  BattleRoomGame,
-  PlayerRole,
-  Point,
-  SelectOrbAndAssignDestination,
-  simulatedLagMs,
-  SocketEventsFromClient,
-} from "../../../../common";
+import { BattleRoomGame, PlayerRole, Point, SelectOrbAndAssignDestination, simulatedLagMs, SocketEventsFromClient } from "../../../../common";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 const replicator = new (require("replicator"))();
 
-export default (
-  e: KeyboardEvent,
-  currentGame: BattleRoomGame,
-  socket: Socket,
-  playerRole: PlayerRole | null
-) => {
+export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, playerRole: PlayerRole | null) => {
   if (!playerRole) return;
   let keyPressed;
+  console.log(e);
   switch (e.key) {
     case "1":
       keyPressed = 1;
@@ -34,19 +23,20 @@ export default (
     case "5":
       keyPressed = 5;
       break;
+    case "0":
+      keyPressed = 0;
+      break;
     default:
       return;
   }
+  if (keyPressed === 0) currentGame.debug.showDebug = !currentGame.debug.showDebug;
   if (keyPressed < 1 || keyPressed > 5) return;
   const { mouseData } = currentGame;
 
   const input = new SelectOrbAndAssignDestination(
     {
       orbIds: [keyPressed],
-      mousePosition: new Point(
-        mouseData.position?.x || 0,
-        mouseData.position?.y || 0
-      ),
+      mousePosition: new Point(mouseData.position?.x || 0, mouseData.position?.y || 0),
     },
     currentGame.currentTick,
     (currentGame.lastClientInputNumber += 1),
@@ -54,10 +44,5 @@ export default (
   );
   currentGame.queues.client.localInputs.push(input);
   // socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input))
-  laggedSocketEmit(
-    socket,
-    SocketEventsFromClient.NEW_INPUT,
-    replicator.encode(input),
-    simulatedLagMs
-  );
+  laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
 };
