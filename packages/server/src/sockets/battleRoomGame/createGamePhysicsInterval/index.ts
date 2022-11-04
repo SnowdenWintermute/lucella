@@ -1,6 +1,5 @@
-import cloneDeep from "lodash.clonedeep";
 import { Server, Socket } from "socket.io";
-import { physicsTickRate, processPlayerInput, SocketEventsFromServer, UserInput, UserInputs } from "../../../../../common";
+import { physicsTickRate, processPlayerInput, SocketEventsFromServer, UserInput } from "../../../../../common";
 import ServerState from "../../../interfaces/ServerState";
 import handleScoringPoints from "./handleScoringPoints";
 const replicator = new (require("replicator"))();
@@ -12,7 +11,6 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
     if (!game) return new Error("tried to update physics in a game that wasn't found");
 
     game.queues.server.receivedInputs.forEach(() => {
-      // @ todo - only accept an amount of move inputs from client that would be possible within the time since last server tick (or else they can speed hack)
       const input: UserInput = game.queues.server.receivedInputs.shift();
       processPlayerInput(input, game);
       game.serverLastKnownClientTicks[input.playerRole!] = input.tick;

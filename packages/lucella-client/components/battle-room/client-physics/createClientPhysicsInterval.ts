@@ -25,6 +25,8 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
     interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 
+    game.debug.general = newGameState.debug.general;
+
     const newRtt = determineRoundTripTime(game, lastUpdateFromServerCopy, playerRole);
     if (newRtt) game.roundTripTime = newRtt;
 

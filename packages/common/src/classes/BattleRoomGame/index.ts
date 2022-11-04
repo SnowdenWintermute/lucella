@@ -43,6 +43,7 @@ export class BattleRoomGame {
     host: number | null;
     challenger: number | null;
   };
+  serverLastSeenMovementInputTimestamps: { host: number; challenger: number };
   winner: string | null;
   orbs: { host: Orb[]; challenger: Orb[] };
   endzones: { host: Rectangle; challenger: Rectangle };
@@ -50,6 +51,10 @@ export class BattleRoomGame {
   speedModifier: number;
   debug: {
     showDebug: boolean;
+    general: {
+      deltaT?: number;
+      gameSpeedAdjustedForDeltaT?: number;
+    };
     clientPrediction: {
       inputsToSimulate?: any[];
       ticksSinceLastClientTickConfirmedByServer?: number;
@@ -100,6 +105,7 @@ export class BattleRoomGame {
       host: null,
       challenger: null,
     };
+    this.serverLastSeenMovementInputTimestamps = { host: 0, challenger: 0 };
     this.orbs = { host: [], challenger: [] };
     this.score = {
       host: 0,
@@ -117,6 +123,7 @@ export class BattleRoomGame {
     this.speedModifier = BattleRoomGame.baseSpeedModifier;
     this.debug = {
       showDebug: false,
+      general: {},
       clientPrediction: {},
     };
     generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
