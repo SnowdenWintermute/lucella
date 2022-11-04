@@ -1,4 +1,4 @@
-import { BattleRoomGame, PlayerRole, processPlayerInput, UserInput } from "../../../../common";
+import { BattleRoomGame, PlayerRole, processPlayerInput, renderRate, UserInput } from "../../../../common";
 import cloneDeep from "lodash.clonedeep";
 
 export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {

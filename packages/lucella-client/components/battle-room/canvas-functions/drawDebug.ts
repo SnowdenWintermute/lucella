@@ -38,6 +38,14 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
       name: "roundTripTime",
       value: game.debug.clientPrediction.roundTripTime?.toString(),
     },
+    {
+      name: "gameSpeedAdjustedForDeltaT",
+      value: game.debug.general.gameSpeedAdjustedForDeltaT?.toString(),
+    },
+    {
+      name: "deltaT",
+      value: game.debug.general.deltaT?.toString(),
+    },
   ];
 
   const marginLeft = 10;
