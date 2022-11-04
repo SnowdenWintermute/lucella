@@ -1507,6 +1507,11 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.185.tgz#c9843f5a40703a8f5edfd53358a58ae729816908"
   integrity sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==
 
+"@types/matter-js@^0.18.2":
+  version "0.18.2"
+  resolved "https://registry.yarnpkg.com/@types/matter-js/-/matter-js-0.18.2.tgz#68a971386368882d3445de95dcf31289346dc22f"
+  integrity sha512-W9UC9DOPNBRTUocqqPZmzX3cbHmlZBI9jLn6SuxZz0n5QrPk382Ig3hbBWHqYU8TRUmTCJJhuanXeyMTavF7Mg==
+
 "@types/mime@*":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-3.0.1.tgz#5f8f2bca0a5863cb69bc0b0acd88c96cb1d4ae10"
@@ -3660,6 +3665,11 @@ map-stream@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/map-stream/-/map-stream-0.1.0.tgz#e56aa94c4c8055a16404a0674b78f215f7c8e194"
   integrity sha512-CkYQrPYZfWnu/DAmVCpTSX/xHpKZ80eKh2lAkyA6AJTef6bW+6JpbQZN5rofum7da+SyN1bi5ctTm+lTfcCW3g==
+
+matter-js@^0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/matter-js/-/matter-js-0.18.0.tgz#083ced04eb6768f7664dc7ca8948a10e46ad3ed6"
+  integrity sha512-/ZVem4WygUnbmo/iE4oHZpZS97btfBtYy5Iwn1396vUZU7YhgVEN8J4UWwfZwY1ZqoTYlPgjvSw9WXauuXL0mg==
 
 mdn-data@2.0.14:
   version "2.0.14"

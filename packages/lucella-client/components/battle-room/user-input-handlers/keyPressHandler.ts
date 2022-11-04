@@ -6,7 +6,7 @@ const replicator = new (require("replicator"))();
 export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, playerRole: PlayerRole | null) => {
   if (!playerRole) return;
   let keyPressed;
-  console.log(e);
+
   switch (e.key) {
     case "1":
       keyPressed = 1;
@@ -35,7 +35,7 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, p
 
   const input = new SelectOrbAndAssignDestination(
     {
-      orbIds: [keyPressed],
+      orbLabels: [`${playerRole}-orb-${keyPressed - 1}`],
       mousePosition: new Point(mouseData.position?.x || 0, mouseData.position?.y || 0),
     },
     currentGame.currentTick,

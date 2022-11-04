@@ -7,15 +7,15 @@ export default function (game: BattleRoomGame, playerRole: "host" | "challenger"
   if (!game) return;
   const { endzones } = game;
   if (!orb.isGhost) return;
-  const newDestination = new Point(orb.position.x, 0);
+  const newDestination = new Point(orb.body.position.x, 0);
   switch (playerRole) {
     case PlayerRole.HOST:
       newDestination.y = endzones.host.origin.y + endzones.host.height;
-      if (orb.position.y <= endzones.host.origin.y + endzones.host.height + orb.radius) orb.isGhost = false;
+      if (orb.body.position.y <= endzones.host.origin.y + endzones.host.height + orb.body.circleRadius!) orb.isGhost = false;
       break;
     case PlayerRole.CHALLENGER:
       newDestination.y = endzones.challenger.origin.y;
-      if (orb.position.y >= endzones.challenger.origin.y - orb.radius) orb.isGhost = false;
+      if (orb.body.position.y >= endzones.challenger.origin.y - orb.body.circleRadius!) orb.isGhost = false;
       break;
     default:
       break;

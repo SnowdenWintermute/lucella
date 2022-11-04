@@ -18,6 +18,7 @@ import {
   updatePlayerRole,
   updatePlayersReady,
 } from "../../redux/slices/lobby-ui-slice";
+const replicator = new (require("replicator"))();
 
 interface Props {
   socket: Socket;
@@ -57,6 +58,7 @@ const UISocketListener = ({ socket }: Props) => {
       dispatch(updateGameCountdown(countdown));
     });
     socket.on(SocketEventsFromServer.SHOW_END_SCREEN, (data) => {
+      data.game = replicator.decode(data.game);
       dispatch(setScoreScreenData(data));
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {

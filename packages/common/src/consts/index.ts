@@ -1,3 +1,5 @@
+import Matter from "matter-js";
+
 export const ghostTransparency = 0.3;
 export const inGameFontSizes = { medium: 12, large: 25 };
 export const colors = {
@@ -17,3 +19,7 @@ export const minimumQuickTouchSelectionBoxSize = 8;
 export const startingLadderRating = 1500;
 export const reconciliationThreshold = 10;
 export const simulatedLagMs = 25;
+
+// Matter-JS
+export const hostOrbCollisionCategory = 0x0001;
+export const challengerOrbCollisionCategory = 0x0002;

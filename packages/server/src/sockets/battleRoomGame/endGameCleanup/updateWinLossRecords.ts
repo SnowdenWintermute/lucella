@@ -1,11 +1,7 @@
-import { PlayerRole } from "../../../../../common";
+import { PlayerRole } from "@lucella/common";
 import { IBattleRoomRecord } from "../../../models/BattleRoomRecord";
 
-export default function (
-  winnerRole: PlayerRole,
-  hostBattleRoomRecord: IBattleRoomRecord,
-  challengerBattleRoomRecord: IBattleRoomRecord
-) {
+export default function (winnerRole: PlayerRole, hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord) {
   if (winnerRole === PlayerRole.HOST) {
     hostBattleRoomRecord.wins = hostBattleRoomRecord.wins + 1;
     challengerBattleRoomRecord.losses = challengerBattleRoomRecord.losses + 1;
@@ -15,8 +11,6 @@ export default function (
     hostBattleRoomRecord.losses = hostBattleRoomRecord.losses + 1;
   }
 
-  hostBattleRoomRecord.winrate =
-    (hostBattleRoomRecord.wins / (hostBattleRoomRecord.losses + hostBattleRoomRecord.wins)) * 100;
-  challengerBattleRoomRecord.winrate =
-    (challengerBattleRoomRecord.wins / (challengerBattleRoomRecord.losses + challengerBattleRoomRecord.wins)) * 100;
+  hostBattleRoomRecord.winrate = (hostBattleRoomRecord.wins / (hostBattleRoomRecord.losses + hostBattleRoomRecord.wins)) * 100;
+  challengerBattleRoomRecord.winrate = (challengerBattleRoomRecord.wins / (challengerBattleRoomRecord.losses + challengerBattleRoomRecord.wins)) * 100;
 }

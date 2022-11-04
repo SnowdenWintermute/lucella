@@ -4,11 +4,13 @@ import { MouseData } from "../MouseData";
 import { Orb } from "../Orb";
 import { Point } from "../Point";
 import { Rectangle } from "../Rectangles";
-import { generateStartingOrbs } from "./generateStartingOrbs";
+import { DebugValues } from "./DebugValues";
+import initializeWorld from "./initializeWorld";
 
 export class BattleRoomGame {
   gameName: string;
   isRanked: boolean;
+  physicsEngine: Matter.Engine | undefined;
   intervals: {
     physics: NodeJS.Timeout | undefined;
     broadcast: NodeJS.Timeout | undefined;
@@ -45,34 +47,17 @@ export class BattleRoomGame {
   };
   serverLastSeenMovementInputTimestamps: { host: number; challenger: number };
   winner: string | null;
-  orbs: { host: Orb[]; challenger: Orb[] };
+  orbs: { host: { [label: string]: Orb }; challenger: { [label: string]: Orb } };
   endzones: { host: Rectangle; challenger: Rectangle };
   score: { host: number; challenger: number; neededToWin: number };
   speedModifier: number;
-  debug: {
-    showDebug: boolean;
-    general: {
-      deltaT?: number;
-      gameSpeedAdjustedForDeltaT?: number;
-    };
-    clientPrediction: {
-      inputsToSimulate?: any[];
-      ticksSinceLastClientTickConfirmedByServer?: number;
-      simulatingBetweenInputs?: boolean;
-      clientServerTickDifference?: number;
-      lastProcessedClientInputNumber?: number;
-      frameTime?: number;
-      timeLastPacketSent?: number;
-      roundTripTime?: number;
-      entityPositionBuffer?: { position: Point; timestamp: number }[];
-      lerpFrameTime?: number;
-    };
-  };
+  debug: DebugValues;
   static baseWindowDimensions = { width: 450, height: 750 };
   static baseEndzoneHeight = 60;
   static baseOrbRadius = baseOrbRadius;
   static baseSpeedModifier = baseSpeedModifier;
   static initialScoreNeededToWin = initialScoreNeededToWin;
+  static initializeWorld = initializeWorld;
   constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
@@ -106,7 +91,7 @@ export class BattleRoomGame {
       challenger: null,
     };
     this.serverLastSeenMovementInputTimestamps = { host: 0, challenger: 0 };
-    this.orbs = { host: [], challenger: [] };
+    this.orbs = { host: {}, challenger: {} };
     this.score = {
       host: 0,
       challenger: 0,
@@ -126,6 +111,5 @@ export class BattleRoomGame {
       general: {},
       clientPrediction: {},
     };
-    generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
   }
 }

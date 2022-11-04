@@ -15,7 +15,7 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
 
   mostRecentOpponentOrbUpdate.forEach((orb: Orb, i: number) => {
     const { positionBuffer } = newGameState.orbs[opponentRole][i];
-    if (firstTimeProcessingThisUpdate) positionBuffer.push({ position: orb.position, timestamp: lastUpdateFromServerCopy.timeReceived });
+    if (firstTimeProcessingThisUpdate) positionBuffer.push({ position: orb.body.position, timestamp: lastUpdateFromServerCopy.timeReceived });
     while (positionBuffer.length >= 2 && positionBuffer[1].timestamp <= render_timestamp) positionBuffer.shift();
 
     if (i === 0) game.debug.clientPrediction.entityPositionBuffer = positionBuffer;

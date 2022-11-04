@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
-import { BattleRoomGame, SocketEventsFromServer } from "../../../../common";
+import { BattleRoomGame, SocketEventsFromServer } from "@lucella/common";
 import createGamePhysicsInterval from "./createGamePhysicsInterval";
 
 export default function startGame(io: Server, socket: Socket, serverState: ServerState, gameName: string) {

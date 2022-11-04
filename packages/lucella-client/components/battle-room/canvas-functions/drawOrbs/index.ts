@@ -8,20 +8,21 @@ export function drawOrbs(context: CanvasRenderingContext2D, playerRole: PlayerRo
     let lastServerOrbSets: keyof typeof game.lastUpdateFromServer.orbs;
     for (lastServerOrbSets in game.lastUpdateFromServer.orbs) {
       if (lastServerOrbSets !== playerRole) continue;
-      game.lastUpdateFromServer.orbs[lastServerOrbSets].forEach((orb: Orb) => {
-        drawOrb(context, orb, canvasDrawFractions, game.debug.showDebug);
-        // drawOrbNumber(context, orb, playerRole, canvasDrawFractions);
-        // drawSelectionRing(context, orb);
-      });
+
+      // game.lastUpdateFromServer.orbs[lastServerOrbSets].forEach((orb: Orb) => {
+      //   drawOrb(context, orb, canvasDrawFractions, game.debug.showDebug);
+      //   // drawOrbNumber(context, orb, playerRole, canvasDrawFractions);
+      //   // drawSelectionRing(context, orb);
+      // });
     }
   }
 
   let orbSet: keyof typeof game.orbs;
   for (orbSet in game.orbs) {
-    game.orbs[orbSet].forEach((orb) => {
-      drawOrb(context, orb, canvasDrawFractions, showAsRing, game.debug.showDebug);
-      drawOrbNumber(context, orb, playerRole, canvasDrawFractions);
-      drawSelectionRing(context, orb);
-    });
+    for (let orbLabel in game.orbs[orbSet]) {
+      drawOrb(context, game.orbs[orbSet][orbLabel], canvasDrawFractions, showAsRing, game.debug.showDebug);
+      drawOrbNumber(context, game.orbs[orbSet][orbLabel], playerRole, canvasDrawFractions);
+      drawSelectionRing(context, game.orbs[orbSet][orbLabel]);
+    }
   }
 }

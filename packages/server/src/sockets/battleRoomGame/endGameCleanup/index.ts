@@ -4,16 +4,10 @@ import setGameRoomWinnerName from "./setGameRoomWinnerName";
 import createGameEndingCountdownInterval from "./createGameEndingCountdownInterval";
 import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
-import { GameStatus, SocketEventsFromServer, EloUpdates } from "../../../../../common";
+import { GameStatus, SocketEventsFromServer, EloUpdates } from "@lucella/common";
 const replicator = new (require("replicator"))();
 
-export default async function endGameCleanup(
-  io: Server,
-  socket: Socket,
-  serverState: ServerState,
-  gameName: string,
-  isDisconnecting?: boolean
-) {
+export default async function endGameCleanup(io: Server, socket: Socket, serverState: ServerState, gameName: string, isDisconnecting?: boolean) {
   const gameRoom = serverState.gameRooms[gameName];
   const game = serverState.games[gameName];
   if (gameRoom.gameStatus === GameStatus.ENDING) return;
@@ -32,8 +26,7 @@ export default async function endGameCleanup(
       : gameRoom.players.host?.associatedUser.username;
 
   let eloUpdates: EloUpdates | null = null;
-  if (!gameRoom.winner || !loser)
-    throw new Error("Tried to update game records but either winner or loser wasn't found");
+  if (!gameRoom.winner || !loser) throw new Error("Tried to update game records but either winner or loser wasn't found");
   // else eloUpdates = await updateGameRecords(gameRoom.winner, loser, gameRoom, game, gameRoom.isRanked);
 
   io.in(`game-${gameName}`).emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
