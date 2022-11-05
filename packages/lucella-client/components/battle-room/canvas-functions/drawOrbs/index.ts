@@ -8,12 +8,8 @@ export function drawOrbs(context: CanvasRenderingContext2D, playerRole: PlayerRo
     let lastServerOrbSets: keyof typeof game.lastUpdateFromServer.orbs;
     for (lastServerOrbSets in game.lastUpdateFromServer.orbs) {
       if (lastServerOrbSets !== playerRole) continue;
-
-      // game.lastUpdateFromServer.orbs[lastServerOrbSets].forEach((orb: Orb) => {
-      //   drawOrb(context, orb, canvasDrawFractions, game.debug.showDebug);
-      //   // drawOrbNumber(context, orb, playerRole, canvasDrawFractions);
-      //   // drawSelectionRing(context, orb);
-      // });
+      for (let orb in game.lastUpdateFromServer.orbs[lastServerOrbSets])
+        drawOrb(context, game.lastUpdateFromServer.orbs[lastServerOrbSets][orb], canvasDrawFractions, game.debug.showDebug);
     }
   }
 

@@ -27,10 +27,10 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
       const lerpStartTime = positionBuffer[0].timestamp;
       const lerpEndTime = positionBuffer[1].timestamp;
 
-      newGameState.orbs[opponentRole][i].position.x = Math.round(
+      newGameState.orbs[opponentRole][i].body.position.x = Math.round(
         lerpStartPosition.x + ((lerpEndPosition.x - lerpStartPosition.x) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime)
       );
-      newGameState.orbs[opponentRole][i].position.y = Math.round(
+      newGameState.orbs[opponentRole][i].body.position.y = Math.round(
         lerpStartPosition.y + ((lerpEndPosition.y - lerpStartPosition.y) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime)
       );
     }

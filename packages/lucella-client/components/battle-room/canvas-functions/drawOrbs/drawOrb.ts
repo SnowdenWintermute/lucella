@@ -17,11 +17,17 @@ export default function drawOrb(context: CanvasRenderingContext2D, orb: Orb, can
     context.fillStyle = "white";
     context.textAlign = "center";
     context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px Arial`;
-    context.fillText(
-      orb.destination!.x + ", " + orb.destination!.y,
-      orb.body.position.x * canvasDrawFractions.x,
-      orb.body.position.y * canvasDrawFractions.y - orb.body.circleRadius! - 20
-    );
+    orb.destination?.x && orb.destination?.y
+      ? context.fillText(
+          orb.destination?.x + ", " + orb.destination?.y,
+          orb.body.position.x * canvasDrawFractions.x,
+          orb.body.position.y * canvasDrawFractions.y - orb.body.circleRadius! - 20
+        )
+      : context.fillText(
+          "no destination",
+          orb.body.position.x * canvasDrawFractions.x,
+          orb.body.position.y * canvasDrawFractions.y - orb.body.circleRadius! - 20
+        );
     context.fillStyle = "red";
     orb.destination &&
       orb.destination.x &&
