@@ -2,9 +2,11 @@ import { UserInput } from "./UserInput";
 import { PlayerRole, UserInputs } from "../../enums";
 import { Point } from "../Point";
 
-export class MoveOrbsTowardDestinations extends UserInput {
-  constructor(tick: number, number: number, playerRole?: PlayerRole) {
-    super(UserInputs.MOVE_ORBS_TOWARD_DESTINATIONS, null, tick, number, playerRole);
+// @ todo - don't probably need to send tick numbers
+
+export class ClientTickNumber extends UserInput {
+  constructor(data: null, tick: number, number: number, playerRole?: PlayerRole) {
+    super(UserInputs.CLIENT_TICK_NUMBER, data, tick, number, playerRole);
   }
 }
 

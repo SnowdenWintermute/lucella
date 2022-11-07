@@ -7,7 +7,7 @@ export function drawOrbs(context: CanvasRenderingContext2D, playerRole: PlayerRo
   if (game.lastUpdateFromServer && game.debug.showDebug) {
     let lastServerOrbSets: keyof typeof game.lastUpdateFromServer.orbs;
     for (lastServerOrbSets in game.lastUpdateFromServer.orbs) {
-      if (lastServerOrbSets !== playerRole) continue;
+      // if (lastServerOrbSets !== playerRole) continue;
       for (let orb in game.lastUpdateFromServer.orbs[lastServerOrbSets])
         drawOrb(context, game.lastUpdateFromServer.orbs[lastServerOrbSets][orb], canvasDrawFractions, game.debug.showDebug);
     }

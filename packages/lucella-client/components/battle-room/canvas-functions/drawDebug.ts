@@ -13,16 +13,6 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
         game.debug.clientPrediction.inputsToSimulate.map((item) => item.type.slice(0, 1) + " " + item.number).toString(),
     },
     {
-      name: "entityPositionBuffer",
-      value: JSON.stringify(
-        game.debug.clientPrediction.entityPositionBuffer?.map((item) => item.position.x + ", " + item.position.y + ", " + item.timestamp.toString().slice(-4))
-      ),
-    },
-    {
-      name: "lerpFrameTime",
-      value: JSON.stringify(game.debug.clientPrediction.lerpFrameTime),
-    },
-    {
       name: "ticksSinceLastClientTickConfirmedByServer",
       value: game.debug.clientPrediction.ticksSinceLastClientTickConfirmedByServer?.toString(),
     },

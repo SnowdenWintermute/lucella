@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import { BattleRoomGame, physicsTickRate, processPlayerInput, SocketEventsFromServer, UserInput } from "../../../../../common";
+import { BattleRoomGame, physicsTickRate, processPlayerInput, renderRate, SocketEventsFromServer, updateOrbs, UserInput } from "../../../../../common";
 import ServerState from "../../../interfaces/ServerState";
 import handleScoringPoints from "./handleScoringPoints";
 import Matter from "matter-js";
@@ -19,10 +19,9 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
       game.serverLastKnownClientTicks[input.playerRole!] = input.tick;
       game.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
     });
+    updateOrbs(game, undefined, +Date.now() - timeOfLastTick);
+    Matter.Engine.update(game.physicsEngine!, +Date.now() - timeOfLastTick);
 
-    // // serverState.games[gameName].orbs = game.orbs;
-
-    // rollback for lag comp
     game.currentTick = game.currentTick <= 65535 ? game.currentTick + 1 : 0; // @todo fix this into ring buffer
     handleScoringPoints(io, socket, serverState, game);
     // // @ todo - determine deltas to send

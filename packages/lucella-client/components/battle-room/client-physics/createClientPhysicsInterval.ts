@@ -1,4 +1,4 @@
-import { BattleRoomGame, MoveOrbsTowardDestinations, PlayerRole, renderRate, simulatedLagMs, SocketEventsFromClient } from "../../../../common";
+import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, simulatedLagMs, SocketEventsFromClient, updateOrbs } from "../../../../common";
 import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
@@ -7,6 +7,8 @@ import determineRoundTripTime from "./determineRoundTripTime";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
 import Matter from "matter-js";
+import setOrbSetPhysicsPropertiesFromAnotherSet from "./setOrbSetPhysicsPropertiesFromAnotherSet";
+import setOrbSetNonPhysicsPropertiesFromAnotherSet from "./setOrbSetNonPhysicsPropertiesFromAnotherSet";
 const replicator = new (require("replicator"))();
 
 export default function createClientPhysicsInterval(socket: Socket, game: BattleRoomGame, playerRole: PlayerRole | null) {
@@ -17,19 +19,24 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
     const timeAtStartOfFrameSimulation = +Date.now();
     const lastUpdateFromServerCopy = cloneDeep(game.lastUpdateFromServer);
     const newGameState = cloneDeep(game);
+    BattleRoomGame.initializeWorld(newGameState);
 
     if (!lastUpdateFromServerCopy || !playerRole) return console.log("awaiting first server update before starting client physics");
-    newGameState.orbs[playerRole] = lastUpdateFromServerCopy.orbs[playerRole];
 
-    const input = new MoveOrbsTowardDestinations(game.currentTick, (game.lastClientInputNumber += 1), playerRole);
+    const input = new ClientTickNumber(null, game.currentTick, (game.lastClientInputNumber += 1), playerRole);
     newGameState.queues.client.localInputs.push(input);
     laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
 
-    interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
+    setOrbSetPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
+    setOrbSetNonPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
+    // Matter.Engine.update(newGameState.physicsEngine!, +Date.now() - game.timeOfLastTick!);
 
-    game.physicsEngine = newGameState.physicsEngine;
-    game.orbs = newGameState.orbs;
+    setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[playerRole], newGameState.orbs[playerRole]);
+    setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[playerRole], newGameState.orbs[playerRole]);
+    // Matter.Engine.merge(game.physicsEngine!, newGameState.physicsEngine!);
+    // interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
+
     game.debug.general = newGameState.debug.general;
 
     const newRtt = determineRoundTripTime(game, lastUpdateFromServerCopy, playerRole);

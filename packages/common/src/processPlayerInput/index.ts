@@ -1,15 +1,13 @@
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { UserInput } from "../classes/inputs/UserInput";
 import { UserInputs } from "../enums";
-import { updateOrbs } from "../updateOrbs";
 import handleAssignOrbDestinations from "./handleAssignOrbDestinations";
 import handleSelectOrbs from "./handleSelectOrbs";
 
-export function processPlayerInput(input: UserInput, game: BattleRoomGame, deltaT?: number) {
-  game.serverLastKnownClientTicks;
+export function processPlayerInput(input: UserInput, game: BattleRoomGame) {
   switch (input.type) {
-    case UserInputs.MOVE_ORBS_TOWARD_DESTINATIONS:
-      updateOrbs(game, deltaT, input.playerRole);
+    case UserInputs.CLIENT_TICK_NUMBER:
+      //
       break;
     case UserInputs.SELECT_ORBS:
       handleSelectOrbs(input, game);

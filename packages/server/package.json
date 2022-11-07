@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@typegoose/typegoose": "^9.12.1",
+    "@types/pg": "^8.6.5",
     "bcryptjs": "^2.4.3",
     "config": "^3.3.8",
     "cookie-parser": "^1.4.6",
@@ -31,6 +32,7 @@
     "matter-js": "^0.18.0",
     "mongoose": "^6.6.1",
     "nodemailer": "^6.4.2",
+    "pg": "^8.8.0",
     "redis": "^4.3.1",
     "replicator": "^1.0.5",
     "socket.io": "^4.5.2",
