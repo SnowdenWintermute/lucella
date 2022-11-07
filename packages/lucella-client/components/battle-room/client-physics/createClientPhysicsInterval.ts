@@ -30,11 +30,8 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
     setOrbSetPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
     setOrbSetNonPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
-    // Matter.Engine.update(newGameState.physicsEngine!, +Date.now() - game.timeOfLastTick!);
-
     setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[playerRole], newGameState.orbs[playerRole]);
     setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[playerRole], newGameState.orbs[playerRole]);
-    // Matter.Engine.merge(game.physicsEngine!, newGameState.physicsEngine!);
     // interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 
     game.debug.general = newGameState.debug.general;

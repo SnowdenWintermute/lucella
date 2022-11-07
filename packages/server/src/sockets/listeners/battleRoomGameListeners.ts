@@ -1,30 +1,31 @@
-import { PlayerRole, renderRate, SocketEventsFromClient, UserInput, UserInputs } from "../../../../common";
+import {
+  firstMovementRequestTimeLimiter,
+  movementRequestAntiCheatGracePeriod,
+  PlayerRole,
+  renderRate,
+  SocketEventsFromClient,
+  UserInput,
+  UserInputs,
+} from "../../../../common";
 import { Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
+import antiCheat from "../battleRoomGame/antiCheat";
 const replicator = new (require("replicator"))();
 
 export default function (socket: Socket, serverState: ServerState) {
   const { connectedSockets, games, gameRooms } = serverState;
 
   socket.on(SocketEventsFromClient.NEW_INPUT, (data: string) => {
-    if (
-      !connectedSockets[socket.id].currentGameName ||
-      !games[connectedSockets[socket.id].currentGameName!] ||
-      !gameRooms[connectedSockets[socket.id].currentGameName!]
-    )
-      return;
-    const now = +Date.now();
+    const game = games[connectedSockets[socket.id].currentGameName!];
+    const gameRoom = gameRooms[connectedSockets[socket.id].currentGameName!];
+    if (!connectedSockets[socket.id].currentGameName || !game || !gameRoom) return;
 
     const playerRole =
-      gameRooms[connectedSockets[socket.id].currentGameName!].players.host?.socketId === socket.id
-        ? PlayerRole.HOST
-        : gameRooms[connectedSockets[socket.id].currentGameName!].players.challenger?.socketId === socket.id
-        ? PlayerRole.CHALLENGER
-        : null;
+      gameRoom.players.host?.socketId === socket.id ? PlayerRole.HOST : gameRoom.players.challenger?.socketId === socket.id ? PlayerRole.CHALLENGER : null;
     if (!playerRole) return console.log("error: received an input from a user not in this game");
     const inputToQueue: UserInput = replicator.decode(data);
     inputToQueue.playerRole = playerRole;
-
-    games[connectedSockets[socket.id].currentGameName!].queues.server.receivedInputs.push(inputToQueue);
+    let clientTryingToMoveTooFast = antiCheat(game, inputToQueue, playerRole);
+    !clientTryingToMoveTooFast && games[connectedSockets[socket.id].currentGameName!].queues.server.receivedInputs.push(inputToQueue);
   });
 }

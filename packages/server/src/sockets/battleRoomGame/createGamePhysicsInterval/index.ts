@@ -1,5 +1,14 @@
 import { Server, Socket } from "socket.io";
-import { BattleRoomGame, physicsTickRate, processPlayerInput, renderRate, SocketEventsFromServer, updateOrbs, UserInput } from "../../../../../common";
+import {
+  BattleRoomGame,
+  physicsTickRate,
+  processPlayerInput,
+  renderRate,
+  SocketEventsFromServer,
+  updateOrbs,
+  UserInput,
+  UserInputs,
+} from "../../../../../common";
 import ServerState from "../../../interfaces/ServerState";
 import handleScoringPoints from "./handleScoringPoints";
 import Matter from "matter-js";
@@ -13,14 +22,13 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
     if (!game) return console.log("tried to update physics in a game that wasn't found");
     if (!game.physicsEngine) return console.log("tried to update physics in a game that was not yet initialized");
 
-    game.queues.server.receivedInputs.forEach(() => {
+    game.queues.server.receivedInputs.forEach((inputToBeDequeued, i) => {
       const input: UserInput = game.queues.server.receivedInputs.shift();
-      processPlayerInput(input, game);
+
+      processPlayerInput(input, game, renderRate, input.playerRole);
       game.serverLastKnownClientTicks[input.playerRole!] = input.tick;
       game.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
     });
-    updateOrbs(game, undefined, +Date.now() - timeOfLastTick);
-    Matter.Engine.update(game.physicsEngine!, +Date.now() - timeOfLastTick);
 
     game.currentTick = game.currentTick <= 65535 ? game.currentTick + 1 : 0; // @todo fix this into ring buffer
     handleScoringPoints(io, socket, serverState, game);

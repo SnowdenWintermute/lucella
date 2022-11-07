@@ -46,6 +46,11 @@ export class BattleRoomGame {
     challenger: number | null;
   };
   serverLastSeenMovementInputTimestamps: { host: number; challenger: number };
+  antiCheat: {
+    numberOfMovementRequests: { host: number; challenger: number };
+    cumulativeTimeBetweenMovementRequests: { host: number; challenger: number };
+    averageMovementRequestRate: { host: number; challenger: number };
+  };
   winner: string | null;
   orbs: { host: { [label: string]: Orb }; challenger: { [label: string]: Orb } };
   endzones: { host: Rectangle; challenger: Rectangle };
@@ -91,6 +96,11 @@ export class BattleRoomGame {
       challenger: null,
     };
     this.serverLastSeenMovementInputTimestamps = { host: 0, challenger: 0 };
+    this.antiCheat = {
+      numberOfMovementRequests: { host: 0, challenger: 0 },
+      cumulativeTimeBetweenMovementRequests: { host: 0, challenger: 0 },
+      averageMovementRequestRate: { host: 0, challenger: 0 },
+    };
     this.orbs = { host: {}, challenger: {} };
     this.score = {
       host: 0,

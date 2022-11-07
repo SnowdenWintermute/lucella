@@ -21,3 +21,9 @@ export const simulatedLagMs = 25;
 // Matter-JS
 export const hostOrbCollisionCategory = 0x0001;
 export const challengerOrbCollisionCategory = 0x0002;
+
+// anti cheat
+export const movementRequestAntiCheatGracePeriod = 50;
+// the value below is used for the first movement request since there is no previous request to calculate the time difference
+// when calculating the average time between requests it would otherwise be such a large number the average would be ruined
+export const firstMovementRequestTimeLimiter = 200;

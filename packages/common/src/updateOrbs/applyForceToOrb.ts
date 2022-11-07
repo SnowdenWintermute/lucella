@@ -14,10 +14,7 @@ export default function (orb: Orb, game: BattleRoomGame, deltaT?: number) {
     position.y <= destination.y + tolerance &&
     position.y >= destination.y - tolerance;
   if (entityReachedDestination) return (orb.destination = null);
-  let gameSpeedAdjustedForDeltaT: number;
-  if (deltaT) gameSpeedAdjustedForDeltaT = (game.speedModifier * deltaT) / physicsTickRate;
-  else gameSpeedAdjustedForDeltaT = game.speedModifier;
-  const force = gameSpeedAdjustedForDeltaT;
+  const force = game.speedModifier;
   const deltaVector = Vector.sub(orb.destination, orb.body.position);
   const normalizedDelta = Vector.normalise(deltaVector);
   const forceVector = Vector.mult(normalizedDelta, force);
