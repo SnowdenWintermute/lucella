@@ -3,9 +3,10 @@ import { BattleRoomGame } from ".";
 import { challengerOrbCollisionCategory, colors, hostOrbCollisionCategory } from "../../consts";
 import { orbDensity, frictionAir } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
+import { setOrbSetNonPhysicsPropertiesFromAnotherSet, setOrbSetPhysicsPropertiesFromAnotherSet } from "../../utils";
 import { Orb } from "../Orb";
 
-export default function initializeWorld(game: BattleRoomGame) {
+export default function initializeWorld(game: BattleRoomGame, prevGameState?: BattleRoomGame) {
   game.physicsEngine = Matter.Engine.create();
   game.physicsEngine.gravity.y = 0;
   game.physicsEngine.gravity.x = 0;
@@ -29,6 +30,14 @@ export default function initializeWorld(game: BattleRoomGame) {
     });
     game.orbs.challenger[`challenger-orb-${i}`] = new Orb(challengerOrbBody, PlayerRole.CHALLENGER, i + 1, colors.challengerOrbs);
     Matter.Composite.add(game.physicsEngine.world, challengerOrbBody);
+  }
+
+  if (prevGameState) {
+    let orbSet: keyof typeof game.orbs;
+    for (orbSet in game.orbs) {
+      setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet]);
+      setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet]);
+    }
   }
 
   Matter.Events.on(game.physicsEngine, "collisionStart", function (event) {

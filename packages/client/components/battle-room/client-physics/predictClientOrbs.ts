@@ -1,6 +1,12 @@
-import { BattleRoomGame, PlayerRole, processPlayerInput, renderRate, updateOrbs, UserInput } from "@lucella/common";
-import setOrbSetNonPhysicsPropertiesFromAnotherSet from "./setOrbSetNonPhysicsPropertiesFromAnotherSet";
-import setOrbSetPhysicsPropertiesFromAnotherSet from "./setOrbSetPhysicsPropertiesFromAnotherSet";
+import {
+  BattleRoomGame,
+  PlayerRole,
+  processPlayerInput,
+  renderRate,
+  UserInput,
+  setOrbSetNonPhysicsPropertiesFromAnotherSet,
+  setOrbSetPhysicsPropertiesFromAnotherSet,
+} from "../../../../common";
 
 export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumbers[playerRole];

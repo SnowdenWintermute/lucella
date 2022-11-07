@@ -6,8 +6,7 @@ import assignDebugValues from "./assignDebugValues";
 import determineRoundTripTime from "./determineRoundTripTime";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
-import setOrbSetPhysicsPropertiesFromAnotherSet from "./setOrbSetPhysicsPropertiesFromAnotherSet";
-import setOrbSetNonPhysicsPropertiesFromAnotherSet from "./setOrbSetNonPhysicsPropertiesFromAnotherSet";
+import { setOrbSetPhysicsPropertiesFromAnotherSet, setOrbSetNonPhysicsPropertiesFromAnotherSet } from "../../../../common";
 const replicator = new (require("replicator"))();
 
 export default function createClientPhysicsInterval(socket: Socket, game: BattleRoomGame, playerRole: PlayerRole | null) {
@@ -18,7 +17,7 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
     const timeAtStartOfFrameSimulation = +Date.now();
     const lastUpdateFromServerCopy = cloneDeep(game.lastUpdateFromServer);
     const newGameState = cloneDeep(game);
-    BattleRoomGame.initializeWorld(newGameState);
+    BattleRoomGame.initializeWorld(newGameState, game);
 
     if (!lastUpdateFromServerCopy || !playerRole) return console.log("awaiting first server update before starting client physics");
 
