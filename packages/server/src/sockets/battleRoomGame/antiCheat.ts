@@ -2,6 +2,7 @@ import {
   BattleRoomGame,
   firstMovementRequestTimeLimiter,
   movementRequestAntiCheatGracePeriod,
+  movementRequestRateMarginOfError,
   PlayerRole,
   renderRate,
   UserInput,
@@ -19,7 +20,7 @@ export default function (game: BattleRoomGame, inputToQueue: UserInput, playerRo
       game.antiCheat.cumulativeTimeBetweenMovementRequests[playerRole] / game.antiCheat.numberOfMovementRequests[playerRole];
 
     if (
-      game.antiCheat.averageMovementRequestRate[playerRole] < renderRate &&
+      game.antiCheat.averageMovementRequestRate[playerRole] < renderRate - movementRequestRateMarginOfError &&
       game.antiCheat.numberOfMovementRequests[playerRole] > movementRequestAntiCheatGracePeriod
     ) {
       clientTryingToMoveTooFast = true;

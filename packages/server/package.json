@@ -8,7 +8,7 @@
     "serve": "tsc-watch -b --onSuccess \"node dist/servers.js\"",
     "server": "nodemon server",
     "servers": "nodemon servers",
-    "client": "yarn --cwd ../lucella-client develop",
+    "client": "yarn --cwd ../client develop",
     "dev": "concurrently \"yarn serve\" \"yarn client\""
   },
   "author": "Mike Silverman",

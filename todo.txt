@@ -8,8 +8,12 @@ Chat
   -client can lie what their name is...
   -icon of what game they're playing
 
+- delta byte packets
+- psql
 - mouse position at start of game doesn't work until you move the mouse
 - channel update revamp so people don't stay in channels when they're not
+- tests for auth flow
+- auth error handling
 
 Lag Compensation
   - lerp to correct position if update + client prediction doesn't match with last client predicted location
