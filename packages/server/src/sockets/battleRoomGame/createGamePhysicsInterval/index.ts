@@ -27,7 +27,6 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
       game.netcode.serverLastKnownClientTicks[input.playerRole!] = input.tick;
       game.netcode.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
     });
-    handleOrbBodyCollisions(game);
 
     game.netcode.currentTick = game.netcode.currentTick <= 65535 ? game.netcode.currentTick + 1 : 0; // @todo fix this into ring buffer
     handleScoringPoints(io, socket, serverState, game);

@@ -3,6 +3,7 @@ import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { UserInput } from "../classes/inputs/UserInput";
 import { PlayerRole, UserInputs } from "../enums";
 import { updateOrbs } from "../updateOrbs";
+import { handleOrbBodyCollisions } from "../updateOrbs/handleOrbBodyCollisions";
 import handleAssignOrbDestinations from "./handleAssignOrbDestinations";
 import handleLineUpOrbsAtY from "./handleLineUpOrbsAtY";
 import handleSelectOrbs from "./handleSelectOrbs";
@@ -27,4 +28,5 @@ export function processPlayerInput(input: UserInput, game: BattleRoomGame, delta
       handleLineUpOrbsAtY(input, game);
       break;
   }
+  handleOrbBodyCollisions(game);
 }
