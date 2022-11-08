@@ -11,7 +11,7 @@ import Modal from "../common-components/modal/Modal";
 import io, { Socket } from "socket.io-client";
 import SocketManager from "../socket-manager/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
-import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "@lucella/common";
+import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { authApi } from "../../redux/api-slices/auth-api-slice";

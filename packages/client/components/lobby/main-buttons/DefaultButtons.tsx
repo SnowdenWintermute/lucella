@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import Modal from "../../common-components/modal/Modal";
-import { SocketEventsFromClient } from "@lucella/common";
+import { SocketEventsFromClient } from "../../../../common";
 import { Socket } from "socket.io-client";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import GameLobbyModalButton from "../../common-components/buttons/GameLobbyModalButton";

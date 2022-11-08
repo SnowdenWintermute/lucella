@@ -1,4 +1,4 @@
-import { GameStatus, SocketEventsFromClient } from "@lucella/common";
+import { GameStatus, SocketEventsFromClient } from "../../../common";
 import React from "react";
 import { Socket } from "socket.io-client";
 import { AlertType } from "../../enums";

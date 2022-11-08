@@ -4,7 +4,7 @@ import setGameRoomWinnerName from "./setGameRoomWinnerName";
 import createGameEndingCountdownInterval from "./createGameEndingCountdownInterval";
 import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
-import { GameStatus, SocketEventsFromServer, EloUpdates } from "@lucella/common";
+import { GameStatus, SocketEventsFromServer, EloUpdates } from "../../../../../common";
 const replicator = new (require("replicator"))();
 
 export default async function endGameCleanup(io: Server, socket: Socket, serverState: ServerState, gameName: string, isDisconnecting?: boolean) {

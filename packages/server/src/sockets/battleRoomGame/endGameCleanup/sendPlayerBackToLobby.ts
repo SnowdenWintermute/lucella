@@ -1,4 +1,4 @@
-import { SocketMetadata } from "@lucella/common";
+import { SocketMetadata } from "../../../../../common";
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import clientRequestsToJoinChatChannel from "../../lobbyFunctions/clientRequestsToJoinChatChannel";

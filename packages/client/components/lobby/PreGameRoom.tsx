@@ -5,7 +5,7 @@ import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
-import { GameStatus, SocketEventsFromClient } from "@lucella/common";
+import { GameStatus, SocketEventsFromClient } from "../../../common";
 import styles from "./game-lobby.module.scss";
 
 interface Props {

@@ -1,4 +1,4 @@
-import { PlayerRole, colors, inGameFontSizes, Orb, Point } from "@lucella/common";
+import { PlayerRole, colors, inGameFontSizes, Orb, Point } from "../../../../../common";
 
 export default function drawOrbNumber(context: CanvasRenderingContext2D, orb: Orb, playerRole: PlayerRole, canvasDrawFractions: Point) {
   if (orb.owner !== playerRole) return;

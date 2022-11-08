@@ -1,4 +1,4 @@
-import { BattleRoomGame, inGameFontSizes, Point } from "@lucella/common";
+import { BattleRoomGame, inGameFontSizes, Point } from "../../../../common";
 
 export default function drawDebug(context: CanvasRenderingContext2D, game: BattleRoomGame, canvasDrawFractions: Point) {
   const { mouseData } = game;

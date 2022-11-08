@@ -36,7 +36,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
     let orbSet: keyof typeof game.orbs;
     for (orbSet in game.orbs) {
       setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet]);
-      setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet]);
+      setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet], true);
     }
   }
 

@@ -1,4 +1,4 @@
-import { BattleRoomGame, renderRate } from "@lucella/common";
+import { BattleRoomGame, renderRate } from "../../../../common";
 
 export function createRenderInterval(currentDrawFunction: () => void, currentGame: BattleRoomGame) {
   return setInterval(() => {

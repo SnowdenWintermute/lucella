@@ -1,4 +1,4 @@
-import { MouseData, Orb } from "@lucella/common";
+import { MouseData, Orb } from "../../../../../../common";
 
 export default function (orb: Orb, mouseData: MouseData) {
   const { position } = mouseData;

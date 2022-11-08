@@ -1,4 +1,4 @@
-import { BattleRoomGame, Point } from "@lucella/common";
+import { BattleRoomGame, Point } from "../../../../common";
 
 export default function mouseDownHandler(e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, currentGame: BattleRoomGame) {
   if (!(e.button === 0)) return;

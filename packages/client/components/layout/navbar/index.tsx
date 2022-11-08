@@ -5,7 +5,7 @@ import logo from "../../../img/logo.png";
 import GamesIcon from "../../../img/menuIcons/queen.svg";
 import LadderIcon from "../../../img/menuIcons/podium.svg";
 import { useAppSelector } from "../../../redux";
-import { GameStatus } from "@lucella/common";
+import { GameStatus } from "../../../../common";
 import Image from "next/image";
 
 const Navbar = () => {

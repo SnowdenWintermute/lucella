@@ -11,13 +11,13 @@ export function distanceBetweenTwoPoints(a: Point, b: Point) {
   return Math.sqrt(x * x + y * y);
 }
 
-export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: { [orbLabel: string]: Orb }, b: { [orbLabel: string]: Orb }) {
+export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: { [orbLabel: string]: Orb }, b: { [orbLabel: string]: Orb }, withPositionBuffer?: boolean) {
   for (let orbLabel in a) {
     const { isSelected, isGhost, destination, positionBuffer } = b[orbLabel];
     a[orbLabel].isSelected = isSelected;
     a[orbLabel].isGhost = isGhost;
     a[orbLabel].destination = destination;
-    a[orbLabel].positionBuffer = positionBuffer;
+    if (withPositionBuffer) a[orbLabel].positionBuffer = positionBuffer;
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "../../redux";
-import { SocketEventsFromClient } from "@lucella/common";
+import { SocketEventsFromClient } from "../../../common";
 
 interface Props {
   socket: Socket;

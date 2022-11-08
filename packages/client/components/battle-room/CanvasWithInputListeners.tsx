@@ -1,4 +1,4 @@
-import { eventLimiterRate, WidthAndHeight, BattleRoomGame } from "@lucella/common";
+import { eventLimiterRate, WidthAndHeight, BattleRoomGame } from "../../../common";
 import React, { useCallback, useEffect } from "react";
 import mouseDownHandler from "./user-input-handlers/mouseDownHandler";
 import mouseEnterHandler from "./user-input-handlers/mouseEnterHandler";

@@ -1,4 +1,4 @@
-import { MouseData, Point } from "@lucella/common";
+import { MouseData, Point } from "../../../../common";
 
 export default function first(
   context: CanvasRenderingContext2D,

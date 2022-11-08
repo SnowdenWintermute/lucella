@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, simulatedLagMs } from "@lucella/common";
+import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, simulatedLagMs } from "../../../../common";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
 const replicator = new (require("replicator"))();

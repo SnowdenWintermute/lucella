@@ -1,4 +1,4 @@
-import { BattleRoomGame, PlayerRole } from "@lucella/common";
+import { BattleRoomGame, PlayerRole } from "../../../../common";
 
 export default function (game: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumbers[playerRole];

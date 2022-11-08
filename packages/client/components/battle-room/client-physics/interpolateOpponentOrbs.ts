@@ -39,5 +39,6 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
     orb.isGhost = lastUpdateFromServerCopy.orbs[opponentRole][orbLabel].isGhost;
   }
   setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole]);
-  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole]);
+  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole], true); // we only want to interpolate positions, not selections or ghost status
+  // setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate, false); // we only want to interpolate positions, not selections or ghost status
 }

@@ -1,4 +1,4 @@
-import { BattleRoomGame, GameRoom, Point } from "@lucella/common";
+import { BattleRoomGame, GameRoom, Point } from "../../../../common";
 
 const gameOverText = (context: CanvasRenderingContext2D, game: BattleRoomGame, gameRoom: GameRoom, canvasDrawFractions: Point) => {
   const fontSize = 25;

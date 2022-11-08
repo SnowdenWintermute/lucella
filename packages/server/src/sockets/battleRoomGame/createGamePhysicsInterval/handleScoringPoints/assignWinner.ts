@@ -1,4 +1,4 @@
-import { BattleRoomGame, PlayerRole } from "@lucella/common";
+import { BattleRoomGame, PlayerRole } from "../../../../../../common";
 
 export default function assignWinner(game: BattleRoomGame) {
   if (game.score.challenger >= game.score.neededToWin && game.score.host >= game.score.neededToWin) game.winner = "tie";

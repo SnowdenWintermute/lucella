@@ -1,4 +1,4 @@
-import { WidthAndHeight, Point, BattleRoomGame } from "@lucella/common";
+import { WidthAndHeight, Point, BattleRoomGame } from "../../../../common";
 
 export default (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) => {
   const { mouseData } = currentGame;

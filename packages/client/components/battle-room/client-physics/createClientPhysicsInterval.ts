@@ -1,4 +1,3 @@
-import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, simulatedLagMs, SocketEventsFromClient } from "@lucella/common";
 import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
@@ -6,7 +5,16 @@ import assignDebugValues from "./assignDebugValues";
 import determineRoundTripTime from "./determineRoundTripTime";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
-import { setOrbSetPhysicsPropertiesFromAnotherSet, setOrbSetNonPhysicsPropertiesFromAnotherSet } from "../../../../common";
+import {
+  setOrbSetPhysicsPropertiesFromAnotherSet,
+  setOrbSetNonPhysicsPropertiesFromAnotherSet,
+  BattleRoomGame,
+  ClientTickNumber,
+  PlayerRole,
+  renderRate,
+  simulatedLagMs,
+  SocketEventsFromClient,
+} from "../../../../common";
 const replicator = new (require("replicator"))();
 
 export default function createClientPhysicsInterval(socket: Socket, game: BattleRoomGame, playerRole: PlayerRole | null) {

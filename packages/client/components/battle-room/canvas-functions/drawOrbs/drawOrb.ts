@@ -1,4 +1,4 @@
-import { Orb, ghostTransparency, Point, inGameFontSizes } from "@lucella/common";
+import { Orb, ghostTransparency, Point, inGameFontSizes } from "../../../../../common";
 
 export default function drawOrb(context: CanvasRenderingContext2D, orb: Orb, canvasDrawFractions: Point, showAsRing?: boolean, debug?: boolean) {
   context.beginPath();

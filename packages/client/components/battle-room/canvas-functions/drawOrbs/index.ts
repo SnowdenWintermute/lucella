@@ -1,4 +1,4 @@
-import { PlayerRole, Point, BattleRoomGame, Orb } from "@lucella/common";
+import { PlayerRole, Point, BattleRoomGame, Orb } from "../../../../../common";
 import drawOrb from "./drawOrb";
 import drawOrbNumber from "./drawOrbNumber";
 import drawSelectionRing from "./drawSelectionRing";

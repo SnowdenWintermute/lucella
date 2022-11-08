@@ -1,4 +1,4 @@
-import { MouseData, Point } from "@lucella/common";
+import { MouseData, Point } from "../../../../common";
 
 const getSelectionBoxSize = (mouseData: MouseData, canvasDrawFractions: Point) => {
   if (!mouseData.mouseOnScreen) mouseData.leftCurrentlyPressed = false;

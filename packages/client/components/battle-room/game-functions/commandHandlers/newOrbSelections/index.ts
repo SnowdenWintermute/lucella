@@ -1,4 +1,4 @@
-import { BattleRoomGame, MouseData, PlayerRole } from "@lucella/common";
+import { BattleRoomGame, MouseData, PlayerRole } from "../../../../../../common";
 import mouseIsDirectlyOverOrb from "./mouseIsDirectlyOverOrb";
 import orbIsWithinSelectionBox from "./orbIsWithinSelectionBox";
 import selectionBoxBelowSizeThreshold from "./selectionBoxBelowSizeThreshold";

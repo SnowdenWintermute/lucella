@@ -1,4 +1,4 @@
-import { SocketEventsFromClient } from "@lucella/common";
+import { SocketEventsFromClient } from "../../../../common";
 import React, { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";

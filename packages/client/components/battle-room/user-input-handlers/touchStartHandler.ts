@@ -1,4 +1,4 @@
-import { BattleRoomGame, WidthAndHeight, Point } from "@lucella/common";
+import { BattleRoomGame, WidthAndHeight, Point } from "../../../../common";
 
 export default function touchStartHandler(e: React.TouchEvent<HTMLCanvasElement>, canvasSize: WidthAndHeight, currentGame: BattleRoomGame) {
   if (!e.target) return;

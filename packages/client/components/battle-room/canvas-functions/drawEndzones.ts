@@ -1,4 +1,4 @@
-import { BattleRoomGame, WidthAndHeight, colors } from "@lucella/common";
+import { BattleRoomGame, WidthAndHeight, colors } from "../../../../common";
 
 export default function drawEndzones(context: CanvasRenderingContext2D, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) {
   let x = currentGame.endzones.host.origin.x;

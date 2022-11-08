@@ -1,4 +1,4 @@
-import { minimumSelectionBoxSize, MouseData } from "@lucella/common";
+import { minimumSelectionBoxSize, MouseData } from "../../../../../../common";
 
 export default function (mouseData: MouseData) {
   const { position, leftPressedAt } = mouseData;

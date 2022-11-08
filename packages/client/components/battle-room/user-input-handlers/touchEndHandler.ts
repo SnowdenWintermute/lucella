@@ -1,4 +1,4 @@
-import { WidthAndHeight, Point, BattleRoomGame, minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "@lucella/common";
+import { WidthAndHeight, Point, BattleRoomGame, minimumQuickTouchSelectionBoxSize, touchHoldSelectionBoxStartThreshold } from "../../../../common";
 
 export default function touchEndHandler(e: React.TouchEvent<HTMLCanvasElement>, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) {
   const { mouseData } = currentGame;
