@@ -61,7 +61,7 @@ const BattleRoomGameInstance = (props: Props) => {
 
   return (
     <div className="battle-room-canvas-holder" onContextMenu={(e) => e.preventDefault()}>
-      {currentGame.current && <GameListener socket={socket} currentGame={currentGame.current} />}
+      {currentGame.current && <GameListener socket={socket} game={currentGame.current} />}
       {(currentGame.current && currentGameRoom?.gameStatus === GameStatus.IN_PROGRESS) || currentGameRoom?.gameStatus === GameStatus.ENDING ? (
         <CanvasWithInputListeners canvasSize={canvasSize} canvasRef={canvasRef} currentGame={currentGame.current!} socket={socket} />
       ) : (

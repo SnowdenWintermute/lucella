@@ -4,12 +4,12 @@ import drawOrbNumber from "./drawOrbNumber";
 import drawSelectionRing from "./drawSelectionRing";
 
 export function drawOrbs(context: CanvasRenderingContext2D, playerRole: PlayerRole, game: BattleRoomGame, canvasDrawFractions: Point, showAsRing?: boolean) {
-  if (game.lastUpdateFromServer && game.debug.showDebug) {
-    let lastServerOrbSets: keyof typeof game.lastUpdateFromServer.orbs;
-    for (lastServerOrbSets in game.lastUpdateFromServer.orbs) {
+  if (game.netcode.lastUpdateFromServer && game.debug.showDebug) {
+    let lastServerOrbSets: keyof typeof game.netcode.lastUpdateFromServer.orbs;
+    for (lastServerOrbSets in game.netcode.lastUpdateFromServer.orbs) {
       // if (lastServerOrbSets !== playerRole) continue;
-      for (let orb in game.lastUpdateFromServer.orbs[lastServerOrbSets])
-        drawOrb(context, game.lastUpdateFromServer.orbs[lastServerOrbSets][orb], canvasDrawFractions, game.debug.showDebug);
+      for (let orb in game.netcode.lastUpdateFromServer.orbs[lastServerOrbSets])
+        drawOrb(context, game.netcode.lastUpdateFromServer.orbs[lastServerOrbSets][orb], canvasDrawFractions, game.debug.showDebug);
     }
   }
 

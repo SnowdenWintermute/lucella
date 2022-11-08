@@ -15,7 +15,6 @@ export default async function endGameCleanup(io: Server, socket: Socket, serverS
   io.in(`game-${gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
   io.to(`game-${gameName}`).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
   if (game.intervals.physics) clearInterval(game.intervals.physics);
-  if (game.intervals.broadcast) clearInterval(game.intervals.broadcast);
   io.to(`game-${gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game)); // since we stop the broadcast interval we need one last snapshot to show the winning point
   if (!isDisconnecting) setGameRoomWinnerName(gameRoom, game);
   else handleDisconnectionFromGame(io, socket, serverState, gameName);

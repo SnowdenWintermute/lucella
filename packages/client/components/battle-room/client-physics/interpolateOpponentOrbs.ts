@@ -12,8 +12,11 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
   const opponentRole = playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
 
   let firstTimeProcessingThisUpdate = false;
-  if (!game.lastUpdateFromServerProcessedByLerperTimestamp || game.lastUpdateFromServerProcessedByLerperTimestamp !== lastUpdateFromServerCopy.timeReceived) {
-    game.lastUpdateFromServerProcessedByLerperTimestamp = lastUpdateFromServerCopy.timeReceived;
+  if (
+    !game.netcode.lastUpdateFromServerProcessedByLerperTimestamp ||
+    game.netcode.lastUpdateFromServerProcessedByLerperTimestamp !== lastUpdateFromServerCopy.timeReceived
+  ) {
+    game.netcode.lastUpdateFromServerProcessedByLerperTimestamp = lastUpdateFromServerCopy.timeReceived;
     firstTimeProcessingThisUpdate = true;
   }
 
@@ -39,6 +42,6 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
     orb.isGhost = lastUpdateFromServerCopy.orbs[opponentRole][orbLabel].isGhost;
   }
   setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole]);
-  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole], true); // we only want to interpolate positions, not selections or ghost status
-  // setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate, false); // we only want to interpolate positions, not selections or ghost status
+  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole], true);
+  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate, false); // we only want to interpolate positions, not selections or ghost status
 }

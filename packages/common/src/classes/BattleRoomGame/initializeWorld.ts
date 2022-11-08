@@ -42,24 +42,6 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
 
   Matter.Events.on(game.physicsEngine, "collisionStart", function (event) {
     const pairs = event.pairs;
-
-    for (let i = 0; i < pairs.length; i++) {
-      const pair = pairs[i];
-      // @ todo - find a way to make this DRY
-      if (game.orbs.host[pair.bodyA.label] && !game.orbs.host[pair.bodyA.label].isGhost) {
-        game.orbs.host[pair.bodyA.label].isGhost = true;
-        pair.bodyA.isSensor = true;
-      } else if (game.orbs.challenger[pair.bodyA.label] && !game.orbs.challenger[pair.bodyA.label].isGhost) {
-        game.orbs.challenger[pair.bodyA.label].isGhost = true;
-        pair.bodyA.isSensor = true;
-      }
-      if (game.orbs.host[pair.bodyB.label] && !game.orbs.host[pair.bodyB.label].isGhost) {
-        game.orbs.host[pair.bodyB.label].isGhost = true;
-        pair.bodyB.isSensor = true;
-      } else if (game.orbs.challenger[pair.bodyB.label] && !game.orbs.challenger[pair.bodyB.label].isGhost) {
-        game.orbs.challenger[pair.bodyB.label].isGhost = true;
-        pair.bodyB.isSensor = true;
-      }
-    }
+    game.currentCollisionPairs.push(...pairs);
   });
 }

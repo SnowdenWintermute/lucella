@@ -1,17 +1,15 @@
 import { Server, Socket } from "socket.io";
 import {
   BattleRoomGame,
+  handleOrbBodyCollisions,
   physicsTickRate,
   processPlayerInput,
   renderRate,
   SocketEventsFromServer,
-  updateOrbs,
   UserInput,
-  UserInputs,
 } from "../../../../../common";
 import ServerState from "../../../interfaces/ServerState";
 import handleScoringPoints from "./handleScoringPoints";
-import Matter from "matter-js";
 const replicator = new (require("replicator"))();
 
 export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string) {
@@ -26,11 +24,12 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
       const input: UserInput = game.queues.server.receivedInputs.shift();
 
       processPlayerInput(input, game, renderRate, input.playerRole);
-      game.serverLastKnownClientTicks[input.playerRole!] = input.tick;
-      game.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
+      game.netcode.serverLastKnownClientTicks[input.playerRole!] = input.tick;
+      game.netcode.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
     });
+    handleOrbBodyCollisions(game);
 
-    game.currentTick = game.currentTick <= 65535 ? game.currentTick + 1 : 0; // @todo fix this into ring buffer
+    game.netcode.currentTick = game.netcode.currentTick <= 65535 ? game.netcode.currentTick + 1 : 0; // @todo fix this into ring buffer
     handleScoringPoints(io, socket, serverState, game);
     // // @ todo - determine deltas to send
     io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));

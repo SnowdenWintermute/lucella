@@ -12,7 +12,7 @@ import {
 export default function (game: BattleRoomGame, inputToQueue: UserInput, playerRole: PlayerRole) {
   let clientTryingToMoveTooFast = false;
   if (inputToQueue.type === UserInputs.CLIENT_TICK_NUMBER) {
-    let timeSinceLastMovementRequestAccepted = +Date.now() - game.serverLastSeenMovementInputTimestamps[playerRole];
+    let timeSinceLastMovementRequestAccepted = +Date.now() - game.netcode.serverLastSeenMovementInputTimestamps[playerRole];
     if (timeSinceLastMovementRequestAccepted > firstMovementRequestTimeLimiter) timeSinceLastMovementRequestAccepted = renderRate;
     game.antiCheat.cumulativeTimeBetweenMovementRequests[playerRole] += timeSinceLastMovementRequestAccepted;
     game.antiCheat.numberOfMovementRequests[playerRole] += 1;
@@ -27,7 +27,7 @@ export default function (game: BattleRoomGame, inputToQueue: UserInput, playerRo
       console.log("Client sending move requests too quickly - averageMovementRequestRate: ", game.antiCheat.averageMovementRequestRate[playerRole]);
     }
 
-    game.serverLastSeenMovementInputTimestamps[playerRole] = +Date.now();
+    game.netcode.serverLastSeenMovementInputTimestamps[playerRole] = +Date.now();
   }
   return clientTryingToMoveTooFast;
 }
