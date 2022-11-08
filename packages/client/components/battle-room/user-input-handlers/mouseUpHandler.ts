@@ -18,8 +18,8 @@ export default function mouseUpHandler(
     mouseData.rightReleasedAt = new Point(mouseData.position.y, mouseData.position.x);
     const input = new AssignOrbDestinations(
       { mousePosition: new Point(mouseData.position.x, mouseData.position.y) },
-      currentGame.currentTick,
-      (currentGame.lastClientInputNumber += 1),
+      currentGame.netcode.currentTick,
+      (currentGame.netcode.lastClientInputNumber += 1),
       playerRole
     );
     currentGame.queues.client.localInputs.push(input);
@@ -31,8 +31,8 @@ export default function mouseUpHandler(
     mouseData.leftReleasedAt = new Point(mouseData.position.x, mouseData.position.y);
     const input = new SelectOrbs(
       { orbLabels: newOrbSelections(mouseData, currentGame, playerRole) },
-      currentGame.currentTick,
-      (currentGame.lastClientInputNumber += 1),
+      currentGame.netcode.currentTick,
+      (currentGame.netcode.lastClientInputNumber += 1),
       playerRole
     );
     currentGame.queues.client.localInputs.push(input);

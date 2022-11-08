@@ -35,3 +35,9 @@ export class SelectOrbAndAssignDestination extends UserInput {
     super(UserInputs.SELECT_ORB_AND_ASSIGN_DESTINATION, data, tick, number, playerRole);
   }
 }
+
+export class LineUpOrbsHorizontallyAtMouseY extends UserInput {
+  constructor(data: number, tick: number, number: number, playerRole?: PlayerRole) {
+    super(UserInputs.LINE_UP_ORBS_HORIZONTALLY_AT_Y, data, tick, number, playerRole);
+  }
+}
