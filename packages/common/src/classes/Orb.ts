@@ -1,10 +1,9 @@
+import Matter from "matter-js";
 import { Point } from "./Point";
 
 export class Orb {
-  position: Point;
+  body: Matter.Body;
   destination: Point | null;
-  velocity: Point;
-  radius: number;
   color: string;
   owner: string;
   id: number;
@@ -12,11 +11,9 @@ export class Orb {
   isDashing: boolean;
   isSelected: boolean;
   positionBuffer: { position: Point; timestamp: number }[];
-  constructor(position: Point, radius: number, owner: string, id: number, color: string) {
-    this.position = position;
-    this.destination = position;
-    this.velocity = new Point(0, 0);
-    this.radius = radius;
+  constructor(body: Matter.Body, owner: string, id: number, color: string) {
+    this.body = body;
+    this.destination = new Point(body.position.x, body.position.y);
     this.color = color;
     this.owner = owner;
     this.id = id;

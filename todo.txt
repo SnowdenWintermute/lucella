@@ -1,0 +1,28 @@
+Profile
+Profile view with name, avi and ranks
+Chat
+  -press up to get last entered messages
+  -send private messages
+  -friend list
+  -make messages a class
+  -client can lie what their name is...
+  -icon of what game they're playing
+
+- delta byte packets
+- psql
+- mouse position at start of game doesn't work until you move the mouse
+- channel update revamp so people don't stay in channels when they're not
+- tests for auth flow
+- auth error handling
+
+Lag Compensation
+  - lerp to correct position if update + client prediction doesn't match with last client predicted location
+    or rubberband if it is really far off (https://medium.com/@geretti/netcode-series-part-3-player-movement-921f0aec661a)
+    "Now, we can transition from the primary context to the secondary context over a short amount of time, all while still simulating both."
+  - 
+  - send only deltas
+
+  - buffer other player positions and interpolate their movement in the past
+
+  - constantly measure round trip time of packets
+  - On high latency situations, the client artificially delays physics prediction, to communicate latency to the user and reduce the burden on server lag comp. 

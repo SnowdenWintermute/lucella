@@ -1,6 +1,7 @@
 import { BattleRoomGame } from "../BattleRoomGame";
 import { SocketMetadata } from "../SocketMetadata";
 import { GameStatus } from "../../enums";
+import Matter from "matter-js";
 
 export class GameRoom {
   gameName: string;

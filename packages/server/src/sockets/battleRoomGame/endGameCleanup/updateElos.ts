@@ -1,11 +1,7 @@
 import { PlayerRole } from "../../../../../common";
 import { IBattleRoomRecord } from "../../../models/BattleRoomRecord";
 
-export default function (
-  hostBattleRoomRecord: IBattleRoomRecord,
-  challengerBattleRoomRecord: IBattleRoomRecord,
-  winnerRole: PlayerRole
-) {
+export default function (hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord, winnerRole: PlayerRole) {
   const hostElo = hostBattleRoomRecord.elo;
   const challengerElo = challengerBattleRoomRecord.elo;
   let newHostElo: number, newChallengerElo: number;

@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "license": "MIT",
   "dependencies": {
+    "matter-js": "^0.18.0",
     "replicator": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/matter-js": "^0.18.2"
   }
 }

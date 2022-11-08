@@ -1,3 +1,5 @@
+import { Orb } from "../classes/Orb";
+
 export type WidthAndHeight = { width: number; height: number };
 
 export interface EloUpdates {
@@ -9,4 +11,12 @@ export interface EloUpdates {
   newHostRank: number;
   oldChallengerRank: number;
   newChallengerRank: number;
+}
+
+export interface ServerPacket {
+  orbs: { host: { [orbLabel: string]: Orb }; challenger: { [orbLabel: string]: Orb } };
+  tick: number;
+  serverLastKnownClientTicks: { host: number; challenger: number };
+  serverLastProcessedInputNumbers: { host: number; challenger: number };
+  timeReceived: number;
 }

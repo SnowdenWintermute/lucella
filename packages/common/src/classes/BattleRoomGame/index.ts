@@ -1,17 +1,20 @@
+import Matter from "matter-js";
 import { baseOrbRadius, baseSpeedModifier, gameOverCountdownDuration, initialScoreNeededToWin } from "../../consts/battle-room-game-config";
 import { UserInput } from "../inputs/UserInput";
 import { MouseData } from "../MouseData";
 import { Orb } from "../Orb";
 import { Point } from "../Point";
 import { Rectangle } from "../Rectangles";
-import { generateStartingOrbs } from "./generateStartingOrbs";
+import { DebugValues } from "./DebugValues";
+import initializeWorld from "./initializeWorld";
+import { NetCode } from "./NetCode";
 
 export class BattleRoomGame {
   gameName: string;
   isRanked: boolean;
+  physicsEngine: Matter.Engine | undefined;
   intervals: {
     physics: NodeJS.Timeout | undefined;
-    broadcast: NodeJS.Timeout | undefined;
     endingCountdown: NodeJS.Timeout | undefined;
   };
   mouseData: MouseData; // client only
@@ -29,56 +32,30 @@ export class BattleRoomGame {
       };
     };
   };
-  lastUpdateFromServer: any;
-  lastUpdateFromServerProcessedByLerperTimestamp: number | null;
-  currentTick: number; // 65535 max then roll to 0
-  timeOfLastTick: number | null;
-  roundTripTime: number | null;
-  lastClientInputNumber: number;
-  serverLastKnownClientTicks: {
-    host: number | null;
-    challenger: number | null;
-  }; // server only
-  serverLastProcessedInputNumbers: {
-    host: number | null;
-    challenger: number | null;
+  netcode: NetCode;
+  antiCheat: {
+    numberOfMovementRequests: { host: number; challenger: number };
+    cumulativeTimeBetweenMovementRequests: { host: number; challenger: number };
+    averageMovementRequestRate: { host: number; challenger: number };
   };
-  serverLastSeenMovementInputTimestamps: { host: number; challenger: number };
   winner: string | null;
-  orbs: { host: Orb[]; challenger: Orb[] };
+  orbs: { host: { [label: string]: Orb }; challenger: { [label: string]: Orb } };
+  currentCollisionPairs: Matter.Pair[];
   endzones: { host: Rectangle; challenger: Rectangle };
   score: { host: number; challenger: number; neededToWin: number };
   speedModifier: number;
-  debug: {
-    showDebug: boolean;
-    general: {
-      deltaT?: number;
-      gameSpeedAdjustedForDeltaT?: number;
-    };
-    clientPrediction: {
-      inputsToSimulate?: any[];
-      ticksSinceLastClientTickConfirmedByServer?: number;
-      simulatingBetweenInputs?: boolean;
-      clientServerTickDifference?: number;
-      lastProcessedClientInputNumber?: number;
-      frameTime?: number;
-      timeLastPacketSent?: number;
-      roundTripTime?: number;
-      entityPositionBuffer?: { position: Point; timestamp: number }[];
-      lerpFrameTime?: number;
-    };
-  };
+  debug: DebugValues;
   static baseWindowDimensions = { width: 450, height: 750 };
   static baseEndzoneHeight = 60;
   static baseOrbRadius = baseOrbRadius;
   static baseSpeedModifier = baseSpeedModifier;
   static initialScoreNeededToWin = initialScoreNeededToWin;
+  static initializeWorld = initializeWorld;
   constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
     this.intervals = {
       physics: undefined,
-      broadcast: undefined,
       endingCountdown: undefined,
     };
     this.mouseData = new MouseData();
@@ -93,20 +70,15 @@ export class BattleRoomGame {
         receivedLatestClientTickNumbers: { host: null, challenger: null },
       }, // server only
     };
-    this.lastUpdateFromServer = null;
-    this.lastUpdateFromServerProcessedByLerperTimestamp = null;
-    this.currentTick = 0;
-    this.timeOfLastTick = null;
-    this.roundTripTime = null;
-    this.lastClientInputNumber = 0;
-    this.winner = null;
-    this.serverLastKnownClientTicks = { host: null, challenger: null }; // server only
-    this.serverLastProcessedInputNumbers = {
-      host: null,
-      challenger: null,
+    this.netcode = new NetCode();
+    this.antiCheat = {
+      numberOfMovementRequests: { host: 0, challenger: 0 },
+      cumulativeTimeBetweenMovementRequests: { host: 0, challenger: 0 },
+      averageMovementRequestRate: { host: 0, challenger: 0 },
     };
-    this.serverLastSeenMovementInputTimestamps = { host: 0, challenger: 0 };
-    this.orbs = { host: [], challenger: [] };
+    this.winner = null;
+    this.orbs = { host: {}, challenger: {} };
+    this.currentCollisionPairs = [];
     this.score = {
       host: 0,
       challenger: 0,
@@ -126,6 +98,5 @@ export class BattleRoomGame {
       general: {},
       clientPrediction: {},
     };
-    generateStartingOrbs(this.orbs, BattleRoomGame.baseOrbRadius);
   }
 }

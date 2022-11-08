@@ -1,4 +1,4 @@
-export { WidthAndHeight, EloUpdates } from "./types";
+export * from "./types";
 export { GameStatus, PlayerRole, UserInputs } from "./enums";
 export * from "./consts";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
@@ -15,4 +15,5 @@ export { UserInput } from "./classes/inputs/UserInput";
 export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
 export { processPlayerInput } from "./processPlayerInput";
 export { updateOrbs } from "./updateOrbs";
+export { handleOrbBodyCollisions } from "./updateOrbs/handleOrbBodyCollisions";
 export * from "./utils";

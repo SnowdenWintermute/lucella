@@ -2,7 +2,10 @@ import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { SelectOrbs } from "../classes/inputs";
 
 export default function handleSelectOrbs(input: SelectOrbs, game: BattleRoomGame) {
-  game.orbs[input.playerRole!].forEach((orb) =>
-    input.data.orbIds.includes(orb.id) ? (orb.isSelected = true) : (orb.isSelected = false)
-  );
+  // @ todo - can just select these directly now we're using object structure instead of array
+  for (let orbLabel in game.orbs[input.playerRole!]) {
+    input.data.orbLabels.includes(orbLabel)
+      ? (game.orbs[input.playerRole!][orbLabel].isSelected = true)
+      : (game.orbs[input.playerRole!][orbLabel].isSelected = false);
+  }
 }

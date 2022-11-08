@@ -2,6 +2,7 @@ import { EloUpdates, SocketEventsFromServer } from "../../../../../common";
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import sendPlayerBackToLobby from "./sendPlayerBackToLobby";
+const replicator = new (require("replicator"))();
 
 export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates: EloUpdates | null) {
   const { connectedSockets, gameRooms, games } = serverState;
@@ -16,7 +17,7 @@ export default function (io: Server, serverState: ServerState, gameName: string,
       const challenger = gameRoom.players.challenger ? connectedSockets[gameRoom.players.challenger.socketId!] : null;
       io.in(`game-${gameName}`).emit(SocketEventsFromServer.SHOW_END_SCREEN, {
         gameRoom,
-        game,
+        game: replicator.encode(game),
         eloUpdates,
       });
       io.in(`game-${gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
@@ -27,10 +28,7 @@ export default function (io: Server, serverState: ServerState, gameName: string,
       io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, gameRooms);
     } else {
       game.gameOverCountdown.current -= 1;
-      io.to(`game-${gameName}`).emit(
-        SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE,
-        game.gameOverCountdown.current
-      );
+      io.to(`game-${gameName}`).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
     }
   }, 1000);
 }
