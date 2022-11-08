@@ -1,4 +1,4 @@
-import { SocketEventsFromServer } from "../../../common";
+import { SocketEventsFromServer } from "../../../common/dist";
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { Alert } from "../../classes/Alert";

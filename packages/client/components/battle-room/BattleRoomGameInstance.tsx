@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux";
 import draw from "./canvas-functions/canvasMain";
 import { createRenderInterval } from "./game-functions/createRenderInterval";
-import GameListener from "../socket-manager/GameListener";
+import GameListener from "../socket-listeners/GameListener";
 import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../common";
 import { Socket } from "socket.io-client";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";

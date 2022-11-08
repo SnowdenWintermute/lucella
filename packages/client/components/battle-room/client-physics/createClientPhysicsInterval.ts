@@ -30,7 +30,7 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
 
     if (!lastUpdateFromServerCopy || !playerRole) return console.log("awaiting first server update before starting client physics");
 
-    const input = new ClientTickNumber(null, game.netcode.currentTick, (game.netcode.lastClientInputNumber += 1), playerRole);
+    const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
     newGameState.queues.client.localInputs.push(input);
     laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
 
@@ -44,8 +44,6 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
     const newRtt = determineRoundTripTime(game, lastUpdateFromServerCopy, playerRole);
     if (newRtt) game.netcode.roundTripTime = newRtt;
     assignDebugValues(game, lastUpdateFromServerCopy, playerRole, frameTime, newRtt);
-
-    game.netcode.currentTick = game.netcode.currentTick <= 65535 ? game.netcode.currentTick + 1 : 0; // @ todo - change to ring buffer
 
     frameTime = +Date.now() - timeAtStartOfFrameSimulation;
     game.netcode.timeOfLastTick = +Date.now();

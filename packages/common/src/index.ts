@@ -3,6 +3,7 @@ export { GameStatus, PlayerRole, UserInputs } from "./enums";
 export * from "./consts";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
+export { GameElementsOfConstantInterest } from "./classes/BattleRoomGame/GameElementsOfConstantInterest";
 export { ChatChannel } from "./classes/ChatChannel";
 export { ChatMessage, ChatMessageStyles } from "./classes/ChatMessage";
 export { MouseData } from "./classes/MouseData";

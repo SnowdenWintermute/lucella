@@ -70,8 +70,13 @@ export const authApi = createApi({
       },
       invalidatesTags: ["User"],
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        await queryFulfilled;
-        dispatch(authApi.util.resetApiState());
+        queryFulfilled
+          .then(() => {
+            dispatch(authApi.util.resetApiState());
+          })
+          .catch(() => {
+            dispatch(authApi.util.resetApiState());
+          });
       },
     }),
     // DELETE ACCOUNT

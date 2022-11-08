@@ -27,24 +27,13 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, p
         orbLabels: [`${playerRole}-orb-${keyPressed - 1}`],
         mousePosition: new Point(mouseData.position?.x || 0, mouseData.position?.y || 0),
       },
-      currentGame.netcode.currentTick,
       (currentGame.netcode.lastClientInputNumber += 1),
       playerRole
     );
   else if (keyPressed === 6)
-    input = new LineUpOrbsHorizontallyAtMouseY(
-      mouseData.position?.y || 0,
-      currentGame.netcode.currentTick,
-      (currentGame.netcode.lastClientInputNumber += 1),
-      playerRole
-    );
+    input = new LineUpOrbsHorizontallyAtMouseY(mouseData.position?.y || 0, (currentGame.netcode.lastClientInputNumber += 1), playerRole);
   else if (keyPressed === 7)
-    input = new SelectOrbs(
-      { orbLabels: Object.keys(currentGame.orbs[playerRole]) },
-      currentGame.netcode.currentTick,
-      (currentGame.netcode.lastClientInputNumber += 1),
-      playerRole
-    );
+    input = new SelectOrbs({ orbLabels: Object.keys(currentGame.orbs[playerRole]) }, (currentGame.netcode.lastClientInputNumber += 1), playerRole);
   if (!input) return;
   currentGame.queues.client.localInputs.push(input);
   // socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input))

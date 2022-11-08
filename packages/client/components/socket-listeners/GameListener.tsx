@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { BattleRoomGame, SocketEventsFromServer, randBetween } from "../../../common";
+import { BattleRoomGame, SocketEventsFromServer, randBetween } from "../../../common/dist";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 const replicator = new (require("replicator"))();
@@ -21,15 +21,12 @@ const GameListener = (props: Props) => {
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
       console.log("game initialized");
       game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole);
-      // game.intervals.broadcast = createClientBroadcastInterval(socket, game, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
       setTimeout(() => {
         const decodedPacket = replicator.decode(data);
         game.netcode.lastUpdateFromServer = {
           orbs: decodedPacket.orbs,
-          tick: decodedPacket.netcode.currentTick,
-          serverLastKnownClientTicks: decodedPacket.netcode.serverLastKnownClientTicks,
           serverLastProcessedInputNumbers: decodedPacket.netcode.serverLastProcessedInputNumbers,
           timeReceived: +Date.now(),
         };

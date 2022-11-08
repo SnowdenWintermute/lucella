@@ -9,7 +9,7 @@ import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import ScoreScreenModalContents from "./ScoreScreenModalContents";
 import Modal from "../common-components/modal/Modal";
 import io, { Socket } from "socket.io-client";
-import SocketManager from "../socket-manager/SocketManager";
+import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux";

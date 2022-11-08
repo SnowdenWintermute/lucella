@@ -13,10 +13,10 @@ export interface EloUpdates {
   newChallengerRank: number;
 }
 
+export type HostAndChallengerOrbSets = { host: { [label: string]: Orb }; challenger: { [label: string]: Orb } };
+
 export interface ServerPacket {
-  orbs: { host: { [orbLabel: string]: Orb }; challenger: { [orbLabel: string]: Orb } };
-  tick: number;
-  serverLastKnownClientTicks: { host: number; challenger: number };
+  orbs: HostAndChallengerOrbSets;
   serverLastProcessedInputNumbers: { host: number; challenger: number };
   timeReceived: number;
 }
