@@ -22,11 +22,13 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
     if (!game) return console.log("tried to update physics in a game that wasn't found");
     if (!game.physicsEngine) return console.log("tried to update physics in a game that was not yet initialized");
 
-    game.queues.server.receivedInputs.forEach(() => {
+    let numInputsToProcess = game.queues.server.receivedInputs.length;
+    while (numInputsToProcess) {
       const input: UserInput = game.queues.server.receivedInputs.shift();
       processPlayerInput(input, game, renderRate, input.playerRole);
       game.netcode.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
-    });
+      numInputsToProcess--;
+    }
 
     handleScoringPoints(io, socket, serverState, game);
     const updateForHost = createDeltaPacket(game, PlayerRole.HOST);

@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, simulatedLagMs } from "../../../../common";
+import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, simulatedLagMs, simulateLag } from "../../../../common";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
 const replicator = new (require("replicator"))();
@@ -22,8 +22,8 @@ export default function mouseUpHandler(
       playerRole
     );
     currentGame.queues.client.localInputs.push(input);
-    // socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
-    laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
+    if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
+    else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
   }
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = false;

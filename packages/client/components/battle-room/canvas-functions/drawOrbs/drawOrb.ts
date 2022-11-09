@@ -14,6 +14,23 @@ export default function drawOrb(context: CanvasRenderingContext2D, orb: Orb, can
   );
   showAsRing ? context.stroke() : context.fill();
   if (debug) {
+    // context.strokeStyle = "white";
+    // context.beginPath();
+    // context.moveTo(orb.body.position.x * canvasDrawFractions.x, orb.body.position.y * canvasDrawFractions.y);
+    // context.arc(
+    //   orb.body.position.x * canvasDrawFractions.x,
+    //   orb.body.position.y * canvasDrawFractions.y,
+    //   orb.body.circleRadius!,
+    //   orb.body.angle,
+    //   orb.body.angle + Math.PI * 0.5
+    // );
+    // context.lineTo(
+    //   orb.body.position.x * canvasDrawFractions.x + Math.cos(orb.body.angle),
+    //   orb.body.position.y * canvasDrawFractions.y + Math.sin(orb.body.angle)
+    // );
+    // context.stroke();
+    context.fillStyle = context.strokeStyle = orb.isGhost ? `rgba(${orb.color},${ghostTransparency})` : `rgb(${orb.color})`;
+
     context.fillStyle = "white";
     context.textAlign = "center";
     context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px Arial`;

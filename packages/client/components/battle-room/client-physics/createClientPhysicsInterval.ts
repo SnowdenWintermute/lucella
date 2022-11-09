@@ -15,6 +15,7 @@ import {
   simulatedLagMs,
   SocketEventsFromClient,
   ServerPacket,
+  simulateLag,
 } from "../../../../common";
 const replicator = new (require("replicator"))();
 
@@ -32,7 +33,9 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
 
     const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
     newGameState.queues.client.localInputs.push(input);
-    laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
+
+    if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
+    else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
 
     setOrbSetPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
     setOrbSetNonPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);

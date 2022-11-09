@@ -1,6 +1,6 @@
-import { GameStatus, PlayerRole } from "../../../../common";
+import { GameStatus, PlayerRole } from "../../../common";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EloUpdates, GameRoom, BattleRoomGame } from "../../../../common";
+import { EloUpdates, GameRoom, BattleRoomGame } from "../../../common";
 
 export interface IGameScoreScreen {
   gameRoom: GameRoom;
@@ -57,6 +57,7 @@ const ladderSlice = createSlice({
   initialState,
   reducers: {
     clearLobbyUi(state) {
+      // @ts-ignore
       state = initialState;
     },
     setPreGameScreenDisplayed(state, action: PayloadAction<boolean>) {
@@ -99,6 +100,7 @@ const ladderSlice = createSlice({
       state.gameList.games = action.payload;
     },
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
+      // @ts-ignore
       state.scoreScreenData = action.payload;
       state.scoreScreenDisplayed = true;
     },

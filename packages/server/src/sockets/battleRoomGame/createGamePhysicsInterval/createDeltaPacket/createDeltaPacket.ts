@@ -23,5 +23,6 @@ export default function (game: BattleRoomGame, playerRole: PlayerRole) {
 
     if (Object.keys(orbDeltas).length) changedOrbsDeltas[orbLabel] = orbDeltas;
   }
-  if (Object.keys(changedOrbsDeltas).length) console.log(changedOrbsDeltas);
+  // if (Object.keys(changedOrbsDeltas).length) console.log(changedOrbsDeltas);
+  return Object.keys(changedOrbsDeltas).length ? changedOrbsDeltas : null;
 }

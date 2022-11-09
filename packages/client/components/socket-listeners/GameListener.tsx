@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { BattleRoomGame, SocketEventsFromServer, randBetween } from "../../../common/dist";
-import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
+import { BattleRoomGame, SocketEventsFromServer, randBetween, simulateLag, simulatedLagMs } from "../../../common/dist";
+import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 const replicator = new (require("replicator"))();
 
@@ -23,7 +23,17 @@ const GameListener = (props: Props) => {
       game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
-      setTimeout(() => {
+      if (simulateLag)
+        setTimeout(() => {
+          const decodedPacket = replicator.decode(data);
+          game.netcode.lastUpdateFromServer = {
+            orbs: decodedPacket.orbs,
+            serverLastProcessedInputNumbers: decodedPacket.netcode.serverLastProcessedInputNumbers,
+            timeReceived: +Date.now(),
+          };
+          game.score = decodedPacket.score;
+        }, simulatedLagMs);
+      else {
         const decodedPacket = replicator.decode(data);
         game.netcode.lastUpdateFromServer = {
           orbs: decodedPacket.orbs,
@@ -31,17 +41,15 @@ const GameListener = (props: Props) => {
           timeReceived: +Date.now(),
         };
         game.score = decodedPacket.score;
-      }, 500);
+      }
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
       clearInterval(game.intervals.physics);
-      // clearInterval(game.intervals.broadcast);
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
       game.gameOverCountdown.current = data;
       clearInterval(game.intervals.physics);
-      // clearInterval(game.intervals.broadcast);
       // if (data === 0) dispatch(gameUiActions.clearGameUiData())
     });
     return () => {
