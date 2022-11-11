@@ -13,7 +13,7 @@ export class Orb {
   positionBuffer: { position: Point; timestamp: number }[];
   constructor(body: Matter.Body, owner: string, id: number, color: string) {
     this.body = body;
-    this.destination = new Point(body.position.x, body.position.y);
+    this.destination = null;
     this.color = color;
     this.owner = owner;
     this.id = id;

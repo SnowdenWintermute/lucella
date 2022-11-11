@@ -31,7 +31,7 @@ export function setOrbSetPhysicsPropertiesFromAnotherSet(a: { [orbLabel: string]
       inertia,
       velocity,
       angle,
-      angularVelocity,
+      // angularVelocity,
     };
     setBodyProperties(a[orbLabel].body, newProperties);
   }

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { BattleRoomGame, SocketEventsFromServer, randBetween, simulateLag, simulatedLagMs } from "../../../common/dist";
+import { BattleRoomGame, SocketEventsFromServer, DeltasProto } from "../../../common/dist";
 import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 const replicator = new (require("replicator"))();
@@ -23,25 +23,36 @@ const GameListener = (props: Props) => {
       game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
-      if (simulateLag)
-        setTimeout(() => {
-          const decodedPacket = replicator.decode(data);
-          game.netcode.lastUpdateFromServer = {
-            orbs: decodedPacket.orbs,
-            serverLastProcessedInputNumbers: decodedPacket.netcode.serverLastProcessedInputNumbers,
-            timeReceived: +Date.now(),
-          };
-          game.score = decodedPacket.score;
-        }, simulatedLagMs);
-      else {
-        const decodedPacket = replicator.decode(data);
-        game.netcode.lastUpdateFromServer = {
-          orbs: decodedPacket.orbs,
-          serverLastProcessedInputNumbers: decodedPacket.netcode.serverLastProcessedInputNumbers,
-          timeReceived: +Date.now(),
-        };
-        game.score = decodedPacket.score;
-      }
+      const deserializedMessage = DeltasProto.deserializeBinary(data);
+      const decodedPacket = deserializedMessage.toObject();
+      deserializedMessage.hasChallengerorbs() && console.log(deserializedMessage.getChallengerorbs()?.toObject());
+      deserializedMessage.hasHostorbs() && console.log(deserializedMessage.getHostorbs()?.toObject());
+      // game.netcode.lastUpdateFromServer = {
+      //   orbs: decodedPacket.orbsList,
+      //   serverLastProcessedInputNumbers: decodedPacket.serverLastProcessedInputNumbers,
+      //   timeReceived: +Date.now(),
+      // };
+      // game.score = decodedPacket.score;
+
+      // if (simulateLag)
+      //   setTimeout(() => {
+      //     const decodedPacket = replicator.decode(data);
+      // game.netcode.lastUpdateFromServer = {
+      //   orbs: decodedPacket.orbs,
+      //   serverLastProcessedInputNumbers: decodedPacket.netcode.serverLastProcessedInputNumbers,
+      //   timeReceived: +Date.now(),
+      // };
+      // game.score = decodedPacket.score;
+      //   }, simulatedLagMs);
+      // else {
+      //   const decodedPacket = replicator.decode(data);
+      //   game.netcode.lastUpdateFromServer = {
+      //     orbs: decodedPacket.orbs,
+      //     serverLastProcessedInputNumbers: decodedPacket.netcode.serverLastProcessedInputNumbers,
+      //     timeReceived: +Date.now(),
+      //   };
+      //   game.score = decodedPacket.score;
+      // }
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

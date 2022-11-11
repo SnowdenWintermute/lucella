@@ -33,7 +33,10 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
     handleScoringPoints(io, socket, serverState, game);
     const updateForHost = createDeltaPacket(game, PlayerRole.HOST);
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
-    io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
+    // io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
+    io.to(serverState.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
+    io.to(serverState.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
+
     game.netcode.prevGameState = new GameElementsOfConstantInterest(
       cloneDeep(game.orbs),
       cloneDeep(game.score),

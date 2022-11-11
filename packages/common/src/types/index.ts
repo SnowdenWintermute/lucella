@@ -1,4 +1,5 @@
 import { Orb } from "../classes/Orb";
+import { Point } from "../classes/Point";
 
 export type WidthAndHeight = { width: number; height: number };
 
@@ -20,3 +21,5 @@ export interface ServerPacket {
   serverLastProcessedInputNumbers: { host: number; challenger: number };
   timeReceived: number;
 }
+
+export type OrbDeltas = { position?: Point; destination?: Point; isSelected?: boolean; isGhost?: boolean };

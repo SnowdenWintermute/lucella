@@ -8,8 +8,8 @@ export class NetCode {
   roundTripTime: number | null;
   lastClientInputNumber: number;
   serverLastProcessedInputNumbers: {
-    host: number | null;
-    challenger: number | null;
+    host: number;
+    challenger: number;
   };
   prevGameState: GameElementsOfConstantInterest | null;
   serverLastSeenMovementInputTimestamps: { host: number; challenger: number };
@@ -20,8 +20,8 @@ export class NetCode {
     this.roundTripTime = null;
     this.lastClientInputNumber = 0;
     this.serverLastProcessedInputNumbers = {
-      host: null,
-      challenger: null,
+      host: 0,
+      challenger: 0,
     };
     this.serverLastSeenMovementInputTimestamps = { host: 0, challenger: 0 };
     this.prevGameState = null;
