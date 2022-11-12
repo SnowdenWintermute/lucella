@@ -1,4 +1,4 @@
-import { BattleRoomGame, OrbDeltas, PlayerRole, Point } from "../../../../../../common";
+import { BattleRoomGame, OrbDeltas, OrbSetDeltas, PlayerRole, Point } from "../../../../../../common";
 import isEqual from "lodash.isequal";
 
 const orbPropNames = ["isSelected", "isGhost", "destination"];
@@ -7,9 +7,7 @@ const propsToOmitFromOpponentOrbs = ["destination"];
 export default function determineOrbDeltas(game: BattleRoomGame, playerRole: PlayerRole, isOpponent?: boolean) {
   if (!game.netcode.prevGameState) return; // send full game data
 
-  const orbsDeltasToSerialize: {
-    [orbLabel: string]: OrbDeltas;
-  } = {};
+  const orbsDeltasToSerialize: OrbSetDeltas = {};
   for (let orbLabel in game.netcode.prevGameState.orbs[playerRole]) {
     const prevOrbState = game.netcode.prevGameState.orbs[playerRole][orbLabel];
     const currOrb = game.orbs[playerRole][orbLabel];

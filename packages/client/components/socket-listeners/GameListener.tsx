@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux";
 import { BattleRoomGame, SocketEventsFromServer, DeltasProto } from "../../../common/dist";
 import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
+import unpackDeltaPacket from "../../utils/unpackDeltaPacket";
 const replicator = new (require("replicator"))();
 
 interface Props {
@@ -22,11 +23,9 @@ const GameListener = (props: Props) => {
       console.log("game initialized");
       game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole);
     });
-    socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data) => {
-      const deserializedMessage = DeltasProto.deserializeBinary(data);
-      const decodedPacket = deserializedMessage.toObject();
-      deserializedMessage.hasChallengerorbs() && console.log(deserializedMessage.getChallengerorbs()?.toObject());
-      deserializedMessage.hasHostorbs() && console.log(deserializedMessage.getHostorbs()?.toObject());
+    socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
+      const newUpdate = unpackDeltaPacket(data);
+
       // game.netcode.lastUpdateFromServer = {
       //   orbs: decodedPacket.orbsList,
       //   serverLastProcessedInputNumbers: decodedPacket.serverLastProcessedInputNumbers,

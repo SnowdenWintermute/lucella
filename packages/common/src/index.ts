@@ -1,6 +1,7 @@
 export * from "./types";
 export { GameStatus, PlayerRole, UserInputs } from "./enums";
 export * from "./consts";
+export * from "./consts/battle-room-game-config";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
 export { GameElementsOfConstantInterest } from "./classes/BattleRoomGame/GameElementsOfConstantInterest";

@@ -14,12 +14,13 @@ export interface EloUpdates {
   newChallengerRank: number;
 }
 
-export type HostAndChallengerOrbSets = { host: { [label: string]: Orb }; challenger: { [label: string]: Orb } };
+export type OrbSet = { [orbLabel: string]: Orb };
+export type HostAndChallengerOrbSets = { host: OrbSet; challenger: OrbSet };
+export type OrbDeltas = { position?: Point; destination?: Point; isSelected?: boolean; isGhost?: boolean };
+export type OrbSetDeltas = { [orbLabel: string]: OrbDeltas };
 
 export interface ServerPacket {
   orbs: HostAndChallengerOrbSets;
   serverLastProcessedInputNumbers: { host: number; challenger: number };
   timeReceived: number;
 }
-
-export type OrbDeltas = { position?: Point; destination?: Point; isSelected?: boolean; isGhost?: boolean };

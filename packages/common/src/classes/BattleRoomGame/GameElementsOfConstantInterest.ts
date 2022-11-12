@@ -1,5 +1,6 @@
 import { baseSpeedModifier } from "../../consts/battle-room-game-config";
 import { HostAndChallengerOrbSets } from "../../types";
+import { Orb } from "../Orb";
 
 export class GameElementsOfConstantInterest {
   orbs: HostAndChallengerOrbSets;
@@ -7,7 +8,7 @@ export class GameElementsOfConstantInterest {
   speedModifier: number;
   serverLastProcessedInputNumbers: { host: number | null; challenger: number | null };
   constructor(
-    orbs?: HostAndChallengerOrbSets,
+    orbs?: { host: { [orbLabel: string]: Orb }; challenger: { [orbLabel: string]: Orb } },
     score?: { host: number; challenger: number; neededToWin: number },
     speedModifier?: number,
     serverLastProcessedInputNumbers?: { host: number | null; challenger: number | null }
