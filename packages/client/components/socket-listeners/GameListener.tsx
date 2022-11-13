@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux";
 import { BattleRoomGame, SocketEventsFromServer } from "../../../common/dist";
 import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
-import unpackDeltaPacket from "../../utils/unpackDeltaPacket";
+import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
 const replicator = new (require("replicator"))();
 
 interface Props {
@@ -56,6 +56,7 @@ const GameListener = (props: Props) => {
       clearInterval(game.intervals.physics);
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
+      console.log(data);
       game.gameOverCountdown.current = data;
       clearInterval(game.intervals.physics);
       // if (data === 0) dispatch(gameUiActions.clearGameUiData())

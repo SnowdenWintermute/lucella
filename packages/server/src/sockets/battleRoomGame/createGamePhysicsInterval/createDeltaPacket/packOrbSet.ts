@@ -14,6 +14,7 @@ export default function (orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas 
       positionPacket.setX(x);
       positionPacket.setY(y);
       orbPacket.setPosition(positionPacket);
+      console.log(x, y);
     }
     if (currOrb.destination) {
       const destinationPacket = new VectorProto();
