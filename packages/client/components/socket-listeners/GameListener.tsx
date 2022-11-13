@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { BattleRoomGame, SocketEventsFromServer, DeltasProto } from "../../../common/dist";
+import { BattleRoomGame, SocketEventsFromServer } from "../../../common/dist";
 import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../utils/unpackDeltaPacket";
@@ -25,14 +25,12 @@ const GameListener = (props: Props) => {
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
       const newUpdate = unpackDeltaPacket(data);
-
       // game.netcode.lastUpdateFromServer = {
       //   orbs: decodedPacket.orbsList,
       //   serverLastProcessedInputNumbers: decodedPacket.serverLastProcessedInputNumbers,
       //   timeReceived: +Date.now(),
       // };
       // game.score = decodedPacket.score;
-
       // if (simulateLag)
       //   setTimeout(() => {
       //     const decodedPacket = replicator.decode(data);

@@ -1,8 +1,7 @@
-import { DeltasProto } from "../../common/src";
+import { DeltasProto } from "../../common";
 
 export default function (serializedMessage: Uint8Array) {
   const newUpdate = { orbs: { host: {}, challenger: {} } };
-
   const deserializedMessage = DeltasProto.deserializeBinary(serializedMessage);
   if (deserializedMessage.hasChallengerorbs()) {
     const orbList = deserializedMessage.getChallengerorbs()?.getOrbsList();
@@ -18,5 +17,5 @@ export default function (serializedMessage: Uint8Array) {
       console.log(currOrb);
     });
   }
-  //   deserializedMessage.hasHostorbs() && console.log(deserializedMessage.getHostorbs()?.toObject());
+  deserializedMessage.hasHostorbs() && console.log(deserializedMessage.getHostorbs()?.toObject());
 }
