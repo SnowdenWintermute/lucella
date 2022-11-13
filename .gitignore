@@ -8,3 +8,5 @@ yarn-error.log
 *.css
 !main.css
 *.css.map
+
+.tsbuildinfo
