@@ -21,7 +21,7 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
   return setInterval(() => {
     if (!game) return console.log("tried to update physics in a game that wasn't found");
     if (!game.physicsEngine) return console.log("tried to update physics in a game that was not yet initialized");
-
+    // console.log(game.orbs.challenger["challenger-orb-0"].body.position, game.orbs.challenger["challenger-orb-0"].destination);
     let numInputsToProcess = game.queues.server.receivedInputs.length;
     while (numInputsToProcess) {
       const input: UserInput = game.queues.server.receivedInputs.shift();

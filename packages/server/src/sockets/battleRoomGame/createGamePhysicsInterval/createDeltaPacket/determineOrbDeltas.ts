@@ -12,10 +12,7 @@ export default function determineOrbDeltas(game: BattleRoomGame, playerRole: Pla
     const prevOrbState = game.netcode.prevGameState.orbs[playerRole][orbLabel];
     const currOrb = game.orbs[playerRole][orbLabel];
     const orbDeltas: OrbDeltas = {};
-    if (!isEqual(currOrb.body.position, prevOrbState.body.position)) {
-      orbDeltas.position = currOrb.body.position;
-      console.log("positions not equal, ", currOrb.body.position);
-    }
+    if (!isEqual(currOrb.body.position, prevOrbState.body.position)) orbDeltas.position = currOrb.body.position;
     if (currOrb.isSelected !== prevOrbState.isSelected) orbDeltas.isSelected = currOrb.isSelected;
     if (currOrb.isGhost !== prevOrbState.isGhost) orbDeltas.isGhost = currOrb.isGhost;
     if (!isOpponent && !isEqual(currOrb.destination, prevOrbState.destination)) orbDeltas.destination = currOrb.destination || undefined;

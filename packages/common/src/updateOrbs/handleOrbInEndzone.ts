@@ -1,11 +1,12 @@
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
+import { gameSpeedIncrementRate } from "../consts/battle-room-game-config";
 import { PlayerRole } from "../enums";
 
 const incrementScoreAndGameSpeed = (orb: Orb, game: BattleRoomGame, playerRole: PlayerRole) => {
   game.score[playerRole] += 1;
   orb.isGhost = true;
-  game.speedModifier += 0.5;
+  game.speedModifier += gameSpeedIncrementRate;
 };
 
 export default function handleOrbInEndzone(orb: Orb, game: BattleRoomGame, playerRole: "host" | "challenger") {

@@ -24,12 +24,13 @@ const GameListener = (props: Props) => {
       game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
-      const newUpdate = unpackDeltaPacket(data);
-      // game.netcode.lastUpdateFromServer = {
-      //   orbs: decodedPacket.orbsList,
-      //   serverLastProcessedInputNumbers: decodedPacket.serverLastProcessedInputNumbers,
-      //   timeReceived: +Date.now(),
-      // };
+      const newUpdate = unpackDeltaPacket(data, playerRole);
+      if (newUpdate && Object.keys(newUpdate).length) console.log(newUpdate);
+      game.netcode.lastUpdateFromServer = {
+        orbs: { host: {}, challenger: {} },
+        serverLastProcessedInputNumbers: { host: 0, challenger: 0 },
+        timeReceived: +Date.now(),
+      };
       // game.score = decodedPacket.score;
       // if (simulateLag)
       //   setTimeout(() => {

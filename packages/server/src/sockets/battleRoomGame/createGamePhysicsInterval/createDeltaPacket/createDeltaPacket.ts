@@ -21,19 +21,19 @@ export default function (game: BattleRoomGame, playerRole: PlayerRole) {
 
   if (!isEqual(game.score, game.netcode.prevGameState.score)) {
     const packedScore = new ScoreProto();
-    game.score.host !== game.netcode.prevGameState.score.host && packedScore.setHost(game.score.host);
-    game.score.challenger !== game.netcode.prevGameState.score.challenger && packedScore.setChallenger(game.score.challenger);
-    game.score.neededToWin !== game.netcode.prevGameState.score.neededToWin && packedScore.setNeededtowin(game.score.neededToWin);
+    if (game.score.host !== game.netcode.prevGameState.score.host) packedScore.setHost(game.score.host);
+    if (game.score.challenger !== game.netcode.prevGameState.score.challenger) packedScore.setChallenger(game.score.challenger);
+    if (game.score.neededToWin !== game.netcode.prevGameState.score.neededToWin) packedScore.setNeededtowin(game.score.neededToWin);
     deltasPacket.setScore(packedScore);
   }
   if (game.speedModifier !== game.netcode.prevGameState.speedModifier) deltasPacket.setGamespeedmodifier(game.speedModifier);
 
   const packedLastProcessedInputNumbers = new LastProcessedInputNumbersProto();
-  packedLastProcessedInputNumbers.setHost(game.netcode.serverLastProcessedInputNumbers.host || 0);
-  packedLastProcessedInputNumbers.setChallenger(game.netcode.serverLastProcessedInputNumbers.challenger || 0);
+  playerRole === PlayerRole.HOST && packedLastProcessedInputNumbers.setHost(game.netcode.serverLastProcessedInputNumbers.host || 0);
+  playerRole === PlayerRole.CHALLENGER && packedLastProcessedInputNumbers.setChallenger(game.netcode.serverLastProcessedInputNumbers.challenger || 0);
   deltasPacket.setServerlastprocessedinputnumbers(packedLastProcessedInputNumbers);
 
   const serializedMessage = deltasPacket.serializeBinary();
-  console.log("length in bytes: " + serializedMessage.length);
+  // console.log("length in bytes: " + serializedMessage.length);
   return serializedMessage;
 }

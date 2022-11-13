@@ -1,7 +1,6 @@
 import { Body, Vector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
-import { physicsTickRate } from "../consts";
 
 export default function (orb: Orb, game: BattleRoomGame, deltaT?: number) {
   if (!orb.destination) return;
