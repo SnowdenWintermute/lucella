@@ -13,7 +13,7 @@ const gameOverText = (context: CanvasRenderingContext2D, game: BattleRoomGame, g
     (BattleRoomGame.baseWindowDimensions.height * canvasDrawFractions.y) / 2
   );
   context.fillText(
-    typeof game.gameOverCountdown.current === "number" ? "Score screen in " + game.gameOverCountdown.current : "",
+    typeof game.gameOverCountdown.current === "number" ? "Score screen in " + game.gameOverCountdown.current : game.gameOverCountdown.duration.toString(),
     (BattleRoomGame.baseWindowDimensions.width * canvasDrawFractions.x) / 2,
     (BattleRoomGame.baseWindowDimensions.height * canvasDrawFractions.y) / 2 + 20
   );

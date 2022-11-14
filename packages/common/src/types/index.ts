@@ -21,6 +21,8 @@ export type OrbSetDeltas = { [orbLabel: string]: OrbDeltas };
 
 export interface ServerPacket {
   orbs: HostAndChallengerOrbSets;
-  serverLastProcessedInputNumbers: { host: number; challenger: number };
+  serverLastProcessedInputNumber: number;
+  speedModifier: number;
+  score: { host: number; challenger: number; neededToWin: number };
   timeReceived: number;
 }

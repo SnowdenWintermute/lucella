@@ -11,6 +11,7 @@ import {
 export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
   const opponentRole = playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
 
+  // console.log("lastUpdateFromServerCopy.timeReceived: ", lastUpdateFromServerCopy.timeReceived);
   let firstTimeProcessingThisUpdate = false;
   if (
     !game.netcode.lastUpdateFromServerProcessedByLerperTimestamp ||

@@ -23,5 +23,6 @@ export default function unpackOrbProto(orbProto: OrbProto) {
   if (position) unpackedDeltas.position = new Point(position.getX(), position.getY());
   if (orbProto.hasIsghost()) unpackedDeltas.isGhost = orbProto.getIsghost();
   if (orbProto.hasIsselected()) unpackedDeltas.isSelected = orbProto.getIsselected();
+
   return unpackedDeltas;
 }

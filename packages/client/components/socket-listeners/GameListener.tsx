@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { BattleRoomGame, SocketEventsFromServer } from "../../../common/dist";
+import { BattleRoomGame, simulatedLagMs, simulateLag, SocketEventsFromServer } from "../../../common";
 import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
-const replicator = new (require("replicator"))();
+import mapUnpackedPacketToUpdateObject from "../../protobuf-utils/mapUnpackedPacketToUpdateObject";
 
 interface Props {
   socket: Socket;
@@ -24,33 +24,15 @@ const GameListener = (props: Props) => {
       game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
-      const newUpdate = unpackDeltaPacket(data, playerRole);
-      if (newUpdate && Object.keys(newUpdate).length) console.log(newUpdate);
-      game.netcode.lastUpdateFromServer = {
-        orbs: { host: {}, challenger: {} },
-        serverLastProcessedInputNumbers: { host: 0, challenger: 0 },
-        timeReceived: +Date.now(),
-      };
-      // game.score = decodedPacket.score;
-      // if (simulateLag)
-      //   setTimeout(() => {
-      //     const decodedPacket = replicator.decode(data);
-      // game.netcode.lastUpdateFromServer = {
-      //   orbs: decodedPacket.orbs,
-      //   serverLastProcessedInputNumbers: decodedPacket.netcode.serverLastProcessedInputNumbers,
-      //   timeReceived: +Date.now(),
-      // };
-      // game.score = decodedPacket.score;
-      //   }, simulatedLagMs);
-      // else {
-      //   const decodedPacket = replicator.decode(data);
-      //   game.netcode.lastUpdateFromServer = {
-      //     orbs: decodedPacket.orbs,
-      //     serverLastProcessedInputNumbers: decodedPacket.netcode.serverLastProcessedInputNumbers,
-      //     timeReceived: +Date.now(),
-      //   };
-      //   game.score = decodedPacket.score;
-      // }
+      if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
+      const unpacked = unpackDeltaPacket(data, playerRole);
+      // if (!unpacked || !Object.keys(unpacked).length) return;
+      const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, playerRole, unpacked || undefined);
+      if (simulateLag)
+        setTimeout(() => {
+          game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
+        }, simulatedLagMs);
+      else game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
