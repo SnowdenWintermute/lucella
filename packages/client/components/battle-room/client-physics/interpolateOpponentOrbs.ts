@@ -11,13 +11,11 @@ import {
 export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
   const opponentRole = playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
 
-  // console.log("lastUpdateFromServerCopy.timeReceived: ", lastUpdateFromServerCopy.timeReceived);
+  const { timeOfLastUpdateProcessedByLerper } = game.netcode;
+
   let firstTimeProcessingThisUpdate = false;
-  if (
-    !game.netcode.lastUpdateFromServerProcessedByLerperTimestamp ||
-    game.netcode.lastUpdateFromServerProcessedByLerperTimestamp !== lastUpdateFromServerCopy.timeReceived
-  ) {
-    game.netcode.lastUpdateFromServerProcessedByLerperTimestamp = lastUpdateFromServerCopy.timeReceived;
+  if (!timeOfLastUpdateProcessedByLerper || timeOfLastUpdateProcessedByLerper !== lastUpdateFromServerCopy.timeReceived) {
+    game.netcode.timeOfLastUpdateProcessedByLerper = lastUpdateFromServerCopy.timeReceived;
     firstTimeProcessingThisUpdate = true;
   }
 
@@ -32,6 +30,7 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
     while (positionBuffer.length >= 2 && positionBuffer[1].timestamp <= render_timestamp) positionBuffer.shift();
 
     if (positionBuffer.length >= 2 && positionBuffer[0].timestamp <= render_timestamp && render_timestamp <= positionBuffer[1].timestamp) {
+      console.log("lerping");
       const lerpStartPosition = positionBuffer[0].position;
       const lerpEndPosition = positionBuffer[1].position;
       const lerpStartTime = positionBuffer[0].timestamp;

@@ -11,7 +11,10 @@ export interface IUnpackedGameStateDeltas {
 }
 
 export default function (serializedMessage: Uint8Array, playerRole: PlayerRole | null) {
-  if (!playerRole) return console.log("no player role assigned - abandoning unpacking of delta packet");
+  if (!playerRole) {
+    console.log("no player role assigned - abandoning unpacking of delta packet");
+    return undefined;
+  }
   const unpacked: IUnpackedGameStateDeltas = { orbs: { host: {}, challenger: {} } };
   const deserializedMessage = DeltasProto.deserializeBinary(serializedMessage);
   if (deserializedMessage.hasChallengerorbs()) {
@@ -32,11 +35,8 @@ export default function (serializedMessage: Uint8Array, playerRole: PlayerRole |
   }
 
   if (deserializedMessage.hasGamespeedmodifier()) unpacked.gameSpeedModifier = deserializedMessage.getGamespeedmodifier();
-  if (deserializedMessage.hasServerlastprocessedinputnumbers()) {
-    if (playerRole === PlayerRole.HOST) unpacked.serverlastprocessedinputnumber = deserializedMessage.getServerlastprocessedinputnumbers()?.getHost();
-    if (playerRole === PlayerRole.CHALLENGER)
-      unpacked.serverlastprocessedinputnumber = deserializedMessage.getServerlastprocessedinputnumbers()?.getChallenger();
-  }
+  if (deserializedMessage.hasServerlastprocessedinputnumber())
+    unpacked.serverlastprocessedinputnumber = deserializedMessage.getServerlastprocessedinputnumber();
 
   if (deserializedMessage.hasScore()) {
     const unpackedScore: any = {};

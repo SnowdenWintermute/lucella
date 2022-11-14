@@ -1,4 +1,3 @@
-import { Orb } from "../classes/Orb";
 import { Point } from "../classes/Point";
 import { OrbSet } from "../types";
 
@@ -29,9 +28,9 @@ export function setOrbSetPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet) {
     const { position, inertia, velocity, angle, angularVelocity } = b[orbLabel].body;
     const newProperties = {
       position,
-      inertia,
-      velocity,
-      angle,
+      // inertia,
+      // velocity,
+      // angle,
       // angularVelocity,
     };
     setBodyProperties(a[orbLabel].body, newProperties);

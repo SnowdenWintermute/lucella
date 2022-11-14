@@ -26,5 +26,5 @@ test("delta packet basic fields serialize and deserialize and can be recognized 
 
   expect(deserializedMessage.hasScore()).toBe(false);
   expect(deserializedMessage.hasGamespeedmodifier()).toBe(true);
-  expect(deserializedMessage.hasServerlastprocessedinputnumbers()).toBe(true); // always gets sent
+  expect(deserializedMessage.hasServerlastprocessedinputnumber()).toBe(true); // always gets sent
 });

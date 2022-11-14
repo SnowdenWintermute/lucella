@@ -1,5 +1,5 @@
 import isEqual from "lodash.isequal";
-import { BattleRoomGame, PlayerRole, DeltasProto, ScoreProto, LastProcessedInputNumbersProto } from "../../../../../../common";
+import { BattleRoomGame, PlayerRole, DeltasProto, ScoreProto } from "../../../../../../common";
 import determineOrbDeltas from "./determineOrbDeltas";
 import packOrbSet from "./packOrbSet";
 
@@ -28,10 +28,7 @@ export default function (game: BattleRoomGame, playerRole: PlayerRole) {
   }
   if (game.speedModifier !== game.netcode.prevGameState.speedModifier) deltasPacket.setGamespeedmodifier(game.speedModifier);
 
-  const packedLastProcessedInputNumbers = new LastProcessedInputNumbersProto();
-  playerRole === PlayerRole.HOST && packedLastProcessedInputNumbers.setHost(game.netcode.serverLastProcessedInputNumbers.host || 0);
-  playerRole === PlayerRole.CHALLENGER && packedLastProcessedInputNumbers.setChallenger(game.netcode.serverLastProcessedInputNumbers.challenger || 0);
-  deltasPacket.setServerlastprocessedinputnumbers(packedLastProcessedInputNumbers);
+  deltasPacket.setServerlastprocessedinputnumber(game.netcode.serverLastProcessedInputNumbers[playerRole]);
 
   const serializedMessage = deltasPacket.serializeBinary();
   // console.log("length in bytes: " + serializedMessage.length);

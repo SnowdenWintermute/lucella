@@ -127,34 +127,6 @@ export namespace ScoreProto {
   }
 }
 
-export class LastProcessedInputNumbersProto extends jspb.Message {
-  hasHost(): boolean;
-  clearHost(): void;
-  getHost(): number;
-  setHost(value: number): void;
-
-  hasChallenger(): boolean;
-  clearChallenger(): void;
-  getChallenger(): number;
-  setChallenger(value: number): void;
-
-  serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): LastProcessedInputNumbersProto.AsObject;
-  static toObject(includeInstance: boolean, msg: LastProcessedInputNumbersProto): LastProcessedInputNumbersProto.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: LastProcessedInputNumbersProto, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): LastProcessedInputNumbersProto;
-  static deserializeBinaryFromReader(message: LastProcessedInputNumbersProto, reader: jspb.BinaryReader): LastProcessedInputNumbersProto;
-}
-
-export namespace LastProcessedInputNumbersProto {
-  export type AsObject = {
-    host: number,
-    challenger: number,
-  }
-}
-
 export class DeltasProto extends jspb.Message {
   hasChallengerorbs(): boolean;
   clearChallengerorbs(): void;
@@ -176,10 +148,10 @@ export class DeltasProto extends jspb.Message {
   getGamespeedmodifier(): number;
   setGamespeedmodifier(value: number): void;
 
-  hasServerlastprocessedinputnumbers(): boolean;
-  clearServerlastprocessedinputnumbers(): void;
-  getServerlastprocessedinputnumbers(): LastProcessedInputNumbersProto | undefined;
-  setServerlastprocessedinputnumbers(value?: LastProcessedInputNumbersProto): void;
+  hasServerlastprocessedinputnumber(): boolean;
+  clearServerlastprocessedinputnumber(): void;
+  getServerlastprocessedinputnumber(): number;
+  setServerlastprocessedinputnumber(value: number): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): DeltasProto.AsObject;
@@ -197,7 +169,7 @@ export namespace DeltasProto {
     hostorbs?: OrbsProto.AsObject,
     score?: ScoreProto.AsObject,
     gamespeedmodifier: number,
-    serverlastprocessedinputnumbers?: LastProcessedInputNumbersProto.AsObject,
+    serverlastprocessedinputnumber: number,
   }
 }
 

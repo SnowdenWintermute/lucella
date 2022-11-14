@@ -25,15 +25,10 @@ message ScoreProto{
   optional int32 neededToWin = 3;
 }
 
-message LastProcessedInputNumbersProto{
-  optional int32 host = 1;
-  optional int32 challenger = 2;
-}
-
 message DeltasProto{
   optional OrbsProto challengerOrbs = 1;
   optional OrbsProto hostOrbs = 2;
   optional ScoreProto score = 3;
   optional int32 gameSpeedModifier = 4;
-  optional LastProcessedInputNumbersProto serverLastProcessedInputNumbers = 5;
+  optional int32 serverLastProcessedInputNumber = 5;
 }

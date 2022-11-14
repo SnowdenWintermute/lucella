@@ -20,7 +20,6 @@ import {
 const replicator = new (require("replicator"))();
 
 export default function createClientPhysicsInterval(socket: Socket, game: BattleRoomGame, playerRole: PlayerRole | null) {
-  game.netcode.timeOfLastTick = +Date.now();
   let frameTime = renderRate;
   BattleRoomGame.initializeWorld(game);
   return setInterval(() => {
@@ -44,11 +43,8 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
 
     game.debug.general = newGameState.debug.general;
 
-    const newRtt = determineRoundTripTime(game, lastUpdateFromServerCopy, playerRole);
-    if (newRtt) game.netcode.roundTripTime = newRtt;
-    assignDebugValues(game, lastUpdateFromServerCopy, playerRole, frameTime, newRtt);
+    assignDebugValues(game, lastUpdateFromServerCopy, playerRole, frameTime);
 
     frameTime = +Date.now() - timeAtStartOfFrameSimulation;
-    game.netcode.timeOfLastTick = +Date.now();
   }, renderRate);
 }
