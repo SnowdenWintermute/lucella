@@ -14,21 +14,25 @@ export default function (game: BattleRoomGame, unpacked?: IUnpackedGameStateDelt
   if (!unpacked) return prevGamestateWithNewDeltas;
   let orbSet: keyof typeof unpacked.orbs;
   for (orbSet in unpacked.orbs)
-    for (let orbLabel in unpacked.orbs[orbSet]) {
+    for (let orbLabel in unpacked.orbs[orbSet])
       for (let key in unpacked.orbs[orbSet]![orbLabel]) {
-        if (key === "position") Matter.Body.setPosition(prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].body, unpacked.orbs[orbSet]![orbLabel].position!);
+        if (key === "position")
+          Matter.Body.setPosition(prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].body, cloneDeep(unpacked.orbs[orbSet]![orbLabel].position!));
+        if (key === "velocity")
+          Matter.Body.setVelocity(prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].body, cloneDeep(unpacked.orbs[orbSet]![orbLabel].velocity!));
+        if (key === "destination") prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].destination, cloneDeep(unpacked.orbs[orbSet]![orbLabel].destination);
         else {
           // @ts-ignore
           prevGamestateWithNewDeltas.orbs[orbSet][orbLabel][key] = unpacked.orbs[orbSet]![orbLabel][key];
         }
       }
-    }
+
   if (unpacked.score) {
     let key: keyof typeof unpacked.score;
     for (key in unpacked.score) if (unpacked.score[key]) prevGamestateWithNewDeltas.score[key] = unpacked.score[key]!;
   }
   if (unpacked.gameSpeedModifier) prevGamestateWithNewDeltas.speedModifier = unpacked.gameSpeedModifier;
   if (unpacked.serverlastprocessedinputnumber) prevGamestateWithNewDeltas.serverLastProcessedInputNumber = unpacked.serverlastprocessedinputnumber;
-
+  // console.log(prevGamestateWithNewDeltas.orbs.challenger["challenger-orb-0"].body.position.x);
   return prevGamestateWithNewDeltas;
 }

@@ -51,6 +51,11 @@ export class OrbProto extends jspb.Message {
   getDestination(): VectorProto | undefined;
   setDestination(value?: VectorProto): void;
 
+  hasVelocity(): boolean;
+  clearVelocity(): void;
+  getVelocity(): VectorProto | undefined;
+  setVelocity(value?: VectorProto): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): OrbProto.AsObject;
   static toObject(includeInstance: boolean, msg: OrbProto): OrbProto.AsObject;
@@ -68,6 +73,7 @@ export namespace OrbProto {
     isghost: boolean,
     position?: VectorProto.AsObject,
     destination?: VectorProto.AsObject,
+    velocity?: VectorProto.AsObject,
   }
 }
 

@@ -16,7 +16,7 @@ export interface EloUpdates {
 
 export type OrbSet = { [orbLabel: string]: Orb };
 export type HostAndChallengerOrbSets = { host: OrbSet; challenger: OrbSet };
-export type OrbDeltas = { position?: Point; destination?: Point; isSelected?: boolean; isGhost?: boolean };
+export type OrbDeltas = { position?: Point; destination?: Point; velocity?: Point; isSelected?: boolean; isGhost?: boolean };
 export type OrbSetDeltas = { [orbLabel: string]: OrbDeltas };
 
 export interface ServerPacket {

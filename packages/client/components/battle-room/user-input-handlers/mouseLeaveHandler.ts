@@ -1,5 +1,6 @@
 import { Socket } from "socket.io-client";
-import { BattleRoomGame, PlayerRole, Point, SelectOrbs, SocketEventsFromClient } from "../../../../common";
+import { BattleRoomGame, PlayerRole, Point, SelectOrbs, simulatedLagMs, simulateLag, SocketEventsFromClient } from "../../../../common";
+import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
 const replicator = new (require("replicator"))();
 
@@ -16,6 +17,7 @@ export default function mouseLeaveHandler(currentGame: BattleRoomGame, socket: S
       playerRole
     );
     currentGame.queues.client.localInputs.push(input);
-    socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
+    if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
+    else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
   }
 }

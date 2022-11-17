@@ -34,6 +34,7 @@ export default function mouseUpHandler(
       playerRole
     );
     currentGame.queues.client.localInputs.push(input);
-    socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
+    if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
+    else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
   }
 }

@@ -9,6 +9,7 @@ export interface IUnpackedOrbDeltas {
   id?: number;
   destination?: Point;
   position?: Point;
+  velocity?: Point;
   isSelected?: boolean;
   isGhost?: boolean;
 }
@@ -21,6 +22,8 @@ export default function unpackOrbProto(orbProto: OrbProto) {
   if (destination) unpackedDeltas.destination = new Point(destination.getX(), destination.getY());
   const position = orbProto.hasPosition() ? orbProto.getPosition() : null;
   if (position) unpackedDeltas.position = new Point(position.getX(), position.getY());
+  const velocity = orbProto.hasVelocity() ? orbProto.getVelocity() : null;
+  if (velocity) unpackedDeltas.velocity = new Point(velocity.getX(), velocity.getY());
   if (orbProto.hasIsghost()) unpackedDeltas.isGhost = orbProto.getIsghost();
   if (orbProto.hasIsselected()) unpackedDeltas.isSelected = orbProto.getIsselected();
 

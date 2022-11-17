@@ -16,9 +16,10 @@ export default function (socket: Socket, serverState: ServerState) {
   const { connectedSockets, games, gameRooms } = serverState;
 
   socket.on(SocketEventsFromClient.NEW_INPUT, (data: string) => {
+    if (!connectedSockets[socket.id].currentGameName) return;
     const game = games[connectedSockets[socket.id].currentGameName!];
     const gameRoom = gameRooms[connectedSockets[socket.id].currentGameName!];
-    if (!connectedSockets[socket.id].currentGameName || !game || !gameRoom) return;
+    if (!game || !gameRoom) return;
 
     const playerRole =
       gameRoom.players.host?.socketId === socket.id ? PlayerRole.HOST : gameRoom.players.challenger?.socketId === socket.id ? PlayerRole.CHALLENGER : null;

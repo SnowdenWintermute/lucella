@@ -4,7 +4,7 @@ import applyForceToOrb from "./applyForceToOrb";
 import handleOrbInEndzone from "./handleOrbInEndzone";
 import { PlayerRole } from "../enums";
 
-export function updateOrbs(game: BattleRoomGame, playerRole?: PlayerRole) {
+export function updateOrbs(game: BattleRoomGame, playerRole?: PlayerRole, clientPersistentGameCopy?: BattleRoomGame, inputNumber?: number) {
   let playerOrbs: keyof typeof game.orbs;
   for (playerOrbs in game.orbs) {
     if (playerRole && playerOrbs !== playerRole) continue;
@@ -12,7 +12,8 @@ export function updateOrbs(game: BattleRoomGame, playerRole?: PlayerRole) {
     for (orbLabel in game.orbs[playerOrbs]) {
       const orb = game.orbs[playerOrbs][orbLabel];
       updateGhostOrb(game, playerOrbs, orb);
-      applyForceToOrb(orb, game);
+      applyForceToOrb(orb, game, clientPersistentGameCopy, playerRole, inputNumber);
+
       handleOrbInEndzone(orb, game, playerOrbs);
     }
   }

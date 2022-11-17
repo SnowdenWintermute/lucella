@@ -23,19 +23,20 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
     if (!game.physicsEngine) return console.log("tried to update physics in a game that was not yet initialized");
 
     let numInputsToProcess = game.queues.server.receivedInputs.length;
-    while (numInputsToProcess) {
+    while (numInputsToProcess > 0) {
       const input: UserInput = game.queues.server.receivedInputs.shift();
       processPlayerInput(input, game, renderRate, input.playerRole);
       game.netcode.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
-      numInputsToProcess--;
+      numInputsToProcess -= 1;
     }
 
+    // console.log(game.orbs.challenger["challenger-orb-0"].debug.numInputsAppliedBeforeComingToRest);
     handleScoringPoints(io, socket, serverState, game);
     const updateForHost = createDeltaPacket(game, PlayerRole.HOST);
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
-    // io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
-    io.to(serverState.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
-    io.to(serverState.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
+    io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
+    // io.to(serverState.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
+    // io.to(serverState.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
 
     game.netcode.prevGameState = new GameElementsOfConstantInterest(
       cloneDeep(game.orbs),

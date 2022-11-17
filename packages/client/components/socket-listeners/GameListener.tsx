@@ -6,6 +6,7 @@ import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-s
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
 import mapUnpackedPacketToUpdateObject from "../../protobuf-utils/mapUnpackedPacketToUpdateObject";
+const replicator = new (require("replicator"))();
 
 interface Props {
   socket: Socket;
@@ -24,15 +25,17 @@ const GameListener = (props: Props) => {
       game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
-      if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
-      const unpacked = unpackDeltaPacket(data, playerRole);
-      const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
-
+      // if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
+      // const unpacked = unpackDeltaPacket(data, playerRole);
+      // const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
+      const decodedPacket = replicator.decode(data);
       if (simulateLag)
         setTimeout(() => {
-          game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
+          game.netcode.lastUpdateFromServer = decodedPacket;
+          // game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
         }, simulatedLagMs);
-      else game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
+      // else game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
+      else game.netcode.lastUpdateFromServer = decodedPacket;
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

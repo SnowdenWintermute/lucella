@@ -21,6 +21,12 @@ export default function (orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas 
       destinationPacket.setY(currOrb.destination.y);
       orbPacket.setDestination(destinationPacket);
     }
+    if (currOrb.velocity) {
+      const velocityPacket = new VectorProto();
+      velocityPacket.setX(currOrb.velocity.x);
+      velocityPacket.setY(currOrb.velocity.y);
+      orbPacket.setVelocity(velocityPacket);
+    }
 
     currOrb.hasOwnProperty("isSelected") && orbPacket.setIsselected(currOrb.isSelected!);
     currOrb.hasOwnProperty("isGhost") && orbPacket.setIsghost(currOrb.isGhost!);

@@ -1,8 +1,10 @@
+import { BattleRoomGame } from ".";
 import { ServerPacket } from "../../types";
 import { GameElementsOfConstantInterest } from "./GameElementsOfConstantInterest";
 
 export class NetCode {
-  lastUpdateFromServer: ServerPacket | null;
+  // lastUpdateFromServer: ServerPacket | null;
+  lastUpdateFromServer: BattleRoomGame | null;
   timeOfLastUpdateProcessedByLerper: number | null; // for interpolation of opponent orbs
   // timeOfLastTick: number | null;
   // roundTripTime: number | null;

@@ -11,6 +11,7 @@ export class Orb {
   isDashing: boolean;
   isSelected: boolean;
   positionBuffer: { position: Point; timestamp: number }[];
+  debug?: { numInputsAppliedBeforeComingToRest?: number; highestNumberInputApplied?: number };
   constructor(body: Matter.Body, owner: string, id: number, color: string) {
     this.body = body;
     this.destination = null;
@@ -21,5 +22,6 @@ export class Orb {
     this.isDashing = false;
     this.isSelected = false;
     this.positionBuffer = [];
+    this.debug = { numInputsAppliedBeforeComingToRest: 0, highestNumberInputApplied: 0 };
   }
 }
