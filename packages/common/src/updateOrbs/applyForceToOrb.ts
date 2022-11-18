@@ -3,6 +3,7 @@ import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
 import { renderRate } from "../consts";
 import { PlayerRole } from "../enums";
+import { findAngle, numberInRangeToBetweenZeroAndOne, slope } from "../utils";
 
 export default function (orb: Orb, game: BattleRoomGame, clientPersistentGameCopy?: BattleRoomGame, playerRole?: PlayerRole, inputNumber?: number) {
   if (!orb.destination) return;
@@ -33,12 +34,21 @@ export default function (orb: Orb, game: BattleRoomGame, clientPersistentGameCop
     Body.applyForce(orb.body, orb.body.position, Vector.neg(orb.body.force));
     return;
   }
+
   const force = game.speedModifier;
   const deltaVector = Vector.sub(orb.destination, orb.body.position);
   const normalizedDelta = Vector.normalise(deltaVector);
   const forceVector = Vector.mult(normalizedDelta, force);
-  orb.id === 1 && console.log(inputNumber, orb.body.position.y, orb.destination.y);
+  // orb.id === 1 && console.log(inputNumber, orb.body.position.y, orb.destination.y);
   // console.log(inputNumber, orb.body.inertia, orb.destination.y, orb.body.position.y, Math.round(orb.body.velocity.y), Math.round(forceVector.y));
+
+  // orb.body.force = Vector.create(0, 0);
+  // Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.2)));
+  const deltaVectorSlope = slope(position.x, position.y, position.x + deltaVector.x, position.y + deltaVector.y);
+  const forceSlope = slope(position.x, position.y, position.x + orb.body.force.x, position.y + orb.body.force.y);
+  const angle = findAngle(deltaVectorSlope, forceSlope);
+  const multiplier = numberInRangeToBetweenZeroAndOne(angle, 360);
+  Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, multiplier * 3)));
   Body.applyForce(orb.body, orb.body.position, forceVector);
   Body.update(orb.body, renderRate, 1, 0);
 

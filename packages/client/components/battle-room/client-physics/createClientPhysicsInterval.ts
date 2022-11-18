@@ -33,23 +33,23 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
     if (!lastUpdateFromServerCopy || !playerRole) return console.log("awaiting first server update before starting client physics");
 
     const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
-    newGameState.queues.client.localInputs.push(input);
-    // game.queues.client.localInputs.push(input);
+    // newGameState.queues.client.localInputs.push(input);
+    game.queues.client.localInputs.push(input);
 
     if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
     else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
 
-    // let numInputsToProcess = game.queues.client.localInputs.length;
-    // while (numInputsToProcess > 0) {
-    //   const input: UserInput = game.queues.client.localInputs.shift()!;
-    //   processPlayerInput(input, game, renderRate, playerRole);
-    //   numInputsToProcess -= 1;
-    // }
+    let numInputsToProcess = game.queues.client.localInputs.length;
+    while (numInputsToProcess > 0) {
+      const input: UserInput = game.queues.client.localInputs.shift()!;
+      processPlayerInput(input, game, renderRate, playerRole);
+      numInputsToProcess -= 1;
+    }
 
-    setOrbSetPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
-    setOrbSetNonPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
-    // interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
-    predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
+    // setOrbSetPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
+    // setOrbSetNonPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
+    // // interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
+    // predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 
     game.debug.general = newGameState.debug.general;
 
