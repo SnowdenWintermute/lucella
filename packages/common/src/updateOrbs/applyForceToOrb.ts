@@ -3,10 +3,15 @@ import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
 import { renderRate } from "../consts";
 import { PlayerRole } from "../enums";
-import { findAngle, numberInRangeToBetweenZeroAndOne, slope } from "../utils";
+import { distanceBetweenTwoPoints, findAngle, numberInRangeToBetweenZeroAndOne, slope } from "../utils";
 
 export default function (orb: Orb, game: BattleRoomGame, clientPersistentGameCopy?: BattleRoomGame, playerRole?: PlayerRole, inputNumber?: number) {
-  if (!orb.destination) return;
+  if (!orb.destination) {
+    Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.1)));
+    Body.update(orb.body, renderRate, 1, 0);
+    return;
+  }
+
   orb.debug!.numInputsAppliedBeforeComingToRest! += 1;
 
   if (clientPersistentGameCopy) {
@@ -31,7 +36,7 @@ export default function (orb: Orb, game: BattleRoomGame, clientPersistentGameCop
     if (orb.id === 1) console.log("orb reached destination on input number ", inputNumber, +Date.now());
     orb.destination = null;
     // orb.body.force = Matter.Vector.create(0, 0);
-    Body.applyForce(orb.body, orb.body.position, Vector.neg(orb.body.force));
+    Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.2)));
     return;
   }
 
@@ -49,7 +54,7 @@ export default function (orb: Orb, game: BattleRoomGame, clientPersistentGameCop
   const angle = findAngle(deltaVectorSlope, forceSlope);
   const multiplier = numberInRangeToBetweenZeroAndOne(angle, 360);
   Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, multiplier * 3)));
-  Body.applyForce(orb.body, orb.body.position, forceVector);
+  if (distanceBetweenTwoPoints(position, destination) > 30) Body.applyForce(orb.body, orb.body.position, forceVector);
   Body.update(orb.body, renderRate, 1, 0);
 
   // let gameSpeedAdjustedForDeltaT = game.speedModifier;
