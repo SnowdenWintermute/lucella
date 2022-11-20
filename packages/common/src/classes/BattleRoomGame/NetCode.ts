@@ -5,6 +5,7 @@ import { GameElementsOfConstantInterest } from "./GameElementsOfConstantInterest
 export class NetCode {
   // lastUpdateFromServer: ServerPacket | null;
   lastUpdateFromServer: BattleRoomGame | null;
+  timeLastUpdateReceived: number | null;
   timeOfLastUpdateProcessedByLerper: number | null; // for interpolation of opponent orbs
   // timeOfLastTick: number | null;
   // roundTripTime: number | null;
@@ -15,6 +16,7 @@ export class NetCode {
   serverLastSeenMovementInputTimestamps: { host: number; challenger: number }; // used in anticheat
   constructor() {
     this.lastUpdateFromServer = null;
+    this.timeLastUpdateReceived = null;
     this.timeOfLastUpdateProcessedByLerper = null;
     // this.timeOfLastTick = null;
     // this.roundTripTime = null;

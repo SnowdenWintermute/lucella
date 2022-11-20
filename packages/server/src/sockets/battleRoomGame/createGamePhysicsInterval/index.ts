@@ -1,4 +1,5 @@
 import cloneDeep from "lodash.clonedeep";
+import Matter, { Detector } from "matter-js";
 import { Server, Socket } from "socket.io";
 import {
   BattleRoomGame,
@@ -18,6 +19,8 @@ const replicator = new (require("replicator"))();
 export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string) {
   const game = serverState.games[gameName];
   BattleRoomGame.initializeWorld(game);
+  Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
+
   return setInterval(() => {
     if (!game) return console.log("tried to update physics in a game that wasn't found");
     if (!game.physicsEngine) return console.log("tried to update physics in a game that was not yet initialized");
@@ -29,6 +32,11 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
       game.netcode.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
       numInputsToProcess -= 1;
     }
+    const collisions = Detector.collisions(game.physicsEngine!.detector);
+    collisions.forEach((collision) => {
+      game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
+    });
+    // console.log(game.currentCollisionPairs);
 
     // console.log(game.orbs.challenger["challenger-orb-0"].debug.numInputsAppliedBeforeComingToRest);
     handleScoringPoints(io, socket, serverState, game);

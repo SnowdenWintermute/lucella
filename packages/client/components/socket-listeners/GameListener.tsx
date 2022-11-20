@@ -34,9 +34,14 @@ const GameListener = (props: Props) => {
         setTimeout(() => {
           game.netcode.lastUpdateFromServer = decodedPacket;
           // game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
+          game.netcode.timeLastUpdateReceived = +Date.now();
         }, simulatedLagMs);
       // else game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
-      else game.netcode.lastUpdateFromServer = decodedPacket;
+      // game.netcode.lastUpdateFromServer.timeReceived = +Date.now()
+      else {
+        game.netcode.lastUpdateFromServer = decodedPacket;
+        game.netcode.timeLastUpdateReceived = +Date.now();
+      }
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

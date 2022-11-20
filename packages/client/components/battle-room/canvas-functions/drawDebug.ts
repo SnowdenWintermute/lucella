@@ -21,8 +21,8 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
       value: game.debug.clientPrediction.roundTripTime?.toString(),
     },
     {
-      name: "deltaT",
-      value: game.debug.general.deltaT?.toString(),
+      name: "frameTime",
+      value: game.debug.clientPrediction.frameTime?.toString(),
     },
   ];
 

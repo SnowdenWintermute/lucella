@@ -10,7 +10,7 @@ interface BodyProperties {
   angularVelocity?: number;
 }
 
-export const setBodyProperties = (body: Matter.Body, properties: BodyProperties, orb: Orb) => {
+export const setBodyProperties = (body: Matter.Body, properties: BodyProperties) => {
   const { position, inertia, velocity, force, angle, angularVelocity } = properties;
   if (force) body.force = force;
   position && Matter.Body.setPosition(body, position);

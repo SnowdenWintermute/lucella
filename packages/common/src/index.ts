@@ -19,4 +19,5 @@ export { processPlayerInput } from "./processPlayerInput";
 export { updateOrbs } from "./updateOrbs";
 export { handleOrbBodyCollisions } from "./updateOrbs/handleOrbBodyCollisions";
 export * from "./utils";
+export { setBodyProperties } from "./utils/setBodyProperties";
 export { OrbsProto, VectorProto, OrbProto, ScoreProto, DeltasProto } from "./proto/generated/src/proto/deltas_pb";

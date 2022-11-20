@@ -33,7 +33,7 @@ export function findAngle(M1: number, M2: number) {
 }
 
 export function numberInRangeToBetweenZeroAndOne(value: number, max: number) {
-  return (100 * value) / max / 1000;
+  return (100 * value) / max / 100;
 }
 
 export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet, withPositionBuffer?: boolean) {
@@ -60,6 +60,6 @@ export function setOrbSetPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet) {
       // angle,
       // angularVelocity,
     };
-    setBodyProperties(a[orbLabel].body, newProperties, a[orbLabel]);
+    setBodyProperties(a[orbLabel].body, newProperties);
   }
 }
