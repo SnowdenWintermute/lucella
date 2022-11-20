@@ -31,11 +31,12 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
       processPlayerInput(input, game, renderRate, input.playerRole);
       game.netcode.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
       numInputsToProcess -= 1;
+      const collisions = Detector.collisions(game.physicsEngine!.detector);
+      collisions.forEach((collision) => {
+        game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
+      });
     }
-    const collisions = Detector.collisions(game.physicsEngine!.detector);
-    collisions.forEach((collision) => {
-      game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
-    });
+
     // console.log(game.currentCollisionPairs);
 
     // console.log(game.orbs.challenger["challenger-orb-0"].debug.numInputsAppliedBeforeComingToRest);

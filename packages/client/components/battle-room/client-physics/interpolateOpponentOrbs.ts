@@ -30,13 +30,13 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
     if (firstTimeProcessingThisUpdate && timeLastUpdateReceived) {
       positionBuffer.push({ position: mostRecentOpponentOrbUpdate[orbLabel].body.position, timestamp: timeLastUpdateReceived });
     }
-    while (positionBuffer.length >= 2 && positionBuffer[1].timestamp <= render_timestamp) positionBuffer.shift();
+    while (positionBuffer.length >= 3 && positionBuffer[2].timestamp <= render_timestamp) positionBuffer.shift();
 
-    if (positionBuffer.length >= 2 && positionBuffer[0].timestamp <= render_timestamp && render_timestamp <= positionBuffer[1].timestamp) {
+    if (positionBuffer.length >= 3 && positionBuffer[0].timestamp <= render_timestamp && render_timestamp <= positionBuffer[2].timestamp) {
       const lerpStartPosition = positionBuffer[0].position;
-      const lerpEndPosition = positionBuffer[1].position;
+      const lerpEndPosition = positionBuffer[2].position;
       const lerpStartTime = positionBuffer[0].timestamp;
-      const lerpEndTime = positionBuffer[1].timestamp;
+      const lerpEndTime = positionBuffer[2].timestamp;
       const newX = lerpStartPosition.x + ((lerpEndPosition.x - lerpStartPosition.x) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime);
       const newY = lerpStartPosition.y + ((lerpEndPosition.y - lerpStartPosition.y) * (render_timestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime);
       Matter.Body.setPosition(orb.body, Matter.Vector.create(newX, newY));

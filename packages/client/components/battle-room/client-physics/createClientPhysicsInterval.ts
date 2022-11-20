@@ -59,20 +59,13 @@ export default function createClientPhysicsInterval(
     //   numInputsToProcess -= 1;
     // }
 
-    if (game.physicsEngine) {
-      if (game.physicsEngine.world.bodies.length) Detector.setBodies(game.physicsEngine.detector, game.physicsEngine.world.bodies);
-      const collisions = Detector.collisions(game.physicsEngine.detector);
-      collisions.forEach((collision) => {
-        if (collision.pair) game.currentCollisionPairs.push(collision.pair);
-      });
-    }
     interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 
-    const collisions = Detector.collisions(game.physicsEngine!.detector);
-    collisions.forEach((collision) => {
-      game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
-    });
+    // const collisions = Detector.collisions(game.physicsEngine!.detector);
+    // collisions.forEach((collision) => {
+    //   game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
+    // });
 
     game.debug.general = newGameState.debug.general;
     assignDebugValues(game, lastUpdateFromServerCopy, playerRole, frameTime);
