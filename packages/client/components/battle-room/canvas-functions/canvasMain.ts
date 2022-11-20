@@ -7,7 +7,7 @@ import getSelectionBoxSize from "./getSelectionBoxSize";
 import drawEndzones from "./drawEndzones";
 import drawDebug from "./drawDebug";
 
-export default function draw(context: CanvasRenderingContext2D, canvasSize: WidthAndHeight, playerRole: any, game: BattleRoomGame, gameRoom: GameRoom) {
+export default function draw(context: CanvasRenderingContext2D, canvasSize: WidthAndHeight, playerRole: any, game: BattleRoomGame) {
   return requestAnimationFrame(() => {
     if (!game) return;
     const { mouseData } = game;
@@ -21,8 +21,7 @@ export default function draw(context: CanvasRenderingContext2D, canvasSize: Widt
     drawScore(context, game, canvasSize);
     drawOrbs(context, playerRole, game, canvasDrawFractions);
     if (game.debug.showDebug) drawDebug(context, game, canvasDrawFractions);
-
-    if (gameRoom.gameStatus === GameStatus.ENDING) gameOverText(context, game, gameRoom, canvasDrawFractions);
+    if (game.winner) gameOverText(context, game, canvasDrawFractions);
     const selectionBoxSize = getSelectionBoxSize(game.mouseData, canvasDrawFractions);
     if (selectionBoxSize) drawSelectionBox(context, mouseData, canvasDrawFractions, selectionBoxSize);
   });

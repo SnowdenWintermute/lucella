@@ -19,6 +19,7 @@ export const reconciliationThreshold = 10;
 export const simulateLag = true;
 export const simulatedLagMs = 15;
 export const desyncTolerance = 4;
+export const endScreenCountdownDelay = 1010;
 
 // Matter-JS
 export const hostOrbCollisionCategory = 0x0001;

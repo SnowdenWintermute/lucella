@@ -18,10 +18,19 @@ import {
   simulateLag,
   UserInput,
   processPlayerInput,
+  WidthAndHeight,
 } from "../../../../common";
+import draw from "../canvas-functions/canvasMain";
+import { ILobbyUIState } from "../../../redux/slices/lobby-ui-slice";
 const replicator = new (require("replicator"))();
 
-export default function createClientPhysicsInterval(socket: Socket, game: BattleRoomGame, playerRole: PlayerRole | null) {
+export default function createClientPhysicsInterval(
+  socket: Socket,
+  game: BattleRoomGame,
+  playerRole: PlayerRole | null,
+  canvasRef: React.RefObject<HTMLCanvasElement | null>,
+  canvasSizeRef: React.RefObject<WidthAndHeight | null>
+) {
   let frameTime = renderRate;
   BattleRoomGame.initializeWorld(game);
   return setInterval(() => {
@@ -56,5 +65,8 @@ export default function createClientPhysicsInterval(socket: Socket, game: Battle
     assignDebugValues(game, lastUpdateFromServerCopy, playerRole, frameTime);
 
     frameTime = +Date.now() - timeAtStartOfFrameSimulation;
+    if (canvasRef && canvasRef.current && canvasSizeRef.current) {
+      draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game);
+    }
   }, renderRate);
 }
