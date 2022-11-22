@@ -17,7 +17,7 @@ export default function mouseLeaveHandler(currentGame: BattleRoomGame, socket: S
       playerRole
     );
     currentGame.queues.client.localInputs.push(input);
-    currentGame.queues.client.inputsFromLastTick.push(input);
+
     if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
     else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
   }

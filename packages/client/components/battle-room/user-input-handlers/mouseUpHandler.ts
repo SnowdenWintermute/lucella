@@ -22,7 +22,7 @@ export default function mouseUpHandler(
       playerRole
     );
     currentGame.queues.client.localInputs.push(input);
-    currentGame.queues.client.inputsFromLastTick.push(input);
+
     if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
     else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
   }
@@ -35,7 +35,7 @@ export default function mouseUpHandler(
       playerRole
     );
     currentGame.queues.client.localInputs.push(input);
-    currentGame.queues.client.inputsFromLastTick.push(input);
+
     if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
     else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
   }

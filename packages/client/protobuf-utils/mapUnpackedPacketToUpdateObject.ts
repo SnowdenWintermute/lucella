@@ -1,6 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 import Matter from "matter-js";
-import { BattleRoomGame, PlayerRole } from "../../common";
+import { BattleRoomGame } from "../../common";
 import { IUnpackedGameStateDeltas } from "./unpackDeltaPacket";
 
 export default function (game: BattleRoomGame, unpacked?: IUnpackedGameStateDeltas) {
@@ -35,10 +35,7 @@ export default function (game: BattleRoomGame, unpacked?: IUnpackedGameStateDelt
         if (key === "velocity")
           Matter.Body.setVelocity(prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].body, cloneDeep(unpacked.orbs[orbSet]![orbLabel].velocity!));
         if (key === "force") prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].body.force = cloneDeep(unpacked.orbs[orbSet]![orbLabel].force!);
-        if (key === "destination") {
-          if (orbLabel === "challenger-orb-0") console.log(cloneDeep(unpacked.orbs[orbSet]![orbLabel].destination!));
-          prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].destination = cloneDeep(unpacked.orbs[orbSet]![orbLabel].destination!);
-        }
+        if (key === "destination") prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].destination = cloneDeep(unpacked.orbs[orbSet]![orbLabel].destination!);
         if (key === "isSelected") prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].isSelected = unpacked.orbs[orbSet]![orbLabel].isSelected!;
         if (key === "isGhost") prevGamestateWithNewDeltas.orbs[orbSet][orbLabel].isGhost = unpacked.orbs[orbSet]![orbLabel].isGhost!;
       }
@@ -51,6 +48,5 @@ export default function (game: BattleRoomGame, unpacked?: IUnpackedGameStateDelt
   if (unpacked.gameSpeedModifier) prevGamestateWithNewDeltas.speedModifier = unpacked.gameSpeedModifier;
   prevGamestateWithNewDeltas.serverLastProcessedInputNumber = unpacked.serverlastprocessedinputnumber!;
 
-  // console.log(prevGamestateWithNewDeltas.orbs.challenger["challenger-orb-0"].isSelected);
   return prevGamestateWithNewDeltas;
 }

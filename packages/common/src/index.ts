@@ -21,3 +21,4 @@ export { handleOrbBodyCollisions } from "./updateOrbs/handleOrbBodyCollisions";
 export * from "./utils";
 export { setBodyProperties } from "./utils/setBodyProperties";
 export { OrbsProto, VectorProto, OrbProto, ScoreProto, DeltasProto } from "./proto/generated/src/proto/deltas_pb";
+export { InputProto, SmallVectorProto } from "./proto/generated/src/proto/client-inputs_pb";

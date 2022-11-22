@@ -1,4 +1,4 @@
-// package: lucella
+// package: deltas
 // file: src/proto/deltas.proto
 
 import * as jspb from "google-protobuf";
