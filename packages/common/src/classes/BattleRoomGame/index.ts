@@ -76,7 +76,7 @@ export class BattleRoomGame {
     };
     this.speedModifier = BattleRoomGame.baseSpeedModifier;
     this.debug = {
-      showDebug: false,
+      mode: 0,
       general: {},
       clientPrediction: {},
     };

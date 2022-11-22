@@ -14,14 +14,14 @@ import { Socket } from "socket.io-client";
 import { useAppSelector } from "../../redux";
 
 interface Props {
-  canvasSize: WidthAndHeight;
+  canvasSizeRef: React.RefObject<WidthAndHeight | null>;
   canvasRef: React.RefObject<HTMLCanvasElement>;
   currentGame: BattleRoomGame;
   socket: Socket;
 }
 
 const Canvas = (props: Props) => {
-  const { canvasSize, canvasRef, currentGame, socket } = props;
+  const { canvasSizeRef, canvasRef, currentGame, socket } = props;
   const { playerRole } = useAppSelector((state) => state.lobbyUi);
 
   const onKeyPress = useCallback((e: KeyboardEvent) => {
@@ -35,21 +35,23 @@ const Canvas = (props: Props) => {
     };
   }, [onKeyPress]);
 
+  if (!canvasSizeRef.current) return <span>Loading...</span>;
+
   return (
     <canvas
-      height={canvasSize.height}
-      width={canvasSize.width}
+      height={canvasSizeRef.current.height}
+      width={canvasSizeRef.current.width}
       className="battle-room-canvas"
       ref={canvasRef}
       onContextMenu={(e) => e.preventDefault()}
       onTouchStart={(e) => {
-        touchStartHandler(e, canvasSize, currentGame);
+        touchStartHandler(e, canvasSizeRef.current!, currentGame);
       }}
       onTouchMove={(e) => {
-        throttle(eventLimiterRate, touchMoveHandler(e, currentGame, canvasSize));
+        throttle(eventLimiterRate, touchMoveHandler(e, currentGame, canvasSizeRef.current!));
       }}
       onTouchEnd={(e) => {
-        touchEndHandler(e, currentGame, canvasSize);
+        touchEndHandler(e, currentGame, canvasSizeRef.current!);
       }}
       onMouseDown={(e) => {
         mouseDownHandler(e, currentGame);
@@ -58,7 +60,7 @@ const Canvas = (props: Props) => {
         mouseUpHandler(e, currentGame, socket, playerRole);
       }}
       onMouseMove={(e) => {
-        throttle(eventLimiterRate, mouseMoveHandler(e, currentGame, canvasSize));
+        throttle(eventLimiterRate, mouseMoveHandler(e, currentGame, canvasSizeRef.current!));
       }}
       onMouseLeave={() => {
         mouseLeaveHandler(currentGame, socket, playerRole);

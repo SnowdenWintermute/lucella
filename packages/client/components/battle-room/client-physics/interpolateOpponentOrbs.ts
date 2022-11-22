@@ -5,11 +5,12 @@ import {
   physicsTickRate,
   PlayerRole,
   renderRate,
+  ServerPacket,
   setOrbSetNonPhysicsPropertiesFromAnotherSet,
   setOrbSetPhysicsPropertiesFromAnotherSet,
 } from "../../../../common";
 
-export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
+export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: ServerPacket, playerRole: PlayerRole) {
   const opponentRole = playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
 
   const { timeOfLastUpdateProcessedByLerper } = game.netcode;

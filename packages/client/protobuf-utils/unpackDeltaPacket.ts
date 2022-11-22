@@ -1,5 +1,5 @@
-import { DeltasProto, PlayerRole } from "../../common";
-import unpackOrbProto, { IUnpackedOrbDeltas } from "./unpackOrbProto";
+import { DeltasProto, IUnpackedOrbDeltas, PlayerRole } from "../../common";
+import unpackOrbProto from "./unpackOrbProto";
 
 type OrbDeltaSet = { [key: string]: IUnpackedOrbDeltas };
 
@@ -15,7 +15,7 @@ export default function (serializedMessage: Uint8Array, playerRole: PlayerRole |
     console.log("no player role assigned - abandoning unpacking of delta packet");
     return undefined;
   }
-  const unpacked: IUnpackedGameStateDeltas = { orbs: { host: {}, challenger: {} } };
+  const unpacked: IUnpackedGameStateDeltas = { orbs: {} };
   const deserializedMessage = DeltasProto.deserializeBinary(serializedMessage);
   if (deserializedMessage.hasChallengerorbs()) {
     const orbList = deserializedMessage.getChallengerorbs()?.getOrbsList();

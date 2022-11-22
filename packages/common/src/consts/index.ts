@@ -17,7 +17,7 @@ export const minimumQuickTouchSelectionBoxSize = 8;
 export const startingLadderRating = 1500;
 export const reconciliationThreshold = 10;
 export const simulateLag = true;
-export const simulatedLagMs = 25;
+export const simulatedLagMs = 100;
 export const desyncTolerance = 5;
 export const endScreenCountdownDelay = 1010;
 

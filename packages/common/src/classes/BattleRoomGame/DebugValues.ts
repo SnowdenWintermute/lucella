@@ -1,7 +1,13 @@
 import { Point } from "../Point";
 
+export enum DebugModes {
+  HIDDEN,
+  SHAPES,
+  SHAPES_AND_TEXT,
+}
+
 export interface DebugValues {
-  showDebug: boolean;
+  mode: DebugModes;
   general: {
     deltaT?: number;
   };

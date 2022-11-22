@@ -46,12 +46,12 @@ export default function createClientPhysicsInterval(
 
     const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
     newGameState.queues.client.localInputs.push(input);
-    newGameState.queues.client.inputsFromLastTick.push(input);
-    // game.queues.client.localInputs.push(input);
+    newGameState.queues.client.inputsFromLastTick.push(input); // probs remove all these
 
     if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
     else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
 
+    // game.queues.client.localInputs.push(input);
     // let numInputsToProcess = game.queues.client.localInputs.length;
     // while (numInputsToProcess > 0) {
     //   const input: UserInput = game.queues.client.localInputs.shift()!;

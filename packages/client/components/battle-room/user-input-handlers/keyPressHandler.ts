@@ -21,7 +21,7 @@ export default (e: KeyboardEvent, currentGame: BattleRoomGame, socket: Socket, p
   if (!mouseData.position) return;
 
   let input;
-  if (keyPressed === 0) currentGame.debug.showDebug = !currentGame.debug.showDebug;
+  if (keyPressed === 0) currentGame.debug.mode = currentGame.debug.mode < 2 ? currentGame.debug.mode + 1 : 0;
   else if (keyPressed >= 1 && keyPressed <= 5)
     input = new SelectOrbAndAssignDestination(
       {

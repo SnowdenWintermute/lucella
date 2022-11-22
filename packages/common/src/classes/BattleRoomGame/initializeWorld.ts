@@ -41,9 +41,4 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
       setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet], true);
     }
   }
-
-  Matter.Events.on(game.physicsEngine, "collisionStart", function (event) {
-    const pairs = event.pairs;
-    game.currentCollisionPairs.push(...pairs);
-  });
 }

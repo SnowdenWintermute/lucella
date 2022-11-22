@@ -27,21 +27,27 @@ const GameListener = (props: Props) => {
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
       // if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
-      // const unpacked = unpackDeltaPacket(data, playerRole);
+      const unpacked = unpackDeltaPacket(data, playerRole);
+      // if (unpacked!.orbs!.challenger) console.log(unpacked!.orbs!.challenger!["challenger-orb-0"] || undefined);
       // const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
-      const decodedPacket = replicator.decode(data);
+      // const decodedPacket = replicator.decode(data);
       if (simulateLag)
         setTimeout(() => {
-          game.netcode.lastUpdateFromServer = decodedPacket;
-          // game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
+          // game.netcode.lastUpdateFromServer = decodedPacket;
+          const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
+          game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
           game.netcode.timeLastUpdateReceived = +Date.now();
         }, simulatedLagMs);
-      // else game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
-      // game.netcode.lastUpdateFromServer.timeReceived = +Date.now()
       else {
-        game.netcode.lastUpdateFromServer = decodedPacket;
+        const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
+
+        game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
         game.netcode.timeLastUpdateReceived = +Date.now();
       }
+      // else {
+      //   game.netcode.lastUpdateFromServer = decodedPacket;
+      //   game.netcode.timeLastUpdateReceived = +Date.now();
+      // }
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

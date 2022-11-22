@@ -4,7 +4,7 @@ import { GameElementsOfConstantInterest } from "./GameElementsOfConstantInterest
 
 export class NetCode {
   // lastUpdateFromServer: ServerPacket | null;
-  lastUpdateFromServer: BattleRoomGame | null;
+  lastUpdateFromServer: ServerPacket | null;
   timeLastUpdateReceived: number | null;
   timeOfLastUpdateProcessedByLerper: number | null; // for interpolation of opponent orbs
   // timeOfLastTick: number | null;
@@ -21,7 +21,7 @@ export class NetCode {
     // this.timeOfLastTick = null;
     // this.roundTripTime = null;
     this.lastClientInputNumber = 0;
-    this.serverLastProcessedInputNumbers = { host: 0, challenger: 0 };
+    this.serverLastProcessedInputNumbers = { host: 0, challenger: 0 }; // for server
     this.serverLastProcessedInputNumberOnPreviousClientTick = 0;
     this.prevGameState = null;
     this.serverLastSeenMovementInputTimestamps = { host: 0, challenger: 0 };

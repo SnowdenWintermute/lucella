@@ -20,7 +20,7 @@ export default function draw(context: CanvasRenderingContext2D, canvasSize: Widt
     drawEndzones(context, game, canvasSize);
     drawScore(context, game, canvasSize);
     drawOrbs(context, playerRole, game, canvasDrawFractions);
-    if (game.debug.showDebug) drawDebug(context, game, canvasDrawFractions);
+    if (game.debug.mode) drawDebug(context, game, canvasDrawFractions);
     if (game.winner) gameOverText(context, game, canvasDrawFractions);
     const selectionBoxSize = getSelectionBoxSize(game.mouseData, canvasDrawFractions);
     if (selectionBoxSize) drawSelectionBox(context, mouseData, canvasDrawFractions, selectionBoxSize);

@@ -16,7 +16,10 @@ export interface EloUpdates {
 
 export type OrbSet = { [orbLabel: string]: Orb };
 export type HostAndChallengerOrbSets = { host: OrbSet; challenger: OrbSet };
-export type OrbDeltas = { position?: Point; destination?: Point; velocity?: Point; isSelected?: boolean; isGhost?: boolean };
+export type OrbDeltas = { position?: Point; destination?: Point | null; velocity?: Point; force?: Point; isSelected?: boolean; isGhost?: boolean };
+export interface IUnpackedOrbDeltas extends OrbDeltas {
+  id?: number;
+}
 export type OrbSetDeltas = { [orbLabel: string]: OrbDeltas };
 
 export interface ServerPacket {
@@ -24,5 +27,4 @@ export interface ServerPacket {
   serverLastProcessedInputNumber: number;
   speedModifier: number;
   score: { host: number; challenger: number; neededToWin: number };
-  timeReceived: number;
 }

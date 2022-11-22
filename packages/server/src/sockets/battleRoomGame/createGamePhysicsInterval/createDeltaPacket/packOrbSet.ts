@@ -15,17 +15,26 @@ export default function (orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas 
       positionPacket.setY(y);
       orbPacket.setPosition(positionPacket);
     }
-    if (currOrb.destination) {
-      const destinationPacket = new VectorProto();
-      destinationPacket.setX(currOrb.destination.x);
-      destinationPacket.setY(currOrb.destination.y);
-      orbPacket.setDestination(destinationPacket);
+    if (typeof currOrb.destination !== "undefined") {
+      let destinationPacket;
+      if (currOrb.destination) {
+        destinationPacket = new VectorProto();
+        destinationPacket.setX(currOrb.destination.x);
+        destinationPacket.setY(currOrb.destination.y);
+        orbPacket.setDestination(destinationPacket);
+      } else orbPacket.setNodestination(true);
     }
     if (currOrb.velocity) {
       const velocityPacket = new VectorProto();
       velocityPacket.setX(currOrb.velocity.x);
       velocityPacket.setY(currOrb.velocity.y);
       orbPacket.setVelocity(velocityPacket);
+    }
+    if (currOrb.force) {
+      const forcePacket = new VectorProto();
+      forcePacket.setX(currOrb.force.x);
+      forcePacket.setY(currOrb.force.y);
+      orbPacket.setForce(forcePacket);
     }
 
     currOrb.hasOwnProperty("isSelected") && orbPacket.setIsselected(currOrb.isSelected!);
