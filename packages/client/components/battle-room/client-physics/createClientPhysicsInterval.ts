@@ -59,6 +59,8 @@ export default function createClientPhysicsInterval(
     //   numInputsToProcess -= 1;
     // }
 
+    // console.log(newGameState.orbs.challenger["challenger-orb-0"].isGhost);
+
     interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 

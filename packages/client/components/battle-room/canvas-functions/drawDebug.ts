@@ -9,8 +9,7 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
     {
       name: "inputsToSimulate",
       value:
-        game.debug.clientPrediction.inputsToSimulate &&
-        game.debug.clientPrediction.inputsToSimulate.map((item) => item.type.slice(0, 1) + " " + item.number).toString(),
+        game.debug.clientPrediction.inputsToSimulate && game.debug.clientPrediction.inputsToSimulate.map((item) => item.type + " " + item.number).toString(),
     },
     {
       name: "lastProcessedClientInputNumber",

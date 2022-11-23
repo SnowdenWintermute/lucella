@@ -1,4 +1,4 @@
-import { Detector } from "matter-js";
+import { Detector, Pair } from "matter-js";
 import {
   BattleRoomGame,
   PlayerRole,
@@ -16,12 +16,14 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
 
   setOrbSetPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
   setOrbSetNonPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
+
+  Detector.setBodies(newGameState.physicsEngine!.detector, newGameState.physicsEngine!.world.bodies);
   newGameState.queues.client.localInputs.forEach((input, i) => {
     if (lastProcessedClientInputNumber && input.number <= lastProcessedClientInputNumber) return;
-    processPlayerInput(input, newGameState, renderRate, playerRole, game);
-    const collisions = Detector.collisions(game.physicsEngine!.detector);
+    processPlayerInput(input, newGameState, renderRate, playerRole);
+    const collisions = Detector.collisions(newGameState.physicsEngine!.detector);
     collisions.forEach((collision) => {
-      if (collision.pair) game.currentCollisionPairs.push(collision.pair);
+      newGameState.currentCollisionPairs.push(Pair.create(collision, +Date.now()));
     });
     inputsToKeep.push(input);
   });

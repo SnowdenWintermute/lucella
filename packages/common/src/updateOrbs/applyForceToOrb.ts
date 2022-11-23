@@ -6,24 +6,12 @@ import { orbMaxSpeed } from "../consts/battle-room-game-config";
 import { PlayerRole } from "../enums";
 import { distanceBetweenTwoPoints, findAngle, numberInRangeToBetweenZeroAndOne, slope } from "../utils";
 
-export default function (orb: Orb, game: BattleRoomGame, clientPersistentGameCopy?: BattleRoomGame, playerRole?: PlayerRole, inputNumber?: number) {
+export default function (orb: Orb, game: BattleRoomGame) {
   if (!orb.destination) {
     if (Vector.magnitude(orb.body.force) < 0.4) orb.body.force = Vector.create(0, 0);
     else Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.2)));
     Body.update(orb.body, renderRate, 1, 0);
     return;
-  }
-
-  orb.debug!.numInputsAppliedBeforeComingToRest! += 1;
-
-  if (clientPersistentGameCopy) {
-    //@ts-ignore
-    if (clientPersistentGameCopy.orbs[playerRole!][`${playerRole}-orb-${orb.id - 1}`].debug.highestNumberInputApplied < inputNumber!) {
-      //@ts-ignore
-      clientPersistentGameCopy.orbs[playerRole!][`${playerRole}-orb-${orb.id - 1}`].debug.highestNumberInputApplied = inputNumber;
-      //@ts-ignore
-      clientPersistentGameCopy.orbs[playerRole!][`${playerRole}-orb-${orb.id - 1}`].debug.numInputsAppliedBeforeComingToRest += 1;
-    }
   }
 
   const { position } = orb.body;
