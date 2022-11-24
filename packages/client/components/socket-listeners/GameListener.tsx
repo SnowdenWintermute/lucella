@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux";
-import { BattleRoomGame, endScreenCountdownDelay, GameRoom, simulatedLagMs, simulateLag, SocketEventsFromServer, WidthAndHeight } from "../../../common";
+import { BattleRoomGame, endScreenCountdownDelay, simulatedLagMs, simulateLag, SocketEventsFromServer, WidthAndHeight } from "../../../common";
 import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
 import mapUnpackedPacketToUpdateObject from "../../protobuf-utils/mapUnpackedPacketToUpdateObject";
-const replicator = new (require("replicator"))();
 
 interface Props {
   socket: Socket;
@@ -26,28 +25,19 @@ const GameListener = (props: Props) => {
       game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole, canvasRef, canvasSizeRef);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
-      // if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
+      if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
       const unpacked = unpackDeltaPacket(data, playerRole);
-      // if (unpacked!.orbs!.challenger) console.log(unpacked!.orbs!.challenger!["challenger-orb-0"] || undefined);
-      // const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
-      // const decodedPacket = replicator.decode(data);
       if (simulateLag)
         setTimeout(() => {
-          // game.netcode.lastUpdateFromServer = decodedPacket;
           const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
           game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
           game.netcode.timeLastUpdateReceived = +Date.now();
         }, simulatedLagMs);
       else {
         const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
-
         game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
         game.netcode.timeLastUpdateReceived = +Date.now();
       }
-      // else {
-      //   game.netcode.lastUpdateFromServer = decodedPacket;
-      //   game.netcode.timeLastUpdateReceived = +Date.now();
-      // }
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

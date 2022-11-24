@@ -1,9 +1,10 @@
 export const gameOverCountdownDuration = 2;
 export const initialScoreNeededToWin = 5;
-export const baseSpeedModifier = 2;
+export const baseSpeedModifier = 1;
 export const gameSpeedIncrementRate = 1;
 export const baseOrbRadius = 15;
 export const orbMaxSpeed = 7;
+export const decelerationDistance = 30;
 export const orbDensity = 10;
 export const frictionAir = 20.9;
 export const initialEndZoneHeight = 60;

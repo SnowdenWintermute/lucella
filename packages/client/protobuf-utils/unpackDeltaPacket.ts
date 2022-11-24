@@ -40,7 +40,7 @@ export default function (serializedMessage: Uint8Array, playerRole: PlayerRole |
 
   if (deserializedMessage.hasScore()) {
     const unpackedScore: any = {};
-    if (deserializedMessage.getScore()?.hasHost()) unpackedScore.challenger = deserializedMessage.getScore()?.getHost();
+    if (deserializedMessage.getScore()?.hasHost()) unpackedScore.host = deserializedMessage.getScore()?.getHost();
     if (deserializedMessage.getScore()?.hasChallenger()) unpackedScore.challenger = deserializedMessage.getScore()?.getChallenger();
     if (deserializedMessage.getScore()?.hasNeededtowin()) unpackedScore.neededToWin = deserializedMessage.getScore()?.getNeededtowin();
     unpacked.score = unpackedScore;

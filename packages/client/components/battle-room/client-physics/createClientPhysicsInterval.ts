@@ -18,7 +18,7 @@ import {
 import draw from "../canvas-functions/canvasMain";
 import { Detector } from "matter-js";
 import serializeInput from "../user-input-serializers/serialize-input";
-const replicator = new (require("replicator"))();
+import setNonOrbGameState from "./setNonOrbGameState";
 
 export default function createClientPhysicsInterval(
   socket: Socket,

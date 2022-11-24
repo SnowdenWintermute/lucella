@@ -16,9 +16,5 @@ export default function determineOrbDeltas(game: BattleRoomGame, playerRole: Pla
     if (currOrb.isGhost !== prevOrbState.isGhost) orbDeltas.isGhost = currOrb.isGhost;
     if (Object.keys(orbDeltas).length) orbsDeltasToSerialize[orbLabel] = orbDeltas;
   }
-  // if (playerRole === PlayerRole.CHALLENGER) {
-  //   if (!Object.keys(orbsDeltasToSerialize).length) console.log("no deltas");
-  //   else console.log("deltas found");
-  // }
   return orbsDeltasToSerialize;
 }

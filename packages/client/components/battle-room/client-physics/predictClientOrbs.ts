@@ -9,6 +9,7 @@ import {
   setOrbSetPhysicsPropertiesFromAnotherSet,
   ServerPacket,
 } from "../../../../common";
+import setNonOrbGameState from "./setNonOrbGameState";
 
 export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: ServerPacket, playerRole: PlayerRole) {
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
@@ -16,6 +17,7 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
 
   setOrbSetPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
   setOrbSetNonPhysicsPropertiesFromAnotherSet(newGameState.orbs[playerRole], lastUpdateFromServerCopy.orbs[playerRole]);
+  setNonOrbGameState(newGameState, lastUpdateFromServerCopy);
 
   Detector.setBodies(newGameState.physicsEngine!.detector, newGameState.physicsEngine!.world.bodies);
   newGameState.queues.client.localInputs.forEach((input, i) => {
@@ -32,4 +34,5 @@ export default function (game: BattleRoomGame, newGameState: BattleRoomGame, las
 
   setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[playerRole], newGameState.orbs[playerRole]);
   setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[playerRole], newGameState.orbs[playerRole]);
+  setNonOrbGameState(game, newGameState);
 }

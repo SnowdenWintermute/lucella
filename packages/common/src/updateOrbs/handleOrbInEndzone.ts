@@ -6,7 +6,7 @@ import { PlayerRole } from "../enums";
 
 const incrementScoreAndGameSpeed = (orb: Orb, game: BattleRoomGame, playerRole: PlayerRole) => {
   game.score[playerRole] += 1;
-  // game.speedModifier += gameSpeedIncrementRate;
+  game.speedModifier += gameSpeedIncrementRate;
   orb.isGhost = true;
   Body.applyForce(orb.body, orb.body.position, Vector.neg(orb.body.force));
 };

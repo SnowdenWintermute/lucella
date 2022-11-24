@@ -1,7 +1,7 @@
 import { IUnpackedOrbDeltas, OrbDeltas, OrbProto, Point } from "../../common";
 
 function orbProtoHasAnyProperty(orbProto: OrbProto) {
-  if (orbProto.hasDestination() || orbProto.hasIsghost() || orbProto.hasIsselected() || orbProto.hasPosition()) return true;
+  if (orbProto.hasDestination() || orbProto.hasIsghost() || orbProto.hasIsselected() || orbProto.hasPosition() || orbProto.hasNodestination()) return true;
   else return false;
 }
 
