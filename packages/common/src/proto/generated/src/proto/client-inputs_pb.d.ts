@@ -4,13 +4,9 @@
 import * as jspb from "google-protobuf";
 
 export class SmallVectorProto extends jspb.Message {
-  hasX(): boolean;
-  clearX(): void;
   getX(): number;
   setX(value: number): void;
 
-  hasY(): boolean;
-  clearY(): void;
   getY(): number;
   setY(value: number): void;
 
@@ -48,6 +44,11 @@ export class InputProto extends jspb.Message {
   getMouseposition(): SmallVectorProto | undefined;
   setMouseposition(value?: SmallVectorProto): void;
 
+  hasYonly(): boolean;
+  clearYonly(): void;
+  getYonly(): number;
+  setYonly(value: number): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InputProto.AsObject;
   static toObject(includeInstance: boolean, msg: InputProto): InputProto.AsObject;
@@ -64,6 +65,7 @@ export namespace InputProto {
     number: number,
     orbidsList: Array<number>,
     mouseposition?: SmallVectorProto.AsObject,
+    yonly: number,
   }
 }
 

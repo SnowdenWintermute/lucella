@@ -1,6 +1,7 @@
 import { Detector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 
+// @ todo - could be more dry
 export function handleOrbBodyCollisions(game: BattleRoomGame) {
   const orbsAlreadyCollided: { [orbLabel: string]: boolean } = {};
 

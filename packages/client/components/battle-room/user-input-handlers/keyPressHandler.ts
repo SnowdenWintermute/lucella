@@ -35,9 +35,9 @@ export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRo
   else if (keyPressed === 7) input = new LineUpOrbsHorizontallyAtMouseY(mouseData.position.y, (game.netcode.lastClientInputNumber += 1), playerRole);
   else if (keyPressed === 6) input = new SelectOrbs({ orbLabels: Object.keys(game.orbs[playerRole]) }, (game.netcode.lastClientInputNumber += 1), playerRole);
   if (!input) return;
-  const serialized = serializeInput(input);
   game.queues.client.localInputs.push(input);
 
-  if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
-  else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
+  const serialized = serializeInput(input);
+  if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, serialized, simulatedLagMs);
+  else socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
 };

@@ -6,23 +6,18 @@ import determineRoundTripTime from "./determineRoundTripTime";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
 import {
-  setOrbSetPhysicsPropertiesFromAnotherSet,
-  setOrbSetNonPhysicsPropertiesFromAnotherSet,
   BattleRoomGame,
   ClientTickNumber,
   PlayerRole,
   renderRate,
   simulatedLagMs,
   SocketEventsFromClient,
-  ServerPacket,
   simulateLag,
-  UserInput,
-  processPlayerInput,
   WidthAndHeight,
 } from "../../../../common";
 import draw from "../canvas-functions/canvasMain";
-import { ILobbyUIState } from "../../../redux/slices/lobby-ui-slice";
-import Matter, { Detector } from "matter-js";
+import { Detector } from "matter-js";
+import serializeInput from "../user-input-serializers/serialize-input";
 const replicator = new (require("replicator"))();
 
 export default function createClientPhysicsInterval(
@@ -45,29 +40,15 @@ export default function createClientPhysicsInterval(
     if (!lastUpdateFromServerCopy || !playerRole) return console.log("awaiting first server update before starting client physics");
 
     const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
+    const serialized = serializeInput(input);
     newGameState.queues.client.localInputs.push(input);
     newGameState.queues.client.inputsFromLastTick.push(input); // probs remove all these
 
-    if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, replicator.encode(input), simulatedLagMs);
-    else socket.emit(SocketEventsFromClient.NEW_INPUT, replicator.encode(input));
-
-    // game.queues.client.localInputs.push(input);
-    // let numInputsToProcess = game.queues.client.localInputs.length;
-    // while (numInputsToProcess > 0) {
-    //   const input: UserInput = game.queues.client.localInputs.shift()!;
-    //   processPlayerInput(input, game, renderRate, playerRole);
-    //   numInputsToProcess -= 1;
-    // }
-
-    // console.log(newGameState.orbs.challenger["challenger-orb-0"].isGhost);
+    if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, serialized, simulatedLagMs);
+    else socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
 
     interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
-
-    // const collisions = Detector.collisions(game.physicsEngine!.detector);
-    // collisions.forEach((collision) => {
-    //   game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
-    // });
 
     game.debug.general = newGameState.debug.general;
     assignDebugValues(game, lastUpdateFromServerCopy, playerRole, frameTime);
