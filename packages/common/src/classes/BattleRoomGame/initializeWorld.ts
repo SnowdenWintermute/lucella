@@ -12,6 +12,8 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
   game.physicsEngine.gravity.x = 0;
   game.physicsEngine.gravity.scale = 0;
 
+  game.debug.clientPrediction.clientOrbNumInputsApplied = 0;
+
   for (let i = 0; i < 5; i++) {
     let startingX = (i + 1) * 50 + 75;
     const hostOrbBody = Matter.Bodies.circle(startingX, 100, BattleRoomGame.baseOrbRadius, {
@@ -39,9 +41,4 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
       setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet], true);
     }
   }
-
-  Matter.Events.on(game.physicsEngine, "collisionStart", function (event) {
-    const pairs = event.pairs;
-    game.currentCollisionPairs.push(...pairs);
-  });
 }

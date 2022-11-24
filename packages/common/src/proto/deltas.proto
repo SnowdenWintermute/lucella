@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package deltas;
+
+message VectorProto{
+  float x = 1;
+  float y = 2;
+}
+
+message OrbProto{
+  int32 id = 1;
+  optional bool isSelected = 2;
+  optional bool isGhost = 3;
+  optional VectorProto position = 4;
+  optional VectorProto destination = 5;
+  optional VectorProto velocity = 6;
+  optional VectorProto force = 7;
+  optional bool noDestination = 8;
+}
+
+message OrbsProto{
+  repeated OrbProto orbs = 1;
+}
+
+message ScoreProto{
+  optional int32 host = 1;
+  optional int32 challenger = 2;
+  optional int32 neededToWin = 3;
+}
+
+message DeltasProto{
+  optional OrbsProto challengerOrbs = 1;
+  optional OrbsProto hostOrbs = 2;
+  optional ScoreProto score = 3;
+  optional int32 gameSpeedModifier = 4;
+  optional int32 serverLastProcessedInputNumber = 5;
+}

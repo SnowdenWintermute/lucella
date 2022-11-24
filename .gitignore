@@ -6,4 +6,7 @@ node_modules
 yarn-error.log
 
 *.css
+!main.css
 *.css.map
+
+.tsbuildinfo

@@ -1,4 +1,5 @@
 import { Orb } from "../classes/Orb";
+import { Point } from "../classes/Point";
 
 export type WidthAndHeight = { width: number; height: number };
 
@@ -13,10 +14,17 @@ export interface EloUpdates {
   newChallengerRank: number;
 }
 
+export type OrbSet = { [orbLabel: string]: Orb };
+export type HostAndChallengerOrbSets = { host: OrbSet; challenger: OrbSet };
+export type OrbDeltas = { position?: Point; destination?: Point | null; velocity?: Point; force?: Point; isSelected?: boolean; isGhost?: boolean };
+export interface IUnpackedOrbDeltas extends OrbDeltas {
+  id?: number;
+}
+export type OrbSetDeltas = { [orbLabel: string]: OrbDeltas };
+
 export interface ServerPacket {
-  orbs: { host: { [orbLabel: string]: Orb }; challenger: { [orbLabel: string]: Orb } };
-  tick: number;
-  serverLastKnownClientTicks: { host: number; challenger: number };
-  serverLastProcessedInputNumbers: { host: number; challenger: number };
-  timeReceived: number;
+  orbs: HostAndChallengerOrbSets;
+  serverLastProcessedInputNumber: number;
+  speedModifier: number;
+  score: { host: number; challenger: number; neededToWin: number };
 }

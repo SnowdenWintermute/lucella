@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package lucella;
+
+message SmallVectorProto{
+  uint32 x = 1;
+  uint32 y = 2;
+}
+message InputProto{
+  int32 type = 1;
+  uint32 number = 2;
+  repeated uint32 orbIds = 3;
+  optional SmallVectorProto mousePosition = 4;
+  optional uint32 yOnly = 5;
+}

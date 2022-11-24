@@ -9,16 +9,7 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
     {
       name: "inputsToSimulate",
       value:
-        game.debug.clientPrediction.inputsToSimulate &&
-        game.debug.clientPrediction.inputsToSimulate.map((item) => item.type.slice(0, 1) + " " + item.number).toString(),
-    },
-    {
-      name: "ticksSinceLastClientTickConfirmedByServer",
-      value: game.debug.clientPrediction.ticksSinceLastClientTickConfirmedByServer?.toString(),
-    },
-    {
-      name: "clientServerTickDifference",
-      value: game.debug.clientPrediction.clientServerTickDifference?.toString(),
+        game.debug.clientPrediction.inputsToSimulate && game.debug.clientPrediction.inputsToSimulate.map((item) => item.type + " " + item.number).toString(),
     },
     {
       name: "lastProcessedClientInputNumber",
@@ -29,12 +20,8 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
       value: game.debug.clientPrediction.roundTripTime?.toString(),
     },
     {
-      name: "gameSpeedAdjustedForDeltaT",
-      value: game.debug.general.gameSpeedAdjustedForDeltaT?.toString(),
-    },
-    {
-      name: "deltaT",
-      value: game.debug.general.deltaT?.toString(),
+      name: "frameTime",
+      value: game.debug.clientPrediction.frameTime?.toString(),
     },
   ];
 

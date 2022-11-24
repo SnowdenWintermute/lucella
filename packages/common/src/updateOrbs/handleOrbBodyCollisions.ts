@@ -1,10 +1,12 @@
+import { Detector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 
+// @ todo - could be more dry
 export function handleOrbBodyCollisions(game: BattleRoomGame) {
   const orbsAlreadyCollided: { [orbLabel: string]: boolean } = {};
+
   game.currentCollisionPairs.forEach((pair, i) => {
     if (orbsAlreadyCollided[pair.bodyA.label] || orbsAlreadyCollided[pair.bodyB.label]) return;
-
     if (
       game.orbs.host[pair.bodyA.label] &&
       !game.orbs.host[pair.bodyA.label].isGhost &&

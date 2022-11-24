@@ -1,7 +1,7 @@
 import { BattleRoomGame, PlayerRole } from "../../../../common";
 
 export default function (game: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
-  const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumbers[playerRole];
+  const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
   if (game.queues.client.localInputs.length < 0 || !lastProcessedClientInputNumber) return;
   let localCopyOfLastInputProcessedByServer;
   let searchIndex = 0;

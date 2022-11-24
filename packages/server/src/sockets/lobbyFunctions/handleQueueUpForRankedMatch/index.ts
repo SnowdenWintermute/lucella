@@ -9,6 +9,7 @@ import { findUser } from "../../../services/user.service";
 export default async function handleQueueUpForRankedMatch(io: Server, socket: Socket, serverState: ServerState) {
   try {
     const { connectedSockets, rankedQueue } = serverState;
+    if (!connectedSockets[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, "Server restarted, please refresh");
     if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, "You are already in a game");
     const user = await findUser({ name: connectedSockets[socket.id].associatedUser.username });
     if (!user) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, "Log in or create an account to play ranked games");

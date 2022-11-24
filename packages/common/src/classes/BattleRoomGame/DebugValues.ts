@@ -1,20 +1,24 @@
 import { Point } from "../Point";
 
+export enum DebugModes {
+  HIDDEN,
+  SHAPES,
+  SHAPES_AND_TEXT,
+}
+
 export interface DebugValues {
-  showDebug: boolean;
+  mode: DebugModes;
   general: {
     deltaT?: number;
-    gameSpeedAdjustedForDeltaT?: number;
   };
   clientPrediction: {
     inputsToSimulate?: any[];
-    ticksSinceLastClientTickConfirmedByServer?: number;
     simulatingBetweenInputs?: boolean;
-    clientServerTickDifference?: number;
     lastProcessedClientInputNumber?: number;
     frameTime?: number;
     timeLastPacketSent?: number;
     roundTripTime?: number;
+    clientOrbNumInputsApplied?: number;
     // entityPositionBuffer?: { position: Point; timestamp: number }[];
     // lerpFrameTime?: number;
   };

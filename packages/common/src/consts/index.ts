@@ -10,13 +10,16 @@ export const colors = {
 };
 export const renderRate = 33;
 export const physicsTickRate = 50;
-export const eventLimiterRate = 33;
+export const eventLimiterRate = renderRate;
 export const minimumSelectionBoxSize = 3;
 export const touchHoldSelectionBoxStartThreshold = 500;
 export const minimumQuickTouchSelectionBoxSize = 8;
 export const startingLadderRating = 1500;
 export const reconciliationThreshold = 10;
-export const simulatedLagMs = 25;
+export const simulateLag = true;
+export const simulatedLagMs = 100;
+export const desyncTolerance = 5;
+export const endScreenCountdownDelay = 1010;
 
 // Matter-JS
 export const hostOrbCollisionCategory = 0x0001;

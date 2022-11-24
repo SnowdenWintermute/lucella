@@ -8,6 +8,7 @@
     "replicator": "^1.0.5"
   },
   "devDependencies": {
-    "@types/matter-js": "^0.18.2"
+    "@types/matter-js": "^0.18.2",
+    "ts-protoc-gen": "^0.15.0"
   }
 }

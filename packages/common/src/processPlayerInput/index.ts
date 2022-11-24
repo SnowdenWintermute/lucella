@@ -12,7 +12,6 @@ export function processPlayerInput(input: UserInput, game: BattleRoomGame, delta
   switch (input.type) {
     case UserInputs.CLIENT_TICK_NUMBER:
       updateOrbs(game, playerRole);
-      Matter.Engine.update(game.physicsEngine!, deltaT);
       break;
     case UserInputs.SELECT_ORBS:
       handleSelectOrbs(input, game);

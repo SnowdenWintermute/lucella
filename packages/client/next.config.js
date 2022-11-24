@@ -8,6 +8,14 @@ const nextConfig = {
       use: ["@svgr/webpack"],
     });
 
+    // config.module.rules.push({
+    //   test: /\.jsx?$/,
+    //   loader: "babel-loader",
+    //   exclude: /node_modules/,
+    //   query: {
+    //     presets: ["es2015"],
+    //   },
+    // });
     return config;
   },
 };
