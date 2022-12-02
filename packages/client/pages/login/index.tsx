@@ -11,8 +11,7 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [loginUser, { isLoading: loginUserIsLoading, isSuccess: loginUserIsSuccess, error, isError }] =
-    useLoginUserMutation();
+  const [loginUser, { isLoading: loginUserIsLoading, isSuccess: loginUserIsSuccess, error, isError }] = useLoginUserMutation();
   const {
     data: userState,
     isLoading: userQueryIsLoading,
@@ -22,8 +21,7 @@ const Login = () => {
 
   const { email, password } = formData;
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,6 +41,7 @@ const Login = () => {
       <form className="auth-form" onSubmit={(e) => onSubmit(e)}>
         <input
           className="simple-text-input"
+          aria-label="email"
           type="email"
           placeholder="Email"
           name="email"
@@ -53,6 +52,7 @@ const Login = () => {
         ></input>
         <input
           className="simple-text-input"
+          aria-label="password"
           type="password"
           name="password"
           placeholder="Password"

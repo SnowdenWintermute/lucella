@@ -5,10 +5,9 @@ import { SocketEventsFromClient } from "../../../common";
 
 interface Props {
   socket: Socket;
-  username: string;
 }
 
-const GameLobbyChat = ({ socket, username }: Props) => {
+const GameLobbyChat = ({ socket }: Props) => {
   const [chatInput, setChatInput] = useState("");
   const [chatClass, setChatClass] = useState("");
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);

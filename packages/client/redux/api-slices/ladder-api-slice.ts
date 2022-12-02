@@ -4,7 +4,7 @@ import { UserRecord } from "../../classes/UserRecord";
 import { AlertType } from "../../enums";
 import { setAlert } from "../slices/alerts-slice";
 import { setViewingSearchedUser } from "../slices/ladder-slice";
-const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
+const API_URL = process.env.NEXT_PUBLIC_API;
 
 export interface ILadderPageResponse {
   pageNumber: number;

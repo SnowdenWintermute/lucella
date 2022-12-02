@@ -1,7 +1,6 @@
 import { GameStatus, PlayerRole } from "../../../common";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EloUpdates, GameRoom, BattleRoomGame } from "../../../common";
-import { HYDRATE } from "next-redux-wrapper";
 
 export interface IGameScoreScreen {
   gameRoom: GameRoom;
@@ -109,14 +108,6 @@ const ladderSlice = createSlice({
       state.scoreScreenDisplayed = false;
     },
   },
-  // extraReducers: {
-  //   [HYDRATE]: (state, action) => {
-  //     return {
-  //       ...state,
-  //       ...action.payload.auth,
-  //     };
-  //   },
-  // },
 });
 
 export const {

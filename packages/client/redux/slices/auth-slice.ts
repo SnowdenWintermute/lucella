@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { HYDRATE } from "next-redux-wrapper";
 
 export interface IAuthState {
   token: string | null;
@@ -15,15 +14,6 @@ const authSlice = createSlice({
   reducers: {
     logOut: (state) => {
       state.token = null;
-    },
-  },
-  // for next-redux-wrapper
-  extraReducers: {
-    [HYDRATE]: (state, action) => {
-      return {
-        ...state,
-        ...action.payload.auth,
-      };
     },
   },
 });

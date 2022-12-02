@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Alert } from "../../classes/Alert";
-import { HYDRATE } from "next-redux-wrapper";
 
 const initialState = { alerts: <Alert[]>[] };
 
@@ -20,14 +19,6 @@ const alertsSlice = createSlice({
       };
     },
   },
-  // extraReducers: {
-  //   [HYDRATE]: (state, action) => {
-  //     return {
-  //       ...state,
-  //       ...action.payload.auth,
-  //     };
-  //   },
-  // },
 });
 
 export const { setAlert, clearAlert } = alertsSlice.actions;

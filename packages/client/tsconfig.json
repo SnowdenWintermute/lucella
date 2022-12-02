@@ -17,6 +17,6 @@
     "types": ["jest", "node", "@types/testing-library__jest-dom"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/components", "src/custom.d.ts", "utils/throttledEventHandlerCreator.js"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "cypress"],
   "references": [{ "path": "../common" }]
 }

@@ -1,25 +1,15 @@
 import { render, screen } from "@testing-library/react";
-import BattleRoom from "../pages/battle-room";
-import { Provider } from "react-redux";
-import store from "../redux/hooks";
-import { wrapper } from "../redux/hooks";
+import "@testing-library/jest-dom";
+import ButtonBasic from "../components/common-components/buttons/ButtonBasic";
 
 describe("Battle Room", () => {
-  it("renders a heading", () => {
-    render(
-      <Provider store={store}>
-        <BattleRoom />
-      </Provider>
-    );
+  it("renders the button text", () => {
+    render(<ButtonBasic title="test" onClick={jest.fn()} />);
 
-    const heading = screen.getByRole("heading", {
-      name: /battle room/i,
+    const button = screen.getByRole("button", {
+      name: /test/i,
     });
 
-    expect(heading).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
   });
 });
-
-// it("passes", () => {
-//     expect(true).toBe(true);
-//   });

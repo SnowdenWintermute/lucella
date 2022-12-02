@@ -1,1 +1,0 @@
-@reduxjs/toolkit @svgr/webpack @types/node @types/react @types/react-dom async-mutex axios lodash.clonedeep lodash.isequal matter-js next react react-dom react-redux redux replicator socket.io-client uuid next-redux-wrapper @testing-library/jest-dom @testing-library/react jest jest-environment-jsdom @types/matter-js @types/uuid eslint eslint-config-next sass typescript

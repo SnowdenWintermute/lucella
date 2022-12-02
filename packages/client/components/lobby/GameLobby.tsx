@@ -15,7 +15,7 @@ import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../.
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { authApi } from "../../redux/api-slices/auth-api-slice";
-const socketAddress = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_SOCKET_API_DEV : process.env.NEXT_PUBLIC_SOCKET_API;
+const socketAddress = process.env.NEXT_PUBLIC_SOCKET_API;
 
 interface Props {
   defaultChatRoom: string;
@@ -122,7 +122,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
               <PreGameRoom socket={socket.current} />
               <MatchmakingQueueDisplay />
               <GameList socket={socket.current} />
-              <GameLobbyChat socket={socket.current} username={username} />
+              <GameLobbyChat socket={socket.current} />
             </div>
           </div>
         </Fragment>

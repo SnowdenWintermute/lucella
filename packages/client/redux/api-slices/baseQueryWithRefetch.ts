@@ -1,7 +1,7 @@
 import { BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { Mutex } from "async-mutex";
 
-const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
+const API_URL = process.env.NEXT_PUBLIC_API;
 const baseUrl = `${API_URL}/api/`;
 const mutex = new Mutex();
 const baseQuery = fetchBaseQuery({
