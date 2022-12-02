@@ -1,6 +1,5 @@
 import { BaseQueryFn, FetchArgs, fetchBaseQuery, FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { Mutex } from "async-mutex";
-import { logOut } from "../slices/auth-slice";
 
 const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
 const baseUrl = `${API_URL}/api/`;
@@ -9,11 +8,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl,
 });
 
-const baseQueryWithRefetch: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
-  args,
-  api,
-  extraOptions
-) => {
+const baseQueryWithRefetch: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
   // wait until the mutex is available without locking it
   await mutex.waitForUnlock();
   let result = await baseQuery(args, api, extraOptions);
@@ -25,7 +20,7 @@ const baseQueryWithRefetch: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQu
         const refreshResult = await baseQuery({ credentials: "include", url: "auth/refresh" }, api, extraOptions);
         if (refreshResult.data) result = await baseQuery(args, api, extraOptions); // Retry the initial query
         else {
-          api.dispatch(logOut());
+          // api.dispatch(logOut());
           window.location.href = "/login";
         }
       } finally {

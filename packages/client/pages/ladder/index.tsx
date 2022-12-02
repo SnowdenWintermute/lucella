@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } from "../../redux/api-slices/ladder-api-slice";
 import { setViewingSearchedUser } from "../../redux/slices/ladder-slice";
 
@@ -12,10 +12,7 @@ const Ladder = () => {
   const [pageNumberAnimateClass, setPageNumberAnimateClass] = useState("");
   const [currentPageViewing, setCurrentPageViewing] = useState(1);
   const { isLoading: ladderPageIsLoading, data: ladderPageData } = useGetLadderPageQuery(currentPageViewing);
-  const { isLoading: searchedUserIsLoading, data: searchedUserData } = useGetUserBattleRoomRecordQuery(
-    submittedSearchText,
-    { skip: !submittedSearchText }
-  );
+  const { isLoading: searchedUserIsLoading, data: searchedUserData } = useGetUserBattleRoomRecordQuery(submittedSearchText, { skip: !submittedSearchText });
 
   useEffect(() => {
     searchInputRef.current!.focus();

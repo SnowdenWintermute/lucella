@@ -2,7 +2,7 @@ import { SocketEventsFromClient } from "../../../../common";
 import React, { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
-import { useAppSelector, useAppDispatch } from "../../../redux";
+import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { setMatchmakingWindowVisible } from "../../../redux/slices/lobby-ui-slice";
 
 interface Props {

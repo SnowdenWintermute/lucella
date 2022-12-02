@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect, useRef } from "react";
 import SuccessIcon from "../../img/alertIcons/success.svg";
 import { Socket } from "socket.io-client";
 import { AlertType } from "../../enums";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { GameStatus, SocketEventsFromClient } from "../../../common";

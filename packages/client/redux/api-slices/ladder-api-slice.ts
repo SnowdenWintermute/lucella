@@ -3,7 +3,6 @@ import { Alert } from "../../classes/Alert";
 import { UserRecord } from "../../classes/UserRecord";
 import { AlertType } from "../../enums";
 import { setAlert } from "../slices/alerts-slice";
-import { IAuthState } from "../slices/auth-slice";
 import { setViewingSearchedUser } from "../slices/ladder-slice";
 const API_URL = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_API_DEV : process.env.NEXT_PUBLIC_API;
 
@@ -16,10 +15,6 @@ export interface ILadderPageResponse {
 const baseQuery = fetchBaseQuery({
   baseUrl: `${API_URL}/api`,
   prepareHeaders(headers, { getState }) {
-    console.log(API_URL);
-    const { auth } = getState() as { auth: IAuthState };
-    const { token } = auth;
-    if (token) headers.set("x-auth-token", token);
     return headers;
   },
 });
@@ -59,9 +54,7 @@ export const ladderApiSlice = createApi({
             dispatch(setViewingSearchedUser(true));
           } catch (error: any) {
             console.log(error);
-            dispatch(
-              setAlert(new Alert("User not found. Please note that names are case sensitive", AlertType.DANGER))
-            );
+            dispatch(setAlert(new Alert("User not found. Please note that names are case sensitive", AlertType.DANGER)));
           }
         },
       }),

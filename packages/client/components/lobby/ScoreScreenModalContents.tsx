@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { useAppSelector } from "../../redux";
+import { useAppSelector } from "../../redux/hooks";
 import { authApi } from "../../redux/api-slices/auth-api-slice";
 
 const ScoreScreenModalContents = () => {

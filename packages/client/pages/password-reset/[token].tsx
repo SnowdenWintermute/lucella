@@ -5,7 +5,7 @@ import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { usePasswordResetMutation } from "../../redux/api-slices/auth-api-slice";
 import { setAlert } from "../../redux/slices/alerts-slice";
-import { useAppDispatch } from "../../redux";
+import { useAppDispatch } from "../../redux/hooks";
 
 const PasswordReset = () => {
   const dispatch = useAppDispatch();
@@ -25,15 +25,7 @@ const PasswordReset = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password !== password2) dispatch(setAlert(new Alert("Passwords do not match.", AlertType.DANGER)));
-    else if (!token)
-      dispatch(
-        setAlert(
-          new Alert(
-            "no password reset token provided, use the link in email to get a page with a token",
-            AlertType.DANGER
-          )
-        )
-      );
+    else if (!token) dispatch(setAlert(new Alert("no password reset token provided, use the link in email to get a page with a token", AlertType.DANGER)));
     else resetPassword({ password, password2, token: token.toString() });
   };
 
@@ -56,14 +48,7 @@ const PasswordReset = () => {
           onChange={(e) => onChange(e)}
           autoFocus
         ></input>
-        <input
-          className="simple-text-input"
-          type="password"
-          name="password2"
-          placeholder="Password2"
-          value={password2}
-          onChange={(e) => onChange(e)}
-        ></input>
+        <input className="simple-text-input" type="password" name="password2" placeholder="Password2" value={password2} onChange={(e) => onChange(e)}></input>
         <div className="auth-bottom-links">
           <Link href="/login">Log in to existing account</Link>
           <input type="submit" className="button button-standard-size button-primary" value="SET" />

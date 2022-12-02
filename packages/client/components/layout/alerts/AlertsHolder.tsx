@@ -1,6 +1,6 @@
 import React from "react";
 import { Alert } from "../../../classes/Alert";
-import { useAppSelector } from "../../../redux";
+import { useAppSelector } from "../../../redux/hooks";
 import AlertElement from "./AlertElement";
 import styles from "./alerts.module.scss";
 

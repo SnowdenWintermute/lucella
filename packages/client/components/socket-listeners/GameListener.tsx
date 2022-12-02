@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { BattleRoomGame, endScreenCountdownDelay, simulatedLagMs, simulateLag, SocketEventsFromServer, WidthAndHeight } from "../../../common";
 import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";

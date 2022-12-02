@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { Socket } from "socket.io-client";
-import { useAppSelector } from "../../redux";
+import { useAppSelector } from "../../redux/hooks";
 import { SocketEventsFromClient } from "../../../common";
 
 interface Props {

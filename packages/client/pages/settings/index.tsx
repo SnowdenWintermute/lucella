@@ -2,12 +2,8 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect, Fragment } from "react";
 import FlashingClickableText from "../../components/common-components/FlashingClickableText";
 import Modal from "../../components/common-components/modal/Modal";
-import {
-  authApi,
-  useDeleteAccountMutation,
-  useRequestPasswordResetEmailMutation,
-} from "../../redux/api-slices/auth-api-slice";
-import { useAppDispatch } from "../../redux";
+import { authApi, useDeleteAccountMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
+import { useAppDispatch } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
@@ -16,14 +12,9 @@ const Settings = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [redirecting, setRedirecting] = useState(false);
-  const [
-    deleteAccount,
-    { isLoading: deleteAccountIsLoading, isSuccess: deleteAccountIsSuccess, isError: deleteAccountIsError },
-  ] = useDeleteAccountMutation();
-  const [
-    requestPasswordResetEmail,
-    { isLoading: passwordResetIsLoading, isSuccess: passwordResetIsSuccess, isError: passwordResetIsError },
-  ] = useRequestPasswordResetEmailMutation();
+  const [deleteAccount, { isLoading: deleteAccountIsLoading, isSuccess: deleteAccountIsSuccess, isError: deleteAccountIsError }] = useDeleteAccountMutation();
+  const [requestPasswordResetEmail, { isLoading: passwordResetIsLoading, isSuccess: passwordResetIsSuccess, isError: passwordResetIsError }] =
+    useRequestPasswordResetEmailMutation();
   const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(false);
   const [email, setEmail] = useState("");
   const {
@@ -44,8 +35,7 @@ const Settings = () => {
 
   const handleSubmitDeleteAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (email !== userState?.email)
-      dispatch(setAlert(new Alert("Email address typed did not match your account's email", AlertType.DANGER)));
+    if (email !== userState?.email) dispatch(setAlert(new Alert("Email address typed did not match your account's email", AlertType.DANGER)));
     else {
       deleteAccount(email);
     }
@@ -75,18 +65,11 @@ const Settings = () => {
         title={"Delete Account"}
       >
         <p>
-          WARNING: This will delete your account, including all profile and ranking info. If you are certain of your
-          decision, type your email address into the input and click Confirm Delete.
+          WARNING: This will delete your account, including all profile and ranking info. If you are certain of your decision, type your email address into the
+          input and click Confirm Delete.
         </p>
         <form onSubmit={(e) => handleSubmitDeleteAccount(e)}>
-          <input
-            className="simple-text-input"
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            name="email"
-            value={email}
-            autoFocus
-          ></input>
+          <input className="simple-text-input" onChange={(e) => setEmail(e.target.value)} placeholder="Email" name="email" value={email} autoFocus></input>
           {/* @ts-ignore */}
           <button className="button button-standard-size button-danger modal-submit-button" action="submit">
             Confirm Delete
@@ -105,9 +88,7 @@ const Settings = () => {
               /*emailResetIsLoading*/ false ? (
                 <span>loading...</span>
               ) : (
-                <FlashingClickableText
-                  onClick={() => (passwordResetIsLoading ? null : requestPasswordResetEmail(accountEmail))}
-                >
+                <FlashingClickableText onClick={() => (passwordResetIsLoading ? null : requestPasswordResetEmail(accountEmail))}>
                   {passwordResetIsLoading ? "Senging email..." : "Change Password"}
                 </FlashingClickableText>
               )

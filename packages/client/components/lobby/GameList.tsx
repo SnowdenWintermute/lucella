@@ -2,7 +2,7 @@ import { GameStatus, SocketEventsFromClient } from "../../../common";
 import React from "react";
 import { Socket } from "socket.io-client";
 import { AlertType } from "../../enums";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
 

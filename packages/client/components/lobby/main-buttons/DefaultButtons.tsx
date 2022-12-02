@@ -4,7 +4,7 @@ import { SocketEventsFromClient } from "../../../../common";
 import { Socket } from "socket.io-client";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import GameLobbyModalButton from "../../common-components/buttons/GameLobbyModalButton";
-import { useAppSelector, useAppDispatch } from "../../../redux";
+import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 import { mobileViewWidthThreshold } from "../../../consts";
 

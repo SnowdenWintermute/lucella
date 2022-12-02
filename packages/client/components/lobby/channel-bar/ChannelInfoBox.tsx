@@ -1,5 +1,5 @@
 import React from "react";
-import { useAppSelector } from "../../../redux";
+import { useAppSelector } from "../../../redux/hooks";
 
 const ChannelInfoBox = () => {
   const chatState = useAppSelector((state) => state.chat);

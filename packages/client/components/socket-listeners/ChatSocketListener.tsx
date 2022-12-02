@@ -1,7 +1,7 @@
 import { SocketEventsFromServer } from "../../../common/dist";
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { newChatMessage, setNewChatRoomLoading, updateCurrentChatRoom } from "../../redux/slices/chat-slice";
 
 interface Props {

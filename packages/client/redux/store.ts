@@ -6,6 +6,7 @@ import alertsSlice from "./slices/alerts-slice";
 import chatSlice from "./slices/chat-slice";
 import ladderSlice from "./slices/ladder-slice";
 import lobbyUiSlice from "./slices/lobby-ui-slice";
+import { createWrapper } from "next-redux-wrapper";
 
 const store = configureStore({
   reducer: {
@@ -16,15 +17,15 @@ const store = configureStore({
     chat: chatSlice,
     lobbyUi: lobbyUiSlice,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat([authApi.middleware, ladderApiSlice.middleware]),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat([authApi.middleware, ladderApiSlice.middleware]),
 }); // disabled serializable check because we are using instances of classes for alerts, game rooms etc
 
 export default store;
+// export type AppStore = ReturnType<typeof store>;
+// export const wrapper = createWrapper<AppStore>(store); // next-redux-wrapper
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
+// export type RootState = ReturnType<AppStore["getState"]>; // next-redux-wrapper
+// export type AppDispatch = ReturnType<AppStore["dispatch"]>;
 export type AppThunk = ThunkAction<void, RootState, unknown, Action>;
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

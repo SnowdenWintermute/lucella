@@ -1,6 +1,6 @@
 import React from "react";
 import { Socket } from "socket.io-client";
-import { useAppSelector } from "../../../redux";
+import { useAppSelector } from "../../../redux/hooks";
 import DefaultButtons from "./DefaultButtons";
 import InGameRoomButtons from "./InGameRoomButtons";
 import MatchmakingButtons from "./MatchmakingButtons";

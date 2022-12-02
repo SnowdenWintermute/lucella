@@ -11,7 +11,7 @@ import touchEndHandler from "./user-input-handlers/touchEndHandler";
 import keyPressHandler from "./user-input-handlers/keyPressHandler";
 import throttle from "../../utils/throttle";
 import { Socket } from "socket.io-client";
-import { useAppSelector } from "../../redux";
+import { useAppSelector } from "../../redux/hooks";
 
 interface Props {
   canvasSizeRef: React.RefObject<WidthAndHeight | null>;

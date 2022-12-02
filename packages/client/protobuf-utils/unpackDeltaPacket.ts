@@ -19,7 +19,7 @@ export default function (serializedMessage: Uint8Array, playerRole: PlayerRole |
   const deserializedMessage = DeltasProto.deserializeBinary(serializedMessage);
   if (deserializedMessage.hasChallengerorbs()) {
     const orbList = deserializedMessage.getChallengerorbs()?.getOrbsList();
-    orbList?.forEach((orbProto) => {
+    orbList?.forEach((orbProto: any) => {
       const unpackedOrb = unpackOrbProto(orbProto);
       if (!unpacked.orbs.challenger) unpacked.orbs.challenger = {};
       if (unpackedOrb) unpacked.orbs.challenger[`challenger-orb-${unpackedOrb.id}`] = unpackedOrb;
@@ -27,7 +27,7 @@ export default function (serializedMessage: Uint8Array, playerRole: PlayerRole |
   }
   if (deserializedMessage.hasHostorbs()) {
     const orbList = deserializedMessage.getHostorbs()?.getOrbsList();
-    orbList?.forEach((orbProto) => {
+    orbList?.forEach((orbProto: any) => {
       const unpackedOrb = unpackOrbProto(orbProto);
       if (!unpacked.orbs.host) unpacked.orbs.host = {};
       if (unpackedOrb) unpacked.orbs.host[`host-orb-${unpackedOrb.id}`] = unpackedOrb;

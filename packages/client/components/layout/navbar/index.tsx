@@ -4,9 +4,10 @@ import { UserMenu } from "./UserMenu";
 import logo from "../../../img/logo.png";
 import GamesIcon from "../../../img/menuIcons/queen.svg";
 import LadderIcon from "../../../img/menuIcons/podium.svg";
-import { useAppSelector } from "../../../redux";
+import { useAppSelector } from "../../../redux/hooks";
 import { GameStatus } from "../../../../common";
 import Image from "next/image";
+import React, { Fragment } from "react";
 
 const Navbar = () => {
   const router = useRouter();
@@ -16,28 +17,22 @@ const Navbar = () => {
   if (gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING) return <></>;
 
   return (
-    <>
+    <Fragment>
       <nav className="nav">
         {/* Nav tabs */}
         <div className="nav-right-holder">
           <Image className="logo-img" alt="lucella logo" src={logo} />
-          <Link href="/">
-            <a className="brand-text">
-              <h1>Lucella.org</h1>
-            </a>
+          <Link href="/" className="brand-text">
+            <h1>Lucella.org</h1>
           </Link>
           <div className="nav-tabs">
-            <Link href="/battle-room">
-              <a className={`nav-tab ${router.pathname === "/battle-room" && "tab-active"}`}>
-                <span className="tab-title-text">GAME</span>
-                <GamesIcon className="tab-icon-svg" />
-              </a>
+            <Link href="/battle-room" className={`nav-tab ${router.pathname === "/battle-room" && "tab-active"}`}>
+              <span className="tab-title-text">GAME</span>
+              <GamesIcon className="tab-icon-svg" />
             </Link>
-            <Link href="/ladder">
-              <a className={`nav-tab ${router.pathname === "/ladder" && "tab-active"}`}>
-                <span className="tab-title-text">LADDER</span>
-                <LadderIcon className="tab-icon-svg" />
-              </a>
+            <Link href="/ladder" className={`nav-tab ${router.pathname === "/ladder" && "tab-active"}`}>
+              <span className="tab-title-text">LADDER</span>
+              <LadderIcon className="tab-icon-svg" />
             </Link>
           </div>
         </div>
@@ -45,7 +40,7 @@ const Navbar = () => {
         <div className="user-menu-holder">{<UserMenu />}</div>
       </nav>
       <div className="nav-tab-thin-bar"></div>
-    </>
+    </Fragment>
   );
 };
 

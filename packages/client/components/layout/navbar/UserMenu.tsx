@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
-import { useAppDispatch } from "../../../redux";
+import { useAppDispatch } from "../../../redux/hooks";
 import { authApi, useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 
 export const UserMenu = () => {
@@ -46,17 +46,13 @@ export const UserMenu = () => {
       </div>
       {showUserDropdown && (
         <ul className="user-menu">
-          <Link href="/settings">
-            <a className="user-menu-item">
-              {/* <SettingsIcon className="menu-icon-svg" height="100" width="100" color="red" stroke="red" fill="red" /> */}
-              Settings
-            </a>
+          <Link href="/settings" className="user-menu-item">
+            {/* <SettingsIcon className="menu-icon-svg" height="100" width="100" color="red" stroke="red" fill="red" /> */}
+            Settings
           </Link>
-          <Link href="/login">
-            <a className="user-menu-item" onClick={(e) => handleLogout()}>
-              {/* <Image alt="logout icon" src={logoutIcon} /> */}
-              Logout
-            </a>
+          <Link href="/login" onClick={(e) => handleLogout()} className="user-menu-item">
+            {/* <Image alt="logout icon" src={logoutIcon} /> */}
+            Logout
           </Link>
         </ul>
       )}
@@ -64,8 +60,8 @@ export const UserMenu = () => {
   );
 
   const guestMenu = (
-    <Link href="/login">
-      <a className="button button-standard-size button-basic">LOGIN</a>
+    <Link href="/login" className="button button-standard-size button-basic">
+      LOGIN
     </Link>
   );
 

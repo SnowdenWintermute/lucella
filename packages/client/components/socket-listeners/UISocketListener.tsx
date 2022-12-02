@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import {
   clearLobbyUi,

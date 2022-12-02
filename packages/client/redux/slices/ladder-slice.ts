@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { HYDRATE } from "next-redux-wrapper";
 
 export interface ILadderState {
   totalNumberOfPages: number | null;
@@ -17,6 +18,14 @@ const ladderSlice = createSlice({
       state.viewingSearchedUser = action.payload;
     },
   },
+  // extraReducers: {
+  //   [HYDRATE]: (state, action) => {
+  //     return {
+  //       ...state,
+  //       ...action.payload.auth,
+  //     };
+  //   },
+  // },
 });
 
 export const { setViewingSearchedUser } = ladderSlice.actions;

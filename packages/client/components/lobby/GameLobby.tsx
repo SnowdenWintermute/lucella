@@ -12,7 +12,7 @@ import io, { Socket } from "socket.io-client";
 import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
-import { useAppDispatch, useAppSelector } from "../../redux";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { authApi } from "../../redux/api-slices/auth-api-slice";
 const socketAddress = process.env.NEXT_PUBLIC_DEV_MODE ? process.env.NEXT_PUBLIC_SOCKET_API_DEV : process.env.NEXT_PUBLIC_SOCKET_API;

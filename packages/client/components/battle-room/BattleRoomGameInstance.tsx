@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAppSelector } from "../../redux";
+import { useAppSelector } from "../../redux/hooks";
 import GameListener from "../socket-listeners/GameListener";
 import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../common";
 import { Socket } from "socket.io-client";

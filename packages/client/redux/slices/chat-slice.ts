@@ -1,5 +1,6 @@
 import { ChatMessage, ChatChannel } from "../../../common";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { HYDRATE } from "next-redux-wrapper";
 
 export interface IChatState {
   currentChatRoomName: string;
@@ -30,6 +31,14 @@ const chatSlice = createSlice({
       state.currentChatRoomUsers = action.payload.connectedUsers;
     },
   },
+  // extraReducers: {
+  //   [HYDRATE]: (state, action) => {
+  //     return {
+  //       ...state,
+  //       ...action.payload.auth,
+  //     };
+  //   },
+  // },
 });
 
 export const { setNewChatRoomLoading, newChatMessage, updateCurrentChatRoom } = chatSlice.actions;

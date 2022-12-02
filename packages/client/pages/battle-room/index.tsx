@@ -1,7 +1,7 @@
 import { GameStatus } from "../../../common";
 import React from "react";
 import GameLobby from "../../components/lobby/GameLobby";
-import { useAppSelector } from "../../redux";
+import { useAppSelector } from "../../redux/hooks";
 
 const BattleRoom = () => {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
