@@ -13,7 +13,7 @@
     "build:test": "yarn db:reset && export NODE_ENV=\"test\" && next build",
     "start:test": "export NODE_ENV=\"test\" && next start",
     "cypress:open": "env-cmd -f .env.test.local cypress open --e2e --browser firefox",
-    "cypress:start": "start-server-and-test start:test 3000 cypress:open",
+    "cypress:start": "concurrently \"start-server-and-test start:test 3000 cypress:open\" \"yarn --cwd ../server serve\"",
     "cypress:build": "yarn build:test && yarn cypress:start"
   },
   "dependencies": {
@@ -47,6 +47,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/matter-js": "^0.18.2",
     "@types/uuid": "^9.0.0",
+    "concurrently": "^7.6.0",
     "cypress": "^11.2.0",
     "env-cmd": "^10.1.0",
     "jest": "^29.3.1",

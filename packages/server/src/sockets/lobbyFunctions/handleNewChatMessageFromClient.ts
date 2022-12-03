@@ -9,11 +9,7 @@ export default function handleNewChatMessageFromClient(
   data: { currentChatRoomName: string; style: string; text: string }
 ) {
   const { currentChatRoomName, style, text } = data;
-  console.log(data);
   const { connectedSockets } = serverState;
   // @todo check currentChatRoomName against names of rooms user is in so they can't send message to a room they're not authed for
-  io.in(currentChatRoomName).emit(
-    SocketEventsFromServer.NEW_CHAT_MESSAGE,
-    new ChatMessage(connectedSockets[socket.id].associatedUser.username, text, style)
-  );
+  io.in(currentChatRoomName).emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(connectedSockets[socket.id].associatedUser.username, text, style));
 }

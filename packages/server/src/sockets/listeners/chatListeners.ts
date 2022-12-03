@@ -6,6 +6,7 @@ import handleNewChatMessageFromClient from "../lobbyFunctions/handleNewChatMessa
 export default function chatListeners(io: Server, socket: Socket, serverState: ServerState) {
   if (!socket) return;
   socket.on(SocketEventsFromClient.NEW_CHAT_MESSAGE, (data) => {
+    console.log("chat message received: ", data, " for channel: ", serverState.chatChannels[socket.id]?.name);
     handleNewChatMessageFromClient(io, socket, serverState, data);
   });
 }

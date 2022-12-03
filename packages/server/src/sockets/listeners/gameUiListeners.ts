@@ -15,6 +15,7 @@ export default function gameUiListeners(io: Server, socket: Socket, serverState:
     socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, gameRooms);
   });
   socket.on(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, (data) => {
+    if (!data.chatChannelToJoin) return; // todo - error handling
     clientRequestsToJoinChatChannel(io, socket, serverState, data.chatChannelToJoin.toLowerCase());
   });
   socket.on(SocketEventsFromClient.HOSTS_NEW_GAME, (gameName) => {
