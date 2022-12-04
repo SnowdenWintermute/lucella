@@ -9,7 +9,11 @@ const UserList = () => {
   Object.keys(currentChatRoomUsers).forEach((key) => {
     usersInChannelToDisplay.push(<div key={key}>{key}</div>);
   });
-  return <div className="game-lobby-players-list">{newChatRoomLoading ? "..." : usersInChannelToDisplay}</div>;
+  return (
+    <div className="game-lobby-players-list" aria-label="users in this channel">
+      {newChatRoomLoading ? "..." : usersInChannelToDisplay}
+    </div>
+  );
 };
 
 export default UserList;

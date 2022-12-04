@@ -20,6 +20,8 @@ const ChangeChannelModalContents = ({ setJoinNewRoomInput, joinNewRoomInput, onJ
           setJoinNewRoomInput(e.target.value);
         }}
         value={joinNewRoomInput}
+        type="text"
+        aria-label="channel to join"
         placeholder={"Channel to join..."}
       ></input>
       <div className="modal-option-buttons-grid">

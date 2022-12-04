@@ -1,3 +1,6 @@
+// lobby/chat
+export const battleRoomDefaultChatChannel = "battle-room-chat";
+// battle-room game
 export const ghostTransparency = 0.3;
 export const inGameFontSizes = { medium: 12, large: 25 };
 export const colors = {

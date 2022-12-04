@@ -2,6 +2,7 @@ import { BattleRoomGame, EloUpdates, SocketEventsFromServer } from "../../../../
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import sendPlayerBackToLobby from "./sendPlayerBackToLobby";
+import sanitizeGameRoomsForClient from "../../../utils/sanitizeGameRoomsForClient";
 const replicator = new (require("replicator"))();
 
 export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates: EloUpdates | null) {
@@ -26,7 +27,7 @@ export default function (io: Server, serverState: ServerState, gameName: string,
       sendPlayerBackToLobby(io, serverState, gameRoom.players.challenger!.socketId!, challenger);
       delete games[gameName];
       delete gameRooms[gameName];
-      io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, gameRooms);
+      io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, sanitizeGameRoomsForClient(gameRooms));
     } else {
       game.gameOverCountdown.current! -= 1;
       io.to(`game-${gameName}`).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);

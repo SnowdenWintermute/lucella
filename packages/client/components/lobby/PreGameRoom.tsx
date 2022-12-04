@@ -37,7 +37,7 @@ const PreGameRoom = ({ socket }: Props) => {
     if (!preGameScreenIsOpen) setPreGameRoomDisplayClass("height-0-hidden");
   }, [preGameScreenIsOpen]);
 
-  // 'make public' actually request to server to host a game
+  // 'make public' actually request to server to host a game (until now it is just the creation input window/box)
   const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const gameNameToCreate = gameNameInput;

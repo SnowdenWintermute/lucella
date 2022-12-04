@@ -29,7 +29,6 @@ const GameLobbyChat = ({ socket }: Props) => {
   const sendNewMessage = (message: string) => {
     if (message === "") return;
     const messageToSend = {
-      currentChatRoomName,
       style: "normal",
       text: message,
     };
@@ -60,6 +59,7 @@ const GameLobbyChat = ({ socket }: Props) => {
       <div className="game-lobby-chat-input-holder">
         <form onSubmit={(e) => onSubmit(e)}>
           <input
+            aria-label="chat-input"
             type="text"
             className="text-input-transparent game-lobby-chat-input"
             onChange={(e) => onChange(e)}
