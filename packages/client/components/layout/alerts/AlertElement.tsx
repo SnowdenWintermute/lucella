@@ -31,7 +31,11 @@ const AlertElement = ({ message, type, id }: Props) => {
   };
 
   return (
-    <li className={`${styles.alert} ${styles[`alert-${type.toLowerCase()}`]} ${animateClass ? styles[animateClass] : ""}`} onClick={(e) => removeAlert(id)}>
+    <li
+      role="status"
+      className={`${styles.alert} ${styles[`alert-${type.toLowerCase()}`]} ${animateClass ? styles[animateClass] : ""}`}
+      onClick={(e) => removeAlert(id)}
+    >
       {alertIcon}
       {message}
     </li>

@@ -1,4 +1,4 @@
-import { GameStatus } from "../../../common";
+import { GameStatus, battleRoomDefaultChatChannel } from "../../../common";
 import React from "react";
 import GameLobby from "../../components/lobby/GameLobby";
 import { useAppSelector } from "../../redux/hooks";
@@ -14,7 +14,7 @@ const BattleRoom = () => {
     <section className={gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? "page-frame" : ""}>
       <div className={`game-shell ${inGameShellClass}`}>
         {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? <h1 className="game-page-title">Battle Room</h1> : ""}
-        <GameLobby defaultChatRoom="battle-room-chat" />
+        <GameLobby defaultChatRoom={battleRoomDefaultChatChannel} />
       </div>
     </section>
   );

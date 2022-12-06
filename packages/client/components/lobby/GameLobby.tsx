@@ -58,10 +58,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   // join initial room
   useEffect(() => {
     if (authenticating) return;
-    socket.current &&
-      socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, {
-        chatChannelToJoin: defaultChatRoom,
-      });
+    socket.current && socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatRoom);
   }, [authenticating, defaultChatRoom]);
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
@@ -82,7 +79,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   const joinRoom = (chatChannelToJoin: string) => {
     setDisplayChangeChannelModal(false);
     setJoinNewRoomInput("");
-    socket.current && socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, { chatChannelToJoin, username });
+    socket.current && socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, chatChannelToJoin);
   };
 
   if (!socket.current) return <p>Awaiting socket connection...</p>;

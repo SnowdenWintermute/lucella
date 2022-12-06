@@ -1,6 +1,7 @@
 import { BattleRoomGame } from "../BattleRoomGame";
 import { SocketMetadata } from "../SocketMetadata";
 import { GameStatus } from "../../enums";
+import { gameRoomCountdownDuration } from "../../consts/game-lobby-config";
 
 export class GameRoom {
   gameName: string;
@@ -21,7 +22,7 @@ export class GameRoom {
     this.players = { host: null, challenger: null };
     this.spectators = [];
     this.gameStatus = GameStatus.IN_LOBBY;
-    this.countdown = { duration: 1, current: 1 };
+    this.countdown = { duration: gameRoomCountdownDuration, current: gameRoomCountdownDuration };
     this.countdownInterval = null;
     this.playersReady = { host: false, challenger: false };
     this.score = { host: 0, challenger: 0, neededToWin: BattleRoomGame.initialScoreNeededToWin };

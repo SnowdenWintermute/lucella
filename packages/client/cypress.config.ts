@@ -1,6 +1,7 @@
 import { defineConfig } from "cypress";
 import { Socket } from "socket.io-client";
 import { SocketEventsFromClient } from "../common";
+import { TaskNames } from "./cypress/support/TaskNames";
 const io = require("socket.io-client");
 
 let socket: Socket;
@@ -9,17 +10,21 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       on("task", {
-        connectSocket: (username: string) => {
+        [TaskNames.connectSocket]: () => {
           socket = io("http://localhost:8080" || "", {
             transports: ["websocket"],
             withCredentials: true,
+            // reconnectionAttempts: 3,
           });
-          console.log(socket.id + " socket id");
           return null;
         },
-        sendChatMessage: (message) => {
-          console.log(socket.id + " socket id from chat message");
-          socket.emit(SocketEventsFromClient.NEW_CHAT_MESSAGE, "other user says hi");
+        [TaskNames.disconnectSocket]: () => {
+          socket.disconnect();
+          return null;
+        },
+        [TaskNames.socketEmit]: (taskData: { socketEvent: SocketEventsFromClient; data: any }) => {
+          const { socketEvent, data } = taskData;
+          socket.emit(socketEvent, data);
           return null;
         },
       });

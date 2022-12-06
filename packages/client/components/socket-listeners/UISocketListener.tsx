@@ -12,6 +12,7 @@ import {
   setMatchmakingWindowVisible,
   setPreGameScreenDisplayed,
   setScoreScreenData,
+  setViewingGamesList,
   updateGameCountdown,
   updateGameList,
   updateGameStatus,
@@ -35,10 +36,17 @@ const UISocketListener = ({ socket }: Props) => {
       dispatch(clearLobbyUi());
     });
     socket.on(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, (data) => {
+      console.log("new list of games: ", data);
       dispatch(updateGameList(data));
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
       dispatch(setCurrentGameRoom(data));
+      if (data) {
+        dispatch(setViewingGamesList(false));
+        dispatch(setPreGameScreenDisplayed(true));
+      } else {
+        dispatch(setPreGameScreenDisplayed(false));
+      }
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
       dispatch(setPreGameScreenDisplayed(false));

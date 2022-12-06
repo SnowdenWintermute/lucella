@@ -8,12 +8,10 @@ export default function (io: Server, socket: Socket, serverState: ServerState) {
   const { connectedSockets, chatChannels } = serverState;
   if (!connectedSockets[socket.id] || !connectedSockets[socket.id].currentChatChannel) return;
   const nameOfChatChannelToLeave = connectedSockets[socket.id].currentChatChannel;
+  console.log("removing socket " + socket.id + " from channel " + nameOfChatChannelToLeave);
   if (!nameOfChatChannelToLeave) return;
   connectedSockets[socket.id].previousChatChannelName = nameOfChatChannelToLeave; // used for placing user back in their last chat channel after a game ends
   updateChatChannelUsernameList(socket, serverState, nameOfChatChannelToLeave, undefined);
   socket.leave(nameOfChatChannelToLeave);
-  io.in(nameOfChatChannelToLeave).emit(
-    SocketEventsFromServer.CHAT_ROOM_UPDATE,
-    sanitizeChatChannelForClient(chatChannels, nameOfChatChannelToLeave)
-  );
+  io.in(nameOfChatChannelToLeave).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, sanitizeChatChannelForClient(chatChannels, nameOfChatChannelToLeave));
 }

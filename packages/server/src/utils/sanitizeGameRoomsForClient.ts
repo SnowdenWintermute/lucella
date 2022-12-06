@@ -10,5 +10,6 @@ export default function sanitizeGameRoomsForClient(gameRooms: { [gameName: strin
       if (gamesForClient[game].players[player]) delete gamesForClient[game].players[player]!.socketId;
     }
   });
+
   return gamesForClient;
 }

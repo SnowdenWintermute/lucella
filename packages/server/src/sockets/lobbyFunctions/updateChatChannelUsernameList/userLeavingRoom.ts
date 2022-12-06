@@ -8,6 +8,7 @@ export default function (socket: Socket, serverState: ServerState, nameOfChatCha
   const userNameLeaving = connectedSockets[socket.id].associatedUser.username;
   const userToRemoveFromRoom = chatChannelToLeave.connectedUsers[userNameLeaving];
   userToRemoveFromRoom.connectedSockets.forEach((userConnectedSocket, i) => {
+    console.log("line 11 userLeavingRoom");
     if (userConnectedSocket.toString() === socket.id.toString())
       if (userToRemoveFromRoom.connectedSockets.length <= 1) delete chatChannelToLeave.connectedUsers[userNameLeaving];
       else {
@@ -15,4 +16,5 @@ export default function (socket: Socket, serverState: ServerState, nameOfChatCha
         userToRemoveFromRoom.connectedSockets = newSocketList;
       }
   });
+  console.log("line 19 userLeavingRoom");
 }

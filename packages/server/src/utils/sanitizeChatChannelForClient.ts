@@ -1,9 +1,6 @@
 import { ChatChannel } from "../../../common";
 
-export default function sanitizeChatChannelForClient(
-  chatChannels: { [channelName: string]: ChatChannel },
-  channelName: string
-) {
+export default function sanitizeChatChannelForClient(chatChannels: { [channelName: string]: ChatChannel }, channelName: string) {
   let sanitizedChatChannel: { name: string; connectedUsers: { [userKey: string]: {} } } = {
     name: channelName,
     connectedUsers: {},
@@ -15,11 +12,12 @@ export default function sanitizeChatChannelForClient(
     };
     let userPropKey: keyof typeof chatChannels.channelName.connectedUsers.userId;
     for (userPropKey in chatChannels[channelName].connectedUsers[userKey]) {
-      if (userPropKey !== "connectedSockets")
-        sanitizedUser[userPropKey] = chatChannels[channelName].connectedUsers[userKey][userPropKey];
+      if (userPropKey !== "connectedSockets") sanitizedUser[userPropKey] = chatChannels[channelName].connectedUsers[userKey][userPropKey];
     }
     sanitizedChatChannel.connectedUsers[userKey] = sanitizedUser;
   });
+
+  console.log("sanitized chat channel line 20");
 
   return sanitizedChatChannel;
 }
