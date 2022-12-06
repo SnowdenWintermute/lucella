@@ -53,5 +53,5 @@ io.sockets.on("connect", async (socket) => {
   gameUiListeners(io, socket, serverState);
   battleRoomGameListeners(socket, serverState);
 
-  socket.on("disconnect", () => handleSocketDisconnection(io, socket, serverState, serverState?.connectedSockets[socket.id]?.currentGameName || undefined));
+  socket.on("disconnect", () => handleSocketDisconnection(io, socket, serverState));
 });

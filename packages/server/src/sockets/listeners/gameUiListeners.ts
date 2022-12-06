@@ -25,13 +25,13 @@ export default function gameUiListeners(io: Server, socket: Socket, serverState:
   });
   socket.on(SocketEventsFromClient.LEAVES_GAME, (gameName) => {
     console.log(socket.id + " leaving game " + gameName);
-    clientLeavesGame(io, socket, serverState, gameName);
+    clientLeavesGame(io, socket, serverState);
   });
   socket.on(SocketEventsFromClient.JOINS_GAME, (gameName) => {
     clientJoinsGame(io, socket, serverState, gameName);
   });
   socket.on(SocketEventsFromClient.CLICKS_READY, (gameName) => {
-    handleReadyClick(io, socket, serverState, gameName);
+    handleReadyClick(io, socket, serverState);
   });
   socket.on(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE, () => {
     handleQueueUpForRankedMatch(io, socket, serverState);

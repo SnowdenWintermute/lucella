@@ -6,7 +6,8 @@ import ServerState from "../../interfaces/ServerState";
 export default function (io: Server, socket: Socket, serverState: ServerState, gameName?: string) {
   console.log(socket.id + " disconnected");
   const { connectedSockets } = serverState;
-  if (gameName) clientLeavesGame(io, socket, serverState, gameName, true);
+  const { currentGameName } = serverState.connectedSockets[socket.id];
+  if (currentGameName) clientLeavesGame(io, socket, serverState, true);
   else removeSocketFromChatChannel(io, socket, serverState);
 
   delete connectedSockets[socket.id];

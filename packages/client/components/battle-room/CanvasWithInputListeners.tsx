@@ -68,6 +68,7 @@ const Canvas = (props: Props) => {
       onMouseEnter={() => {
         mouseEnterHandler(currentGame.mouseData);
       }}
+      data-cy="battle-room-canvas"
     />
   );
 };

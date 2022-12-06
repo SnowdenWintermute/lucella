@@ -56,19 +56,27 @@ const PreGameRoom = ({ socket }: Props) => {
         game: {currentGameName}
       </h3>
       <div>Players:</div>
-      <table className="pre-game-room-player-list">
+      <table role="table" aria-label="players in game" className="pre-game-room-player-list">
         <tbody>
           <tr>
             <td>{players?.host?.associatedUser.username}</td>
-            <td className={styles["ready-icon-holder"]}>{playersReady?.host && <SuccessIcon className={styles["ready-icon"]}></SuccessIcon>}</td>
+            <td aria-label="host status" className={styles["ready-icon-holder"]}>
+              {playersReady?.host ? <SuccessIcon aria-label="ready" className={styles["ready-icon"]}></SuccessIcon> : <span aria-label="not ready">...</span>}
+            </td>
           </tr>
           <tr>
             <td>{players?.challenger ? players.challenger.associatedUser.username : "Awaiting challenger..."}</td>
-            <td className={styles["ready-icon-holder"]}>{playersReady?.challenger && <SuccessIcon className={styles["ready-icon"]}></SuccessIcon>}</td>
+            <td aria-label="challenger status" className={styles["ready-icon-holder"]}>
+              {playersReady?.challenger ? (
+                <SuccessIcon aria-label="ready" className={styles["ready-icon"]}></SuccessIcon>
+              ) : (
+                <span aria-label="not ready">...</span>
+              )}
+            </td>
           </tr>
           <tr>
-            <td>{gameStatus}</td>
-            <td>{gameStatus === GameStatus.COUNTING_DOWN && countdown?.current}</td>
+            <td aria-label="game status">{gameStatus}</td>
+            <td aria-label="game start countdown">{gameStatus === GameStatus.COUNTING_DOWN && countdown?.current}</td>
           </tr>
         </tbody>
       </table>

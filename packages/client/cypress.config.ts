@@ -22,20 +22,9 @@ export default defineConfig({
           socket.disconnect();
           return null;
         },
-        [TaskNames.joinChatChannel]: (channelName) => {
-          socket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, channelName);
-          return null;
-        },
-        [TaskNames.sendChatMessage]: (message) => {
-          socket.emit(SocketEventsFromClient.NEW_CHAT_MESSAGE, message);
-          return null;
-        },
-        [TaskNames.hostGame]: (gameName) => {
-          socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameName);
-          return null;
-        },
-        [TaskNames.leaveGame]: (gameName) => {
-          socket.emit(SocketEventsFromClient.LEAVES_GAME, gameName);
+        [TaskNames.socketEmit]: (taskData: { socketEvent: SocketEventsFromClient; data: any }) => {
+          const { socketEvent, data } = taskData;
+          socket.emit(socketEvent, data);
           return null;
         },
       });

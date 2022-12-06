@@ -54,7 +54,7 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
 });
 
 const PORT = process.env.PORT;
-const expressServer = app.listen(PORT, () => {
+export const expressServer = app.listen(PORT, () => {
   console.log(`express server on port ${PORT}`);
 
   connectDB();
