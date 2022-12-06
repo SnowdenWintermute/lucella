@@ -5,6 +5,8 @@ import { SocketEventsFromServer, ChatChannel, ChatMessage, ChatMessageStyles } f
 import updateRoomUsernameList from "./updateChatChannelUsernameList";
 import sanitizeChatChannelForClient from "../../utils/sanitizeChatChannelForClient";
 
+// @ old delete
+
 export default function clientRequestsToJoinChatChannel(
   io: Server,
   socket: Socket,

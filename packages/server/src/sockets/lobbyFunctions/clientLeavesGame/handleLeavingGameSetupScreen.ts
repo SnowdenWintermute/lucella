@@ -5,7 +5,7 @@ import handleChallengerLeavingGameSetup from "./handleChallengerLeavingGameSetup
 import handleDisconnectionFromGameSetup from "./handleDisconnectionFromGameSetup";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
-import sanitizeGameRoomForClient from "../../../utils/sanitizeGameRoomForClient";
+import sanitizeGameRoomForClient from "../../../classes/LobbyManager/sanitizeGameRoomForClient";
 import { SocketEventsFromServer } from "../../../../../common";
 
 export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string, isDisconnecting: boolean | undefined) {

@@ -3,11 +3,11 @@ import { io } from "../express-server";
 import handleNewSocketConnection from "./generalFunctions/handleNewSocketConnection";
 import handleSocketDisconnection from "./generalFunctions/handleSocketDisconnection";
 import chatListeners from "./listeners/chatListeners";
-import gameUiListeners from "./listeners/gameUiListeners";
+import gameUiListeners from "./listeners/lobbyUiListeners";
 import battleRoomGameListeners from "./listeners/battleRoomGameListeners";
 import { SocketEventsFromServer } from "../../../common";
 import sanitizeChatChannelForClient from "../utils/sanitizeChatChannelForClient";
-import sanitizeGameRoomsForClient from "../utils/sanitizeGameRoomsForClient";
+import sanitizeGameRoomsForClient from "../classes/LobbyManager/sanitizeGameRoomsForClient";
 
 const serverState: ServerState = {
   chatChannels: {},

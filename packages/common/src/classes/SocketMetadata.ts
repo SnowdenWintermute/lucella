@@ -9,7 +9,7 @@ export class SocketMetadata {
     isGuest: boolean;
   };
   uuid: string;
-  socketId?: string | null;
+  socketId?: string; // optional so it can be omitted when sent to client
   constructor(
     socketId: string,
     associatedUser: {
@@ -19,7 +19,7 @@ export class SocketMetadata {
     currentChatChannel?: string,
     currentGameName?: string
   ) {
-    this.socketId = socketId || null;
+    this.socketId = socketId;
     this.associatedUser = associatedUser;
     this.currentGameName = currentGameName || null;
     this.currentChatChannel = currentChatChannel || null;

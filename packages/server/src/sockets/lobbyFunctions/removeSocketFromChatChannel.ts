@@ -4,6 +4,7 @@ import ServerState from "../../interfaces/ServerState";
 import sanitizeChatChannelForClient from "../../utils/sanitizeChatChannelForClient";
 import updateChatChannelUsernameList from "./updateChatChannelUsernameList";
 
+// old-delete
 export default function (io: Server, socket: Socket, serverState: ServerState) {
   const { connectedSockets, chatChannels } = serverState;
   if (!connectedSockets[socket.id] || !connectedSockets[socket.id].currentChatChannel) return;

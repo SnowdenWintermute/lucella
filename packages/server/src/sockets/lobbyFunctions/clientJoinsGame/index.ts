@@ -1,10 +1,12 @@
 import clientRequestsToJoinChatChannel from "../clientRequestsToJoinChatChannel";
-import sanitizeGameRoomForClient from "../../../utils/sanitizeGameRoomForClient";
-import sanitizeGameRoomsForClient from "../../../utils/sanitizeGameRoomsForClient";
-import assignPlayerRole from "./assignPlayerRole";
+import sanitizeGameRoomForClient from "../../../classes/LobbyManager/sanitizeGameRoomForClient";
+import sanitizeGameRoomsForClient from "../../../classes/LobbyManager/sanitizeGameRoomsForClient";
+import assignPlayerRole from "../../../classes/LobbyManager/assignPlayerRole";
 import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
 import { SocketEventsFromServer } from "../../../../../common";
+
+// old - delete
 
 export default function (io: Server, socket: Socket | undefined, serverState: ServerState, gameName: string) {
   const { connectedSockets, gameRooms } = serverState;

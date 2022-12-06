@@ -1,5 +1,7 @@
 import { ChatChannel } from "../../../common";
 
+// old - delete
+
 export default function sanitizeChatChannelForClient(chatChannels: { [channelName: string]: ChatChannel }, channelName: string) {
   let sanitizedChatChannel: { name: string; connectedUsers: { [userKey: string]: {} } } = {
     name: channelName,

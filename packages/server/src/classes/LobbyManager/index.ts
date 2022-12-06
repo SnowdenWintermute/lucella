@@ -1,26 +1,32 @@
-import { Server } from "socket.io";
-import { ChatChannel, GameRoom } from "../../../../common";
-import ServerState from "../../interfaces/ServerState";
-import sanitizeGameRoomsForClient from "../../utils/sanitizeGameRoomsForClient";
+import { Socket } from "socket.io";
+import { ChatChannel, GameRoom, SocketEventsFromServer, SocketMetadata, ErrorMessages } from "../../../../common";
+import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
+import updateChatChannelUsernameLists from "./updateChatChannelUsernameLists";
+import validateGameName from "./validateGameName";
 
 export class LobbyManager {
-  io: Server;
-  serverState: ServerState;
   chatChannels: { [name: string]: ChatChannel };
   gameRooms: { [roomName: string]: GameRoom };
-  constructor(io: Server, serverState: ServerState) {
+  constructor() {
     this.chatChannels = {};
     this.gameRooms = {};
-    this.io = io;
-    this.serverState = serverState;
+  }
+  getSanitizedGameRoom(gameRoom: GameRoom) {
+    return sanitizeGameRoom(gameRoom);
   }
   getSanitizedGameRooms() {
-    return sanitizeGameRoomsForClient(this.gameRooms);
+    return sanitizeAllGameRooms(this.gameRooms);
   }
-  handleRequestToJoinChatChannel() {
-    // leave socket from any previous channel
-    // remove socketMetaData from that channel
-    // join socket to new channel
-    // update socket metadata for that channel
+  getSanitizedChatChannel(channelName: string) {
+    return sanitizeChatChannel(this.chatChannels[channelName]);
+  }
+  updateChatChannelUsernameLists(socketMeta: SocketMetadata, channelNameLeaving?: string | null, channelNameJoining?: string) {
+    updateChatChannelUsernameLists(this.chatChannels, socketMeta, channelNameLeaving, channelNameJoining);
+  }
+  createGameRoom(socket: Socket, gameName: string, isRanked: boolean) {
+    if (this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_EXISTS);
+    const gameNameValidationError = validateGameName(gameName);
+    if (gameNameValidationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, gameNameValidationError);
+    this.gameRooms[gameName] = new GameRoom(gameName, isRanked);
   }
 }

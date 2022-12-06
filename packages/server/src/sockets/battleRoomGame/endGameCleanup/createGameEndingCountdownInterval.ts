@@ -2,7 +2,7 @@ import { BattleRoomGame, EloUpdates, SocketEventsFromServer } from "../../../../
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import sendPlayerBackToLobby from "./sendPlayerBackToLobby";
-import sanitizeGameRoomsForClient from "../../../utils/sanitizeGameRoomsForClient";
+import sanitizeGameRoomsForClient from "../../../classes/LobbyManager/sanitizeGameRoomsForClient";
 const replicator = new (require("replicator"))();
 
 export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates: EloUpdates | null) {

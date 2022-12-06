@@ -59,13 +59,3 @@ export const expressServer = app.listen(PORT, () => {
 
   connectDB();
 });
-
-export const io = new Server(
-  expressServer
-  // {
-  // cors: {
-  //   methods: ["GET", "PATCH", "POST", "PUT"],
-  //   origin: true,
-  // },
-  // }
-);

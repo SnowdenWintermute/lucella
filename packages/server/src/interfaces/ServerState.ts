@@ -1,5 +1,6 @@
 import { SocketMetadata, ChatChannel, GameRoom, BattleRoomGame } from "../../../common";
 import { IBattleRoomRecord } from "../models/BattleRoomRecord";
+import { SocketMetadataList } from "../types";
 
 export interface RankedQueueUser {
   userId: string;
@@ -21,8 +22,6 @@ export default interface ServerState {
   chatChannels: { [name: string]: ChatChannel };
   gameRooms: { [roomName: string]: GameRoom };
   games: { [gameName: string]: BattleRoomGame };
-  connectedSockets: {
-    [socketId: string]: SocketMetadata;
-  };
+  connectedSockets: SocketMetadataList;
   rankedQueue: RankedQueue;
 }

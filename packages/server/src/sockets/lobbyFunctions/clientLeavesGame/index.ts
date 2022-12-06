@@ -4,7 +4,9 @@ import ServerState from "../../../interfaces/ServerState";
 
 import endGameCleanup from "../../battleRoomGame/endGameCleanup";
 import handleLeavingGameSetupScreen from "./handleLeavingGameSetupScreen";
-import sanitizeGameRoomsForClient from "../../../utils/sanitizeGameRoomsForClient";
+import sanitizeGameRoomsForClient from "../../../classes/LobbyManager/sanitizeGameRoomsForClient";
+
+// old - delete
 
 export default function (io: Server, socket: Socket, serverState: ServerState, isDisconnecting?: boolean) {
   const { connectedSockets, gameRooms } = serverState;

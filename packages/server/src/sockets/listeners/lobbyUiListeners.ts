@@ -4,24 +4,21 @@ import clientJoinsGame from "../lobbyFunctions/clientJoinsGame";
 import handleReadyClick from "../lobbyFunctions/handleReadyClick";
 import clientLeavesGame from "../lobbyFunctions/clientLeavesGame";
 // import handleQueueUpForRankedMatch from "../lobbyFunctions/handleQueueUpForRankedMatch";
-import { Server, Socket } from "socket.io";
-import ServerState from "../../interfaces/ServerState";
-import { SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
+import { Socket } from "socket.io";
+import { SocketEventsFromClient, SocketEventsFromServer } from "@lucella/common";
 import handleQueueUpForRankedMatch from "../lobbyFunctions/handleQueueUpForRankedMatch";
-import sanitizeGameRoomsForClient from "../../utils/sanitizeGameRoomsForClient";
+import { LucellaServer } from "../../classes/LucellaServer";
 
-export default function gameUiListeners(io: Server, socket: Socket, serverState: ServerState) {
-  const { gameRooms, rankedQueue } = serverState;
+export default function gameUiListeners(server: LucellaServer, socket: Socket) {
+  const { lobbyManager, rankedQueue } = server;
   socket.on(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST, () => {
-    socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, sanitizeGameRoomsForClient(gameRooms));
+    socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobbyManager.getSanitizedGameRooms());
   });
   socket.on(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, (data) => {
-    console.log("chat channel request to join data: ", data);
-    if (!data) return; // todo - error handling
-    clientRequestsToJoinChatChannel(io, socket, serverState, data);
+    server.handleJoinChatChannelRequest(socket, data);
   });
   socket.on(SocketEventsFromClient.HOSTS_NEW_GAME, (gameName) => {
-    clientHostsNewGame(io, socket, serverState, gameName, false);
+    server.handleHostNewGameRequest(socket, gameName);
   });
   socket.on(SocketEventsFromClient.LEAVES_GAME, (gameName) => {
     console.log(socket.id + " leaving game " + gameName);
