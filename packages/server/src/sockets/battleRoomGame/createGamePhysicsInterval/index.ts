@@ -11,13 +11,13 @@ import {
   SocketEventsFromServer,
   UserInput,
 } from "../../../../../common";
-import ServerState from "../../../interfaces/ServerState";
+import { LucellaServer } from "../../../classes/LucellaServer";
 import createDeltaPacket from "./createDeltaPacket/createDeltaPacket";
 import handleScoringPoints from "./handleScoringPoints";
 const replicator = new (require("replicator"))();
 
-export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string) {
-  const game = serverState.games[gameName];
+export default function (io: Server, socket: Socket, server: LucellaServer, gameName: string) {
+  const game = server.games[gameName];
   BattleRoomGame.initializeWorld(game);
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
 
@@ -37,12 +37,13 @@ export default function (io: Server, socket: Socket, serverState: ServerState, g
       });
     }
 
-    handleScoringPoints(io, socket, serverState, game);
+    handleScoringPoints(io, socket, server, game);
     const updateForHost = createDeltaPacket(game, PlayerRole.HOST);
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
     // io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
-    io.to(serverState.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
-    io.to(serverState.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
+    io.to(server.lobby.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
+    io.to(server.lobby.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
+    if (game.winner) server.endGameAndEmitUpdates(game);
 
     game.netcode.prevGameState = new GameElementsOfConstantInterest(
       cloneDeep(game.orbs),

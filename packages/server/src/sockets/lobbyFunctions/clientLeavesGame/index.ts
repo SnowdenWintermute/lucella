@@ -4,7 +4,7 @@ import ServerState from "../../../interfaces/ServerState";
 
 import endGameCleanup from "../../battleRoomGame/endGameCleanup";
 import handleLeavingGameSetupScreen from "./handleLeavingGameSetupScreen";
-import sanitizeGameRoomsForClient from "../../../classes/LobbyManager/sanitizeGameRoomsForClient";
+import sanitizeGameRoomsForClient from "../../../classes/Lobby/sanitizeGameRoomsForClient";
 
 // old - delete
 

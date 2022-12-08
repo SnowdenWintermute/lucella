@@ -5,13 +5,14 @@ import createGameEndingCountdownInterval from "./createGameEndingCountdownInterv
 import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
 import { GameStatus, SocketEventsFromServer, EloUpdates } from "../../../../../common";
+import { LucellaServer } from "../../../classes/LucellaServer";
 const replicator = new (require("replicator"))();
 
 // old - delete (from handlePlayerLeavingGame)
 
-export default async function endGameCleanup(io: Server, socket: Socket, serverState: ServerState, gameName: string, isDisconnecting?: boolean) {
-  const gameRoom = serverState.gameRooms[gameName];
-  const game = serverState.games[gameName];
+export default async function endGameCleanup(io: Server, socket: Socket, server: LucellaServer, gameName: string, isDisconnecting?: boolean) {
+  const gameRoom = server.lobby.gameRooms[gameName];
+  const game = server.games[gameName];
   if (gameRoom.gameStatus === GameStatus.ENDING) return;
   gameRoom.gameStatus = GameStatus.ENDING;
   io.in(`game-${gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
@@ -20,7 +21,7 @@ export default async function endGameCleanup(io: Server, socket: Socket, serverS
   // @ todo - change this to a score only broadcast
   // io.to(`game-${gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game)); // since we stop the broadcast interval we need one last snapshot to show the winning point
   if (!isDisconnecting) setGameRoomWinnerName(gameRoom, game);
-  else handleDisconnectionFromGame(io, socket, serverState, gameName);
+  else handleDisconnectionFromGame(io, socket, server, gameName);
 
   const loser =
     gameRoom.winner === gameRoom.players.host?.associatedUser.username
@@ -32,5 +33,5 @@ export default async function endGameCleanup(io: Server, socket: Socket, serverS
   // else eloUpdates = await updateGameRecords(gameRoom.winner, loser, gameRoom, game, gameRoom.isRanked);
 
   io.in(`game-${gameName}`).emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
-  game.intervals.endingCountdown = createGameEndingCountdownInterval(io, serverState, gameName, eloUpdates);
+  game.intervals.endingCountdown = createGameEndingCountdownInterval(io, server, gameName, eloUpdates);
 }

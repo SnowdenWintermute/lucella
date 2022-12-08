@@ -2,7 +2,7 @@ import { BattleRoomGame, EloUpdates, SocketEventsFromServer } from "../../../../
 import { Server } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 import sendPlayerBackToLobby from "./sendPlayerBackToLobby";
-import sanitizeGameRoomsForClient from "../../../classes/LobbyManager/sanitizeGameRoomsForClient";
+import sanitizeGameRoomsForClient from "../../../classes/Lobby/sanitizeGameRoomsForClient";
 const replicator = new (require("replicator"))();
 
 // old - delete

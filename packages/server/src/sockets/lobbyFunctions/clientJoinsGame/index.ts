@@ -1,7 +1,7 @@
 import clientRequestsToJoinChatChannel from "../clientRequestsToJoinChatChannel";
-import sanitizeGameRoomForClient from "../../../classes/LobbyManager/sanitizeGameRoomForClient";
-import sanitizeGameRoomsForClient from "../../../classes/LobbyManager/sanitizeGameRoomsForClient";
-import assignPlayerRole from "../../../classes/LobbyManager/assignPlayerRole";
+import sanitizeGameRoomForClient from "../../../classes/Lobby/sanitizeGameRoomForClient";
+import sanitizeGameRoomsForClient from "../../../classes/Lobby/sanitizeGameRoomsForClient";
+import assignPlayerRole from "../../../classes/Lobby/assignPlayerRole";
 import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
 import { SocketEventsFromServer } from "../../../../../common";

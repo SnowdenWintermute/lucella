@@ -3,6 +3,8 @@ import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 import startGame from "../battleRoomGame/startGame";
 
+// old - delete
+
 export default function startGameCountdown(io: Server, socket: Socket, serverState: ServerState, gameName: string) {
   const { gameRooms } = serverState;
   const gameRoom = gameRooms[gameName];

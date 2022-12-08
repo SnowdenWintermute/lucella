@@ -7,7 +7,7 @@ import gameUiListeners from "./listeners/lobbyUiListeners";
 import battleRoomGameListeners from "./listeners/battleRoomGameListeners";
 import { SocketEventsFromServer } from "../../../common";
 import sanitizeChatChannelForClient from "../utils/sanitizeChatChannelForClient";
-import sanitizeGameRoomsForClient from "../classes/LobbyManager/sanitizeGameRoomsForClient";
+import sanitizeGameRoomsForClient from "../classes/Lobby/sanitizeGameRoomsForClient";
 
 const serverState: ServerState = {
   chatChannels: {},

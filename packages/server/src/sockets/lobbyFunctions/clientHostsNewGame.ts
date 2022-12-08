@@ -3,7 +3,7 @@ import { Server, Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
 
 import clientJoinsGame from "./clientJoinsGame";
-import validateGameName from "../../classes/LobbyManager/validateGameName";
+import validateGameName from "../../classes/Lobby/validateGameName";
 // old - delete
 export default function (io: Server, socket: Socket | undefined, serverState: ServerState, gameName: string, isRanked?: boolean) {
   const { connectedSockets, gameRooms } = serverState;

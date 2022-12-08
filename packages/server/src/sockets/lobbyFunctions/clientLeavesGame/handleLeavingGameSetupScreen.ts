@@ -5,7 +5,7 @@ import handleChallengerLeavingGameSetup from "./handleChallengerLeavingGameSetup
 import handleDisconnectionFromGameSetup from "./handleDisconnectionFromGameSetup";
 import { Server, Socket } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
-import sanitizeGameRoomForClient from "../../../classes/LobbyManager/sanitizeGameRoomForClient";
+import sanitizeGameRoomForClient from "../../../classes/Lobby/sanitizeGameRoomForClient";
 import { SocketEventsFromServer } from "../../../../../common";
 
 // old - delete

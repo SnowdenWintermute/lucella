@@ -3,8 +3,8 @@ import { LucellaServer } from ".";
 const replicator = new (require("replicator"))();
 
 export default function endGameAndEmitUpdates(lucellaServer: LucellaServer, game: BattleRoomGame) {
-  const { io, lobbyManager, games } = lucellaServer;
-  const gameRoom = lobbyManager.gameRooms[game.gameName];
+  const { io, lobby, games } = lucellaServer;
+  const gameRoom = lobby.gameRooms[game.gameName];
   const gameChatChannelName = gameChannelNamePrefix + game.gameName;
   const { players } = gameRoom;
 
@@ -39,12 +39,12 @@ export default function endGameAndEmitUpdates(lucellaServer: LucellaServer, game
     for (playerRole in gameRoom.players) {
       const player = gameRoom.players[playerRole];
       if (!player) continue;
-      lucellaServer.changeSocketChatChannelAndEmitUpdates(io.sockets.sockets.get(player.socketId!)!, player.previousChatChannelName!);
+      lucellaServer.changeSocketChatChannelAndEmitUpdates(io.sockets.sockets.get(player.socketId!)!, player.previousChatChannelName || null);
       lucellaServer.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, player);
     }
 
-    delete lobbyManager.gameRooms[game.gameName];
+    delete lobby.gameRooms[game.gameName];
     delete games[game.gameName];
-    io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobbyManager.getSanitizedGameRooms());
+    io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobby.getSanitizedGameRooms());
   }, 1000);
 }

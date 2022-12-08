@@ -1,10 +1,10 @@
 import { Socket } from "socket.io";
-import { ChatChannel, GameRoom, SocketEventsFromServer, SocketMetadata, ErrorMessages } from "../../../../common";
+import { ChatChannel, GameRoom, SocketEventsFromServer, SocketMetadata, ErrorMessages } from "@lucella/common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameLists from "./updateChatChannelUsernameLists";
 import validateGameName from "./validateGameName";
 
-export class LobbyManager {
+export class Lobby {
   chatChannels: { [name: string]: ChatChannel };
   gameRooms: { [roomName: string]: GameRoom };
   constructor() {

@@ -1,13 +1,13 @@
-import { ErrorMessages, GameStatus, PlayerRole, SocketEventsFromServer } from "../../../../common";
+import { ErrorMessages, GameStatus, PlayerRole, SocketEventsFromServer } from "@lucella/common";
 import { LucellaServer } from ".";
 import { Socket } from "socket.io";
 
-export default function handlePlayerLeavingGame(lucellaServer: LucellaServer, socket: Socket, isDisconnecting: boolean) {
-  const { io, lobbyManager, connectedSockets, games } = lucellaServer;
+export default function handleSocketLeavingGame(lucellaServer: LucellaServer, socket: Socket, isDisconnecting: boolean) {
+  const { io, lobby, connectedSockets, games } = lucellaServer;
   const { currentGameName } = connectedSockets[socket.id];
   console.log(`${socket.id} leaving game ${currentGameName}`);
   if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
-  const gameRoom = lobbyManager.gameRooms[currentGameName];
+  const gameRoom = lobby.gameRooms[currentGameName];
   if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
 
   const usernameOfPlayerLeaving = connectedSockets[socket.id].associatedUser.username;
@@ -23,5 +23,5 @@ export default function handlePlayerLeavingGame(lucellaServer: LucellaServer, so
     gameRoom.winner = game.winner === PlayerRole.HOST ? players!.host!.associatedUser.username : players!.challenger!.associatedUser.username;
     lucellaServer.endGameAndEmitUpdates(game);
   }
-  io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobbyManager.getSanitizedGameRooms());
+  io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobby.getSanitizedGameRooms());
 }

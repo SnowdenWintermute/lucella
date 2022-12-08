@@ -1,4 +1,4 @@
-import { ChatChannel, SocketMetadata } from "../../../../common";
+import { ChatChannel, SocketMetadata } from "@lucella/common";
 
 export default function updateChatChannelUsernameLists(
   chatChannels: { [name: string]: ChatChannel },

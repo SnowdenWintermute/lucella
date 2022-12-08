@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import ServerState from "../../interfaces/ServerState";
-import { PlayerRole, GameRoom, SocketMetadata } from "../../../../common";
+import { PlayerRole, GameRoom, SocketMetadata } from "@lucella/common";
 
 // old - delete
 

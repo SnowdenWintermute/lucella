@@ -10,7 +10,7 @@ export default function initializeListeners(server: LucellaServer) {
   server.io.sockets.on("connect", async (socket) => {
     await handleNewSocketConnection(server, socket);
     socket.emit(SocketEventsFromServer.AUTHENTICATION_COMPLETE, null);
-    socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, server.lobbyManager.getSanitizedGameRooms());
+    socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, server.lobby.getSanitizedGameRooms());
     socket.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
     chatListeners(server, socket);
     lobbyUiListeners(server, socket);

@@ -10,7 +10,7 @@ export default function handleSocketLeavingGameRoom(
   playerToKick?: SocketMetadata
 ) {
   const gameChatChannelName = gameChannelNamePrefix + gameRoom.gameName;
-  const { io, lobbyManager, connectedSockets } = lucellaServer;
+  const { io, lobby, connectedSockets } = lucellaServer;
   const usernameOfPlayerLeaving = connectedSockets[socket.id].associatedUser.username;
   const playerRoleLeaving = gameRoom.players.host?.associatedUser.username === usernameOfPlayerLeaving ? PlayerRole.HOST : PlayerRole.CHALLENGER;
 
@@ -19,8 +19,8 @@ export default function handleSocketLeavingGameRoom(
 
   gameRoom.playersReady = { host: false, challenger: false };
   gameRoom.cancelCountdownInterval();
-  io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, lobbyManager.getSanitizedGameRoom(gameRoom));
-  io.in(gameChatChannelName).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, lobbyManager.getSanitizedChatChannel(gameChatChannelName));
+  io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, lobby.getSanitizedGameRoom(gameRoom));
+  io.in(gameChatChannelName).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, lobby.getSanitizedChatChannel(gameChatChannelName));
 
   if (playerToKick) {
     // below only happens if host left, then we are kicking the other player
@@ -36,7 +36,7 @@ export default function handleSocketLeavingGameRoom(
   }
 
   if (!gameRoom.players.host) {
-    delete lobbyManager.gameRooms[gameRoom.gameName];
-    delete lobbyManager.chatChannels[gameChatChannelName];
+    delete lobby.gameRooms[gameRoom.gameName];
+    delete lobby.chatChannels[gameChatChannelName];
   }
 }
