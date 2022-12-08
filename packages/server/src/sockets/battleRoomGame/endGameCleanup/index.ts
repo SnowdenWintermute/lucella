@@ -7,6 +7,8 @@ import { Server, Socket } from "socket.io";
 import { GameStatus, SocketEventsFromServer, EloUpdates } from "../../../../../common";
 const replicator = new (require("replicator"))();
 
+// old - delete (from handlePlayerLeavingGame)
+
 export default async function endGameCleanup(io: Server, socket: Socket, serverState: ServerState, gameName: string, isDisconnecting?: boolean) {
   const gameRoom = serverState.gameRooms[gameName];
   const game = serverState.games[gameName];

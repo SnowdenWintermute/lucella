@@ -4,6 +4,8 @@ import ServerState from "../../../interfaces/ServerState";
 
 import cancelGameCountdown from "../cancelGameCountdown";
 
+// old - delete
+
 export default function (
   io: Server,
   socket: Socket,

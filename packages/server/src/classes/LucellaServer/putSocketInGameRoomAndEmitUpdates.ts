@@ -1,15 +1,9 @@
-import { ErrorMessages, gameChannelNamePrefix, PlayerRole, SocketEventsFromServer } from "../../../../common";
-import { Server, Socket } from "socket.io";
-import { SocketMetadataList } from "../../types";
-import { LobbyManager } from "../LobbyManager";
+import { ErrorMessages, gameChannelNamePrefix, PlayerRole, SocketEventsFromServer } from "@lucella/common";
+import { Socket } from "socket.io";
+import { LucellaServer } from ".";
 
-export default function putSocketInGameRoomAndEmitUpdates(
-  io: Server,
-  lobbyManager: LobbyManager,
-  connectedSockets: SocketMetadataList,
-  socket: Socket,
-  gameName: string
-) {
+export default function putSocketInGameRoomAndEmitUpdates(lucellaServer: LucellaServer, socket: Socket, gameName: string) {
+  const { io, lobbyManager, connectedSockets } = lucellaServer;
   const username = connectedSockets[socket.id].associatedUser.username;
   const gameRoom = lobbyManager.gameRooms[gameName];
   try {
@@ -19,6 +13,7 @@ export default function putSocketInGameRoomAndEmitUpdates(
     if (gameRoom.players.host && gameRoom.players.host.associatedUser.username === username)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_PLAY_AGAINST_SELF); // to prevent a logged in player from playing against themselves by opening another browser window
 
+    connectedSockets[socket.id].currentGameName = gameName;
     let playerRole;
     if (!gameRoom.players.host) {
       gameRoom.players.host = connectedSockets[socket.id];
@@ -28,11 +23,9 @@ export default function putSocketInGameRoomAndEmitUpdates(
       playerRole = PlayerRole.CHALLENGER;
     }
     socket.emit(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT, playerRole);
-
-    connectedSockets[socket.id].currentGameName = gameName;
-
     io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobbyManager.getSanitizedGameRooms());
     io.to(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, lobbyManager.getSanitizedGameRoom(gameRoom));
+    return gameRoom;
   } catch (error) {
     console.log(error);
   }

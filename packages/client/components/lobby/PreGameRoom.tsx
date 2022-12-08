@@ -46,7 +46,7 @@ const PreGameRoom = ({ socket }: Props) => {
   };
 
   const handleReadyClick = () => {
-    socket.emit(SocketEventsFromClient.CLICKS_READY, currentGameName);
+    socket.emit(SocketEventsFromClient.CLICKS_READY);
   };
 
   const preGameRoomMenu = currentGameName ? (

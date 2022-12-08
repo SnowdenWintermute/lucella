@@ -29,4 +29,9 @@ export class GameRoom {
     this.winner = null;
     this.isRanked = isRanked ? isRanked : false;
   }
+  cancelCountdownInterval() {
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
+    this.countdown.current = this.countdown.duration;
+    this.gameStatus = GameStatus.IN_LOBBY;
+  }
 }

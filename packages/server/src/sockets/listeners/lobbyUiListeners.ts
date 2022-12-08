@@ -20,12 +20,11 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
   socket.on(SocketEventsFromClient.HOSTS_NEW_GAME, (gameName) => {
     server.handleHostNewGameRequest(socket, gameName);
   });
-  socket.on(SocketEventsFromClient.LEAVES_GAME, (gameName) => {
-    console.log(socket.id + " leaving game " + gameName);
-    clientLeavesGame(io, socket, serverState);
+  socket.on(SocketEventsFromClient.LEAVES_GAME, () => {
+    server.handlePlayerLeavingGame(socket, false);
   });
   socket.on(SocketEventsFromClient.JOINS_GAME, (gameName) => {
-    clientJoinsGame(io, socket, serverState, gameName);
+    server.handleJoinGameRoomRequest(socket, gameName);
   });
   socket.on(SocketEventsFromClient.CLICKS_READY, (gameName) => {
     handleReadyClick(io, socket, serverState);

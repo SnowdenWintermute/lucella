@@ -3,8 +3,8 @@ import { ChatChannel, SocketMetadata } from "../../../../common";
 export default function updateChatChannelUsernameLists(
   chatChannels: { [name: string]: ChatChannel },
   socketMeta: SocketMetadata,
-  channelNameLeaving?: string | null,
-  channelNameJoining?: string
+  channelNameLeaving: string | null,
+  channelNameJoining: string | null
 ) {
   const username = socketMeta.associatedUser.username;
   if (channelNameLeaving) {
@@ -16,7 +16,7 @@ export default function updateChatChannelUsernameLists(
     if (newSocketList.length < 1) delete channelLeaving.connectedUsers[username];
     else userInRoom.connectedSockets = newSocketList;
     if (Object.keys(channelLeaving.connectedUsers[username]).length < 1) delete chatChannels[channelNameLeaving];
-    console.log(`${socketMeta.socketId} left channel ${channelNameLeaving}`);
+    console.log(`${socketMeta.socketId} removed from ${channelNameLeaving}'s list`);
   }
   if (channelNameJoining) {
     if (!chatChannels[channelNameJoining]) chatChannels[channelNameJoining] = new ChatChannel(channelNameJoining);
@@ -24,9 +24,9 @@ export default function updateChatChannelUsernameLists(
     if (!channelJoining.connectedUsers[username])
       channelJoining.connectedUsers[username] = {
         username,
-        connectedSockets: [socketMeta.socketId],
+        connectedSockets: [socketMeta.socketId!],
       };
-    else channelJoining.connectedUsers[username].connectedSockets.push(socketMeta.socketId);
-    console.log(`${socketMeta.socketId} joined channel ${channelNameJoining}`);
+    else channelJoining.connectedUsers[username].connectedSockets.push(socketMeta.socketId!);
+    console.log(`${socketMeta.socketId} added to ${channelNameJoining}'s list`);
   }
 }

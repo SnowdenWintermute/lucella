@@ -3,6 +3,8 @@ import { SocketMetadata } from "../../../../../common";
 import ServerState from "../../../interfaces/ServerState";
 import clientRequestsToJoinChatChannel from "../clientRequestsToJoinChatChannel";
 
+// old - delete
+
 export default function (io: Server, serverState: ServerState, players: { host: SocketMetadata | null; challenger: SocketMetadata | null }) {
   const { connectedSockets } = serverState;
   if (!players.challenger) return;

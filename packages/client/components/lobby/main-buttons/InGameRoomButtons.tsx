@@ -50,7 +50,7 @@ const InGameButtons = ({ socket }: Props) => {
   const onLeaveGameClick = () => {
     dispatch(setPreGameScreenDisplayed(false));
     dispatch(clearLobbyUi());
-    socket.emit(SocketEventsFromClient.LEAVES_GAME, gameName);
+    socket.emit(SocketEventsFromClient.LEAVES_GAME);
   };
 
   return (

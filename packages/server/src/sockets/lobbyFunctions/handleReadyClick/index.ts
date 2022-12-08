@@ -5,6 +5,8 @@ import ServerState from "../../../interfaces/ServerState";
 import { Server, Socket } from "socket.io";
 import { GameStatus, SocketEventsFromServer } from "../../../../../common";
 
+// old - delete
+
 export default function (io: Server, socket: Socket | undefined, serverState: ServerState) {
   try {
     if (!socket) return new Error("client tried to ready up but their socket wasn't found");

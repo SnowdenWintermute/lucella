@@ -30,7 +30,7 @@ export class BattleRoomGame {
   queues: BattleRoomQueues;
   mouseData: MouseData; // client only
   gameOverCountdown: { duration: number; current: number | null };
-  winner: string | null;
+  winner: string | null | undefined;
   currentCollisionPairs: Matter.Pair[];
   orbs: HostAndChallengerOrbSets;
   score: { host: number; challenger: number; neededToWin: number };
@@ -80,5 +80,11 @@ export class BattleRoomGame {
       general: {},
       clientPrediction: {},
     };
+  }
+  clearPhysicsInterval() {
+    clearInterval(this.intervals.physics);
+  }
+  clearGameEndingCountdownInterval() {
+    clearInterval(this.intervals.endingCountdown);
   }
 }

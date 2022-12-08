@@ -16,6 +16,6 @@ export default function initializeListeners(server: LucellaServer) {
     lobbyUiListeners(server, socket);
     battleRoomGameListeners(socket, serverState);
 
-    socket.on("disconnect", () => handleSocketDisconnection(io, socket, serverState));
+    socket.on("disconnect", () => server.handleSocketDisconnection(socket));
   });
 }

@@ -5,6 +5,8 @@ import sendPlayerBackToLobby from "./sendPlayerBackToLobby";
 import sanitizeGameRoomsForClient from "../../../classes/LobbyManager/sanitizeGameRoomsForClient";
 const replicator = new (require("replicator"))();
 
+// old - delete
+
 export default function (io: Server, serverState: ServerState, gameName: string, eloUpdates: EloUpdates | null) {
   const { connectedSockets, gameRooms, games } = serverState;
   const gameRoom = gameRooms[gameName];
@@ -23,6 +25,16 @@ export default function (io: Server, serverState: ServerState, gameName: string,
         eloUpdates,
       });
       io.in(`game-${gameName}`).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
+
+      if (!player) return new Error("tried to send player back to lobby but no player found");
+      if (!socketId) return new Error("tried to send player back to lobby but no sockedId found");
+      console.log("sending player back to lobby: ", player);
+      const { connectedSockets } = serverState;
+      player.currentGameName = null;
+      const socketToSend = io.sockets.sockets.get(socketId);
+      if (socketToSend) clientRequestsToJoinChatChannel(io, socketToSend, serverState, connectedSockets[socketId].previousChatChannelName);
+      else throw new Error("tried to send player back to lobby but their socket id wasn't registered with the io server");
+
       sendPlayerBackToLobby(io, serverState, gameRoom.players.host!.socketId!, host);
       sendPlayerBackToLobby(io, serverState, gameRoom.players.challenger!.socketId!, challenger);
       delete games[gameName];

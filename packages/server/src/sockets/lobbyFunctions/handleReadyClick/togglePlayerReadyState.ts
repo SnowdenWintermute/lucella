@@ -2,6 +2,8 @@ import { SocketMetadata } from "../../../../../common";
 import { Socket } from "socket.io";
 import ServerState from "../../../interfaces/ServerState";
 
+// old - delete
+
 export default function togglePlayerReadyState(
   socket: Socket,
   serverState: ServerState,

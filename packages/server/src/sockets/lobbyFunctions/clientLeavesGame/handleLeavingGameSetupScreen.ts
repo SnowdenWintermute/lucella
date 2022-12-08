@@ -8,6 +8,8 @@ import ServerState from "../../../interfaces/ServerState";
 import sanitizeGameRoomForClient from "../../../classes/LobbyManager/sanitizeGameRoomForClient";
 import { SocketEventsFromServer } from "../../../../../common";
 
+// old - delete
+
 export default function (io: Server, socket: Socket, serverState: ServerState, gameName: string, isDisconnecting: boolean | undefined) {
   const { connectedSockets, chatChannels, gameRooms } = serverState;
   const username = connectedSockets[socket.id].associatedUser.username;

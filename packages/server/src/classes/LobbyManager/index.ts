@@ -20,7 +20,7 @@ export class LobbyManager {
   getSanitizedChatChannel(channelName: string) {
     return sanitizeChatChannel(this.chatChannels[channelName]);
   }
-  updateChatChannelUsernameLists(socketMeta: SocketMetadata, channelNameLeaving?: string | null, channelNameJoining?: string) {
+  updateChatChannelUsernameLists(socketMeta: SocketMetadata, channelNameLeaving: string | null, channelNameJoining: string | null) {
     updateChatChannelUsernameLists(this.chatChannels, socketMeta, channelNameLeaving, channelNameJoining);
   }
   createGameRoom(socket: Socket, gameName: string, isRanked: boolean) {
