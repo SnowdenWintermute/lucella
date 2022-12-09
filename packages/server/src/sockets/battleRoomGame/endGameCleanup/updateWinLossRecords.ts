@@ -1,7 +1,7 @@
 import { PlayerRole } from "../../../../../common";
 import { IBattleRoomRecord } from "../../../models/BattleRoomRecord";
 
-export default function (winnerRole: PlayerRole, hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord) {
+export default function updateWinLossRecords(winnerRole: PlayerRole, hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord) {
   if (winnerRole === PlayerRole.HOST) {
     hostBattleRoomRecord.wins = hostBattleRoomRecord.wins + 1;
     challengerBattleRoomRecord.losses = challengerBattleRoomRecord.losses + 1;

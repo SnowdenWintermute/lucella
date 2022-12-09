@@ -1,9 +1,7 @@
 import { ErrorMessages, SocketEventsFromServer } from "../../../../common";
-import handleNewSocketConnection from "../../sockets/generalFunctions/handleNewSocketConnection";
-import chatListeners from "../../sockets/listeners/chatListeners";
+import handleNewSocketConnection from "./handleNewSocketConnection";
 import lobbyUiListeners from "../../sockets/listeners/lobbyUiListeners";
 import battleRoomGameListeners from "../../sockets/listeners/battleRoomGameListeners";
-import handleSocketDisconnection from "../../sockets/generalFunctions/handleSocketDisconnection";
 import { LucellaServer } from ".";
 
 export default function initializeListeners(server: LucellaServer) {
@@ -15,9 +13,8 @@ export default function initializeListeners(server: LucellaServer) {
     socket.onAny(() => {
       if (!server.connectedSockets[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.SOCKET_NOT_REGISTERED);
     });
-    chatListeners(server, socket);
     lobbyUiListeners(server, socket);
-    battleRoomGameListeners(socket, serverState);
+    battleRoomGameListeners(server, socket);
 
     socket.on("disconnect", () => server.handleSocketDisconnection(socket));
   });

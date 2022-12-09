@@ -1,6 +1,6 @@
 import ServerState from "../interfaces/ServerState";
 import { io } from "../express-server";
-import handleNewSocketConnection from "./generalFunctions/handleNewSocketConnection";
+import handleNewSocketConnection from "../classes/LucellaServer/handleNewSocketConnection";
 import handleSocketDisconnection from "./generalFunctions/handleSocketDisconnection";
 import chatListeners from "./listeners/chatListeners";
 import gameUiListeners from "./listeners/lobbyUiListeners";

@@ -1,26 +1,17 @@
-import {
-  firstMovementRequestTimeLimiter,
-  InputProto,
-  movementRequestAntiCheatGracePeriod,
-  PlayerRole,
-  renderRate,
-  SocketEventsFromClient,
-  UserInput,
-  UserInputs,
-} from "../../../../common";
+import { PlayerRole, SocketEventsFromClient, UserInput } from "../../../../common";
 import { Socket } from "socket.io";
-import ServerState from "../../interfaces/ServerState";
 import antiCheat from "../battleRoomGame/antiCheat";
 import unpackUserInput from "../../protobuf-utils/unpackUserInput";
+import { LucellaServer } from "../../classes/LucellaServer";
 const replicator = new (require("replicator"))();
 
-export default function (socket: Socket, serverState: ServerState) {
-  const { connectedSockets, games, gameRooms } = serverState;
+export default function (server: LucellaServer, socket: Socket) {
+  const { connectedSockets, games } = server;
 
   socket.on(SocketEventsFromClient.NEW_INPUT, (data: Uint8Array) => {
     if (!connectedSockets[socket.id].currentGameName) return;
     const game = games[connectedSockets[socket.id].currentGameName!];
-    const gameRoom = gameRooms[connectedSockets[socket.id].currentGameName!];
+    const gameRoom = server.lobby.gameRooms[connectedSockets[socket.id].currentGameName!];
     if (!game || !gameRoom) return;
 
     const playerRole =

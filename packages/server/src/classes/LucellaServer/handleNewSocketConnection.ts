@@ -1,11 +1,10 @@
 import { Socket } from "socket.io";
-import { SocketMetadata } from "../../../../common";
-import makeRandomAnonUsername from "../../utils/makeRandomAnonUsername";
+import { SocketMetadata } from "@lucella/common";
 import { findUserById } from "../../services/user.service";
 import cookie from "cookie";
 import { verifyJwt } from "../../utils/jwt";
 import redisClient from "../../utils/connectRedis";
-import { LucellaServer } from "../../classes/LucellaServer";
+import { LucellaServer } from ".";
 
 export default async function handleNewSocketConnection(server: LucellaServer, socket: Socket) {
   try {
@@ -28,4 +27,19 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
     // @ todo - handle this better
     console.log(error);
   }
+}
+
+function randomFourNumbers(): number[] {
+  let randomNumbers: number[] = [];
+  for (let i = 4; i > 0; i--) {
+    randomNumbers.push(Math.floor(Math.random() * Math.floor(9)));
+  }
+  return randomNumbers;
+}
+
+function makeRandomAnonUsername(): string {
+  // give them a rand 4 string and if duplicate run it again - danger of loop?
+  const randomNums = randomFourNumbers().join("");
+  const randomAnonUsername = "Anon" + randomNums;
+  return randomAnonUsername;
 }

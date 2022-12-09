@@ -2,8 +2,8 @@ import { BattleRoomGame, EloUpdates, gameChannelNamePrefix, GameStatus, SocketEv
 import { LucellaServer } from ".";
 const replicator = new (require("replicator"))();
 
-export default function endGameAndEmitUpdates(lucellaServer: LucellaServer, game: BattleRoomGame) {
-  const { io, lobby, games } = lucellaServer;
+export default function endGameAndEmitUpdates(server: LucellaServer, game: BattleRoomGame) {
+  const { io, lobby, games } = server;
   const gameRoom = lobby.gameRooms[game.gameName];
   const gameChatChannelName = gameChannelNamePrefix + game.gameName;
   const { players } = gameRoom;
@@ -39,8 +39,8 @@ export default function endGameAndEmitUpdates(lucellaServer: LucellaServer, game
     for (playerRole in gameRoom.players) {
       const player = gameRoom.players[playerRole];
       if (!player) continue;
-      lucellaServer.changeSocketChatChannelAndEmitUpdates(io.sockets.sockets.get(player.socketId!)!, player.previousChatChannelName || null);
-      lucellaServer.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, player);
+      lobby.changeSocketChatChannelAndEmitUpdates(io.sockets.sockets.get(player.socketId!)!, player.previousChatChannelName || null);
+      lobby.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, player);
     }
 
     delete lobby.gameRooms[game.gameName];

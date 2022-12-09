@@ -1,11 +1,15 @@
-import { ErrorMessages, maxEloDiffThreshold, eloDiffThresholdDebuggerAdditive, rankedGameChannelNamePrefix, SocketEventsFromServer } from "../../../../common";
+import {
+  ErrorMessages,
+  maxEloDiffThreshold,
+  eloDiffThresholdDebuggerAdditive,
+  rankedGameChannelNamePrefix,
+  SocketEventsFromServer,
+  OfficialChannels,
+} from "../../../../common";
 import { Socket } from "socket.io";
 import { IBattleRoomRecord } from "../../models/BattleRoomRecord";
 import { findUser } from "../../services/user.service";
-import fetchOrCreateBattleRoomRecord from "../../sockets/lobbyFunctions/handleQueueUpForRankedMatch/fetchOrCreateBattleRoomRecord";
-import { SocketMetadataList } from "../../types";
 import { LucellaServer } from "../LucellaServer";
-import removeMatchedPlayersFromQueue from "../../sockets/lobbyFunctions/handleQueueUpForRankedMatch/removeMatchedPlayersFromQueue";
 
 export interface MatchmakingQueueUser {
   userId: string;
@@ -26,20 +30,25 @@ export class MatchmakingQueue {
   constructor(server: LucellaServer) {
     this.server = server;
   }
-  async addUser(socket: Socket, connectedSockets: SocketMetadataList) {
-    const user = await findUser({ name: connectedSockets[socket.id].associatedUser.username });
+  async addUser(socket: Socket) {
+    const user = await findUser({ name: this.server.connectedSockets[socket.id].associatedUser.username });
     if (!user) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOG_IN_TO_PLAY_RANKED);
-    let userBattleRoomRecord = await fetchOrCreateBattleRoomRecord(user);
+    let userBattleRoomRecord = await this.server.fetchOrCreateBattleRoomRecord(user);
     this.users[socket.id] = {
       userId: user._id,
       record: userBattleRoomRecord,
       socketId: socket.id,
       username: user.name,
     };
-    socket.join("ranked-queue");
+    socket.join(OfficialChannels.matchmakingQueue);
     socket.emit(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
     this.currentEloDiffThreshold = 0;
     if (this.matchmakingInterval) return;
+    else this.createMatchmakingInterval();
+  }
+  removeUser(socketId: string) {
+    const { io } = this.server;
+    delete this.users[socketId];
   }
   clearMatchmakingInterval() {
     this.matchmakingInterval && clearInterval(this.matchmakingInterval);
@@ -51,7 +60,7 @@ export class MatchmakingQueue {
     this.matchmakingInterval = setInterval(() => {
       this.currentIntervalIteration++;
       if (Object.keys(this.users).length < 1) return this.clearMatchmakingInterval();
-      io.in("ranked-queue").emit(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, {
+      io.in(OfficialChannels.matchmakingQueue).emit(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, {
         queueSize: Object.keys(this.users).length,
         currentEloDiffThreshold: this.currentEloDiffThreshold,
       });
@@ -71,17 +80,14 @@ export class MatchmakingQueue {
       this.startRankedGame(hostSocket, challengerSocket);
       this.rankedGameCurrentNumber += 1;
 
-      // removeMatchedPlayersFromQueue(io, this, players);
-      delete this.users[players.host.socketId];
-      delete this.users[players.challenger.socketId];
-      if (!io.sockets.sockets.get(players.host.socketId)) return new Error("tried to remove host from matchmaking queue but their socket wasn't found");
-      if (!io.sockets.sockets.get(players.challenger.socketId))
-        return new Error("tried to remove challenger from matchmaking queue but their socket wasn't found");
-      io.sockets.sockets.get(players.host.socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
-      io.sockets.sockets.get(players.challenger.socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
-      io.sockets.sockets.get(players.host.socketId)!.leave("ranked-queue");
-      io.sockets.sockets.get(players.challenger.socketId)!.leave("ranked-queue");
-      //
+      let playerRole: keyof typeof players;
+      for (playerRole in players) {
+        this.removeUser(players[playerRole].socketId);
+        if (!io.sockets.sockets.get(players[playerRole].socketId)) return;
+        io.sockets.sockets.get(players[playerRole].socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
+        io.sockets.sockets.get(players[playerRole].socketId)!.leave(OfficialChannels.matchmakingQueue);
+      }
+
       if (Object.keys(this.users).length < 1) {
         this.matchmakingInterval && clearInterval(this.matchmakingInterval);
         this.matchmakingInterval = null;
@@ -97,8 +103,8 @@ export class MatchmakingQueue {
   }
   startRankedGame(hostSocket: Socket, challengerSocket: Socket) {
     const gameName = rankedGameChannelNamePrefix + this.rankedGameCurrentNumber;
-    this.server.handleHostNewGameRequest(hostSocket, gameName, true);
-    this.server.handleJoinGameRoomRequest(challengerSocket, gameName, true);
+    this.server.lobby.handleHostNewGameRequest(hostSocket, gameName, true);
+    this.server.lobby.handleJoinGameRoomRequest(challengerSocket, gameName, true);
     this.server.handleReadyStateToggleRequest(hostSocket);
     this.server.handleReadyStateToggleRequest(challengerSocket);
   }
