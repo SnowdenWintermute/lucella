@@ -9,6 +9,7 @@ export interface RankedQueueUser {
   username: string;
 }
 
+// old - delete
 export interface RankedQueue {
   users: {
     [socketId: string]: RankedQueueUser;
@@ -17,7 +18,7 @@ export interface RankedQueue {
   currentEloDiffThreshold: number;
   rankedGameCurrentNumber: number;
 }
-
+// old - delete
 export default interface ServerState {
   chatChannels: { [name: string]: ChatChannel };
   gameRooms: { [roomName: string]: GameRoom };

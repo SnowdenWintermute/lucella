@@ -21,22 +21,37 @@ export class BattleRoomGame {
   gameName: string;
   isRanked: boolean;
   physicsEngine: Matter.Engine | undefined;
-  netcode: NetCode;
-  antiCheat: AntiCheatValues;
+  netcode = new NetCode();
+  antiCheat = new AntiCheatValues();
   intervals: {
     physics: NodeJS.Timeout | undefined;
     endingCountdown: NodeJS.Timeout | undefined;
   };
-  queues: BattleRoomQueues;
-  mouseData: MouseData; // client only
+  queues = new BattleRoomQueues();
+  mouseData = new MouseData();
   gameOverCountdown: { duration: number; current: number | null };
-  winner: string | null | undefined;
+  winner: string | null | undefined = null;
   currentCollisionPairs: Matter.Pair[];
   orbs: HostAndChallengerOrbSets;
-  score: { host: number; challenger: number; neededToWin: number };
-  speedModifier: number;
-  endzones: { host: Rectangle; challenger: Rectangle };
-  debug: DebugValues;
+  score = {
+    host: 0,
+    challenger: 0,
+    neededToWin: BattleRoomGame.initialScoreNeededToWin,
+  };
+  speedModifier = BattleRoomGame.baseSpeedModifier;
+  endzones = {
+    host: new Rectangle(new Point(0, 0), BattleRoomGame.baseWindowDimensions.width, BattleRoomGame.baseEndzoneHeight),
+    challenger: new Rectangle(
+      new Point(0, BattleRoomGame.baseWindowDimensions.height - BattleRoomGame.baseEndzoneHeight),
+      BattleRoomGame.baseWindowDimensions.width,
+      BattleRoomGame.baseEndzoneHeight
+    ),
+  };
+  debug: DebugValues = {
+    mode: 0,
+    general: {},
+    clientPrediction: {},
+  };
   static baseWindowDimensions = baseWindowDimensions;
   static baseEndzoneHeight = initialEndZoneHeight;
   static baseOrbRadius = baseOrbRadius;
@@ -50,36 +65,12 @@ export class BattleRoomGame {
       physics: undefined,
       endingCountdown: undefined,
     };
-    this.mouseData = new MouseData();
     this.gameOverCountdown = {
       duration: gameOverCountdownDuration,
       current: null,
     };
-    this.queues = new BattleRoomQueues();
-    this.netcode = new NetCode();
-    this.antiCheat = new AntiCheatValues();
-    this.winner = null;
     this.orbs = { host: {}, challenger: {} };
     this.currentCollisionPairs = [];
-    this.score = {
-      host: 0,
-      challenger: 0,
-      neededToWin: BattleRoomGame.initialScoreNeededToWin,
-    };
-    this.endzones = {
-      host: new Rectangle(new Point(0, 0), BattleRoomGame.baseWindowDimensions.width, BattleRoomGame.baseEndzoneHeight),
-      challenger: new Rectangle(
-        new Point(0, BattleRoomGame.baseWindowDimensions.height - BattleRoomGame.baseEndzoneHeight),
-        BattleRoomGame.baseWindowDimensions.width,
-        BattleRoomGame.baseEndzoneHeight
-      ),
-    };
-    this.speedModifier = BattleRoomGame.baseSpeedModifier;
-    this.debug = {
-      mode: 0,
-      general: {},
-      clientPrediction: {},
-    };
   }
   clearPhysicsInterval() {
     clearInterval(this.intervals.physics);

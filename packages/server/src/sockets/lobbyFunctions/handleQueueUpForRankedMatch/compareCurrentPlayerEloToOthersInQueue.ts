@@ -2,11 +2,8 @@ import { startingLadderRating } from "../../../../../common/dist";
 import { Server } from "socket.io";
 import ServerState, { RankedQueueUser } from "../../../interfaces/ServerState";
 
-export default function compareCurrentPlayerEloToOthersInQueue(
-  io: Server,
-  serverState: ServerState,
-  socketIdOfPlayerInQueue: string
-) {
+// old - delete
+export default function compareCurrentPlayerEloToOthersInQueue(io: Server, serverState: ServerState, socketIdOfPlayerInQueue: string) {
   const { rankedQueue } = serverState;
   const currentBestMatch: { player: null | RankedQueueUser; eloDiff: null | number } = {
     player: null,
@@ -25,11 +22,7 @@ export default function compareCurrentPlayerEloToOthersInQueue(
     const playerToCompare = rankedQueue.users[socketIdOfUserToCompare];
     const comparedPlayerElo = playerToCompare.record ? playerToCompare.record.elo : startingLadderRating;
     const currEloDiff = Math.abs(currPlayerElo - comparedPlayerElo);
-    if (
-      currentBestMatch.player === null ||
-      currentBestMatch.eloDiff === null ||
-      currentBestMatch.eloDiff > currEloDiff
-    ) {
+    if (currentBestMatch.player === null || currentBestMatch.eloDiff === null || currentBestMatch.eloDiff > currEloDiff) {
       currentBestMatch.player = playerToCompare;
       currentBestMatch.eloDiff = currEloDiff;
     }

@@ -4,6 +4,8 @@ import handleReadyClick from "../handleReadyClick";
 import { Server } from "socket.io";
 import ServerState, { RankedQueueUser } from "../../../interfaces/ServerState";
 
+// old - delete
+
 export default function (io: Server, serverState: ServerState, players: { host: RankedQueueUser; challenger: RankedQueueUser }) {
   const { rankedQueue } = serverState;
   const gameName = `ranked-${rankedQueue.rankedGameCurrentNumber}`;

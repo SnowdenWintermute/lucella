@@ -1,6 +1,15 @@
 import { expressServer } from "../../express-server";
 import { Server, Socket } from "socket.io";
-import { BattleRoomGame, ErrorMessages, gameChannelNamePrefix, GameRoom, PlayerRole, SocketEventsFromServer, SocketMetadata } from "../../../../common";
+import {
+  BattleRoomGame,
+  ErrorMessages,
+  gameChannelNamePrefix,
+  GameRoom,
+  PlayerRole,
+  rankedGameChannelNamePrefix,
+  SocketEventsFromServer,
+  SocketMetadata,
+} from "../../../../common";
 import { RankedQueue } from "../../interfaces/ServerState";
 import { Lobby } from "../Lobby";
 import initializeListeners from "./initializeListeners";
@@ -13,15 +22,21 @@ import changeSocketChatChannelAndEmitUpdates from "./changeSocketChatChannelAndE
 import handleSocketLeavingGameRoom from "./handleSocketLeavingGameRoom";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
+import fetchOrCreateBattleRoomRecord from "../../sockets/lobbyFunctions/handleQueueUpForRankedMatch/fetchOrCreateBattleRoomRecord";
+import putUserInRankedMatchmakingQueue from "../../sockets/lobbyFunctions/handleQueueUpForRankedMatch/putUserInRankedMatchmakingQueue";
+import createMatchmakingInterval from "../../sockets/lobbyFunctions/handleQueueUpForRankedMatch/createMatchmakingInterval";
+import { MatchmakingQueue } from "../MatchmakingQueue";
+import { findUser } from "../../services/user.service";
 
 export class LucellaServer {
   io: Server;
   lobby: Lobby;
   games: { [gameName: string]: BattleRoomGame };
   connectedSockets: SocketMetadataList;
-  rankedQueue: RankedQueue;
+  matchmakingQueue: MatchmakingQueue;
   constructor() {
     this.io = new Server(expressServer);
+    this.matchmakingQueue = new MatchmakingQueue(this);
     this.games = {};
     this.connectedSockets = {};
     initializeListeners(this);
@@ -30,20 +45,19 @@ export class LucellaServer {
   handleJoinChatChannelRequest(socket: Socket, channelName: string) {
     changeSocketChatChannelAndEmitUpdates(this, socket, channelName, false);
   }
-  handleHostNewGameRequest(socket: Socket, gameName: string) {
+  handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
     gameName = gameName.toLowerCase();
     if (this.connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_HOST_IF_ALREADY_IN_GAME);
-    this.lobby.createGameRoom(socket, gameName, false);
+    this.lobby.createGameRoom(socket, gameName, isRanked);
     putSocketInGameRoomAndEmitUpdates(this, socket, gameName);
     changeSocketChatChannelAndEmitUpdates(this, socket, gameChannelNamePrefix + gameName, true);
   }
-  handleJoinGameRoomRequest(socket: Socket, gameName: string) {
+  handleJoinGameRoomRequest(socket: Socket, gameName: string, assignedToGameByMatchmaking?: boolean) {
+    if (this.lobby.gameRooms[gameName].isRanked && !assignedToGameByMatchmaking)
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
     if (this.connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_JOIN_IF_ALREADY_IN_GAME);
     changeSocketChatChannelAndEmitUpdates(this, socket, gameChannelNamePrefix + gameName, true);
     putSocketInGameRoomAndEmitUpdates(this, socket, gameName);
-  }
-  handleReadyStateToggleRequest(socket: Socket) {
-    handleReadyStateToggleRequest(this, socket);
   }
   handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {
     handleSocketLeavingGame(this, socket, isDisconnecting);
@@ -70,5 +84,11 @@ export class LucellaServer {
   }
   endGameAndEmitUpdates(game: BattleRoomGame) {
     endGameAndEmitUpdates(this, game);
+  }
+  handleReadyStateToggleRequest(socket: Socket) {
+    handleReadyStateToggleRequest(this, socket);
+  }
+  async handleQueueForRanked(socket: Socket) {
+    await this.matchmakingQueue.addUser(socket, this.connectedSockets);
   }
 }

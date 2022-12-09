@@ -23,9 +23,9 @@ export class Lobby {
   updateChatChannelUsernameLists(socketMeta: SocketMetadata, channelNameLeaving: string | null, channelNameJoining: string | null) {
     updateChatChannelUsernameLists(this.chatChannels, socketMeta, channelNameLeaving, channelNameJoining);
   }
-  createGameRoom(socket: Socket, gameName: string, isRanked: boolean) {
+  createGameRoom(socket: Socket, gameName: string, isRanked?: boolean) {
     if (this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_EXISTS);
-    const gameNameValidationError = validateGameName(gameName);
+    const gameNameValidationError = validateGameName(gameName, isRanked);
     if (gameNameValidationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, gameNameValidationError);
     this.gameRooms[gameName] = new GameRoom(gameName, isRanked);
   }

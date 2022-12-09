@@ -2,6 +2,8 @@ import { Server } from "socket.io";
 import ServerState, { RankedQueueUser } from "../../../interfaces/ServerState";
 import compareCurrentPlayerEloToOthersInQueue from "./compareCurrentPlayerEloToOthersInQueue";
 
+// old - delete
+
 export default function findTwoMostCloselyMatchedPlayers(io: Server, serverState: ServerState) {
   const { rankedQueue } = serverState;
   const twoBestMatchedPlayersInQueue: {

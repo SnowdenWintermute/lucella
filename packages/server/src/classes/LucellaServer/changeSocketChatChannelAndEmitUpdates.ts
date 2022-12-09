@@ -1,4 +1,4 @@
-import { ChatMessage, ChatMessageStyles, gameChannelNamePrefix, SocketEventsFromServer, theVoid } from "@lucella/common";
+import { ChatMessage, ChatMessageStyles, gameChannelNamePrefix, rankedGameChannelNamePrefix, SocketEventsFromServer, theVoid } from "@lucella/common";
 import { Server, Socket } from "socket.io";
 import { LucellaServer } from ".";
 import { SocketMetadataList } from "../../types";
@@ -22,8 +22,15 @@ export default function changeSocketChatChannelAndEmitUpdates(
   }
 
   if (channelNameJoining) {
-    if (channelNameJoining.slice(0, 5) === gameChannelNamePrefix && !authorizedForGameChannel)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, `Channels prefixed with ${gameChannelNamePrefix} are reserved for that game's players`);
+    if (
+      (channelNameJoining.slice(0, gameChannelNamePrefix.length) === rankedGameChannelNamePrefix ||
+        channelNameJoining.slice(0, rankedGameChannelNamePrefix.length) === gameChannelNamePrefix) &&
+      !authorizedForGameChannel
+    )
+      return socket.emit(
+        SocketEventsFromServer.ERROR_MESSAGE,
+        `Channels prefixed with "${gameChannelNamePrefix}" or "${rankedGameChannelNamePrefix}" are reserved for that game's players`
+      );
     socket.join(channelNameJoining);
     io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, lobby.getSanitizedChatChannel(channelNameJoining));
     connectedSockets[socket.id].previousChatChannelName = channelNameLeaving; // used for placing user back in their last chat channel after a game ends
