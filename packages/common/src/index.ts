@@ -16,6 +16,7 @@ export { SocketMetadata } from "./classes/SocketMetadata";
 export * from "./classes/inputs";
 export { UserInput } from "./classes/inputs/UserInput";
 export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
+export { ErrorMessages } from "./enums/ErrorMessages";
 export { processPlayerInput } from "./processPlayerInput";
 export { updateOrbs } from "./updateOrbs";
 export { handleOrbBodyCollisions } from "./updateOrbs/handleOrbBodyCollisions";
