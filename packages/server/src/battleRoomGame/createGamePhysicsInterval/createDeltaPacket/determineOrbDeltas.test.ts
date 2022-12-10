@@ -1,5 +1,5 @@
 import cloneDeep from "lodash.clonedeep";
-import { BattleRoomGame, GameElementsOfConstantInterest, PlayerRole, Point } from "../../../../../../common";
+import { BattleRoomGame, GameElementsOfConstantInterest, PlayerRole, Point } from "@lucella/common";
 import determineOrbDeltas from "./determineOrbDeltas";
 
 export function createTestGameWithPrevGameState() {

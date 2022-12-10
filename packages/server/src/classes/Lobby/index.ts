@@ -16,6 +16,7 @@ import updateChatChannelUsernameLists from "./updateChatChannelUsernameLists";
 import validateGameName from "./validateGameName";
 import { LucellaServer } from "../LucellaServer";
 import handleSocketLeavingGameRoom from "./handleSocketLeavingGameRoom";
+import validateChannelName from "./validateChannelName";
 
 export class Lobby {
   chatChannels: { [name: string]: ChatChannel };
@@ -59,15 +60,8 @@ export class Lobby {
     }
 
     if (channelNameJoining) {
-      if (
-        (channelNameJoining.slice(0, gameChannelNamePrefix.length) === rankedGameChannelNamePrefix ||
-          channelNameJoining.slice(0, rankedGameChannelNamePrefix.length) === gameChannelNamePrefix) &&
-        !authorizedForGameChannel
-      )
-        return socket.emit(
-          SocketEventsFromServer.ERROR_MESSAGE,
-          `Channels prefixed with "${gameChannelNamePrefix}" or "${rankedGameChannelNamePrefix}" are reserved for that game's players`
-        );
+      const validationError = validateChannelName(channelNameJoining);
+      if (validationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, validationError);
       socket.join(channelNameJoining);
       io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, this.getSanitizedChatChannel(channelNameJoining));
       connectedSockets[socket.id].previousChatChannelName = channelNameLeaving; // used for placing user back in their last chat channel after a game ends
@@ -79,9 +73,11 @@ export class Lobby {
     gameName = gameName.toLowerCase();
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_HOST_IF_ALREADY_IN_GAME);
-    this.createGameRoom(socket, gameName, isRanked);
-    this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
+    const gameCreationError = this.createGameRoom(socket, gameName, isRanked);
+    if (gameCreationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, gameCreationError);
+    console.log(`game room created: ${gameName}`);
     this.changeSocketChatChannelAndEmitUpdates(socket, gameChannelNamePrefix + gameName, true);
+    this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
   handleJoinGameRoomRequest(socket: Socket, gameName: string, assignedToGameByMatchmaking?: boolean) {
     if (this.gameRooms[gameName].isRanked && !assignedToGameByMatchmaking)
@@ -92,9 +88,9 @@ export class Lobby {
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
   createGameRoom(socket: Socket, gameName: string, isRanked?: boolean) {
-    if (this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_EXISTS);
+    if (this.gameRooms[gameName]) return ErrorMessages.GAME_EXISTS;
     const gameNameValidationError = validateGameName(gameName, isRanked);
-    if (gameNameValidationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, gameNameValidationError);
+    if (gameNameValidationError) return gameNameValidationError;
     this.gameRooms[gameName] = new GameRoom(gameName, isRanked);
   }
   putSocketInGameRoomAndEmitUpdates(socket: Socket, gameName: string) {
@@ -118,7 +114,7 @@ export class Lobby {
     }
     socket.emit(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT, playerRole);
     io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.getSanitizedGameRooms());
-    io.to(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, this.getSanitizedGameRoom(gameRoom));
+    io.in(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, this.getSanitizedGameRoom(gameRoom));
     return gameRoom;
   }
   handleSocketLeavingGameRoom(socket: Socket, gameRoom: GameRoom, isDisconnecting: boolean, playerToKick?: SocketMetadata) {
@@ -126,8 +122,8 @@ export class Lobby {
   }
   removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom: GameRoom, socketMeta: SocketMetadata) {
     if (!socketMeta) return console.log("Tried to remove a player from game room but player did not exist in that room");
-    this.server.io.sockets.sockets.get(socketMeta.socketId!)!.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
-    this.server.connectedSockets[socketMeta.socketId!].currentGameName = null;
+    this.server.io.sockets.sockets.get(socketMeta.socketId!)?.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
+    if (this.server.connectedSockets[socketMeta.socketId!]) this.server.connectedSockets[socketMeta.socketId!].currentGameName = null;
     const playerRoleLeaving = gameRoom.players.host?.associatedUser.username === socketMeta.associatedUser.username ? PlayerRole.HOST : PlayerRole.CHALLENGER;
     gameRoom.players[playerRoleLeaving] = null;
   }

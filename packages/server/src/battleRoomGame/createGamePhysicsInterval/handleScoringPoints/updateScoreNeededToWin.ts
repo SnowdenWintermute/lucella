@@ -1,4 +1,4 @@
-import { BattleRoomGame } from "../../../../../../common";
+import { BattleRoomGame } from "@lucella/common";
 
 export default (game: BattleRoomGame) => {
   if (Math.abs(game.score.challenger - game.score.host) < 2) {

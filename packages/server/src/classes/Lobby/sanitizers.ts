@@ -3,6 +3,7 @@ import { GameRoom } from "@lucella/common";
 const cloneDeep = require("lodash.clonedeep");
 
 export function sanitizeChatChannel(channel: ChatChannel) {
+  if (!channel) return console.error("tried to sanitize a channel but no channel was given");
   let sanitizedChatChannel: { name: string; connectedUsers: { [userKey: string]: {} } } = {
     name: channel.name,
     connectedUsers: {},
@@ -25,17 +26,20 @@ export function sanitizeGameRoom(gameRoom: GameRoom): GameRoom | void {
   let gameRoomForClient = cloneDeep(gameRoom);
   gameRoomForClient.countdownInterval = null;
   Object.keys(gameRoomForClient.players).forEach((player) => {
-    if (gameRoomForClient.players[player]) delete gameRoomForClient.players[player].socketId;
+    if (gameRoomForClient.players[player]) {
+      delete gameRoomForClient.players[player].socketId;
+      delete gameRoomForClient.players[player].currentChatChannel;
+      delete gameRoomForClient.players[player].previousChatChannelName;
+    }
   });
   return gameRoomForClient;
 }
 
 export function sanitizeAllGameRooms(gameRooms: { [gameName: string]: GameRoom }) {
   let gamesForClient: { [gameName: string]: GameRoom } = {};
-  Object.keys(gamesForClient).forEach((gameName) => {
+  Object.keys(gameRooms).forEach((gameName) => {
     const sanitizedGameRoom = sanitizeGameRoom(gameRooms[gameName]);
     if (sanitizedGameRoom) gamesForClient[gameName] = sanitizedGameRoom;
   });
-
   return gamesForClient;
 }

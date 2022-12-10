@@ -1,5 +1,4 @@
-import { expressServer } from "../../express-server";
-import { Server, Socket } from "socket.io";
+import SocketIO, { Socket } from "socket.io";
 import { BattleRoomGame } from "../../../../common";
 import { Lobby } from "../Lobby";
 import initializeListeners from "./initializeListeners";
@@ -8,15 +7,17 @@ import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
+import { User } from "../../models/user.model";
+import BattleRoomRecord from "../../models/BattleRoomRecord";
 
 export class LucellaServer {
-  io: Server;
+  io: SocketIO.Server;
   lobby: Lobby;
   games: { [gameName: string]: BattleRoomGame };
   connectedSockets: SocketMetadataList;
   matchmakingQueue: MatchmakingQueue;
-  constructor() {
-    this.io = new Server(expressServer);
+  constructor(expressServer: any) {
+    this.io = new SocketIO.Server(expressServer);
     this.matchmakingQueue = new MatchmakingQueue(this);
     this.lobby = new Lobby(this);
     this.games = {};
@@ -40,5 +41,11 @@ export class LucellaServer {
   }
   handleReadyStateToggleRequest(socket: Socket) {
     handleReadyStateToggleRequest(this, socket);
+  }
+  async fetchOrCreateBattleRoomRecord(user: User) {
+    let record = await BattleRoomRecord.findOne({ userId: user.id });
+    if (!record) record = new BattleRoomRecord({ userId: user.id });
+    await record.save();
+    return record;
   }
 }

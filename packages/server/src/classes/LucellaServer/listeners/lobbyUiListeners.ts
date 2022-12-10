@@ -1,6 +1,6 @@
 import { Socket } from "socket.io";
 import { SocketEventsFromClient, SocketEventsFromServer } from "@lucella/common";
-import { LucellaServer } from "../../classes/LucellaServer";
+import { LucellaServer } from "..";
 
 export default function gameUiListeners(server: LucellaServer, socket: Socket) {
   socket.on(SocketEventsFromClient.NEW_CHAT_MESSAGE, (data) => {

@@ -1,4 +1,4 @@
-import { OrbDeltas, OrbsProto, VectorProto } from "../../../../../../common";
+import { OrbDeltas, OrbsProto, VectorProto } from "@lucella/common";
 
 export default function (orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas }) {
   const orbsPacket = new OrbsProto();

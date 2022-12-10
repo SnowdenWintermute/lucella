@@ -26,13 +26,13 @@ export class BattleRoomGame {
   intervals: {
     physics: NodeJS.Timeout | undefined;
     endingCountdown: NodeJS.Timeout | undefined;
-  };
+  } = { physics: undefined, endingCountdown: undefined };
   queues = new BattleRoomQueues();
   mouseData = new MouseData();
-  gameOverCountdown: { duration: number; current: number | null };
+  gameOverCountdown: { duration: number; current: number | null } = { duration: gameOverCountdownDuration, current: null };
   winner: string | null | undefined = null;
-  currentCollisionPairs: Matter.Pair[];
-  orbs: HostAndChallengerOrbSets;
+  currentCollisionPairs: Matter.Pair[] = [];
+  orbs: HostAndChallengerOrbSets = { host: {}, challenger: {} };
   score = {
     host: 0,
     challenger: 0,
@@ -61,16 +61,6 @@ export class BattleRoomGame {
   constructor(gameName: string, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
-    this.intervals = {
-      physics: undefined,
-      endingCountdown: undefined,
-    };
-    this.gameOverCountdown = {
-      duration: gameOverCountdownDuration,
-      current: null,
-    };
-    this.orbs = { host: {}, challenger: {} };
-    this.currentCollisionPairs = [];
   }
   clearPhysicsInterval() {
     clearInterval(this.intervals.physics);

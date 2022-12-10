@@ -4,12 +4,12 @@ const helmet = require("helmet");
 import express, { NextFunction } from "express";
 import connectDB from "./utils/connectDB";
 import { Request, Response } from "express";
-import { Server } from "socket.io";
 import userRouter from "./routes/user.route";
 import authRouter from "./routes/auth.route";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import { LucellaServer } from "./classes/LucellaServer";
 export const app = express();
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
@@ -59,3 +59,5 @@ export const expressServer = app.listen(PORT, () => {
 
   connectDB();
 });
+
+const lucellaServer = new LucellaServer(expressServer);

@@ -1,7 +1,7 @@
 import { ErrorMessages, SocketEventsFromServer } from "../../../../common";
 import handleNewSocketConnection from "./handleNewSocketConnection";
-import lobbyUiListeners from "../../sockets/listeners/lobbyUiListeners";
-import battleRoomGameListeners from "../../sockets/listeners/battleRoomGameListeners";
+import lobbyUiListeners from "./listeners/lobbyUiListeners";
+import battleRoomGameListeners from "./listeners/battleRoomGameListeners";
 import { LucellaServer } from ".";
 
 export default function initializeListeners(server: LucellaServer) {

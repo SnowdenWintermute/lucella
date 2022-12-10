@@ -1,8 +1,8 @@
-import { PlayerRole, SocketEventsFromClient, UserInput } from "../../../../common";
+import { PlayerRole, SocketEventsFromClient, UserInput } from "@lucella/common";
 import { Socket } from "socket.io";
-import antiCheat from "../battleRoomGame/antiCheat";
-import unpackUserInput from "../../protobuf-utils/unpackUserInput";
-import { LucellaServer } from "../../classes/LucellaServer";
+import antiCheat from "../../../battleRoomGame/antiCheat";
+import unpackUserInput from "../../../protobuf-utils/unpackUserInput";
+import { LucellaServer } from "..";
 const replicator = new (require("replicator"))();
 
 export default function (server: LucellaServer, socket: Socket) {

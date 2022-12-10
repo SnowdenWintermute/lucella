@@ -1,5 +1,5 @@
 import isEqual from "lodash.isequal";
-import { BattleRoomGame, PlayerRole, DeltasProto, ScoreProto } from "../../../../../../common";
+import { BattleRoomGame, PlayerRole, DeltasProto, ScoreProto } from "@lucella/common";
 import determineOrbDeltas from "./determineOrbDeltas";
 import packOrbSet from "./packOrbSet";
 

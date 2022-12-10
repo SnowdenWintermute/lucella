@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "build": "rimraf dist && tsc --build && ",
-    "serve": "tsc-watch -b --onSuccess \"node dist/servers.js\"",
+    "serve": "tsc-watch -b --onSuccess \"node dist/express-server.js\"",
     "server": "nodemon server",
     "servers": "nodemon servers",
     "client": "yarn --cwd ../client develop",

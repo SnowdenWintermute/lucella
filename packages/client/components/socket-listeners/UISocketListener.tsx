@@ -40,6 +40,7 @@ const UISocketListener = ({ socket }: Props) => {
       dispatch(updateGameList(data));
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+      console.log("SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE", data);
       dispatch(setCurrentGameRoom(data));
       if (data) {
         dispatch(setViewingGamesList(false));

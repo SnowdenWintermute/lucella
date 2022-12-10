@@ -10,8 +10,8 @@ import {
   renderRate,
   SocketEventsFromServer,
   UserInput,
-} from "../../../../../common";
-import { LucellaServer } from "../../../classes/LucellaServer";
+} from "@lucella/common";
+import { LucellaServer } from "../../classes/LucellaServer";
 import createDeltaPacket from "./createDeltaPacket/createDeltaPacket";
 import handleScoringPoints from "./handleScoringPoints";
 const replicator = new (require("replicator"))();
@@ -41,9 +41,9 @@ export default function (io: Server, socket: Socket, server: LucellaServer, game
     const updateForHost = createDeltaPacket(game, PlayerRole.HOST);
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
     // io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
+    if (game.winner) server.endGameAndEmitUpdates(game);
     io.to(server.lobby.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
     io.to(server.lobby.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
-    if (game.winner) server.endGameAndEmitUpdates(game);
 
     game.netcode.prevGameState = new GameElementsOfConstantInterest(
       cloneDeep(game.orbs),

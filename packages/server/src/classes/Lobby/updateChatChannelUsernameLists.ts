@@ -12,10 +12,11 @@ export default function updateChatChannelUsernameLists(
     if (!channelLeaving) return;
     const userInRoom = channelLeaving.connectedUsers[username];
     // logged in users can have multiple socket connections in one chat channel, each under their username umbrella. Only remove the user if they have 0 socket connections
-    const newSocketList = userInRoom.connectedSockets.filter((socketInThisChannel) => socketInThisChannel !== socketMeta.socketId);
+    let newSocketList: string[] = [];
+    if (userInRoom) newSocketList = userInRoom.connectedSockets.filter((socketInThisChannel) => socketInThisChannel !== socketMeta.socketId);
     if (newSocketList.length < 1) delete channelLeaving.connectedUsers[username];
     else userInRoom.connectedSockets = newSocketList;
-    if (Object.keys(channelLeaving.connectedUsers[username]).length < 1) delete chatChannels[channelNameLeaving];
+    if (channelLeaving.connectedUsers[username] && Object.keys(channelLeaving.connectedUsers).length < 1) delete chatChannels[channelNameLeaving];
     console.log(`${socketMeta.socketId} removed from ${channelNameLeaving}'s list`);
   }
   if (channelNameJoining) {
