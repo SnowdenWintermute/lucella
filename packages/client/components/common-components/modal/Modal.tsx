@@ -20,7 +20,7 @@ const Modal = ({ isOpen, children, setParentDisplay, title, screenClass, frameCl
   const handleUserKeyPress = useCallback(
     (e: KeyboardEvent) => {
       const { key } = e;
-      if (key === "escape") hideModal();
+      if (key === "Escape" || key === "Esc") hideModal();
     },
     [hideModal]
   );
@@ -34,10 +34,10 @@ const Modal = ({ isOpen, children, setParentDisplay, title, screenClass, frameCl
   );
 
   useEffect(() => {
-    window.addEventListener("keydown", handleUserKeyPress);
+    window.addEventListener("keyup", handleUserKeyPress);
     window.addEventListener("click", handleClickOutOfModal);
     return () => {
-      window.removeEventListener("keydown", handleUserKeyPress);
+      window.removeEventListener("keyup", handleUserKeyPress);
       window.removeEventListener("click", handleClickOutOfModal);
     };
   }, [handleUserKeyPress, hideModal, handleClickOutOfModal]);

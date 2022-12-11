@@ -5,7 +5,7 @@ import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
-import { GameStatus, SocketEventsFromClient } from "../../../common";
+import { ErrorMessages, GameStatus, SocketEventsFromClient } from "../../../common";
 import styles from "./game-lobby.module.scss";
 
 interface Props {
@@ -42,7 +42,7 @@ const PreGameRoom = ({ socket }: Props) => {
     e.preventDefault();
     const gameNameToCreate = gameNameInput;
     if (gameNameToCreate && socket) socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameNameToCreate);
-    else dispatch(setAlert(new Alert("Please enter a game name", AlertType.DANGER)));
+    else dispatch(setAlert(new Alert(ErrorMessages.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
   };
 
   const handleReadyClick = () => {
@@ -64,7 +64,7 @@ const PreGameRoom = ({ socket }: Props) => {
               {playersReady?.host ? <SuccessIcon aria-label="ready" className={styles["ready-icon"]}></SuccessIcon> : <span aria-label="not ready">...</span>}
             </td>
           </tr>
-          <tr>
+          <tr data-cy="challenger-info">
             <td>{players?.challenger ? players.challenger.associatedUser.username : "Awaiting challenger..."}</td>
             <td aria-label="challenger status" className={styles["ready-icon-holder"]}>
               {playersReady?.challenger ? (
@@ -97,7 +97,9 @@ const PreGameRoom = ({ socket }: Props) => {
         ref={channelNameInput}
         autoFocus={true}
         className={"text-input-transparent  mb-10"}
+        aria-label={"Enter a game name"}
         placeholder={"Enter a game name"}
+        data-cy={"game-name-input"}
         value={gameNameInput}
         onChange={(e) => {
           setGameNameInput(e.target.value);

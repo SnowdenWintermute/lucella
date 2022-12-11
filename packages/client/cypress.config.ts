@@ -22,9 +22,9 @@ export default defineConfig({
           socket.disconnect();
           return null;
         },
-        [TaskNames.socketEmit]: (taskData: { socketEvent: SocketEventsFromClient; data: any }) => {
-          const { socketEvent, data } = taskData;
-          socket.emit(socketEvent, data);
+        [TaskNames.socketEmit]: (taskData: { event: SocketEventsFromClient; data: any }) => {
+          const { event, data } = taskData;
+          socket.emit(event, data);
           return null;
         },
       });

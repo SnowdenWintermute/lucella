@@ -1,8 +1,13 @@
+import { ErrorMessages, gameRoomCountdownDuration, GameStatus, maxGameNameLength, SocketEventsFromClient } from "../../../../common";
+import { veryLongTestText, shortTestText, mediumTestText } from "../../support/consts";
+import { TaskNames } from "../../support/TaskNames";
+import authedUserHostAndStartGame from "./authedUserHostAndStartGame";
 import chatAndChangeChannels from "./chatAndChangeChannels";
-import unauthedJoinLeaveAndStartGames from "./unauthedJoinLeaveAndStartGames";
+import unauthedJoinLeaveAndDisconnectFromGameRoom from "./unauthedJoinLeaveAndDisconnectFromGameRoom";
 
-describe("lobby chat functionality", () => {
+describe("lobby chat, hosting, joining and game start and end functionality", () => {
   afterEach(() => cy.task("disconnectSocket"));
-  // chatAndChangeChannels();
-  unauthedJoinLeaveAndStartGames();
+  chatAndChangeChannels();
+  unauthedJoinLeaveAndDisconnectFromGameRoom();
+  authedUserHostAndStartGame();
 });

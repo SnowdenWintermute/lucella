@@ -1,5 +1,5 @@
 import { battleRoomDefaultChatChannel, SocketEventsFromClient } from "../../../../common";
-import { longTestText, mediumTestText, shortTestText } from "../../support/consts";
+import { veryLongTestText, mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
 export default function chatAndChangeChannels() {
@@ -8,27 +8,27 @@ export default function chatAndChangeChannels() {
     cy.findByText("Server : Welcome to battle-room-chat.").should("exist");
 
     cy.task(TaskNames.connectSocket);
-    cy.task(TaskNames.socketEmit, { socketEvent: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, data: battleRoomDefaultChatChannel });
+    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, data: battleRoomDefaultChatChannel });
     cy.findByLabelText(/users in this channel/i)
       .findAllByText(/Anon/i)
       .should("have.length", 2);
     cy.task(TaskNames.socketEmit, {
-      socketEvent: SocketEventsFromClient.NEW_CHAT_MESSAGE,
+      event: SocketEventsFromClient.NEW_CHAT_MESSAGE,
       data: {
         style: "normal",
-        text: longTestText,
+        text: veryLongTestText,
       },
     });
 
-    cy.findByText(new RegExp(`${longTestText}`)).should("exist");
+    cy.findByText(new RegExp(`${veryLongTestText}`)).should("exist");
     cy.findByLabelText("chat-input").click().type(`${mediumTestText}{enter}`);
     cy.findByText(new RegExp(`${mediumTestText}`)).should("exist");
-    cy.task(TaskNames.socketEmit, { socketEvent: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, data: "test" });
+    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, data: "test" });
     cy.findByLabelText(/users in this channel/i)
       .findAllByText(/anon/i)
       .should("have.length", 1);
     cy.task(TaskNames.socketEmit, {
-      socketEvent: SocketEventsFromClient.NEW_CHAT_MESSAGE,
+      event: SocketEventsFromClient.NEW_CHAT_MESSAGE,
       data: {
         style: "normal",
         text: shortTestText,
@@ -42,7 +42,7 @@ export default function chatAndChangeChannels() {
       .findAllByText(/anon/i)
       .should("have.length", 2);
     cy.task(TaskNames.socketEmit, {
-      socketEvent: SocketEventsFromClient.NEW_CHAT_MESSAGE,
+      event: SocketEventsFromClient.NEW_CHAT_MESSAGE,
       data: {
         style: "normal",
         text: shortTestText,

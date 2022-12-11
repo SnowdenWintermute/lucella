@@ -19,8 +19,10 @@ export default function handleReadyStateToggleRequest(server: LucellaServer, soc
 
   if (playersReady.host && playersReady.challenger) {
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
+    gameRoom.countdown.current--;
+    io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     gameRoom.countdownInterval = setInterval(() => {
-      io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+      io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
       if (gameRoom.countdown.current > 0) return;
       gameRoom.countdownInterval && clearInterval(gameRoom.countdownInterval);
       gameRoom.gameStatus = GameStatus.IN_PROGRESS;
@@ -29,7 +31,6 @@ export default function handleReadyStateToggleRequest(server: LucellaServer, soc
       const game = games[currentGameName];
       io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
       game.intervals.physics = createGamePhysicsInterval(io, socket, server, currentGameName);
-      gameRoom.countdown.current--;
     }, 1000);
   } else {
     gameRoom.cancelCountdownInterval();

@@ -48,7 +48,7 @@ const GameList = ({ socket }: Props) => {
     <div className={`game-list-frame ${gameListDisplayClass}`}>
       <div className="p-10">
         <h3>Current Games</h3>
-        <table className="game-list-table">
+        <table className="game-list-table" data-cy="list-of-current-games">
           <tbody>{gamesToDisplay}</tbody>
         </table>
       </div>

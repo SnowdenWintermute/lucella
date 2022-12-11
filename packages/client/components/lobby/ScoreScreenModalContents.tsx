@@ -61,9 +61,9 @@ const ScoreScreenModalContents = () => {
     };
   }, [eloDiff, playerNewElo]);
 
-  if (!scoreScreenData) return <div />;
+  if (!scoreScreenData) return <div>Error - no score screen data received</div>;
   return (
-    <div>
+    <div data-cy={"score-screen-modal"}>
       <h3>Game {scoreScreenData!.gameRoom.gameName} final score:</h3>
       <table>
         <tbody>

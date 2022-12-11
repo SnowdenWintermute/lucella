@@ -7,3 +7,4 @@ export const eloDiffThresholdDebuggerAdditive = 1000;
 export enum OfficialChannels {
   matchmakingQueue = "matchmaking-queue",
 }
+export const maxGameNameLength = 20;

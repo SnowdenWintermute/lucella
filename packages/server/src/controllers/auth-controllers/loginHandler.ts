@@ -25,8 +25,7 @@ const refreshTokenCookieOptions: CookieOptions = {
 export default async function loginHandler(req: Request<{}, {}, LoginUserInput>, res: Response, next: NextFunction) {
   try {
     const user = await findUser({ email: req.body.email });
-    if (!user || !(await user.comparePasswords(user.password, req.body.password)))
-      return next(new AppError("Invalid email or password", 401));
+    if (!user || !(await user.comparePasswords(user.password, req.body.password))) return next(new AppError("Invalid email or password", 401));
 
     const { access_token, refresh_token } = await signTokenAndCreateSession(user);
     res.cookie("access_token", access_token, accessTokenCookieOptions);
@@ -37,6 +36,7 @@ export default async function loginHandler(req: Request<{}, {}, LoginUserInput>,
     });
 
     res.status(200).json({ status: "success" });
+    console.log("user logged in");
   } catch (err: any) {
     next(err);
   }

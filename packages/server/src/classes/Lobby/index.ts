@@ -80,6 +80,7 @@ export class Lobby {
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
   handleJoinGameRoomRequest(socket: Socket, gameName: string, assignedToGameByMatchmaking?: boolean) {
+    if (!this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_DOES_NOT_EXIST);
     if (this.gameRooms[gameName].isRanked && !assignedToGameByMatchmaking)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
     if (this.server.connectedSockets[socket.id].currentGameName)
