@@ -1,0 +1,36 @@
+Table users{
+  id serial [pk, increment]
+  created_at timestamp
+  updated_at timestamp
+  name varchar(24)
+  email varchar(254)
+  password varchar(60)
+  role enum
+  status enum
+}
+
+Table battle_room_score_cards{
+  id serial [pk, increment]
+  created_at timestamp
+  elo integer
+  wins integer
+  losses integer
+  draws integer
+  user_id integer [ref: > users.id]
+}
+
+Table battle_room_game_records{
+  id serial [pk, increment]
+  created_at timestamp
+  player_1_id integer [ref: > users.id]
+  player_2_id integer [ref: > users.id]
+  player_1_score integer
+  player_2_score integer
+}
+
+Table mutes{
+  id serial [pk, increment]
+  created_at timestamp
+  muter_id integer [ref: > users.id]
+  muted_id integer [ref: > users.id]
+}

@@ -7,7 +7,7 @@ import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
-import { User } from "../../models/user.model";
+import { User } from "../../models/User";
 import BattleRoomRecord from "../../models/BattleRoomRecord";
 
 export class LucellaServer {

@@ -1,6 +1,6 @@
 import { getModelForClass, index, modelOptions, pre, prop } from "@typegoose/typegoose";
 import bcrypt from "bcryptjs";
-import { minPasswordLength } from "../schema/user.schema";
+import { minPasswordLength } from "../schema-validation/user-schema";
 
 @index({ email: 1 })
 @pre<User>("save", async function () {

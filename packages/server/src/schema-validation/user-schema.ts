@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from "zod";
+import { object, string, TypeOf, z } from "zod";
 
 export const minPasswordLength = 6;
 
@@ -15,6 +15,8 @@ export const createUserSchema = object({
     message: "Passwords do not match",
   }),
 });
+
+export type CreateUserSchema = z.infer<typeof createUserSchema>;
 
 export const loginUserSchema = object({
   body: object({

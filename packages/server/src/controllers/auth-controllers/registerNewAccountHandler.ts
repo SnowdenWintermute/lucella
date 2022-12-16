@@ -1,29 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { CreateUserInput } from "../../schema/user.schema";
+import { CreateUserInput } from "../../schema-validation/user-schema";
 import { createUser } from "../../services/user.service";
 
-export default async function registerNewAccountHandler(
-  req: Request<{}, {}, CreateUserInput>,
-  res: Response,
-  next: NextFunction
-) {
+export default async function registerNewAccountHandler(req: Request<{}, {}, CreateUserInput>, res: Response, next: NextFunction) {
   try {
-    await createUser({
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-    });
-
-    res.status(201).json({
-      status: "success",
-    });
-  } catch (err: any) {
-    // mongodb specific code for duplicate entry
-    if (!(err.code === 11000)) return next(err);
-    // all other errors
-    return res.status(409).json({
-      status: "fail",
-      message: "Email already exist",
-    });
+    const user = await createUser(req);
+    res.status(201).json(user);
+  } catch (error: any) {
+    console.error(error);
+    if (error.schema && error.detail) {
+      // probably a postgres error
+      const errors = [];
+      if (error.column) errors.push(`Database error - problem relating to ${error.column}`);
+      else if (error.detail) errors.push(`Database error - detail: ${error.detail}`);
+      return res.status(500).json(errors);
+    } else return res.status(500).json([error.toString()]);
   }
 }

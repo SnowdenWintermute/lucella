@@ -12,10 +12,7 @@ export const validate = (schema: AnyZodObject) => (req: Request, res: Response, 
     next();
   } catch (err: any) {
     if (err instanceof ZodError) {
-      return res.status(400).json({
-        status: "fail",
-        error: err.errors,
-      });
+      return res.status(400).json(err.errors.map((error) => error.message));
     }
     next(err);
   }

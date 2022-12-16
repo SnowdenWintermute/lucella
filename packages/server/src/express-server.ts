@@ -1,27 +1,29 @@
 import * as dotenv from "dotenv";
-const config = dotenv.config();
+dotenv.config();
 const helmet = require("helmet");
 import express, { NextFunction } from "express";
-import connectDB from "./utils/connectDB";
+// import connectDB from "./utils/connectDB";
 import { Request, Response } from "express";
 import userRouter from "./routes/user.route";
 import authRouter from "./routes/auth.route";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import WrappedPool from "./database/WrappedPool";
 import { LucellaServer } from "./classes/LucellaServer";
+import { DatabaseError } from "pg";
+import { pgOptions } from "./database/config";
 export const app = express();
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
 app.use(helmet());
 
-console.log(process.env.ORIGIN);
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 app.use(
   // cors()
   cors({
     // methods: ["GET", "PATCH", "POST", "PUT", "DELETE"],
-    origin: "http://localhost:3000",
+    origin: process.env.ORIGIN,
     credentials: true,
   })
 );
@@ -54,10 +56,13 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
 });
 
 const PORT = process.env.PORT;
-export const expressServer = app.listen(PORT, () => {
-  console.log(`express server on port ${PORT}`);
 
-  connectDB();
-});
+let expressServer;
+
+WrappedPool.connect(pgOptions)
+  .then(() => {
+    expressServer = app.listen(PORT, () => console.log(`express server on port ${PORT}`));
+  })
+  .catch((error: DatabaseError) => console.error(error));
 
 const lucellaServer = new LucellaServer(expressServer);
