@@ -1,10 +1,10 @@
 import { Socket } from "socket.io";
 import { SocketMetadata } from "@lucella/common";
-import { findUserById } from "../../services/user.service";
 import cookie from "cookie";
-import { verifyJwt } from "../../utils/jwt";
+import { verifyJwt } from "../../controllers/auth-controllers/utils/jwt";
 import redisClient from "../../utils/connectRedis";
 import { LucellaServer } from ".";
+import UserRepo from "../../database/repos/users";
 
 export default async function handleNewSocketConnection(server: LucellaServer, socket: Socket) {
   try {
@@ -16,7 +16,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
     if (decoded) {
       const session = await redisClient.get(decoded.sub);
       if (!session) return new Error(`User session has expired`);
-      userToReturn = await findUserById(JSON.parse(session)._id);
+      userToReturn = await UserRepo.findById(JSON.parse(session).id);
       isGuest = false;
     }
 

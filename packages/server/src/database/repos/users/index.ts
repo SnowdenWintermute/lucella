@@ -14,16 +14,18 @@ export default class UserRepo {
     //@ts-ignore
     return toCamelCase(rows)[0];
   }
-  static async findById(id: number) {
+  static async findById(id: number): Promise<User | undefined> {
     const { rows } = await WrappedPool.query(`SELECT * FROM users WHERE id = $1;`, [id]);
-    return toCamelCase(rows)![0];
+    //@ts-ignore
+    return toCamelCase(rows)[0];
   }
   static async insert(name: string, email: string, password: string) {
     const { rows } = await WrappedPool.query("INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;", [name, email, password]);
     console.log(toCamelCase(rows)[0]);
     return toCamelCase(rows)[0];
   }
-  static async update(id: number, name: string, email: string, password: string) {
+  static async update(user: User) {
+    const { id, name, email, password } = user;
     const { rows } = await WrappedPool.query(`UPDATE users SET name = $2, email = $3, password = $4, WHERE id = $1 RETURNING *;`, [id, name, email, password]);
     return toCamelCase(rows)![0];
   }

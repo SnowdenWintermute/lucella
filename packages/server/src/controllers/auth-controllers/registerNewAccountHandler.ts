@@ -1,10 +1,15 @@
 import { NextFunction, Request, Response } from "express";
+import UserRepo from "../../database/repos/users";
 import { CreateUserInput } from "../../schema-validation/user-schema";
-import { createUser } from "../../services/user.service";
+import bcrypt from "bcryptjs";
 
 export default async function registerNewAccountHandler(req: Request<{}, {}, CreateUserInput>, res: Response, next: NextFunction) {
   try {
-    const user = await createUser(req);
+    const { name, email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 12);
+    const user = await UserRepo.insert(name, email, hashedPassword);
+    delete user.password;
+    delete user.id;
     res.status(201).json(user);
   } catch (error: any) {
     console.error(error);

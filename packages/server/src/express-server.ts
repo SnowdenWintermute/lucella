@@ -4,7 +4,6 @@ const helmet = require("helmet");
 import express, { NextFunction } from "express";
 // import connectDB from "./utils/connectDB";
 import { Request, Response } from "express";
-import userRouter from "./routes/user.route";
 import authRouter from "./routes/auth.route";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -39,7 +38,6 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.use("/api/users", userRouter);
 app.use("/api/auth", authRouter);
 
 // const path = require("path");

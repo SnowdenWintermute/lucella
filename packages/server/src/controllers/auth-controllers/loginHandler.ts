@@ -1,8 +1,9 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
 import AppError from "../../classes/AppError";
 import { LoginUserInput } from "../../schema-validation/user-schema";
-import { findUserByField, signTokenAndCreateSession } from "../../services/user.service";
 import bcrypt from "bcryptjs";
+import UserRepo from "../../database/repos/users";
+import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
 
 const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!);
 const accessTokenCookieOptions: CookieOptions = {
@@ -25,7 +26,7 @@ const refreshTokenCookieOptions: CookieOptions = {
 
 export default async function loginHandler(req: Request<{}, {}, LoginUserInput>, res: Response, next: NextFunction) {
   try {
-    const user = await findUserByField("email", req.body.email);
+    const user = await UserRepo.findOne(req.body.email, req.body.password);
     console.log("user in loginHandler: ", user, "req.body.password: ", req.body.password);
     console.log(await bcrypt.compare(req.body.password, user.password!));
     if (!user || !(await bcrypt.compare(req.body.password, user.password!))) return next(new AppError("Invalid email or password", 401));
