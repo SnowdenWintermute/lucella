@@ -14,7 +14,6 @@ test("pack and unpack orb deltas and be able to know if a field was not set", ()
   const serializedMessage = packedOrbs?.serializeBinary();
   const deserializedMessage = OrbsProto.deserializeBinary(serializedMessage!);
   const orbList = deserializedMessage.getOrbsList();
-  const deserializedObject = JSON.parse(JSON.stringify(deserializedMessage.toObject()));
   expect(orbList[0].getId()).toBe(0);
   expect(orbList[1].getId()).toBe(1);
   expect(orbList[1].hasIsselected()).toBe(false);
@@ -24,11 +23,4 @@ test("pack and unpack orb deltas and be able to know if a field was not set", ()
   expect(orbList[2].hasIsselected()).toBe(true);
   expect(orbList[2].hasIsghost()).toBe(false);
   expect(orbList[2].getIsselected()).toBe(false);
-  expect(deserializedObject).toStrictEqual({
-    orbsList: [
-      { id: 0, isselected: false, isghost: false },
-      { id: 1, isselected: false, isghost: false },
-      { id: 2, isselected: false, isghost: false },
-    ],
-  });
 });

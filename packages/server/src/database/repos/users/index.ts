@@ -9,6 +9,7 @@ export default class UserRepo {
     return toCamelCase(rows);
   }
   static async findOne(field: string, value: any): Promise<User> {
+    console.log("field: ", field, "value: ", value);
     const { rows } = await WrappedPool.query(format(`SELECT * FROM users WHERE %I = %L;`, field, value));
     console.log("result of findOne: ", toCamelCase(rows), "field: ", field, "value: ", value);
     //@ts-ignore

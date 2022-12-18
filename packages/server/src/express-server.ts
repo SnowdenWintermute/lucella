@@ -12,6 +12,7 @@ import WrappedPool from "./database/WrappedPool";
 import { LucellaServer } from "./classes/LucellaServer";
 import { DatabaseError } from "pg";
 import { pgOptions } from "./database/config";
+import errorHandler from "./middleware/errorHandler";
 export const app = express();
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());
@@ -26,33 +27,16 @@ app.use(
     credentials: true,
   })
 );
-
-// Global Error Handler
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  err.status = err.status || "error";
-  err.statusCode = err.statusCode || 500;
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
-});
-
 app.use("/api/auth", authRouter);
-
-// const path = require("path");
-// app.use(express.static(path.join(__dirname, "../client/build")));
-// app.get("*", function (req: Request, res: Response) {
-//   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-// });
 
 // UnKnown Routes
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   const err = new Error(`Route ${req.originalUrl} not found`) as any;
-  err.statusCode = 404;
+  err.status = 404;
   next(err);
 });
 
+app.use(errorHandler);
 const PORT = process.env.PORT;
 
 let expressServer;
@@ -60,7 +44,6 @@ let expressServer;
 WrappedPool.connect(pgOptions)
   .then(() => {
     expressServer = app.listen(PORT, () => console.log(`express server on port ${PORT}`));
+    const lucellaServer = new LucellaServer(expressServer);
   })
   .catch((error: DatabaseError) => console.error(error));
-
-const lucellaServer = new LucellaServer(expressServer);

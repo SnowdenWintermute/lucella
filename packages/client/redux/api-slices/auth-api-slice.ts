@@ -1,13 +1,22 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import baseQueryWithRefetch from "./baseQueryWithRefetch";
 import { IUser, LoginInput, RegisterInput } from "../types";
 import { setAlert } from "../slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 
+const API_URL = process.env.NEXT_PUBLIC_API;
+
+const baseQuery = fetchBaseQuery({
+  baseUrl: `${API_URL}/api`,
+  prepareHeaders(headers, { getState }) {
+    return headers;
+  },
+});
+
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: baseQueryWithRefetch,
+  baseQuery: baseQuery,
   tagTypes: ["User"],
   endpoints: (builder) => ({
     // GET SELF

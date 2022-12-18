@@ -14,7 +14,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
     let decoded;
     if (token) decoded = verifyJwt<{ sub: string }>(token.toString(), process.env.ACCESS_TOKEN_PUBLIC_KEY!);
     if (decoded) {
-      const session = await redisClient.get(decoded.sub);
+      const session = await redisClient.get(decoded.sub.toString());
       if (!session) return new Error(`User session has expired`);
       userToReturn = await UserRepo.findById(JSON.parse(session).id);
       isGuest = false;

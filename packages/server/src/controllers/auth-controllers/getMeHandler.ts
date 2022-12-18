@@ -10,6 +10,7 @@ export default function getMeHandler(req: Request, res: Response, next: NextFunc
       },
     });
   } catch (err: any) {
+    console.log(err);
     next(err);
   }
 }

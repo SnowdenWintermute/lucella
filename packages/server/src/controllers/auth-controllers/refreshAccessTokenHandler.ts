@@ -1,5 +1,5 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import AppError from "../../classes/AppError";
+import CustomError from "../../classes/CustomError";
 import UserRepo from "../../database/repos/users";
 import redisClient from "../../utils/connectRedis";
 import { signJwt, verifyJwt } from "./utils/jwt";
@@ -21,11 +21,11 @@ export default async function refreshAccessTokenHandler(req: Request, res: Respo
     const decoded = verifyJwt<{ sub: string }>(refresh_token, process.env.REFRESH_TOKEN_PUBLIC_KEY!);
 
     const message = "Could not refresh access token";
-    if (!decoded) return next(new AppError(message, 403));
-    const session = await redisClient.get(decoded.sub);
-    if (!session) return next(new AppError(message, 403));
+    if (!decoded) return next(new CustomError(message, 403));
+    const session = await redisClient.get(decoded.sub.toString());
+    if (!session) return next(new CustomError(message, 403));
     const user = await UserRepo.findById(JSON.parse(session).id);
-    if (!user) return next(new AppError(message, 403));
+    if (!user) return next(new CustomError(message, 403));
 
     const access_token = signJwt({ sub: user.id }, process.env.ACCESS_TOKEN_PRIVATE_KEY!, {
       expiresIn: `${parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) / 1000 / 60}m`,

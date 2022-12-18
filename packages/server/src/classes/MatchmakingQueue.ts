@@ -5,11 +5,11 @@ import {
   rankedGameChannelNamePrefix,
   SocketEventsFromServer,
   OfficialChannels,
-} from "../../../../common";
+} from "@lucella/common";
 import { Socket } from "socket.io";
-import { IBattleRoomRecord } from "../../models/BattleRoomRecord";
-import { findUserByField } from "../../services/user.service";
-import { LucellaServer } from "../LucellaServer";
+import UserRepo from "../database/repos/users";
+import { IBattleRoomRecord } from "../models/BattleRoomRecord";
+import { LucellaServer } from "./LucellaServer";
 
 export interface MatchmakingQueueUser {
   userId: string;
@@ -31,7 +31,7 @@ export class MatchmakingQueue {
     this.server = server;
   }
   async addUser(socket: Socket) {
-    const user = await findUserByField("name", this.server.connectedSockets[socket.id].associatedUser.username);
+    const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id].associatedUser.username);
     if (!user) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOG_IN_TO_PLAY_RANKED);
     let userBattleRoomRecord = await this.server.fetchOrCreateBattleRoomRecord(user);
     this.users[socket.id] = {
