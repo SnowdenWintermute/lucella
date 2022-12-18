@@ -1,8 +1,8 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import AppError from "../../classes/AppError";
-import { findUserById } from "../../services/user.service";
-import redisClient from "../../utils/connectRedis";
-import { signJwt, verifyJwt } from "../../utils/jwt";
+import CustomError from "../../classes/CustomError";
+import UserRepo from "../../database/repos/users";
+import redisClient, { connectRedis } from "../../utils/connectRedis";
+import { signJwt, verifyJwt } from "./utils/jwt";
 
 const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!);
 const accessTokenCookieOptions: CookieOptions = {
@@ -21,13 +21,14 @@ export default async function refreshAccessTokenHandler(req: Request, res: Respo
     const decoded = verifyJwt<{ sub: string }>(refresh_token, process.env.REFRESH_TOKEN_PUBLIC_KEY!);
 
     const message = "Could not refresh access token";
-    if (!decoded) return next(new AppError(message, 403));
-    const session = await redisClient.get(decoded.sub);
-    if (!session) return next(new AppError(message, 403));
-    const user = await findUserById(JSON.parse(session)._id);
-    if (!user) return next(new AppError(message, 403));
+    if (!decoded) return next(new CustomError(message, 403));
+    if (!redisClient.isOpen) await connectRedis();
+    const session = await redisClient.get(decoded.sub.toString());
+    if (!session) return next(new CustomError(message, 403));
+    const user = await UserRepo.findById(JSON.parse(session).id);
+    if (!user) return next(new CustomError(message, 403));
 
-    const access_token = signJwt({ sub: user._id }, process.env.ACCESS_TOKEN_PRIVATE_KEY!, {
+    const access_token = signJwt({ sub: user.id }, process.env.ACCESS_TOKEN_PRIVATE_KEY!, {
       expiresIn: `${parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!) / 1000 / 60}m`,
     });
 
@@ -35,7 +36,7 @@ export default async function refreshAccessTokenHandler(req: Request, res: Respo
 
     res.status(200).json({
       status: "success",
-      access_token: process.env.NODE_ENV === "development" ? access_token : "",
+      access_token: process.env.NODE_ENV === "development" ? access_token : "", // @todo - prob don't need this anymore
     });
   } catch (err: any) {
     next(err);

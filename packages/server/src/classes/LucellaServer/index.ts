@@ -7,7 +7,7 @@ import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
-import { User } from "../../models/user.model";
+import { User } from "../../models/User";
 import BattleRoomRecord from "../../models/BattleRoomRecord";
 
 export class LucellaServer {
@@ -30,6 +30,7 @@ export class LucellaServer {
     handleSocketLeavingGame(this, socket, isDisconnecting);
   }
   handleSocketDisconnection(socket: Socket) {
+    if (!this.connectedSockets[socket.id]) return;
     const { currentGameName } = this.connectedSockets[socket.id];
     if (currentGameName) this.handleSocketLeavingGame(socket, true);
     else this.lobby.changeSocketChatChannelAndEmitUpdates(socket, null, false);

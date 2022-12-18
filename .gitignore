@@ -12,3 +12,5 @@ yarn-error.log
 .tsbuildinfo
 
 cypress.env.json
+**/*.env
+**/*.env*.local
