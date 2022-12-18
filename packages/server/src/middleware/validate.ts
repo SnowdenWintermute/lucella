@@ -9,12 +9,10 @@ export const validate = (schema: AnyZodObject) => (req: Request, res: Response, 
       query: req.query,
       body: req.body,
     });
-
     next();
   } catch (err: any) {
     if (err instanceof ZodError) {
       const errors = err.errors.map((error) => new CustomError(error.message, 400));
-      console.log("zod errors customized: ", errors);
       next(errors);
     } else next(err);
   }

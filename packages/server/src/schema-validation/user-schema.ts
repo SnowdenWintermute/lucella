@@ -1,18 +1,20 @@
+import { ErrorMessages, nameMaxLength, nameMinLength, passwordMaxLength } from "../../../common";
 import { object, string, TypeOf, z } from "zod";
-
-export const minPasswordLength = 6;
+import { passwordMinLength } from "../../../common";
 
 export const createUserSchema = object({
   body: object({
-    name: string({ required_error: "Name is required" }),
-    email: string({ required_error: "Email is required" }).email("Invalid email"),
-    password: string({ required_error: "Password is required" })
-      .min(minPasswordLength, `Password must be at least ${minPasswordLength} characters`)
-      .max(32, "Password must be no more than than 32 characters"),
-    password2: string({ required_error: "Please confirm your password" }),
+    name: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.NAME })
+      .min(nameMinLength, ErrorMessages.VALIDATION.AUTH.NAME_MIN_LENGTH)
+      .max(nameMaxLength, ErrorMessages.VALIDATION.AUTH.NAME_MAX_LENGTH),
+    email: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL }).email(ErrorMessages.VALIDATION.AUTH.INVALID_EMAIL),
+    password: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD })
+      .min(passwordMinLength, ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)
+      .max(passwordMaxLength, ErrorMessages.VALIDATION.AUTH.PASSWORD_MAX_LENGTH),
+    password2: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD_CONFIRMATION }),
   }).refine((data) => data.password === data.password2, {
     path: ["passwordConfirm"],
-    message: "Passwords do not match",
+    message: ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH,
   }),
 });
 
@@ -20,8 +22,8 @@ export type CreateUserSchema = z.infer<typeof createUserSchema>;
 
 export const loginUserSchema = object({
   body: object({
-    email: string({ required_error: "Email is required" }).email("Invalid email or password"),
-    password: string({ required_error: "Password is required" }).min(minPasswordLength, "Invalid email or password"),
+    email: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL }),
+    password: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD }),
   }),
 });
 

@@ -1,4 +1,5 @@
-import { maxGameNameLength, rankedGameChannelNamePrefix } from "../consts/game-lobby-config";
+import { nameMaxLength, nameMinLength, passwordMinLength } from "./auth-validation-config";
+import { maxGameNameLength, rankedGameChannelNamePrefix } from "./game-lobby-config";
 
 export const ErrorMessages = {
   SOCKET_NOT_REGISTERED: "Socket not registered. Server likely restarted, please refresh",
@@ -17,5 +18,21 @@ export const ErrorMessages = {
     MIN_LENGTH: "Game name must be at least one character long",
     MAX_LENGTH: `Game name must be fewer than ${maxGameNameLength} characters`,
     UNAUTHORIZED_RANKED: `Game name can only start with "${rankedGameChannelNamePrefix}" if it is a ranked game`,
+  },
+  VALIDATION: {
+    AUTH: {
+      REQUIRED_FIELD: {
+        NAME: "A name is required",
+        EMAIL: "An email address is required",
+        PASSWORD: "A password is required",
+        PASSWORD_CONFIRMATION: "Please confirm your password",
+      },
+      INVALID_EMAIL: "Invalid email",
+      PASSWORD_MIN_LENGTH: `Password must be at least ${passwordMinLength} characters`,
+      PASSWORD_MAX_LENGTH: `Password must be no longer than ${passwordMinLength} characters`,
+      PASSWORDS_DONT_MATCH: "Password confirmation does not match the password",
+      NAME_MIN_LENGTH: `Name must be at least ${nameMinLength} characters`,
+      NAME_MAX_LENGTH: `Name must be no longer than ${nameMaxLength} characters`,
+    },
   },
 };
