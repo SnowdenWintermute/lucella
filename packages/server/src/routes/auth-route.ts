@@ -16,7 +16,6 @@ const router = express.Router();
 
 router.post("/register", validate(createUserSchema), registerNewAccountHandler);
 router.post("/login", validate(loginUserSchema), loginHandler);
-
 router.get("/refresh", refreshAccessTokenHandler);
 router.put("/password-reset", resetPasswordHandler);
 router.use(deserializeUser, requireUser);

@@ -1,7 +1,7 @@
 import pg from "pg";
 
 class WrappedPool {
-  _pool: pg.Pool | null = null;
+  private _pool: pg.Pool | null = null;
 
   connect(options: pg.PoolConfig) {
     this._pool = new pg.Pool(options);

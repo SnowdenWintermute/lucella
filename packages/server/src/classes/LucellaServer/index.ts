@@ -30,6 +30,7 @@ export class LucellaServer {
     handleSocketLeavingGame(this, socket, isDisconnecting);
   }
   handleSocketDisconnection(socket: Socket) {
+    if (!this.connectedSockets[socket.id]) return;
     const { currentGameName } = this.connectedSockets[socket.id];
     if (currentGameName) this.handleSocketLeavingGame(socket, true);
     else this.lobby.changeSocketChatChannelAndEmitUpdates(socket, null, false);
