@@ -1,8 +1,16 @@
-import { AuthRoutePaths, ErrorMessages, userStatuses } from "../../../../common";
+import {
+  AuthRoutePaths,
+  ErrorMessages,
+  userStatuses,
+} from "../../../../common";
 import request from "supertest";
 import createExpressApp from "../../createExpressApp";
 import PGContext from "../../utils/PGContext";
-import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
+import {
+  TEST_USER_EMAIL,
+  TEST_USER_NAME,
+  TEST_USER_PASSWORD,
+} from "../../utils/test-utils/consts";
 import redisClient, { connectRedis } from "../../utils/connectRedis";
 import { Application } from "express";
 import UserRepo from "../../database/repos/users";
@@ -10,7 +18,7 @@ import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
 import { signJwt } from "./utils/jwt";
 import { User } from "../../models/User";
 
-describe("loginHandler", () => {
+describe("getMeHandler", () => {
   let context: PGContext | undefined;
   let app: Application | undefined;
   beforeAll(async () => {
@@ -38,7 +46,9 @@ describe("loginHandler", () => {
 
   it("gets user information in response", async () => {
     const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-    const { access_token, refresh_token } = await signTokenAndCreateSession(user);
+    const { access_token, refresh_token } = await signTokenAndCreateSession(
+      user
+    );
 
     const response = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
@@ -54,7 +64,9 @@ describe("loginHandler", () => {
     await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
       .expect((res) => {
-        expect(res.body.messages.includes(ErrorMessages.AUTH.NOT_LOGGED_IN)).toBeTruthy();
+        expect(
+          res.body.messages.includes(ErrorMessages.AUTH.NOT_LOGGED_IN)
+        ).toBeTruthy();
         expect(res.status).toBe(401);
       });
   });
@@ -64,19 +76,27 @@ describe("loginHandler", () => {
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
       .set("Cookie", [`access_token=some invalid token`]);
     expect(response.status).toBe(401);
-    expect(response.body.messages.includes(ErrorMessages.AUTH.INVALID_TOKEN)).toBeTruthy();
+    expect(
+      response.body.messages.includes(ErrorMessages.AUTH.INVALID_TOKEN)
+    ).toBeTruthy();
   });
 
   it("should tell a user if their session has expired", async () => {
     // it will show expried if they provide a vaild token but no session is stored in redis
-    const access_token = signJwt({ sub: 1 }, process.env.ACCESS_TOKEN_PRIVATE_KEY!, {
-      expiresIn: `1000m`,
-    });
+    const access_token = signJwt(
+      { sub: 1 },
+      process.env.ACCESS_TOKEN_PRIVATE_KEY!,
+      {
+        expiresIn: `1000m`,
+      }
+    );
     const response = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
       .set("Cookie", [`access_token=${access_token}`]);
     expect(response.status).toBe(401);
-    expect(response.body.messages.includes(ErrorMessages.AUTH.EXPIRED_SESSION)).toBeTruthy();
+    expect(
+      response.body.messages.includes(ErrorMessages.AUTH.EXPIRED_SESSION)
+    ).toBeTruthy();
   });
 
   it("should tell a user if they don't exist (valid token but no user by that id returned in deserialize user)", async () => {
@@ -87,6 +107,8 @@ describe("loginHandler", () => {
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
       .set("Cookie", [`access_token=${access_token}`]);
     expect(response.status).toBe(401);
-    expect(response.body.messages.includes(ErrorMessages.AUTH.NO_USER_EXISTS)).toBeTruthy();
+    expect(
+      response.body.messages.includes(ErrorMessages.AUTH.NO_USER_EXISTS)
+    ).toBeTruthy();
   });
 });
