@@ -4,11 +4,12 @@ import { IUser, LoginInput, RegisterInput } from "../types";
 import { setAlert } from "../slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
+import { AuthRoutePaths } from "../../../common";
 
 const API_URL = process.env.NEXT_PUBLIC_API;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${API_URL}/api`,
+  baseUrl: `${API_URL}/api${AuthRoutePaths.BASE}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },
@@ -23,18 +24,18 @@ export const authApi = createApi({
     getMe: builder.query<IUser, null>({
       query() {
         return {
-          url: "auth/me",
+          url: AuthRoutePaths.ME,
           credentials: "include",
         };
       },
       providesTags: ["User"],
-      transformResponse: (result: { data: { user: IUser } }) => result.data.user,
+      transformResponse: (result: { user: IUser }) => result.user,
     }),
     // REGISTER
     registerUser: builder.mutation<Response, RegisterInput>({
       query(data) {
         return {
-          url: "/auth/register",
+          url: AuthRoutePaths.REGISTER,
           method: "POST",
           body: data,
         };
@@ -53,7 +54,7 @@ export const authApi = createApi({
     loginUser: builder.mutation<{ status: string }, LoginInput>({
       query(data) {
         return {
-          url: "auth/login",
+          url: AuthRoutePaths.LOGIN,
           method: "POST",
           body: data,
           credentials: "include",
@@ -73,7 +74,7 @@ export const authApi = createApi({
     logoutUser: builder.mutation<void, void>({
       query() {
         return {
-          url: "auth/logout",
+          url: AuthRoutePaths.LOGOUT,
           credentials: "include",
         };
       },
@@ -92,8 +93,8 @@ export const authApi = createApi({
     deleteAccount: builder.mutation<void, string>({
       query() {
         return {
-          url: "auth/delete-account",
-          method: "DELETE",
+          url: AuthRoutePaths.DELETE_ACCOUNT,
+          method: "e",
           credentials: "include",
         };
       },
@@ -113,7 +114,7 @@ export const authApi = createApi({
     requestPasswordResetEmail: builder.mutation<void, string>({
       query(email) {
         return {
-          url: "auth/request-password-reset-email",
+          url: AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL,
           method: "POST",
           body: { email },
           credentials: "include",
@@ -133,7 +134,7 @@ export const authApi = createApi({
     passwordReset: builder.mutation<void, { password: string; password2: string; token: string }>({
       query({ password, password2, token }) {
         return {
-          url: "auth/password-reset",
+          url: AuthRoutePaths.RESET_PASSWORD,
           method: "PUT",
           body: { password, password2, token },
           credentials: "include",

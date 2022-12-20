@@ -8,6 +8,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import errorHandler from "./middleware/errorHandler";
+import { AuthRoutePaths } from "@lucella/common";
 
 export default function createExpressApp() {
   const app = express();
@@ -23,7 +24,7 @@ export default function createExpressApp() {
       credentials: true,
     })
   );
-  app.use("/api/auth", authRouter);
+  app.use(`/api${AuthRoutePaths.BASE}`, authRouter);
   // UnKnown Routes
   app.all("*", (req: Request, res: Response, next: NextFunction) => {
     const err = new Error(`Route ${req.originalUrl} not found`) as any;

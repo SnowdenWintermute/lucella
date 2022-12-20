@@ -1,5 +1,5 @@
 import { User } from "../../../models/User";
-import redisClient from "../../../utils/connectRedis";
+import redisClient, { connectRedis } from "../../../utils/connectRedis";
 import { signJwt } from "./jwt";
 
 export default async function signTokenAndCreateSession(user: User) {
@@ -12,6 +12,7 @@ export default async function signTokenAndCreateSession(user: User) {
   });
 
   // Create a Session
+  if (!redisClient.isOpen) await connectRedis();
   redisClient.set(user.id.toString(), JSON.stringify(user), {
     EX: parseInt(process.env.REDIS_SESSION_EXPIRATION!),
   });

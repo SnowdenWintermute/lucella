@@ -1,13 +1,14 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import nodemailer from "nodemailer";
 import { signJwt } from "./utils/jwt";
 import UserRepo from "../../database/repos/users";
+import CustomError from "../../classes/CustomError";
+import { AuthRoutePaths, ErrorMessages } from "../../../../common";
 
-export default async function passwordResetEmailRequestHandler(req: Request, res: Response) {
+export default async function passwordResetEmailRequestHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const user = await UserRepo.findOne("email", req.body.email);
-    if (!user) return res.status(500).json({ error: "No user found with that email" });
-    // create their token to be put in link
+    if (!user) return next([new CustomError(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, 404)]);
     const payload = {
       user: {
         id: user.id,
@@ -22,13 +23,12 @@ export default async function passwordResetEmailRequestHandler(req: Request, res
 
     const output = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="http${
       process.env.NODE_ENV === "production" ? "s" : ""
-    }://${rootUrl}/password-reset/${password_reset_token}" target="_blank">http${
+    }://${rootUrl}${AuthRoutePaths.RESET_PASSWORD}${password_reset_token}" target="_blank">http${
       process.env.NODE_ENV === "production" ? "s" : ""
-    }://${rootUrl}/password-reset/${password_reset_token}</a></p>`;
+    }://${rootUrl}${AuthRoutePaths.RESET_PASSWORD}${password_reset_token}</a></p>`;
     const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: http${
       process.env.NODE_ENV === "production" ? "s" : ""
-    }://${rootUrl}/password-reset/${password_reset_token}`;
-
+    }://${rootUrl}${AuthRoutePaths.RESET_PASSWORD}${password_reset_token}`;
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       name: "lucella.org", // website name
@@ -40,7 +40,6 @@ export default async function passwordResetEmailRequestHandler(req: Request, res
         pass: emailPass, // generated ethereal password
       },
     });
-
     // send mail with defined transport object
     let info = await transporter.sendMail({
       from: '"Lucella" <no-reply@lucella.org>', // sender address
@@ -49,15 +48,11 @@ export default async function passwordResetEmailRequestHandler(req: Request, res
       text: textOutput, // plain text body
       html: output, // html body
     });
-
     console.log("Message sent: %s", info.messageId);
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-
-    res.status(200).json({
-      msg: "An email has been sent with a link to reset your password.",
-    });
+    res.status(200);
   } catch (error: any) {
-    console.log(error, "error sending email");
-    res.status(500).send("Server error");
+    console.log(error);
+    return next([new CustomError(ErrorMessages.AUTH.PASSWORD_RESET_EMAIL, 500)]);
   }
 }

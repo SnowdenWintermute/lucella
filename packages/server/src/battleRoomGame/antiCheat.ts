@@ -7,7 +7,7 @@ import {
   renderRate,
   UserInput,
   UserInputs,
-} from "@lucella/common";
+} from "../../../common";
 
 export default function (game: BattleRoomGame, inputToQueue: UserInput, playerRole: PlayerRole) {
   let clientTryingToMoveTooFast = false;

@@ -1,5 +1,7 @@
 export * from "./types";
 export { GameStatus, PlayerRole, UserInputs } from "./enums";
+export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
+export { AuthRoutePaths } from "./enums/RoutePaths";
 export * from "./consts";
 export * from "./consts/battle-room-game-config";
 export * from "./consts/game-lobby-config";
@@ -16,7 +18,6 @@ export { Rectangle, DetailedRectangle } from "./classes/Rectangles";
 export { SocketMetadata } from "./classes/SocketMetadata";
 export * from "./classes/inputs";
 export { UserInput } from "./classes/inputs/UserInput";
-export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
 export { ErrorMessages } from "./consts/ErrorMessages";
 export { processPlayerInput } from "./processPlayerInput";
 export { updateOrbs } from "./updateOrbs";

@@ -1,4 +1,4 @@
-import { BattleRoomGame } from "@lucella/common";
+import { BattleRoomGame } from "../../../../../common";
 import updateScoreNeededToWin from "./updateScoreNeededToWin";
 import assignWinner from "./assignWinner";
 import { Server, Socket } from "socket.io";

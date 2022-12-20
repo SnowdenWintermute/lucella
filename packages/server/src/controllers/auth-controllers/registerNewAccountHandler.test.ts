@@ -1,4 +1,4 @@
-import { ErrorMessages } from "@lucella/common";
+import { ErrorMessages } from "../../../../common";
 import request from "supertest";
 import createExpressApp from "../../createExpressApp";
 import UserRepo from "../../database/repos/users";
@@ -75,8 +75,6 @@ describe("registerNewAccountHandler", () => {
         password2: "",
       })
       .expect((res) => {
-        console.log(res.body);
-
         expect(res.body.error);
         expect(res.body.messages.includes(ErrorMessages.VALIDATION.AUTH.NAME_MIN_LENGTH)).toBeTruthy();
         expect(res.body.messages.includes(ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH)).toBeTruthy();

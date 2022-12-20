@@ -1,5 +1,4 @@
 import express from "express";
-import { requireUser } from "../middleware/requireUser";
 import { deserializeUser } from "../middleware/deserializeUser";
 import { validate } from "../middleware/validate";
 import { createUserSchema, loginUserSchema } from "../schema-validation/user-schema";
@@ -11,17 +10,18 @@ import deleteAccountHandler from "../controllers/auth-controllers/deleteAccountH
 import passwordResetEmailRequestHandler from "../controllers/auth-controllers/passwordResetEmailRequestHandler";
 import resetPasswordHandler from "../controllers/auth-controllers/resetPasswordHandler";
 import getMeHandler from "../controllers/auth-controllers/getMeHandler";
+import { AuthRoutePaths } from "@lucella/common";
 
 const router = express.Router();
 
-router.post("/register", validate(createUserSchema), registerNewAccountHandler);
-router.post("/login", validate(loginUserSchema), loginHandler);
-router.get("/refresh", refreshAccessTokenHandler);
-router.put("/password-reset", resetPasswordHandler);
-router.use(deserializeUser, requireUser);
-router.get("/me", getMeHandler);
-router.get("/logout", logoutHandler);
-router.delete("/delete-account", deleteAccountHandler);
-router.post("/request-password-reset-email", passwordResetEmailRequestHandler);
+router.post(AuthRoutePaths.REGISTER, validate(createUserSchema), registerNewAccountHandler);
+router.post(AuthRoutePaths.LOGIN, validate(loginUserSchema), loginHandler);
+router.get(AuthRoutePaths.REFRESH_SESSION, refreshAccessTokenHandler);
+router.put(AuthRoutePaths.RESET_PASSWORD, resetPasswordHandler);
+router.use(deserializeUser);
+router.get(AuthRoutePaths.ME, getMeHandler);
+router.get(AuthRoutePaths.LOGOUT, logoutHandler);
+router.delete(AuthRoutePaths.DELETE_ACCOUNT, deleteAccountHandler);
+router.post(AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL, passwordResetEmailRequestHandler);
 
 export default router;

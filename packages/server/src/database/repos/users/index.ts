@@ -14,7 +14,9 @@ export default class UserRepo {
     return toCamelCase(rows)[0];
   }
   static async findById(id: number): Promise<User | undefined> {
-    const { rows } = await wrappedPool.query(`SELECT * FROM users WHERE id = $1;`, [id]);
+    const result = await wrappedPool.query(`SELECT * FROM users WHERE id = $1;`, [id]);
+    if (!result) return undefined;
+    const { rows } = result;
     //@ts-ignore
     return toCamelCase(rows)[0];
   }

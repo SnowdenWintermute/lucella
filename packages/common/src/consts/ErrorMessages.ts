@@ -19,12 +19,22 @@ export const ErrorMessages = {
     MAX_LENGTH: `Game name must be fewer than ${maxGameNameLength} characters`,
     UNAUTHORIZED_RANKED: `Game name can only start with "${rankedGameChannelNamePrefix}" if it is a ranked game`,
   },
+  AUTH: {
+    NOT_LOGGED_IN: "You are not logged in",
+    INVALID_TOKEN: "Invalid token",
+    EXPIRED_SESSION: "User session has expired, please log in again",
+    INVALID_CREDENTIALS: "Incorrect email or password",
+    NO_USER_EXISTS: "User with that token no longer exists",
+    ROLE_RESTRICTED: "That action is role restricted",
+    EMAIL_DOES_NOT_EXIST: "No user with that email exists",
+    PASSWORD_RESET_EMAIL: "Error trying to send password reset email",
+  },
   VALIDATION: {
     AUTH: {
       REQUIRED_FIELD: {
         NAME: "A name is required",
         EMAIL: "An email address is required",
-        PASSWORD: "A password is required",
+        PASSWORD: "Please enter a password",
         PASSWORD_CONFIRMATION: "Please confirm your password",
       },
       INVALID_EMAIL: "Invalid email",

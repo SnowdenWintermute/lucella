@@ -1,4 +1,4 @@
-import { PlayerRole, SocketEventsFromClient, UserInput } from "@lucella/common";
+import { PlayerRole, SocketEventsFromClient, UserInput } from "../../../../../common";
 import { Socket } from "socket.io";
 import antiCheat from "../../../battleRoomGame/antiCheat";
 import unpackUserInput from "../../../protobuf-utils/unpackUserInput";

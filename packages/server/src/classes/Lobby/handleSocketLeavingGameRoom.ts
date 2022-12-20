@@ -1,4 +1,4 @@
-import { ChatMessage, gameChannelNamePrefix, GameRoom, PlayerRole, SocketEventsFromServer, SocketMetadata, theVoid } from "@lucella/common";
+import { ChatMessage, gameChannelNamePrefix, GameRoom, PlayerRole, SocketEventsFromServer, SocketMetadata } from "../../../../common";
 import { Socket } from "socket.io";
 import { LucellaServer } from "../LucellaServer";
 

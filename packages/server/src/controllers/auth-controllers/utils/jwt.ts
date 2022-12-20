@@ -9,7 +9,7 @@ export const signJwt = (payload: Object, key: string, options: SignOptions = {})
         algorithm: "RS256",
       });
   } catch (error) {
-    console.log("error");
+    console.log("error in signJwt");
     throw error;
   }
 };
