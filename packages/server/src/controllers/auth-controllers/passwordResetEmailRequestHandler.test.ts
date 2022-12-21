@@ -2,11 +2,7 @@ import { AuthRoutePaths, ErrorMessages } from "../../../../common";
 import request from "supertest";
 import createExpressApp from "../../createExpressApp";
 import PGContext from "../../utils/PGContext";
-import {
-  TEST_USER_EMAIL,
-  TEST_USER_NAME,
-  TEST_USER_PASSWORD,
-} from "../../utils/test-utils/consts";
+import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import redisClient from "../../utils/connectRedis";
 import { Application, Request, Response } from "express";
 import passwordResetEmailRequestHandler from "./passwordResetEmailRequestHandler";
@@ -33,19 +29,13 @@ describe("passwordResetEmailRequestHandler", () => {
     if (context) await context.cleanup();
     if (redisClient.isOpen) redisClient.disconnect();
   });
-
+  it("", () => {});
   it("receives auth cookies in the set-cookie header upon login", async () => {
     const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-    const { access_token, refresh_token } = await signTokenAndCreateSession(
-      user
-    );
+    const { access_token, refresh_token } = await signTokenAndCreateSession(user);
 
     const response = await request(app)
-      .get(
-        `/api${
-          AuthRoutePaths.BASE + AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL
-        }`
-      )
+      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL}`)
       .set("Cookie", [`access_token=${access_token}`]);
   });
 });

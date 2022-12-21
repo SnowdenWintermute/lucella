@@ -68,7 +68,6 @@ describe("loginHandler", () => {
     const logoutResponse = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGOUT}`)
       .set("Cookie", [`access_token=${access_token}`]);
-    console.log(logoutResponse.body);
     expect(logoutResponse.status).toBe(200);
     expect(logoutResponse.body.status).toBe("success");
   });
