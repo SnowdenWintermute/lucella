@@ -5,6 +5,7 @@ import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import redisClient from "../../utils/connectRedis";
 import { Application } from "express";
+import { RedisContext, wrappedRedis } from "../../utils/RedisContext";
 
 describe("loginHandler", () => {
   let context: PGContext | undefined;
@@ -12,6 +13,8 @@ describe("loginHandler", () => {
   beforeAll(async () => {
     context = await PGContext.build();
     app = createExpressApp();
+    wrappedRedis.context = RedisContext.build(true);
+    await wrappedRedis.context.connect();
     await request(app)
       .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
       .send({
@@ -22,9 +25,13 @@ describe("loginHandler", () => {
       });
   });
 
+  beforeEach(async () => {
+    await wrappedRedis.context!.removeAllKeys();
+  });
+
   afterAll(async () => {
     if (context) await context.cleanup();
-    if (redisClient.isOpen) redisClient.disconnect();
+    await wrappedRedis.context!.cleanup();
   });
 
   it("receives auth cookies in the set-cookie header upon login", async () => {

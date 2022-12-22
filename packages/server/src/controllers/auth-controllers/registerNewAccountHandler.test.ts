@@ -1,4 +1,4 @@
-import { ErrorMessages } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages } from "../../../../common";
 import request from "supertest";
 import createExpressApp from "../../createExpressApp";
 import UserRepo from "../../database/repos/users";
@@ -19,7 +19,7 @@ describe("registerNewAccountHandler", () => {
     const startingCount = await UserRepo.count();
     const app = createExpressApp();
     await request(app)
-      .post("/api/auth/register")
+      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
       .send({
         name: TEST_USER_NAME,
         email: TEST_USER_EMAIL,
@@ -44,7 +44,7 @@ describe("registerNewAccountHandler", () => {
     const app = createExpressApp();
 
     await request(app)
-      .post("/api/auth/register")
+      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
       .send({
         name: "",
         email: "",
@@ -67,7 +67,7 @@ describe("registerNewAccountHandler", () => {
     const app = createExpressApp();
 
     await request(app)
-      .post("/api/auth/register")
+      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
       .send({
         name: "",
         email: TEST_USER_EMAIL,

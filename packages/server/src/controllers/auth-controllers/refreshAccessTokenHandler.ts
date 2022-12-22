@@ -2,6 +2,7 @@ import { CookieOptions, NextFunction, Request, Response } from "express";
 import CustomError from "../../classes/CustomError";
 import UserRepo from "../../database/repos/users";
 import redisClient, { connectRedis } from "../../utils/connectRedis";
+import { wrappedRedis } from "../../utils/RedisContext";
 import { signJwt, verifyJwt } from "./utils/jwt";
 
 const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!);
@@ -22,8 +23,7 @@ export default async function refreshAccessTokenHandler(req: Request, res: Respo
 
     const message = "Could not refresh access token";
     if (!decoded) return next(new CustomError(message, 403));
-    if (!redisClient.isOpen) await connectRedis();
-    const session = await redisClient.get(decoded.sub.toString());
+    const session = await wrappedRedis.context!.get(decoded.sub.toString());
     if (!session) return next(new CustomError(message, 403));
     const user = await UserRepo.findById(JSON.parse(session).id);
     if (!user) return next(new CustomError(message, 403));

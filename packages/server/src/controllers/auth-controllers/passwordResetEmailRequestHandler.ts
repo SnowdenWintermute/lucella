@@ -4,46 +4,27 @@ import { signJwt } from "./utils/jwt";
 import UserRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { AuthRoutePaths, ErrorMessages } from "../../../../common";
-export default async function passwordResetEmailRequestHandler(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+
+export default async function passwordResetEmailRequestHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const user = await UserRepo.findOne("email", req.body.email);
-    if (!user)
-      return next([
-        new CustomError(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, 404),
-      ]);
+    if (!user) return next([new CustomError(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, 404)]);
     const payload = {
       user: {
         id: user.id,
       },
     };
-    const password_reset_token = signJwt(
-      payload,
-      process.env.PASSWORD_RESET_TOKEN_PRIVATE_KEY!,
-      {
-        expiresIn: `${
-          parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!) / 1000 / 60
-        }m`,
-      }
-    );
+    const password_reset_token = signJwt(payload, process.env.PASSWORD_RESET_TOKEN_PRIVATE_KEY!, {
+      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!) / 1000 / 60}m`,
+    });
 
-    const rootUrl =
-      process.env.NODE_ENV === "development"
-        ? process.env.EMAIL_ROOT_URL_DEV
-        : process.env.EMAIL_ROOT_URL;
+    const rootUrl = process.env.NODE_ENV === "development" ? process.env.EMAIL_ROOT_URL_DEV : process.env.EMAIL_ROOT_URL;
 
     const htmlOutput = `<p>Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password.</p><p><a href="http${
       process.env.NODE_ENV === "production" ? "s" : ""
-    }://${rootUrl}${
-      AuthRoutePaths.RESET_PASSWORD
-    }${password_reset_token}" target="_blank">http${
+    }://${rootUrl}${AuthRoutePaths.RESET_PASSWORD}${password_reset_token}" target="_blank">http${
       process.env.NODE_ENV === "production" ? "s" : ""
-    }://${rootUrl}${
-      AuthRoutePaths.RESET_PASSWORD
-    }${password_reset_token}</a></p>`;
+    }://${rootUrl}${AuthRoutePaths.RESET_PASSWORD}${password_reset_token}</a></p>`;
     const textOutput = `Someone (hopefully you) has requested a password reset for your account at Lucella. Follow the link to reset your password: http${
       process.env.NODE_ENV === "production" ? "s" : ""
     }://${rootUrl}${AuthRoutePaths.RESET_PASSWORD}${password_reset_token}`;
@@ -51,17 +32,11 @@ export default async function passwordResetEmailRequestHandler(
     res.status(200);
   } catch (error: any) {
     console.log(error);
-    return next([
-      new CustomError(ErrorMessages.AUTH.PASSWORD_RESET_EMAIL, 500),
-    ]);
+    return next([new CustomError(ErrorMessages.AUTH.PASSWORD_RESET_EMAIL, 500)]);
   }
 }
 
-export async function sendPasswordResetEmail(
-  emailAddress: string,
-  textOutput: string,
-  htmlOutput: string
-) {
+export async function sendPasswordResetEmail(emailAddress: string, textOutput: string, htmlOutput: string) {
   const emailPass = process.env.EMAIL_PASSWORD;
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({

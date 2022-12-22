@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { verifyJwt } from "../controllers/auth-controllers/utils/jwt";
-
 import redisClient, { connectRedis } from "../utils/connectRedis";
 import UserRepo from "../database/repos/users";
 import CustomError from "../classes/CustomError";
 import { AuthRoutePaths, ErrorMessages } from "../../../common";
 import logout from "../controllers/auth-controllers/utils/logout";
+import { wrappedRedis } from "../utils/RedisContext";
 
 export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,8 +14,9 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
     if (!access_token) return next([new CustomError(ErrorMessages.AUTH.NOT_LOGGED_IN, 401)]);
     const decoded = verifyJwt<{ sub: string }>(access_token, process.env.ACCESS_TOKEN_PUBLIC_KEY!);
     if (!decoded) return next([new CustomError(ErrorMessages.AUTH.INVALID_TOKEN, 401)]);
-    if (!redisClient.isOpen) await connectRedis();
-    const session = await redisClient.get(decoded.sub.toString());
+
+    const session = await wrappedRedis.context!.get(decoded.sub.toString());
+    console.log("session found: " + session);
     if (!session) {
       logout(res);
       if (req.path === AuthRoutePaths.LOGOUT) return res.status(200).json({ status: "success" });

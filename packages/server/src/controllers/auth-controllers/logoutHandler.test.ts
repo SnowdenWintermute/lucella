@@ -9,6 +9,7 @@ import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
 import { signJwt } from "./utils/jwt";
 import { User } from "../../models/User";
+import { RedisContext, wrappedRedis } from "../../utils/RedisContext";
 
 describe("loginHandler", () => {
   let context: PGContext | undefined;
@@ -16,6 +17,8 @@ describe("loginHandler", () => {
   beforeAll(async () => {
     context = await PGContext.build();
     app = createExpressApp();
+    wrappedRedis.context = RedisContext.build(true);
+    await wrappedRedis.context!.connect();
     await request(app)
       .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
       .send({
@@ -26,14 +29,13 @@ describe("loginHandler", () => {
       });
   });
 
-  beforeEach(() => {
-    if (!redisClient.isOpen) connectRedis();
-    redisClient.flushDb();
+  beforeEach(async () => {
+    await wrappedRedis.context!.removeAllKeys();
   });
 
   afterAll(async () => {
     if (context) await context.cleanup();
-    if (redisClient.isOpen) redisClient.disconnect();
+    await wrappedRedis.context!.cleanup();
   });
 
   it("doesn't send user info in /auth/me after logout", async () => {
@@ -64,7 +66,7 @@ describe("loginHandler", () => {
   it("still works if user token is already expired", async () => {
     const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
     const { access_token, refresh_token } = await signTokenAndCreateSession(user);
-    redisClient.flushDb();
+    wrappedRedis.context!.removeAllKeys();
     const logoutResponse = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGOUT}`)
       .set("Cookie", [`access_token=${access_token}`]);

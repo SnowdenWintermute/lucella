@@ -17,15 +17,14 @@ export default function createExpressApp() {
   app.use(helmet());
   if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
   app.use(
-    // cors()
     cors({
-      // methods: ["GET", "PATCH", "POST", "PUT", "DELETE"],
       origin: process.env.ORIGIN,
       credentials: true,
     })
   );
+
   app.use(`/api${AuthRoutePaths.BASE}`, authRouter);
-  // UnKnown Routes
+
   app.all("*", (req: Request, res: Response, next: NextFunction) => {
     const err = new Error(`Route ${req.originalUrl} not found`) as any;
     err.status = 404;

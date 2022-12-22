@@ -10,7 +10,7 @@ import deleteAccountHandler from "../controllers/auth-controllers/deleteAccountH
 import passwordResetEmailRequestHandler from "../controllers/auth-controllers/passwordResetEmailRequestHandler";
 import resetPasswordHandler from "../controllers/auth-controllers/resetPasswordHandler";
 import getMeHandler from "../controllers/auth-controllers/getMeHandler";
-import { AuthRoutePaths } from "@lucella/common";
+import { AuthRoutePaths } from "../../../common";
 
 const router = express.Router();
 
