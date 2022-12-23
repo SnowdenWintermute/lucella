@@ -28,3 +28,5 @@ export interface ServerPacket {
   speedModifier: number;
   score: { host: number; challenger: number; neededToWin: number };
 }
+
+export type CustomErrorDetails = { message: string; field?: string };

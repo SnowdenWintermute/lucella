@@ -17,23 +17,23 @@ const Register = () => {
     email: "",
     name: "",
     password: "",
-    password2: "",
+    passwordConfirm: "",
   });
 
-  const { email, password, password2, name } = formData;
+  const { email, password, passwordConfirm, name } = formData;
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== password2) dispatch(setAlert(new Alert("Passwords do not match.", AlertType.DANGER)));
+    if (password !== passwordConfirm) dispatch(setAlert(new Alert("Passwords do not match.", AlertType.DANGER)));
     else {
       try {
         const res = await registerUser({
           name: formData.name,
           email: formData.email,
           password: formData.password,
-          password2: formData.password2,
+          passwordConfirm: formData.passwordConfirm,
         });
       } catch (error) {
         console.log(error);
@@ -56,7 +56,14 @@ const Register = () => {
         <input className="simple-text-input" type="email" placeholder="Email" name="email" value={email} onChange={(e) => onChange(e)} autoFocus></input>
         <input className="simple-text-input" type="text" placeholder="Name" name="name" value={name} onChange={(e) => onChange(e)}></input>
         <input className="simple-text-input" type="password" name="password" placeholder="Password" value={password} onChange={(e) => onChange(e)}></input>
-        <input className="simple-text-input" type="password" name="password2" placeholder="Password2" value={password2} onChange={(e) => onChange(e)}></input>
+        <input
+          className="simple-text-input"
+          type="password"
+          name="passwordConfirm"
+          placeholder="passwordConfirm"
+          value={passwordConfirm}
+          onChange={(e) => onChange(e)}
+        ></input>
         <div className="auth-bottom-links">
           <Link href="/login">Log in to existing account</Link>
           <input type="submit" className="button button-standard-size button-primary" value="CREATE" />

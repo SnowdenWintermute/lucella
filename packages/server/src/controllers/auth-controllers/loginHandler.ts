@@ -1,10 +1,10 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import { LoginUserInput } from "../../schema-validation/user-schema";
+import { LoginUserInput } from "../../user-input-validation-schema/login-schema";
 import bcrypt from "bcryptjs";
 import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
 import CustomError from "../../classes/CustomError";
-import { ErrorMessages } from "@lucella/common";
+import { ErrorMessages } from "../../../../common";
 
 const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!);
 const accessTokenCookieOptions: CookieOptions = {
@@ -14,6 +14,7 @@ const accessTokenCookieOptions: CookieOptions = {
   sameSite: "lax",
 };
 
+// @todo - find out why this
 // Only set secure to true in production // @production
 if (process.env.NODE_ENV === "production") accessTokenCookieOptions.secure = true;
 
@@ -42,7 +43,7 @@ export default async function loginHandler(req: Request<{}, {}, LoginUserInput>,
       httpOnly: false,
     });
 
-    res.status(200).json({ status: "success" });
+    res.sendStatus(200);
   } catch (err: any) {
     next(err);
   }

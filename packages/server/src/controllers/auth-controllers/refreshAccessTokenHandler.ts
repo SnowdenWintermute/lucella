@@ -1,7 +1,6 @@
 import { CookieOptions, NextFunction, Request, Response } from "express";
 import CustomError from "../../classes/CustomError";
 import UserRepo from "../../database/repos/users";
-import redisClient, { connectRedis } from "../../utils/connectRedis";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { signJwt, verifyJwt } from "./utils/jwt";
 
@@ -35,7 +34,6 @@ export default async function refreshAccessTokenHandler(req: Request, res: Respo
     res.cookie("access_token", access_token, accessTokenCookieOptions);
 
     res.status(200).json({
-      status: "success",
       access_token: process.env.NODE_ENV === "development" ? access_token : "", // @todo - prob don't need this anymore
     });
   } catch (err: any) {

@@ -1,9 +1,6 @@
 import nodemailer from "nodemailer";
-export default async function sendPasswordResetEmail(
-  emailAddress: string,
-  textOutput: string,
-  htmlOutput: string
-) {
+
+export async function sendEmail(emailAddress: string, textOutput: string, htmlOutput: string) {
   const emailPass = process.env.EMAIL_PASSWORD;
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
@@ -24,6 +21,6 @@ export default async function sendPasswordResetEmail(
     text: textOutput, // plain text body
     html: htmlOutput, // html body
   });
-  console.log("Message sent: %s", info.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  // console.log("Message sent: %s", info.messageId);
+  // console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }

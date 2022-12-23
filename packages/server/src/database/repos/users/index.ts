@@ -26,7 +26,9 @@ export default class UserRepo {
   }
   static async update(user: User) {
     const { id, name, email, password } = user;
-    const { rows } = await wrappedPool.query(`UPDATE users SET name = $2, email = $3, password = $4, WHERE id = $1 RETURNING *;`, [id, name, email, password]);
+    const { rows } = await wrappedPool.query(
+      format(`UPDATE users SET name = %L, email = %L, password = %L WHERE id = %L RETURNING *;`, name, email, password, id)
+    );
     return toCamelCase(rows)![0];
   }
   static async delete(id: number) {

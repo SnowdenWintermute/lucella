@@ -8,7 +8,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import errorHandler from "./middleware/errorHandler";
-import { AuthRoutePaths } from "@lucella/common";
+import { AuthRoutePaths } from "../../common";
 
 export default function createExpressApp() {
   const app = express();

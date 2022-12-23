@@ -5,7 +5,6 @@ export default function getMeHandler(req: Request, res: Response, next: NextFunc
     const user = res.locals.user; // assigned in deserializeUser middleware
     delete user.password;
     res.status(200).json({
-      status: "success",
       user,
     });
   } catch (error: any) {

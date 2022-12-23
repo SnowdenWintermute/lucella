@@ -1,4 +1,4 @@
-import { ErrorMessages } from "@lucella/common";
+import { ErrorMessages } from "../../../common";
 import { NextFunction, Request, Response } from "express";
 import CustomError from "../classes/CustomError";
 

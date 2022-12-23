@@ -2,6 +2,7 @@ import { nameMaxLength, nameMinLength, passwordMinLength } from "./auth-validati
 import { maxGameNameLength, rankedGameChannelNamePrefix } from "./game-lobby-config";
 
 export const ErrorMessages = {
+  SERVER_GENERIC: "Internal server error",
   SOCKET_NOT_REGISTERED: "Socket not registered. Server likely restarted, please refresh",
   GAME_EXISTS: "A game by that name already exists",
   GAME_DOES_NOT_EXIST: "No game by that name exists",
@@ -21,10 +22,10 @@ export const ErrorMessages = {
   },
   AUTH: {
     NOT_LOGGED_IN: "You are not logged in",
-    INVALID_TOKEN: "Invalid token",
+    INVALID_OR_EXPIRED_TOKEN: "Invalid or expired token",
     EXPIRED_SESSION: "User session has expired, please log in again",
     INVALID_CREDENTIALS: "Incorrect email or password",
-    NO_USER_EXISTS: "User with that token no longer exists",
+    NO_USER_EXISTS: "The specified user longer exists",
     ROLE_RESTRICTED: "That action is role restricted",
     EMAIL_DOES_NOT_EXIST: "No user with that email exists",
     PASSWORD_RESET_EMAIL: "Error trying to send password reset email",

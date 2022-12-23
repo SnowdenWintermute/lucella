@@ -4,7 +4,7 @@ export enum AuthRoutePaths {
   REGISTER = "/register",
   LOGIN = "/login",
   LOGOUT = "/logout",
-  RESET_PASSWORD = "/reset-password",
+  CHANGE_PASSWORD = "/change-password",
   DELETE_ACCOUNT = "/delete-account",
   REQUEST_PASSWORD_RESET_EMAIL = "/request-password-reset-email",
   REFRESH_SESSION = "/refresh-session",

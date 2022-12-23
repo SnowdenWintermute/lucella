@@ -131,12 +131,12 @@ export const authApi = createApi({
       },
     }),
     // RESET PASSWORD USING EMAILED TOKEN
-    passwordReset: builder.mutation<void, { password: string; password2: string; token: string }>({
-      query({ password, password2, token }) {
+    passwordReset: builder.mutation<void, { password: string; passwordConfirm: string; token: string }>({
+      query({ password, passwordConfirm, token }) {
         return {
-          url: AuthRoutePaths.RESET_PASSWORD,
+          url: AuthRoutePaths.CHANGE_PASSWORD,
           method: "PUT",
-          body: { password, password2, token },
+          body: { password, passwordConfirm, token },
           credentials: "include",
         };
       },

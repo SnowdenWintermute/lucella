@@ -23,11 +23,11 @@ export class RedisContext {
 
   async connect() {
     await this.redisClient.connect();
-    console.log(`redis client with ${this.keyPrefix ? `context ${this.keyPrefix}` : "vanilla context"} connected`);
+    if (!this.keyPrefix) console.log(`redis client with ${this.keyPrefix ? `context ${this.keyPrefix}` : "vanilla context"} connected`);
   }
   async disconnect() {
     await this.redisClient.disconnect();
-    console.log(`redis client with ${this.keyPrefix ? `context ${this.keyPrefix}` : "vanilla context"} disconnected`);
+    if (!this.keyPrefix) console.log(`redis client with ${this.keyPrefix ? `context ${this.keyPrefix}` : "vanilla context"} disconnected`);
   }
   async set(key: string, value: any, options?: SetOptions | undefined) {
     await this.redisClient.set(this.keyPrefix + key, value, options);
