@@ -29,6 +29,7 @@ export const ErrorMessages = {
     ROLE_RESTRICTED: "That action is role restricted",
     EMAIL_DOES_NOT_EXIST: "No user with that email exists",
     PASSWORD_RESET_EMAIL: "Error trying to send password reset email",
+    ACCOUNT_BANNED: "The specified account has been banned",
   },
   VALIDATION: {
     AUTH: {

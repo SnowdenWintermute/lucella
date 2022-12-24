@@ -6,6 +6,7 @@ import { pgOptions } from "./database/config";
 import createExpressApp from "./createExpressApp";
 import wrappedPool from "./database/wrappedPool";
 import { wrappedRedis, RedisContext } from "./utils/RedisContext";
+import { lucella } from "./lucella";
 
 const PORT = process.env.PORT;
 wrappedPool
@@ -16,7 +17,7 @@ wrappedPool
       wrappedRedis.context = RedisContext.build();
       await wrappedRedis.context.connect();
       console.log(`express server on port ${PORT}`);
-      const lucellaServer = new LucellaServer(listening);
+      lucella.server = new LucellaServer(listening);
     });
   })
   .catch((error: DatabaseError) => console.error(error));

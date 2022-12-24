@@ -1,4 +1,4 @@
-import { AuthRoutePaths, CustomErrorDetails, ErrorMessages, userStatuses } from "../../../../common";
+import { AuthRoutePaths, CustomErrorDetails, ErrorMessages, UserStatuses } from "../../../../common";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
@@ -29,7 +29,7 @@ describe("loginHandler", () => {
 
   it("doesn't send user info in /auth/me after logout", async () => {
     const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-    const { access_token, refresh_token } = await signTokenAndCreateSession(user);
+    const { access_token } = await signTokenAndCreateSession(user);
 
     const getMeResponse = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
@@ -37,7 +37,7 @@ describe("loginHandler", () => {
     expect(getMeResponse.body.user).not.toHaveProperty("password");
     expect(getMeResponse.body.user.name).toBe(TEST_USER_NAME);
     expect(getMeResponse.body.user.email).toBe(TEST_USER_EMAIL);
-    expect(getMeResponse.body.user.status).toBe(userStatuses.ACTIVE);
+    expect(getMeResponse.body.user.status).toBe(UserStatuses.ACTIVE);
 
     const logoutResponse = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGOUT}`)
@@ -53,7 +53,7 @@ describe("loginHandler", () => {
 
   it("still works if user token is already expired", async () => {
     const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-    const { access_token, refresh_token } = await signTokenAndCreateSession(user);
+    const { access_token } = await signTokenAndCreateSession(user);
     wrappedRedis.context!.removeAllKeys();
     const logoutResponse = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGOUT}`)

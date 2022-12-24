@@ -29,7 +29,6 @@ describe("loginHandler", () => {
     const response = await request(app)
       .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGIN}`)
       .send({
-        name: TEST_USER_NAME,
         email: TEST_USER_EMAIL,
         password: TEST_USER_PASSWORD,
       });
@@ -62,15 +61,15 @@ describe("loginHandler", () => {
     expect(response.status).toBe(401);
   });
 
-  it("gets appropriate error for incorrect email", async () => {
+  it("gets appropriate error for non existant email", async () => {
     const response = await request(app)
       .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGIN}`)
       .send({
-        email: "some other email",
+        email: "a non existant email",
         password: TEST_USER_PASSWORD,
       });
 
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_CREDENTIALS)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST)).toBeTruthy();
     expect(response.status).toBe(401);
   });
 });

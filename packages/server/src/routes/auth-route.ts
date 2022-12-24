@@ -6,7 +6,6 @@ import { loginSchema } from "../user-input-validation-schema/login-schema";
 import { changePasswordSchema } from "../user-input-validation-schema/change-password--schema";
 import registerNewAccountHandler from "../controllers/auth-controllers/registerNewAccountHandler";
 import loginHandler from "../controllers/auth-controllers/loginHandler";
-// import refreshAccessTokenHandler from "../controllers/auth-controllers/refreshAccessTokenHandler";
 import logoutHandler from "../controllers/auth-controllers/logoutHandler";
 import deleteAccountHandler from "../controllers/auth-controllers/deleteAccountHandler";
 import passwordResetEmailRequestHandler from "../controllers/auth-controllers/passwordResetEmailRequestHandler";
@@ -18,7 +17,6 @@ const router = express.Router();
 
 router.post(AuthRoutePaths.REGISTER, validate(registerUserSchema), registerNewAccountHandler);
 router.post(AuthRoutePaths.LOGIN, validate(loginSchema), loginHandler);
-// router.get(AuthRoutePaths.REFRESH_SESSION, refreshAccessTokenHandler);
 router.post(AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL, passwordResetEmailRequestHandler);
 router.put(AuthRoutePaths.CHANGE_PASSWORD, validate(changePasswordSchema), changePasswordHandler);
 router.use(deserializeUser);

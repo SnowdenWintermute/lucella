@@ -38,7 +38,7 @@ const GameLobby = ({ defaultChatRoom }: Props) => {
   useEffect(() => {
     socket.current = io(socketAddress || "", {
       transports: ["websocket"],
-      withCredentials: true,
+      // withCredentials: true,
       // reconnectionAttempts: 3,
     });
     return () => {

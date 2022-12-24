@@ -8,7 +8,7 @@ export default class UserRepo {
     const { rows } = await wrappedPool.query(`SELECT * FROM users ORDER BY id;`);
     return toCamelCase(rows);
   }
-  static async findOne(field: string, value: any): Promise<User> {
+  static async findOne(field: keyof User, value: any): Promise<User> {
     const { rows } = await wrappedPool.query(format(`SELECT * FROM users WHERE %I = %L;`, field, value));
     //@ts-ignore
     return toCamelCase(rows)[0];
@@ -25,9 +25,17 @@ export default class UserRepo {
     return toCamelCase(rows)[0];
   }
   static async update(user: User) {
-    const { id, name, email, password } = user;
+    const { id, name, email, password, status, role } = user;
     const { rows } = await wrappedPool.query(
-      format(`UPDATE users SET name = %L, email = %L, password = %L WHERE id = %L RETURNING *;`, name, email, password, id)
+      format(
+        `UPDATE users SET name = %L, email = %L, password = %L, status = %L, role = %L WHERE id = %L RETURNING *;`,
+        name,
+        email,
+        password,
+        status,
+        role,
+        id
+      )
     );
     return toCamelCase(rows)![0];
   }

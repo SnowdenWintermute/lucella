@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { verifyJwt } from "../controllers/auth-controllers/utils/jwt";
 import UserRepo from "../database/repos/users";
 import CustomError from "../classes/CustomError";
-import { AuthRoutePaths, ErrorMessages } from "../../../common";
+import { AuthRoutePaths, ErrorMessages, UserStatuses } from "../../../common";
 import logout from "../controllers/auth-controllers/utils/logout";
 import { wrappedRedis } from "../utils/RedisContext";
 
@@ -22,7 +22,8 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
       return next([new CustomError(ErrorMessages.AUTH.EXPIRED_SESSION, 401)]);
     }
     const user = await UserRepo.findById(JSON.parse(session).id);
-    if (!user) return next([new CustomError(ErrorMessages.AUTH.NO_USER_EXISTS, 401)]);
+    if (!user || user.status === UserStatuses.DELETED) return next([new CustomError(ErrorMessages.AUTH.NO_USER_EXISTS, 401)]);
+    if (user.status === UserStatuses.BANNED) return next([new CustomError(ErrorMessages.AUTH.ACCOUNT_BANNED, 401)]);
     res.locals.user = user;
     next();
   } catch (err: any) {

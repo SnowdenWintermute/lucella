@@ -51,7 +51,7 @@ export const authApi = createApi({
       },
     }),
     // LOGIN
-    loginUser: builder.mutation<{ status: string }, LoginInput>({
+    loginUser: builder.mutation<void, LoginInput>({
       query(data) {
         return {
           url: AuthRoutePaths.LOGIN,
@@ -65,7 +65,7 @@ export const authApi = createApi({
           const data = await queryFulfilled;
           await dispatch(authApi.endpoints.getMe.initiate(null));
         } catch (error: any) {
-          console.log(error);
+          console.log(error.error.status);
           dispatch(setAlert(new Alert("non-specific login error", AlertType.DANGER)));
         }
       },
@@ -94,7 +94,7 @@ export const authApi = createApi({
       query() {
         return {
           url: AuthRoutePaths.DELETE_ACCOUNT,
-          method: "e",
+          method: "DELETE",
           credentials: "include",
         };
       },
@@ -137,7 +137,6 @@ export const authApi = createApi({
           url: AuthRoutePaths.CHANGE_PASSWORD,
           method: "PUT",
           body: { password, passwordConfirm, token },
-          credentials: "include",
         };
       },
       async onQueryStarted(args, { dispatch, queryFulfilled }) {

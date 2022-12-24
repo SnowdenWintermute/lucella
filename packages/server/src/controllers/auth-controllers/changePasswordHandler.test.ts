@@ -8,7 +8,7 @@ import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { TEST_USER_ALTERNATE_PASSWORD, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { signJwt } from "./utils/jwt";
 
-describe("resetPasswordHandler", () => {
+describe("changePasswordHandler", () => {
   let context: PGContext | undefined;
   let app: Application | undefined;
   beforeAll(async () => {

@@ -1,4 +1,4 @@
-import { AuthRoutePaths, CustomErrorDetails, ErrorMessages, userStatuses } from "../../../../common";
+import { AuthRoutePaths, CustomErrorDetails, ErrorMessages, UserStatuses } from "../../../../common";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
@@ -31,7 +31,7 @@ describe("getMeHandler", () => {
 
   it("gets user information in response", async () => {
     const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-    const { access_token, refresh_token } = await signTokenAndCreateSession(user);
+    const { access_token } = await signTokenAndCreateSession(user);
 
     const response = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
@@ -41,7 +41,7 @@ describe("getMeHandler", () => {
     expect(response.body.user).not.toHaveProperty("password");
     expect(response.body.user.name).toBe(TEST_USER_NAME);
     expect(response.body.user.email).toBe(TEST_USER_EMAIL);
-    expect(response.body.user.status).toBe(userStatuses.ACTIVE);
+    expect(response.body.user.status).toBe(UserStatuses.ACTIVE);
   });
 
   it("should return error if no token provided in cookies", async () => {
