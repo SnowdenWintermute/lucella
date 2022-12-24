@@ -19,6 +19,7 @@ export { SocketMetadata } from "./classes/SocketMetadata";
 export * from "./classes/inputs";
 export { UserInput } from "./classes/inputs/UserInput";
 export { ErrorMessages } from "./consts/ErrorMessages";
+export { InputFields } from "./consts/InputFields";
 export { processPlayerInput } from "./processPlayerInput";
 export { updateOrbs } from "./updateOrbs";
 export { handleOrbBodyCollisions } from "./updateOrbs/handleOrbBodyCollisions";
