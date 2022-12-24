@@ -1,4 +1,4 @@
-import { ChatMessage, gameChannelNamePrefix, GameRoom, PlayerRole, SocketEventsFromServer, SocketMetadata } from "../../../../common";
+import { ChatMessage, ChatMessageStyles, gameChannelNamePrefix, GameRoom, PlayerRole, SocketEventsFromServer, SocketMetadata } from "../../../../common";
 import { Socket } from "socket.io";
 import { LucellaServer } from "../LucellaServer";
 
@@ -30,7 +30,10 @@ export default function handleSocketLeavingGameRoom(
     if (!connectedSockets[removedPlayerSocket.id]) console.log("tried to remove a socket that is no longer in our list");
     lobby.changeSocketChatChannelAndEmitUpdates(server.io.sockets.sockets.get(playerToKick.socketId!)!, playerToKick.previousChatChannelName!);
     lobby.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, gameRoom.players[PlayerRole.CHALLENGER]!);
-    removedPlayerSocket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage("Server", `Game ${gameRoom.gameName} closed by host.`, "private"));
+    removedPlayerSocket.emit(
+      SocketEventsFromServer.NEW_CHAT_MESSAGE,
+      new ChatMessage(`Game ${gameRoom.gameName} closed by host.`, "Server", ChatMessageStyles.PRIVATE)
+    );
   }
 
   if (!gameRoom.players.host) {

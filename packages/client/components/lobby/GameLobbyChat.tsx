@@ -1,7 +1,7 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "../../redux/hooks";
-import { SocketEventsFromClient } from "../../../common";
+import { ChatMessage, SocketEventsFromClient } from "../../../common";
 
 interface Props {
   socket: Socket;
@@ -28,11 +28,7 @@ const GameLobbyChat = ({ socket }: Props) => {
 
   const sendNewMessage = (message: string) => {
     if (message === "") return;
-    const messageToSend = {
-      style: "normal",
-      text: message,
-    };
-    socket.emit(SocketEventsFromClient.NEW_CHAT_MESSAGE, messageToSend);
+    socket.emit(SocketEventsFromClient.NEW_CHAT_MESSAGE, new ChatMessage(message));
   };
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

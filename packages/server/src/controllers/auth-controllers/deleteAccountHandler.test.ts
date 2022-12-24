@@ -1,4 +1,4 @@
-import { AuthRoutePaths, battleRoomDefaultChatChannel, ErrorMessages, randBetween, SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, randBetween } from "../../../../common";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -36,6 +36,7 @@ describe("deleteAccountHandler", () => {
   afterAll(async () => {
     if (context) await context.cleanup();
     await wrappedRedis.context!.cleanup();
+    lucella.server?.io.close();
     httpServer?.close();
   });
 
@@ -50,6 +51,8 @@ describe("deleteAccountHandler", () => {
       });
 
       socket.on("connect", async () => {
+        // ensure they are connected so we know deleting account actually disconnects them
+        expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
         const response = await request(app)
           .delete(`/api${AuthRoutePaths.BASE + AuthRoutePaths.DELETE_ACCOUNT}`)
           .set("Cookie", [`access_token=${access_token}`]);
