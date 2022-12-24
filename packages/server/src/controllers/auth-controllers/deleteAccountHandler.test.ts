@@ -40,6 +40,11 @@ describe("deleteAccountHandler", () => {
     httpServer?.close();
   });
 
+  it("doesn't let a user delete an account they are not logged into", async () => {
+    const response = await request(app).delete(`/api${AuthRoutePaths.BASE + AuthRoutePaths.DELETE_ACCOUNT}`);
+    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NOT_LOGGED_IN));
+    expect(response.status).toBe(401);
+  });
   it("flags account as deleted, logs out user and doesn't let them log in or create an account with the same name", (done) => {
     async function thisTest() {
       const user = await UserRepo.findOne("email", TEST_USER_EMAIL);

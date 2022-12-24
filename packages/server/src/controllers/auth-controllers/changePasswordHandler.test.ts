@@ -2,9 +2,9 @@ import PGContext from "../../utils/PGContext";
 import { Application } from "express";
 import request from "supertest";
 import { wrappedRedis } from "../../utils/RedisContext";
-import { AuthRoutePaths, ErrorMessages } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
-import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
+import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { TEST_USER_ALTERNATE_PASSWORD, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { signJwt } from "./utils/jwt";
 
@@ -62,7 +62,7 @@ describe("changePasswordHandler", () => {
     expect(loginResponse.headers["set-cookie"][0].includes("access_token")).toBeTruthy();
   });
 
-  it("sends error for non-matching passwords", async () => {
+  it("sends error for non-matching passwords and password too short", async () => {
     const response = await request(app)
       .put(`/api${AuthRoutePaths.BASE + AuthRoutePaths.CHANGE_PASSWORD}`)
       .send({
@@ -72,7 +72,9 @@ describe("changePasswordHandler", () => {
     console.log(response.body);
     expect(response.status).toBe(400);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD_CONFIRM)).toBeTruthy();
   });
 
   it("sends error for invalid token", async () => {
@@ -102,6 +104,7 @@ describe("changePasswordHandler", () => {
       });
 
     expect(response.status).toBe(401);
+    console.log(response.body);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NO_USER_EXISTS)).toBeTruthy();
   });
 });

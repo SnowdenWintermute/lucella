@@ -1,11 +1,11 @@
-import { AuthRoutePaths, CustomErrorDetails, ErrorMessages } from "../../../../common";
+import { AuthRoutePaths, CustomErrorDetails, ErrorMessages, InputFields } from "../../../../common";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { Application } from "express";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
-import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
+import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 
 describe("loginHandler", () => {
   let context: PGContext | undefined;
@@ -43,9 +43,12 @@ describe("loginHandler", () => {
         email: "",
         password: "",
       });
-
+    console.log(response.body);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.EMAIL)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD)).toBeTruthy();
+
     expect(response.status).toBe(401);
   });
 

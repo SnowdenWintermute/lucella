@@ -20,10 +20,10 @@ if (process.env.NODE_ENV === "production") accessTokenCookieOptions.secure = tru
 
 export default async function loginHandler(req: Request<{}, {}, LoginUserInput>, res: Response, next: NextFunction) {
   try {
-    const validationErrors: CustomError[] = [];
-    if (!req.body.password) validationErrors.push(new CustomError(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD, 401));
-    if (!req.body.email) validationErrors.push(new CustomError(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL, 401));
-    if (validationErrors.length) return next(validationErrors);
+    // const validationErrors: CustomError[] = [];
+    // if (!req.body.password) validationErrors.push(new CustomError(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD, 401));
+    // if (!req.body.email) validationErrors.push(new CustomError(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL, 401));
+    // if (validationErrors.length) return next(validationErrors);
     const user = await UserRepo.findOne("email", req.body.email);
     if (!user || user.status === UserStatuses.DELETED) return next([new CustomError(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, 401)]);
     if (!(await bcrypt.compare(req.body.password, user.password!))) return next([new CustomError(ErrorMessages.AUTH.INVALID_CREDENTIALS, 401)]);
