@@ -1,4 +1,4 @@
-import { AuthRoutePaths, CustomErrorDetails, ErrorMessages, UserStatuses } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, UserStatuses } from "../../../../common";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
@@ -73,7 +73,7 @@ describe("getMeHandler", () => {
 
   it("should tell a user if they don't exist (valid token but no user by that id returned in deserialize user)", async () => {
     // this would mean they have a session but were removed from the database, which would be really weird
-    const testUser: User = { id: 2, name: "", email: "", role: "", status: "" };
+    const testUser: User = { id: 2, name: "", createdAt: 12, updatedAt: 12, password: "", email: "", role: "", status: "" };
     const { access_token } = await signTokenAndCreateSession(testUser);
     const response = await request(app)
       .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)

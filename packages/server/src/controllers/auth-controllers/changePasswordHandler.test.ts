@@ -69,7 +69,7 @@ describe("changePasswordHandler", () => {
         password: "aoeu",
         passwordConfirm: "asdf",
       });
-    console.log(response.body);
+
     expect(response.status).toBe(400);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD)).toBeTruthy();
@@ -104,7 +104,6 @@ describe("changePasswordHandler", () => {
       });
 
     expect(response.status).toBe(401);
-    console.log(response.body);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NO_USER_EXISTS)).toBeTruthy();
   });
 });

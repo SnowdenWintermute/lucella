@@ -1,4 +1,4 @@
-import { AuthRoutePaths, CustomErrorDetails, ErrorMessages, InputFields } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
 import request from "supertest";
 import createExpressApp from "../../createExpressApp";
 import UserRepo from "../../database/repos/users";
@@ -16,7 +16,7 @@ describe("registerNewAccountHandler", () => {
     if (context) await context.cleanup();
   });
 
-  it("can create a user", async () => {
+  it("can create a user and cannot create another account with the same name", async () => {
     const startingCount = await UserRepo.count();
     const app = createExpressApp();
     const response = await request(app)
@@ -37,6 +37,17 @@ describe("registerNewAccountHandler", () => {
 
     const finishCount = await UserRepo.count();
     expect(finishCount - startingCount).toEqual(1);
+    const responseForSecondCreation = await request(app)
+      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
+      .send({
+        name: TEST_USER_NAME,
+        email: TEST_USER_EMAIL,
+        password: TEST_USER_PASSWORD,
+        passwordConfirm: TEST_USER_PASSWORD,
+      });
+
+    expect(responseBodyIncludesCustomErrorMessage(responseForSecondCreation, ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE)).toBeTruthy();
+    expect(responseForSecondCreation.status).toBe(403);
   });
 
   it("gets errors for missing email or password", async () => {

@@ -7,9 +7,7 @@ import { ErrorMessages } from "../../../../common/dist";
 
 export default async function resetPassword(req: Request, res: Response, next: NextFunction) {
   try {
-    console.log(req.body);
     const decoded = verifyJwt<{ user: { id: string } }>(req.body.token, process.env.PASSWORD_RESET_TOKEN_PUBLIC_KEY!);
-    console.log(decoded);
     if (!decoded) return next([new CustomError(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
     const user = await UserRepo.findById(parseInt(decoded.user.id));
     if (!user) return next([new CustomError(ErrorMessages.AUTH.NO_USER_EXISTS, 401)]);

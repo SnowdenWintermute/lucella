@@ -1,7 +1,7 @@
-import { AuthRoutePaths, CustomErrorDetails, ErrorMessages, InputFields } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
-import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
+import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { Application } from "express";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
@@ -43,13 +43,13 @@ describe("loginHandler", () => {
         email: "",
         password: "",
       });
-    console.log(response.body);
+
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.EMAIL)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD)).toBeTruthy();
 
-    expect(response.status).toBe(401);
+    expect(response.status).toBe(400);
   });
 
   it("gets appropriate error for incorrect password", async () => {

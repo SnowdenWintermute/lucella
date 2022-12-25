@@ -28,6 +28,7 @@ export const ErrorMessages = {
     NO_USER_EXISTS: "The specified user longer exists",
     ROLE_RESTRICTED: "That action is role restricted",
     EMAIL_DOES_NOT_EXIST: "No user with that email exists",
+    EMAIL_IN_USE_OR_UNAVAILABLE: "The specified email is already in use or is unavailable",
     PASSWORD_RESET_EMAIL: "Error trying to send password reset email",
     ACCOUNT_BANNED: "The specified account has been banned",
   },

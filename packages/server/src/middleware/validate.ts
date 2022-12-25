@@ -4,7 +4,6 @@ import CustomError from "../classes/CustomError";
 
 export const validate = (schema: AnyZodObject) => (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log(schema);
     schema.parse({
       params: req.params,
       query: req.query,
@@ -12,7 +11,6 @@ export const validate = (schema: AnyZodObject) => (req: Request, res: Response, 
     });
     next();
   } catch (err: any) {
-    console.log(err);
     if (err instanceof ZodError) {
       const errors = err.errors.map((error) => {
         let field;

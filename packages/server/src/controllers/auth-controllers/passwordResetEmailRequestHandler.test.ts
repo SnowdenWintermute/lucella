@@ -1,4 +1,4 @@
-import { AuthRoutePaths, CustomErrorDetails, ErrorMessages } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages } from "../../../../common";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL } from "../../utils/test-utils/consts";

@@ -45,7 +45,7 @@ describe("deleteAccountHandler", () => {
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NOT_LOGGED_IN));
     expect(response.status).toBe(401);
   });
-  it("flags account as deleted, logs out user and doesn't let them log in or create an account with the same name", (done) => {
+  it("flags account as deleted, logs out user and doesn't let them log in with the deleted account", (done) => {
     async function thisTest() {
       const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
       const { access_token } = await signTokenAndCreateSession(user);
