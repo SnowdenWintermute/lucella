@@ -1,4 +1,4 @@
-import { BattleRoomGame, EloUpdates, gameChannelNamePrefix, GameStatus, SocketEventsFromServer } from "@lucella/common";
+import { BattleRoomGame, EloUpdates, gameChannelNamePrefix, GameStatus, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from ".";
 const replicator = new (require("replicator"))();
 

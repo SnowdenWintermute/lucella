@@ -6,30 +6,42 @@ import format from "pg-format";
 export default class UserRepo {
   static async find() {
     const { rows } = await wrappedPool.query(`SELECT * FROM users ORDER BY id;`);
-    return toCamelCase(rows);
+    return toCamelCase(rows) as unknown as User;
   }
-  static async findOne(field: string, value: any): Promise<User> {
+  static async findOne(field: keyof User, value: any): Promise<User> {
     const { rows } = await wrappedPool.query(format(`SELECT * FROM users WHERE %I = %L;`, field, value));
     //@ts-ignore
-    return toCamelCase(rows)[0];
+    return toCamelCase(rows)[0] as unknown as User;
   }
   static async findById(id: number): Promise<User | undefined> {
-    const { rows } = await wrappedPool.query(`SELECT * FROM users WHERE id = $1;`, [id]);
+    const result = await wrappedPool.query(`SELECT * FROM users WHERE id = $1;`, [id]);
+    if (!result) return undefined;
+    const { rows } = result;
     //@ts-ignore
-    return toCamelCase(rows)[0];
+    return toCamelCase(rows)[0] as unknown as User;
   }
   static async insert(name: string, email: string, password: string) {
     const { rows } = await wrappedPool.query("INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;", [name, email, password]);
-    return toCamelCase(rows)[0];
+    return toCamelCase(rows)[0] as unknown as User;
   }
   static async update(user: User) {
-    const { id, name, email, password } = user;
-    const { rows } = await wrappedPool.query(`UPDATE users SET name = $2, email = $3, password = $4, WHERE id = $1 RETURNING *;`, [id, name, email, password]);
-    return toCamelCase(rows)![0];
+    const { id, name, email, password, status, role } = user;
+    const { rows } = await wrappedPool.query(
+      format(
+        `UPDATE users SET name = %L, email = %L, password = %L, status = %L, role = %L WHERE id = %L RETURNING *;`,
+        name,
+        email,
+        password,
+        status,
+        role,
+        id
+      )
+    );
+    return toCamelCase(rows)![0] as unknown as User;
   }
   static async delete(id: number) {
     const { rows } = await wrappedPool.query(`DELETE FROM  users  WHERE  id = $1 RETURNING *`, [id]);
-    return toCamelCase(rows)![0];
+    return toCamelCase(rows)![0] as unknown as User;
   }
   static async count() {
     const { rows } = await wrappedPool.query("SELECT COUNT(*) FROM users;");

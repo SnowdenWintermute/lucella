@@ -1,4 +1,4 @@
-import { PlayerRole } from "@lucella/common";
+import { PlayerRole } from "../../../../common";
 import { IBattleRoomRecord } from "../../models/BattleRoomRecord";
 
 export default function updateWinLossRecords(winnerRole: PlayerRole, hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord) {

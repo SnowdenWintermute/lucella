@@ -10,7 +10,7 @@ import {
   renderRate,
   SocketEventsFromServer,
   UserInput,
-} from "@lucella/common";
+} from "../../../../common";
 import { LucellaServer } from "../../classes/LucellaServer";
 import createDeltaPacket from "./createDeltaPacket/createDeltaPacket";
 import handleScoringPoints from "./handleScoringPoints";

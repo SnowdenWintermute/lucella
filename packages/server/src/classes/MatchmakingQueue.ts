@@ -5,7 +5,7 @@ import {
   rankedGameChannelNamePrefix,
   SocketEventsFromServer,
   OfficialChannels,
-} from "@lucella/common";
+} from "../../../common";
 import { Socket } from "socket.io";
 import UserRepo from "../database/repos/users";
 import { IBattleRoomRecord } from "../models/BattleRoomRecord";

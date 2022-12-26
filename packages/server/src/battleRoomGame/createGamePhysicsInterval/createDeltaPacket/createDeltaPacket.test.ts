@@ -1,7 +1,7 @@
 import { createTestGameWithPrevGameState } from "./determineOrbDeltas.test";
-import { DeltasProto, PlayerRole, Point, baseSpeedModifier } from "@lucella/common";
+import { DeltasProto, PlayerRole, Point, baseSpeedModifier } from "../../../../../common";
 import createDeltaPacket from "./createDeltaPacket";
-// import { baseSpeedModifier } from "@lucella/common/src/consts/battle-room-game-config";
+// import { baseSpeedModifier } from "../../../../../common/src/consts/battle-room-game-config";
 
 test("delta packet doesn't contain destinations of opponent orbs", () => {
   const game = createTestGameWithPrevGameState();

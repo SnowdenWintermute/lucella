@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { SocketEventsFromClient, SocketEventsFromServer } from "@lucella/common";
+import { SocketEventsFromClient, SocketEventsFromServer } from "../../../../../common";
 import { LucellaServer } from "..";
 
 export default function gameUiListeners(server: LucellaServer, socket: Socket) {

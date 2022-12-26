@@ -39,13 +39,13 @@ export class Lobby {
   updateChatChannelUsernameLists(socketMeta: SocketMetadata, channelNameLeaving: string | null, channelNameJoining: string | null) {
     updateChatChannelUsernameLists(this.chatChannels, socketMeta, channelNameLeaving, channelNameJoining);
   }
-  handleNewChatMessage(socket: Socket, data: { style: string; text: string }) {
+  handleNewChatMessage(socket: Socket, data: { style: ChatMessageStyles; text: string }) {
     // @todo - check the style the user sends against a list of valid styles for that user (can sell styles)
     const { style, text } = data;
     if (!this.server.connectedSockets[socket.id].currentChatChannel) return console.error("error sending chat message, the socket is not in a chat channel");
     this.server.io
       .in(this.server.connectedSockets[socket.id].currentChatChannel!)
-      .emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(this.server.connectedSockets[socket.id].associatedUser.username, text, style));
+      .emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(text, this.server.connectedSockets[socket.id].associatedUser.username, style));
   }
   changeSocketChatChannelAndEmitUpdates(socket: Socket, channelNameJoining: string | null, authorizedForGameChannel?: boolean) {
     const { io, connectedSockets } = this.server;
@@ -66,7 +66,7 @@ export class Lobby {
       io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, this.getSanitizedChatChannel(channelNameJoining));
       connectedSockets[socket.id].previousChatChannelName = channelNameLeaving; // used for placing user back in their last chat channel after a game ends
       connectedSockets[socket.id].currentChatChannel = channelNameJoining;
-      socket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage("Server", `Welcome to ${channelNameJoining}.`, ChatMessageStyles.PRIVATE));
+      socket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(`Welcome to ${channelNameJoining}.`, "Server", ChatMessageStyles.PRIVATE));
     }
   }
   handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {

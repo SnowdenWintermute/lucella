@@ -1,5 +1,5 @@
 import { createTestGameWithPrevGameState } from "./determineOrbDeltas.test";
-import { OrbsProto, PlayerRole } from "@lucella/common";
+import { OrbsProto, PlayerRole } from "../../../../../common";
 import determineOrbDeltas from "./determineOrbDeltas";
 import packOrbSet from "./packOrbSet";
 

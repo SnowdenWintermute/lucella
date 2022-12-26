@@ -1,4 +1,4 @@
-import { ErrorMessages, GameStatus, PlayerRole, SocketEventsFromServer } from "@lucella/common";
+import { ErrorMessages, GameStatus, PlayerRole, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from "../LucellaServer";
 import { Socket } from "socket.io";
 

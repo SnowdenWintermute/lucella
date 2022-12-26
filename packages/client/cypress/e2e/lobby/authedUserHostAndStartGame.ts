@@ -1,4 +1,4 @@
-import { ErrorMessages, gameRoomCountdownDuration, GameStatus, SocketEventsFromClient } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, gameRoomCountdownDuration, GameStatus, SocketEventsFromClient } from "../../../../common";
 import { mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -6,7 +6,7 @@ export default function authedUserHostAndStartGame() {
   it("lets authed user host a game that another player can join and leave", () => {
     const username = Cypress.env("CYPRESS_TEST_USER_NAME");
     // log in and host a game
-    cy.request("POST", `http://localhost:8080/api/auth/login`, {
+    cy.request("POST", `http://localhost:8080/api/${AuthRoutePaths.BASE + AuthRoutePaths.LOGIN}`, {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
       password: Cypress.env("CYPRESS_TEST_PASSWORD"),
     });

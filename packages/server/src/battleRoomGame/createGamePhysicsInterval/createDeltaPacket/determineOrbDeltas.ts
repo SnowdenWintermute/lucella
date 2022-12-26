@@ -1,4 +1,4 @@
-import { BattleRoomGame, OrbDeltas, OrbSetDeltas, PlayerRole, Point } from "@lucella/common";
+import { BattleRoomGame, OrbDeltas, OrbSetDeltas, PlayerRole } from "../../../../../common";
 import isEqual from "lodash.isequal";
 
 export default function determineOrbDeltas(game: BattleRoomGame, playerRole: PlayerRole, isOpponent?: boolean) {

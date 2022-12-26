@@ -14,19 +14,19 @@ const PasswordReset = () => {
 
   const [formData, setFormData] = useState({
     password: "",
-    password2: "",
+    passwordConfirm: "",
   });
 
-  const { password, password2 } = formData;
+  const { password, passwordConfirm } = formData;
   const { token } = router.query;
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== password2) dispatch(setAlert(new Alert("Passwords do not match.", AlertType.DANGER)));
+    if (password !== passwordConfirm) dispatch(setAlert(new Alert("Passwords do not match.", AlertType.DANGER)));
     else if (!token) dispatch(setAlert(new Alert("no password reset token provided, use the link in email to get a page with a token", AlertType.DANGER)));
-    else resetPassword({ password, password2, token: token.toString() });
+    else resetPassword({ password, passwordConfirm, token: token.toString() });
   };
 
   useEffect(() => {
@@ -48,7 +48,14 @@ const PasswordReset = () => {
           onChange={(e) => onChange(e)}
           autoFocus
         ></input>
-        <input className="simple-text-input" type="password" name="password2" placeholder="Password2" value={password2} onChange={(e) => onChange(e)}></input>
+        <input
+          className="simple-text-input"
+          type="password"
+          name="passwordConfirm"
+          placeholder="passwordConfirm"
+          value={passwordConfirm}
+          onChange={(e) => onChange(e)}
+        ></input>
         <div className="auth-bottom-links">
           <Link href="/login">Log in to existing account</Link>
           <input type="submit" className="button button-standard-size button-primary" value="SET" />

@@ -8,6 +8,7 @@ module.exports = {
       isolatedModules: true,
     },
   },
+  // setupFiles: ["dotenv/config"],
   // transform: {
   //   "^.+\\.(ts|tsx)$": [
   //     `ts-jest`,

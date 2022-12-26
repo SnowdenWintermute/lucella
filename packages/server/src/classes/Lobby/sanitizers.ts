@@ -1,5 +1,4 @@
-import { ChatChannel } from "@lucella/common";
-import { GameRoom } from "@lucella/common";
+import { ChatChannel, GameRoom } from "../../../../common";
 const cloneDeep = require("lodash.clonedeep");
 
 export function sanitizeChatChannel(channel: ChatChannel) {
