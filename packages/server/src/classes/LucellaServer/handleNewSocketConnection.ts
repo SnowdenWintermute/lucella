@@ -4,7 +4,7 @@
 import cookie from "cookie";
 import { Socket } from "socket.io";
 import { SocketMetadata } from "../../../../common";
-import { verifyJwt } from "../../controllers/auth-controllers/utils/jwt";
+import { verifyJwt } from "../../controllers/utils/jwt";
 import { LucellaServer } from ".";
 import UserRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { signJwt } from "./utils/jwt";
+import { signJwt } from "../utils/jwt";
 import UserRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { ErrorMessages } from "../../../../common";
-import { sendEmail } from "./utils/sendEmail";
-import { buildPasswordResetHTML, buildPasswordResetText } from "./utils/buildEmailBodies";
+import { sendEmail } from "../utils/sendEmail";
+import { buildPasswordResetHTML, buildPasswordResetText } from "../utils/buildEmailBodies";
 
 // eslint-disable-next-line consistent-return
 export default async function passwordResetEmailRequestHandler(req: Request, res: Response, next: NextFunction) {

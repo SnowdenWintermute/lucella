@@ -9,7 +9,7 @@ import { AuthRoutePaths } from "../../../common";
 const API_URL = process.env.NEXT_PUBLIC_API;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${API_URL}/api${AuthRoutePaths.BASE}`,
+  baseUrl: `${API_URL}/api${AuthRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

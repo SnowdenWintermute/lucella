@@ -1,10 +1,10 @@
 import { Application } from "express";
 import request from "supertest";
 import UserRepo from "../../database/repos/users";
-import { AuthRoutePaths, ErrorMessages, UserStatuses } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, UsersRoutePaths, UserStatuses } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
-import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
+import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
@@ -32,7 +32,7 @@ describe("loginHandler", () => {
     const { accessToken } = await signTokenAndCreateSession(user);
 
     const getMeResponse = await request(app)
-      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
+      .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     expect(getMeResponse.body.user).not.toHaveProperty("password");
     expect(getMeResponse.body.user.name).toBe(TEST_USER_NAME);
@@ -40,12 +40,12 @@ describe("loginHandler", () => {
     expect(getMeResponse.body.user.status).toBe(UserStatuses.ACTIVE);
 
     const logoutResponse = await request(app)
-      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGOUT}`)
+      .post(`/api${AuthRoutePaths.ROOT + AuthRoutePaths.LOGOUT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     expect(logoutResponse.status).toBe(200);
 
     const getMeAfterLogoutResponse = await request(app)
-      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
+      .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     expect(getMeAfterLogoutResponse.body).not.toHaveProperty("user");
     expect(responseBodyIncludesCustomErrorMessage(getMeAfterLogoutResponse, ErrorMessages.AUTH.EXPIRED_SESSION)).toBeTruthy();
@@ -56,7 +56,7 @@ describe("loginHandler", () => {
     const { accessToken } = await signTokenAndCreateSession(user);
     wrappedRedis.context!.removeAllKeys();
     const logoutResponse = await request(app)
-      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGOUT}`)
+      .post(`/api${AuthRoutePaths.ROOT + AuthRoutePaths.LOGOUT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     expect(logoutResponse.status).toBe(200);
   });

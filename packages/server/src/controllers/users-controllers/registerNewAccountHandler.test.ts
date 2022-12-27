@@ -1,5 +1,5 @@
 import request from "supertest";
-import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
+import { ErrorMessages, InputFields, UsersRoutePaths } from "@lucella/common";
 import createExpressApp from "../../createExpressApp";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
@@ -19,14 +19,12 @@ describe("registerNewAccountHandler", () => {
   it("can create a user and cannot create another account with the same name", async () => {
     const startingCount = await UserRepo.count();
     const app = createExpressApp();
-    const response = await request(app)
-      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
-      .send({
-        name: TEST_USER_NAME,
-        email: TEST_USER_EMAIL,
-        password: TEST_USER_PASSWORD,
-        passwordConfirm: TEST_USER_PASSWORD,
-      });
+    const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
+      name: TEST_USER_NAME,
+      email: TEST_USER_EMAIL,
+      password: TEST_USER_PASSWORD,
+      passwordConfirm: TEST_USER_PASSWORD,
+    });
 
     expect(response.body.user).not.toHaveProperty("password");
     expect(response.body.user).toHaveProperty("createdAt");
@@ -37,14 +35,12 @@ describe("registerNewAccountHandler", () => {
 
     const finishCount = await UserRepo.count();
     expect(finishCount - startingCount).toEqual(1);
-    const responseForSecondCreation = await request(app)
-      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
-      .send({
-        name: TEST_USER_NAME,
-        email: TEST_USER_EMAIL,
-        password: TEST_USER_PASSWORD,
-        passwordConfirm: TEST_USER_PASSWORD,
-      });
+    const responseForSecondCreation = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
+      name: TEST_USER_NAME,
+      email: TEST_USER_EMAIL,
+      password: TEST_USER_PASSWORD,
+      passwordConfirm: TEST_USER_PASSWORD,
+    });
 
     expect(responseBodyIncludesCustomErrorMessage(responseForSecondCreation, ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE)).toBeTruthy();
     expect(responseForSecondCreation.status).toBe(403);
@@ -54,14 +50,12 @@ describe("registerNewAccountHandler", () => {
     const startingCount = await UserRepo.count();
     const app = createExpressApp();
 
-    const response = await request(app)
-      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
-      .send({
-        name: "",
-        email: "",
-        password: "",
-        passwordConfirm: "",
-      });
+    const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
+      name: "",
+      email: "",
+      password: "",
+      passwordConfirm: "",
+    });
 
     expect(response.status).toBe(400);
     expect(response.body.error);
@@ -78,14 +72,12 @@ describe("registerNewAccountHandler", () => {
     const startingCount = await UserRepo.count();
     const app = createExpressApp();
 
-    const response = await request(app)
-      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REGISTER}`)
-      .send({
-        name: "",
-        email: TEST_USER_EMAIL,
-        password: TEST_USER_PASSWORD,
-        passwordConfirm: "",
-      });
+    const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
+      name: "",
+      email: TEST_USER_EMAIL,
+      password: TEST_USER_PASSWORD,
+      passwordConfirm: "",
+    });
 
     expect(response.status).toBe(400);
     expect(response.body.error);

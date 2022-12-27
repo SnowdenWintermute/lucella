@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { CookieOptions, NextFunction, Request, Response } from "express";
 import { LoginUserInput } from "../../user-input-validation-schema/login-schema";
 import UserRepo from "../../database/repos/users";
-import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
+import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import CustomError from "../../classes/CustomError";
 import { ErrorMessages, UserStatuses } from "../../../../common";
 

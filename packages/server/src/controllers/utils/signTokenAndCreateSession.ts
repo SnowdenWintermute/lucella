@@ -1,5 +1,5 @@
-import { User } from "../../../models/User";
-import { wrappedRedis } from "../../../utils/RedisContext";
+import { User } from "../../models/User";
+import { wrappedRedis } from "../../utils/RedisContext";
 import { signJwt } from "./jwt";
 
 export default async function signTokenAndCreateSession(user: User) {
