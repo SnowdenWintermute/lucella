@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { Point } from "./Point";
 
 export class Rectangle {
@@ -11,8 +12,7 @@ export class Rectangle {
   }
 }
 
-export class DetailedRectangle {
-  origin: Point;
+export class DetailedRectangle extends Rectangle {
   topRightCorner: Point;
   bottomRightCorner: Point;
   bottomLeftCorner: Point;
@@ -20,8 +20,8 @@ export class DetailedRectangle {
   bottomY: number;
   leftX: number;
   rightX: number;
-  containsPoint: (point: Point) => boolean;
   constructor(origin: Point, width: number, height: number) {
+    super(origin, width, height);
     this.origin = origin;
     this.topRightCorner = new Point(origin.x + width - 1, origin.y);
     this.bottomRightCorner = new Point(origin.x + width - 1, origin.y + height - 1);
@@ -30,9 +30,9 @@ export class DetailedRectangle {
     this.leftX = origin.x;
     this.topY = origin.y;
     this.rightX = origin.x + width - 1;
-    this.containsPoint = function (point: Point) {
-      const { x, y } = point;
-      return this.origin.x <= x && x <= this.origin.x + width && this.origin.y <= y && y <= this.origin.y + height;
-    };
+  }
+  containsPoint(point: Point) {
+    const { x, y } = point;
+    return this.origin.x <= x && x <= this.origin.x + this.width && this.origin.y <= y && y <= this.origin.y + this.height;
   }
 }

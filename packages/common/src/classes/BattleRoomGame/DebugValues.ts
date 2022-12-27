@@ -1,5 +1,3 @@
-import { Point } from "../Point";
-
 export enum DebugModes {
   HIDDEN,
   SHAPES,

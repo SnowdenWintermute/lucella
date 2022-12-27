@@ -1,3 +1,5 @@
+// times
+export const ONE_SECOND = 1000;
 // lobby/chat
 export const battleRoomDefaultChatChannel = "battle-room-chat";
 // battle-room game

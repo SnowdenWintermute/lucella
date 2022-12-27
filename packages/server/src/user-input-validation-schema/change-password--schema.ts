@@ -1,6 +1,5 @@
-import { ErrorMessages, passwordMaxLength } from "@lucella/common";
 import { object, string, TypeOf, z } from "zod";
-import { passwordMinLength } from "@lucella/common";
+import { passwordMinLength, ErrorMessages, passwordMaxLength } from "../../../common";
 
 export const changePasswordSchema = object({
   body: object({

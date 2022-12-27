@@ -1,5 +1,4 @@
 import mongoose, { Schema, model } from "mongoose";
-import { IBattleRoomRecord } from "./BattleRoomRecord";
 
 export interface IBattleRoomLadder {
   ladder: [mongoose.Types.ObjectId];

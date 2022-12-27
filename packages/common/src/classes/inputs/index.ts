@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { UserInput } from "./UserInput";
 import { PlayerRole, UserInputs } from "../../enums";
 import { Point } from "../Point";
@@ -9,7 +10,7 @@ export class ClientTickNumber extends UserInput {
 }
 
 export interface SelectOrbsData {
-  orbLabels: string[];
+  orbIds: number[];
 }
 
 export class SelectOrbs extends UserInput {

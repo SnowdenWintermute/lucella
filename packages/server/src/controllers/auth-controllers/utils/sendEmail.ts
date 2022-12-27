@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 export async function sendEmail(emailAddress: string, textOutput: string, htmlOutput: string) {
   const emailPass = process.env.EMAIL_PASSWORD;
   // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
+  const transporter = nodemailer.createTransport({
     name: "lucella.org", // website name
     host: "host2010.HostMonster.com", // note - might can change this after hosted not on local host
     port: 465,
@@ -14,7 +14,7 @@ export async function sendEmail(emailAddress: string, textOutput: string, htmlOu
     },
   });
   // send mail with defined transport object
-  let info = await transporter.sendMail({
+  const info = await transporter.sendMail({
     from: '"Lucella" <no-reply@lucella.org>', // sender address
     to: emailAddress, // list of receivers
     subject: "Lucella - Password Reset", // Subject line

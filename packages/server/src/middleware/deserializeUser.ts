@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from "express";
 import { verifyJwt } from "../controllers/auth-controllers/utils/jwt";
 import UserRepo from "../database/repos/users";
@@ -8,10 +9,10 @@ import { wrappedRedis } from "../utils/RedisContext";
 
 export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let access_token;
-    if (req.cookies.access_token) access_token = req.cookies.access_token;
-    if (!access_token) return next([new CustomError(ErrorMessages.AUTH.NOT_LOGGED_IN, 401)]);
-    const decoded = verifyJwt<{ sub: string }>(access_token, process.env.ACCESS_TOKEN_PUBLIC_KEY!);
+    let accessToken;
+    if (req.cookies.access_token) accessToken = req.cookies.access_token;
+    if (!accessToken) return next([new CustomError(ErrorMessages.AUTH.NOT_LOGGED_IN, 401)]);
+    const decoded = verifyJwt<{ sub: string }>(accessToken, process.env.ACCESS_TOKEN_PUBLIC_KEY!);
     if (!decoded) return next([new CustomError(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
 
     const session = await wrappedRedis.context!.get(decoded.sub.toString());
@@ -26,8 +27,8 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
     if (user.status === UserStatuses.BANNED) return next([new CustomError(ErrorMessages.AUTH.ACCOUNT_BANNED, 401)]);
     res.locals.user = user;
     next();
-  } catch (err: any) {
-    console.log(err);
-    next(err);
+  } catch (error: any) {
+    console.log(error);
+    next(error);
   }
 };

@@ -2,7 +2,7 @@ import React, { useEffect, useState, Fragment } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { authApi } from "../../redux/api-slices/auth-api-slice";
 
-const ScoreScreenModalContents = () => {
+function ScoreScreenModalContents() {
   const user = authApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
   const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState("elo-animate-1");
   const [eloAnimatedChange, setEloAnimatedChange] = useState<number | null>();
@@ -16,19 +16,19 @@ const ScoreScreenModalContents = () => {
 
   if (scoreScreenData && scoreScreenData.gameRoom) {
     playerOldElo =
-      scoreScreenData.gameRoom!.players!.challenger!.associatedUser.username == user?.name
+      scoreScreenData.gameRoom!.players!.challenger!.associatedUser.username === user?.name
         ? scoreScreenData.eloUpdates?.challengerElo
         : scoreScreenData.eloUpdates?.hostElo;
     playerNewElo =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username == user?.name
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === user?.name
         ? scoreScreenData.eloUpdates?.newChallengerElo
         : scoreScreenData.eloUpdates?.newHostElo;
     playerOldRank =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username == user?.name
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === user?.name
         ? scoreScreenData.eloUpdates?.oldChallengerRank
         : scoreScreenData.eloUpdates?.oldHostRank;
     playerNewRank =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username == user?.name
+      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === user?.name
         ? scoreScreenData.eloUpdates?.newChallengerRank
         : scoreScreenData.eloUpdates?.newHostRank;
     eloDiff = playerNewElo - playerOldElo;
@@ -63,7 +63,7 @@ const ScoreScreenModalContents = () => {
 
   if (!scoreScreenData) return <div>Error - no score screen data received</div>;
   return (
-    <div data-cy={"score-screen-modal"}>
+    <div data-cy="score-screen-modal">
       <h3>Game {scoreScreenData!.gameRoom.gameName} final score:</h3>
       <table>
         <tbody>
@@ -80,7 +80,7 @@ const ScoreScreenModalContents = () => {
               <td>No changes to ladder rating</td>
             </tr>
           ) : (
-            <Fragment>
+            <>
               <tr>
                 <td className={eloAnimatedChangeClass}>Elo: {eloAnimatedChange}</td>
                 <td className={eloAnimatedChangeClass}>
@@ -91,8 +91,8 @@ const ScoreScreenModalContents = () => {
               </tr>
               {playerOldRank !== playerNewRank ? (
                 <tr>
-                  <td className={""}>Rank:</td>
-                  <td className={""}>
+                  <td className="">Rank:</td>
+                  <td className="">
                     {playerOldRank && playerOldRank + 1 === 0 ? "Unranked" : playerOldRank && playerOldRank + 1}
                     {` -> `}
                     {playerNewRank && playerNewRank + 1}
@@ -107,12 +107,12 @@ const ScoreScreenModalContents = () => {
                   </td>
                 </tr>
               )}
-            </Fragment>
+            </>
           )}
         </tbody>
       </table>
     </div>
   );
-};
+}
 
 export default ScoreScreenModalContents;

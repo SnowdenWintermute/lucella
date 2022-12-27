@@ -1,3 +1,8 @@
+export enum ChatMessageStyles {
+  PRIVATE = "private",
+  NORMAL = "normal",
+}
+
 export class ChatMessage {
   text: string;
   timeStamp = +Date.now();
@@ -8,9 +13,4 @@ export class ChatMessage {
     this.text = text;
     this.author = author;
   }
-}
-
-export enum ChatMessageStyles {
-  PRIVATE = "private",
-  NORMAL = "normal",
 }

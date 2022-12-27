@@ -1,4 +1,3 @@
-import Matter from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { UserInput } from "../classes/inputs/UserInput";
 import { PlayerRole, UserInputs } from "../enums";
@@ -25,6 +24,8 @@ export function processPlayerInput(input: UserInput, game: BattleRoomGame, delta
       break;
     case UserInputs.LINE_UP_ORBS_HORIZONTALLY_AT_Y:
       handleLineUpOrbsAtY(input, game);
+      break;
+    default:
       break;
   }
   handleOrbBodyCollisions(game);

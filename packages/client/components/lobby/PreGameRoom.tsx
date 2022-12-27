@@ -1,6 +1,6 @@
+import { Socket } from "socket.io-client";
 import React, { Fragment, useState, useEffect, useRef } from "react";
 import SuccessIcon from "../../img/alertIcons/success.svg";
-import { Socket } from "socket.io-client";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Alert } from "../../classes/Alert";
@@ -12,7 +12,7 @@ interface Props {
   socket: Socket;
 }
 
-const PreGameRoom = ({ socket }: Props) => {
+function PreGameRoom({ socket }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
@@ -50,7 +50,7 @@ const PreGameRoom = ({ socket }: Props) => {
   };
 
   const preGameRoomMenu = currentGameName ? (
-    <Fragment>
+    <>
       <h3>
         {!isRanked && (playerRole && playerRole === "host" ? "You are the host of " : "You are challinging the host of ")}
         game: {currentGameName}
@@ -61,17 +61,13 @@ const PreGameRoom = ({ socket }: Props) => {
           <tr>
             <td>{players?.host?.associatedUser.username}</td>
             <td aria-label="host status" className={styles["ready-icon-holder"]}>
-              {playersReady?.host ? <SuccessIcon aria-label="ready" className={styles["ready-icon"]}></SuccessIcon> : <span aria-label="not ready">...</span>}
+              {playersReady?.host ? <SuccessIcon aria-label="ready" className={styles["ready-icon"]} /> : <span aria-label="not ready">...</span>}
             </td>
           </tr>
           <tr data-cy="challenger-info">
             <td>{players?.challenger ? players.challenger.associatedUser.username : "Awaiting challenger..."}</td>
             <td aria-label="challenger status" className={styles["ready-icon-holder"]}>
-              {playersReady?.challenger ? (
-                <SuccessIcon aria-label="ready" className={styles["ready-icon"]}></SuccessIcon>
-              ) : (
-                <span aria-label="not ready">...</span>
-              )}
+              {playersReady?.challenger ? <SuccessIcon aria-label="ready" className={styles["ready-icon"]} /> : <span aria-label="not ready">...</span>}
             </td>
           </tr>
           <tr>
@@ -81,11 +77,11 @@ const PreGameRoom = ({ socket }: Props) => {
         </tbody>
       </table>
       {!isRanked && (
-        <button className="button button-standard-size button-primary" onClick={handleReadyClick}>
+        <button type="button" className="button button-standard-size button-primary" onClick={handleReadyClick}>
           READY
         </button>
       )}
-    </Fragment>
+    </>
   ) : (
     <form
       onSubmit={(e) => {
@@ -95,17 +91,20 @@ const PreGameRoom = ({ socket }: Props) => {
       <h3 className="mb-10">Host a friendly match:</h3>
       <input
         ref={channelNameInput}
-        autoFocus={true}
-        className={"text-input-transparent  mb-10"}
-        aria-label={"Enter a game name"}
-        placeholder={"Enter a game name"}
-        data-cy={"game-name-input"}
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus
+        className="text-input-transparent  mb-10"
+        aria-label="Enter a game name"
+        placeholder="Enter a game name"
+        data-cy="game-name-input"
         value={gameNameInput}
         onChange={(e) => {
           setGameNameInput(e.target.value);
         }}
       />
-      <button className="button button-standard-size button-primary">Make Public</button>
+      <button type="submit" className="button button-standard-size button-primary">
+        Make Public
+      </button>
     </form>
   );
 
@@ -116,6 +115,6 @@ const PreGameRoom = ({ socket }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default PreGameRoom;

@@ -1,6 +1,6 @@
-import PGContext from "../../utils/PGContext";
 import { Application } from "express";
 import request from "supertest";
+import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
@@ -29,8 +29,8 @@ describe("changePasswordHandler", () => {
   it(`successfully updates password when given a valid token and matching new passwords,
   and user can't log in with old password but can with new password`, async () => {
     const payload = { user: { id: "1" } };
-    const password_reset_token = signJwt(payload, process.env.PASSWORD_RESET_TOKEN_PRIVATE_KEY!, {
-      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!) / 1000 / 60}m`,
+    const passwordResetToken = signJwt(payload, process.env.PASSWORD_RESET_TOKEN_PRIVATE_KEY!, {
+      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!, 10) / 1000 / 60}m`,
     });
 
     const response = await request(app)
@@ -38,7 +38,7 @@ describe("changePasswordHandler", () => {
       .send({
         password: TEST_USER_ALTERNATE_PASSWORD,
         passwordConfirm: TEST_USER_ALTERNATE_PASSWORD,
-        token: password_reset_token,
+        token: passwordResetToken,
       });
 
     expect(response.status).toBe(204);
@@ -91,8 +91,8 @@ describe("changePasswordHandler", () => {
 
   it("sends error for non-existent email/user", async () => {
     const payload = { user: { id: "1234" } };
-    const password_reset_token = signJwt(payload, process.env.PASSWORD_RESET_TOKEN_PRIVATE_KEY!, {
-      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!) / 1000 / 60}m`,
+    const passwordResetToken = signJwt(payload, process.env.PASSWORD_RESET_TOKEN_PRIVATE_KEY!, {
+      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!, 10) / 1000 / 60}m`,
     });
 
     const response = await request(app)
@@ -100,7 +100,7 @@ describe("changePasswordHandler", () => {
       .send({
         password: TEST_USER_ALTERNATE_PASSWORD,
         passwordConfirm: TEST_USER_ALTERNATE_PASSWORD,
-        token: password_reset_token,
+        token: passwordResetToken,
       });
 
     expect(response.status).toBe(401);

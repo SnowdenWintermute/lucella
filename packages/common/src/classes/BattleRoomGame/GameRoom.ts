@@ -20,7 +20,7 @@ export class GameRoom {
   constructor(gameName: string, isRanked: boolean | undefined) {
     this.gameName = gameName;
     this.spectators = [];
-    this.isRanked = isRanked ? isRanked : false;
+    this.isRanked = isRanked || false;
   }
   cancelCountdownInterval() {
     if (this.countdownInterval) clearInterval(this.countdownInterval);

@@ -1,6 +1,7 @@
+/* eslint-disable consistent-return */
+import { Socket } from "socket.io";
 import { ErrorMessages, GameStatus, PlayerRole, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from "../LucellaServer";
-import { Socket } from "socket.io";
 
 export default function handleSocketLeavingGame(server: LucellaServer, socket: Socket, isDisconnecting: boolean) {
   const { io, lobby, connectedSockets, games } = server;

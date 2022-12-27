@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { BattleRoomGame } from "../../../../../common";
 
 export default (game: BattleRoomGame) => {

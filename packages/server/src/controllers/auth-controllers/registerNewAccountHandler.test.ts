@@ -1,5 +1,5 @@
-import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
 import request from "supertest";
+import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
 import createExpressApp from "../../createExpressApp";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";

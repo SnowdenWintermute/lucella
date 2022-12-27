@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
   BattleRoomGame,
   firstMovementRequestTimeLimiter,
@@ -9,7 +10,7 @@ import {
   UserInputs,
 } from "../../../common";
 
-export default function (game: BattleRoomGame, inputToQueue: UserInput, playerRole: PlayerRole) {
+export default function antiCheat(game: BattleRoomGame, inputToQueue: UserInput, playerRole: PlayerRole) {
   let clientTryingToMoveTooFast = false;
   if (inputToQueue.type === UserInputs.CLIENT_TICK_NUMBER) {
     let timeSinceLastMovementRequestAccepted = +Date.now() - game.netcode.serverLastSeenMovementInputTimestamps[playerRole];

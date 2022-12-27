@@ -7,6 +7,7 @@ import {
   initialEndZoneHeight,
   initialScoreNeededToWin,
 } from "../../consts/battle-room-game-config";
+import { PlayerRole } from "../../enums";
 import { HostAndChallengerOrbSets } from "../../types";
 import { MouseData } from "../MouseData";
 import { Point } from "../Point";
@@ -32,7 +33,7 @@ export class BattleRoomGame {
   gameOverCountdown: { duration: number; current: number | null } = { duration: gameOverCountdownDuration, current: null };
   winner: string | null | undefined = null;
   currentCollisionPairs: Matter.Pair[] = [];
-  orbs: HostAndChallengerOrbSets = { host: {}, challenger: {} };
+  orbs: HostAndChallengerOrbSets = { [PlayerRole.HOST]: {}, [PlayerRole.CHALLENGER]: {} };
   score = {
     host: 0,
     challenger: 0,

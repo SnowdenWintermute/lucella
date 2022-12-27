@@ -1,4 +1,5 @@
-import { battleRoomDefaultChatChannel, ChatMessage, ChatMessageStyles, randBetween, SocketEventsFromClient, SocketEventsFromServer } from "@lucella/common";
+import io, { Socket } from "socket.io-client";
+import { battleRoomDefaultChatChannel, ChatMessage, randBetween, SocketEventsFromClient, SocketEventsFromServer } from "@lucella/common";
 import { Application } from "express";
 import { IncomingMessage, Server, ServerResponse } from "node:http";
 import { lucella } from "../../lucella";
@@ -6,7 +7,6 @@ import PGContext from "../../utils/PGContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { LucellaServer } from "../LucellaServer";
 import { wrappedRedis } from "../../utils/RedisContext";
-import io, { Socket } from "socket.io-client";
 
 let context: PGContext | undefined;
 let app: Application | undefined;
@@ -23,10 +23,10 @@ beforeAll((done) => {
       lucella.server = new LucellaServer(httpServer);
       clientSocket = io(`http://localhost:${port}`, {
         transports: ["websocket"],
-        // extraHeaders: { cookie: `access_token=${access_token};` },
+        // extraHeaders: { cookie: `access_token=${accessToken};` },
       });
       clientSocket.on("connect", done);
-      console.log("test server on " + port);
+      console.log(`test server on ${port}`);
     });
   }
   setupForTests();

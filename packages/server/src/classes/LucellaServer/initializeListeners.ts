@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { ErrorMessages, SocketEventsFromServer } from "../../../../common";
 import handleNewSocketConnection from "./handleNewSocketConnection";
 import lobbyUiListeners from "./listeners/lobbyUiListeners";

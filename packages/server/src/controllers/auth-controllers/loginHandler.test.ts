@@ -1,8 +1,8 @@
-import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
+import { Application } from "express";
 import request from "supertest";
+import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
-import { Application } from "express";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../redux/hooks";
 
-const MatchmakingQueueDisplay = () => {
+function MatchmakingQueueDisplay() {
   const [hideClass, setHideClass] = useState("height-0-hidden");
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const matchmakingQueueScreen = lobbyUiState.matchmakingScreen;
@@ -23,6 +23,6 @@ const MatchmakingQueueDisplay = () => {
       </div>
     </div>
   );
-};
+}
 
 export default MatchmakingQueueDisplay;

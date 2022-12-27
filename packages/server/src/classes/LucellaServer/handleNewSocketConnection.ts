@@ -1,6 +1,9 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-use-before-define */
+/* eslint-disable consistent-return */
+import cookie from "cookie";
 import { Socket } from "socket.io";
 import { SocketMetadata } from "../../../../common";
-import cookie from "cookie";
 import { verifyJwt } from "../../controllers/auth-controllers/utils/jwt";
 import { LucellaServer } from ".";
 import UserRepo from "../../database/repos/users";
@@ -14,8 +17,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
     let decoded;
     if (token) decoded = verifyJwt<{ sub: string }>(token.toString(), process.env.ACCESS_TOKEN_PUBLIC_KEY!);
     if (decoded) {
-      let session;
-      session = await wrappedRedis.context!.get(decoded.sub.toString());
+      const session = await wrappedRedis.context!.get(decoded.sub.toString());
       if (!session) {
         console.log(`User session has expired`);
         return new Error(`User session has expired`);
@@ -41,8 +43,8 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
 }
 
 function randomFourNumbers(): number[] {
-  let randomNumbers: number[] = [];
-  for (let i = 4; i > 0; i--) {
+  const randomNumbers: number[] = [];
+  for (let i = 4; i > 0; i -= 1) {
     randomNumbers.push(Math.floor(Math.random() * Math.floor(9)));
   }
   return randomNumbers;
@@ -51,6 +53,6 @@ function randomFourNumbers(): number[] {
 function makeRandomAnonUsername(): string {
   // give them a rand 4 string and if duplicate run it again - danger of loop?
   const randomNums = randomFourNumbers().join("");
-  const randomAnonUsername = "Anon" + randomNums;
+  const randomAnonUsername = `Anon${randomNums}`;
   return randomAnonUsername;
 }

@@ -1,5 +1,4 @@
 import {
-  BattleRoomGame,
   InputProto,
   LineUpOrbsHorizontallyAtMouseY,
   SelectOrbAndAssignDestination,
@@ -15,12 +14,10 @@ export default function serializeInput(input: UserInput | SelectOrbs | SelectOrb
   inputProto.setType(input.type);
   inputProto.setNumber(input.number);
   if (data) {
-    const { orbLabels, mousePosition } = data;
-    if (orbLabels) {
-      const orbIds = orbLabels.map((label: string) => parseInt(label.slice(-1)));
-      inputProto.setOrbidsList([...orbIds]);
-    }
-    if (input.type == UserInputs.LINE_UP_ORBS_HORIZONTALLY_AT_Y) {
+    const { orbIds, mousePosition } = data;
+    if (orbIds) inputProto.setOrbidsList(orbIds);
+
+    if (input.type === UserInputs.LINE_UP_ORBS_HORIZONTALLY_AT_Y) {
       inputProto.setYonly(data);
     } else if (mousePosition) {
       const smallVectorProto = new SmallVectorProto();

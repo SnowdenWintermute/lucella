@@ -1,9 +1,10 @@
+/* eslint-disable no-param-reassign */
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
 import { Point } from "../classes/Point";
 import { PlayerRole } from "../enums";
 
-export default function (game: BattleRoomGame, playerRole: "host" | "challenger", orb: Orb) {
+export default function updateGhostOrb(game: BattleRoomGame, playerRole: "host" | "challenger", orb: Orb) {
   if (!game) return;
   const { endzones } = game;
   if (!orb.isGhost) return;

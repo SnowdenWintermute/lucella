@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
 import { Socket } from "socket.io";
 import {
   ChatChannel,
@@ -7,7 +9,6 @@ import {
   ErrorMessages,
   PlayerRole,
   gameChannelNamePrefix,
-  rankedGameChannelNamePrefix,
   ChatMessage,
   ChatMessageStyles,
 } from "../../../../common";
@@ -27,7 +28,7 @@ export class Lobby {
     this.gameRooms = {};
     this.server = server;
   }
-  getSanitizedGameRoom(gameRoom: GameRoom) {
+  static getSanitizedGameRoom(gameRoom: GameRoom) {
     return sanitizeGameRoom(gameRoom);
   }
   getSanitizedGameRooms() {
@@ -36,7 +37,7 @@ export class Lobby {
   getSanitizedChatChannel(channelName: string) {
     return sanitizeChatChannel(this.chatChannels[channelName]);
   }
-  updateChatChannelUsernameLists(socketMeta: SocketMetadata, channelNameLeaving: string | null, channelNameJoining: string | null) {
+  updateChatChannelUsernameLists(socketMeta: SocketMetadata, channelNameLeaving: string | null | undefined, channelNameJoining: string | null) {
     updateChatChannelUsernameLists(this.chatChannels, socketMeta, channelNameLeaving, channelNameJoining);
   }
   handleNewChatMessage(socket: Socket, data: { style: ChatMessageStyles; text: string }) {
@@ -96,7 +97,7 @@ export class Lobby {
   }
   putSocketInGameRoomAndEmitUpdates(socket: Socket, gameName: string) {
     const { io, connectedSockets } = this.server;
-    const username = connectedSockets[socket.id].associatedUser.username;
+    const { username } = connectedSockets[socket.id].associatedUser;
     const gameRoom = this.gameRooms[gameName];
     if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE);
     if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_DOES_NOT_EXIST);
@@ -115,7 +116,7 @@ export class Lobby {
     }
     socket.emit(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT, playerRole);
     io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.getSanitizedGameRooms());
-    io.in(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, this.getSanitizedGameRoom(gameRoom));
+    io.in(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
     return gameRoom;
   }
   handleSocketLeavingGameRoom(socket: Socket, gameRoom: GameRoom, isDisconnecting: boolean, playerToKick?: SocketMetadata) {

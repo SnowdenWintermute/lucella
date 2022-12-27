@@ -1,5 +1,5 @@
-import { ErrorMessages } from "../../../common";
 import { object, string, TypeOf } from "zod";
+import { ErrorMessages } from "../../../common";
 
 export const loginSchema = object({
   body: object({

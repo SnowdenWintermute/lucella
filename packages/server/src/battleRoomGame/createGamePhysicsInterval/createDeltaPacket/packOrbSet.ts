@@ -1,11 +1,10 @@
 import { OrbDeltas, OrbsProto, VectorProto } from "../../../../../common";
 
-export default function (orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas }) {
+export default function packOrbSet(orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas }) {
   const orbsPacket = new OrbsProto();
-  for (let orbLabel in orbsDeltasToSerialize) {
-    const currOrb = orbsDeltasToSerialize[orbLabel];
+  Object.values(orbsDeltasToSerialize).forEach((currOrb, i) => {
     const orbPacket = orbsPacket.addOrbs();
-    orbPacket.setId(parseInt(orbLabel.slice(-1)));
+    orbPacket.setId(i + 1);
 
     if (currOrb.position) {
       const positionPacket = new VectorProto();
@@ -37,9 +36,9 @@ export default function (orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas 
       orbPacket.setForce(forcePacket);
     }
 
-    currOrb.hasOwnProperty("isSelected") && orbPacket.setIsselected(currOrb.isSelected!);
-    currOrb.hasOwnProperty("isGhost") && orbPacket.setIsghost(currOrb.isGhost!);
-  }
+    if (Object.prototype.hasOwnProperty.call(currOrb, "isSelected")) orbPacket.setIsselected(currOrb.isSelected!);
+    if (Object.prototype.hasOwnProperty.call(currOrb, "isGhost")) orbPacket.setIsghost(currOrb.isGhost!);
+  });
 
   return orbsPacket;
 }

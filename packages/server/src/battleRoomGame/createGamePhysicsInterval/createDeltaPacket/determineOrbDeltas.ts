@@ -1,11 +1,10 @@
-import { BattleRoomGame, OrbDeltas, OrbSetDeltas, PlayerRole } from "../../../../../common";
 import isEqual from "lodash.isequal";
+import { BattleRoomGame, OrbDeltas, OrbSetDeltas, PlayerRole } from "../../../../../common";
 
 export default function determineOrbDeltas(game: BattleRoomGame, playerRole: PlayerRole, isOpponent?: boolean) {
   if (!game.netcode.prevGameState) return console.log("no prev game state yet", game.netcode.prevGameState); // send full game data
   const orbsDeltasToSerialize: OrbSetDeltas = {};
-  for (let orbLabel in game.netcode.prevGameState.orbs[playerRole]) {
-    const prevOrbState = game.netcode.prevGameState.orbs[playerRole][orbLabel];
+  Object.entries(game.netcode.prevGameState.orbs[playerRole]).forEach(([orbLabel, prevOrbState]) => {
     const currOrb = game.orbs[playerRole][orbLabel];
     const orbDeltas: OrbDeltas = {};
     if (!isEqual(currOrb.body.position, prevOrbState.body.position)) orbDeltas.position = currOrb.body.position;
@@ -15,6 +14,6 @@ export default function determineOrbDeltas(game: BattleRoomGame, playerRole: Pla
     if (currOrb.isSelected !== prevOrbState.isSelected) orbDeltas.isSelected = currOrb.isSelected;
     if (currOrb.isGhost !== prevOrbState.isGhost) orbDeltas.isGhost = currOrb.isGhost;
     if (Object.keys(orbDeltas).length) orbsDeltasToSerialize[orbLabel] = orbDeltas;
-  }
+  });
   return orbsDeltasToSerialize;
 }

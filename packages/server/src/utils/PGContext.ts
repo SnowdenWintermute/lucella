@@ -1,13 +1,13 @@
+import migrate from "node-pg-migrate";
 import { randomBytes } from "crypto";
 import format from "pg-format";
 import { pgOptionsTestDB } from "../database/config";
 import wrappedPool from "../database/wrappedPool";
-import migrate from "node-pg-migrate";
 
 export default class PGContext {
   roleName: string;
   static async build() {
-    const roleName = "a" + randomBytes(4).toString("hex"); // pg requires role names start with a letter
+    const roleName = `a${randomBytes(4).toString("hex")}`; // pg requires role names start with a letter
     await wrappedPool.connect(pgOptionsTestDB);
     await wrappedPool.query(format(`CREATE ROLE %I WITH LOGIN PASSWORD %L;`, roleName, roleName));
     await wrappedPool.query(format(`CREATE SCHEMA %I AUTHORIZATION %I;`, roleName, roleName));

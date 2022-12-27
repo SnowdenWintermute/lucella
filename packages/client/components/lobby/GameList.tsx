@@ -1,6 +1,6 @@
-import { GameStatus, SocketEventsFromClient } from "../../../common";
 import React from "react";
 import { Socket } from "socket.io-client";
+import { GameRoom, GameStatus, SocketEventsFromClient } from "../../../common";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Alert } from "../../classes/Alert";
@@ -10,7 +10,7 @@ interface Props {
   socket: Socket;
 }
 
-const GameList = ({ socket }: Props) => {
+function GameList({ socket }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const gameList = lobbyUiState.gameList.games;
@@ -22,26 +22,31 @@ const GameList = ({ socket }: Props) => {
     else dispatch(setAlert(new Alert("No game by that name exists", AlertType.DANGER)));
   };
 
-  const gamesToDisplay = [];
+  const gameListTableRow = (gameRoom: GameRoom) => {
+    const { host, challenger } = gameRoom.players;
+    const { gameName } = gameRoom;
+    return (
+      <tr className="game-list-item" key={gameName}>
+        <td>{gameName}</td>
+        <td>Host: {host?.associatedUser.username}</td>
+        <td>Challenger: {challenger ? challenger.associatedUser.username : "Awaiting Opponent"}</td>
+        <td>
+          {gameRoom.gameStatus === GameStatus.IN_LOBBY && (
+            <button type="button" className="button button-standard-size button-primary" onClick={() => handleJoinGameClick(gameName)}>
+              Join
+            </button>
+          )}
+        </td>
+      </tr>
+    );
+  };
+
+  const gamesToDisplay: JSX.Element[] = [];
+
   if (gameList) {
-    for (const game in gameList) {
-      const { gameName } = gameList[game];
-      const { host, challenger } = gameList[game].players;
-      gamesToDisplay.push(
-        <tr className="game-list-item" key={gameList[game].gameName}>
-          <td>{gameName}</td>
-          <td>Host: {host?.associatedUser.username}</td>
-          <td>Challenger: {challenger ? challenger.associatedUser.username : "Awaiting Opponent"}</td>
-          <td>
-            {gameList[game].gameStatus === GameStatus.IN_LOBBY && (
-              <button className="button button-standard-size button-primary" onClick={() => handleJoinGameClick(gameName)}>
-                Join
-              </button>
-            )}
-          </td>
-        </tr>
-      );
-    }
+    Object.values(gameList).forEach((gameRoom) => {
+      gamesToDisplay.push(gameListTableRow(gameRoom));
+    });
   }
 
   return (
@@ -54,6 +59,6 @@ const GameList = ({ socket }: Props) => {
       </div>
     </div>
   );
-};
+}
 
 export default GameList;

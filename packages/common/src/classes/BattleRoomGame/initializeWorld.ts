@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import Matter from "matter-js";
 import { BattleRoomGame } from ".";
 import { challengerOrbCollisionCategory, colors, hostOrbCollisionCategory } from "../../consts";
@@ -14,31 +15,31 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
 
   game.debug.clientPrediction.clientOrbNumInputsApplied = 0;
 
-  for (let i = 0; i < 5; i++) {
-    let startingX = (i + 1) * 50 + 75;
+  for (let i = 1; i <= 5; i += 1) {
+    const startingX = i * 50 + 75;
+
     const hostOrbBody = Matter.Bodies.circle(startingX, 100, BattleRoomGame.baseOrbRadius, {
       collisionFilter: { category: hostOrbCollisionCategory, mask: challengerOrbCollisionCategory },
-      frictionAir: frictionAir,
+      frictionAir,
       density: orbDensity,
       label: `host-orb-${i}`,
     });
-    game.orbs.host[`host-orb-${i}`] = new Orb(hostOrbBody, PlayerRole.HOST, i + 1, colors.hostOrbs);
+    game.orbs.host[`host-orb-${i}`] = new Orb(hostOrbBody, PlayerRole.HOST, i, colors.hostOrbs);
     Matter.Composite.add(game.physicsEngine.world, hostOrbBody);
     const challengerOrbBody = Matter.Bodies.circle(startingX, BattleRoomGame.baseWindowDimensions.height - 100, BattleRoomGame.baseOrbRadius, {
       collisionFilter: { category: challengerOrbCollisionCategory, mask: hostOrbCollisionCategory },
-      frictionAir: frictionAir,
+      frictionAir,
       density: orbDensity,
       label: `challenger-orb-${i}`,
     });
-    game.orbs.challenger[`challenger-orb-${i}`] = new Orb(challengerOrbBody, PlayerRole.CHALLENGER, i + 1, colors.challengerOrbs);
+    game.orbs.challenger[`challenger-orb-${i}`] = new Orb(challengerOrbBody, PlayerRole.CHALLENGER, i, colors.challengerOrbs);
     Matter.Composite.add(game.physicsEngine.world, challengerOrbBody);
   }
 
   if (prevGameState) {
-    let orbSet: keyof typeof game.orbs;
-    for (orbSet in game.orbs) {
-      setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet]);
-      setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[orbSet], prevGameState.orbs[orbSet], true);
-    }
+    Object.entries(game.orbs).forEach(([playerRole, orbSet]) => {
+      setOrbSetPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
+      setOrbSetNonPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole], true);
+    });
   }
 }

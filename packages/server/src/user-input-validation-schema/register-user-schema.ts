@@ -1,6 +1,5 @@
-import { ErrorMessages, nameMaxLength, nameMinLength, passwordMaxLength } from "../../../common";
 import { object, string, TypeOf, z } from "zod";
-import { passwordMinLength } from "../../../common";
+import { ErrorMessages, nameMaxLength, nameMinLength, passwordMaxLength, passwordMinLength } from "../../../common";
 
 export const registerUserSchema = object({
   body: object({
