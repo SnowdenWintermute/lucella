@@ -17,6 +17,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
 
   for (let i = 1; i <= 5; i += 1) {
     const startingX = i * 50 + 75;
+
     const hostOrbBody = Matter.Bodies.circle(startingX, 100, BattleRoomGame.baseOrbRadius, {
       collisionFilter: { category: hostOrbCollisionCategory, mask: challengerOrbCollisionCategory },
       frictionAir,

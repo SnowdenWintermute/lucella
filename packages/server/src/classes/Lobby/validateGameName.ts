@@ -1,5 +1,6 @@
 import { rankedGameChannelNamePrefix, maxGameNameLength, ErrorMessages } from "../../../../common";
 
+// eslint-disable-next-line consistent-return
 export default function validateGameName(gameName: string, isRanked?: Boolean) {
   if (gameName.length < 1) return ErrorMessages.GAME_NAME.MIN_LENGTH;
   if (gameName.length > maxGameNameLength) return ErrorMessages.GAME_NAME.MAX_LENGTH;

@@ -1,8 +1,9 @@
-import { BattleRoomGame, gameChannelNamePrefix, GameStatus, SocketEventsFromServer } from "../../../../common";
 import { Socket } from "socket.io";
+import { BattleRoomGame, gameChannelNamePrefix, GameStatus, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from ".";
 import createGamePhysicsInterval from "../../battleRoomGame/createGamePhysicsInterval";
 
+// eslint-disable-next-line consistent-return
 export default function handleReadyStateToggleRequest(server: LucellaServer, socket: Socket) {
   const { io, connectedSockets, lobby, games } = server;
   const { currentGameName } = connectedSockets[socket.id];
@@ -19,12 +20,12 @@ export default function handleReadyStateToggleRequest(server: LucellaServer, soc
 
   if (playersReady.host && playersReady.challenger) {
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
-    gameRoom.countdown.current--;
+    gameRoom.countdown.current -= 1;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     gameRoom.countdownInterval = setInterval(() => {
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
       if (gameRoom.countdown.current > 0) return;
-      gameRoom.countdownInterval && clearInterval(gameRoom.countdownInterval);
+      if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
       gameRoom.gameStatus = GameStatus.IN_PROGRESS;
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
       games[currentGameName] = new BattleRoomGame(currentGameName);

@@ -1,10 +1,11 @@
-import { ErrorMessages, gameChannelNamePrefix, PlayerRole, SocketEventsFromServer } from "../../../../common";
 import { Socket } from "socket.io";
+import { ErrorMessages, gameChannelNamePrefix, PlayerRole, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from ".";
+import { Lobby } from "../Lobby";
 
 export default function putSocketInGameRoomAndEmitUpdates(lucellaServer: LucellaServer, socket: Socket, gameName: string) {
   const { io, lobby, connectedSockets } = lucellaServer;
-  const username = connectedSockets[socket.id].associatedUser.username;
+  const { username } = connectedSockets[socket.id].associatedUser;
   const gameRoom = lobby.gameRooms[gameName];
   try {
     if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE);
@@ -24,7 +25,7 @@ export default function putSocketInGameRoomAndEmitUpdates(lucellaServer: Lucella
     }
     socket.emit(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT, playerRole);
     io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobby.getSanitizedGameRooms());
-    io.to(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, lobby.getSanitizedGameRoom(gameRoom));
+    io.to(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
     return gameRoom;
   } catch (error) {
     console.log(error);

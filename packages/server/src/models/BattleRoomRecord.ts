@@ -1,5 +1,5 @@
-import { startingLadderRating } from "../../../common";
 import { Types, Schema, model } from "mongoose";
+import { startingLadderRating } from "../../../common";
 
 export interface IBattleRoomRecord {
   userId: Types.ObjectId;

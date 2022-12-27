@@ -1,5 +1,7 @@
-import { ChatMessage, ChatMessageStyles, gameChannelNamePrefix, GameRoom, PlayerRole, SocketEventsFromServer, SocketMetadata } from "../../../../common";
+/* eslint-disable no-param-reassign */
 import { Socket } from "socket.io";
+import { Lobby } from ".";
+import { ChatMessage, ChatMessageStyles, gameChannelNamePrefix, GameRoom, PlayerRole, SocketEventsFromServer, SocketMetadata } from "../../../../common";
 import { LucellaServer } from "../LucellaServer";
 
 export default function handleSocketLeavingGameRoom(
@@ -20,7 +22,7 @@ export default function handleSocketLeavingGameRoom(
 
   gameRoom.playersReady = { host: false, challenger: false };
   gameRoom.cancelCountdownInterval();
-  io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, lobby.getSanitizedGameRoom(gameRoom));
+  io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
   io.in(gameChatChannelName).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, lobby.getSanitizedChatChannel(gameChatChannelName));
 
   if (playerToKick) {

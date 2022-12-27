@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable global-require */
 import { BattleRoomGame, EloUpdates, gameChannelNamePrefix, GameStatus, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from ".";
 const replicator = new (require("replicator"))();
@@ -17,6 +19,7 @@ export default function endGameAndEmitUpdates(server: LucellaServer, game: Battl
 
   const loser = gameRoom.winner === players.host?.associatedUser.username ? players.challenger?.associatedUser.username : players.host?.associatedUser.username;
 
+  // eslint-disable-next-line prefer-const
   let eloUpdates: EloUpdates | null = null;
   if (!gameRoom.winner || !loser) console.error("Tried to update game records but either winner or loser wasn't found");
   // else eloUpdates = await updateGameRecords(gameRoom.winner, loser, gameRoom, game, gameRoom.isRanked);
@@ -35,13 +38,11 @@ export default function endGameAndEmitUpdates(server: LucellaServer, game: Battl
       eloUpdates,
     });
 
-    let playerRole: keyof typeof gameRoom.players;
-    for (playerRole in gameRoom.players) {
-      const player = gameRoom.players[playerRole];
-      if (!player) continue;
+    Object.values(gameRoom.players).forEach((player) => {
+      if (!player) return;
       lobby.changeSocketChatChannelAndEmitUpdates(io.sockets.sockets.get(player.socketId!)!, player.previousChatChannelName || null);
       lobby.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, player);
-    }
+    });
 
     delete lobby.gameRooms[game.gameName];
     delete games[game.gameName];

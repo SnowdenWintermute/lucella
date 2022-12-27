@@ -13,8 +13,8 @@ export class SmallVectorProto extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): SmallVectorProto.AsObject;
   static toObject(includeInstance: boolean, msg: SmallVectorProto): SmallVectorProto.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
+  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: SmallVectorProto, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): SmallVectorProto;
   static deserializeBinaryFromReader(message: SmallVectorProto, reader: jspb.BinaryReader): SmallVectorProto;
@@ -22,9 +22,9 @@ export class SmallVectorProto extends jspb.Message {
 
 export namespace SmallVectorProto {
   export type AsObject = {
-    x: number,
-    y: number,
-  }
+    x: number;
+    y: number;
+  };
 }
 
 export class InputProto extends jspb.Message {
@@ -52,8 +52,8 @@ export class InputProto extends jspb.Message {
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): InputProto.AsObject;
   static toObject(includeInstance: boolean, msg: InputProto): InputProto.AsObject;
-  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
-  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static extensions: { [key: number]: jspb.ExtensionFieldInfo<jspb.Message> };
+  static extensionsBinary: { [key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message> };
   static serializeBinaryToWriter(message: InputProto, writer: jspb.BinaryWriter): void;
   static deserializeBinary(bytes: Uint8Array): InputProto;
   static deserializeBinaryFromReader(message: InputProto, reader: jspb.BinaryReader): InputProto;
@@ -61,11 +61,10 @@ export class InputProto extends jspb.Message {
 
 export namespace InputProto {
   export type AsObject = {
-    type: number,
-    number: number,
-    orbidsList: Array<number>,
-    mouseposition?: SmallVectorProto.AsObject,
-    yonly: number,
-  }
+    type: number;
+    number: number;
+    orbidsList: Array<number>;
+    mouseposition?: SmallVectorProto.AsObject;
+    yonly: number;
+  };
 }
-

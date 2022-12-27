@@ -1,14 +1,14 @@
 import { v4 } from "uuid";
 
 export class SocketMetadata {
-  currentChatChannel: string | null;
-  previousChatChannelName: string | null;
   currentGameName: string | null;
   associatedUser: {
     username: string;
     isGuest: boolean;
   };
   uuid: string;
+  currentChatChannel?: string | null;
+  previousChatChannelName?: string | null;
   socketId?: string; // optional so it can be omitted when sent to client
   constructor(
     socketId: string,

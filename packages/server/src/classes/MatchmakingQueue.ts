@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+import { Socket } from "socket.io";
 import {
   ErrorMessages,
   maxEloDiffThreshold,
@@ -5,8 +7,8 @@ import {
   rankedGameChannelNamePrefix,
   SocketEventsFromServer,
   OfficialChannels,
+  ONE_SECOND,
 } from "../../../common";
-import { Socket } from "socket.io";
 import UserRepo from "../database/repos/users";
 import { IBattleRoomRecord } from "../models/BattleRoomRecord";
 import { LucellaServer } from "./LucellaServer";
@@ -30,10 +32,11 @@ export class MatchmakingQueue {
   constructor(server: LucellaServer) {
     this.server = server;
   }
+
   async addUser(socket: Socket) {
     const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id].associatedUser.username);
     if (!user) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOG_IN_TO_PLAY_RANKED);
-    let userBattleRoomRecord = await this.server.fetchOrCreateBattleRoomRecord(user);
+    const userBattleRoomRecord = await LucellaServer.fetchOrCreateBattleRoomRecord(user);
     this.users[socket.id] = {
       userId: user.id.toString(), // todo- investigate why this needs to be a string and not anumber
       record: userBattleRoomRecord,
@@ -44,21 +47,20 @@ export class MatchmakingQueue {
     socket.emit(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
     this.currentEloDiffThreshold = 0;
     if (this.matchmakingInterval) return;
-    else this.createMatchmakingInterval();
+    this.createMatchmakingInterval();
   }
   removeUser(socketId: string) {
-    const { io } = this.server;
     delete this.users[socketId];
   }
   clearMatchmakingInterval() {
-    this.matchmakingInterval && clearInterval(this.matchmakingInterval);
+    if (this.matchmakingInterval) clearInterval(this.matchmakingInterval);
     this.matchmakingInterval = null;
   }
   createMatchmakingInterval() {
     const { io } = this.server;
     this.currentIntervalIteration = 0;
     this.matchmakingInterval = setInterval(() => {
-      this.currentIntervalIteration++;
+      this.currentIntervalIteration += 1;
       if (Object.keys(this.users).length < 1) return this.clearMatchmakingInterval();
       io.in(OfficialChannels.matchmakingQueue).emit(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, {
         queueSize: Object.keys(this.users).length,
@@ -80,25 +82,24 @@ export class MatchmakingQueue {
       this.startRankedGame(hostSocket, challengerSocket);
       this.rankedGameCurrentNumber += 1;
 
-      let playerRole: keyof typeof players;
-      for (playerRole in players) {
-        this.removeUser(players[playerRole].socketId);
-        if (!io.sockets.sockets.get(players[playerRole].socketId)) return;
-        io.sockets.sockets.get(players[playerRole].socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
-        io.sockets.sockets.get(players[playerRole].socketId)!.leave(OfficialChannels.matchmakingQueue);
-      }
+      Object.values(players).forEach((player) => {
+        this.removeUser(player.socketId);
+        if (!io.sockets.sockets.get(player.socketId)) return;
+        io.sockets.sockets.get(player.socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
+        io.sockets.sockets.get(player.socketId)!.leave(OfficialChannels.matchmakingQueue);
+      });
 
       if (Object.keys(this.users).length < 1) {
-        this.matchmakingInterval && clearInterval(this.matchmakingInterval);
+        if (this.matchmakingInterval) clearInterval(this.matchmakingInterval);
         this.matchmakingInterval = null;
       }
       bestMatch.eloDiff = null;
       bestMatch.players = null;
-    }, 1000);
+    }, ONE_SECOND);
   }
   increaseEloDiffMatchingThreshold() {
     if (this.currentEloDiffThreshold >= maxEloDiffThreshold) return;
-    const exponentiallyIncreasedThreshold = Math.round(0.35 * Math.pow(1.5, this.currentIntervalIteration) + eloDiffThresholdDebuggerAdditive);
+    const exponentiallyIncreasedThreshold = Math.round(0.35 * 1.5 ** this.currentIntervalIteration + eloDiffThresholdDebuggerAdditive);
     this.currentEloDiffThreshold = exponentiallyIncreasedThreshold;
   }
   startRankedGame(hostSocket: Socket, challengerSocket: Socket) {

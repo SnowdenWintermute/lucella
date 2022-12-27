@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { gameChannelNamePrefix, rankedGameChannelNamePrefix } from "../../../../common";
 
 export default function validateChannelName(name: string, authorizedForGameChannel?: boolean) {

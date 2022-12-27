@@ -19,12 +19,14 @@ module.exports = {
     Cypress: true,
     JSX: true,
     NodeJS: true,
+    React: true,
   },
   rules: {
     "import/no-relative-packages": `off`,
     "import/prefer-default-export": `off`,
     "import/extensions": `off`,
     "import/no-unresolved": `off`,
+    "import/newline-after-import": `off`,
     "lines-between-class-members": `off`,
     "no-shadow": `off`,
     "@typescript-eslint/no-shadow": [`error`],
@@ -35,6 +37,8 @@ module.exports = {
       // },
     ],
     "no-unused-vars": `warn`,
+    "consistent-return": `warn`,
+    "no-underscore-dangle": `off`,
     // "arrow-body-style": [2, `as-needed`],
     // "no-param-reassign": [
     //   2,

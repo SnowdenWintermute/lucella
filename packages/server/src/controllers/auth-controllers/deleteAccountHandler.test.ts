@@ -1,8 +1,10 @@
-import { AuthRoutePaths, ErrorMessages, randBetween } from "../../../../common";
+import { Application } from "express";
 import request from "supertest";
+import io from "socket.io-client";
+import { IncomingMessage, Server, ServerResponse } from "node:http";
+import { AuthRoutePaths, ErrorMessages, randBetween } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
-import { Application } from "express";
 import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -10,8 +12,6 @@ import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { lucella } from "../../lucella";
 import { LucellaServer } from "../../classes/LucellaServer";
-import io from "socket.io-client";
-import { IncomingMessage, Server, ServerResponse } from "node:http";
 
 describe("deleteAccountHandler", () => {
   let context: PGContext | undefined;
@@ -25,7 +25,7 @@ describe("deleteAccountHandler", () => {
 
     httpServer = app.listen(port, () => {
       lucella.server = new LucellaServer(httpServer);
-      console.log("test server on " + port);
+      console.log(`test server on ${port}`);
     });
   });
 
@@ -45,14 +45,15 @@ describe("deleteAccountHandler", () => {
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NOT_LOGGED_IN));
     expect(response.status).toBe(401);
   });
+
   it("flags account as deleted, logs out user and doesn't let them log in with the deleted account", (done) => {
     async function thisTest() {
       const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-      const { access_token } = await signTokenAndCreateSession(user);
+      const { accessToken } = await signTokenAndCreateSession(user);
 
       const socket = await io(`http://localhost:${port}`, {
         transports: ["websocket"],
-        extraHeaders: { cookie: `access_token=${access_token};` },
+        extraHeaders: { cookie: `access_token=${accessToken};` },
       });
 
       socket.on("connect", async () => {
@@ -60,14 +61,14 @@ describe("deleteAccountHandler", () => {
         expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
         const response = await request(app)
           .delete(`/api${AuthRoutePaths.BASE + AuthRoutePaths.DELETE_ACCOUNT}`)
-          .set("Cookie", [`access_token=${access_token}`]);
+          .set("Cookie", [`access_token=${accessToken}`]);
         // logs user out
         expect(response.headers["set-cookie"][0].includes("access_token=;")).toBeTruthy();
         expect(response.status).toBe(204);
         // sockets are disconnected
         expect(lucella.server?.io.sockets.sockets.get(socket.id)).toBeUndefined();
-        expect(lucella.server?.connectedUsers[user.name]).toBeUndefined();
         expect(Object.keys(lucella.server!.connectedSockets!).length).toBe(0);
+        expect(lucella.server?.connectedUsers[user.name]).toBeUndefined();
         // can't log in after acconut deletion
         const loginResponse = await request(app)
           .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGIN}`)

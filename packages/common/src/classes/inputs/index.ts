@@ -10,7 +10,7 @@ export class ClientTickNumber extends UserInput {
 }
 
 export interface SelectOrbsData {
-  orbLabels: string[];
+  orbIds: number[];
 }
 
 export class SelectOrbs extends UserInput {

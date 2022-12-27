@@ -45,7 +45,7 @@ export class LucellaServer {
     console.log(`user ${username} on socket ${socket.id} disconnected`);
   }
   disconnectUser(username: string) {
-    if (!this.connectedUsers[username]) return console.log("tried to disconnect a user but they woren't in the list of connected users");
+    if (!this.connectedUsers[username]) return console.log("tried to disconnect a user but they weren't in the list of connected users");
     const socketIdsDisconnected: string[] = [];
     this.connectedUsers[username].forEach((socketId) => {
       if (!this.io.sockets.sockets.get(socketId))
@@ -61,7 +61,7 @@ export class LucellaServer {
   handleReadyStateToggleRequest(socket: Socket) {
     handleReadyStateToggleRequest(this, socket);
   }
-  async fetchOrCreateBattleRoomRecord(user: User) {
+  static async fetchOrCreateBattleRoomRecord(user: User) {
     let record = await BattleRoomRecord.findOne({ userId: user.id });
     if (!record) record = new BattleRoomRecord({ userId: user.id });
     await record.save();

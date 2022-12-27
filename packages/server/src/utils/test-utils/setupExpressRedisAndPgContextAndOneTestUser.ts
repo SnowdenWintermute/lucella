@@ -1,7 +1,7 @@
+import request from "supertest";
 import createExpressApp from "../../createExpressApp";
 import PGContext from "../PGContext";
 import { RedisContext, wrappedRedis } from "../RedisContext";
-import request from "supertest";
 import { AuthRoutePaths } from "../../../../common";
 import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "./consts";
 

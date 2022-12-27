@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { BattleRoomGame, PlayerRole } from "../../../../../common";
 
 export default function assignWinner(game: BattleRoomGame) {

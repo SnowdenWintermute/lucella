@@ -1,10 +1,11 @@
+/* eslint-disable consistent-return */
+import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import UserRepo from "../../database/repos/users";
 import { UserRegistrationUserInput } from "../../user-input-validation-schema/register-user-schema";
-import bcrypt from "bcryptjs";
 import CustomError from "../../classes/CustomError";
 import { SanitizedUser } from "../../models/User";
-import { ErrorMessages } from "@lucella/common";
+import { ErrorMessages } from "../../../../common";
 
 export default async function registerNewAccountHandler(req: Request<object, object, UserRegistrationUserInput>, res: Response, next: NextFunction) {
   try {
@@ -23,6 +24,6 @@ export default async function registerNewAccountHandler(req: Request<object, obj
       else if (error.column) errors.push(new CustomError(`Database error - problem relating to ${error.column}`, 400));
       else if (error.detail) errors.push(new CustomError(`Database error - detail: ${error.detail}`, 400));
       return next(errors);
-    } else return next();
+    }
   }
 }

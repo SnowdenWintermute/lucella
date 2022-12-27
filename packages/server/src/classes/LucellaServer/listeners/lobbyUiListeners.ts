@@ -21,7 +21,7 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
   socket.on(SocketEventsFromClient.JOINS_GAME, (gameName) => {
     server.lobby.handleJoinGameRoomRequest(socket, gameName);
   });
-  socket.on(SocketEventsFromClient.CLICKS_READY, (gameName) => {
+  socket.on(SocketEventsFromClient.CLICKS_READY, () => {
     server.handleReadyStateToggleRequest(socket);
   });
   socket.on(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE, () => {

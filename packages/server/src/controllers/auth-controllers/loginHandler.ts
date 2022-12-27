@@ -1,12 +1,14 @@
+/* eslint-disable consistent-return */
+/* eslint-disable camelcase */
+import bcrypt from "bcryptjs";
 import { CookieOptions, NextFunction, Request, Response } from "express";
 import { LoginUserInput } from "../../user-input-validation-schema/login-schema";
-import bcrypt from "bcryptjs";
 import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
 import CustomError from "../../classes/CustomError";
 import { ErrorMessages, UserStatuses } from "../../../../common";
 
-const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!);
+const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!, 10);
 const accessTokenCookieOptions: CookieOptions = {
   expires: new Date(Date.now() + accessTokenExpiresIn),
   maxAge: accessTokenExpiresIn,
@@ -25,8 +27,8 @@ export default async function loginHandler(req: Request<object, object, LoginUse
     if (!(await bcrypt.compare(req.body.password, user.password!))) return next([new CustomError(ErrorMessages.AUTH.INVALID_CREDENTIALS, 401)]);
     if (user.status === UserStatuses.BANNED) return next([new CustomError(ErrorMessages.AUTH.ACCOUNT_BANNED, 401)]);
 
-    const { access_token } = await signTokenAndCreateSession(user);
-    res.cookie("access_token", access_token, accessTokenCookieOptions);
+    const { accessToken } = await signTokenAndCreateSession(user);
+    res.cookie("access_token", accessToken, accessTokenCookieOptions);
     res.cookie("user_role", user.role, {
       ...accessTokenCookieOptions,
       httpOnly: false,
@@ -34,7 +36,8 @@ export default async function loginHandler(req: Request<object, object, LoginUse
 
     // if we don't send some json rtk query complains PARSING_ERROR
     return res.status(200).json({ user });
-  } catch (err: any) {
-    next(err);
+  } catch (error: any) {
+    console.log("error in login: ", error);
+    return next(error);
   }
 }

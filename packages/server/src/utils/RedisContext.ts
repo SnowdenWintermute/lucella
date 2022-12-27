@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { createClient, RedisClientType, SetOptions } from "redis";
 import { randomBytes } from "crypto";
 
@@ -33,7 +34,7 @@ export class RedisContext {
     await this.redisClient.set(this.keyPrefix + key, value, options);
   }
   async get(key: string) {
-    return await this.redisClient.get(this.keyPrefix + key);
+    return this.redisClient.get(this.keyPrefix + key);
   }
   async del(key: string) {
     await this.redisClient.del(this.keyPrefix + key);
@@ -42,18 +43,20 @@ export class RedisContext {
     let currentCursor: number | undefined;
     let keysToReturn: string[] = [];
     while (currentCursor !== 0) {
-      const { cursor, keys } = await this.redisClient.scan(currentCursor || 0, { MATCH: this.keyPrefix + "*", COUNT: 10 });
+      // eslint-disable-next-line no-await-in-loop
+      const { cursor, keys } = await this.redisClient.scan(currentCursor || 0, { MATCH: `${this.keyPrefix}*`, COUNT: 10 });
       keysToReturn = [...keysToReturn, ...keys];
       currentCursor = cursor;
     }
     return keysToReturn;
   }
   async unlink(keys: string[]) {
-    if (keys.length) return await this.redisClient.unlink(keys);
+    if (keys.length) return this.redisClient.unlink(keys);
   }
   async removeAllKeys() {
     const keysToRemove = await this.getKeysByPrefix();
     const numKeysRemoved = await this.unlink(keysToRemove);
+    return numKeysRemoved;
   }
   async cleanup() {
     await this.removeAllKeys();

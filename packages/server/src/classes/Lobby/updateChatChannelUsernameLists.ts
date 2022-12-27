@@ -1,12 +1,13 @@
+/* eslint-disable no-param-reassign */
 import { ChatChannel, SocketMetadata } from "../../../../common";
 
 export default function updateChatChannelUsernameLists(
   chatChannels: { [name: string]: ChatChannel },
   socketMeta: SocketMetadata,
-  channelNameLeaving: string | null,
+  channelNameLeaving: string | null | undefined,
   channelNameJoining: string | null
 ) {
-  const username = socketMeta.associatedUser.username;
+  const { username } = socketMeta.associatedUser;
   if (channelNameLeaving) {
     const channelLeaving = chatChannels[channelNameLeaving];
     if (!channelLeaving) return;

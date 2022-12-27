@@ -1,9 +1,10 @@
+/* eslint-disable no-param-reassign */
 import { Socket } from "socket.io-client";
 import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, simulatedLagMs, simulateLag } from "../../../../common";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
 import serializeInput from "../user-input-serializers/serialize-input";
-const replicator = new (require("replicator"))();
+// const replicator = new (require("replicator"))();
 
 export default function mouseUpHandler(
   e: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -26,7 +27,7 @@ export default function mouseUpHandler(
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = false;
     mouseData.leftReleasedAt = new Point(mouseData.position.x, mouseData.position.y);
-    input = new SelectOrbs({ orbLabels: newOrbSelections(mouseData, currentGame, playerRole) }, (currentGame.netcode.lastClientInputNumber += 1), playerRole);
+    input = new SelectOrbs({ orbIds: newOrbSelections(mouseData, currentGame, playerRole) }, (currentGame.netcode.lastClientInputNumber += 1), playerRole);
   }
   if (!input) return;
   currentGame.queues.client.localInputs.push(input);
