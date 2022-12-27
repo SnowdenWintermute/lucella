@@ -3,18 +3,21 @@ import { BattleRoomGame, PlayerRole, DeltasProto, ScoreProto } from "../../../..
 import determineOrbDeltas from "./determineOrbDeltas";
 import packOrbSet from "./packOrbSet";
 
-export default function (game: BattleRoomGame, playerRole: PlayerRole) {
-  if (!game.netcode.prevGameState) return; // send full data
+export default function createDeltaPacket(game: BattleRoomGame, playerRole: PlayerRole) {
+  if (!game.netcode.prevGameState) return; // send full data // @todo - serialize this in its own protobuf and remove the consistent-renturn eslint disable comment at bottom of file
   const opponentRole = playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
   const playerOrbDeltas = determineOrbDeltas(game, playerRole);
   const opponentOrbDeltas = determineOrbDeltas(game, opponentRole, true);
 
-  let deltasPacket = new DeltasProto();
-  let packedHostOrbs, packedChallengerOrbs;
+  const deltasPacket = new DeltasProto();
+  let packedHostOrbs;
+  let packedChallengerOrbs;
   if (playerOrbDeltas && Object.keys(playerOrbDeltas).length)
-    playerRole === PlayerRole.HOST ? (packedHostOrbs = packOrbSet(playerOrbDeltas)) : (packedChallengerOrbs = packOrbSet(playerOrbDeltas));
+    if (playerRole === PlayerRole.HOST) packedHostOrbs = packOrbSet(playerOrbDeltas);
+    else packedChallengerOrbs = packOrbSet(playerOrbDeltas);
   if (opponentOrbDeltas && Object.keys(opponentOrbDeltas).length)
-    opponentRole === PlayerRole.HOST ? (packedHostOrbs = packOrbSet(opponentOrbDeltas)) : (packedChallengerOrbs = packOrbSet(opponentOrbDeltas));
+    if (opponentRole === PlayerRole.HOST) packedHostOrbs = packOrbSet(opponentOrbDeltas);
+    else packedChallengerOrbs = packOrbSet(opponentOrbDeltas);
 
   deltasPacket.setHostorbs(packedHostOrbs);
   deltasPacket.setChallengerorbs(packedChallengerOrbs);
@@ -32,5 +35,7 @@ export default function (game: BattleRoomGame, playerRole: PlayerRole) {
 
   const serializedMessage = deltasPacket.serializeBinary();
   // console.log("length in bytes: " + serializedMessage.length);
+
+  // eslint-disable-next-line consistent-return
   return serializedMessage;
 }

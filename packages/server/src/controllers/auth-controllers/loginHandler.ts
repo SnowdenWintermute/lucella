@@ -18,7 +18,7 @@ const accessTokenCookieOptions: CookieOptions = {
 // Only set secure to true in production // @production
 if (process.env.NODE_ENV === "production") accessTokenCookieOptions.secure = true;
 
-export default async function loginHandler(req: Request<{}, {}, LoginUserInput>, res: Response, next: NextFunction) {
+export default async function loginHandler(req: Request<object, object, LoginUserInput>, res: Response, next: NextFunction) {
   try {
     const user = await UserRepo.findOne("email", req.body.email);
     if (!user || user.status === UserStatuses.DELETED) return next([new CustomError(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, 401)]);

@@ -14,13 +14,14 @@ import {
 import { LucellaServer } from "../../classes/LucellaServer";
 import createDeltaPacket from "./createDeltaPacket/createDeltaPacket";
 import handleScoringPoints from "./handleScoringPoints";
-const replicator = new (require("replicator"))();
+// const replicator = new (require("replicator"))();
 
 export default function (io: Server, socket: Socket, server: LucellaServer, gameName: string) {
   const game = server.games[gameName];
   BattleRoomGame.initializeWorld(game);
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
 
+  // eslint-disable-next-line consistent-return
   return setInterval(() => {
     if (!game) return console.log("tried to update physics in a game that wasn't found");
     if (!game.physicsEngine) return console.log("tried to update physics in a game that was not yet initialized");

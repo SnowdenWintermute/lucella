@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import Matter, { Vector } from "matter-js";
 import { Orb } from "../classes/Orb";
 
@@ -13,8 +14,8 @@ interface BodyProperties {
 export const setBodyProperties = (body: Matter.Body, properties: BodyProperties) => {
   const { position, inertia, velocity, force, angle, angularVelocity } = properties;
   if (force) body.force = force;
-  position && Matter.Body.setPosition(body, position);
-  velocity && Matter.Body.setVelocity(body, velocity);
+  if (position) Matter.Body.setPosition(body, position);
+  if (velocity) Matter.Body.setVelocity(body, velocity);
   // inertia && Matter.Body.setInertia(body, inertia);
   // angle && Matter.Body.setAngle(body, angle);
   // angularVelocity && Matter.Body.setAngularVelocity(body, angularVelocity);

@@ -10,6 +10,7 @@ import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 
 jest.mock("nodemailer", () => ({
   createTransport: jest.fn().mockReturnValue({
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     sendMail: jest.fn().mockReturnValue((mailoptions: any, callback: () => any) => {}),
   }),
 }));

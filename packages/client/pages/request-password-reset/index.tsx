@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { Fragment, useState } from "react";
 import { useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
-const RequestPasswordResetEmail = () => {
+
+function RequestPasswordResetEmail() {
   const [requestPasswordResetEmail, { isLoading, isSuccess, error, isError }] = useRequestPasswordResetEmailMutation();
   const [formData, setFormData] = useState({
     email: "",
@@ -11,8 +11,7 @@ const RequestPasswordResetEmail = () => {
 
   const { email } = formData;
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,15 +28,7 @@ const RequestPasswordResetEmail = () => {
           <span>loading...</span>
         ) : (
           <Fragment>
-            <input
-              className="simple-text-input"
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={email}
-              onChange={(e) => onChange(e)}
-              autoFocus
-            ></input>
+            <input className="simple-text-input" type="email" placeholder="Email" name="email" value={email} onChange={(e) => onChange(e)} autoFocus></input>
             <div className="forgot-password">Enter your email to request a password reset.</div>
             <div className="auth-bottom-links">
               <Link href="/login">Back to login</Link>
@@ -48,6 +39,6 @@ const RequestPasswordResetEmail = () => {
       </form>
     </div>
   );
-};
+}
 
 export default RequestPasswordResetEmail;

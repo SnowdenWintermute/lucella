@@ -14,8 +14,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
     let decoded;
     if (token) decoded = verifyJwt<{ sub: string }>(token.toString(), process.env.ACCESS_TOKEN_PUBLIC_KEY!);
     if (decoded) {
-      let session;
-      session = await wrappedRedis.context!.get(decoded.sub.toString());
+      const session = await wrappedRedis.context!.get(decoded.sub.toString());
       if (!session) {
         console.log(`User session has expired`);
         return new Error(`User session has expired`);
@@ -41,7 +40,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
 }
 
 function randomFourNumbers(): number[] {
-  let randomNumbers: number[] = [];
+  const randomNumbers: number[] = [];
   for (let i = 4; i > 0; i--) {
     randomNumbers.push(Math.floor(Math.random() * Math.floor(9)));
   }

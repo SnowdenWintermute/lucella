@@ -8,22 +8,23 @@ interface Props {
   joinRoom: (roomName: string) => void;
 }
 
-const ChangeChannelModalContents = ({ setJoinNewRoomInput, joinNewRoomInput, onJoinRoomSubmit, joinRoom }: Props) => {
+function ChangeChannelModalContents({ setJoinNewRoomInput, joinNewRoomInput, onJoinRoomSubmit, joinRoom }: Props) {
   const defaultChannelNames = ["Lindblum", "Alexandria", "Burmecia", "Battle Room Chat", "Treno", "Lurker Lounge"];
   return (
     <form onSubmit={(e) => onJoinRoomSubmit(e)}>
       <p>Type any channel name, or choose from a list of suggested channels:</p>
       <input
-        autoFocus={true}
-        className={"text-input-transparent mb-15"}
+        // eslint-disable-next-line jsx-a11y/no-autofocus
+        autoFocus
+        className="text-input-transparent mb-15"
         onChange={(e) => {
           setJoinNewRoomInput(e.target.value);
         }}
         value={joinNewRoomInput}
         type="text"
         aria-label="channel to join"
-        placeholder={"Channel to join..."}
-      ></input>
+        placeholder="Channel to join..."
+      />
       <div className="modal-option-buttons-grid">
         {defaultChannelNames.map((name) => (
           <ButtonBasic title={name} key={name} onClick={() => joinRoom(name.replace(/\s+/g, "-").toLowerCase())} />
@@ -31,6 +32,6 @@ const ChangeChannelModalContents = ({ setJoinNewRoomInput, joinNewRoomInput, onJ
       </div>
     </form>
   );
-};
+}
 
 export default ChangeChannelModalContents;

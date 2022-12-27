@@ -1,4 +1,4 @@
-import { Detector } from "matter-js";
+/* eslint-disable no-param-reassign */
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 
 // @ todo - could be more dry

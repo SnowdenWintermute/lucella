@@ -1,3 +1,4 @@
+/* eslint-disable max-classes-per-file */
 import { UserInput } from "./UserInput";
 import { PlayerRole, UserInputs } from "../../enums";
 import { Point } from "../Point";

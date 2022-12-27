@@ -1,3 +1,5 @@
+/* eslint-disable import/first */
+// eslint-disable-next-line import/newline-after-import
 import * as dotenv from "dotenv";
 dotenv.config();
 import { DatabaseError } from "pg";
@@ -8,7 +10,8 @@ import wrappedPool from "./database/wrappedPool";
 import { wrappedRedis, RedisContext } from "./utils/RedisContext";
 import { lucella } from "./lucella";
 
-const PORT = process.env.PORT;
+const { PORT } = process.env;
+
 wrappedPool
   .connect(pgOptions)
   .then(() => {

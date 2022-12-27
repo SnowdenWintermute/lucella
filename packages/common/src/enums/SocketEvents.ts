@@ -1,3 +1,4 @@
+// @todo - change these to numbers
 export enum SocketEventsFromClient {
   NEW_CHAT_MESSAGE = "0",
   CLICKS_READY = "1",

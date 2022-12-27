@@ -3,25 +3,22 @@ import { Point } from "./Point";
 
 export class Orb {
   body: Matter.Body;
-  destination: Point | null;
+  destination: Point | null = null;
   color: string;
   owner: string;
   id: number;
-  isGhost: boolean;
-  isDashing: boolean;
-  isSelected: boolean;
-  positionBuffer: { position: Point; timestamp: number }[];
-  debug?: { numInputsAppliedBeforeComingToRest?: number; highestNumberInputApplied?: number };
+  isGhost = false;
+  isDashing = false;
+  isSelected = false;
+  positionBuffer: { position: Point; timestamp: number }[] = [];
+  debug?: { numInputsAppliedBeforeComingToRest?: number; highestNumberInputApplied?: number } = {
+    numInputsAppliedBeforeComingToRest: 0,
+    highestNumberInputApplied: 0,
+  };
   constructor(body: Matter.Body, owner: string, id: number, color: string) {
     this.body = body;
-    this.destination = null;
     this.color = color;
     this.owner = owner;
     this.id = id;
-    this.isGhost = false;
-    this.isDashing = false;
-    this.isSelected = false;
-    this.positionBuffer = [];
-    this.debug = { numInputsAppliedBeforeComingToRest: 0, highestNumberInputApplied: 0 };
   }
 }

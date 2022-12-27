@@ -67,7 +67,7 @@ describe("deleteAccountHandler", () => {
         // sockets are disconnected
         expect(lucella.server?.io.sockets.sockets.get(socket.id)).toBeUndefined();
         expect(lucella.server?.connectedUsers[user.name]).toBeUndefined();
-        expect(Object.keys(lucella.server?.connectedSockets!).length).toBe(0);
+        expect(Object.keys(lucella.server!.connectedSockets!).length).toBe(0);
         // can't log in after acconut deletion
         const loginResponse = await request(app)
           .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.LOGIN}`)

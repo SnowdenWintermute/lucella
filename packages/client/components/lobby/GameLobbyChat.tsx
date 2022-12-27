@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "../../redux/hooks";
 import { ChatMessage, SocketEventsFromClient } from "../../../common";
@@ -7,7 +7,7 @@ interface Props {
   socket: Socket;
 }
 
-const GameLobbyChat = ({ socket }: Props) => {
+function GameLobbyChat({ socket }: Props) {
   const [chatInput, setChatInput] = useState("");
   const [chatClass, setChatClass] = useState("");
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
@@ -15,7 +15,7 @@ const GameLobbyChat = ({ socket }: Props) => {
   const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
   const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
   const chatState = useAppSelector((state) => state.chat);
-  const { currentChatRoomName, messages } = chatState;
+  const { messages } = chatState;
 
   useEffect(() => {
     if (gameListIsOpen || preGameScreenIsOpen || matchmakingScreenIsOpen) setChatClass("chat-stream-top-border");
@@ -40,7 +40,7 @@ const GameLobbyChat = ({ socket }: Props) => {
   if (messages) {
     messagesToDisplay = messages.map((message) => {
       return (
-        <li className={`chat-message chat-message-${message.style}`} key={message.timeStamp + " " + message.text}>
+        <li className={`chat-message chat-message-${message.style}`} key={`${message.timeStamp} ${message.text}`}>
           {message.author} : {message.text}
         </li>
       );
@@ -48,7 +48,7 @@ const GameLobbyChat = ({ socket }: Props) => {
   }
 
   return (
-    <Fragment>
+    <>
       <div className={`game-lobby-chat-stream ${chatClass}`}>
         <ul>{messagesToDisplay}</ul>
       </div>
@@ -61,11 +61,11 @@ const GameLobbyChat = ({ socket }: Props) => {
             onChange={(e) => onChange(e)}
             value={chatInput}
             placeholder="Enter a message to chat..."
-          ></input>
+          />
         </form>
       </div>
-    </Fragment>
+    </>
   );
-};
+}
 
 export default GameLobbyChat;

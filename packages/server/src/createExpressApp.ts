@@ -1,12 +1,14 @@
+/* eslint-disable import/newline-after-import */
+/* eslint-disable import/order */
+/* eslint-disable import/first */
 import * as dotenv from "dotenv";
 dotenv.config();
 const helmet = require("helmet");
-import express, { NextFunction } from "express";
-import { Request, Response } from "express";
-import authRouter from "./routes/auth-route";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import authRouter from "./routes/auth-route";
 import errorHandler from "./middleware/errorHandler";
 import { AuthRoutePaths } from "../../common";
 

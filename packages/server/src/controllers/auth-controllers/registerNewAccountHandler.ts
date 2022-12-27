@@ -6,7 +6,7 @@ import CustomError from "../../classes/CustomError";
 import { SanitizedUser } from "../../models/User";
 import { ErrorMessages } from "@lucella/common";
 
-export default async function registerNewAccountHandler(req: Request<{}, {}, UserRegistrationUserInput>, res: Response, next: NextFunction) {
+export default async function registerNewAccountHandler(req: Request<object, object, UserRegistrationUserInput>, res: Response, next: NextFunction) {
   try {
     const { name, email, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 12);
