@@ -9,8 +9,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRouter from "./routes/auth-route";
+import usersRouter from "./routes/users-route";
 import errorHandler from "./middleware/errorHandler";
-import { AuthRoutePaths } from "../../common";
+import { AuthRoutePaths, UsersRoutePaths } from "../../common";
 
 export default function createExpressApp() {
   const app = express();
@@ -25,7 +26,8 @@ export default function createExpressApp() {
     })
   );
 
-  app.use(`/api${AuthRoutePaths.BASE}`, authRouter);
+  app.use(`/api${AuthRoutePaths.ROOT}`, authRouter);
+  app.use(`/api${UsersRoutePaths.ROOT}`, usersRouter);
 
   app.all("*", (req: Request, res: Response, next: NextFunction) => {
     const err = new Error(`Route ${req.originalUrl} not found`) as any;

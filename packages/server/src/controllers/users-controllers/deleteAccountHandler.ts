@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { UserStatuses } from "../../../../common";
 import UserRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";
-import logout from "./utils/logout";
+import logout from "../utils/logout";
 
 import { lucella } from "../../lucella";
 import { User } from "../../models/User";

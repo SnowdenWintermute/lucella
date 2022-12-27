@@ -1,11 +1,11 @@
 import { Application } from "express";
 import request from "supertest";
-import { AuthRoutePaths, ErrorMessages, UserStatuses } from "../../../../common";
+import { ErrorMessages, UsersRoutePaths, UserStatuses } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
 import UserRepo from "../../database/repos/users";
-import signTokenAndCreateSession from "./utils/signTokenAndCreateSession";
-import { signJwt } from "./utils/jwt";
+import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
+import { signJwt } from "../utils/jwt";
 import { User } from "../../models/User";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
@@ -34,7 +34,7 @@ describe("getMeHandler", () => {
     const { accessToken } = await signTokenAndCreateSession(user);
 
     const response = await request(app)
-      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
+      .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
 
     expect(response.status).toBe(200);
@@ -45,16 +45,14 @@ describe("getMeHandler", () => {
   });
 
   it("should return error if no token provided in cookies", async () => {
-    const response = await request(app).get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`);
+    const response = await request(app).get(`/api${UsersRoutePaths.ROOT}`);
 
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NOT_LOGGED_IN)).toBeTruthy();
     expect(response.status).toBe(401);
   });
 
   it("should return invalid token error", async () => {
-    const response = await request(app)
-      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
-      .set("Cookie", [`access_token=some invalid token`]);
+    const response = await request(app).get(`/api${UsersRoutePaths.ROOT}`).set("Cookie", [`access_token=some invalid token`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
   });
@@ -65,7 +63,7 @@ describe("getMeHandler", () => {
       expiresIn: `1000m`,
     });
     const response = await request(app)
-      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
+      .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.EXPIRED_SESSION)).toBeTruthy();
@@ -76,7 +74,7 @@ describe("getMeHandler", () => {
     const testUser: User = { id: 2, name: "", createdAt: 12, updatedAt: 12, password: "", email: "", role: "", status: "" };
     const { accessToken } = await signTokenAndCreateSession(testUser);
     const response = await request(app)
-      .get(`/api${AuthRoutePaths.BASE + AuthRoutePaths.ME}`)
+      .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NO_USER_EXISTS)).toBeTruthy();

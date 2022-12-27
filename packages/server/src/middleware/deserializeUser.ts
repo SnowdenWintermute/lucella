@@ -1,10 +1,10 @@
 /* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from "express";
-import { verifyJwt } from "../controllers/auth-controllers/utils/jwt";
+import { verifyJwt } from "../controllers/utils/jwt";
+import logout from "../controllers/utils/logout";
 import UserRepo from "../database/repos/users";
 import CustomError from "../classes/CustomError";
 import { AuthRoutePaths, ErrorMessages, UserStatuses } from "../../../common";
-import logout from "../controllers/auth-controllers/utils/logout";
 import { wrappedRedis } from "../utils/RedisContext";
 
 export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {

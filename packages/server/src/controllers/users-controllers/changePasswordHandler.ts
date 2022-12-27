@@ -2,7 +2,7 @@
 import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import UserRepo from "../../database/repos/users";
-import { verifyJwt } from "./utils/jwt";
+import { verifyJwt } from "../utils/jwt";
 import CustomError from "../../classes/CustomError";
 import { ErrorMessages } from "../../../../common/dist";
 

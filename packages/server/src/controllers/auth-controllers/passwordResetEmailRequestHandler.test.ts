@@ -35,7 +35,7 @@ describe("passwordResetEmailRequestHandler", () => {
 
   it("calls nodemailer functions when called", async () => {
     const response = await request(app)
-      .post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL}`)
+      .post(`/api${AuthRoutePaths.ROOT + AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL}`)
       .send({
         email: TEST_USER_EMAIL,
       });
@@ -45,7 +45,7 @@ describe("passwordResetEmailRequestHandler", () => {
   });
 
   it("sends appropriate error when no email provided", async () => {
-    const response = await request(app).post(`/api${AuthRoutePaths.BASE + AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL}`);
+    const response = await request(app).post(`/api${AuthRoutePaths.ROOT + AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL}`);
     expect(response.status).toBe(404);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST)).toBeTruthy();
   });
