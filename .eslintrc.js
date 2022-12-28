@@ -60,7 +60,7 @@ module.exports = {
     //     avoidEscape: true,
     //   },
     // ],
-    // "no-console": [`warn`, { allow: [`warn`] }],
+    "no-console": "off",
     // "spaced-comment": [2, `always`, { exceptions: [`-`, `+`], markers: [`/`] }],
     // "no-use-before-define": 0,
     // "no-plusplus": 0,

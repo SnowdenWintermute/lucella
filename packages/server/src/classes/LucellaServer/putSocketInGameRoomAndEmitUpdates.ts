@@ -9,10 +9,10 @@ export default function putSocketInGameRoomAndEmitUpdates(lucellaServer: Lucella
   const gameRoom = lobby.gameRooms[gameName];
   try {
     if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE);
-    if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_DOES_NOT_EXIST);
-    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_IS_FULL);
+    if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
+    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_IS_FULL);
     if (gameRoom.players.host && gameRoom.players.host.associatedUser.username === username)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_PLAY_AGAINST_SELF); // to prevent a logged in player from playing against themselves by opening another browser window
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_PLAY_AGAINST_SELF); // to prevent a logged in player from playing against themselves by opening another browser window
 
     connectedSockets[socket.id].currentGameName = gameName;
     let playerRole;

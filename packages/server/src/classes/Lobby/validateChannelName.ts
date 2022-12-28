@@ -1,11 +1,11 @@
 /* eslint-disable consistent-return */
-import { gameChannelNamePrefix, rankedGameChannelNamePrefix } from "../../../../common";
+import { ErrorMessages, gameChannelNamePrefix, rankedGameChannelNamePrefix } from "../../../../common";
 
 export default function validateChannelName(name: string, authorizedForGameChannel?: boolean) {
   if (
-    (name.slice(0, gameChannelNamePrefix.length) === rankedGameChannelNamePrefix ||
-      name.slice(0, rankedGameChannelNamePrefix.length) === gameChannelNamePrefix) &&
+    (name.slice(0, gameChannelNamePrefix.length) === gameChannelNamePrefix ||
+      name.slice(0, rankedGameChannelNamePrefix.length) === rankedGameChannelNamePrefix) &&
     !authorizedForGameChannel
   )
-    return `Channels prefixed with "${gameChannelNamePrefix}" or "${rankedGameChannelNamePrefix}" are reserved for that game's players`;
+    return ErrorMessages.LOBBY.GAME_NAME.UNAUTHORIZED_CHANNEL_NAME;
 }

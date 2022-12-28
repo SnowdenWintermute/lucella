@@ -12,7 +12,7 @@ export default function initializeListeners(server: LucellaServer) {
     socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, server.lobby.getSanitizedGameRooms());
     socket.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
     socket.onAny(() => {
-      if (!server.connectedSockets[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.SOCKET_NOT_REGISTERED);
+      if (!server.connectedSockets[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.SOCKET_NOT_REGISTERED);
     });
     lobbyUiListeners(server, socket);
     battleRoomGameListeners(server, socket);

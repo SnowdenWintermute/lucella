@@ -1,10 +1,12 @@
 import { ChatMessage } from "./ChatMessage";
 
+export type ChatChannelUsersList = { [username: string]: { username: string; connectedSockets: string[] } };
+
 export class ChatChannel {
   name: string;
   parentGameRoom: string | null;
   messageHistory: ChatMessage[] = [];
-  connectedUsers: { [username: string]: { username: string; connectedSockets: string[] } } = {};
+  connectedUsers: ChatChannelUsersList = {};
   constructor(name: string, parentGameRoom?: string) {
     this.name = name;
     this.parentGameRoom = parentGameRoom || null;

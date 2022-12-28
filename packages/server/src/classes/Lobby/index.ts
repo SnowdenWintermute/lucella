@@ -61,7 +61,7 @@ export class Lobby {
     }
 
     if (channelNameJoining) {
-      const validationError = validateChannelName(channelNameJoining);
+      const validationError = validateChannelName(channelNameJoining, authorizedForGameChannel);
       if (validationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, validationError);
       socket.join(channelNameJoining);
       io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, this.getSanitizedChatChannel(channelNameJoining));
@@ -73,24 +73,24 @@ export class Lobby {
   handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
     gameName = gameName.toLowerCase();
     if (this.server.connectedSockets[socket.id].currentGameName)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_HOST_IF_ALREADY_IN_GAME);
-    const gameCreationError = this.createGameRoom(socket, gameName, isRanked);
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_HOST_IF_ALREADY_IN_GAME);
+    const gameCreationError = this.createGameRoom(gameName, isRanked);
     if (gameCreationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, gameCreationError);
     console.log(`game room created: ${gameName}`);
     this.changeSocketChatChannelAndEmitUpdates(socket, gameChannelNamePrefix + gameName, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
   handleJoinGameRoomRequest(socket: Socket, gameName: string, assignedToGameByMatchmaking?: boolean) {
-    if (!this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_DOES_NOT_EXIST);
+    if (!this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
     if (this.gameRooms[gameName].isRanked && !assignedToGameByMatchmaking)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
     if (this.server.connectedSockets[socket.id].currentGameName)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_JOIN_IF_ALREADY_IN_GAME);
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
     this.changeSocketChatChannelAndEmitUpdates(socket, gameChannelNamePrefix + gameName, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
-  createGameRoom(socket: Socket, gameName: string, isRanked?: boolean) {
-    if (this.gameRooms[gameName]) return ErrorMessages.GAME_EXISTS;
+  createGameRoom(gameName: string, isRanked?: boolean) {
+    if (this.gameRooms[gameName]) return ErrorMessages.LOBBY.GAME_EXISTS;
     const gameNameValidationError = validateGameName(gameName, isRanked);
     if (gameNameValidationError) return gameNameValidationError;
     this.gameRooms[gameName] = new GameRoom(gameName, isRanked);
@@ -100,10 +100,10 @@ export class Lobby {
     const { username } = connectedSockets[socket.id].associatedUser;
     const gameRoom = this.gameRooms[gameName];
     if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE);
-    if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_DOES_NOT_EXIST);
-    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.GAME_IS_FULL);
+    if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
+    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_IS_FULL);
     if (gameRoom.players.host && gameRoom.players.host.associatedUser.username === username)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_PLAY_AGAINST_SELF); // to prevent a logged in player from playing against themselves by opening another browser window
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_PLAY_AGAINST_SELF); // to prevent a logged in player from playing against themselves by opening another browser window
 
     connectedSockets[socket.id].currentGameName = gameName;
     let playerRole;

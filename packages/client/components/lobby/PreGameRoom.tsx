@@ -41,8 +41,9 @@ function PreGameRoom({ socket }: Props) {
   const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const gameNameToCreate = gameNameInput;
+    // todo - run validation reuse server function
     if (gameNameToCreate && socket) socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameNameToCreate);
-    else dispatch(setAlert(new Alert(ErrorMessages.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
+    else dispatch(setAlert(new Alert(ErrorMessages.LOBBY.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
   };
 
   const handleReadyClick = () => {

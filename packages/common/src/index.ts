@@ -12,7 +12,7 @@ export { InputFields } from "./consts/InputFields";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
 export { GameElementsOfConstantInterest } from "./classes/BattleRoomGame/GameElementsOfConstantInterest";
-export { ChatChannel } from "./classes/ChatChannel";
+export * from "./classes/ChatChannel";
 export { ChatMessage, ChatMessageStyles } from "./classes/ChatMessage";
 export { MouseData } from "./classes/MouseData";
 export { Orb } from "./classes/Orb";

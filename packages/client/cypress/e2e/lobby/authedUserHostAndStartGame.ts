@@ -15,9 +15,9 @@ export default function authedUserHostAndStartGame() {
     cy.findByRole("button", { name: new RegExp("Host", "i") }).click();
     cy.get('[data-cy="game-name-input"]').click().type("{enter}");
     cy.findByText(new RegExp(`You are the host of game:`, "i")).should("not.exist");
-    cy.findByText(ErrorMessages.GAME_NAME.NOT_ENTERED).should("exist");
+    cy.findByText(ErrorMessages.LOBBY.GAME_NAME.NOT_ENTERED).should("exist");
     cy.get('[data-cy="game-name-input"]').click().type(`${mediumTestText}{enter}`);
-    cy.findByText(ErrorMessages.GAME_NAME.MAX_LENGTH).should("exist");
+    cy.findByText(ErrorMessages.LOBBY.GAME_NAME.MAX_LENGTH).should("exist");
     cy.get('[data-cy="game-name-input"]').clear().click().type(`${shortTestText}{enter}`);
     cy.findByText(new RegExp(`You are the host of game: ${shortTestText}`, "i")).should("exist");
     cy.findByText(new RegExp("Awaiting challenger...", "i")).should("exist");
