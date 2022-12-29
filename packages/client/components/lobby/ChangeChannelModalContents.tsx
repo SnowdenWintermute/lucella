@@ -1,4 +1,5 @@
 import React from "react";
+import { defaultChatChannelNames } from "../../../common";
 import ButtonBasic from "../common-components/buttons/ButtonBasic";
 
 interface Props {
@@ -9,7 +10,6 @@ interface Props {
 }
 
 function ChangeChannelModalContents({ setJoinNewRoomInput, joinNewRoomInput, onJoinRoomSubmit, joinRoom }: Props) {
-  const defaultChannelNames = ["Lindblum", "Alexandria", "Burmecia", "Battle Room Chat", "Treno", "Lurker Lounge"];
   return (
     <form onSubmit={(e) => onJoinRoomSubmit(e)}>
       <p>Type any channel name, or choose from a list of suggested channels:</p>
@@ -26,8 +26,8 @@ function ChangeChannelModalContents({ setJoinNewRoomInput, joinNewRoomInput, onJ
         placeholder="Channel to join..."
       />
       <div className="modal-option-buttons-grid">
-        {defaultChannelNames.map((name) => (
-          <ButtonBasic title={name} key={name} onClick={() => joinRoom(name.replace(/\s+/g, "-").toLowerCase())} />
+        {Object.values(defaultChatChannelNames).map((name) => (
+          <ButtonBasic title={name} key={name} onClick={() => joinRoom(name)} />
         ))}
       </div>
     </form>

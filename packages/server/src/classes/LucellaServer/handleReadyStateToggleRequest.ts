@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { BattleRoomGame, gameChannelNamePrefix, GameStatus, SocketEventsFromServer } from "../../../../common";
+import { BattleRoomGame, gameChannelNamePrefix, GameStatus, ONE_SECOND, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from ".";
 import createGamePhysicsInterval from "../../battleRoomGame/createGamePhysicsInterval";
 
@@ -32,7 +32,7 @@ export default function handleReadyStateToggleRequest(server: LucellaServer, soc
       const game = games[currentGameName];
       io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
       game.intervals.physics = createGamePhysicsInterval(io, socket, server, currentGameName);
-    }, 1000);
+    }, ONE_SECOND);
   } else {
     gameRoom.cancelCountdownInterval();
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);

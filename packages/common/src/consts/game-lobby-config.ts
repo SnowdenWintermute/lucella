@@ -8,3 +8,13 @@ export enum OfficialChannels {
   matchmakingQueue = "matchmaking-queue",
 }
 export const maxGameNameLength = 20;
+
+export const battleRoomDefaultChatChannel = "battle-room-chat";
+export const defaultChatChannelNames = {
+  LINDBLUM: "Lindblum",
+  ALEXANDRIA: "Alexandria",
+  BURMECIA: "Burmecia",
+  BATTLE_ROOM_CHAT: "Battle Room Chat",
+  TRENO: "Treno",
+  LURKER_LOUNGE: "Lurker Lounge",
+};

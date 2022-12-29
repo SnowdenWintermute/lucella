@@ -1,4 +1,4 @@
-import { battleRoomDefaultChatChannel, SocketEventsFromClient } from "../../../../common";
+import { SocketEventsFromClient, battleRoomDefaultChatChannel } from "../../../../common";
 import { veryLongTestText, mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 

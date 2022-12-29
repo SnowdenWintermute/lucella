@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { Socket } from "socket.io";
 import { ErrorMessages, gameChannelNamePrefix, PlayerRole, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from ".";

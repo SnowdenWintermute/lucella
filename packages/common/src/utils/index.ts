@@ -8,6 +8,10 @@ export function randBetween(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
+export function toKebabCase(string: string) {
+  return string.replace(/\s+/g, "-").toLowerCase();
+}
+
 export function distanceBetweenTwoPoints(a: Point, b: Point) {
   const y = b.x - a.x;
   const x = b.y - a.y;

@@ -13,7 +13,7 @@ import {
   ChatMessageStyles,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
-import updateChatChannelUsernameLists from "./updateChatChannelUsernameLists";
+import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
 import validateGameName from "./validateGameName";
 import { LucellaServer } from "../LucellaServer";
 import handleSocketLeavingGameRoom from "./handleSocketLeavingGameRoom";
@@ -37,8 +37,12 @@ export class Lobby {
   getSanitizedChatChannel(channelName: string) {
     return sanitizeChatChannel(this.chatChannels[channelName]);
   }
-  updateChatChannelUsernameLists(socketMeta: SocketMetadata, channelNameLeaving: string | null | undefined, channelNameJoining: string | null) {
-    updateChatChannelUsernameLists(this.chatChannels, socketMeta, channelNameLeaving, channelNameJoining);
+  updateChatChannelUsernameListsAndDeleteEmptyChannels(
+    socketMeta: SocketMetadata,
+    channelNameLeaving: string | null | undefined,
+    channelNameJoining: string | null
+  ) {
+    updateChatChannelUsernameListsAndDeleteEmptyChannels(this.chatChannels, socketMeta, channelNameLeaving, channelNameJoining);
   }
   handleNewChatMessage(socket: Socket, data: { style: ChatMessageStyles; text: string }) {
     // @todo - check the style the user sends against a list of valid styles for that user (can sell styles)
@@ -54,7 +58,7 @@ export class Lobby {
     if (channelNameJoining) channelNameJoining = channelNameJoining.toLowerCase();
 
     const channelNameLeaving = connectedSockets[socket.id].currentChatChannel;
-    this.updateChatChannelUsernameLists(connectedSockets[socket.id], channelNameLeaving, channelNameJoining);
+    this.updateChatChannelUsernameListsAndDeleteEmptyChannels(connectedSockets[socket.id], channelNameLeaving, channelNameJoining);
     if (channelNameLeaving) {
       socket?.leave(channelNameLeaving);
       io.in(channelNameLeaving).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, this.getSanitizedChatChannel(channelNameLeaving));
