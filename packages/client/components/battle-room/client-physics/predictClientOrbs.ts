@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { Detector, Pair } from "matter-js";
 import {
   BattleRoomGame,
@@ -11,7 +12,7 @@ import {
 } from "../../../../common";
 import setNonOrbGameState from "./setNonOrbGameState";
 
-export default function (game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: ServerPacket, playerRole: PlayerRole) {
+export default function predictClientOrbs(game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: ServerPacket, playerRole: PlayerRole) {
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
   const inputsToKeep: UserInput[] = [];
 

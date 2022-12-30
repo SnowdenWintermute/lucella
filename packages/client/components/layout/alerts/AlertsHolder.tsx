@@ -4,7 +4,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import AlertElement from "./AlertElement";
 import styles from "./alerts.module.scss";
 
-const Alerts = () => {
+function Alerts() {
   const { alerts } = useAppSelector((state) => state.alerts);
 
   const alertsToDisplay: React.ReactElement[] = [];
@@ -16,6 +16,6 @@ const Alerts = () => {
   }
 
   return <ul className={styles["alerts-holder"]}>{alertsToDisplay}</ul>;
-};
+}
 
 export default Alerts;

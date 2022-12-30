@@ -1,8 +1,9 @@
+/* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { BattleRoomGame, endScreenCountdownDelay, simulatedLagMs, simulateLag, SocketEventsFromServer, WidthAndHeight } from "../../../common";
-import { setGameWinner, setScoreScreenData } from "../../redux/slices/lobby-ui-slice";
+import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
 import mapUnpackedPacketToUpdateObject from "../../protobuf-utils/mapUnpackedPacketToUpdateObject";
@@ -14,7 +15,7 @@ interface Props {
   canvasSizeRef: React.RefObject<WidthAndHeight | null>;
 }
 
-const GameListener = (props: Props) => {
+function GameListener(props: Props) {
   const dispatch = useAppDispatch();
   const { playerRole } = useAppSelector((state) => state.lobbyUi);
   const { socket, game, canvasRef, canvasSizeRef } = props;
@@ -58,6 +59,6 @@ const GameListener = (props: Props) => {
   }, [socket, dispatch]);
 
   return <div id="socket-listener-for-battle-room-game" />;
-};
+}
 
 export default GameListener;

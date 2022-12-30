@@ -1,6 +1,6 @@
 import { MouseData, Orb } from "../../../../../../common";
 
-export default function (orb: Orb, mouseData: MouseData): boolean | void {
+export default function orbIsWithinSelectionBox(orb: Orb, mouseData: MouseData): boolean | void {
   const { leftPressedAt, leftReleasedAt } = mouseData;
   if (!leftPressedAt || !leftReleasedAt) return console.log("missing arguments for orbIsWithinSelectionBox");
   return (

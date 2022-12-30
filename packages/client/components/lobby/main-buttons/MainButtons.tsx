@@ -10,7 +10,7 @@ interface Props {
   showChangeChannelModal: () => void;
 }
 
-const MainButtons = ({ socket, showChangeChannelModal }: Props) => {
+function MainButtons({ socket, showChangeChannelModal }: Props) {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
 
   const { currentGameRoom } = lobbyUiState;
@@ -23,6 +23,6 @@ const MainButtons = ({ socket, showChangeChannelModal }: Props) => {
       <MatchmakingButtons socket={socket} />
     </div>
   );
-};
+}
 
 export default MainButtons;

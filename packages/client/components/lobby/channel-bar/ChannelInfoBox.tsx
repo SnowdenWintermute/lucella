@@ -1,7 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../../../redux/hooks";
 
-const ChannelInfoBox = () => {
+function ChannelInfoBox() {
   const chatState = useAppSelector((state) => state.chat);
   const { newChatRoomLoading, currentChatRoomName, currentChatRoomUsers } = chatState;
   const numUsers = Object.keys(currentChatRoomUsers).length;
@@ -10,6 +10,6 @@ const ChannelInfoBox = () => {
       {currentChatRoomName} ({newChatRoomLoading ? "..." : numUsers})
     </div>
   );
-};
+}
 
 export default ChannelInfoBox;

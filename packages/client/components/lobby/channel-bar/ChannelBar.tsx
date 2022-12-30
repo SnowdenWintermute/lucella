@@ -1,14 +1,14 @@
-import React, { Fragment } from "react";
+import React from "react";
 import UserList from "./UserList";
 import ChannelInfoBox from "./ChannelInfoBox";
 
-const ChannelBar = () => {
+function ChannelBar() {
   return (
-    <Fragment>
+    <>
       <ChannelInfoBox />
       <UserList />
-    </Fragment>
+    </>
   );
-};
+}
 
 export default ChannelBar;

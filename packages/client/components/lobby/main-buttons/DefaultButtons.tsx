@@ -1,7 +1,7 @@
+import { Socket } from "socket.io-client";
 import React, { useState, useEffect, Fragment } from "react";
 import Modal from "../../common-components/modal/Modal";
 import { SocketEventsFromClient } from "../../../../common";
-import { Socket } from "socket.io-client";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import GameLobbyModalButton from "../../common-components/buttons/GameLobbyModalButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
@@ -13,7 +13,7 @@ interface Props {
   socket: Socket;
 }
 
-const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
+function DefaultButtons({ showChangeChannelModal, socket }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
@@ -91,10 +91,10 @@ const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
       </li>
     </ul>
   ) : (
-    <Fragment>
+    <>
       <GameLobbyTopButton title="≡" onClick={onMenuClick} displayClass={chatButtonDisplayClass} />
-      <Modal screenClass="" frameClass="modal-frame-dark" isOpen={menuModalDisplayed} setParentDisplay={setMenuModalDisplayed} title={"Menu"}>
-        <ul className={`chat-buttons-modal-list`}>
+      <Modal screenClass="" frameClass="modal-frame-dark" isOpen={menuModalDisplayed} setParentDisplay={setMenuModalDisplayed} title="Menu">
+        <ul className="chat-buttons-modal-list">
           <li>
             <GameLobbyModalButton title="Channel" onClick={onChannelClick} />
           </li>
@@ -109,8 +109,8 @@ const DefaultButtons = ({ showChangeChannelModal, socket }: Props) => {
           </li>
         </ul>
       </Modal>
-    </Fragment>
+    </>
   );
-};
+}
 
 export default DefaultButtons;

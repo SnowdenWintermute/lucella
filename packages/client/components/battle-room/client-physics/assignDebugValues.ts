@@ -1,6 +1,13 @@
+/* eslint-disable no-param-reassign */
 import { BattleRoomGame, PlayerRole } from "../../../../common";
 
-export default function (game: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole, frameTime: number, roundTripTime?: number | undefined) {
+export default function assignDebugValues(
+  game: BattleRoomGame,
+  lastUpdateFromServerCopy: any,
+  playerRole: PlayerRole,
+  frameTime: number,
+  roundTripTime?: number | undefined
+) {
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
   game.debug.clientPrediction.inputsToSimulate = game.queues.client.localInputs;
   game.debug.clientPrediction.lastProcessedClientInputNumber = lastProcessedClientInputNumber;

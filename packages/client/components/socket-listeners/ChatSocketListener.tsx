@@ -1,6 +1,7 @@
-import { SocketEventsFromServer } from "../../../common/dist";
+/* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
+import { SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { newChatMessage, setNewChatRoomLoading, updateCurrentChatRoom } from "../../redux/slices/chat-slice";
 
@@ -8,7 +9,7 @@ interface Props {
   socket: Socket;
 }
 
-const ChatSocketListener = ({ socket }: Props) => {
+function ChatSocketListener({ socket }: Props) {
   const dispatch = useAppDispatch();
   const chatState = useAppSelector((state) => state.chat);
   const { currentChatRoomName } = chatState;
@@ -28,6 +29,6 @@ const ChatSocketListener = ({ socket }: Props) => {
   }, [socket, currentChatRoomName, dispatch]);
 
   return <div id="socket-listener-for-chat" />;
-};
+}
 
 export default ChatSocketListener;

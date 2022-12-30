@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import "../styles/main.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";

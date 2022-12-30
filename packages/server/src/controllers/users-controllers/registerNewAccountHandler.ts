@@ -2,10 +2,9 @@
 import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 import UserRepo from "../../database/repos/users";
-import { UserRegistrationUserInput } from "../../user-input-validation-schema/register-user-schema";
 import CustomError from "../../classes/CustomError";
-import { SanitizedUser } from "../../models/User";
-import { ErrorMessages } from "../../../../common";
+import { ErrorMessages, SanitizedUser } from "../../../../common";
+import { UserRegistrationUserInput } from "../../user-input-validation-schema/register-user-schema";
 
 export default async function registerNewAccountHandler(req: Request<object, object, UserRegistrationUserInput>, res: Response, next: NextFunction) {
   try {

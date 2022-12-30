@@ -1,6 +1,6 @@
-import { SocketEventsFromClient } from "../../../../common";
 import React, { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
+import { SocketEventsFromClient } from "../../../../common";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { setMatchmakingWindowVisible } from "../../../redux/slices/lobby-ui-slice";
@@ -9,7 +9,7 @@ interface Props {
   socket: Socket;
 }
 
-const MatchmakingButtons = ({ socket }: Props) => {
+function MatchmakingButtons({ socket }: Props) {
   const dispatch = useAppDispatch();
   const [cancelMatchmakingButtonDisplayClass, setCancelMatchmakingButtonDisplayClass] = useState("chat-button-hidden");
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
@@ -29,12 +29,12 @@ const MatchmakingButtons = ({ socket }: Props) => {
   };
   if (isRanked) return <span />;
   return (
-    <ul className={`pre-game-buttons`}>
+    <ul className="pre-game-buttons">
       <li>
         <GameLobbyTopButton title="Cancel Search" onClick={onCancelMatchmakingSearch} displayClass={cancelMatchmakingButtonDisplayClass} />
       </li>
     </ul>
   );
-};
+}
 
 export default MatchmakingButtons;

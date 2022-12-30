@@ -1,9 +1,9 @@
-import { GameStatus, battleRoomDefaultChatChannel } from "../../../common";
 import React from "react";
+import { GameStatus, battleRoomDefaultChatChannel } from "../../../common";
 import GameLobby from "../../components/lobby/GameLobby";
 import { useAppSelector } from "../../redux/hooks";
 
-const BattleRoom = () => {
+function BattleRoom() {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { currentGameRoom } = lobbyUiState;
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
@@ -18,6 +18,6 @@ const BattleRoom = () => {
       </div>
     </section>
   );
-};
+}
 
 export default BattleRoom;

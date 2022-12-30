@@ -13,8 +13,7 @@ interface Props {
   id: string;
 }
 
-const AlertElement = ({ message, type, id }: Props) => {
-  if (!message) message = "undefined alert message";
+function AlertElement({ message, type, id }: Props) {
   const dispatch = useAppDispatch();
   const [animateClass, setAnimateClass] = useState("");
 
@@ -23,23 +22,26 @@ const AlertElement = ({ message, type, id }: Props) => {
     setTimeout(() => dispatch(clearAlert(id)), defaultAlertTimeout);
   }, []);
 
-  const alertIcon =
-    type === AlertType.DANGER ? <DangerIcon className={styles["alert-icon"]}></DangerIcon> : <SuccessIcon className={styles["alert-icon"]}></SuccessIcon>;
+  const alertIcon = type === AlertType.DANGER ? <DangerIcon className={styles["alert-icon"]} /> : <SuccessIcon className={styles["alert-icon"]} />;
 
-  const removeAlert = (id: string) => {
+  const removeAlert = () => {
     dispatch(clearAlert(id));
   };
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <li
       role="status"
       className={`${styles.alert} ${styles[`alert-${type.toLowerCase()}`]} ${animateClass ? styles[animateClass] : ""}`}
-      onClick={(e) => removeAlert(id)}
+      onClick={(e) => removeAlert()}
+      onKeyUp={(e) => {
+        if (e.key === "Enter") removeAlert();
+      }}
     >
       {alertIcon}
       {message}
     </li>
   );
-};
+}
 
 export default AlertElement;

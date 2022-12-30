@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
-import { BattleRoomGame } from "../../../../common";
+import { BattleRoomGame, User } from "../../../../common";
 import { Lobby } from "../Lobby";
 import initializeListeners from "./initializeListeners";
 import { SocketIDsByUsername, SocketMetadataList } from "../../types";
@@ -8,7 +8,6 @@ import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
-import { User } from "../../models/User";
 import BattleRoomRecord from "../../models/BattleRoomRecord";
 
 export class LucellaServer {

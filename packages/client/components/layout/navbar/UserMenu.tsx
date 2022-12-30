@@ -2,20 +2,13 @@ import Link from "next/link";
 import { useState, useEffect, Fragment } from "react";
 import logoutIcon from "../../../img/menuIcons/logout.png";
 import SettingsIcon from "../../../img/menuIcons/settings.svg";
-import { useAppDispatch } from "../../../redux/hooks";
-import { authApi, useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
+import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
+import { usersApi } from "../../../redux/api-slices/users-api-slice";
 
-export const UserMenu = () => {
-  const dispatch = useAppDispatch();
+export function UserMenu() {
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const [logoutUser] = useLogoutUserMutation();
-  const {
-    data: userState,
-    isLoading: userQueryIsLoading,
-    isSuccess: userQueryIsSuccess,
-    isFetching: userQueryIsFetching,
-  } = authApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
-  const user = authApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
+  const { data: user, isLoading } = usersApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
 
   // show/hide menu
   useEffect(() => {
@@ -31,9 +24,12 @@ export const UserMenu = () => {
     logoutUser();
   };
 
+  useEffect(() => {}, [user]);
+
   const loggedInUserMenu = (
-    <Fragment>
-      <div
+    <>
+      <button
+        type="button"
         className="user-icon-circle"
         data-name="profile-icon"
         onClick={(e) => {
@@ -43,7 +39,7 @@ export const UserMenu = () => {
         <div className="user-icon-letter" data-name="profile-icon">
           {user?.name && user.name.slice(0, 1)}
         </div>
-      </div>
+      </button>
       {showUserDropdown && (
         <ul className="user-menu">
           <Link href="/settings" className="user-menu-item">
@@ -56,7 +52,7 @@ export const UserMenu = () => {
           </Link>
         </ul>
       )}
-    </Fragment>
+    </>
   );
 
   const guestMenu = (
@@ -66,7 +62,6 @@ export const UserMenu = () => {
   );
 
   // if (userIsLoading || userIsFetching) return <p>...</p>;
-  const userMenu = user ? loggedInUserMenu : guestMenu;
-
-  return userMenu;
-};
+  // eslint-disable-next-line no-nested-ternary
+  return isLoading ? <span>...</span> : user ? loggedInUserMenu : guestMenu;
+}

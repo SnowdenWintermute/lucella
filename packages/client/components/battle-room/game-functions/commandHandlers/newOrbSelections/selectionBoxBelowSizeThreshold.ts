@@ -1,6 +1,7 @@
+/* eslint-disable consistent-return */
 import { minimumSelectionBoxSize, MouseData } from "../../../../../../common";
 
-export default function (mouseData: MouseData) {
+export default function selectionBoxBelowSizeThreshold(mouseData: MouseData) {
   const { position, leftPressedAt } = mouseData;
   if (!position || !leftPressedAt) return;
   const selectionBoxIsBelowSizeThreshold =

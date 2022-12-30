@@ -47,19 +47,19 @@ const Modal = ({ isOpen, children, setParentDisplay, title, screenClass, frameCl
   }, [isOpen]);
 
   const modalToShow = displayModal ? (
-    <Fragment>
-      <div className={`modal-screen ${screenClass || ""}`} id="modal-screen"></div>
+    <>
+      <div className={`modal-screen ${screenClass || ""}`} id="modal-screen" />
       <div className={`modal-frame ${frameClass}`}>
         <div className="modal-top-bar">
           <div className="modal-title">{title}</div>
-          <div className="modal-x-button" onClick={() => hideModal()}>
+          <button type="button" className="modal-x-button" onClick={() => hideModal()}>
             x
-          </div>
+          </button>
         </div>
-        <div className="modal-divider-bar"></div>
+        <div className="modal-divider-bar" />
         <div className="modal-content">{children}</div>
       </div>{" "}
-    </Fragment>
+    </>
   ) : null;
 
   return modalToShow;

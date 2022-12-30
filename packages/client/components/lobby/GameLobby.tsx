@@ -77,7 +77,7 @@ function GameLobby({ defaultChatRoom }: Props) {
   };
   const onJoinRoomSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    joinRoom(joinNewRoomInput.replace(/\s+/g, "-").toLowerCase());
+    joinRoom(joinNewRoomInput);
   };
 
   if (!socket.current) return <p>Awaiting socket connection...</p>;

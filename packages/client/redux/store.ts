@@ -5,17 +5,20 @@ import alertsSlice from "./slices/alerts-slice";
 import chatSlice from "./slices/chat-slice";
 import ladderSlice from "./slices/ladder-slice";
 import lobbyUiSlice from "./slices/lobby-ui-slice";
+import { usersApi } from "./api-slices/users-api-slice";
 
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
+    [usersApi.reducerPath]: usersApi.reducer,
     [ladderApiSlice.reducerPath]: ladderApiSlice.reducer,
     ladder: ladderSlice,
     alerts: alertsSlice,
     chat: chatSlice,
     lobbyUi: lobbyUiSlice,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat([authApi.middleware, ladderApiSlice.middleware]),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }).concat([authApi.middleware, usersApi.middleware, ladderApiSlice.middleware]),
 }); // disabled serializable check because we are using instances of classes for alerts, game rooms etc
 
 export default store;

@@ -1,4 +1,4 @@
-import { User } from "../../models/User";
+import { User } from "../../../../common";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { signJwt } from "./jwt";
 

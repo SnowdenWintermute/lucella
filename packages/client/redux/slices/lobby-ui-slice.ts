@@ -1,6 +1,6 @@
-import { GameStatus, PlayerRole } from "../../../common";
+/* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EloUpdates, GameRoom, BattleRoomGame } from "../../../common";
+import { EloUpdates, GameRoom, BattleRoomGame, GameStatus, PlayerRole } from "../../../common";
 
 export interface IGameScoreScreen {
   gameRoom: GameRoom;

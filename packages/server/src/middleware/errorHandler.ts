@@ -16,8 +16,8 @@ export default function errorHandler(error: any, req: Request, res: Response, ne
   } else console.error("non-custom error in handler: ", error);
 
   let jsonToSend;
-  if (errors) jsonToSend = { error: true, errors };
-  else jsonToSend = { error: true, errors: [{ message: ErrorMessages.SERVER_GENERIC }] };
+  if (errors) jsonToSend = errors;
+  else jsonToSend = [{ message: ErrorMessages.SERVER_GENERIC }];
 
   res.status(status || error.status || 500).json(jsonToSend);
 }

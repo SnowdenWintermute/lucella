@@ -21,7 +21,7 @@ const baseQuery = fetchBaseQuery({
 
 export const ladderApiSlice = createApi({
   reducerPath: "ladderApi",
-  baseQuery: baseQuery,
+  baseQuery,
   endpoints(builder) {
     return {
       getLadderPage: builder.query<ILadderPageResponse, number>({
@@ -31,15 +31,6 @@ export const ladderApiSlice = createApi({
             method: "GET",
           };
         },
-        async onQueryStarted(args, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(setViewingSearchedUser(false));
-          } catch (error: any) {
-            console.log(error);
-            dispatch(setAlert(new Alert("Error fetching ladder data", AlertType.DANGER)));
-          }
-        },
       }),
       getUserBattleRoomRecord: builder.query<UserRecord, string>({
         query(username) {
@@ -47,15 +38,6 @@ export const ladderApiSlice = createApi({
             url: `/gameRecords/battle-room-ladder/${username}`,
             method: "GET",
           };
-        },
-        async onQueryStarted(args, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(setViewingSearchedUser(true));
-          } catch (error: any) {
-            console.log(error);
-            dispatch(setAlert(new Alert("User not found. Please note that names are case sensitive", AlertType.DANGER)));
-          }
         },
       }),
     };

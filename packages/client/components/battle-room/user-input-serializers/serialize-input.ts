@@ -6,7 +6,7 @@ import {
   SmallVectorProto,
   UserInput,
   UserInputs,
-} from "../../../../common/dist";
+} from "../../../../common";
 
 export default function serializeInput(input: UserInput | SelectOrbs | SelectOrbAndAssignDestination | LineUpOrbsHorizontallyAtMouseY) {
   const { data } = input;

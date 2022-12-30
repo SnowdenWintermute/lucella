@@ -1,4 +1,4 @@
-import { BattleRoomGame, GameRoom, Point } from "../../../../common";
+import { BattleRoomGame, Point } from "../../../../common";
 
 const gameOverText = (context: CanvasRenderingContext2D, game: BattleRoomGame, canvasDrawFractions: Point) => {
   const fontSize = 25;
@@ -13,7 +13,7 @@ const gameOverText = (context: CanvasRenderingContext2D, game: BattleRoomGame, c
     (BattleRoomGame.baseWindowDimensions.height * canvasDrawFractions.y) / 2
   );
   context.fillText(
-    typeof game.gameOverCountdown.current === "number" ? "Score screen in " + game.gameOverCountdown.current || game.gameOverCountdown.duration.toString() : "",
+    typeof game.gameOverCountdown.current === "number" ? `Score screen in ${game.gameOverCountdown.current}` || game.gameOverCountdown.duration.toString() : "",
     (BattleRoomGame.baseWindowDimensions.width * canvasDrawFractions.x) / 2,
     (BattleRoomGame.baseWindowDimensions.height * canvasDrawFractions.y) / 2 + 20
   );

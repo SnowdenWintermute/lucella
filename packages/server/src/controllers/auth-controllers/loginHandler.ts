@@ -2,11 +2,11 @@
 /* eslint-disable camelcase */
 import bcrypt from "bcryptjs";
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import { LoginUserInput } from "../../user-input-validation-schema/login-schema";
 import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import CustomError from "../../classes/CustomError";
 import { ErrorMessages, UserStatuses } from "../../../../common";
+import { LoginUserInput } from "../../user-input-validation-schema/login-schema";
 
 const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!, 10);
 const accessTokenCookieOptions: CookieOptions = {

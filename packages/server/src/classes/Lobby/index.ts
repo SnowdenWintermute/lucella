@@ -11,6 +11,7 @@ import {
   gameChannelNamePrefix,
   ChatMessage,
   ChatMessageStyles,
+  toKebabCase,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
@@ -55,7 +56,7 @@ export class Lobby {
   changeSocketChatChannelAndEmitUpdates(socket: Socket, channelNameJoining: string | null, authorizedForGameChannel?: boolean) {
     const { io, connectedSockets } = this.server;
     if (!socket || !connectedSockets[socket.id]) return console.error("error handling change chat channel request - no socket registered with server");
-    if (channelNameJoining) channelNameJoining = channelNameJoining.toLowerCase();
+    if (channelNameJoining) channelNameJoining = toKebabCase(channelNameJoining);
 
     const channelNameLeaving = connectedSockets[socket.id].currentChatChannel;
     this.updateChatChannelUsernameListsAndDeleteEmptyChannels(connectedSockets[socket.id], channelNameLeaving, channelNameJoining);

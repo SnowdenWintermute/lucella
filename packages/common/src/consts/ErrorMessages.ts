@@ -23,6 +23,9 @@ export const ErrorMessages = {
       UNAUTHORIZED_CHANNEL_NAME: `Channels prefixed with "${gameChannelNamePrefix}" or "${rankedGameChannelNamePrefix}" are reserved for that game's players`,
     },
   },
+  LADDER: {
+    USER_NOT_FOUND: "User not found (please note that names are case sensitive)",
+  },
   AUTH: {
     NOT_LOGGED_IN: "You are not logged in",
     INVALID_OR_EXPIRED_TOKEN: "Invalid or expired token",
@@ -32,7 +35,8 @@ export const ErrorMessages = {
     ROLE_RESTRICTED: "That action is role restricted",
     EMAIL_DOES_NOT_EXIST: "No user with that email exists",
     EMAIL_IN_USE_OR_UNAVAILABLE: "The specified email is already in use or is unavailable",
-    PASSWORD_RESET_EMAIL: "Error trying to send password reset email",
+    CHANGE_PASSWORD_EMAIL: "Error trying to send password reset email",
+    CHANGE_PASSWORD_TOKEN: "No token provided - use the link in your email to get a page with a token",
     ACCOUNT_BANNED: "The specified account has been banned",
   },
   VALIDATION: {
@@ -43,6 +47,7 @@ export const ErrorMessages = {
         PASSWORD: "Please enter a password",
         PASSWORD_CONFIRMATION: "Please confirm your password",
       },
+      CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH: "Email address typed did not match your account's email",
       INVALID_EMAIL: "Invalid email",
       PASSWORD_MIN_LENGTH: `Password must be at least ${passwordMinLength} characters`,
       PASSWORD_MAX_LENGTH: `Password must be no longer than ${passwordMinLength} characters`,

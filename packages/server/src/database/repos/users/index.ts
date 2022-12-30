@@ -1,5 +1,5 @@
 import format from "pg-format";
-import { User } from "../../../models/User";
+import { User } from "../../../../../common";
 import toCamelCase from "../../../utils/toCamelCase";
 import wrappedPool from "../../wrappedPool";
 

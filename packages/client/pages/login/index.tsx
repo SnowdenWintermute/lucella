@@ -1,27 +1,30 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { authApi, useLoginUserMutation } from "../../redux/api-slices/auth-api-slice";
+import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../common";
+import { Alert } from "../../classes/Alert";
+import { AlertType } from "../../enums";
+import { useLoginUserMutation } from "../../redux/api-slices/auth-api-slice";
+import { useAppDispatch } from "../../redux/hooks";
+import { setAlert } from "../../redux/slices/alerts-slice";
 import { LoginInput } from "../../redux/types";
 
-const Login = () => {
+function Login() {
+  const dispatch = useAppDispatch();
   const router = useRouter();
-  const [redirecting, setRedirecting] = useState(false);
   const [formData, setFormData] = useState<LoginInput>({
     email: "",
     password: "",
   });
-  const [loginUser, { isLoading: loginUserIsLoading, isSuccess: loginUserIsSuccess, error, isError }] = useLoginUserMutation();
-  const {
-    data: userState,
-    isLoading: userQueryIsLoading,
-    isSuccess: userQueryIsSuccess,
-    isFetching: userQueryIsFetching,
-  } = authApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
+  const [loginUser, { isLoading: loginUserIsLoading, isSuccess: loginUserIsSuccess, error, isError: loginUserIsError }] = useLoginUserMutation();
 
   const { email, password } = formData;
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // if (e.target.name === InputFields.AUTH.EMAIL) setEmailError(null);
+    // if (e.target.name === InputFields.AUTH.PASSWORD) setPasswordError(null);
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,37 +32,49 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (!userQueryIsSuccess || redirecting) return;
-    setRedirecting(true);
-    router.push("/battle-room");
-  }, [loginUserIsLoading, loginUserIsSuccess, userQueryIsSuccess]);
+    if (loginUserIsSuccess) {
+      // await dispatch(usersApi.endpoints.getMe.initiate(null));
+      dispatch(setAlert(new Alert(SuccessAlerts.AUTH.LOGIN, AlertType.SUCCESS)));
+      router.push("/battle-room");
+    }
+    if (loginUserIsError && error && "data" in error) {
+      const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
+      errors.forEach((currError) => {
+        dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
+      });
+    }
+  }, [loginUserIsError, loginUserIsSuccess]);
 
   return (
     <div className="auth-frame">
       <h1 className="auth-brand-header">Lucella.org</h1>
       <h3 className="auth-header">Sign In</h3>
       <form className="auth-form" onSubmit={(e) => onSubmit(e)}>
-        <input
-          className="simple-text-input"
-          aria-label="email"
-          type="email"
-          placeholder="Email"
-          name="email"
-          value={email}
-          onChange={(e) => onChange(e)}
-          disabled={loginUserIsLoading || loginUserIsSuccess}
-          autoFocus
-        ></input>
-        <input
-          className="simple-text-input"
-          aria-label="password"
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => onChange(e)}
-          disabled={loginUserIsLoading || loginUserIsSuccess}
-        ></input>
+        <label htmlFor="email">
+          <input
+            className="simple-text-input"
+            aria-label="email"
+            type="email"
+            placeholder="Email"
+            name={InputFields.AUTH.EMAIL}
+            value={email}
+            onChange={(e) => onChange(e)}
+            disabled={loginUserIsLoading || loginUserIsSuccess}
+            autoFocus
+          />
+        </label>
+        <label htmlFor="password">
+          <input
+            className="simple-text-input"
+            aria-label="password"
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => onChange(e)}
+            disabled={loginUserIsLoading || loginUserIsSuccess}
+          />
+        </label>
         <div className="forgot-password">
           <Link href="/request-password-reset">Forgot password?</Link>
         </div>
@@ -75,6 +90,6 @@ const Login = () => {
       </form>
     </div>
   );
-};
+}
 
 export default Login;

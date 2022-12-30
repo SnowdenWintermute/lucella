@@ -1,14 +1,16 @@
+import { useRouter } from "next/router";
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../redux/hooks";
 import { AlertType } from "../../enums";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
-import { useRegisterUserMutation } from "../../redux/api-slices/auth-api-slice";
-import { useRouter } from "next/router";
-import Link from "next/link";
 import { RegisterInput } from "../../redux/types";
+import { useRegisterUserMutation } from "../../redux/api-slices/users-api-slice";
+import { authApi } from "../../redux/api-slices/auth-api-slice";
+import { ErrorMessages, SuccessAlerts } from "../../../common";
 
-const Register = () => {
+function Register() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [redirecting, setRedirecting] = useState(false);
@@ -26,18 +28,21 @@ const Register = () => {
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== passwordConfirm) dispatch(setAlert(new Alert("Passwords do not match.", AlertType.DANGER)));
+    if (password !== passwordConfirm) dispatch(setAlert(new Alert(ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH, AlertType.DANGER)));
     else {
-      try {
-        const res = await registerUser({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          passwordConfirm: formData.passwordConfirm,
-        });
-      } catch (error) {
+      await registerUser({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        passwordConfirm: formData.passwordConfirm,
+      });
+      if (registerUserIsSuccess) {
+        dispatch(setAlert(new Alert(SuccessAlerts.USERS.ACCOUNT_CREATED, AlertType.SUCCESS)));
+        await dispatch(authApi.endpoints.loginUser.initiate({ email: formData.email, password: formData.password }));
+      }
+      if (isError) {
+        dispatch(setAlert(new Alert("Registration failed", AlertType.DANGER)));
         console.log(error);
-        dispatch(setAlert(new Alert("Error creating account", AlertType.DANGER)));
       }
     }
   };
@@ -53,9 +58,9 @@ const Register = () => {
       <h1 className="auth-brand-header">Lucella.org</h1>
       <h3 className="auth-header">Create Account</h3>
       <form className="auth-form" onSubmit={(e) => submitHandler(e)}>
-        <input className="simple-text-input" type="email" placeholder="Email" name="email" value={email} onChange={(e) => onChange(e)} autoFocus></input>
-        <input className="simple-text-input" type="text" placeholder="Name" name="name" value={name} onChange={(e) => onChange(e)}></input>
-        <input className="simple-text-input" type="password" name="password" placeholder="Password" value={password} onChange={(e) => onChange(e)}></input>
+        <input className="simple-text-input" type="email" placeholder="Email" name="email" value={email} onChange={(e) => onChange(e)} autoFocus />
+        <input className="simple-text-input" type="text" placeholder="Name" name="name" value={name} onChange={(e) => onChange(e)} />
+        <input className="simple-text-input" type="password" name="password" placeholder="Password" value={password} onChange={(e) => onChange(e)} />
         <input
           className="simple-text-input"
           type="password"
@@ -63,14 +68,16 @@ const Register = () => {
           placeholder="passwordConfirm"
           value={passwordConfirm}
           onChange={(e) => onChange(e)}
-        ></input>
+        />
         <div className="auth-bottom-links">
           <Link href="/login">Log in to existing account</Link>
-          <input type="submit" className="button button-standard-size button-primary" value="CREATE" />
+          <button type="submit" className="button button-standard-size button-primary" disabled={registerUserIsLoading}>
+            {registerUserIsLoading ? "..." : "CREATE"}
+          </button>
         </div>
       </form>
     </div>
   );
-};
+}
 
 export default Register;

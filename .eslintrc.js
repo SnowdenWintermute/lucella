@@ -61,6 +61,7 @@ module.exports = {
     //   },
     // ],
     "no-console": "off",
+    "jsx-a11y/no-autofocus": "off",
     // "spaced-comment": [2, `always`, { exceptions: [`-`, `+`], markers: [`/`] }],
     // "no-use-before-define": 0,
     // "no-plusplus": 0,

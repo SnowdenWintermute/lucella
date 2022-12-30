@@ -1,5 +1,5 @@
 import request from "supertest";
-import { ErrorMessages, InputFields, UsersRoutePaths } from "@lucella/common";
+import { ErrorMessages, InputFields, UsersRoutePaths } from "../../../../common";
 import createExpressApp from "../../createExpressApp";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";

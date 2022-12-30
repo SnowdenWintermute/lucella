@@ -1,5 +1,5 @@
 import { object, string, TypeOf, z } from "zod";
-import { passwordMinLength, ErrorMessages, passwordMaxLength } from "../../../common";
+import { ErrorMessages, passwordMaxLength, passwordMinLength } from "../../../common";
 
 export const changePasswordSchema = object({
   body: object({

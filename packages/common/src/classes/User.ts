@@ -8,7 +8,6 @@ export type User = {
   status: string;
   password: string;
 };
-
 export class SanitizedUser {
   createdAt: number;
   updatedAt: number;

@@ -23,6 +23,6 @@ export default async function passwordResetEmailRequestHandler(req: Request, res
     res.sendStatus(200);
   } catch (error: any) {
     console.log(error);
-    return next([new CustomError(ErrorMessages.AUTH.PASSWORD_RESET_EMAIL, 500)]);
+    return next([new CustomError(ErrorMessages.AUTH.CHANGE_PASSWORD_EMAIL, 500)]);
   }
 }
