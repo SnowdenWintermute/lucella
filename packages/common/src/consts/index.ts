@@ -1,7 +1,5 @@
 // times
 export const ONE_SECOND = 1000;
-// lobby/chat
-export const battleRoomDefaultChatChannel = "battle-room-chat";
 // battle-room game
 export const ghostTransparency = 0.3;
 export const inGameFontSizes = { medium: 12, large: 25 };

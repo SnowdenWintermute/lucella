@@ -35,7 +35,7 @@ export class MatchmakingQueue {
 
   async addUser(socket: Socket) {
     const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id].associatedUser.username);
-    if (!user) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOG_IN_TO_PLAY_RANKED);
+    if (!user) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED);
     const userBattleRoomRecord = await LucellaServer.fetchOrCreateBattleRoomRecord(user);
     this.users[socket.id] = {
       userId: user.id.toString(), // todo- investigate why this needs to be a string and not anumber

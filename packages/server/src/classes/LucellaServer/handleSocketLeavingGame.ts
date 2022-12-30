@@ -7,9 +7,9 @@ export default function handleSocketLeavingGame(server: LucellaServer, socket: S
   const { io, lobby, connectedSockets, games } = server;
   const { currentGameName } = connectedSockets[socket.id];
   console.log(`${socket.id} leaving game ${currentGameName}`);
-  if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
+  if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
   const gameRoom = lobby.gameRooms[currentGameName];
-  if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
+  if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
 
   const usernameOfPlayerLeaving = connectedSockets[socket.id].associatedUser.username;
   const { players } = gameRoom;

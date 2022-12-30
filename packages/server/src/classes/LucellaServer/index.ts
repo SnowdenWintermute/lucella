@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
 import { BattleRoomGame } from "../../../../common";
 import { Lobby } from "../Lobby";
