@@ -8,9 +8,11 @@ import getMeHandler from "../controllers/users-controllers/getMeHandler";
 import { registerUserSchema } from "../user-input-validation-schema/register-user-schema";
 import { UsersRoutePaths } from "../../../common";
 import { changePasswordSchema } from "../user-input-validation-schema/change-password-schema";
+import accountActivationHandler from "../controllers/users-controllers/accountActivationHandler";
 
 const router = express.Router();
 router.post("", validate(registerUserSchema), registerNewAccountHandler);
+router.post(UsersRoutePaths.ACCOUNT_ACTIVATION, accountActivationHandler);
 router.put(UsersRoutePaths.PASSWORD, validate(changePasswordSchema), changePasswordHandler);
 router.use(deserializeUser);
 router.get("", getMeHandler);

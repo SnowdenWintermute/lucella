@@ -4,7 +4,7 @@ import UserRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { ErrorMessages } from "../../../../common";
 import { sendEmail } from "../utils/sendEmail";
-import { buildPasswordResetHTML, buildPasswordResetText } from "../utils/buildEmailBodies";
+import { buildPasswordResetHTML, buildPasswordResetText, RESET_PASSWORD_SUBJECT } from "../utils/buildEmails";
 
 // eslint-disable-next-line consistent-return
 export default async function passwordResetEmailRequestHandler(req: Request, res: Response, next: NextFunction) {
@@ -19,8 +19,8 @@ export default async function passwordResetEmailRequestHandler(req: Request, res
     const htmlOutput = buildPasswordResetHTML(passwordResetToken!);
     const textOutput = buildPasswordResetText(passwordResetToken!);
 
-    await sendEmail(req.body.email, textOutput, htmlOutput);
-    res.sendStatus(200);
+    await sendEmail(req.body.email, RESET_PASSWORD_SUBJECT, textOutput, htmlOutput);
+    res.status(200).json({});
   } catch (error: any) {
     console.log(error);
     return next([new CustomError(ErrorMessages.AUTH.CHANGE_PASSWORD_EMAIL, 500)]);

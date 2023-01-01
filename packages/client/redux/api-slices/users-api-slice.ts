@@ -42,6 +42,16 @@ export const usersApi = createApi({
         };
       },
     }),
+    // ACTIVATE ACCOUNT
+    activateAccount: builder.mutation<Response, { token: string }>({
+      query(data) {
+        return {
+          url: UsersRoutePaths.ACCOUNT_ACTIVATION,
+          method: "POST",
+          body: data,
+        };
+      },
+    }),
     // DELETE ACCOUNT
     deleteAccount: builder.mutation<void, string>({
       query() {
@@ -49,6 +59,7 @@ export const usersApi = createApi({
           url: "",
           method: "DELETE",
           credentials: "include",
+          // responseHandler: (response) => response.text(),
         };
       },
       invalidatesTags: ["User"],
@@ -60,10 +71,11 @@ export const usersApi = createApi({
           url: UsersRoutePaths.PASSWORD,
           method: "PUT",
           body: { password, passwordConfirm, token },
+          // responseHandler: (response) => response.text(),
         };
       },
     }),
   }),
 });
 
-export const { useGetMeQuery, useRegisterUserMutation, useDeleteAccountMutation, useChangePasswordMutation } = usersApi;
+export const { useGetMeQuery, useRegisterUserMutation, useActivateAccountMutation, useDeleteAccountMutation, useChangePasswordMutation } = usersApi;

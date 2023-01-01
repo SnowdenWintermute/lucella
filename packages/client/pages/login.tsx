@@ -38,6 +38,7 @@ function Login() {
       router.push("/battle-room");
     }
     if (isError && error && "data" in error) {
+      console.log(error);
       const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
       const newFieldErrors = { ...fieldErrors };
       errors.forEach((currError) => {

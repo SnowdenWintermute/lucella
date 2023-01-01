@@ -5,7 +5,7 @@ import { CookieOptions, NextFunction, Request, Response } from "express";
 import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import CustomError from "../../classes/CustomError";
-import { ErrorMessages, UserStatuses } from "../../../../common";
+import { ErrorMessages, SanitizedUser, UserStatuses } from "../../../../common";
 import { LoginUserInput } from "../../user-input-validation-schema/login-schema";
 
 const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!, 10);
@@ -34,8 +34,7 @@ export default async function loginHandler(req: Request<object, object, LoginUse
       httpOnly: false,
     });
 
-    // if we don't send some json rtk query complains PARSING_ERROR
-    return res.status(200).json({ user });
+    return res.status(200).json({ user: new SanitizedUser(user) });
   } catch (error: any) {
     console.log("error in login: ", error);
     return next(error);

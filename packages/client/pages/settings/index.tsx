@@ -7,13 +7,12 @@ import { useAppDispatch } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
-import { useDeleteAccountMutation, useGetMeQuery, usersApi } from "../../redux/api-slices/users-api-slice";
+import { useDeleteAccountMutation, useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { ErrorMessages, SuccessAlerts } from "../../../common";
 
 function Settings() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [redirecting, setRedirecting] = useState(false);
   const [deleteAccount, { isLoading: deleteAccountIsLoading, isSuccess: deleteAccountIsSuccess, isError: deleteAccountIsError, error: deleteAccountError }] =
     useDeleteAccountMutation();
   const [
@@ -40,36 +39,36 @@ function Settings() {
 
   const handleRequestChangePasswordEmail = async () => {
     await requestPasswordResetEmail(accountEmail);
-    if (passwordResetIsSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
-    if (passwordResetIsError) {
-      console.log(passwordResetError);
-      dispatch(setAlert(new Alert("placeholder", AlertType.DANGER)));
-    }
   };
 
   const handleSubmitDeleteAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (email !== user?.email) dispatch(setAlert(new Alert(ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, AlertType.DANGER)));
-    else {
-      await deleteAccount(email);
-      if (deleteAccountIsSuccess) dispatch(setAlert(new Alert(SuccessAlerts.USERS.ACCOUNT_DELETED, AlertType.SUCCESS)));
-      await dispatch(authApi.util.resetApiState());
-      if (deleteAccountIsError) {
-        console.log(deleteAccountError);
-        dispatch(setAlert(new Alert("placeholder", AlertType.DANGER)));
-      }
-    }
+    else await deleteAccount(email);
   };
 
   useEffect(() => {
-    if (!deleteAccountIsSuccess) return;
-    setRedirecting(true);
-    router.push("/register");
-  }, [deleteAccountIsSuccess]);
+    if (passwordResetIsSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
+    if (passwordResetIsError) {
+      console.log(passwordResetError);
+      dispatch(setAlert(new Alert(ErrorMessages.AUTH.CHANGE_PASSWORD_EMAIL, AlertType.DANGER)));
+    }
+  }, [passwordResetIsSuccess, passwordResetIsError]);
+
+  useEffect(() => {
+    if (deleteAccountIsSuccess) {
+      dispatch(setAlert(new Alert(SuccessAlerts.USERS.ACCOUNT_DELETED, AlertType.SUCCESS)));
+      dispatch(authApi.util.resetApiState());
+      router.push("/register");
+    }
+    if (deleteAccountIsError) {
+      console.log(deleteAccountError);
+      dispatch(setAlert(new Alert(ErrorMessages.USER.ACCOUNT_DELETION, AlertType.DANGER)));
+    }
+  }, [deleteAccountIsSuccess, deleteAccountIsError]);
 
   useEffect(() => {
     if (user || userQueryIsLoading) return;
-    setRedirecting(true);
     router.push("/login");
   }, [user, userQueryIsSuccess, userQueryIsLoading, userQueryIsFetching]);
 

@@ -28,6 +28,7 @@ export const authApi = createApi({
           method: "POST",
           body: data,
           credentials: "include",
+          // responseHandler: (response) => response.text(),
         };
       },
     }),
@@ -52,6 +53,7 @@ export const authApi = createApi({
           url: AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL,
           method: "POST",
           body: { email },
+          // responseHandler: (response) => response.text(),
         };
       },
     }),

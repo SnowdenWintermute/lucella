@@ -7,4 +7,5 @@ export enum AuthRoutePaths {
 export enum UsersRoutePaths {
   ROOT = "/users",
   PASSWORD = "/password",
+  ACCOUNT_ACTIVATION = "/account-activation",
 }

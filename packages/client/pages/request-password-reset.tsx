@@ -24,10 +24,10 @@ function RequestPasswordResetEmail() {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await requestPasswordResetEmail(email);
-    if (isSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
   };
 
   useEffect(() => {
+    if (isSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
     if (isError && error && "data" in error) {
       const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
       const newFieldErrors = { ...fieldErrors };

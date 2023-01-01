@@ -7,10 +7,8 @@ import { Alert } from "../classes/Alert";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { RegisterInput } from "../redux/types";
 import { useRegisterUserMutation } from "../redux/api-slices/users-api-slice";
-import { authApi } from "../redux/api-slices/auth-api-slice";
 import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../common/dist";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
-import styles from "./auth.module.scss";
 import AuthPage from "../components/layout/auth/AuthPage";
 
 function Register() {
@@ -26,27 +24,22 @@ function Register() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await registerUser({
+    registerUser({
       name: formData.name,
       email: formData.email,
       password: formData.password,
       passwordConfirm: formData.passwordConfirm,
     });
-    if (isSuccess) {
-      // send email
-      // change display of this page
-      // router.push("/battle-room");
-      dispatch(setAlert(new Alert(SuccessAlerts.USERS.ACCOUNT_CREATED, AlertType.SUCCESS)));
-      await dispatch(authApi.endpoints.loginUser.initiate({ email: formData.email, password: formData.password }));
-    }
   };
 
   useEffect(() => {
+    if (isSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, AlertType.SUCCESS)));
     if (isError && error && "data" in error) {
       const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
       const newFieldErrors = { ...fieldErrors };
+      console.log("errors: ", errors);
       errors.forEach((currError) => {
         if (currError.field === InputFields.AUTH.EMAIL) newFieldErrors.email = currError.message;
         if (currError.field === InputFields.AUTH.NAME) newFieldErrors.name = currError.message;
@@ -58,7 +51,12 @@ function Register() {
     }
   }, [isError, isSuccess]);
 
-  return (
+  return isSuccess ? (
+    <AuthPage title="Create Account" submitHandler={() => {}}>
+      <p>{SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT}</p>
+      <p>Please follow the link in your email to complete registration</p>
+    </AuthPage>
+  ) : (
     <AuthPage title="Create Account" submitHandler={submitHandler}>
       <LabeledTextInputWithErrorDisplay
         label="Email Address"

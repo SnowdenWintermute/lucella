@@ -8,7 +8,7 @@ export default async function signTokenAndCreateSession(user: User) {
   });
 
   wrappedRedis.context!.set(user.id.toString(), JSON.stringify(user), {
-    EX: parseInt(process.env.REDIS_SESSION_EXPIRATION!, 10),
+    EX: parseInt(process.env.AUTH_SESSION_EXPIRATION!, 10),
   });
 
   return { accessToken };

@@ -30,14 +30,20 @@ export const ErrorMessages = {
     NOT_LOGGED_IN: "You are not logged in",
     INVALID_OR_EXPIRED_TOKEN: "Invalid or expired token",
     EXPIRED_SESSION: "User session has expired, please log in again",
+    EXPIRED_ACCOUNT_CREATION_SESSION:
+      "It has been too long since you initiated account creation, please try registering again to get a new account activation email",
     INVALID_CREDENTIALS: "Incorrect email or password",
     NO_USER_EXISTS: "The specified user longer exists",
     ROLE_RESTRICTED: "That action is role restricted",
     EMAIL_DOES_NOT_EXIST: "No user with that email exists",
     EMAIL_IN_USE_OR_UNAVAILABLE: "The specified email is already in use or is unavailable",
+    NAME_IN_USE_OR_UNAVAILABLE: "The specified name is already in use or is unavailable",
     CHANGE_PASSWORD_EMAIL: "Error trying to send password reset email",
     CHANGE_PASSWORD_TOKEN: "No token provided - use the link in your email to get a page with a token",
     ACCOUNT_BANNED: "The specified account has been banned",
+  },
+  USER: {
+    ACCOUNT_DELETION: "An error occurred when trying to delete your account",
   },
   VALIDATION: {
     AUTH: {

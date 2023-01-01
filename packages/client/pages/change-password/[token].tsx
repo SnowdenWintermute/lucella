@@ -34,7 +34,7 @@ function ChangePassword() {
   useEffect(() => {
     if (isSuccess) {
       dispatch(setAlert(new Alert(SuccessAlerts.AUTH.PASSWORD_CHANGED, AlertType.SUCCESS)));
-      router.push("/battle-room");
+      router.push("/login");
     }
     if (isError && error && "data" in error) {
       const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
