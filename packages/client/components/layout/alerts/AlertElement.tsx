@@ -32,6 +32,7 @@ function AlertElement({ message, type, id }: Props) {
     // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
     <li
       role="status"
+      data-cy="alert-element"
       className={`${styles.alert} ${styles[`alert-${type.toLowerCase()}`]} ${animateClass ? styles[animateClass] : ""}`}
       onClick={(e) => removeAlert()}
       onKeyUp={(e) => {

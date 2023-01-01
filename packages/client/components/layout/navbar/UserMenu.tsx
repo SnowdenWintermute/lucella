@@ -1,14 +1,12 @@
 import Link from "next/link";
-import { useState, useEffect, Fragment } from "react";
-import logoutIcon from "../../../img/menuIcons/logout.png";
-import SettingsIcon from "../../../img/menuIcons/settings.svg";
+import { useState, useEffect } from "react";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
-import { usersApi } from "../../../redux/api-slices/users-api-slice";
+import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 
 export function UserMenu() {
   const [showUserDropdown, toggleUserDropdown] = useState(false);
-  const [logoutUser] = useLogoutUserMutation();
-  const { data: user, isLoading } = usersApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
+  const [logoutUser, { isUninitialized: logoutIsUninitialized }] = useLogoutUserMutation();
+  const { data: user, isLoading } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
 
   // show/hide menu
   useEffect(() => {
@@ -21,7 +19,7 @@ export function UserMenu() {
   }, [showUserDropdown]);
 
   const handleLogout = async () => {
-    logoutUser();
+    await logoutUser();
   };
 
   useEffect(() => {}, [user]);
@@ -32,6 +30,7 @@ export function UserMenu() {
         type="button"
         className="user-icon-circle"
         data-name="profile-icon"
+        data-cy="profile-icon"
         onClick={(e) => {
           toggleUserDropdown(!showUserDropdown);
         }}
@@ -46,7 +45,7 @@ export function UserMenu() {
             {/* <SettingsIcon className="menu-icon-svg" height="100" width="100" color="red" stroke="red" fill="red" /> */}
             Settings
           </Link>
-          <Link href="/login" onClick={(e) => handleLogout()} className="user-menu-item">
+          <Link href="/login" onClick={handleLogout} className="user-menu-item">
             {/* <Image alt="logout icon" src={logoutIcon} /> */}
             Logout
           </Link>
@@ -61,7 +60,6 @@ export function UserMenu() {
     </Link>
   );
 
-  // if (userIsLoading || userIsFetching) return <p>...</p>;
   // eslint-disable-next-line no-nested-ternary
-  return isLoading ? <span>...</span> : user ? loggedInUserMenu : guestMenu;
+  return isLoading && logoutIsUninitialized ? <span>...</span> : user ? loggedInUserMenu : guestMenu;
 }

@@ -6,63 +6,78 @@ import { AlertType } from "../../enums";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { useAppDispatch } from "../../redux/hooks";
 import { useChangePasswordMutation } from "../../redux/api-slices/users-api-slice";
-import { ErrorMessages, InputFields } from "../../../common";
+import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../common";
+import AuthPage from "../../components/layout/auth/AuthPage";
+import LabeledTextInputWithErrorDisplay from "../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 
 function ChangePassword() {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [changePassword, { isLoading, isSuccess, error, isError, startedTimeStamp }] = useChangePasswordMutation();
-
-  const [formData, setFormData] = useState({
-    [InputFields.AUTH.PASSWORD]: "",
-    [InputFields.AUTH.PASSWORD_CONFIRM]: "",
-  });
+  const [changePassword, { isLoading, isSuccess, error, isError }] = useChangePasswordMutation();
+  const fields = { [InputFields.AUTH.PASSWORD]: "", [InputFields.AUTH.PASSWORD_CONFIRM]: "" };
+  const [formData, setFormData] = useState(fields);
+  const [fieldErrors, setFieldErrors] = useState(fields);
 
   const { password, passwordConfirm } = formData;
   const { token } = router.query;
 
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFieldErrors({ ...fieldErrors, [e.target.name]: "" });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (password !== passwordConfirm) dispatch(setAlert(new Alert(ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH, AlertType.DANGER)));
-    else if (!token) dispatch(setAlert(new Alert(ErrorMessages.AUTH.CHANGE_PASSWORD_TOKEN, AlertType.DANGER)));
-    else changePassword({ password, passwordConfirm, token: token.toString() });
+    changePassword({ password, passwordConfirm, token: token?.toString() || "" });
   };
 
   useEffect(() => {
-    if (isLoading || !startedTimeStamp) return;
-    if (isSuccess) router.push("/battle-room");
-  }, [isLoading, isSuccess, error, isError, startedTimeStamp]);
+    if (isSuccess) {
+      dispatch(setAlert(new Alert(SuccessAlerts.AUTH.PASSWORD_CHANGED, AlertType.SUCCESS)));
+      router.push("/battle-room");
+    }
+    if (isError && error && "data" in error) {
+      const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
+      const newFieldErrors = { ...fieldErrors };
+      errors.forEach((currError) => {
+        console.log(currError);
+        if (currError.field === InputFields.AUTH.PASSWORD) newFieldErrors.password = currError.message;
+        if (currError.field === InputFields.AUTH.PASSWORD_CONFIRM) newFieldErrors.passwordConfirm = currError.message;
+        dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
+      });
+      setFieldErrors(newFieldErrors);
+    }
+  }, [isError, isSuccess]);
 
   return (
-    <div className="auth-frame">
-      <h1 className="auth-brand-header">Lucella.org</h1>
-      <h3 className="auth-header">Change Password</h3>
-      <form className="auth-form" onSubmit={(e) => onSubmit(e)}>
-        <input
-          className="simple-text-input"
-          type="password"
-          name={InputFields.AUTH.PASSWORD}
-          placeholder="Password"
-          value={password}
-          onChange={(e) => onChange(e)}
-          autoFocus
-        />
-        <input
-          className="simple-text-input"
-          type="password"
-          name={InputFields.AUTH.PASSWORD_CONFIRM}
-          placeholder="Confirm Password"
-          value={passwordConfirm}
-          onChange={(e) => onChange(e)}
-        />
-        <div className="auth-bottom-links">
-          <Link href="/login">Log in to existing account</Link>
-          <input type="submit" className="button button-standard-size button-primary" value="SET" />
-        </div>
-      </form>
-    </div>
+    <AuthPage title="Change Password" submitHandler={submitHandler}>
+      <LabeledTextInputWithErrorDisplay
+        label="Password"
+        type="password"
+        placeholder="Password"
+        name={InputFields.AUTH.PASSWORD}
+        value={password}
+        onChange={onChange}
+        disabled={isLoading || isSuccess}
+        error={fieldErrors.password}
+        autofocus
+      />
+      <LabeledTextInputWithErrorDisplay
+        label="Confirm Password"
+        type="password"
+        placeholder="Confirm Password"
+        name={InputFields.AUTH.PASSWORD_CONFIRM}
+        value={passwordConfirm}
+        onChange={onChange}
+        disabled={isLoading || isSuccess}
+        error={fieldErrors.passwordConfirm}
+        autofocus={false}
+      />
+      <div className="auth-bottom-links">
+        <Link href="/login">Log in to existing account</Link>
+        <input type="submit" className="button button-standard-size button-primary" value="SET" />
+      </div>
+    </AuthPage>
   );
 }
 

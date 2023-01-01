@@ -42,16 +42,7 @@ export const authApi = createApi({
       },
       invalidatesTags: ["User"],
       async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        queryFulfilled
-          .then(() => {
-            dispatch(authApi.util.resetApiState());
-            dispatch(usersApi.util.resetApiState());
-          })
-          .catch((error) => {
-            console.log("error resetting redux api states: ", error);
-            dispatch(authApi.util.resetApiState());
-            dispatch(usersApi.util.resetApiState());
-          });
+        dispatch(usersApi.util.resetApiState());
       },
     }),
     // REQUEST PASSWORD RESET EMAIL

@@ -5,6 +5,7 @@ export const SuccessAlerts = {
   },
   AUTH: {
     CHANGE_PASSWORD_EMAIL_SENT: "An email has been sent with a link to change your password",
+    PASSWORD_CHANGED: "Password changed",
     LOGIN: "Welcome back",
   },
 };

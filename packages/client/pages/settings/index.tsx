@@ -7,7 +7,7 @@ import { useAppDispatch } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
-import { useDeleteAccountMutation, usersApi } from "../../redux/api-slices/users-api-slice";
+import { useDeleteAccountMutation, useGetMeQuery, usersApi } from "../../redux/api-slices/users-api-slice";
 import { ErrorMessages, SuccessAlerts } from "../../../common";
 
 function Settings() {
@@ -23,12 +23,12 @@ function Settings() {
   const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(false);
   const [email, setEmail] = useState("");
   const {
-    data: userState,
+    data: user,
     isLoading: userQueryIsLoading,
     isSuccess: userQueryIsSuccess,
     isFetching: userQueryIsFetching,
-  } = usersApi.endpoints.getMe.useQuery(null, { refetchOnMountOrArgChange: true });
-  const accountEmail = userState?.email ? userState.email : "...";
+  } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const accountEmail = user?.email ? user.email : "...";
 
   // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
   const setParentDisplay = (status: boolean) => {
@@ -49,7 +49,7 @@ function Settings() {
 
   const handleSubmitDeleteAccount = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (email !== userState?.email) dispatch(setAlert(new Alert(ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, AlertType.DANGER)));
+    if (email !== user?.email) dispatch(setAlert(new Alert(ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, AlertType.DANGER)));
     else {
       await deleteAccount(email);
       if (deleteAccountIsSuccess) dispatch(setAlert(new Alert(SuccessAlerts.USERS.ACCOUNT_DELETED, AlertType.SUCCESS)));
@@ -68,12 +68,12 @@ function Settings() {
   }, [deleteAccountIsSuccess]);
 
   useEffect(() => {
-    if (userQueryIsSuccess || userQueryIsLoading || userQueryIsFetching || redirecting) return;
+    if (user || userQueryIsLoading) return;
     setRedirecting(true);
     router.push("/login");
-  }, [userQueryIsSuccess, userQueryIsLoading, userQueryIsFetching]);
+  }, [user, userQueryIsSuccess, userQueryIsLoading, userQueryIsFetching]);
 
-  if (!userQueryIsSuccess || userQueryIsLoading || userQueryIsFetching) return <p>...</p>;
+  if (!user || userQueryIsLoading) return <p>...</p>;
 
   return (
     <>

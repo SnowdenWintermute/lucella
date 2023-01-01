@@ -29,10 +29,6 @@ export const usersApi = createApi({
           credentials: "include",
         };
       },
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        const data = await queryFulfilled;
-        console.log("data in user query: ", data);
-      },
       providesTags: ["User"],
       transformResponse: (result: { user: SanitizedUser }) => result.user,
     }),
@@ -66,17 +62,8 @@ export const usersApi = createApi({
           body: { password, passwordConfirm, token },
         };
       },
-      async onQueryStarted(args, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          dispatch(setAlert(new Alert("Password changed", AlertType.SUCCESS)));
-        } catch (error: any) {
-          console.log(error);
-          dispatch(setAlert(new Alert(error.error?.data?.error, AlertType.DANGER)));
-        }
-      },
     }),
   }),
 });
 
-export const { useRegisterUserMutation, useDeleteAccountMutation, useChangePasswordMutation } = usersApi;
+export const { useGetMeQuery, useRegisterUserMutation, useDeleteAccountMutation, useChangePasswordMutation } = usersApi;
