@@ -1,4 +1,4 @@
-import { nameMaxLength, nameMinLength, passwordMinLength } from "./auth-validation-config";
+import { nameMaxLength, nameMinLength, passwordMaxLength, passwordMinLength } from "./auth-validation-config";
 import { gameChannelNamePrefix, maxGameNameLength, rankedGameChannelNamePrefix } from "./game-lobby-config";
 
 export const ErrorMessages = {
@@ -56,7 +56,7 @@ export const ErrorMessages = {
       CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH: "Email address typed did not match your account's email",
       INVALID_EMAIL: "Invalid email",
       PASSWORD_MIN_LENGTH: `Password must be at least ${passwordMinLength} characters`,
-      PASSWORD_MAX_LENGTH: `Password must be no longer than ${passwordMinLength} characters`,
+      PASSWORD_MAX_LENGTH: `Password must be no longer than ${passwordMaxLength} characters`,
       PASSWORDS_DONT_MATCH: "Password confirmation does not match the password",
       NAME_MIN_LENGTH: `Name must be at least ${nameMinLength} characters`,
       NAME_MAX_LENGTH: `Name must be no longer than ${nameMaxLength} characters`,

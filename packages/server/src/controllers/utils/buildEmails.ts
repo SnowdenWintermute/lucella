@@ -9,7 +9,7 @@ export function buildPasswordResetHTML(passwordResetToken: string) {
   const output = `
     <p>Someone (hopefully you) has requested a password reset for your account at ${websiteName}. Follow the link to reset your password.</p>
     <p>
-        <a href="${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${passwordResetToken}" target="_blank">
+        <a href="${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${passwordResetToken}">
             ${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${passwordResetToken}
         </a>
     </p>`;
@@ -30,7 +30,7 @@ export function buildAccountActivationHTML(name: string, token: string) {
   const output = `
   <p>Account creation was initiated for user ${name} with at ${websiteName}. Follow the link to activate your acconut.</p>
   <p>
-      <a href="${protocol}://${rootUrl}${FrontendRoutes.ACCOUNT_ACTIVATION}/${token}" target="_blank">
+      <a href="${protocol}://${rootUrl}${FrontendRoutes.ACCOUNT_ACTIVATION}/${token}" data-cy="activation-link">
           ${protocol}://${rootUrl}${FrontendRoutes.ACCOUNT_ACTIVATION}/${token}
       </a>
   </p>

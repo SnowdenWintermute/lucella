@@ -8,4 +8,5 @@ export enum UsersRoutePaths {
   ROOT = "/users",
   PASSWORD = "/password",
   ACCOUNT_ACTIVATION = "/account-activation",
+  DROP_ALL_TEST_USERS = "/drop-all-test-users",
 }

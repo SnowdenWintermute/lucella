@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from "express";
 import { ErrorMessages } from "../../../common";
 import CustomError from "../classes/CustomError";

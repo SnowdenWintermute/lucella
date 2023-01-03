@@ -10,7 +10,6 @@ import { wrappedRedis } from "../utils/RedisContext";
 export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     let accessToken;
-    console.log(req.cookies);
     if (req.cookies.access_token) accessToken = req.cookies.access_token;
     if (!accessToken) return next([new CustomError(ErrorMessages.AUTH.NOT_LOGGED_IN, 401)]);
     const decoded = verifyJwt<{ sub: string }>(accessToken, process.env.ACCESS_TOKEN_PUBLIC_KEY!);

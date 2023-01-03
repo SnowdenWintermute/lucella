@@ -10,10 +10,14 @@ import { UsersRoutePaths } from "../../../common";
 import { changePasswordSchema } from "../user-input-validation-schema/change-password-schema";
 import accountActivationHandler from "../controllers/users-controllers/accountActivationHandler";
 
+import { requireTesterKey } from "../middleware/requireTesterKey";
+import dropAllTestUsers from "../controllers/users-controllers/dropAllTestUsers";
+
 const router = express.Router();
 router.post("", validate(registerUserSchema), registerNewAccountHandler);
 router.post(UsersRoutePaths.ACCOUNT_ACTIVATION, accountActivationHandler);
 router.put(UsersRoutePaths.PASSWORD, validate(changePasswordSchema), changePasswordHandler);
+router.put(UsersRoutePaths.DROP_ALL_TEST_USERS, requireTesterKey, dropAllTestUsers);
 router.use(deserializeUser);
 router.get("", getMeHandler);
 router.delete("", deleteAccountHandler);

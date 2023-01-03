@@ -8,7 +8,7 @@ export default function authedUserHostAndStartGame() {
     // log in and host a game
     cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
-      password: Cypress.env("CYPRESS_TEST_PASSWORD"),
+      password: Cypress.env("CYPRESS_TEST_USER_PASSWORD"),
     });
     cy.visit("/battle-room");
     cy.findByText(new RegExp(username, "i")).should("exist");
