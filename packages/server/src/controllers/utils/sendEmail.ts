@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+/* eslint-disable consistent-return */
 import sgMail from "@sendgrid/mail";
 
 export async function sendEmail(emailAddress: string, subject: string, textOutput: string, htmlOutput: string) {

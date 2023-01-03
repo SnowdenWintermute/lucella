@@ -9,8 +9,10 @@ describe("full user authentication flow", () => {
   // eslint-disable-next-line no-undef
   before(() => {
     cy.task(TaskNames.getUserEmail).then(async (email) => {
+      expect(email).to.be.a("string");
+      userEmail = email;
       // delete all test users (test users are defined in the UsersRepo deleteTestUsers method)
-      const response = await axios({
+      const deleteAllTestUsersResponse = await axios({
         method: "put",
         url: `${Cypress.env("CYPRESS_BACKEND_URL")}/api${UsersRoutePaths.ROOT}${UsersRoutePaths.DROP_ALL_TEST_USERS}`,
         data: {
@@ -21,10 +23,17 @@ describe("full user authentication flow", () => {
         },
       });
       // confirm that an ethereal mail account was set up for this test
+      expect(deleteAllTestUsersResponse.status).to.equal(200);
+    });
+    const args = {
+      CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
+      CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
+    };
+    cy.task(TaskNames.deleteAllTestUsers, args).then((response: Response) => {
       expect(response.status).to.equal(200);
-      expect(email).to.be.a("string");
-      userEmail = email;
-      console.log(userEmail);
+    });
+    cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
+      expect(response.status).to.equal(201);
     });
   });
 

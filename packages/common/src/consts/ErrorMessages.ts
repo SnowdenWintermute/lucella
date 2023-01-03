@@ -30,8 +30,8 @@ export const ErrorMessages = {
     NOT_LOGGED_IN: "You are not logged in",
     INVALID_OR_EXPIRED_TOKEN: "Invalid or expired token",
     EXPIRED_SESSION: "User session has expired, please log in again",
-    EXPIRED_ACCOUNT_CREATION_SESSION:
-      "It has been too long since you initiated account creation, please try registering again to get a new account activation email",
+    USED_OR_EXPIRED_ACCOUNT_CREATION_SESSION:
+      "Either you have already created an account with this token or it has been too long since you initiated account creation, please try registering again to get a new account activation email",
     INVALID_CREDENTIALS: "Incorrect email or password",
     NO_USER_EXISTS: "The specified user longer exists",
     ROLE_RESTRICTED: "That action is role restricted",

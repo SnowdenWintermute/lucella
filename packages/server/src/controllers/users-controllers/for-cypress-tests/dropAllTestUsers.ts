@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import UserRepo from "../../database/repos/users";
+import UserRepo from "../../../database/repos/users";
 
 export default async function dropAllTestUsers(req: Request, res: Response, next: NextFunction) {
   try {

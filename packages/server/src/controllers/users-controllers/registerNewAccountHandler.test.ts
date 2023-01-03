@@ -1,54 +1,74 @@
+import { Application } from "express";
 import request from "supertest";
+import bcrypt from "bcryptjs";
 import { ErrorMessages, InputFields, UsersRoutePaths } from "../../../../common";
-import createExpressApp from "../../createExpressApp";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
-import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
+import { TEST_USER_EMAIL_2, TEST_USER_NAME_2, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
+import { sendEmail } from "../utils/sendEmail";
+import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
+import { wrappedRedis } from "../../utils/RedisContext";
+import { ACCOUNT_CREATION_SESSION_PREFIX } from "../../consts";
+
+jest.mock("../utils/sendEmail");
 
 describe("registerNewAccountHandler", () => {
   let context: PGContext | undefined;
+  let app: Application | undefined;
   beforeAll(async () => {
-    context = await PGContext.build();
+    const { pgContext, expressApp } = await setupExpressRedisAndPgContextAndOneTestUser();
+    context = pgContext;
+    app = expressApp;
+  });
+
+  beforeEach(async () => {
+    await wrappedRedis.context!.removeAllKeys();
   });
 
   afterAll(async () => {
     if (context) await context.cleanup();
+    await wrappedRedis.context!.cleanup();
   });
 
-  it("can create a user and cannot create another account with the same name", async () => {
-    const startingCount = await UserRepo.count();
-    const app = createExpressApp();
+  it("upon receiving valid input sends an account creation verification email and creates an account creation attempt session", async () => {
+    // const startingCount = await UserRepo.count();
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
-      name: TEST_USER_NAME,
-      email: TEST_USER_EMAIL,
+      name: TEST_USER_NAME_2,
+      email: TEST_USER_EMAIL_2,
       password: TEST_USER_PASSWORD,
       passwordConfirm: TEST_USER_PASSWORD,
     });
 
-    expect(response.body.user).not.toHaveProperty("password");
-    expect(response.body.user).toHaveProperty("createdAt");
-    expect(response.body.user).toHaveProperty("updatedAt");
-    expect(response.body.user.name).toBe(TEST_USER_NAME);
-    expect(response.body.user.email).toBe(TEST_USER_EMAIL);
-    expect(response.status).toBe(201);
+    // expect(response.body.user).not.toHaveProperty("password");
+    // expect(response.body.user).toHaveProperty("createdAt");
+    // expect(response.body.user).toHaveProperty("updatedAt");
+    // expect(response.body.user.name).toBe(TEST_USER_NAME_2);
+    // expect(response.body.user.email).toBe(TEST_USER_EMAIL_2);
+    expect(sendEmail).toHaveBeenCalled();
+    expect(response.status).toBe(200);
+    const regitrationAttemptSession = await wrappedRedis.context!.get(`${ACCOUNT_CREATION_SESSION_PREFIX}${TEST_USER_EMAIL_2}`);
+    const parsedSession = JSON.parse(regitrationAttemptSession!);
+    expect(parsedSession.name).toBe(TEST_USER_NAME_2);
+    expect(parsedSession.email).toBe(TEST_USER_EMAIL_2);
+    const hashedPasswordMatchesUserPassword = await bcrypt.compare(TEST_USER_PASSWORD, parsedSession.password);
+    expect(hashedPasswordMatchesUserPassword).toBeTruthy();
 
-    const finishCount = await UserRepo.count();
-    expect(finishCount - startingCount).toEqual(1);
-    const responseForSecondCreation = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
-      name: TEST_USER_NAME,
-      email: TEST_USER_EMAIL,
-      password: TEST_USER_PASSWORD,
-      passwordConfirm: TEST_USER_PASSWORD,
-    });
+    // const finishCount = await UserRepo.count();
+    // expect(finishCount - startingCount).toEqual(1);
+    // const responseForSecondCreation = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
+    //   name: TEST_USER_NAME_2,
+    //   email: TEST_USER_EMAIL_2,
+    //   password: TEST_USER_PASSWORD,
+    //   passwordConfirm: TEST_USER_PASSWORD,
+    // });
 
-    expect(responseBodyIncludesCustomErrorMessage(responseForSecondCreation, ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE)).toBeTruthy();
-    expect(responseForSecondCreation.status).toBe(403);
+    // expect(responseBodyIncludesCustomErrorMessage(responseForSecondCreation, ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE)).toBeTruthy();
+    // expect(responseForSecondCreation.status).toBe(403);
   });
 
   it("gets errors for missing email or password", async () => {
     const startingCount = await UserRepo.count();
-    const app = createExpressApp();
 
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
       name: "",
@@ -70,11 +90,10 @@ describe("registerNewAccountHandler", () => {
 
   it("gets errors for name length and non matching", async () => {
     const startingCount = await UserRepo.count();
-    const app = createExpressApp();
 
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
       name: "",
-      email: TEST_USER_EMAIL,
+      email: TEST_USER_EMAIL_2,
       password: TEST_USER_PASSWORD,
       passwordConfirm: "",
     });

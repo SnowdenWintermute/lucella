@@ -15,7 +15,7 @@ export default async function accountActivationHandler(req: Request<object, obje
     if (!decoded) return next([new CustomError(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
     const { email } = decoded;
     const accountActivationSession = await wrappedRedis.context!.get(`${ACCOUNT_CREATION_SESSION_PREFIX}${email}`);
-    if (!accountActivationSession) return next([new CustomError(ErrorMessages.AUTH.EXPIRED_ACCOUNT_CREATION_SESSION, 401)]);
+    if (!accountActivationSession) return next([new CustomError(ErrorMessages.AUTH.USED_OR_EXPIRED_ACCOUNT_CREATION_SESSION, 401)]);
     const parsedSession = JSON.parse(accountActivationSession);
     const { name, password } = parsedSession;
     const user = await UserRepo.insert(name, email, password);

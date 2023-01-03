@@ -9,4 +9,5 @@ export enum UsersRoutePaths {
   PASSWORD = "/password",
   ACCOUNT_ACTIVATION = "/account-activation",
   DROP_ALL_TEST_USERS = "/drop-all-test-users",
+  CREATE_CYPRESS_TEST_USER = "/create-cypress-test-user",
 }
