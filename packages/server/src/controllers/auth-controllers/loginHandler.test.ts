@@ -1,6 +1,6 @@
 import { Application } from "express";
 import request from "supertest";
-import { AuthRoutePaths, ErrorMessages, InputFields } from "../../../../common";
+import { AuthRoutePaths, CookieNames, ErrorMessages, InputFields } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -31,7 +31,7 @@ describe("loginHandler", () => {
       password: TEST_USER_PASSWORD,
     });
     console.log(response.body);
-    expect(response.headers["set-cookie"][0].includes("access_token")).toBeTruthy();
+    expect(response.headers["set-cookie"][0].includes(CookieNames.ACCESS_TOKEN)).toBeTruthy();
   });
 
   it("gets appropriate error for missing email and password", async () => {

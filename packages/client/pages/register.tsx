@@ -9,6 +9,7 @@ import { useRegisterUserMutation } from "../redux/api-slices/users-api-slice";
 import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../common/dist";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/layout/auth/AuthPage";
+import { ButtonNames } from "../consts/ButtonNames";
 
 function Register() {
   const dispatch = useAppDispatch();
@@ -104,7 +105,7 @@ function Register() {
       <div className="auth-bottom-links">
         <Link href="/login">Log in to existing account</Link>
         <button type="submit" className="button button-standard-size button-primary" disabled={isLoading}>
-          {isLoading || isSuccess ? "..." : "CREATE"}
+          {isLoading || isSuccess ? "..." : ButtonNames.AUTH_FORMS.CREATE_ACCOUNT}
         </button>
       </div>
     </AuthPage>

@@ -1,11 +1,12 @@
 import { ErrorMessages, SuccessAlerts } from "../../../common";
+import { ButtonNames } from "../../consts/ButtonNames";
 
 it(`login form shows correct errors,
     field errors dissapear when user starts typing in the respective field`, () => {
   cy.visit("/login");
   cy.url().should("be.equal", `${Cypress.env("BASE_URL")}/login`);
   cy.findByRole("heading", { name: /login/i }).should("exist");
-  cy.findByRole("button", { name: /sign/i }).click();
+  cy.findByRole("button", { name: new RegExp(ButtonNames.AUTH_FORMS.LOGIN, "i") }).click();
   cy.get(`[data-cy="error-email"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL, "i"));
   cy.get(`[data-cy="error-password"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD, "i"));
   cy.findByLabelText(/email/).type("some_unregistered_email@gmail.com");

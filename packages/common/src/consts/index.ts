@@ -1,5 +1,9 @@
 // basics
 export const websiteName = "melphina.com";
+// cookies
+export const CookieNames = {
+  ACCESS_TOKEN: "access_token",
+};
 // times
 export const ONE_SECOND = 1000;
 // battle-room game

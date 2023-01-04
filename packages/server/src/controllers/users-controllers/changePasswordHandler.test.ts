@@ -2,7 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
-import { AuthRoutePaths, ErrorMessages, InputFields, UsersRoutePaths } from "../../../../common";
+import { AuthRoutePaths, CookieNames, ErrorMessages, InputFields, UsersRoutePaths } from "../../../../common";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { TEST_USER_ALTERNATE_PASSWORD, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -53,7 +53,7 @@ describe("changePasswordHandler", () => {
       email: TEST_USER_EMAIL,
       password: TEST_USER_ALTERNATE_PASSWORD,
     });
-    expect(loginResponse.headers["set-cookie"][0].includes("access_token")).toBeTruthy();
+    expect(loginResponse.headers["set-cookie"][0].includes(CookieNames.ACCESS_TOKEN)).toBeTruthy();
   });
 
   it("sends error for non-matching passwords and password too short", async () => {

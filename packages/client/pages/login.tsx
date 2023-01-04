@@ -5,6 +5,7 @@ import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../common/dis
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/layout/auth/AuthPage";
+import { ButtonNames } from "../consts/ButtonNames";
 import { AlertType } from "../enums";
 import { useLoginUserMutation } from "../redux/api-slices/auth-api-slice";
 import { usersApi } from "../redux/api-slices/users-api-slice";
@@ -82,7 +83,7 @@ function Login() {
         <input
           type="submit"
           className="button button-standard-size button-primary"
-          value={isLoading || isSuccess ? "..." : "SIGN"}
+          value={isLoading || isSuccess ? "..." : ButtonNames.AUTH_FORMS.LOGIN}
           disabled={isLoading || isSuccess}
         />
       </div>

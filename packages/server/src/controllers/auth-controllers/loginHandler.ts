@@ -5,7 +5,7 @@ import { CookieOptions, NextFunction, Request, Response } from "express";
 import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import CustomError from "../../classes/CustomError";
-import { ErrorMessages, SanitizedUser, UserStatuses } from "../../../../common";
+import { CookieNames, ErrorMessages, SanitizedUser, UserStatuses } from "../../../../common";
 import { LoginUserInput } from "../../user-input-validation-schema/login-schema";
 
 const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!, 10);
@@ -28,11 +28,7 @@ export default async function loginHandler(req: Request<object, object, LoginUse
     if (user.status === UserStatuses.BANNED) return next([new CustomError(ErrorMessages.AUTH.ACCOUNT_BANNED, 401)]);
 
     const { accessToken } = await signTokenAndCreateSession(user);
-    res.cookie("access_token", accessToken, accessTokenCookieOptions);
-    res.cookie("user_role", user.role, {
-      ...accessTokenCookieOptions,
-      httpOnly: false,
-    });
+    res.cookie(CookieNames.ACCESS_TOKEN, accessToken, accessTokenCookieOptions);
 
     return res.status(200).json({ user: new SanitizedUser(user) });
   } catch (error: any) {
