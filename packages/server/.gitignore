@@ -1,10 +1,2 @@
-#server
-node_modules/
-default.json
-**/default.json
-**/config
-*/config
-.env
-*.env
-*.env*.local
-.env*.local
+**/*.env
+**/*.env*.local
