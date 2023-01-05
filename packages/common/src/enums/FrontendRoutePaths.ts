@@ -5,4 +5,5 @@ export const FrontendRoutes = {
   SETTINGS: "/settings",
   BATTLE_ROOM: "/battle-room",
   LADDER: "/ladder",
+  REGISTER: "/register",
 };

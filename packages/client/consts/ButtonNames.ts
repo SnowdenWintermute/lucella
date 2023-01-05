@@ -4,5 +4,6 @@ export const ButtonNames = {
     LOGIN: "LOG IN",
     SEND: "SEND",
     SET: "SET",
+    DELETE_ACCOUNT: "CONFIRM DELETE",
   },
 };

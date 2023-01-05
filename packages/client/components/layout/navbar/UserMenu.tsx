@@ -6,7 +6,15 @@ import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 export function UserMenu() {
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const [logoutUser, { isUninitialized: logoutIsUninitialized }] = useLogoutUserMutation();
-  const { data: user, isLoading } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const { data: user, isLoading, isFetching, isError } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+
+  const MENU = {
+    LOADING: "LOADING",
+    USER: "USER",
+    LOGIN: "LOGIN",
+  };
+
+  const [menuToShow, setMenuToShow] = useState(MENU.LOADING);
 
   // show/hide menu
   useEffect(() => {
@@ -22,7 +30,7 @@ export function UserMenu() {
     await logoutUser();
   };
 
-  useEffect(() => {}, [user]);
+  const menuLoading = <span>...</span>;
 
   const loggedInUserMenu = (
     <>
@@ -60,6 +68,14 @@ export function UserMenu() {
     </Link>
   );
 
-  // eslint-disable-next-line no-nested-ternary
-  return isLoading && logoutIsUninitialized ? <span>...</span> : user ? loggedInUserMenu : guestMenu;
+  useEffect(() => {
+    // console.log("user: ", user, "isLoading: ", isLoading, "isError: ", isError, "logoutIsUninitialized: ", logoutIsUninitialized, "isFetching: ", isFetching);
+    if (user) setMenuToShow(MENU.USER);
+    else if (isFetching && isLoading && logoutIsUninitialized && !isError) setMenuToShow(MENU.LOADING);
+    else setMenuToShow(MENU.LOGIN);
+  }, [user, isLoading, isError, logoutIsUninitialized]);
+
+  if (menuToShow === MENU.LOADING) return menuLoading;
+  if (menuToShow === MENU.USER) return loggedInUserMenu;
+  return guestMenu;
 }

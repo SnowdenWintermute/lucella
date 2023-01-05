@@ -63,6 +63,7 @@ export async function makeEmailAccount() {
 
           imap.connect();
         } catch (ex) {
+          resolve(null);
           console.log("an error occurred");
         }
       });

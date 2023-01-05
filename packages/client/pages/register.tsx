@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../redux/hooks";
@@ -5,15 +6,17 @@ import { AlertType } from "../enums";
 import { Alert } from "../classes/Alert";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { RegisterInput } from "../redux/types";
-import { useRegisterUserMutation } from "../redux/api-slices/users-api-slice";
-import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../common/dist";
+import { useGetMeQuery, useRegisterUserMutation } from "../redux/api-slices/users-api-slice";
+import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../common";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/layout/auth/AuthPage";
 import { ButtonNames } from "../consts/ButtonNames";
 
 function Register() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const [registerUser, { isLoading, isSuccess, error, isError }] = useRegisterUserMutation();
+  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
   const fields = { email: "", name: "", password: "", passwordConfirm: "" };
   const [formData, setFormData] = useState<RegisterInput>(fields);
   const [fieldErrors, setFieldErrors] = useState(fields);
@@ -33,6 +36,10 @@ function Register() {
       passwordConfirm: formData.passwordConfirm,
     });
   };
+
+  useEffect(() => {
+    if (user) router.push(FrontendRoutes.BATTLE_ROOM);
+  }, [user]);
 
   useEffect(() => {
     if (isSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, AlertType.SUCCESS)));

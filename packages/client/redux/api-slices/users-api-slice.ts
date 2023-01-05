@@ -53,24 +53,25 @@ export const usersApi = createApi({
       },
     }),
     // DELETE ACCOUNT
-    deleteAccount: builder.mutation<void, string>({
-      query() {
+    deleteAccount: builder.mutation<void, { email: string; password: string }>({
+      query(data) {
         return {
-          url: "",
-          method: "DELETE",
+          url: UsersRoutePaths.ACCOUNT_DELETION,
+          method: "PUT",
           credentials: "include",
+          body: data,
           // responseHandler: (response) => response.text(),
         };
       },
       invalidatesTags: ["User"],
     }),
     // RESET PASSWORD USING EMAILED TOKEN
-    changePassword: builder.mutation<void, { password: string; passwordConfirm: string; token: string }>({
-      query({ password, passwordConfirm, token }) {
+    changePassword: builder.mutation<void, { password: string; passwordConfirm: string; email: string; token: string }>({
+      query({ password, passwordConfirm, email, token }) {
         return {
           url: UsersRoutePaths.PASSWORD,
           method: "PUT",
-          body: { password, passwordConfirm, token },
+          body: { password, passwordConfirm, email, token },
           // responseHandler: (response) => response.text(),
         };
       },

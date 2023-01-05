@@ -41,6 +41,7 @@ export const ErrorMessages = {
     CHANGE_PASSWORD_EMAIL: "Error trying to send password reset email",
     CHANGE_PASSWORD_TOKEN: "No token provided - use the link in your email to get a page with a token",
     ACCOUNT_BANNED: "The specified account has been banned",
+    PASSWORD_RESET_EMAIL_DOES_NOT_MATCH_TOKEN: "The provided email address did not match with the password reset token",
   },
   USER: {
     ACCOUNT_DELETION: "An error occurred when trying to delete your account",

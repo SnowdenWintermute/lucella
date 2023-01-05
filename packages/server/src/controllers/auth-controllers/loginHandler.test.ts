@@ -30,7 +30,6 @@ describe("loginHandler", () => {
       email: TEST_USER_EMAIL,
       password: TEST_USER_PASSWORD,
     });
-    console.log(response.body);
     expect(response.headers["set-cookie"][0].includes(CookieNames.ACCESS_TOKEN)).toBeTruthy();
   });
 

@@ -4,7 +4,7 @@
 import cookie from "cookie";
 import { Socket } from "socket.io";
 import { SocketMetadata } from "../../../../common";
-import { verifyJwt } from "../../controllers/utils/jwt";
+import { verifyJwtAsymmetric } from "../../controllers/utils/jwt";
 import { LucellaServer } from ".";
 import UserRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -15,7 +15,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
     let isGuest = true;
     const token = cookie.parse(socket.handshake.headers.cookie || "").access_token || null;
     let decoded;
-    if (token) decoded = verifyJwt<{ sub: string }>(token.toString(), process.env.ACCESS_TOKEN_PUBLIC_KEY!);
+    if (token) decoded = verifyJwtAsymmetric<{ sub: string }>(token.toString(), process.env.ACCESS_TOKEN_PUBLIC_KEY!);
     if (decoded) {
       const session = await wrappedRedis.context!.get(decoded.sub.toString());
       if (!session) {

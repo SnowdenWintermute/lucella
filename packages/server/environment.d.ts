@@ -8,7 +8,7 @@ declare global {
       NODE_ENV: string;
       EMAIL_ROOT_URL: string;
       EMAIL_ROOT_URL_DEV: string;
-      PORT: number;
+      PORT: string;
       ORIGIN: string;
       POSTGRES_USER: string;
       POSTGRES_PASSWORD: string;
@@ -16,10 +16,10 @@ declare global {
 
       REDIS_URL: string;
 
-      ACCESS_TOKEN_EXPIRES_IN: number;
-      AUTH_SESSION_EXPIRATION: number;
-      PASSWORD_RESET_TOKEN_EXPIRES_IN: number;
-      ACCOUNT_ACTIVATION_SESSION_EXPIRATION: number;
+      ACCESS_TOKEN_EXPIRES_IN: string;
+      AUTH_SESSION_EXPIRATION: string;
+      PASSWORD_RESET_TOKEN_EXPIRES_IN: string;
+      ACCOUNT_ACTIVATION_SESSION_EXPIRATION: string;
 
       TESTER_KEY: string;
       CYPRESS_TEST_USER_NAME: string;

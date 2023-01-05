@@ -41,8 +41,18 @@ describe("deleteAccountHandler", () => {
   });
 
   it("doesn't let a user delete an account they are not logged into", async () => {
-    const response = await request(app).delete(`/api${AuthRoutePaths.ROOT}`);
+    const response = await request(app).put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NOT_LOGGED_IN));
+    expect(response.status).toBe(401);
+  });
+
+  it("doesn't let a user delete an account without providing their password", async () => {
+    const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
+    const { accessToken } = await signTokenAndCreateSession(user);
+    const response = await request(app)
+      .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`)
+      .set("Cookie", [`access_token=${accessToken}`]);
+    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_CREDENTIALS));
     expect(response.status).toBe(401);
   });
 
@@ -60,8 +70,9 @@ describe("deleteAccountHandler", () => {
         // ensure they are connected so we know deleting account actually disconnects them
         expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
         const response = await request(app)
-          .delete(`/api${UsersRoutePaths.ROOT}`)
-          .set("Cookie", [`access_token=${accessToken}`]);
+          .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`)
+          .set("Cookie", [`access_token=${accessToken}`])
+          .send({ password: TEST_USER_PASSWORD });
         // logs user out
         expect(response.headers["set-cookie"][0].includes("access_token=;")).toBeTruthy();
         expect(response.status).toBe(204);

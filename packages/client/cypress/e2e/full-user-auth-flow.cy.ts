@@ -1,6 +1,5 @@
 import { recurse } from "cypress-recurse";
-import axios from "axios";
-import { ErrorMessages, FrontendRoutes, nameMaxLength, passwordMaxLength, SuccessAlerts, UsersRoutePaths } from "../../../common";
+import { ErrorMessages, FrontendRoutes, nameMaxLength, passwordMaxLength, SuccessAlerts } from "../../../common";
 import { TaskNames } from "../support/TaskNames";
 import { ButtonNames } from "../../consts/ButtonNames";
 
@@ -10,26 +9,15 @@ describe("full user authentication flow", () => {
   // eslint-disable-next-line no-undef
   before(() => {
     cy.task(TaskNames.getUserEmail).then(async (email) => {
+      // confirm that an ethereal mail account was set up for this test
       expect(email).to.be.a("string");
       userEmail = email;
-      // delete all test users (test users are defined in the UsersRepo deleteTestUsers method)
-      const deleteAllTestUsersResponse = await axios({
-        method: "put",
-        url: `${Cypress.env("CYPRESS_BACKEND_URL")}/api${UsersRoutePaths.ROOT}${UsersRoutePaths.DROP_ALL_TEST_USERS}`,
-        data: {
-          testerKey: Cypress.env("CYPRESS_TESTER_KEY"),
-        },
-        headers: {
-          "content-type": "application/json",
-        },
-      });
-      // confirm that an ethereal mail account was set up for this test
-      expect(deleteAllTestUsersResponse.status).to.equal(200);
     });
     const args = {
       CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
       CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
     };
+    // delete all test users (test users are defined in the UsersRepo deleteTestUsers method)
     cy.task(TaskNames.deleteAllTestUsers, args).then((response: Response) => {
       expect(response.status).to.equal(200);
     });
@@ -38,10 +26,43 @@ describe("full user authentication flow", () => {
     });
   });
 
-  it(`lets user register, login, only visit auth protected pages when authenticated, form errors work`, () => {
+  it(`lets user register and login,
+    form errors work,
+    user can only visit auth protected pages when authenticated,
+    user can reset their password`, () => {
+    // test deleting account with user created in test setup
+    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+    cy.findByLabelText(/email address/i).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
+    cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
+    cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
+    cy.get('[data-cy="profile-icon"]').click();
+    cy.findByRole("link", { name: /settings/i }).click();
+    cy.findByRole("button", { name: /delete account/i }).click();
+    cy.findByLabelText(/email address/i).type("wrong_email@gmail.com{enter}");
+    cy.findByText(new RegExp(ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, "i")).should("exist");
+    cy.findByLabelText(/email address/i)
+      .clear()
+      .type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}{enter}`);
+    cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_CREDENTIALS, "i")).should("exist");
+    cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
+    cy.findByText(new RegExp(SuccessAlerts.USERS.ACCOUNT_DELETED, "i")).should("exist");
+    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
+    cy.findByRole("link", { name: /login/i }).click();
+    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+    cy.findByLabelText(/email address/i).type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
+    cy.findByLabelText(/password/).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
+    cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, "i")).should("exist");
+    cy.findByRole("link", { name: /create account/i }).click();
+    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
+    cy.findByLabelText(/email address/i).type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
+    cy.findByLabelText(/username/i).type(`${Cypress.env("CYPRESS_TEST_USER_NAME")}`);
+    cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
+    cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
+    cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE, "i")).should("exist");
+    // at this point we should be logged out
     // can't visit protected route if not logged in
-    cy.visit(FrontendRoutes.SETTINGS);
-    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}/login`);
+    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.SETTINGS}`);
+    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
     cy.findByRole("heading", { name: /login/i }).should("exist");
     // show login instead of profile icon if not logged in
     cy.get('[data-cy="profile-icon"]').should("not.exist");
@@ -101,7 +122,7 @@ describe("full user authentication flow", () => {
         cy.document({ log: false }).invoke({ log: false }, "write", html);
       });
     cy.get('[data-cy="activation-link"]').click();
-    cy.get('[data-cy="alert-element"]').findByText(new RegExp(SuccessAlerts.USERS.ACCOUNT_CREATED, "i")).should("exist");
+    cy.findByText(new RegExp(SuccessAlerts.USERS.ACCOUNT_CREATED, "i")).should("exist");
     // redirected to login after account creation completed
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
     cy.findByRole("heading", { name: /login/i }).should("exist");
@@ -134,10 +155,37 @@ describe("full user authentication flow", () => {
     cy.findByRole("link", { name: /logout/i }).click();
     cy.get('[data-cy="profile-icon"]').should("not.exist");
     cy.findByRole("link", { name: /login/i }).should("exist");
-    // login again and wait for auth token expiry
+    // login again and test password reset function
     cy.findByLabelText(/password/i).type(Cypress.env("CYPRESS_TEST_USER_PASSWORD"));
     cy.findByLabelText(/email address/i).type(`${userEmail}{enter}`);
-    // cy.clock().tick(Cypress.env("ACCESS_TOKEN_EXPIRES_IN") + 10);
-    // cy.visit(FrontendRoutes.SETTINGS);
+
+    cy.get('[data-cy="profile-icon"]').click();
+    cy.findByRole("link", { name: /settings/i }).click();
+    cy.findByRole("button", { name: /change password/i }).click();
+    cy.findByText(new RegExp(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("exist");
+    // follow the link in email to change password
+    recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: 60000, delay: 5000 })
+      .its("html")
+      .then((html) => {
+        cy.document({ log: false }).invoke({ log: false }, "write", html);
+      });
+    cy.get('[data-cy="password-reset-link"]').click();
+    cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}`);
+    cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}{enter}`);
+    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+    cy.get('[data-cy="profile-icon"]').should("not.exist");
+    cy.findByRole("link", { name: /login/i }).should("exist");
+    cy.go("back");
+    // can't use same link/token once already used
+    cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}`);
+    cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}{enter}`);
+    cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, "i")).should("exist");
+    // able to log in with new password
+    cy.findByRole("link", { name: /login/i }).click();
+    cy.findByLabelText(/email address/i).type(userEmail);
+    cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}{enter}`);
+    cy.get('[data-cy="profile-icon"]').click();
+    cy.findByRole("link", { name: /settings/i }).click();
+    cy.findByRole("heading", { name: /settings/i }).should("exist");
   });
 });

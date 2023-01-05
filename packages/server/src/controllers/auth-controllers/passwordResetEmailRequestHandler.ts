@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { signJwt } from "../utils/jwt";
+import { signJwtSymmetric } from "../utils/jwt";
 import UserRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { ErrorMessages } from "../../../../common";
@@ -11,13 +11,14 @@ export default async function passwordResetEmailRequestHandler(req: Request, res
   try {
     const user = await UserRepo.findOne("email", req.body.email);
     if (!user) return next([new CustomError(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, 404)]);
-    const payload = { user: { id: user.id } };
-    const passwordResetToken = signJwt(payload, process.env.PASSWORD_RESET_TOKEN_PRIVATE_KEY!, {
+    const payload = { user: { email: user.email } };
+
+    const passwordResetToken = signJwtSymmetric(payload, user.password, {
       expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!, 10) / 1000 / 60}m`,
     });
 
-    const htmlOutput = buildPasswordResetHTML(passwordResetToken!);
-    const textOutput = buildPasswordResetText(passwordResetToken!);
+    const htmlOutput = buildPasswordResetHTML(user.email, passwordResetToken!);
+    const textOutput = buildPasswordResetText(user.email, passwordResetToken!);
 
     await sendEmail(req.body.email, RESET_PASSWORD_SUBJECT, textOutput, htmlOutput);
     res.status(200).json({});

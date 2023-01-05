@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import UserRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { ErrorMessages, SanitizedUser } from "../../../../common";
-import { verifyJwt } from "../utils/jwt";
+import { verifyJwtAsymmetric } from "../utils/jwt";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { ACCOUNT_CREATION_SESSION_PREFIX } from "../../consts";
 
@@ -11,7 +11,7 @@ export default async function accountActivationHandler(req: Request<object, obje
   try {
     const { token } = req.body;
     if (!token) return next([new CustomError(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
-    const decoded: { email: string } | null = verifyJwt(token, process.env.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY!);
+    const decoded: { email: string } | null = verifyJwtAsymmetric(token, process.env.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY!);
     if (!decoded) return next([new CustomError(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
     const { email } = decoded;
     const accountActivationSession = await wrappedRedis.context!.get(`${ACCOUNT_CREATION_SESSION_PREFIX}${email}`);

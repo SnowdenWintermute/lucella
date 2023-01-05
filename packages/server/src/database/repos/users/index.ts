@@ -23,7 +23,7 @@ export default class UserRepo {
   }
   static async insert(name: string, email: string, password: string) {
     const { rows } = await wrappedPool.query("INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *;", [
-      name,
+      name.toLowerCase().trim(),
       email.toLowerCase(),
       password,
     ]);
@@ -34,7 +34,7 @@ export default class UserRepo {
     const { rows } = await wrappedPool.query(
       format(
         `UPDATE users SET name = %L, email = %L, password = %L, status = %L, role = %L WHERE id = %L RETURNING *;`,
-        name,
+        name.toLowerCase().trim(),
         email.toLowerCase(),
         password,
         status,
@@ -50,7 +50,7 @@ export default class UserRepo {
   }
   static async deleteTestUsers() {
     if (process.env.NODE_ENV === "development")
-      await wrappedPool.query(`DELETE FROM users WHERE name = $1 OR name = $2`, [process.env.CYPRESS_TEST_USER_NAME, TEST_USER_NAME]);
+      await wrappedPool.query(`DELETE FROM users WHERE name = $1 OR name = $2`, [process.env.CYPRESS_TEST_USER_NAME, TEST_USER_NAME.toLowerCase().trim()]);
     else console.log("can't drop all userse unless in development mode");
   }
   static async count() {

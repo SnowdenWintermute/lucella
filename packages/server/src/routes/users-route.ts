@@ -1,5 +1,6 @@
 import express from "express";
 import { deserializeUser } from "../middleware/deserializeUser";
+import refreshSession from "../middleware/refreshSession";
 import { validate } from "../middleware/validate";
 import registerNewAccountHandler from "../controllers/users-controllers/registerNewAccountHandler";
 import deleteAccountHandler from "../controllers/users-controllers/deleteAccountHandler";
@@ -20,8 +21,8 @@ router.post(UsersRoutePaths.ACCOUNT_ACTIVATION, accountActivationHandler);
 router.put(UsersRoutePaths.PASSWORD, validate(changePasswordSchema), changePasswordHandler);
 router.put(UsersRoutePaths.DROP_ALL_TEST_USERS, requireTesterKey, dropAllTestUsers);
 router.post(UsersRoutePaths.CREATE_CYPRESS_TEST_USER, requireTesterKey, createCypressTestUser);
-router.use(deserializeUser);
+router.use(deserializeUser, refreshSession);
 router.get("", getMeHandler);
-router.delete("", deleteAccountHandler);
+router.put(UsersRoutePaths.ACCOUNT_DELETION, deleteAccountHandler);
 
 export default router;

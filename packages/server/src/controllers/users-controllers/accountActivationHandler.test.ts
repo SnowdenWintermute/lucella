@@ -9,7 +9,7 @@ import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { ACCOUNT_CREATION_SESSION_PREFIX } from "../../consts";
-import { signJwt } from "../utils/jwt";
+import { signJwtAsymmetric } from "../utils/jwt";
 
 describe("accountActivationHandler", () => {
   let context: PGContext | undefined;
@@ -34,7 +34,7 @@ describe("accountActivationHandler", () => {
     const startingCount = await UserRepo.count();
 
     // create appropriate jwt for link
-    const token = signJwt({ email: TEST_USER_EMAIL_2 }, process.env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY!, {
+    const token = signJwtAsymmetric({ email: TEST_USER_EMAIL_2 }, process.env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY!, {
       expiresIn: process.env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION!,
     });
     // setup account activation session

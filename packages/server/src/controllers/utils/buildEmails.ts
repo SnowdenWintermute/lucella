@@ -1,26 +1,26 @@
-import { FrontendRoutes, websiteName } from "../../../../common/dist";
+import { FrontendRoutes, websiteName } from "../../../../common";
 
 const rootUrl = process.env.NODE_ENV === "development" ? process.env.EMAIL_ROOT_URL_DEV : process.env.EMAIL_ROOT_URL;
 const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
 export const RESET_PASSWORD_SUBJECT = "Reset your password";
 
-export function buildPasswordResetHTML(passwordResetToken: string) {
+export function buildPasswordResetHTML(email: string, passwordResetToken: string) {
   const output = `
     <p>Someone (hopefully you) has requested a password reset for your account at ${websiteName}. Follow the link to reset your password.</p>
     <p>
-        <a href="${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${passwordResetToken}">
-            ${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${passwordResetToken}
+        <a href="${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${email}/${passwordResetToken}" data-cy="password-reset-link">
+            ${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${email}/${passwordResetToken}
         </a>
     </p>`;
   return output;
 }
 
-export function buildPasswordResetText(passwordResetToken: string) {
+export function buildPasswordResetText(email: string, passwordResetToken: string) {
   const output = `
         Someone (hopefully you) has requested a password reset for your account at ${websiteName}. Follow the link to reset your password:
         \n \n
-        ${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${passwordResetToken}`;
+        ${protocol}://${rootUrl}${FrontendRoutes.CHANGE_PASSWORD}/${email}/${passwordResetToken}`;
   return output;
 }
 

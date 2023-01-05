@@ -1,14 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../common/dist";
+import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../common";
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/layout/auth/AuthPage";
 import { ButtonNames } from "../consts/ButtonNames";
 import { AlertType } from "../enums";
 import { useLoginUserMutation } from "../redux/api-slices/auth-api-slice";
-import { usersApi } from "../redux/api-slices/users-api-slice";
+import { useGetMeQuery, usersApi } from "../redux/api-slices/users-api-slice";
 import { useAppDispatch } from "../redux/hooks";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { LoginInput } from "../redux/types";
@@ -17,6 +17,8 @@ function Login() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
+  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+
   const fields = { email: "", password: "" };
   const [formData, setFormData] = useState<LoginInput>(fields);
   const [fieldErrors, setFieldErrors] = useState(fields);
@@ -31,6 +33,10 @@ function Login() {
     e.preventDefault();
     await loginUser(formData);
   };
+
+  useEffect(() => {
+    if (user) router.push(FrontendRoutes.BATTLE_ROOM);
+  }, [user]);
 
   useEffect(() => {
     if (isSuccess) {
