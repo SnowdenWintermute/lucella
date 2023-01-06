@@ -1,15 +1,15 @@
+import { Socket } from "socket.io-client";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import GameListener from "../socket-listeners/GameListener";
 import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../common";
-import { Socket } from "socket.io-client";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
 
 interface Props {
   socket: Socket;
 }
 
-const BattleRoomGameInstance = (props: Props) => {
+function BattleRoomGameInstance(props: Props) {
   const { socket } = props;
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { currentGameRoom } = lobbyUiState;
@@ -56,6 +56,6 @@ const BattleRoomGameInstance = (props: Props) => {
       )}
     </div>
   );
-};
+}
 
 export default BattleRoomGameInstance;

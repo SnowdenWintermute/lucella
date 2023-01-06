@@ -39,6 +39,18 @@ export class RedisContext {
   async del(key: string) {
     await this.redisClient.del(this.keyPrefix + key);
   }
+  async expire(key: string, seconds: number, mode?: "NX" | "XX" | "GT" | "LT") {
+    return this.redisClient.expire(key, seconds, mode);
+  }
+  async hIncrBy(key: string, field: string, increment: number) {
+    return this.redisClient.hIncrBy(key, field, increment);
+  }
+  async hGetAll(key: string) {
+    return this.redisClient.hGetAll(key);
+  }
+  async hDel(key: string, fields: string | string[]) {
+    await this.redisClient.hDel(key, fields);
+  }
   async getKeysByPrefix() {
     let currentCursor: number | undefined;
     let keysToReturn: string[] = [];

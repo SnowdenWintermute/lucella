@@ -7,13 +7,16 @@ import deleteAccountHandler from "../controllers/users-controllers/deleteAccount
 import changePasswordHandler from "../controllers/users-controllers/changePasswordHandler";
 import getMeHandler from "../controllers/users-controllers/getMeHandler";
 import { registerUserSchema } from "../user-input-validation-schema/register-user-schema";
-import { UsersRoutePaths } from "../../../common";
+import { ONE_MINUTE, UsersRoutePaths } from "../../../common";
 import { changePasswordSchema } from "../user-input-validation-schema/change-password-schema";
 import accountActivationHandler from "../controllers/users-controllers/accountActivationHandler";
 
 import { requireTesterKey } from "../middleware/requireTesterKey";
 import dropAllTestUsers from "../controllers/users-controllers/for-cypress-tests/dropAllTestUsers";
 import createCypressTestUser from "../controllers/users-controllers/for-cypress-tests/createCypressTestUser";
+import createRateLimiterMiddleware, { RateLimiterModes } from "../middleware/rateLimiter";
+
+const ipRateLimiter = createRateLimiterMiddleware(RateLimiterModes.IP, "", ONE_MINUTE * 2, 10, 8000, 3);
 
 const router = express.Router();
 router.post("", validate(registerUserSchema), registerNewAccountHandler);
@@ -21,7 +24,7 @@ router.post(UsersRoutePaths.ACCOUNT_ACTIVATION, accountActivationHandler);
 router.put(UsersRoutePaths.PASSWORD, validate(changePasswordSchema), changePasswordHandler);
 router.put(UsersRoutePaths.DROP_ALL_TEST_USERS, requireTesterKey, dropAllTestUsers);
 router.post(UsersRoutePaths.CREATE_CYPRESS_TEST_USER, requireTesterKey, createCypressTestUser);
-router.use(deserializeUser, refreshSession);
+router.use(deserializeUser, refreshSession, ipRateLimiter);
 router.get("", getMeHandler);
 router.put(UsersRoutePaths.ACCOUNT_DELETION, deleteAccountHandler);
 

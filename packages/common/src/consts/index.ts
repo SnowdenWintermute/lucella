@@ -6,6 +6,7 @@ export const CookieNames = {
 };
 // times
 export const ONE_SECOND = 1000;
+export const ONE_MINUTE = 60000;
 // battle-room game
 export const ghostTransparency = 0.3;
 export const inGameFontSizes = { medium: 12, large: 25 };

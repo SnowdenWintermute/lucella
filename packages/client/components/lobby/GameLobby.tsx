@@ -14,6 +14,7 @@ import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
+import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 
 const socketAddress = process.env.NEXT_PUBLIC_SOCKET_API;
 
@@ -23,6 +24,7 @@ interface Props {
 
 function GameLobby({ defaultChatRoom }: Props) {
   const dispatch = useAppDispatch();
+  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { scoreScreenDisplayed } = lobbyUiState;
   const { currentGameRoom } = lobbyUiState;

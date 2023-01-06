@@ -4,7 +4,6 @@ import handleNewSocketConnection from "./handleNewSocketConnection";
 import lobbyUiListeners from "./listeners/lobbyUiListeners";
 import battleRoomGameListeners from "./listeners/battleRoomGameListeners";
 import { LucellaServer } from ".";
-import { wrappedRedis } from "../../utils/RedisContext";
 
 export default function initializeListeners(server: LucellaServer) {
   server.io.sockets.on("connect", async (socket) => {
