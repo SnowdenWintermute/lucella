@@ -1,12 +1,17 @@
 // basics
 export const websiteName = "melphina.com";
+// times
+export const ONE_SECOND = 1000;
+export const ONE_MINUTE = 60000;
+// rate limits
+export const perIpEnforcementWindowTime = 2 * ONE_MINUTE;
+export const perIpSlidingWindwRateLimit = 11;
+export const perIpFixedWindowCounterTime = 8 * ONE_SECOND;
+export const perIpFixedWindowCounterLimit = 4;
 // cookies
 export const CookieNames = {
   ACCESS_TOKEN: "access_token",
 };
-// times
-export const ONE_SECOND = 1000;
-export const ONE_MINUTE = 60000;
 // battle-room game
 export const ghostTransparency = 0.3;
 export const inGameFontSizes = { medium: 12, large: 25 };

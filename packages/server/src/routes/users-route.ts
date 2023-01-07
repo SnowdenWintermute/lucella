@@ -7,7 +7,13 @@ import deleteAccountHandler from "../controllers/users-controllers/deleteAccount
 import changePasswordHandler from "../controllers/users-controllers/changePasswordHandler";
 import getMeHandler from "../controllers/users-controllers/getMeHandler";
 import { registerUserSchema } from "../user-input-validation-schema/register-user-schema";
-import { ONE_MINUTE, UsersRoutePaths } from "../../../common";
+import {
+  perIpEnforcementWindowTime,
+  perIpFixedWindowCounterLimit,
+  perIpFixedWindowCounterTime,
+  perIpSlidingWindwRateLimit,
+  UsersRoutePaths,
+} from "../../../common";
 import { changePasswordSchema } from "../user-input-validation-schema/change-password-schema";
 import accountActivationHandler from "../controllers/users-controllers/accountActivationHandler";
 
@@ -16,7 +22,14 @@ import dropAllTestUsers from "../controllers/users-controllers/for-cypress-tests
 import createCypressTestUser from "../controllers/users-controllers/for-cypress-tests/createCypressTestUser";
 import createRateLimiterMiddleware, { RateLimiterModes } from "../middleware/rateLimiter";
 
-const ipRateLimiter = createRateLimiterMiddleware(RateLimiterModes.IP, "", ONE_MINUTE * 2, 10, 8000, 3);
+const ipRateLimiter = createRateLimiterMiddleware(
+  RateLimiterModes.IP,
+  "",
+  perIpEnforcementWindowTime,
+  perIpSlidingWindwRateLimit,
+  perIpFixedWindowCounterTime,
+  perIpFixedWindowCounterLimit
+);
 
 const router = express.Router();
 router.post("", validate(registerUserSchema), registerNewAccountHandler);

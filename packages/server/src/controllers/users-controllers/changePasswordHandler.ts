@@ -12,7 +12,6 @@ export default async function changePassword(req: Request, res: Response, next: 
     const { email } = req.body;
     const user = await UserRepo.findOne("email", email);
     if (!user) return next([new CustomError(ErrorMessages.AUTH.NO_USER_EXISTS, 401)]);
-    console.log("user: ", user);
     const decoded = verifyJwtSymmetric<{ user: { email: string } }>(req.body.token, user.password);
     if (!decoded) return next([new CustomError(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
     if (decoded.user.email !== user.email) return next([new CustomError(ErrorMessages.AUTH.PASSWORD_RESET_EMAIL_DOES_NOT_MATCH_TOKEN, 401)]);

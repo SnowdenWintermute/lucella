@@ -26,6 +26,10 @@ export const ErrorMessages = {
   LADDER: {
     USER_NOT_FOUND: "User not found (please note that names are case sensitive)",
   },
+  RATE_LIMITER: {
+    REQUESTING_TOO_QUICKLY: "You are sending requests too quickly, please wait a while before trying again",
+    TOO_MANY_REQUESTS: "You have sent too many requests recently, please wait a while before trying again",
+  },
   AUTH: {
     NOT_LOGGED_IN: "You are not logged in",
     INVALID_OR_EXPIRED_TOKEN: "Invalid or expired token",

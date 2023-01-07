@@ -38,7 +38,7 @@ describe("getMeHandler", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.user).not.toHaveProperty("password");
-    expect(response.body.user.name).toBe(TEST_USER_NAME);
+    expect(response.body.user.name).toBe(TEST_USER_NAME.toLowerCase()); // all names are coerced to lower case when saved to db
     expect(response.body.user.email).toBe(TEST_USER_EMAIL);
     expect(response.body.user.status).toBe(UserStatuses.ACTIVE);
   });
