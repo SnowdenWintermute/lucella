@@ -2,6 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import {
   ErrorMessages,
+  ONE_SECOND,
   perIpEnforcementWindowTime,
   perIpFixedWindowCounterLimit,
   perIpFixedWindowCounterTime,
@@ -41,7 +42,11 @@ describe("getMeHandler", () => {
 
   function sendDateNowFurtherAhead(milliseconds: number) {
     global.Date.now = jest.fn(() => realDateNow() + milliseconds);
-    console.log(`Date.now currently ahead by: ${milliseconds}`);
+    console.log(
+      `Date.now currently ahead by: ${milliseconds}, ${
+        (milliseconds - (milliseconds % perIpEnforcementWindowTime)) / perIpEnforcementWindowTime
+      } perIpEnforcementWindowTime and ${(milliseconds % perIpEnforcementWindowTime) / perIpFixedWindowCounterTime} perIpFixedWindowCounterTime`
+    );
     return milliseconds;
   }
 
@@ -89,6 +94,7 @@ describe("getMeHandler", () => {
 
     // now do a series of time jumps to reach (but not exceed) the sliding window limit without tripping the fixed window counters
     console.log("number of reqs before starting: ", numReqsInThisSlidingWindow);
+    const timeTravelledAtStartOfSlidingWindowLimitTest = millisecondsIntoTheFutureTravelled;
     while (numReqsInThisSlidingWindow < perIpSlidingWindwRateLimit) {
       millisecondsIntoTheFutureTravelled = sendDateNowFurtherAhead(perIpFixedWindowCounterTime + millisecondsIntoTheFutureTravelled);
 
@@ -125,13 +131,15 @@ describe("getMeHandler", () => {
 
     // wait for the sliding window's enforcement window plus one fixed window length becasue we enforce
     // for one extra fixed window's length if the current timestamp isn't divisible by the fixed window interval
-    millisecondsIntoTheFutureTravelled = sendDateNowFurtherAhead(perIpEnforcementWindowTime + perIpFixedWindowCounterTime + millisecondsIntoTheFutureTravelled);
+    console.log("timeTravelledAtStartOfSlidingWindowLimitTest: ", timeTravelledAtStartOfSlidingWindowLimitTest / ONE_SECOND);
+    console.log("distance to next window: ", (perIpEnforcementWindowTime + timeTravelledAtStartOfSlidingWindowLimitTest) / ONE_SECOND);
+    millisecondsIntoTheFutureTravelled = sendDateNowFurtherAhead(perIpEnforcementWindowTime + timeTravelledAtStartOfSlidingWindowLimitTest - 4000);
 
     const responseAfterWaiting = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     numReqsInThisSlidingWindow += 1;
-
+    console.log(responseAfterWaiting.body);
     expect(responseAfterWaiting.status).toBe(200);
 
     // reset Date.now() to it's original value and return to our home timeline

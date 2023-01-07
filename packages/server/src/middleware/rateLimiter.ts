@@ -43,13 +43,14 @@ export default function createRateLimiterMiddleware(
       // loop when the limit is reached while ensuring we start counting from the oldest keys in the window and remove them
       const entries = Object.entries(slidingWindowCounters).sort((a, b) => parseInt(a[0], 10) - parseInt(b[0], 10));
 
+      // restrict window by one counterInterval whenever the current timestamp isn't divisible by the
+      // fixed window interval otherwise it is possible to exceed the sliding window rate limit by the ammout of one counter's worth
+      const window = now % counterFixedWindowMs === 0 ? slidingWindowMs : slidingWindowMs + counterFixedWindowMs;
+      console.log("window: ", window / ONE_SECOND, now % counterFixedWindowMs);
       for (let i = 0; i < entries.length; i += 1) {
         const [key, value] = entries[i];
         const thisCounterTimestamp = parseInt(key, 10);
-        // add time of one counterInterval whenever the current timestamp isn't divisible by the fixed window interval otherwise
-        // it is possible to exceed the sliding window rate limit
-        const window = now % counterFixedWindowMs === 0 ? slidingWindowMs : slidingWindowMs + counterFixedWindowMs;
-        if (now - thisCounterTimestamp > window) {
+        if (now - window > thisCounterTimestamp) {
           console.log("deleting old counter: ", key);
           context!.hDel(keyWithRouteName, key);
         } else {
