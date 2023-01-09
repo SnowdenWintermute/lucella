@@ -47,7 +47,7 @@ export default async function loginHandler(req: Request<object, object, LoginUse
         return next([new CustomError(ErrorMessages.RATE_LIMITER.TOO_MANY_FAILED_LOGINS, 401)]);
       }
       // send number of remaining attempts
-      return next([new CustomError(ErrorMessages.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - failedAttempts), 401)]);
+      return next([new CustomError(ErrorMessages.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - failedAttempts + 1), 401)]);
     }
 
     const { accessToken } = await signTokenAndCreateSession(user);

@@ -60,6 +60,7 @@ export default defineConfig({
         [TaskNames.getLastEmail]: async () => {
           try {
             const lastEmail = await emailAccount.getLastEmail();
+            console.log("last email: ", lastEmail);
             return lastEmail;
           } catch (error) {
             console.log("error in getLastEmail");

@@ -30,15 +30,15 @@ describe("login-lockout-and-reset-flow", () => {
     const genArr = Array.from({ length: failedLoginCountTolerance - 1 }, (v, k) => k + 1); // https://stackoverflow.com/questions/52212868/cypress-io-writing-a-for-loop
     let failedAttempts = 0;
     // attemp with wrong password up to the limit
+    cy.findByLabelText(/email address/i)
+      .clear()
+      .type(userEmail);
     cy.wrap(genArr).each((index) => {
-      cy.findByLabelText(/email address/i)
-        .clear()
-        .type(userEmail);
       cy.findByLabelText(/^password$/i)
         .clear()
         .type(`wrongPassword{enter}`);
       failedAttempts += 1;
-      cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - failedAttempts), "i")).should(
+      cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - failedAttempts + 1), "i")).should(
         "exist"
       );
     });
