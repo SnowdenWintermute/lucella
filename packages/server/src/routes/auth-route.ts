@@ -9,9 +9,8 @@ import { AuthRoutePaths } from "../../../common";
 import { loginSchema } from "../user-input-validation-schema/login-schema";
 
 const router = express.Router();
+router.post(AuthRoutePaths.LOGOUT, deserializeUser, logoutHandler);
 router.post("/", validate(loginSchema), loginHandler);
 router.post(AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL, passwordResetEmailRequestHandler);
-router.use(deserializeUser);
-router.post(AuthRoutePaths.LOGOUT, logoutHandler);
 
 export default router;

@@ -69,6 +69,7 @@ function Login() {
         disabled={isLoading || isSuccess}
         error={fieldErrors.email}
         autofocus
+        dataCy="email-address-input"
       />
       <LabeledTextInputWithErrorDisplay
         label="Password"
@@ -82,7 +83,7 @@ function Login() {
         autofocus={false}
       />
       <div className="forgot-password">
-        <Link href="/request-password-reset">Forgot password?</Link>
+        <Link href="/request-password-reset">Reset password</Link>
       </div>
       <div className="auth-bottom-links">
         <Link href="/register">Create account</Link>

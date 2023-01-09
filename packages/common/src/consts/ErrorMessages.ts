@@ -29,6 +29,7 @@ export const ErrorMessages = {
   RATE_LIMITER: {
     REQUESTING_TOO_QUICKLY: "You are sending requests too quickly, please wait a while before trying again",
     TOO_MANY_REQUESTS: "You have sent too many requests recently, please wait a while before trying again",
+    TOO_MANY_FAILED_LOGINS: "You have failed too many login attempts and your account has been locked, please reset your password to regain access",
   },
   AUTH: {
     NOT_LOGGED_IN: "You are not logged in",
@@ -37,6 +38,10 @@ export const ErrorMessages = {
     USED_OR_EXPIRED_ACCOUNT_CREATION_SESSION:
       "Either you have already created an account with this token or it has been too long since you initiated account creation, please try registering again to get a new account activation email",
     INVALID_CREDENTIALS: "Incorrect email or password",
+    INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING: (remaining: number) => {
+      if (remaining === 0) return `Incorrect email or password, this is your final attempt before account will be locked`;
+      return `Incorrect email or password, you have ${remaining} attempts remaining`;
+    },
     NO_USER_EXISTS: "The specified user longer exists",
     ROLE_RESTRICTED: "That action is role restricted",
     EMAIL_DOES_NOT_EXIST: "No user with that email exists",
@@ -46,6 +51,7 @@ export const ErrorMessages = {
     CHANGE_PASSWORD_TOKEN: "No token provided - use the link in your email to get a page with a token",
     ACCOUNT_BANNED: "The specified account has been banned",
     PASSWORD_RESET_EMAIL_DOES_NOT_MATCH_TOKEN: "The provided email address did not match with the password reset token",
+    ACCOUNT_LOCKED: "Your account has been locked for security reasons, please reset your password to regain access",
   },
   USER: {
     ACCOUNT_DELETION: "An error occurred when trying to delete your account",

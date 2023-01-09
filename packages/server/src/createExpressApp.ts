@@ -12,6 +12,7 @@ import authRouter from "./routes/auth-route";
 import usersRouter from "./routes/users-route";
 import errorHandler from "./middleware/errorHandler";
 import { AuthRoutePaths, UsersRoutePaths } from "../../common";
+import { ipRateLimiter } from "./middleware/rateLimiter";
 
 export default function createExpressApp() {
   const app = express();
@@ -26,6 +27,7 @@ export default function createExpressApp() {
     })
   );
 
+  app.use(ipRateLimiter);
   app.use(`/api${AuthRoutePaths.ROOT}`, authRouter);
   app.use(`/api${UsersRoutePaths.ROOT}`, usersRouter);
 

@@ -4,7 +4,7 @@ exports.shorthands = undefined;
 
 exports.up = (pgm) => {
   pgm.sql(`
-        CREATE TYPE user_status as ENUM ('active', 'deleted', 'banned');
+        CREATE TYPE user_status as ENUM ('active', 'deleted', 'locked_out', 'banned');
     `);
 };
 

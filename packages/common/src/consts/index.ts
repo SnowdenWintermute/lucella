@@ -4,10 +4,22 @@ export const websiteName = "melphina.com";
 export const ONE_SECOND = 1000;
 export const ONE_MINUTE = 60000;
 // rate limits
-export const perIpEnforcementWindowTime = 2 * ONE_MINUTE;
-export const perIpSlidingWindwRateLimit = 11;
-export const perIpFixedWindowCounterTime = 8 * ONE_SECOND;
-export const perIpFixedWindowCounterLimit = 4;
+// ip:general
+export const perIpSlidingWindowTime = 30 * ONE_MINUTE;
+export const perIpSlidingWindowLimit = 500;
+export const perIpFixedWindowCounterTime = 30 * ONE_SECOND;
+export const perIpFixedWindowCounterLimit = 50;
+// ip: registration
+export const registrationSlidingWindowLimit = 500;
+export const registrationFixedWindowCounterTime = 10 * ONE_SECOND;
+export const registrationFixedWindowCounterLimit = 50;
+// login
+export const failedLoginCounterExpiration = 10 * ONE_MINUTE;
+export const failedLoginCountTolerance = 2;
+// redis key prefixes
+export const REDIS_KEY_PREFIXES = {
+  FAILED_LOGINS: "_failed_login_attempts",
+};
 // cookies
 export const CookieNames = {
   ACCESS_TOKEN: "access_token",

@@ -8,6 +8,10 @@ import { AuthRoutePaths, ErrorMessages, UserStatuses } from "../../../common";
 import { wrappedRedis } from "../utils/RedisContext";
 
 export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
+  if (res.locals.rateLimited) {
+    console.log("rate limiter applied");
+    return next();
+  }
   try {
     let accessToken;
     if (req.cookies.access_token) accessToken = req.cookies.access_token;

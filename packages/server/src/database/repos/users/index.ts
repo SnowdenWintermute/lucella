@@ -50,7 +50,10 @@ export default class UserRepo {
   }
   static async deleteTestUsers() {
     if (process.env.NODE_ENV === "development")
-      await wrappedPool.query(`DELETE FROM users WHERE name = $1 OR name = $2`, [process.env.CYPRESS_TEST_USER_NAME, TEST_USER_NAME.toLowerCase().trim()]);
+      await wrappedPool.query(`DELETE FROM users WHERE name = $1 OR name = $2`, [
+        process.env.CYPRESS_TEST_USER_NAME.toLowerCase(),
+        TEST_USER_NAME.toLowerCase().trim(),
+      ]);
     else console.log("can't drop all userse unless in development mode");
   }
   static async count() {

@@ -49,12 +49,14 @@ describe("full user authentication flow", () => {
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
     cy.findByRole("link", { name: /login/i }).click();
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
-    cy.findByLabelText(/email address/i).type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
+    cy.findByRole("heading", { name: /login/i }).should("exist");
+    cy.get('[data-cy="email-address-input"]').type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
     cy.findByLabelText(/password/).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
     cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, "i")).should("exist");
     cy.findByRole("link", { name: /create account/i }).click();
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
-    cy.findByLabelText(/email address/i).type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
+    cy.findByRole("heading", { name: /create account/i }).should("exist");
+    cy.get('[data-cy="email-address-input"]').type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
     cy.findByLabelText(/username/i).type(`${Cypress.env("CYPRESS_TEST_USER_NAME")}`);
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
     cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);

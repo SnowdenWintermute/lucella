@@ -42,6 +42,9 @@ export class RedisContext {
   async expire(key: string, seconds: number, mode?: "NX" | "XX" | "GT" | "LT") {
     return this.redisClient.expire(this.keyPrefix + key, seconds, mode);
   }
+  async incrBy(key: string, increment: number) {
+    return this.redisClient.incrBy(this.keyPrefix + key, increment);
+  }
   async hIncrBy(key: string, field: string, increment: number) {
     return this.redisClient.hIncrBy(this.keyPrefix + key, field, increment);
   }

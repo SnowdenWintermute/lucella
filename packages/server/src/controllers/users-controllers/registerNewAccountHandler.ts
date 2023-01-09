@@ -16,7 +16,7 @@ export default async function registerNewAccountHandler(req: Request<object, obj
 
   const emailAlreadyExists = await UserRepo.findOne("email", email);
   if (emailAlreadyExists) return next([new CustomError(ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE, 403)]);
-  const nameAlreadyExists = await UserRepo.findOne("name", name);
+  const nameAlreadyExists = await UserRepo.findOne("name", name.toLowerCase().trim());
   if (nameAlreadyExists) return next([new CustomError(ErrorMessages.AUTH.NAME_IN_USE_OR_UNAVAILABLE, 403)]);
 
   const token = signJwtAsymmetric({ email }, process.env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY!, {

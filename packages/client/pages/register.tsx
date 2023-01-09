@@ -75,6 +75,7 @@ function Register() {
         disabled={isLoading || isSuccess}
         error={fieldErrors.email}
         autofocus
+        dataCy="email-address-input"
       />
       <LabeledTextInputWithErrorDisplay
         label="Username"

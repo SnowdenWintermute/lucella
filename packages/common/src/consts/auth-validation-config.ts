@@ -5,5 +5,6 @@ export const nameMaxLength = 24;
 export const UserStatuses = {
   ACTIVE: "active",
   DELETED: "deleted",
+  LOCKED_OUT: "locked_out",
   BANNED: "banned",
 };

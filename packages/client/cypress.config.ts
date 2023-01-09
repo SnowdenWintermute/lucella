@@ -10,6 +10,7 @@ let socket: Socket;
 
 export default defineConfig({
   e2e: {
+    defaultCommandTimeout: 6000,
     async setupNodeEvents(on, config) {
       const emailAccount = await makeEmailAccount();
 
@@ -18,7 +19,8 @@ export default defineConfig({
           const response = await axios({
             method: "put",
             url: `${args.CYPRESS_BACKEND_URL}/api${UsersRoutePaths.ROOT}${UsersRoutePaths.DROP_ALL_TEST_USERS}`,
-            data: { testerKey: args.CYPRESS_TESTER_KEY },
+            data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
+
             headers: { "content-type": "application/json" },
           });
           // @ts-ignore
@@ -28,7 +30,7 @@ export default defineConfig({
           const response = await axios({
             method: "post",
             url: `${args.CYPRESS_BACKEND_URL}/api${UsersRoutePaths.ROOT}${UsersRoutePaths.CREATE_CYPRESS_TEST_USER}`,
-            data: { testerKey: args.CYPRESS_TESTER_KEY },
+            data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
             headers: { "content-type": "application/json" },
           });
           // @ts-ignore
@@ -56,8 +58,13 @@ export default defineConfig({
           return emailAccount.email;
         },
         [TaskNames.getLastEmail]: async () => {
-          const lastEmail = await emailAccount.getLastEmail();
-          return lastEmail;
+          try {
+            const lastEmail = await emailAccount.getLastEmail();
+            return lastEmail;
+          } catch (error) {
+            console.log("error in getLastEmail");
+            return null;
+          }
         },
       });
       return config;

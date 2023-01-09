@@ -32,6 +32,7 @@ export async function makeEmailAccount() {
                   msg.on("body", (stream) => {
                     simpleParser(stream, async (err, parsed) => {
                       // const {from, subject, textAsHtml, text} = parsed;
+                      if (err) resolve(null);
                       resolve(parsed);
                     });
                   });
@@ -43,6 +44,7 @@ export async function makeEmailAccount() {
                   });
                 });
                 f.once("error", (error) => {
+                  console.error("error in line 47 email-account cypress task");
                   console.error(error);
                   return resolve(null);
                 });
@@ -55,6 +57,7 @@ export async function makeEmailAccount() {
           });
 
           imap.once("error", (err) => {
+            console.error("error in line 59 email-account cypress task");
             console.error(err);
             return resolve(null);
           });
@@ -63,8 +66,9 @@ export async function makeEmailAccount() {
 
           imap.connect();
         } catch (ex) {
-          resolve(null);
           console.log("an error occurred");
+          resolve(null);
+          // return null;
         }
       });
     },

@@ -11,9 +11,11 @@ type Props = {
   disabled: boolean;
   error: string;
   autofocus: boolean;
+  // eslint-disable-next-line react/require-default-props
+  dataCy?: string;
 };
 
-function LabeledTextInputWithErrorDisplay({ name, type, label, placeholder, value, onChange, disabled, error, autofocus }: Props) {
+function LabeledTextInputWithErrorDisplay({ name, type, label, placeholder, value, onChange, disabled, error, autofocus, dataCy = "" }: Props) {
   return (
     <label htmlFor={name}>
       <p className={error && inputStyles["red-text"]}>
@@ -36,6 +38,7 @@ function LabeledTextInputWithErrorDisplay({ name, type, label, placeholder, valu
         disabled={disabled}
         autoFocus={autofocus}
         aria-invalid={!!error}
+        data-cy={dataCy}
       />
     </label>
   );
