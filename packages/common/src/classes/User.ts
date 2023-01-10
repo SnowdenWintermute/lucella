@@ -7,6 +7,7 @@ export type User = {
   role: string;
   status: string;
   password: string;
+  banExpiresAt?: number | null;
 };
 export class SanitizedUser {
   createdAt: number;

@@ -3,7 +3,7 @@ import { RegisterInput } from "../types";
 import { setAlert } from "../slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
-import { SanitizedUser, UsersRoutePaths } from "../../../common";
+import { Ban, SanitizedUser, UsersRoutePaths } from "../../../common";
 import { authApi } from "./auth-api-slice";
 
 const API_URL = process.env.NEXT_PUBLIC_API;
@@ -65,6 +65,18 @@ export const usersApi = createApi({
       },
       invalidatesTags: ["User"],
     }),
+    // BAN ACCOUNT
+    banAccount: builder.mutation<void, { username: string; ban: Ban }>({
+      query(data) {
+        return {
+          url: UsersRoutePaths.ACCOUNT_BAN,
+          method: "PUT",
+          credentials: "include",
+          body: data,
+        };
+      },
+      invalidatesTags: ["User"],
+    }),
     // RESET PASSWORD USING EMAILED TOKEN
     changePassword: builder.mutation<void, { password: string; passwordConfirm: string; email: string; token: string }>({
       query({ password, passwordConfirm, email, token }) {
@@ -79,4 +91,11 @@ export const usersApi = createApi({
   }),
 });
 
-export const { useGetMeQuery, useRegisterUserMutation, useActivateAccountMutation, useDeleteAccountMutation, useChangePasswordMutation } = usersApi;
+export const {
+  useGetMeQuery,
+  useRegisterUserMutation,
+  useActivateAccountMutation,
+  useDeleteAccountMutation,
+  useBanAccountMutation,
+  useChangePasswordMutation,
+} = usersApi;

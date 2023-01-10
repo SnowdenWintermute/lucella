@@ -4,6 +4,7 @@ import { UserStatuses, User, CookieNames, ErrorMessages } from "../../../../comm
 import CustomError from "../../classes/CustomError";
 import UserRepo from "../../database/repos/users";
 import { lucella } from "../../lucella";
+import { wrappedRedis } from "../../utils/RedisContext";
 
 export default async function deleteAccountHandler(req: Request, res: Response, next: NextFunction) {
   try {
@@ -13,6 +14,7 @@ export default async function deleteAccountHandler(req: Request, res: Response, 
       return next([new CustomError(ErrorMessages.AUTH.INVALID_CREDENTIALS, 401)]);
     await UserRepo.update(user);
     const deletedUser = await UserRepo.findOne(`email`, user.email);
+    wrappedRedis.context!.del(deletedUser.id.toString());
     console.log(`flagged user ${deletedUser.name} as deleted`);
     lucella.server?.disconnectUser(user.name);
     res.cookie(CookieNames.ACCESS_TOKEN, "", { maxAge: 1 });

@@ -1,6 +1,7 @@
 import { GameStatus } from "../../../common";
 import { useAppSelector } from "../../redux/hooks";
 import AlertsHolder from "./alerts/AlertsHolder";
+import ContextMenu from "./ContextMenu";
 import Navbar from "./navbar";
 
 interface Props {
@@ -15,6 +16,7 @@ export default function LayoutWithHeaderAndAlerts({ children }: Props) {
     <>
       {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && <Navbar />}
       <AlertsHolder />
+      <ContextMenu />
       <main>{children}</main>
     </>
   );

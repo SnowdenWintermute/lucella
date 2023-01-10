@@ -11,4 +11,5 @@ export enum UsersRoutePaths {
   DROP_ALL_TEST_USERS = "/drop-all-test-users",
   CREATE_CYPRESS_TEST_USER = "/create-cypress-test-user",
   ACCOUNT_DELETION = "/account-deletion",
+  ACCOUNT_BAN = "/account-ban",
 }

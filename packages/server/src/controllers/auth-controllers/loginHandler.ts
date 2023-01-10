@@ -34,7 +34,11 @@ export default async function loginHandler(req: Request<object, object, LoginUse
     const user = await UserRepo.findOne("email", req.body.email);
     if (!user || user.status === UserStatuses.DELETED) return next([new CustomError(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, 401)]);
     if (user.status === UserStatuses.LOCKED_OUT) return next([new CustomError(ErrorMessages.AUTH.ACCOUNT_LOCKED, 401)]);
-    if (user.status === UserStatuses.BANNED) return next([new CustomError(ErrorMessages.AUTH.ACCOUNT_BANNED, 401)]);
+    if (user.status === UserStatuses.BANNED) {
+      if (user.banExpiresAt && Date.now() > new Date(user.banExpiresAt).getTime())
+        await UserRepo.update({ ...user, status: UserStatuses.ACTIVE, banExpiresAt: null });
+      else return next([new CustomError(ErrorMessages.AUTH.ACCOUNT_BANNED, 401)]);
+    }
 
     if (!(await bcrypt.compare(req.body.password, user.password!))) {
       const failedAttempts = await wrappedRedis.context!.incrBy(`${user.email}${REDIS_KEY_PREFIXES.FAILED_LOGINS}`, 1);

@@ -1,5 +1,5 @@
 export * from "./types";
-export { GameStatus, PlayerRole, UserInputs } from "./enums";
+export { GameStatus, PlayerRole, UserInputs, UserRole } from "./enums";
 export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
 export { AuthRoutePaths, UsersRoutePaths } from "./enums/APIRoutePaths";
 export { FrontendRoutes } from "./enums/FrontendRoutePaths";
@@ -30,3 +30,4 @@ export * from "./utils";
 export { setBodyProperties } from "./utils/setBodyProperties";
 export { OrbsProto, VectorProto, OrbProto, ScoreProto, DeltasProto } from "./proto/generated/src/proto/deltas_pb";
 export { InputProto, SmallVectorProto } from "./proto/generated/src/proto/client-inputs_pb";
+export { Ban } from "./classes/Ban";

@@ -22,7 +22,7 @@ export function UserMenu() {
       const node = e.target as HTMLElement;
       if (node.getAttribute("data-name") !== "profile-icon") toggleUserDropdown(false);
     };
-    window.addEventListener("click", (e) => clearUserDropdown(e));
+    window.addEventListener("click", clearUserDropdown);
     return () => window.removeEventListener("click", clearUserDropdown);
   }, [showUserDropdown]);
 
