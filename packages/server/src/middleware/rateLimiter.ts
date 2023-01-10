@@ -6,6 +6,9 @@ import {
   ErrorMessages,
   ONE_MINUTE,
   ONE_SECOND,
+  passwordResetEmailFixedWindowCounterLimit,
+  passwordResetEmailFixedWindowCounterTime,
+  passwordResetEmailSlidingWindowLimit,
   perIpFixedWindowCounterLimit,
   perIpFixedWindowCounterTime,
   perIpSlidingWindowLimit,
@@ -113,4 +116,13 @@ export const registrationIpRateLimiter = createRateLimiterMiddleware(
   registrationSlidingWindowLimit,
   registrationFixedWindowCounterTime,
   registrationFixedWindowCounterLimit
+);
+
+export const passwordResetEmailRequestIpRateLimiter = createRateLimiterMiddleware(
+  RateLimiterModes.IP,
+  "PASSWORD_RESET",
+  perIpSlidingWindowTime,
+  passwordResetEmailSlidingWindowLimit,
+  passwordResetEmailFixedWindowCounterTime,
+  passwordResetEmailFixedWindowCounterLimit
 );

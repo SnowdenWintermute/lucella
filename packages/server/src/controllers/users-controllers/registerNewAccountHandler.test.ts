@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
 import bcrypt from "bcryptjs";
-import { ErrorMessages, InputFields, UsersRoutePaths } from "../../../../common";
+import { ErrorMessages, InputFields, registrationFixedWindowCounterLimit, UsersRoutePaths } from "../../../../common";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL_2, TEST_USER_NAME_2, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -40,31 +40,15 @@ describe("registerNewAccountHandler", () => {
       passwordConfirm: TEST_USER_PASSWORD,
     });
 
-    // expect(response.body.user).not.toHaveProperty("password");
-    // expect(response.body.user).toHaveProperty("createdAt");
-    // expect(response.body.user).toHaveProperty("updatedAt");
-    // expect(response.body.user.name).toBe(TEST_USER_NAME_2);
-    // expect(response.body.user.email).toBe(TEST_USER_EMAIL_2);
     expect(sendEmail).toHaveBeenCalled();
     expect(response.status).toBe(200);
+    // this session is needed to ensure the email link can not be used after a certain time has passed
     const regitrationAttemptSession = await wrappedRedis.context!.get(`${ACCOUNT_CREATION_SESSION_PREFIX}${TEST_USER_EMAIL_2}`);
     const parsedSession = JSON.parse(regitrationAttemptSession!);
     expect(parsedSession.name).toBe(TEST_USER_NAME_2);
     expect(parsedSession.email).toBe(TEST_USER_EMAIL_2);
     const hashedPasswordMatchesUserPassword = await bcrypt.compare(TEST_USER_PASSWORD, parsedSession.password);
     expect(hashedPasswordMatchesUserPassword).toBeTruthy();
-
-    // const finishCount = await UserRepo.count();
-    // expect(finishCount - startingCount).toEqual(1);
-    // const responseForSecondCreation = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
-    //   name: TEST_USER_NAME_2,
-    //   email: TEST_USER_EMAIL_2,
-    //   password: TEST_USER_PASSWORD,
-    //   passwordConfirm: TEST_USER_PASSWORD,
-    // });
-
-    // expect(responseBodyIncludesCustomErrorMessage(responseForSecondCreation, ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE)).toBeTruthy();
-    // expect(responseForSecondCreation.status).toBe(403);
   });
 
   it("gets errors for missing email or password", async () => {

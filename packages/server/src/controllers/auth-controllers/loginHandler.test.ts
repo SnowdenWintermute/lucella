@@ -1,6 +1,6 @@
 import { Application } from "express";
 import request from "supertest";
-import { AuthRoutePaths, CookieNames, ErrorMessages, InputFields } from "../../../../common";
+import { AuthRoutePaths, CookieNames, ErrorMessages, failedLoginCountTolerance, InputFields } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -47,13 +47,25 @@ describe("loginHandler", () => {
     expect(response.status).toBe(400);
   });
 
-  it("gets appropriate error for incorrect password", async () => {
+  it("gets appropriate errors for incorrect password and can be locked out with too many attempts", async () => {
+    // use up all attempts
+    for (let i = 1; i < failedLoginCountTolerance + 1; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const response = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
+        email: TEST_USER_EMAIL,
+        password: "the wrong password",
+      });
+      expect(
+        responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - i))
+      ).toBeTruthy();
+      expect(response.status).toBe(401);
+    }
+    // should now be locked out
     const response = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
       email: TEST_USER_EMAIL,
       password: "the wrong password",
     });
-
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_CREDENTIALS)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.RATE_LIMITER.TOO_MANY_FAILED_LOGINS)).toBeTruthy();
     expect(response.status).toBe(401);
   });
 

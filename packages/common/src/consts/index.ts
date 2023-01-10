@@ -10,12 +10,16 @@ export const perIpSlidingWindowLimit = 500;
 export const perIpFixedWindowCounterTime = 30 * ONE_SECOND;
 export const perIpFixedWindowCounterLimit = 50;
 // ip: registration
-export const registrationSlidingWindowLimit = 500;
+export const registrationSlidingWindowLimit = 5;
 export const registrationFixedWindowCounterTime = 10 * ONE_SECOND;
-export const registrationFixedWindowCounterLimit = 50;
+export const registrationFixedWindowCounterLimit = 2;
+// ip: password reset email
+export const passwordResetEmailSlidingWindowLimit = 3;
+export const passwordResetEmailFixedWindowCounterTime = 10 * ONE_SECOND;
+export const passwordResetEmailFixedWindowCounterLimit = 1;
 // login
 export const failedLoginCounterExpiration = 10 * ONE_MINUTE;
-export const failedLoginCountTolerance = 2;
+export const failedLoginCountTolerance = 3;
 // redis key prefixes
 export const REDIS_KEY_PREFIXES = {
   FAILED_LOGINS: "_failed_login_attempts",

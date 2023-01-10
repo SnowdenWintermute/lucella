@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import UserRepo from "../../database/repos/users";
 import { verifyJwtSymmetric } from "../utils/jwt";
 import CustomError from "../../classes/CustomError";
-import { ErrorMessages, UserStatuses } from "../../../../common";
+import { ErrorMessages, REDIS_KEY_PREFIXES, UserStatuses } from "../../../../common";
 import { wrappedRedis } from "../../utils/RedisContext";
 
 export default async function changePassword(req: Request, res: Response, next: NextFunction) {
@@ -21,6 +21,8 @@ export default async function changePassword(req: Request, res: Response, next: 
     user.password = hashedPassword;
     if (user.status === UserStatuses.LOCKED_OUT) user.status = UserStatuses.ACTIVE;
     await UserRepo.update(user);
+    // give them back their failed login attempts so they don't immediately lock themselves out again on one failed attempt
+    await wrappedRedis.context!.del(`${user.email}${REDIS_KEY_PREFIXES.FAILED_LOGINS}`);
     // it is important to delete their auth session so anyone using a session from the old password is unauthed
     await wrappedRedis.context!.del(user.id.toString());
     res.sendStatus(204);

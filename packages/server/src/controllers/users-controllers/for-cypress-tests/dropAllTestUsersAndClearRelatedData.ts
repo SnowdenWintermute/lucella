@@ -6,8 +6,10 @@ import { wrappedRedis } from "../../../utils/RedisContext";
 export default async function dropAllTestUsers(req: Request, res: Response, next: NextFunction) {
   try {
     const userEmailFailedLoginsKey = `${req.body.email}${REDIS_KEY_PREFIXES.FAILED_LOGINS}`;
-    await wrappedRedis.context!.get(userEmailFailedLoginsKey);
-    await wrappedRedis.context!.del(userEmailFailedLoginsKey);
+    const existingKey = await wrappedRedis.context!.get(userEmailFailedLoginsKey);
+    console.log("deleting existing key: ", userEmailFailedLoginsKey, existingKey);
+    const numDeleted = await wrappedRedis.context!.del(userEmailFailedLoginsKey);
+    console.log("num keys deleted before cypress test: ", numDeleted);
     await UserRepo.deleteTestUsers();
     return res.sendStatus(200);
   } catch (error) {

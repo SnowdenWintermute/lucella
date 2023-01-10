@@ -2,7 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
-import { AuthRoutePaths, CookieNames, ErrorMessages, InputFields, UsersRoutePaths } from "../../../../common";
+import { AuthRoutePaths, CookieNames, ErrorMessages, failedLoginCountTolerance, InputFields, UsersRoutePaths, UserStatuses } from "../../../../common";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { TEST_USER_ALTERNATE_PASSWORD, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -29,12 +29,16 @@ describe("changePasswordHandler", () => {
   });
 
   it(`successfully updates password when given a valid token, email and matching new passwords,
-  user session is deleted
+  even if the account is locked out, user session is deleted
   and user can't log in with old password but can with new password
-  an user cannot reuse the same token`, async () => {
+  and user cannot reuse the same token to change password again`, async () => {
     const payload = { user: { email: TEST_USER_EMAIL } };
     const user = await UserRepo.findById(1);
     if (!user) return;
+    // lock user out (if they failed password attempts they would need to reset password to unlock)
+    user.status = UserStatuses.LOCKED_OUT;
+    await UserRepo.update(user);
+    // bypass login and give the token to authorize the user to update their password, just for this test
     const { accessToken } = await signTokenAndCreateSession(user);
     const passwordResetToken = signJwtSymmetric(payload, user.password, {
       expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!, 10) / 1000 / 60}m`,
@@ -61,8 +65,13 @@ describe("changePasswordHandler", () => {
     });
 
     expect(loginWithOldPasswordResponse.status).toBe(401);
-    expect(responseBodyIncludesCustomErrorMessage(loginWithOldPasswordResponse, ErrorMessages.AUTH.INVALID_CREDENTIALS)).toBeTruthy();
-
+    expect(
+      responseBodyIncludesCustomErrorMessage(
+        loginWithOldPasswordResponse,
+        ErrorMessages.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - 1)
+      )
+    ).toBeTruthy();
+    // should be able to log in with new password
     const loginResponse = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
       email: TEST_USER_EMAIL,
       password: TEST_USER_ALTERNATE_PASSWORD,

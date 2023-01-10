@@ -12,17 +12,17 @@ describe("full user authentication flow", () => {
       // confirm that an ethereal mail account was set up for this test
       expect(email).to.be.a("string");
       userEmail = email;
-    });
-    const args = {
-      CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
-      CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
-    };
-    // delete all test users (test users are defined in the UsersRepo deleteTestUsers method)
-    cy.task(TaskNames.deleteAllTestUsers, args).then((response: Response) => {
-      expect(response.status).to.equal(200);
-    });
-    cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
-      expect(response.status).to.equal(201);
+      const args = {
+        CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
+        CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
+      };
+      // delete all test users (test users are defined in the UsersRepo deleteTestUsers method)
+      cy.task(TaskNames.deleteAllTestUsers, { ...args, email: userEmail }).then((response: Response) => {
+        expect(response.status).to.equal(200);
+      });
+      cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
+        expect(response.status).to.equal(201);
+      });
     });
   });
 
