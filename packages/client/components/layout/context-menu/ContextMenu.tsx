@@ -4,20 +4,20 @@ import useWindowDimensions from "../../../hooks/useWindowDimensions";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { clearContextMenu, setContextMenuPosition } from "../../../redux/slices/ui-slice";
 import styles from "./context-menu.module.scss";
+import UserNameplateContextMenu from "./UserNameplateContextMenu";
 
 function ContextMenu() {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector((state) => state.UI);
-  const contextMenuRef = useRef<HTMLDivElement>(null);
+  const contextMenuRef = useRef<HTMLUListElement>(null);
   const windowDimensions = useWindowDimensions();
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       const node = e.target as HTMLElement;
-      console.log(e.target);
       const contextMenuElementId = node.getAttribute("data-custom-context-menu-id");
-      if (!contextMenuElementId) dispatch(clearContextMenu());
-      if (contextMenuElementId !== null && parseInt(contextMenuElementId, 10) !== uiState.lastElementContextId) dispatch(clearContextMenu());
+      if (!contextMenuElementId || (contextMenuElementId !== null && parseInt(contextMenuElementId, 10) !== uiState.lastElementContextId))
+        dispatch(clearContextMenu());
     };
     const handleContextMenu = (e: MouseEvent) => {
       const node = e.target as HTMLElement;
@@ -41,9 +41,9 @@ function ContextMenu() {
 
   if (uiState.showContextMenu)
     return (
-      <div ref={contextMenuRef} className={styles["context-menu"]} style={{ top: uiState.position.y, left: uiState.position.x }}>
-        CONTEXT MENU
-      </div>
+      <ul ref={contextMenuRef} className={styles["context-menu"]} style={{ top: uiState.position.y, left: uiState.position.x }}>
+        <UserNameplateContextMenu />
+      </ul>
     );
 
   return <span />;

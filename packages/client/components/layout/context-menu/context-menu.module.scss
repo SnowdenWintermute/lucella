@@ -3,7 +3,24 @@
 .context-menu {
   position: absolute;
   z-index: 1;
-  padding: 10px;
   border: 1px solid color(textPrimary);
   background-color: color(primary);
+}
+
+.context-menu-item {
+  border-bottom: 1px solid color(textPrimary);
+  &:last-child {
+    border-bottom: none;
+  }
+  display: block;
+}
+
+.context-menu-button {
+  padding: 10px;
+  background-color: color(primary);
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: color(dark);
+  }
 }

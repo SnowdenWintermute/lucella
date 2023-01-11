@@ -32,7 +32,6 @@ const UISlice = createSlice({
     openUserNameplateContextMenu(state, action: PayloadAction<{ username: string; contextMenuId: number }>) {
       state.showContextMenu = true;
       state.nameplateContextMenuData.username = action.payload.username;
-      console.log("action.payload.contextMenuId", action.payload.contextMenuId);
       state.lastElementContextId = action.payload.contextMenuId;
     },
     setContextMenuPosition(state, action: PayloadAction<Point>) {

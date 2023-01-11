@@ -27,7 +27,7 @@ describe("login-lockout-and-reset-flow", () => {
 
   it(`locks a user out upon too many login attempts and allows them to regain access upon password reset`, () => {
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
-    const genArr = Array.from({ length: failedLoginCountTolerance - 1 }, (v, k) => k + 1); // https://stackoverflow.com/questions/52212868/cypress-io-writing-a-for-loop
+    const genArr = Array.from({ length: failedLoginCountTolerance }, (v, k) => k + 1); // https://stackoverflow.com/questions/52212868/cypress-io-writing-a-for-loop
     let failedAttempts = 0;
     // attemp with wrong password up to the limit
     cy.findByLabelText(/email address/i)
