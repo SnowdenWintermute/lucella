@@ -1,0 +1,11 @@
+@import "../../../styles/abstracts/_variables.scss";
+.user-nameplate {
+  border: 1px solid color(textPrimary);
+  padding: 5px;
+  padding-left: 10px;
+  margin-bottom: 5px;
+  cursor: context-menu;
+  &:hover {
+    background-color: color(dark);
+  }
+}

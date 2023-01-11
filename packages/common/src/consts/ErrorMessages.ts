@@ -39,7 +39,7 @@ export const ErrorMessages = {
       "Either you have already created an account with this token or it has been too long since you initiated account creation, please try registering again to get a new account activation email",
     INVALID_CREDENTIALS: "Incorrect email or password",
     INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING: (remaining: number) => {
-      if (remaining === 1) return `Incorrect email or password, this is your final attempt before account will be locked`;
+      if (remaining === 0) return `Incorrect email or password, this is your final attempt before account will be locked`;
       return `Incorrect email or password, you have ${remaining} attempts remaining`;
     },
     NO_USER_EXISTS: "The specified user longer exists",

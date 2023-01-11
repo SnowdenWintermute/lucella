@@ -8,7 +8,7 @@ function UserList() {
 
   const usersInChannelToDisplay: React.ReactElement[] = [];
   Object.keys(currentChatRoomUsers).forEach((key, i) => {
-    usersInChannelToDisplay.push(<UserNameplate key={key} username={key} tabindex={i} />);
+    usersInChannelToDisplay.push(<UserNameplate key={key} username={key} tabindex={i} contextMenuId={i + 1} />);
   });
   return (
     <div className="game-lobby-players-list" aria-label="users in this channel">

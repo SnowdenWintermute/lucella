@@ -1,7 +1,7 @@
 import { GameStatus } from "../../../common";
 import { useAppSelector } from "../../redux/hooks";
 import AlertsHolder from "./alerts/AlertsHolder";
-import ContextMenu from "./ContextMenu";
+import ContextMenu from "./context-menu/ContextMenu";
 import Navbar from "./navbar";
 
 interface Props {

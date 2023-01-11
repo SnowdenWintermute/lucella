@@ -56,9 +56,8 @@ const ladderSlice = createSlice({
   name: "lobbyUi",
   initialState,
   reducers: {
-    clearLobbyUi(state) {
-      // @ts-ignore
-      state = initialState;
+    clearLobbyUi() {
+      return initialState;
     },
     setPreGameScreenDisplayed(state, action: PayloadAction<boolean>) {
       state.preGameScreen.isOpen = action.payload;

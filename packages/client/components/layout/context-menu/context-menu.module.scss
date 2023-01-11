@@ -1,0 +1,9 @@
+@import "../../../styles/abstracts/_variables";
+
+.context-menu {
+  position: absolute;
+  z-index: 1;
+  padding: 10px;
+  border: 1px solid color(textPrimary);
+  background-color: color(primary);
+}
