@@ -9,6 +9,7 @@ export interface IUISlice {
     username: string;
   };
   lastElementContextId: number | null;
+  showBanUserModal: boolean;
 }
 const initialState: IUISlice = {
   showContextMenu: false,
@@ -17,6 +18,7 @@ const initialState: IUISlice = {
     username: "",
   },
   lastElementContextId: null,
+  showBanUserModal: false,
 };
 
 const UISlice = createSlice({
@@ -24,10 +26,7 @@ const UISlice = createSlice({
   initialState,
   reducers: {
     clearContextMenu(state) {
-      Object.keys(state).forEach((key) => {
-        // @ts-ignore
-        if (key !== "position") state[key] = initialState[key];
-      });
+      state.showContextMenu = false;
     },
     openUserNameplateContextMenu(state, action: PayloadAction<{ username: string; contextMenuId: number }>) {
       state.showContextMenu = true;
@@ -37,8 +36,12 @@ const UISlice = createSlice({
     setContextMenuPosition(state, action: PayloadAction<Point>) {
       state.position = action.payload;
     },
+    setShowBanUserModal(state, action: PayloadAction<boolean>) {
+      console.log("setting showBanUserModal ", action.payload);
+      state.showBanUserModal = action.payload;
+    },
   },
 });
 
-export const { clearContextMenu, openUserNameplateContextMenu, setContextMenuPosition } = UISlice.actions;
+export const { clearContextMenu, openUserNameplateContextMenu, setContextMenuPosition, setShowBanUserModal } = UISlice.actions;
 export default UISlice.reducer;

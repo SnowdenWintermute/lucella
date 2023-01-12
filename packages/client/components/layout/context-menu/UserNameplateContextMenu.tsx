@@ -1,16 +1,16 @@
 import React from "react";
 import ContextMenuItem from "./ContextMenuItem";
 import styles from "./context-menu.module.scss";
-import { useAppSelector } from "../../../redux/hooks";
-import { useBanAccountMutation } from "../../../redux/api-slices/users-api-slice";
+import { useAppDispatch } from "../../../redux/hooks";
+import { setShowBanUserModal } from "../../../redux/slices/ui-slice";
 
 function UserNameplateContextMenu() {
-  const uiState = useAppSelector((state) => state.UI);
-  const [banUser, { isLoading, isError, isSuccess }] = useBanAccountMutation();
+  const dispatch = useAppDispatch();
 
   const handleBanUserClick = () => {
-    console.log("ban user ", uiState.nameplateContextMenuData.username);
+    dispatch(setShowBanUserModal(true));
   };
+
   return (
     <>
       <ContextMenuItem>
@@ -20,7 +20,7 @@ function UserNameplateContextMenu() {
       </ContextMenuItem>
       <ContextMenuItem>
         <button className={styles["context-menu-button"]} type="button">
-          BAN USER
+          PLACEHOLDER
         </button>
       </ContextMenuItem>
     </>

@@ -11,9 +11,14 @@ describe("loginHandler", () => {
   let context: PGContext | undefined;
   let app: Application | undefined;
   beforeAll(async () => {
-    const { pgContext, expressApp } = await setupExpressRedisAndPgContextAndOneTestUser();
-    context = pgContext;
-    app = expressApp;
+    try {
+      const { pgContext, expressApp } = await setupExpressRedisAndPgContextAndOneTestUser();
+
+      context = pgContext;
+      app = expressApp;
+    } catch (error) {
+      console.log(error);
+    }
   });
 
   beforeEach(async () => {

@@ -5,10 +5,10 @@ import toCamelCase from "../../../utils/toCamelCase";
 import wrappedPool from "../../wrappedPool";
 
 export default class UserRepo {
-  static async find() {
-    const { rows } = await wrappedPool.query(`SELECT * FROM users ORDER BY id;`);
-    return toCamelCase(rows) as unknown as User;
-  }
+  // static async find() {
+  //   const { rows } = await wrappedPool.query(`SELECT * FROM users ORDER BY id;`);
+  //   return toCamelCase(rows) as unknown as User;
+  // }
   static async findOne(field: keyof User, value: any): Promise<User> {
     const { rows } = await wrappedPool.query(format(`SELECT * FROM users WHERE %I = %L;`, field, value));
     // @ts-ignore
@@ -22,12 +22,15 @@ export default class UserRepo {
     return toCamelCase(rows)[0] as unknown as User;
   }
   static async insert(name: string, email: string, password: string, role?: UserRole) {
-    const { rows } = await wrappedPool.query("INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING *;", [
-      name.toLowerCase().trim(),
-      email.toLowerCase(),
-      password,
-      role || UserRole.USER,
-    ]);
+    const { rows } = await wrappedPool.query(
+      format(
+        `INSERT INTO users (name, email, password, role) VALUES (%L, %L, %L, %L) RETURNING *;`,
+        name.toLowerCase().trim(),
+        email.toLowerCase(),
+        password,
+        role || UserRole.USER
+      )
+    );
     return toCamelCase(rows)[0] as unknown as User;
   }
   static async update(user: User) {
@@ -47,12 +50,12 @@ export default class UserRepo {
     return toCamelCase(rows)![0] as unknown as User;
   }
   static async delete(id: number) {
-    const { rows } = await wrappedPool.query(`DELETE FROM  users  WHERE  id = $1 RETURNING *`, [id]);
+    const { rows } = await wrappedPool.query(`DELETE FROM  users  WHERE  id = $1 RETURNING *;`, [id]);
     return toCamelCase(rows)![0] as unknown as User;
   }
   static async deleteTestUsers() {
     if (process.env.NODE_ENV === "development")
-      await wrappedPool.query(`DELETE FROM users WHERE name = $1 OR name = $2`, [
+      await wrappedPool.query(`DELETE FROM users WHERE name = $1 OR name = $2;`, [
         process.env.CYPRESS_TEST_USER_NAME.toLowerCase(),
         TEST_USER_NAME.toLowerCase().trim(),
       ]);

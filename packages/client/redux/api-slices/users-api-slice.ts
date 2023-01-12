@@ -66,7 +66,7 @@ export const usersApi = createApi({
       invalidatesTags: ["User"],
     }),
     // BAN ACCOUNT
-    banAccount: builder.mutation<void, { username: string; ban: Ban }>({
+    banAccount: builder.mutation<void, { name: string; ban: Ban }>({
       query(data) {
         return {
           url: UsersRoutePaths.ACCOUNT_BAN,

@@ -1,37 +1,37 @@
-import React, { Fragment, useState, useEffect, useCallback, ReactNode } from "react";
+import { ThunkAction } from "@reduxjs/toolkit";
+import React, { useEffect, ReactNode } from "react";
+import { useAppDispatch } from "../../../redux/hooks";
 
 interface Props {
   isOpen: boolean;
   children: ReactNode;
-  setParentDisplay: (newValue: boolean) => void;
+  // @ts-ignore
+  setParentDisplay: (newValue: boolean) => void | ThunkAction;
   title: string;
   screenClass: string;
   frameClass: string;
+  isReduxControlled?: boolean;
 }
 
-const Modal = ({ isOpen, children, setParentDisplay, title, screenClass, frameClass }: Props) => {
-  const [displayModal, setDisplayModal] = useState(isOpen);
+const Modal = ({ isOpen, children, setParentDisplay, title, screenClass, frameClass, isReduxControlled }: Props) => {
+  const dispatch = useAppDispatch();
 
-  const hideModal = useCallback(() => {
-    setDisplayModal(false);
-    setParentDisplay(false);
-  }, [setParentDisplay]);
+  function hideModal() {
+    if (isReduxControlled) dispatch(setParentDisplay(false));
+    else setParentDisplay(false);
+  }
 
-  const handleUserKeyPress = useCallback(
-    (e: KeyboardEvent) => {
-      const { key } = e;
-      if (key === "Escape" || key === "Esc") hideModal();
-    },
-    [hideModal]
-  );
+  function handleUserKeyPress(e: KeyboardEvent) {
+    console.log("esc listener in modal", title);
+    const { key } = e;
+    if (key === "Escape" || key === "Esc") hideModal();
+  }
 
-  const handleClickOutOfModal = useCallback(
-    (e: MouseEvent) => {
-      const node = e.target as HTMLElement;
-      if (node.id === "modal-screen") hideModal();
-    },
-    [hideModal]
-  );
+  function handleClickOutOfModal(e: MouseEvent) {
+    console.log("clicked out of modal", title);
+    const node = e.target as HTMLElement;
+    if (node.id === "modal-screen") hideModal();
+  }
 
   useEffect(() => {
     window.addEventListener("keyup", handleUserKeyPress);
@@ -40,19 +40,20 @@ const Modal = ({ isOpen, children, setParentDisplay, title, screenClass, frameCl
       window.removeEventListener("keyup", handleUserKeyPress);
       window.removeEventListener("click", handleClickOutOfModal);
     };
-  }, [handleUserKeyPress, hideModal, handleClickOutOfModal]);
+  }, []);
 
-  useEffect(() => {
-    setDisplayModal(isOpen);
-  }, [isOpen]);
+  function handleClick() {
+    console.log("modal x button");
+    hideModal();
+  }
 
-  const modalToShow = displayModal ? (
+  const modalToShow = isOpen ? (
     <>
       <div className={`modal-screen ${screenClass || ""}`} id="modal-screen" />
       <div className={`modal-frame ${frameClass}`}>
         <div className="modal-top-bar">
           <div className="modal-title">{title}</div>
-          <button type="button" className="modal-x-button" onClick={() => hideModal()}>
+          <button type="button" className="modal-x-button" onClick={handleClick}>
             x
           </button>
         </div>

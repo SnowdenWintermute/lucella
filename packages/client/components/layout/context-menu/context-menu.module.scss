@@ -18,7 +18,9 @@
 .context-menu-button {
   padding: 10px;
   background-color: color(primary);
+  width: 100%;
   border: none;
+  text-align: left;
   cursor: pointer;
   &:hover {
     background-color: color(dark);

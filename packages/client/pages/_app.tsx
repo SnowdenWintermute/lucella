@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next/types";
-import LayoutWithHeader from "../components/layout/LayoutWithHeaderAndAlerts";
+import LayoutWithAlertsAndModals from "../components/layout/LayoutWithAlertsAndModals";
 import store from "../redux/store";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
@@ -20,9 +20,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <Provider store={store}>
       {getLayout(
-        <LayoutWithHeader>
+        <LayoutWithAlertsAndModals>
           <Component {...pageProps} />
-        </LayoutWithHeader>
+        </LayoutWithAlertsAndModals>
       )}
     </Provider>
   );
