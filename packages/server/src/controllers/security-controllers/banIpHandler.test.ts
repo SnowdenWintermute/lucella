@@ -3,7 +3,21 @@ import request from "supertest";
 import io from "socket.io-client";
 import { IncomingMessage, Server, ServerResponse } from "node:http";
 import bcrypt from "bcryptjs";
-import { AuthRoutePaths, Ban, CookieNames, ErrorMessages, ONE_MINUTE, randBetween, UserRole, UsersRoutePaths } from "../../../../common";
+import {
+  AuthRoutePaths,
+  Ban,
+  CookieNames,
+  defaultChatChannelNames,
+  ErrorMessages,
+  IPBanReason,
+  ModerationRoutePaths,
+  ONE_MINUTE,
+  randBetween,
+  SocketEventsFromClient,
+  SocketEventsFromServer,
+  UserRole,
+  UsersRoutePaths,
+} from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import UserRepo from "../../database/repos/users";
@@ -14,7 +28,7 @@ import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { lucella } from "../../lucella";
 import { LucellaServer } from "../../classes/LucellaServer";
 
-describe("banUserAccountHandler", () => {
+describe("banIpHandler.test", () => {
   let context: PGContext | undefined;
   let app: Application | undefined;
   let httpServer: Server<typeof IncomingMessage, typeof ServerResponse> | undefined;
@@ -29,7 +43,6 @@ describe("banUserAccountHandler", () => {
 
     httpServer = app.listen(port, () => {
       lucella.server = new LucellaServer(httpServer);
-      console.log(`test server on ${port}`);
     });
   });
 
@@ -46,7 +59,7 @@ describe("banUserAccountHandler", () => {
 
   const realDateNow = Date.now.bind(global.Date);
 
-  it("requires a user to be admin or moderator to ban an account", async () => {
+  it("requires a user to be admin or moderator to ban an ip address", async () => {
     const user = await UserRepo.findOne("email", TEST_USER_EMAIL); // not a moderator/admin user
     const { accessToken } = await signTokenAndCreateSession(user);
     const response = await request(app)
@@ -57,7 +70,8 @@ describe("banUserAccountHandler", () => {
   });
 
   jest.setTimeout(7000);
-  it(`lets an admin ban a user and that user is disconnected from socket server and can not log in afterward,
+  it(`lets an admin ban an ip and that user is disconnected from socket server and can not reconnect to the socket server
+    and all http requests are cut short before reaching their routes,
     then after waiting their ban duration the user can log in again`, (done) => {
     async function thisTest() {
       // this is who we will ban
@@ -66,53 +80,77 @@ describe("banUserAccountHandler", () => {
 
       const socket = await io(`http://localhost:${port}`, {
         transports: ["websocket"],
-        extraHeaders: { cookie: `access_token=${accessToken};` },
+        // extraHeaders: { cookie: `access_token=${accessToken};` },
       });
 
       socket.on("connect", async () => {
         // ensure they are connected so we know banning the account actually disconnects them
         expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
+        socket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, async (data) => {
+          socket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannelNames.BATTLE_ROOM_CHAT);
+        });
+      });
+      socket.on(SocketEventsFromServer.NEW_CHAT_MESSAGE, async () => {
+        console.log("lucella.server?.connectedUsers: ", lucella.server?.connectedUsers);
+        const nameOfAnonUserToBan = Object.keys(lucella.server?.connectedUsers!)[0];
         // log in as admin and ban user
         const admin = await UserRepo.findOne("email", TEST_ADMIN_EMAIL);
         const objWithToken = await signTokenAndCreateSession(admin);
         const adminAccessToken = objWithToken.accessToken;
         const banDuration = 60 * ONE_MINUTE;
         const response = await request(app)
-          .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_BAN}`)
+          .post(`/api${ModerationRoutePaths.ROOT}${ModerationRoutePaths.IP_BAN}`)
           .set("Cookie", [`access_token=${adminAccessToken}`])
           .send({
-            name: user.name,
-            ban: new Ban("ACCOUNT", banDuration),
+            name: nameOfAnonUserToBan,
+            duration: banDuration,
+            reason: IPBanReason.CHAT,
           });
 
-        expect(response.status).toBe(204);
+        expect(response.status).toBe(201);
 
         // sockets are disconnected
         expect(lucella.server?.io.sockets.sockets.get(socket.id)).toBeUndefined();
         expect(Object.keys(lucella.server!.connectedSockets!).length).toBe(0);
-        expect(lucella.server?.connectedUsers[user.name]).toBeUndefined();
+        expect(lucella.server?.connectedUsers[nameOfAnonUserToBan]).toBeUndefined();
+        expect(socket.connected).toBeFalsy();
         // can't log in after acconut ban
         const loginResponse = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
           email: TEST_USER_EMAIL,
           password: TEST_USER_PASSWORD,
         });
 
-        expect(loginResponse.status).toBe(401);
+        // we don't tell them they are banned so 200 status is given by res.end() called in the ip ban check middleware
+        expect(loginResponse.status).toBe(200);
+        // but no body or cookie should be sent
         expect(loginResponse.headers["set-cookie"]).toBeUndefined();
-        expect(responseBodyIncludesCustomErrorMessage(loginResponse, ErrorMessages.AUTH.ACCOUNT_BANNED)).toBeTruthy();
+        expect(loginResponse.body).toStrictEqual({});
 
-        // after waiting the duration of their ban, they can log in again
-        const currentTime = Date.now();
-        global.Date.now = jest.fn(() => currentTime + banDuration);
-        const loginResponseAfterWaiting = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
-          email: TEST_USER_EMAIL,
-          password: TEST_USER_PASSWORD,
+        // attempt to connect to socket server, it should be rejected
+        const secondSocketConnection = await io(`http://localhost:${port}`, {
+          transports: ["websocket"],
         });
-        expect(loginResponseAfterWaiting.status).toBe(200);
-        expect(loginResponseAfterWaiting.headers["set-cookie"][0].includes(CookieNames.ACCESS_TOKEN)).toBeTruthy();
 
-        global.Date.now = realDateNow;
-        done();
+        secondSocketConnection.on("connect", () => {
+          console.log("second socket connected", secondSocketConnection.connected);
+        });
+
+        secondSocketConnection.on("disconnect", async () => {
+          // socket should be disconnected imediately
+
+          // after waiting the duration of their ban, they can log in again
+          const currentTime = Date.now();
+          global.Date.now = jest.fn(() => currentTime + banDuration);
+          const loginResponseAfterWaiting = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
+            email: TEST_USER_EMAIL,
+            password: TEST_USER_PASSWORD,
+          });
+          expect(loginResponseAfterWaiting.status).toBe(200);
+          expect(loginResponseAfterWaiting.headers["set-cookie"][0].includes(CookieNames.ACCESS_TOKEN)).toBeTruthy();
+
+          global.Date.now = realDateNow;
+          done();
+        });
       });
     }
     thisTest();

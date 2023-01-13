@@ -7,22 +7,22 @@ import GameLobbyModalButton from "../../common-components/buttons/GameLobbyModal
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 import { mobileViewWidthThreshold } from "../../../consts";
+import { setShowChangeChatChannelModal, setShowMobileLobbyMenuModal } from "../../../redux/slices/ui-slice";
 
 interface Props {
-  showChangeChannelModal: () => void;
   socket: Socket;
 }
 
-function DefaultButtons({ showChangeChannelModal, socket }: Props) {
+function DefaultButtons({ socket }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const uiState = useAppSelector((state) => state.UI);
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
   const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
   const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
   const [mobileViewActive, setMobileViewActive] = useState(false);
-  const [menuModalDisplayed, setMenuModalDisplayed] = useState(false);
 
   // manage button visibility
   useEffect(() => {
@@ -37,31 +37,31 @@ function DefaultButtons({ showChangeChannelModal, socket }: Props) {
   }, [gameListIsOpen, preGameScreenIsOpen, matchmakingScreenIsOpen]);
 
   const onChannelClick = () => {
-    showChangeChannelModal();
-    setMenuModalDisplayed(false);
+    dispatch(setShowChangeChatChannelModal(true));
+    dispatch(setShowMobileLobbyMenuModal(false));
   };
 
   const onViewGamesListClick = () => {
     if (!socket) return;
     socket.emit(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST);
     dispatch(setViewingGamesList(true));
-    setMenuModalDisplayed(false);
+    dispatch(setShowMobileLobbyMenuModal(false));
   };
 
   const onSetupNewGameClick = () => {
     dispatch(setPreGameScreenDisplayed(true));
-    setMenuModalDisplayed(false);
+    dispatch(setShowMobileLobbyMenuModal(false));
   };
 
   const onRankedClick = () => {
     if (!socket) return;
     socket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
-    setMenuModalDisplayed(false);
+    dispatch(setShowMobileLobbyMenuModal(false));
   };
 
   // for mobile view
   const onMenuClick = () => {
-    setMenuModalDisplayed(true);
+    dispatch(setShowMobileLobbyMenuModal(true));
   };
 
   useEffect(() => {
@@ -75,38 +75,37 @@ function DefaultButtons({ showChangeChannelModal, socket }: Props) {
     return () => window.removeEventListener("resize", handleResize);
   }, [setMobileViewActive]);
 
+  const buttons = [
+    { title: "Channel", onClick: onChannelClick },
+    { title: "Ranked", onClick: onRankedClick },
+    { title: "Host", onClick: onSetupNewGameClick },
+    { title: "Join", onClick: onViewGamesListClick },
+  ];
+
   return !mobileViewActive ? (
     <ul className={`chat-buttons-list ${chatButtonsDisplayClass}`}>
-      <li>
-        <GameLobbyTopButton title="Channel" onClick={onChannelClick} displayClass={chatButtonDisplayClass} />
-      </li>
-      <li>
-        <GameLobbyTopButton title="Ranked" onClick={onRankedClick} displayClass={chatButtonDisplayClass} />
-      </li>
-      <li>
-        <GameLobbyTopButton title="Host" onClick={onSetupNewGameClick} displayClass={chatButtonDisplayClass} />
-      </li>
-      <li>
-        <GameLobbyTopButton title="Join" onClick={onViewGamesListClick} displayClass={chatButtonDisplayClass} />
-      </li>
+      {buttons.map((button) => (
+        <li key={button.title}>
+          <GameLobbyTopButton title={button.title} onClick={button.onClick} displayClass={chatButtonDisplayClass} />
+        </li>
+      ))}
     </ul>
   ) : (
     <>
       <GameLobbyTopButton title="≡" onClick={onMenuClick} displayClass={chatButtonDisplayClass} />
-      <Modal screenClass="" frameClass="modal-frame-dark" isOpen={menuModalDisplayed} setParentDisplay={setMenuModalDisplayed} title="Menu">
+      <Modal
+        screenClass=""
+        frameClass="modal-frame-dark"
+        isOpen={uiState.modals.mobileLobbyMenuModal}
+        setParentDisplay={setShowMobileLobbyMenuModal}
+        title="Menu"
+      >
         <ul className="chat-buttons-modal-list">
-          <li>
-            <GameLobbyModalButton title="Channel" onClick={onChannelClick} />
-          </li>
-          <li>
-            <GameLobbyModalButton title="Ranked" onClick={onRankedClick} />
-          </li>
-          <li>
-            <GameLobbyModalButton title="Host" onClick={onSetupNewGameClick} />
-          </li>
-          <li>
-            <GameLobbyModalButton title="Join" onClick={onViewGamesListClick} />
-          </li>
+          {buttons.map((button) => (
+            <li key={button.title}>
+              <GameLobbyModalButton title={button.title} onClick={button.onClick} />
+            </li>
+          ))}
         </ul>
       </Modal>
     </>

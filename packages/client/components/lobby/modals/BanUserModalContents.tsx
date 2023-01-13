@@ -1,11 +1,11 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { Ban, CustomErrorDetails, ONE_DAY, SuccessAlerts } from "../../../common";
-import { Alert } from "../../classes/Alert";
-import { AlertType } from "../../enums";
-import { useBanAccountMutation } from "../../redux/api-slices/users-api-slice";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setAlert } from "../../redux/slices/alerts-slice";
-import { setShowBanUserModal } from "../../redux/slices/ui-slice";
+import { Ban, CustomErrorDetails, ONE_DAY, SuccessAlerts } from "../../../../common";
+import { Alert } from "../../../classes/Alert";
+import { AlertType } from "../../../enums";
+import { useBanAccountMutation } from "../../../redux/api-slices/users-api-slice";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setAlert } from "../../../redux/slices/alerts-slice";
+import { setShowBanUserModal } from "../../../redux/slices/ui-slice";
 
 function BanUserModalContents() {
   const dispatch = useAppDispatch();

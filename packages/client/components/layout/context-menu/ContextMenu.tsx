@@ -22,7 +22,6 @@ function ContextMenu() {
     const handleContextMenu = (e: MouseEvent) => {
       const node = e.target as HTMLElement;
       const contextMenuElementId = node.getAttribute("data-custom-context-menu-id");
-      console.log(windowDimensions);
       if (!contextMenuElementId) dispatch(clearContextMenu());
       else if (windowDimensions?.width && windowDimensions?.height && contextMenuRef?.current?.offsetWidth && contextMenuRef?.current?.offsetHeight) {
         if (e.x + contextMenuRef.current.offsetWidth > windowDimensions?.width)

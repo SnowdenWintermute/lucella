@@ -1,66 +1,46 @@
-// import format from "pg-format";
-// import toCamelCase from "../../../utils/toCamelCase";
-// import wrappedPool from "../../wrappedPool";
+import format from "pg-format";
+import { IPBan, IPBanReason } from "../../../../../common";
+import toCamelCase from "../../../utils/toCamelCase";
+import wrappedPool from "../../wrappedPool";
 
-// export default class IpBanRepo {
-//   static async findPage() {
-//     const { rows } = await wrappedPool.query(`SELECT * FROM banned_ip_addresses ORDER BY ip_address;`);
-//     return toCamelCase(rows) as unknown as User;
-//   }
-//   static async findOne(field: keyof User, value: any): Promise<User> {
-//     const { rows } = await wrappedPool.query(format(`SELECT * FROM users WHERE %I = %L;`, field, value));
-//     // @ts-ignore
-//     return toCamelCase(rows)[0] as unknown as User;
-//   }
-//   static async findById(id: number): Promise<User | undefined> {
-//     const result = await wrappedPool.query(`SELECT * FROM users WHERE id = $1;`, [id]);
-//     if (!result) return undefined;
-//     const { rows } = result;
-//     // @ts-ignore
-//     return toCamelCase(rows)[0] as unknown as User;
-//   }
-//   static async insert(name: string, email: string, password: string, role?: UserRole) {
-//     const { rows } = await wrappedPool.query(
-//       format(
-//         `INSERT INTO users (name, email, password, role) VALUES (%L, %L, %L, %L) RETURNING *;`,
-//         name.toLowerCase().trim(),
-//         email.toLowerCase(),
-//         password,
-//         role || UserRole.USER
-//       )
-//     );
-//     return toCamelCase(rows)[0] as unknown as User;
-//   }
-//   static async update(user: User) {
-//     const { id, name, email, password, status, role, banExpiresAt } = user;
-//     const { rows } = await wrappedPool.query(
-//       format(
-//         `UPDATE users SET name = %L, email = %L, password = %L, status = %L, role = %L, ban_expires_at = %L WHERE id = %L RETURNING *;`,
-//         name.toLowerCase().trim(),
-//         email.toLowerCase(),
-//         password,
-//         status,
-//         role,
-//         banExpiresAt ? new Date(banExpiresAt).toISOString() : null,
-//         id
-//       )
-//     );
-//     return toCamelCase(rows)![0] as unknown as User;
-//   }
-//   static async delete(id: number) {
-//     const { rows } = await wrappedPool.query(`DELETE FROM  users  WHERE  id = $1 RETURNING *;`, [id]);
-//     return toCamelCase(rows)![0] as unknown as User;
-//   }
-//   static async deleteTestUsers() {
-//     if (process.env.NODE_ENV === "development")
-//       await wrappedPool.query(`DELETE FROM users WHERE name = $1 OR name = $2;`, [
-//         process.env.CYPRESS_TEST_USER_NAME.toLowerCase(),
-//         TEST_USER_NAME.toLowerCase().trim(),
-//       ]);
-//     else console.log("can't drop all userse unless in development mode");
-//   }
-//   static async count() {
-//     const { rows } = await wrappedPool.query("SELECT COUNT(*) FROM users;");
-//     return parseInt(rows[0].count, 10);
-//   }
-// }
+export default class IpBanRepo {
+  static async findOne(ipAddress: string): Promise<IPBan> {
+    const { rows } = await wrappedPool.query(format(`SELECT * FROM banned_ip_addresses WHERE ip_address = %L;`, ipAddress));
+    // @ts-ignore
+    return toCamelCase(rows)[0] as unknown as IPBan;
+  }
+  static async findById(id: number): Promise<IPBan | undefined> {
+    const result = await wrappedPool.query(`SELECT * FROM banned_ip_addresses WHERE id = $1;`, [id]);
+    if (!result) return undefined;
+    const { rows } = result;
+    // @ts-ignore
+    return toCamelCase(rows)[0] as unknown as IPBan;
+  }
+  static async upsert(ipAddress: string, expiresAt: number, reason: IPBanReason) {
+    const { rows } = await wrappedPool.query(
+      format(
+        `INSERT INTO banned_ip_addresses (ip_address, expires_at, reason) VALUES (%L, %L, %L)
+        ON CONFLICT (ip_address) DO UPDATE
+        SET expires_at = %2$L, reason = %3$L RETURNING *;`,
+        ipAddress.trim(),
+        expiresAt ? new Date(expiresAt).toISOString() : null,
+        reason
+      )
+    );
+    return toCamelCase(rows)[0] as unknown as IPBan;
+  }
+
+  static async delete(ipAddress: string) {
+    const { rows } = await wrappedPool.query(`DELETE FROM banned_ip_addresses WHERE  ip_address = $1 RETURNING *;`, [ipAddress]);
+    return toCamelCase(rows)![0] as unknown as IPBan;
+  }
+
+  static async deleteAll() {
+    await wrappedPool.query(`DELETE FROM banned_ip_addresses;`);
+  }
+
+  static async count() {
+    const { rows } = await wrappedPool.query("SELECT COUNT(*) FROM banned_ip_addresses;");
+    return parseInt(rows[0].count, 10);
+  }
+}

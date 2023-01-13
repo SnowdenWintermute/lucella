@@ -13,3 +13,8 @@ export enum UsersRoutePaths {
   ACCOUNT_DELETION = "/account-deletion",
   ACCOUNT_BAN = "/account-ban",
 }
+
+export enum ModerationRoutePaths {
+  ROOT = "/moderation",
+  IP_BAN = "/ip-ban",
+}

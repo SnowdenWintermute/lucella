@@ -13,24 +13,24 @@ import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { closeScoreScreen, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
+import { setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
+import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
 const socketAddress = process.env.NEXT_PUBLIC_SOCKET_API;
 
 interface Props {
-  defaultChatRoom: string;
+  defaultChatChannel: string;
 }
 
-function GameLobby({ defaultChatRoom }: Props) {
+function GameLobby({ defaultChatChannel }: Props) {
   const dispatch = useAppDispatch();
   const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { scoreScreenDisplayed } = lobbyUiState;
+  const uiState = useAppSelector((state) => state.UI);
   const { currentGameRoom } = lobbyUiState;
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
-  const [displayChangeChannelModal, setDisplayChangeChannelModal] = useState(false);
   const [authenticating, setAuthenticating] = useState(true);
   const socket = useRef<Socket>();
 
@@ -38,6 +38,8 @@ function GameLobby({ defaultChatRoom }: Props) {
   useEffect(() => {
     socket.current = io(socketAddress || "", {
       transports: ["websocket"],
+      // transports: ["polling", "websocket"],
+      // extraHeaders: { "x-forwarded-for": "192.168.1.12" },
       // withCredentials: true,
       // reconnectionAttempts: 3,
     });
@@ -58,22 +60,12 @@ function GameLobby({ defaultChatRoom }: Props) {
   // join initial room
   useEffect(() => {
     if (authenticating || !socket.current) return;
-    socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatRoom);
-  }, [authenticating, defaultChatRoom]);
+    socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannel);
+  }, [authenticating, defaultChatChannel]);
 
-  // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
-  const setChannelModalParentDisplay = (status: boolean) => {
-    setDisplayChangeChannelModal(status);
-  };
-  const setScoreScreenModalParentDisplay = () => {
-    dispatch(closeScoreScreen());
-  };
-  const showChangeChannelModal = () => {
-    setDisplayChangeChannelModal(true);
-  };
   // joining new rooms
   const joinRoom = (chatChannelToJoin: string) => {
-    setDisplayChangeChannelModal(false);
+    dispatch(setShowChangeChatChannelModal(false));
     setJoinNewRoomInput("");
     if (socket.current) socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, chatChannelToJoin);
   };
@@ -90,8 +82,8 @@ function GameLobby({ defaultChatRoom }: Props) {
       <Modal
         screenClass=""
         frameClass="modal-frame-dark"
-        isOpen={displayChangeChannelModal}
-        setParentDisplay={setChannelModalParentDisplay}
+        isOpen={uiState.modals.changeChatChannel}
+        setParentDisplay={setShowChangeChatChannelModal}
         title="Join Channel"
       >
         <ChangeChannelModalContents
@@ -101,18 +93,12 @@ function GameLobby({ defaultChatRoom }: Props) {
           joinRoom={joinRoom}
         />
       </Modal>
-      <Modal
-        screenClass=""
-        frameClass="modal-frame-dark"
-        isOpen={scoreScreenDisplayed}
-        setParentDisplay={setScoreScreenModalParentDisplay}
-        title="Score Screen"
-      >
+      <Modal screenClass="" frameClass="modal-frame-dark" isOpen={uiState.modals.scoreScreen} setParentDisplay={setShowScoreScreenModal} title="Score Screen">
         <ScoreScreenModalContents />
       </Modal>
       {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? (
         <div className="game-lobby">
-          <MainButtons socket={socket.current} showChangeChannelModal={showChangeChannelModal} />
+          <MainButtons socket={socket.current} />
           <ChannelBar />
           <div className="game-lobby-main-window">
             <PreGameRoom socket={socket.current} />

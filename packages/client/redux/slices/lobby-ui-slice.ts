@@ -16,7 +16,6 @@ export interface ILobbyUIState {
     isOpen: boolean;
   };
   scoreScreenData: IGameScoreScreen | null;
-  scoreScreenDisplayed: boolean;
   preGameScreen: {
     isOpen: boolean;
   };
@@ -37,7 +36,6 @@ const initialState: ILobbyUIState = {
     isOpen: false,
   },
   scoreScreenData: null,
-  scoreScreenDisplayed: false,
   preGameScreen: {
     isOpen: false,
   },
@@ -101,10 +99,6 @@ const ladderSlice = createSlice({
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
       // @ts-ignore
       state.scoreScreenData = action.payload;
-      state.scoreScreenDisplayed = true;
-    },
-    closeScoreScreen(state) {
-      state.scoreScreenDisplayed = false;
     },
   },
 });
@@ -123,7 +117,6 @@ export const {
   setViewingGamesList,
   updateGameList,
   setScoreScreenData,
-  closeScoreScreen,
 } = ladderSlice.actions;
 
 export default ladderSlice.reducer;

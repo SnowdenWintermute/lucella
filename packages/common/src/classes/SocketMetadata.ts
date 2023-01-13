@@ -9,9 +9,11 @@ export class SocketMetadata {
   uuid: string;
   currentChatChannel?: string | null;
   previousChatChannelName?: string | null;
+  ipAddress?: string; // optional so it can be omitted when sent to client
   socketId?: string; // optional so it can be omitted when sent to client
   constructor(
     socketId: string,
+    ipAddress: string,
     associatedUser: {
       username: string;
       isGuest: boolean;
@@ -20,6 +22,7 @@ export class SocketMetadata {
     currentGameName?: string
   ) {
     this.socketId = socketId;
+    this.ipAddress = ipAddress;
     this.associatedUser = associatedUser;
     this.currentGameName = currentGameName || null;
     this.currentChatChannel = currentChatChannel || null;

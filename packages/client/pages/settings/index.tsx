@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import Modal from "../../components/common-components/modal/Modal";
 import { authApi, useLogoutUserMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
@@ -12,11 +12,12 @@ import { CustomErrorDetails, ErrorMessages, InputFields, SuccessAlerts } from ".
 import LabeledTextInputWithErrorDisplay from "../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import { LoginInput } from "../../redux/types";
 import { ButtonNames } from "../../consts/ButtonNames";
+import { setShowDeleteAccountModal } from "../../redux/slices/ui-slice";
 
 function Settings() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [displayDeleteAccountModal, setDisplayDeleteAccountModal] = useState(false);
+  const uiState = useAppSelector((state) => state.UI);
   const [deleteAccount, { isLoading: deleteAccountIsLoading, isSuccess: deleteAccountIsSuccess, isError: deleteAccountIsError, error: deleteAccountError }] =
     useDeleteAccountMutation();
   const [logoutUser] = useLogoutUserMutation();
@@ -40,14 +41,6 @@ function Settings() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFieldErrors({ ...fieldErrors, [e.target.name]: "" });
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  // MODAL - must pass function to modal so the modal can send props back to parent and set display to false from within modal component
-  const setParentDisplay = (status: boolean) => {
-    setDisplayDeleteAccountModal(status);
-  };
-  const showDeleteAccountModal = () => {
-    setDisplayDeleteAccountModal(true);
   };
 
   const handleRequestChangePasswordEmail = async () => {
@@ -80,7 +73,6 @@ function Settings() {
       router.push("/register");
     }
     if (deleteAccountIsError && deleteAccountError && "data" in deleteAccountError) {
-      console.log(deleteAccountError);
       const errors: CustomErrorDetails[] = deleteAccountError.data as CustomErrorDetails[];
       const newFieldErrors = { ...fieldErrors };
       errors.forEach((currError) => {
@@ -104,8 +96,8 @@ function Settings() {
       <Modal
         screenClass="modal-screen-dim"
         frameClass="modal-frame-dark"
-        isOpen={displayDeleteAccountModal}
-        setParentDisplay={setParentDisplay}
+        isOpen={uiState.modals.deleteAccount}
+        setParentDisplay={setShowDeleteAccountModal}
         title="Delete Account"
       >
         <p>
@@ -148,12 +140,12 @@ function Settings() {
             <span>{userQueryIsLoading ? "..." : userQueryIsSuccess ? `Logged in as ${accountEmail}` : `failed to fetch user data`}</span>
           </li>
           <li>
-            <button type="button" className="link-simple" onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>
+            <button type="button" className="button button-basic" onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>
               {passwordResetIsLoading ? "Senging email..." : "Change Password"}
             </button>
           </li>
           <li>
-            <button type="button" className="link-simple" onClick={showDeleteAccountModal} disabled={deleteAccountIsLoading}>
+            <button type="button" className="button button-basic" onClick={() => dispatch(setShowDeleteAccountModal(true))} disabled={deleteAccountIsLoading}>
               {deleteAccountIsLoading ? "..." : "Delete Account"}
             </button>
           </li>

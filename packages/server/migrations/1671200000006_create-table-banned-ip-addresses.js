@@ -9,6 +9,7 @@ exports.up = (pgm) => {
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
             ip_address INET NOT NULL UNIQUE,
+            expires_at TIMESTAMP WITH TIME ZONE,
             reason ban_reason
         );
     `);
@@ -16,6 +17,6 @@ exports.up = (pgm) => {
 
 exports.down = (pgm) => {
   pgm.sql(`
-        DROP TABLE banned_ip_addressess;
+        DROP TABLE banned_ip_addresses;
     `);
 };

@@ -62,14 +62,14 @@ export class Lobby {
     this.updateChatChannelUsernameListsAndDeleteEmptyChannels(connectedSockets[socket.id], channelNameLeaving, channelNameJoining);
     if (channelNameLeaving) {
       socket?.leave(channelNameLeaving);
-      io.in(channelNameLeaving).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, this.getSanitizedChatChannel(channelNameLeaving));
+      io.in(channelNameLeaving).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, this.getSanitizedChatChannel(channelNameLeaving));
     }
 
     if (channelNameJoining) {
       const validationError = validateChannelName(channelNameJoining, authorizedForGameChannel);
       if (validationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, validationError);
       socket.join(channelNameJoining);
-      io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, this.getSanitizedChatChannel(channelNameJoining));
+      io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, this.getSanitizedChatChannel(channelNameJoining));
       connectedSockets[socket.id].previousChatChannelName = channelNameLeaving; // used for placing user back in their last chat channel after a game ends
       connectedSockets[socket.id].currentChatChannel = channelNameJoining;
       socket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(`Welcome to ${channelNameJoining}.`, "Server", ChatMessageStyles.PRIVATE));

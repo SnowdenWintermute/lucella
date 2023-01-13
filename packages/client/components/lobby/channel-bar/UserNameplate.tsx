@@ -6,20 +6,21 @@ import styles from "./user-nameplate.module.scss";
 
 type Props = {
   username: string;
+  isGuest: boolean;
   tabindex: number;
   contextMenuId: number;
 };
 
-function UserNameplate({ username, tabindex, contextMenuId }: Props) {
+function UserNameplate({ username, isGuest, tabindex, contextMenuId }: Props) {
   const dispatch = useAppDispatch();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (e.button === 2) dispatch(openUserNameplateContextMenu({ username, contextMenuId }));
+    if (e.button === 2) dispatch(openUserNameplateContextMenu({ username, isGuest, contextMenuId }));
   };
 
   const handleEnter = () => {
-    dispatch(openUserNameplateContextMenu({ username, contextMenuId }));
+    dispatch(openUserNameplateContextMenu({ username, isGuest, contextMenuId }));
   };
 
   return (

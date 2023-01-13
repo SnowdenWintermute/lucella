@@ -1,10 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RegisterInput } from "../types";
-import { setAlert } from "../slices/alerts-slice";
-import { Alert } from "../../classes/Alert";
-import { AlertType } from "../../enums";
 import { Ban, SanitizedUser, UsersRoutePaths } from "../../../common";
-import { authApi } from "./auth-api-slice";
 
 const API_URL = process.env.NEXT_PUBLIC_API;
 

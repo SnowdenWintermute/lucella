@@ -1,8 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { LoginInput } from "../types";
-import { setAlert } from "../slices/alerts-slice";
-import { Alert } from "../../classes/Alert";
-import { AlertType } from "../../enums";
 import { AuthRoutePaths } from "../../../common";
 import { usersApi } from "./users-api-slice";
 

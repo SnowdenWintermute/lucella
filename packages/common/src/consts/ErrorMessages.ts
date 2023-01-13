@@ -56,6 +56,9 @@ export const ErrorMessages = {
   USER: {
     ACCOUNT_DELETION: "An error occurred when trying to delete your account",
   },
+  ADMIN: {
+    NO_IP_TO_BAN: "No IP address was found",
+  },
   VALIDATION: {
     AUTH: {
       REQUIRED_FIELD: {

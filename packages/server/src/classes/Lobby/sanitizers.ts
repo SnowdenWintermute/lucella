@@ -30,6 +30,7 @@ export function sanitizeGameRoom(gameRoom: GameRoom): GameRoom | void {
   Object.values(gameRoomForClient.players).forEach((player) => {
     if (player) {
       delete player.socketId;
+      delete player.ipAddress;
       delete player.currentChatChannel;
       delete player.previousChatChannelName;
     }

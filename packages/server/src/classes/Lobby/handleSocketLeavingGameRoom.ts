@@ -23,7 +23,7 @@ export default function handleSocketLeavingGameRoom(
   gameRoom.playersReady = { host: false, challenger: false };
   gameRoom.cancelCountdownInterval();
   io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
-  io.in(gameChatChannelName).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, lobby.getSanitizedChatChannel(gameChatChannelName));
+  io.in(gameChatChannelName).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, lobby.getSanitizedChatChannel(gameChatChannelName));
 
   if (playerToKick) {
     // below only happens if host left, then we are kicking the other player

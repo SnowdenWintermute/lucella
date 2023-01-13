@@ -24,3 +24,8 @@ export enum UserRole {
   ADMIN = "admin",
   MODERATOR = "moderator",
 }
+
+export enum IPBanReason {
+  RATE_LIMIT_ABUSE = "rate_limit_abuse",
+  CHAT = "chat",
+}

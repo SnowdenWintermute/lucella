@@ -7,7 +7,7 @@ How to setup dev
 Fill out env from template instructions
 
 setup a postgres server and run migrations
-DATABASE_URL=postgres://Username:Password@localhost:5432/dbname yarn run migrate u
+DATABASE_URL=postgres://Username:Password@localhost:5432/dbname yarn run migrate up
 
 setup a redis server
 

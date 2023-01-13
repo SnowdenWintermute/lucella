@@ -1,9 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Alert } from "../../classes/Alert";
 import { UserRecord } from "../../classes/UserRecord";
-import { AlertType } from "../../enums";
-import { setAlert } from "../slices/alerts-slice";
-import { setViewingSearchedUser } from "../slices/ladder-slice";
 const API_URL = process.env.NEXT_PUBLIC_API;
 
 export interface ILadderPageResponse {
@@ -19,7 +15,7 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-export const ladderApiSlice = createApi({
+export const ladderApi = createApi({
   reducerPath: "ladderApi",
   baseQuery,
   endpoints(builder) {
@@ -44,4 +40,4 @@ export const ladderApiSlice = createApi({
   },
 });
 
-export const { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } = ladderApiSlice;
+export const { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } = ladderApi;

@@ -7,17 +7,16 @@ import MatchmakingButtons from "./MatchmakingButtons";
 
 interface Props {
   socket: Socket;
-  showChangeChannelModal: () => void;
 }
 
-function MainButtons({ socket, showChangeChannelModal }: Props) {
+function MainButtons({ socket }: Props) {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
 
   const { currentGameRoom } = lobbyUiState;
 
   return (
     <div className="game-lobby-top-buttons">
-      {!currentGameRoom && <DefaultButtons socket={socket} showChangeChannelModal={showChangeChannelModal} />}
+      {!currentGameRoom && <DefaultButtons socket={socket} />}
       {!currentGameRoom?.isRanked && <InGameRoomButtons socket={socket} />}
       {currentGameRoom?.isRanked && <span>Ranked game starting...</span>}
       <MatchmakingButtons socket={socket} />

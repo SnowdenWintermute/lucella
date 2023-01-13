@@ -3,11 +3,11 @@ import { useAppSelector } from "../../../redux/hooks";
 
 function ChannelInfoBox() {
   const chatState = useAppSelector((state) => state.chat);
-  const { newChatRoomLoading, currentChatRoomName, currentChatRoomUsers } = chatState;
-  const numUsers = Object.keys(currentChatRoomUsers).length;
+  const { newChatChannelLoading, currentChatChannelName, currentChatChannelUsers } = chatState;
+  const numUsers = Object.keys(currentChatChannelUsers).length;
   return (
     <div className="game-lobby-info-box">
-      {currentChatRoomName} ({newChatRoomLoading ? "..." : numUsers})
+      {currentChatChannelName} ({newChatChannelLoading ? "..." : numUsers})
     </div>
   );
 }

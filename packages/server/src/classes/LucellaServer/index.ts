@@ -18,7 +18,13 @@ export class LucellaServer {
   connectedUsers: SocketIDsByUsername = {};
   matchmakingQueue: MatchmakingQueue;
   constructor(expressServer: any) {
-    this.io = new SocketIO.Server(expressServer);
+    this.io = new SocketIO.Server(expressServer, {
+      // cors: {
+      //   origin: process.env.ORIGIN,
+      //   methods: ["GET", "POST"],
+      //   credentials: true,
+      // },
+    });
     this.matchmakingQueue = new MatchmakingQueue(this);
     this.lobby = new Lobby(this);
     initializeListeners(this);
@@ -39,7 +45,7 @@ export class LucellaServer {
     if (!userLeaving.isGuest) {
       this.connectedUsers[username] = this.connectedUsers[username].filter((socketId) => socketId !== socket.id);
       if (this.connectedUsers[username].length < 1) delete this.connectedUsers[username];
-    }
+    } else delete this.connectedUsers[username];
 
     delete this.connectedSockets[socket.id];
     console.log(`user ${username} on socket ${socket.id} disconnected`);

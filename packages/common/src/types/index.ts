@@ -30,3 +30,12 @@ export interface ServerPacket {
 }
 
 export type CustomErrorDetails = { message: string; field?: string };
+
+export type IPBan = {
+  id: number;
+  createdAt: number | Date;
+  updatedAt: number | Date;
+  ipAddress: string;
+  expiresAt: string;
+  reason: string;
+};
