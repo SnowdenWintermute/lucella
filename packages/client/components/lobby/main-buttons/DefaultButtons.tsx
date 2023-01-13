@@ -8,6 +8,7 @@ import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 import { mobileViewWidthThreshold } from "../../../consts";
 import { setShowChangeChatChannelModal, setShowMobileLobbyMenuModal } from "../../../redux/slices/ui-slice";
+import useWindowDimensions from "../../../hooks/useWindowDimensions";
 
 interface Props {
   socket: Socket;
@@ -15,6 +16,7 @@ interface Props {
 
 function DefaultButtons({ socket }: Props) {
   const dispatch = useAppDispatch();
+  const windowDimensions = useWindowDimensions();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const uiState = useAppSelector((state) => state.UI);
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
@@ -65,15 +67,10 @@ function DefaultButtons({ socket }: Props) {
   };
 
   useEffect(() => {
-    if (window.innerWidth < mobileViewWidthThreshold) setMobileViewActive(true);
+    if (!windowDimensions) return;
+    if (windowDimensions.width < mobileViewWidthThreshold) setMobileViewActive(true);
     else setMobileViewActive(false);
-    function handleResize() {
-      if (window.innerWidth < mobileViewWidthThreshold) setMobileViewActive(true);
-      else setMobileViewActive(false);
-    }
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [setMobileViewActive]);
+  }, [windowDimensions, setMobileViewActive]);
 
   const buttons = [
     { title: "Channel", onClick: onChannelClick },

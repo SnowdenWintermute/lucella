@@ -5,17 +5,16 @@ import { ButtonNames } from "../../consts/ButtonNames";
 
 describe("full user authentication flow", () => {
   let userEmail;
-
+  const args = {
+    CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
+    CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
+  };
   // eslint-disable-next-line no-undef
   before(() => {
     cy.task(TaskNames.getUserEmail).then(async (email) => {
       // confirm that an ethereal mail account was set up for this test
       expect(email).to.be.a("string");
       userEmail = email;
-      const args = {
-        CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
-        CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
-      };
       // delete all test users (test users are defined in the UsersRepo deleteTestUsers method)
       cy.task(TaskNames.deleteAllTestUsers, { ...args, email: userEmail }).then((response: Response) => {
         expect(response.status).to.equal(200);
@@ -23,6 +22,16 @@ describe("full user authentication flow", () => {
       cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
         expect(response.status).to.equal(201);
       });
+      cy.task(TaskNames.setRateLimiterDisabled, { ...args, rateLimiterDisabled: true }).then((response: Response) => {
+        console.log("response: ", response);
+        expect(response.status).to.equal(200);
+      });
+    });
+  });
+
+  afterEach(() => {
+    cy.task(TaskNames.setRateLimiterDisabled, { ...args, rateLimiterDisabled: false }).then((response: Response) => {
+      expect(response.status).to.equal(200);
     });
   });
 

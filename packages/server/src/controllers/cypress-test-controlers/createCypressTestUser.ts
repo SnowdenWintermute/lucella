@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
 
-import UserRepo from "../../../database/repos/users";
-import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../../utils/test-utils/consts";
+import UserRepo from "../../database/repos/users";
+import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 
 export default async function createCypressTestUser(req: Request, res: Response, next: NextFunction) {
   try {

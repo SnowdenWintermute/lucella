@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { useState, useEffect } from "react";
 
 function getWindowDimensions() {

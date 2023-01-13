@@ -26,6 +26,8 @@ export enum RateLimiterModes {
   GLOBAL,
 }
 
+export const rateLimiterDisabler = { rateLimiterDisabledForTesting: false };
+
 export default function createRateLimiterMiddleware(
   mode: RateLimiterModes,
   label = "",
@@ -38,6 +40,10 @@ export default function createRateLimiterMiddleware(
 ) {
   // a sliding window of fixed window request counters
   return async function rateLimiter(req: Request, res: Response, next: NextFunction) {
+    if (rateLimiterDisabler.rateLimiterDisabledForTesting) {
+      console.log("rate limiter disabled"); // can be toggled by cypress task
+      return next();
+    }
     const { context } = wrappedRedis; // redis store
     // get the current fixed window counter timestamp
     const now = Date.now();

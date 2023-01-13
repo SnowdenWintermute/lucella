@@ -46,6 +46,7 @@ describe("rate limiter", () => {
     console.log("redis keys removed in test cleanup: ", removed[1]);
   });
 
+  jest.setTimeout(20000);
   it("limits the number of combined requests on all routes in a small fixed window", async () => {
     const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
     const { accessToken } = await signTokenAndCreateSession(user);
@@ -123,6 +124,7 @@ describe("rate limiter", () => {
       .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     numReqsInThisSlidingWindow += 1;
+
     expect(slidingWindowLimitedResponse.status).toBe(429);
     expect(
       responseBodyIncludesCustomErrorMessage(slidingWindowLimitedResponse, ErrorMessages.RATE_LIMITER.TOO_MANY_REQUESTS) ||
@@ -133,7 +135,6 @@ describe("rate limiter", () => {
     // for one extra fixed window's length if the current timestamp isn't divisible by the fixed window interval
     // currentTime = setDateNowReturnValue(timeOfFirstRequest + perIpSlidingWindowTime + perIpFixedWindowCounterTime - 1);
     currentTime = setDateNowReturnValue(timeOfFirstRequest + perIpSlidingWindowTime + perIpFixedWindowCounterTime);
-
     console.log("currentTime: ", currentTime, perIpSlidingWindowTime + perIpFixedWindowCounterTime);
     const responseAfterWaiting = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)

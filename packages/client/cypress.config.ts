@@ -1,7 +1,7 @@
 import axios from "axios";
 import { defineConfig } from "cypress";
 import { Socket } from "socket.io-client";
-import { SocketEventsFromClient, UsersRoutePaths } from "../common";
+import { CypressTestRoutePaths, SocketEventsFromClient } from "../common";
 import { TaskNames } from "./cypress/support/TaskNames";
 import { makeEmailAccount } from "./cypress/support/email-account";
 const io = require("socket.io-client");
@@ -15,10 +15,19 @@ export default defineConfig({
       const emailAccount = await makeEmailAccount();
 
       on("task", {
-        [TaskNames.deleteAllTestUsers]: async (args) => {
+        [TaskNames.setRateLimiterDisabled]: async (args) => {
           const response = await axios({
             method: "put",
-            url: `${args.CYPRESS_BACKEND_URL}/api${UsersRoutePaths.ROOT}${UsersRoutePaths.DROP_ALL_TEST_USERS}`,
+            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.RATE_LIMITER}`,
+            data: { testerKey: args.CYPRESS_TESTER_KEY, rateLimiterDisabled: args.rateLimiterDisabled },
+          });
+          return { status: response.status };
+        },
+        [TaskNames.deleteAllTestUsers]: async (args) => {
+          console.log(`${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`);
+          const response = await axios({
+            method: "put",
+            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`,
             data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
 
             headers: { "content-type": "application/json" },
@@ -29,7 +38,7 @@ export default defineConfig({
         [TaskNames.createCypressTestUser]: async (args) => {
           const response = await axios({
             method: "post",
-            url: `${args.CYPRESS_BACKEND_URL}/api${UsersRoutePaths.ROOT}${UsersRoutePaths.CREATE_CYPRESS_TEST_USER}`,
+            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.CREATE_CYPRESS_TEST_USER}`,
             data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
             headers: { "content-type": "application/json" },
           });

@@ -1,7 +1,7 @@
 export * from "./types";
 export { GameStatus, PlayerRole, UserInputs, UserRole, IPBanReason } from "./enums";
 export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
-export { AuthRoutePaths, UsersRoutePaths, ModerationRoutePaths } from "./enums/APIRoutePaths";
+export { AuthRoutePaths, UsersRoutePaths, ModerationRoutePaths, CypressTestRoutePaths } from "./enums/APIRoutePaths";
 export { FrontendRoutes } from "./enums/FrontendRoutePaths";
 export * from "./consts";
 export * from "./consts/battle-room-game-config";

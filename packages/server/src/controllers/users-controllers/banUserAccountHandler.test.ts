@@ -3,7 +3,19 @@ import request from "supertest";
 import io from "socket.io-client";
 import { IncomingMessage, Server, ServerResponse } from "node:http";
 import bcrypt from "bcryptjs";
-import { AuthRoutePaths, Ban, CookieNames, ErrorMessages, ONE_MINUTE, randBetween, UserRole, UsersRoutePaths } from "../../../../common";
+import {
+  AuthRoutePaths,
+  Ban,
+  CookieNames,
+  defaultChatChannelNames,
+  ErrorMessages,
+  ONE_MINUTE,
+  randBetween,
+  SocketEventsFromClient,
+  SocketEventsFromServer,
+  UserRole,
+  UsersRoutePaths,
+} from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import UserRepo from "../../database/repos/users";
@@ -68,51 +80,56 @@ describe("banUserAccountHandler", () => {
         transports: ["websocket"],
         extraHeaders: { cookie: `access_token=${accessToken};` },
       });
+      const banDuration = 60 * ONE_MINUTE;
 
+      // ensure they are connected so we know banning the account actually disconnects them
       socket.on("connect", async () => {
-        // ensure they are connected so we know banning the account actually disconnects them
         expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
-        // log in as admin and ban user
-        const admin = await UserRepo.findOne("email", TEST_ADMIN_EMAIL);
-        const objWithToken = await signTokenAndCreateSession(admin);
-        const adminAccessToken = objWithToken.accessToken;
-        const banDuration = 60 * ONE_MINUTE;
-        const response = await request(app)
-          .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_BAN}`)
-          .set("Cookie", [`access_token=${adminAccessToken}`])
-          .send({
-            name: user.name,
-            ban: new Ban("ACCOUNT", banDuration),
+        socket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, async (data) => {
+          socket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannelNames.BATTLE_ROOM_CHAT);
+        });
+        socket.on(SocketEventsFromServer.NEW_CHAT_MESSAGE, async () => {
+          // log in as admin and ban user
+          const admin = await UserRepo.findOne("email", TEST_ADMIN_EMAIL);
+          const objWithToken = await signTokenAndCreateSession(admin);
+          const adminAccessToken = objWithToken.accessToken;
+          const response = await request(app)
+            .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_BAN}`)
+            .set("Cookie", [`access_token=${adminAccessToken}`])
+            .send({
+              name: user.name,
+              ban: new Ban("ACCOUNT", banDuration),
+            });
+
+          expect(response.status).toBe(204);
+        });
+        // sockets are disconnected
+        socket.on("disconnect", async () => {
+          expect(Object.keys(lucella.server!.connectedSockets!).length).toBe(0);
+          expect(lucella.server?.connectedUsers[user.name]).toBeUndefined();
+          // can't log in after acconut ban
+          const loginResponse = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
+            email: TEST_USER_EMAIL,
+            password: TEST_USER_PASSWORD,
           });
 
-        expect(response.status).toBe(204);
+          expect(loginResponse.status).toBe(401);
+          expect(loginResponse.headers["set-cookie"]).toBeUndefined();
+          expect(responseBodyIncludesCustomErrorMessage(loginResponse, ErrorMessages.AUTH.ACCOUNT_BANNED)).toBeTruthy();
 
-        // sockets are disconnected
-        expect(lucella.server?.io.sockets.sockets.get(socket.id)).toBeUndefined();
-        expect(Object.keys(lucella.server!.connectedSockets!).length).toBe(0);
-        expect(lucella.server?.connectedUsers[user.name]).toBeUndefined();
-        // can't log in after acconut ban
-        const loginResponse = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
-          email: TEST_USER_EMAIL,
-          password: TEST_USER_PASSWORD,
+          // after waiting the duration of their ban, they can log in again
+          const currentTime = Date.now();
+          global.Date.now = jest.fn(() => currentTime + banDuration);
+          const loginResponseAfterWaiting = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
+            email: TEST_USER_EMAIL,
+            password: TEST_USER_PASSWORD,
+          });
+          expect(loginResponseAfterWaiting.status).toBe(200);
+          expect(loginResponseAfterWaiting.headers["set-cookie"][0].includes(CookieNames.ACCESS_TOKEN)).toBeTruthy();
+
+          global.Date.now = realDateNow;
+          done();
         });
-
-        expect(loginResponse.status).toBe(401);
-        expect(loginResponse.headers["set-cookie"]).toBeUndefined();
-        expect(responseBodyIncludesCustomErrorMessage(loginResponse, ErrorMessages.AUTH.ACCOUNT_BANNED)).toBeTruthy();
-
-        // after waiting the duration of their ban, they can log in again
-        const currentTime = Date.now();
-        global.Date.now = jest.fn(() => currentTime + banDuration);
-        const loginResponseAfterWaiting = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
-          email: TEST_USER_EMAIL,
-          password: TEST_USER_PASSWORD,
-        });
-        expect(loginResponseAfterWaiting.status).toBe(200);
-        expect(loginResponseAfterWaiting.headers["set-cookie"][0].includes(CookieNames.ACCESS_TOKEN)).toBeTruthy();
-
-        global.Date.now = realDateNow;
-        done();
       });
     }
     thisTest();

@@ -9,19 +9,11 @@ import { verifyJwtAsymmetric } from "../../controllers/utils/jwt";
 import { LucellaServer } from ".";
 import UserRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";
-import IpBanRepo from "../../database/repos/ip-bans";
+import getIpFromSocketHandshake from "./utils/getIpFromSocketHandshake";
 
 export default async function handleNewSocketConnection(server: LucellaServer, socket: Socket) {
   try {
-    let ipAddress;
-    if (socket.handshake.headers["x-forwarded-for"]) ipAddress = socket.handshake.headers["x-forwarded-for"][0];
-    else ipAddress = socket.handshake.address;
-    const ipBan = await IpBanRepo.findOne(ipAddress);
-    if (ipBan) {
-      if (Date.now() > new Date(ipBan.expiresAt).getTime()) await IpBanRepo.delete(ipAddress);
-      else socket.disconnect();
-      console.log("ip is banned: ", ipBan);
-    }
+    const ipAddress = getIpFromSocketHandshake(socket);
     let userToReturn;
     let isGuest = true;
     const token = cookie.parse(socket.handshake.headers.cookie || "").access_token || null;

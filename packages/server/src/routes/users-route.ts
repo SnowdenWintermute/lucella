@@ -10,10 +10,6 @@ import { registerUserSchema } from "../user-input-validation-schema/register-use
 import { UsersRoutePaths, UserRole } from "../../../common";
 import { changePasswordSchema } from "../user-input-validation-schema/change-password-schema";
 import accountActivationHandler from "../controllers/users-controllers/accountActivationHandler";
-
-import { requireTesterKey } from "../middleware/requireTesterKey";
-import dropAllTestUsersAndClearRelatedData from "../controllers/users-controllers/for-cypress-tests/dropAllTestUsersAndClearRelatedData";
-import createCypressTestUser from "../controllers/users-controllers/for-cypress-tests/createCypressTestUser";
 import { registrationIpRateLimiter } from "../middleware/rateLimiter";
 import { restrictTo } from "../middleware/restrictTo";
 import banUserAccountHandler from "../controllers/users-controllers/banUserAccountHandler";
@@ -22,8 +18,6 @@ const router = express.Router();
 router.post("", registrationIpRateLimiter, validate(registerUserSchema), registerNewAccountHandler);
 router.post(UsersRoutePaths.ACCOUNT_ACTIVATION, accountActivationHandler);
 router.put(UsersRoutePaths.PASSWORD, validate(changePasswordSchema), changePasswordHandler);
-router.put(UsersRoutePaths.DROP_ALL_TEST_USERS, requireTesterKey, dropAllTestUsersAndClearRelatedData); // used for cypress tests
-router.post(UsersRoutePaths.CREATE_CYPRESS_TEST_USER, requireTesterKey, createCypressTestUser);
 router.use(deserializeUser, refreshSession);
 router.get("", getMeHandler);
 router.put(UsersRoutePaths.ACCOUNT_DELETION, deleteAccountHandler);

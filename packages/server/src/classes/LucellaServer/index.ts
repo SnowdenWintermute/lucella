@@ -9,6 +9,7 @@ import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
 import BattleRoomRecord from "../../models/BattleRoomRecord";
+import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
 
 export class LucellaServer {
   io: SocketIO.Server;
@@ -25,6 +26,7 @@ export class LucellaServer {
       //   credentials: true,
       // },
     });
+    this.io.use(socketCheckForBannedIpAddress);
     this.matchmakingQueue = new MatchmakingQueue(this);
     this.lobby = new Lobby(this);
     initializeListeners(this);

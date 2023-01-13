@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { REDIS_KEY_PREFIXES } from "../../../../../common";
-import UserRepo from "../../../database/repos/users";
-import { wrappedRedis } from "../../../utils/RedisContext";
+import { REDIS_KEY_PREFIXES } from "../../../../common";
+import UserRepo from "../../database/repos/users";
+import { wrappedRedis } from "../../utils/RedisContext";
 
 export default async function dropAllTestUsers(req: Request, res: Response, next: NextFunction) {
   try {

@@ -6,4 +6,5 @@ export enum TaskNames {
   socketEmit = "socketEmit",
   getUserEmail = "getUserEmail",
   getLastEmail = "getLastEmail",
+  setRateLimiterDisabled = "setRateLimiterDisabled",
 }
