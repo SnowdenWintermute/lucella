@@ -1,6 +1,6 @@
 import io, { Socket } from "socket.io-client";
 import React, { useEffect, useState, useRef } from "react";
-import GameLobbyChat from "./GameLobbyChat";
+import GameLobbyChat from "./game-lobby-chat/GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
 import ChannelBar from "./channel-bar/ChannelBar";
 import PreGameRoom from "./PreGameRoom";

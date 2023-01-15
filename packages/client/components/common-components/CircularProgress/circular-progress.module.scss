@@ -1,0 +1,28 @@
+@import "../../../styles/abstracts/variables";
+
+.circle {
+  display: flex;
+  position: absolute;
+  //   border: 1px solid color(textLight);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%) rotate(270deg);
+  right: 20px;
+  fill: none;
+  stroke: color(textPrimary);
+  //   animation: anim 5s ease-in-out forwards;
+  //   animation-iteration-count: infinite;
+  //   stroke-dasharray: 97px;
+  //   stroke-dashoffset: 50%;
+  //   border: 1px solid white;
+  //   right: 50%;
+}
+
+@keyframes anim {
+  50% {
+    transform: translateY(-50%) rotate(-360deg);
+  }
+  100% {
+    transform: translateY(-50%) rotate(-720deg);
+  }
+}
