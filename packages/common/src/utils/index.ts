@@ -12,6 +12,14 @@ export function toKebabCase(string: string) {
   return string.replace(/\s+/g, "-").toLowerCase();
 }
 
+export function percentNumberIsOfAnotherNumber(part: number, whole: number) {
+  return (part / whole) * 100;
+}
+
+export function positiveNumberOrZero(number: number) {
+  return Math.sign(number) === 1 ? number : 0;
+}
+
 export function distanceBetweenTwoPoints(a: Point, b: Point) {
   const y = b.x - a.x;
   const x = b.y - a.y;
@@ -26,14 +34,11 @@ export function slope(x1: number, y1: number, x2: number, y2: number) {
 export function findAngle(M1: number, M2: number) {
   // Store the tan value of the angle
   const angle = Math.abs((M2 - M1) / (1 + M1 * M2));
-
   // Calculate tan inverse of the angle
   const ret = Math.atan(angle);
-
   // Convert the angle from
   // radian to degree
   const val = (ret * 180) / Math.PI;
-
   // Print the result
   return val;
 }

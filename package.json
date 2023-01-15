@@ -4,7 +4,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn --cwd packages/server dev"
+    "dev": "yarn --cwd packages/server dev",
+    "compile-proto": "./packages/common/src/proto/compile-proto.sh"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.47.0",

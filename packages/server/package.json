@@ -4,14 +4,16 @@
   "description": "Lucella: Latin - small gains or profits.",
   "main": "server.js",
   "scripts": {
-    "build": "rimraf dist && tsc --build && ",
+    "build": "rimraf dist && yarn compile-proto && tsc --build",
     "serve": "tsc-watch -b --onSuccess \"node dist/index.js\"",
     "server": "nodemon server",
     "servers": "nodemon servers",
     "client": "yarn --cwd ../client develop",
-    "dev": "concurrently \"yarn serve\" \"yarn client\"",
+    "dev": "concurrently \"yarn serve\" \"yarn client\" \"yarn watch-and-compile-proto\"",
     "migrate": "node-pg-migrate",
-    "test": "jest --no-cache"
+    "test": "jest --no-cache",
+    "compile-proto": "yarn --cwd ../common compile-proto",
+    "watch-and-compile-proto": "yarn --cwd ../common watch-and-compile-proto"
   },
   "author": "Mike Silverman",
   "license": "ISC",

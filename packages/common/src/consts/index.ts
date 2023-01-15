@@ -6,6 +6,9 @@ export const ONE_MINUTE = ONE_SECOND * 60;
 export const ONE_HOUR = ONE_MINUTE * 60;
 export const ONE_DAY = ONE_HOUR * 24;
 // rate limits
+// client socket chat
+export const chatDelayUnregisteredUser = ONE_SECOND * 3;
+export const chatDelayLoggedInUser = 300;
 // ip:general
 export const perIpSlidingWindowTime = 30 * ONE_MINUTE;
 export const perIpSlidingWindowLimit = 500;

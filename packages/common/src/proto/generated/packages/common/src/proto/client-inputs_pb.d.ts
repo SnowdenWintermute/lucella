@@ -1,5 +1,5 @@
 // package: lucella
-// file: src/proto/client-inputs.proto
+// file: packages/common/src/proto/client-inputs.proto
 
 import * as jspb from "google-protobuf";
 

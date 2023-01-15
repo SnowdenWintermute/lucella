@@ -2,7 +2,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "../../../redux/hooks";
-import { ChatMessage, ONE_SECOND, SocketEventsFromClient } from "../../../../common";
+import {
+  ChatMessage,
+  SocketEventsFromClient,
+  chatDelayLoggedInUser,
+  chatDelayUnregisteredUser,
+  percentNumberIsOfAnotherNumber,
+  positiveNumberOrZero,
+} from "../../../../common";
 import styles from "./game-lobby-chat.module.scss";
 import CircularProgress from "../../common-components/CircularProgress";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
@@ -30,14 +37,17 @@ function GameLobbyChat({ socket }: Props) {
 
   function setPercentage() {
     if (!lastChatSentAt.current || Date.now() >= lastChatSentAt.current + baseDelayMilliseconds.current) return setPercentageChatDelayRemaining(0);
-    const newPercentage = ((Date.now() - lastChatSentAt.current) / baseDelayMilliseconds.current) * 100;
+    const newPercentage = percentNumberIsOfAnotherNumber(Date.now() - lastChatSentAt.current, baseDelayMilliseconds.current);
     if (newPercentage <= 100) setPercentageChatDelayRemaining(newPercentage);
-    // else setPercentageChatDelayRemaining(0);
+  }
+
+  function determineDelay() {
+    if (user) baseDelayMilliseconds.current = chatDelayLoggedInUser;
+    else baseDelayMilliseconds.current = chatDelayUnregisteredUser;
   }
 
   useEffect(() => {
-    if (user) baseDelayMilliseconds.current = 300;
-    else baseDelayMilliseconds.current = 3000;
+    determineDelay();
     if (waitingToSendMessage) chatDelayInterval.current = setInterval(setPercentage, 25);
     if (!waitingToSendMessage && chatDelayInterval.current) clearInterval(chatDelayInterval.current);
     return () => {
@@ -60,28 +70,28 @@ function GameLobbyChat({ socket }: Props) {
     setChatInput(e.target.value);
   };
 
-  const sendNewMessage = (message: string) => {
+  const sendNewMessageAfterAnyRemainingDelay = (message: string) => {
     if (message === "") return;
-    if (!lastChatSentAt.current || Date.now() >= lastChatSentAt.current + baseDelayMilliseconds.current) {
-      setWaitingToSendMessage(false);
+    function handleSendMessage() {
       socket.emit(SocketEventsFromClient.NEW_CHAT_MESSAGE, new ChatMessage(message));
+      setWaitingToSendMessage(false);
       lastChatSentAt.current = Date.now();
       setChatInput("");
-    } else {
+    }
+    if (!lastChatSentAt.current || Date.now() >= lastChatSentAt.current + baseDelayMilliseconds.current) handleSendMessage();
+    else {
       setWaitingToSendMessage(true);
+      determineDelay();
       setTimeout(() => {
-        socket.emit(SocketEventsFromClient.NEW_CHAT_MESSAGE, new ChatMessage(message));
-        lastChatSentAt.current = Date.now();
-        setWaitingToSendMessage(false);
+        handleSendMessage();
         if (chatDelayInterval.current) clearInterval(chatDelayInterval.current);
         setPercentageChatDelayRemaining(0);
-        setChatInput("");
-      }, baseDelayMilliseconds.current - (Date.now() - lastChatSentAt.current));
+      }, positiveNumberOrZero(baseDelayMilliseconds.current - (Date.now() - lastChatSentAt.current)));
     }
   };
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    sendNewMessage(chatInput);
+    sendNewMessageAfterAnyRemainingDelay(chatInput);
   };
 
   let messagesToDisplay;
@@ -101,7 +111,7 @@ function GameLobbyChat({ socket }: Props) {
         <ul>{messagesToDisplay}</ul>
       </div>
       <div className={styles["game-lobby-chat-input-holder"]}>
-        <form onSubmit={(e) => onSubmit(e)}>
+        <form onSubmit={handleSubmit}>
           <input
             aria-label="chat-input"
             type="text"

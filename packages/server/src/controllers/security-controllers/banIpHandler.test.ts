@@ -6,7 +6,6 @@ import { IncomingMessage, Server, ServerResponse } from "node:http";
 import bcrypt from "bcryptjs";
 import {
   AuthRoutePaths,
-  Ban,
   CookieNames,
   defaultChatChannelNames,
   ErrorMessages,
