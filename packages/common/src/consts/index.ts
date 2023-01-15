@@ -1,5 +1,38 @@
+// basics
+export const websiteName = "melphina.com";
 // times
 export const ONE_SECOND = 1000;
+export const ONE_MINUTE = ONE_SECOND * 60;
+export const ONE_HOUR = ONE_MINUTE * 60;
+export const ONE_DAY = ONE_HOUR * 24;
+// rate limits
+// client socket chat
+export const chatDelayUnregisteredUser = ONE_SECOND * 3;
+export const chatDelayLoggedInUser = 300;
+// ip:general
+export const perIpSlidingWindowTime = 30 * ONE_MINUTE;
+export const perIpSlidingWindowLimit = 500;
+export const perIpFixedWindowCounterTime = 30 * ONE_SECOND;
+export const perIpFixedWindowCounterLimit = 50;
+// ip: registration
+export const registrationSlidingWindowLimit = 5;
+export const registrationFixedWindowCounterTime = 10 * ONE_SECOND;
+export const registrationFixedWindowCounterLimit = 2;
+// ip: password reset email
+export const passwordResetEmailSlidingWindowLimit = 3;
+export const passwordResetEmailFixedWindowCounterTime = 10 * ONE_SECOND;
+export const passwordResetEmailFixedWindowCounterLimit = 1;
+// login
+export const failedLoginCounterExpiration = 10 * ONE_MINUTE;
+export const failedLoginCountTolerance = 3;
+// redis key prefixes
+export const REDIS_KEY_PREFIXES = {
+  FAILED_LOGINS: "_failed_login_attempts",
+};
+// cookies
+export const CookieNames = {
+  ACCESS_TOKEN: "access_token",
+};
 // battle-room game
 export const ghostTransparency = 0.3;
 export const inGameFontSizes = { medium: 12, large: 25 };

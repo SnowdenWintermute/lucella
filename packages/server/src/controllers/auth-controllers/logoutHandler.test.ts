@@ -35,7 +35,7 @@ describe("loginHandler", () => {
       .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`access_token=${accessToken}`]);
     expect(getMeResponse.body.user).not.toHaveProperty("password");
-    expect(getMeResponse.body.user.name).toBe(TEST_USER_NAME);
+    expect(getMeResponse.body.user.name).toBe(TEST_USER_NAME.toLowerCase());
     expect(getMeResponse.body.user.email).toBe(TEST_USER_EMAIL);
     expect(getMeResponse.body.user.status).toBe(UserStatuses.ACTIVE);
 

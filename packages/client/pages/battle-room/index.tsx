@@ -1,9 +1,9 @@
-import { GameStatus, battleRoomDefaultChatChannel } from "../../../common";
 import React from "react";
+import { GameStatus, battleRoomDefaultChatChannel } from "../../../common";
 import GameLobby from "../../components/lobby/GameLobby";
 import { useAppSelector } from "../../redux/hooks";
 
-const BattleRoom = () => {
+function BattleRoom() {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { currentGameRoom } = lobbyUiState;
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
@@ -14,10 +14,10 @@ const BattleRoom = () => {
     <section className={gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? "page-frame" : ""}>
       <div className={`game-shell ${inGameShellClass}`}>
         {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? <h1 className="game-page-title">Battle Room</h1> : ""}
-        <GameLobby defaultChatRoom={battleRoomDefaultChatChannel} />
+        <GameLobby defaultChatChannel={battleRoomDefaultChatChannel} />
       </div>
     </section>
   );
-};
+}
 
 export default BattleRoom;

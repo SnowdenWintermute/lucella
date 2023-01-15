@@ -1,18 +1,21 @@
+import { Socket } from "socket.io-client";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import GameListener from "../socket-listeners/GameListener";
 import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../common";
-import { Socket } from "socket.io-client";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 interface Props {
   socket: Socket;
 }
 
-const BattleRoomGameInstance = (props: Props) => {
+function BattleRoomGameInstance(props: Props) {
   const { socket } = props;
+  const windowDimensions = useWindowDimensions();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { currentGameRoom } = lobbyUiState;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [canvasSize, setCanvasSize] = useState<WidthAndHeight>({
     width: BattleRoomGame.baseWindowDimensions.width,
     height: BattleRoomGame.baseWindowDimensions.height,
@@ -23,28 +26,19 @@ const BattleRoomGameInstance = (props: Props) => {
   const gameWidthRatio = useRef(window.innerHeight * 0.6);
 
   useEffect(() => {
+    if (!windowDimensions) return;
+    gameWidthRatio.current = window.innerHeight * 0.6;
+    // even though we don't use this value for anything, the fact that we set state forces a react refresh which actually makes the
+    // canvas resize, so its needed for now
     setCanvasSize({
-      height: window.innerHeight,
-      width: gameWidthRatio.current > window.innerWidth ? window.innerWidth : gameWidthRatio.current,
+      height: windowDimensions.height,
+      width: gameWidthRatio.current > windowDimensions.width ? windowDimensions.width : gameWidthRatio.current,
     });
     canvasSizeRef.current = {
-      height: window.innerHeight,
-      width: gameWidthRatio.current > window.innerWidth ? window.innerWidth : gameWidthRatio.current,
+      height: windowDimensions.height,
+      width: gameWidthRatio.current > windowDimensions.width ? windowDimensions.width : gameWidthRatio.current,
     };
-    function handleResize() {
-      gameWidthRatio.current = window.innerHeight * 0.6;
-      setCanvasSize({
-        height: window.innerHeight,
-        width: gameWidthRatio.current > window.innerWidth ? window.innerWidth : gameWidthRatio.current,
-      });
-      canvasSizeRef.current = {
-        height: window.innerHeight,
-        width: gameWidthRatio.current > window.innerWidth ? window.innerWidth : gameWidthRatio.current,
-      };
-    }
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [setCanvasSize]);
+  }, [setCanvasSize, windowDimensions]);
 
   return (
     <div className="battle-room-canvas-holder" onContextMenu={(e) => e.preventDefault()}>
@@ -56,6 +50,6 @@ const BattleRoomGameInstance = (props: Props) => {
       )}
     </div>
   );
-};
+}
 
 export default BattleRoomGameInstance;

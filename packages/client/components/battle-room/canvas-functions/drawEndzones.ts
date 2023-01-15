@@ -1,9 +1,8 @@
 import { BattleRoomGame, WidthAndHeight, colors } from "../../../../common";
 
 export default function drawEndzones(context: CanvasRenderingContext2D, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) {
-  let x = currentGame.endzones.host.origin.x;
-  let y = currentGame.endzones.host.origin.y;
-  let width = canvasSize.width;
+  let { x, y } = currentGame.endzones.host.origin;
+  let { width } = canvasSize;
   let height = (currentGame.endzones.host.height / BattleRoomGame.baseWindowDimensions.height) * canvasSize.height;
   context.beginPath();
   context.fillStyle = colors.hostEndZone;

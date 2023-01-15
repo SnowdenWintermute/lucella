@@ -1,13 +1,12 @@
-import Matter from "matter-js";
-import { Vector } from "matter-js";
-import { COMPILER_INDEXES } from "next/dist/shared/lib/constants";
-import { Orb, ghostTransparency, Point, inGameFontSizes } from "../../../../../common";
+/* eslint-disable no-unused-expressions */
+/* eslint-disable no-multi-assign */
+import { Orb, ghostTransparency, Point } from "../../../../../common";
 import drawOrbDebugText from "./drawOrbDebugText";
 import drawVectors from "./drawVectors";
 
 export default function drawOrb(context: CanvasRenderingContext2D, orb: Orb, canvasDrawFractions: Point, debugMode: number, showAsRing?: boolean) {
   const { x, y } = orb.body.position;
-  const { circleRadius, force, velocity } = orb.body;
+  const { circleRadius } = orb.body;
   const rx = x * canvasDrawFractions.x;
   const ry = y * canvasDrawFractions.y;
   context.beginPath();

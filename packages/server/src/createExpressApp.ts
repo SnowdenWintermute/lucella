@@ -10,8 +10,12 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authRouter from "./routes/auth-route";
 import usersRouter from "./routes/users-route";
+import moderationRouter from "./routes/moderation-route";
+import cypressTestRouter from "./routes/cypress-test-route";
 import errorHandler from "./middleware/errorHandler";
-import { AuthRoutePaths, UsersRoutePaths } from "../../common";
+import { AuthRoutePaths, CypressTestRoutePaths, ModerationRoutePaths, UsersRoutePaths } from "../../common";
+import { ipRateLimiter } from "./middleware/rateLimiter";
+import checkForBannedIpAddress from "./middleware/checkForBannedIpAddress";
 
 export default function createExpressApp() {
   const app = express();
@@ -21,13 +25,17 @@ export default function createExpressApp() {
   if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
   app.use(
     cors({
+      // methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
       origin: process.env.ORIGIN,
       credentials: true,
     })
   );
 
+  app.use(checkForBannedIpAddress, ipRateLimiter);
   app.use(`/api${AuthRoutePaths.ROOT}`, authRouter);
   app.use(`/api${UsersRoutePaths.ROOT}`, usersRouter);
+  app.use(`/api${ModerationRoutePaths.ROOT}`, moderationRouter);
+  app.use(`/api${CypressTestRoutePaths.ROOT}`, cypressTestRouter);
 
   app.all("*", (req: Request, res: Response, next: NextFunction) => {
     const err = new Error(`Route ${req.originalUrl} not found`) as any;

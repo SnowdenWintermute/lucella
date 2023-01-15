@@ -1,9 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Alert } from "../../classes/Alert";
 import { UserRecord } from "../../classes/UserRecord";
-import { AlertType } from "../../enums";
-import { setAlert } from "../slices/alerts-slice";
-import { setViewingSearchedUser } from "../slices/ladder-slice";
 const API_URL = process.env.NEXT_PUBLIC_API;
 
 export interface ILadderPageResponse {
@@ -19,9 +15,9 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-export const ladderApiSlice = createApi({
+export const ladderApi = createApi({
   reducerPath: "ladderApi",
-  baseQuery: baseQuery,
+  baseQuery,
   endpoints(builder) {
     return {
       getLadderPage: builder.query<ILadderPageResponse, number>({
@@ -31,15 +27,6 @@ export const ladderApiSlice = createApi({
             method: "GET",
           };
         },
-        async onQueryStarted(args, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(setViewingSearchedUser(false));
-          } catch (error: any) {
-            console.log(error);
-            dispatch(setAlert(new Alert("Error fetching ladder data", AlertType.DANGER)));
-          }
-        },
       }),
       getUserBattleRoomRecord: builder.query<UserRecord, string>({
         query(username) {
@@ -48,18 +35,9 @@ export const ladderApiSlice = createApi({
             method: "GET",
           };
         },
-        async onQueryStarted(args, { dispatch, queryFulfilled }) {
-          try {
-            const { data } = await queryFulfilled;
-            dispatch(setViewingSearchedUser(true));
-          } catch (error: any) {
-            console.log(error);
-            dispatch(setAlert(new Alert("User not found. Please note that names are case sensitive", AlertType.DANGER)));
-          }
-        },
       }),
     };
   },
 });
 
-export const { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } = ladderApiSlice;
+export const { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } = ladderApi;

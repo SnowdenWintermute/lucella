@@ -1,5 +1,6 @@
-import { eventLimiterRate, WidthAndHeight, BattleRoomGame } from "../../../common";
+import { Socket } from "socket.io-client";
 import React, { useCallback, useEffect } from "react";
+import { eventLimiterRate, WidthAndHeight, BattleRoomGame } from "../../../common";
 import mouseDownHandler from "./user-input-handlers/mouseDownHandler";
 import mouseEnterHandler from "./user-input-handlers/mouseEnterHandler";
 import mouseLeaveHandler from "./user-input-handlers/mouseLeaveHandler";
@@ -10,7 +11,6 @@ import touchStartHandler from "./user-input-handlers/touchStartHandler";
 import touchEndHandler from "./user-input-handlers/touchEndHandler";
 import keyPressHandler from "./user-input-handlers/keyPressHandler";
 import throttle from "../../utils/throttle";
-import { Socket } from "socket.io-client";
 import { useAppSelector } from "../../redux/hooks";
 
 interface Props {
@@ -20,7 +20,7 @@ interface Props {
   socket: Socket;
 }
 
-const Canvas = (props: Props) => {
+function Canvas(props: Props) {
   const { canvasSizeRef, canvasRef, currentGame, socket } = props;
   const { playerRole } = useAppSelector((state) => state.lobbyUi);
 
@@ -71,6 +71,6 @@ const Canvas = (props: Props) => {
       data-cy="battle-room-canvas"
     />
   );
-};
+}
 
 export default Canvas;

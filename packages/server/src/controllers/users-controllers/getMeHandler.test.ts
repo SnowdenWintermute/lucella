@@ -1,12 +1,11 @@
 import { Application } from "express";
 import request from "supertest";
-import { ErrorMessages, UsersRoutePaths, UserStatuses } from "../../../../common";
+import { ErrorMessages, UsersRoutePaths, UserStatuses, User } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
 import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
-import { signJwt } from "../utils/jwt";
-import { User } from "../../models/User";
+import { signJwtAsymmetric } from "../utils/jwt";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
@@ -39,7 +38,7 @@ describe("getMeHandler", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.user).not.toHaveProperty("password");
-    expect(response.body.user.name).toBe(TEST_USER_NAME);
+    expect(response.body.user.name).toBe(TEST_USER_NAME.toLowerCase()); // all names are coerced to lower case when saved to db
     expect(response.body.user.email).toBe(TEST_USER_EMAIL);
     expect(response.body.user.status).toBe(UserStatuses.ACTIVE);
   });
@@ -59,7 +58,7 @@ describe("getMeHandler", () => {
 
   it("should tell a user if their session has expired", async () => {
     // it will show expried if they provide a vaild token but no session is stored in redis
-    const accessToken = signJwt({ sub: 1 }, process.env.ACCESS_TOKEN_PRIVATE_KEY!, {
+    const accessToken = signJwtAsymmetric({ sub: 1 }, process.env.ACCESS_TOKEN_PRIVATE_KEY!, {
       expiresIn: `1000m`,
     });
     const response = await request(app)

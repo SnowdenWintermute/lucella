@@ -1,23 +1,17 @@
+import Image from "next/image";
+import React, { Fragment } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { UserMenu } from "./UserMenu";
 import logo from "../../../img/logo.png";
 import GamesIcon from "../../../img/menuIcons/queen.svg";
 import LadderIcon from "../../../img/menuIcons/podium.svg";
-import { useAppSelector } from "../../../redux/hooks";
-import { GameStatus } from "../../../../common";
-import Image from "next/image";
-import React, { Fragment } from "react";
 
-const Navbar = () => {
+function Navbar() {
   const router = useRouter();
-  const lobbyUIState = useAppSelector((state) => state.lobbyUi);
-  const { gameStatus } = lobbyUIState.currentGameRoom || { gameStatus: null }; // used to hide navbar in game
-
-  if (gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING) return <></>;
-
+  // eslint-disable-next-line consistent-return
   return (
-    <Fragment>
+    <>
       <nav className="nav">
         {/* Nav tabs */}
         <div className="nav-right-holder">
@@ -37,11 +31,13 @@ const Navbar = () => {
           </div>
         </div>
         {/* User menu */}
-        <div className="user-menu-holder">{<UserMenu />}</div>
+        <div className="user-menu-holder">
+          <UserMenu />
+        </div>
       </nav>
-      <div className="nav-tab-thin-bar"></div>
-    </Fragment>
+      <div className="nav-tab-thin-bar" />
+    </>
   );
-};
+}
 
 export default Navbar;

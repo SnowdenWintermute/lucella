@@ -5,15 +5,12 @@ interface Props {
   onClick: () => void;
 }
 
-const GameLobbyModalButton = ({ title, onClick }: Props) => {
+function GameLobbyModalButton({ title, onClick }: Props) {
   return (
-    <button
-      className={`button button-standard-size button-basic game-lobby-top-buttons__button game-lobby-menu-modal-button`}
-      onClick={onClick}
-    >
+    <button type="button" className="button button-standard-size button-basic game-lobby-top-buttons__button game-lobby-menu-modal-button" onClick={onClick}>
       {title}
     </button>
   );
-};
+}
 
 export default GameLobbyModalButton;

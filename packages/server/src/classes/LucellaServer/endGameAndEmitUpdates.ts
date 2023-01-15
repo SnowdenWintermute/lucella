@@ -43,6 +43,8 @@ export default function endGameAndEmitUpdates(server: LucellaServer, game: Battl
       lobby.changeSocketChatChannelAndEmitUpdates(io.sockets.sockets.get(player.socketId!)!, player.previousChatChannelName || null);
       lobby.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, player);
     });
+    // this cleans out the names of any players that disconnected
+    delete lobby.chatChannels[gameChatChannelName];
 
     delete lobby.gameRooms[game.gameName];
     delete games[game.gameName];

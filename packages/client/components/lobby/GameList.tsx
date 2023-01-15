@@ -1,17 +1,13 @@
 import React from "react";
 import { Socket } from "socket.io-client";
 import { GameRoom, GameStatus, SocketEventsFromClient } from "../../../common";
-import { AlertType } from "../../enums";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { Alert } from "../../classes/Alert";
-import { setAlert } from "../../redux/slices/alerts-slice";
+import { useAppSelector } from "../../redux/hooks";
 
 interface Props {
   socket: Socket;
 }
 
 function GameList({ socket }: Props) {
-  const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const gameList = lobbyUiState.gameList.games;
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
@@ -19,7 +15,6 @@ function GameList({ socket }: Props) {
 
   const handleJoinGameClick = (gameName: string) => {
     if (gameName) socket.emit(SocketEventsFromClient.JOINS_GAME, gameName);
-    else dispatch(setAlert(new Alert("No game by that name exists", AlertType.DANGER)));
   };
 
   const gameListTableRow = (gameRoom: GameRoom) => {

@@ -1,6 +1,6 @@
-import { GameStatus, PlayerRole } from "../../../common";
+/* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EloUpdates, GameRoom, BattleRoomGame } from "../../../common";
+import { EloUpdates, GameRoom, BattleRoomGame, GameStatus, PlayerRole } from "../../../common";
 
 export interface IGameScoreScreen {
   gameRoom: GameRoom;
@@ -16,7 +16,6 @@ export interface ILobbyUIState {
     isOpen: boolean;
   };
   scoreScreenData: IGameScoreScreen | null;
-  scoreScreenDisplayed: boolean;
   preGameScreen: {
     isOpen: boolean;
   };
@@ -37,7 +36,6 @@ const initialState: ILobbyUIState = {
     isOpen: false,
   },
   scoreScreenData: null,
-  scoreScreenDisplayed: false,
   preGameScreen: {
     isOpen: false,
   },
@@ -56,9 +54,8 @@ const ladderSlice = createSlice({
   name: "lobbyUi",
   initialState,
   reducers: {
-    clearLobbyUi(state) {
-      // @ts-ignore
-      state = initialState;
+    clearLobbyUi() {
+      return initialState;
     },
     setPreGameScreenDisplayed(state, action: PayloadAction<boolean>) {
       state.preGameScreen.isOpen = action.payload;
@@ -102,10 +99,6 @@ const ladderSlice = createSlice({
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
       // @ts-ignore
       state.scoreScreenData = action.payload;
-      state.scoreScreenDisplayed = true;
-    },
-    closeScoreScreen(state) {
-      state.scoreScreenDisplayed = false;
     },
   },
 });
@@ -124,7 +117,6 @@ export const {
   setViewingGamesList,
   updateGameList,
   setScoreScreenData,
-  closeScoreScreen,
 } = ladderSlice.actions;
 
 export default ladderSlice.reducer;

@@ -1,6 +1,6 @@
-import { SocketEventsFromClient } from "../../../../common";
 import React, { useState, useEffect } from "react";
 import { Socket } from "socket.io-client";
+import { SocketEventsFromClient } from "../../../../common";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { clearLobbyUi, setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
@@ -9,7 +9,7 @@ interface Props {
   socket: Socket;
 }
 
-const InGameButtons = ({ socket }: Props) => {
+function InGameButtons({ socket }: Props) {
   const dispatch = useAppDispatch();
   const [buttonsDisplayClass, setButtonsDisplayClass] = useState("");
   const [cancelGameSetupButtonDisplayClass, setCancelGameSetupButtonDisplayClass] = useState("chat-button-hidden");
@@ -66,6 +66,6 @@ const InGameButtons = ({ socket }: Props) => {
       </li>
     </ul>
   );
-};
+}
 
 export default InGameButtons;

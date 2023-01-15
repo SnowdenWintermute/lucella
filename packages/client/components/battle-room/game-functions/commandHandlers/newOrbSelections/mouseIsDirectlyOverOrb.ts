@@ -1,6 +1,7 @@
+/* eslint-disable consistent-return */
 import { MouseData, Orb } from "../../../../../../common";
 
-export default function (orb: Orb, mouseData: MouseData) {
+export default function mouseIsDirectlyOverOrb(orb: Orb, mouseData: MouseData) {
   const { position } = mouseData;
 
   if (!position) return;

@@ -11,6 +11,7 @@ import {
   gameChannelNamePrefix,
   ChatMessage,
   ChatMessageStyles,
+  toKebabCase,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
@@ -55,20 +56,20 @@ export class Lobby {
   changeSocketChatChannelAndEmitUpdates(socket: Socket, channelNameJoining: string | null, authorizedForGameChannel?: boolean) {
     const { io, connectedSockets } = this.server;
     if (!socket || !connectedSockets[socket.id]) return console.error("error handling change chat channel request - no socket registered with server");
-    if (channelNameJoining) channelNameJoining = channelNameJoining.toLowerCase();
+    if (channelNameJoining) channelNameJoining = toKebabCase(channelNameJoining);
 
     const channelNameLeaving = connectedSockets[socket.id].currentChatChannel;
     this.updateChatChannelUsernameListsAndDeleteEmptyChannels(connectedSockets[socket.id], channelNameLeaving, channelNameJoining);
     if (channelNameLeaving) {
       socket?.leave(channelNameLeaving);
-      io.in(channelNameLeaving).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, this.getSanitizedChatChannel(channelNameLeaving));
+      io.in(channelNameLeaving).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, this.getSanitizedChatChannel(channelNameLeaving));
     }
 
     if (channelNameJoining) {
       const validationError = validateChannelName(channelNameJoining, authorizedForGameChannel);
       if (validationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, validationError);
       socket.join(channelNameJoining);
-      io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_ROOM_UPDATE, this.getSanitizedChatChannel(channelNameJoining));
+      io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, this.getSanitizedChatChannel(channelNameJoining));
       connectedSockets[socket.id].previousChatChannelName = channelNameLeaving; // used for placing user back in their last chat channel after a game ends
       connectedSockets[socket.id].currentChatChannel = channelNameJoining;
       socket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(`Welcome to ${channelNameJoining}.`, "Server", ChatMessageStyles.PRIVATE));

@@ -1,22 +1,50 @@
-import React, { useEffect, useRef, useState } from "react";
+/* eslint-disable consistent-return */
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } from "../../redux/api-slices/ladder-api-slice";
 import { setViewingSearchedUser } from "../../redux/slices/ladder-slice";
+import { CustomErrorDetails } from "../../../common";
+import { setAlert } from "../../redux/slices/alerts-slice";
+import { Alert } from "../../classes/Alert";
+import { AlertType } from "../../enums";
 
-const Ladder = () => {
+function Ladder() {
   const dispatch = useAppDispatch();
   const ladder = useAppSelector((state) => state.ladder);
-  const searchInputRef = useRef<HTMLInputElement | null>(null);
   const [searchText, setSearchText] = useState("");
   const [submittedSearchText, setSubmittedSearchText] = useState("");
   const [pageNumberAnimateClass, setPageNumberAnimateClass] = useState("");
   const [currentPageViewing, setCurrentPageViewing] = useState(1);
-  const { isLoading: ladderPageIsLoading, data: ladderPageData } = useGetLadderPageQuery(currentPageViewing);
-  const { isLoading: searchedUserIsLoading, data: searchedUserData } = useGetUserBattleRoomRecordQuery(submittedSearchText, { skip: !submittedSearchText });
+  const {
+    isLoading: ladderPageIsLoading,
+    data: ladderPageData,
+    isError: ladderPageIsError,
+    error: ladderPageError,
+  } = useGetLadderPageQuery(currentPageViewing);
+  const {
+    isLoading: searchedUserIsLoading,
+    data: searchedUserData,
+    isError: searchedUserIsError,
+    error: searchedUserError,
+  } = useGetUserBattleRoomRecordQuery(submittedSearchText, { skip: !submittedSearchText });
 
   useEffect(() => {
-    searchInputRef.current!.focus();
-  }, []);
+    if (ladderPageIsError && ladderPageError && "data" in ladderPageError) {
+      const errors: CustomErrorDetails[] = ladderPageError.data as CustomErrorDetails[];
+      errors.forEach((currError) => {
+        dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
+      });
+    }
+  }, [ladderPageIsLoading, ladderPageError]);
+
+  useEffect(() => {
+    if (searchedUserError && searchedUserError && "data" in searchedUserError) {
+      const errors: CustomErrorDetails[] = searchedUserError.data as CustomErrorDetails[];
+      errors.forEach((currError) => {
+        dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
+      });
+    }
+  }, [searchedUserIsError, searchedUserError]);
 
   const onSearchUserRecord = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,7 +67,7 @@ const Ladder = () => {
 
   const ladderEntriesToShow = ladderPageIsLoading ? (
     <tr>
-      <td>{`...`}</td>
+      <td>...</td>
     </tr>
   ) : (
     ladderPageData &&
@@ -47,7 +75,7 @@ const Ladder = () => {
     ladderPageData.pageData.map((entry) => {
       return (
         <tr key={entry.user.name} className="ladder-table-row">
-          <td className="ladder-table-datum">{"test"}</td>
+          <td className="ladder-table-datum">test</td>
           <td className="ladder-table-datum">{entry.user.name}</td>
           <td className="ladder-table-datum">{entry.elo}</td>
           <td className="ladder-table-datum">{entry.wins}</td>
@@ -60,7 +88,7 @@ const Ladder = () => {
 
   const searchedUserToShow = searchedUserIsLoading ? (
     <tr>
-      <td>{`...`}</td>
+      <td>...</td>
     </tr>
   ) : (
     searchedUserData?.user && (
@@ -86,40 +114,43 @@ const Ladder = () => {
               onSearchUserRecord(e);
             }}
           >
-            <input
-              className={"simple-text-input ladder-search-input"}
-              id="ladder-search-input"
-              name="Search"
-              value={searchText}
-              onChange={(e) => {
-                setSearchText(e.target.value);
-              }}
-              placeholder={"Enter a username..."}
-              ref={searchInputRef}
-            ></input>
             <label htmlFor="ladder-search-input">
-              <button className={"button button-primary ladder-search-button"}>Search</button>
+              <input
+                className="simple-text-input ladder-search-input"
+                id="ladder-search-input"
+                name="Search"
+                value={searchText}
+                onChange={(e) => {
+                  setSearchText(e.target.value);
+                }}
+                placeholder="Enter a username..."
+              />
+              <button type="button" className="button button-primary ladder-search-button">
+                Search
+              </button>
             </label>
           </form>
           <div className="ladder-page-buttons">
             <button
+              type="button"
               className="button button-basic ladder-page-button"
               onClick={(e) => {
                 onTurnPage(e, "back");
               }}
             >{`<`}</button>
-            <span className={"ladder-current-page-number-holder"}>
+            <span className="ladder-current-page-number-holder">
               <div className={`ladder-current-page-number ${pageNumberAnimateClass}`}>{currentPageViewing}</div>
             </span>
             <button
-              className={"button button-basic ladder-page-button"}
+              type="button"
+              className="button button-basic ladder-page-button"
               onClick={(e) => {
                 onTurnPage(e, "foreward");
               }}
             >{`>`}</button>
           </div>
         </section>
-        <table className={"ladder-table"}>
+        <table className="ladder-table">
           <tbody className="ladder-table-body">
             <tr className="ladder-table-row">
               <td className="ladder-table-datum">Rank</td>
@@ -135,6 +166,6 @@ const Ladder = () => {
       </div>
     </section>
   );
-};
+}
 
 export default Ladder;

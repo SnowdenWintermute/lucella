@@ -1,6 +1,7 @@
+/* eslint-disable consistent-return */
 import { BattleRoomGame, PlayerRole } from "../../../../common";
 
-export default function (game: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
+export default function determineRoundTripTime(game: BattleRoomGame, lastUpdateFromServerCopy: any, playerRole: PlayerRole) {
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
   if (game.queues.client.localInputs.length < 0 || !lastProcessedClientInputNumber) return;
   let localCopyOfLastInputProcessedByServer;

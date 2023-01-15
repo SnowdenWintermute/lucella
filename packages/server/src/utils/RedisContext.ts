@@ -39,6 +39,21 @@ export class RedisContext {
   async del(key: string) {
     await this.redisClient.del(this.keyPrefix + key);
   }
+  async expire(key: string, seconds: number, mode?: "NX" | "XX" | "GT" | "LT") {
+    return this.redisClient.expire(this.keyPrefix + key, seconds, mode);
+  }
+  async incrBy(key: string, increment: number) {
+    return this.redisClient.incrBy(this.keyPrefix + key, increment);
+  }
+  async hIncrBy(key: string, field: string, increment: number) {
+    return this.redisClient.hIncrBy(this.keyPrefix + key, field, increment);
+  }
+  async hGetAll(key: string) {
+    return this.redisClient.hGetAll(this.keyPrefix + key);
+  }
+  async hDel(key: string, fields: string | string[]) {
+    await this.redisClient.hDel(this.keyPrefix + key, fields);
+  }
   async getKeysByPrefix() {
     let currentCursor: number | undefined;
     let keysToReturn: string[] = [];
@@ -56,11 +71,12 @@ export class RedisContext {
   async removeAllKeys() {
     const keysToRemove = await this.getKeysByPrefix();
     const numKeysRemoved = await this.unlink(keysToRemove);
-    return numKeysRemoved;
+    return [numKeysRemoved, keysToRemove];
   }
   async cleanup() {
-    await this.removeAllKeys();
+    const removed = await this.removeAllKeys();
     await this.disconnect();
+    return removed;
   }
 }
 

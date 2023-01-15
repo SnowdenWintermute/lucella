@@ -1,19 +1,20 @@
 import React from "react";
 import { useAppSelector } from "../../../redux/hooks";
+import UserNameplate from "./UserNameplate";
 
-const UserList = () => {
+function UserList() {
   const chatState = useAppSelector((state) => state.chat);
-  const { newChatRoomLoading, currentChatRoomUsers } = chatState;
+  const { newChatChannelLoading, currentChatChannelUsers } = chatState;
 
-  let usersInChannelToDisplay: React.ReactElement[] = [];
-  Object.keys(currentChatRoomUsers).forEach((key) => {
-    usersInChannelToDisplay.push(<div key={key}>{key}</div>);
+  const usersInChannelToDisplay: React.ReactElement[] = [];
+  Object.entries(currentChatChannelUsers).forEach(([username, user], i) => {
+    usersInChannelToDisplay.push(<UserNameplate key={username} username={username} isGuest={user.isGuest} tabindex={i} contextMenuId={i + 1} />);
   });
   return (
     <div className="game-lobby-players-list" aria-label="users in this channel">
-      {newChatRoomLoading ? "..." : usersInChannelToDisplay}
+      {newChatChannelLoading ? "..." : usersInChannelToDisplay}
     </div>
   );
-};
+}
 
 export default UserList;

@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
-import { BattleRoomGame } from "../../../../common";
+import { BattleRoomGame, User } from "../../../../common";
 import { Lobby } from "../Lobby";
 import initializeListeners from "./initializeListeners";
 import { SocketIDsByUsername, SocketMetadataList } from "../../types";
@@ -8,8 +8,8 @@ import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
-import { User } from "../../models/User";
 import BattleRoomRecord from "../../models/BattleRoomRecord";
+import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
 
 export class LucellaServer {
   io: SocketIO.Server;
@@ -19,7 +19,14 @@ export class LucellaServer {
   connectedUsers: SocketIDsByUsername = {};
   matchmakingQueue: MatchmakingQueue;
   constructor(expressServer: any) {
-    this.io = new SocketIO.Server(expressServer);
+    this.io = new SocketIO.Server(expressServer, {
+      // cors: {
+      //   origin: process.env.ORIGIN,
+      //   methods: ["GET", "POST"],
+      //   credentials: true,
+      // },
+    });
+    this.io.use(socketCheckForBannedIpAddress);
     this.matchmakingQueue = new MatchmakingQueue(this);
     this.lobby = new Lobby(this);
     initializeListeners(this);
@@ -40,7 +47,7 @@ export class LucellaServer {
     if (!userLeaving.isGuest) {
       this.connectedUsers[username] = this.connectedUsers[username].filter((socketId) => socketId !== socket.id);
       if (this.connectedUsers[username].length < 1) delete this.connectedUsers[username];
-    }
+    } else delete this.connectedUsers[username];
 
     delete this.connectedSockets[socket.id];
     console.log(`user ${username} on socket ${socket.id} disconnected`);

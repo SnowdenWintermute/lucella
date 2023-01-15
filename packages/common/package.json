@@ -3,15 +3,30 @@
   "main": "dist/index",
   "version": "1.0.0",
   "license": "MIT",
+  "watch": {
+    "compile-proto": {
+      "patterns": [
+        "./src/proto/*.proto"
+      ],
+      "extensions": "proto",
+      "quiet": false
+    }
+  },
+  "scripts": {
+    "compile-proto": "./src/proto/compile-proto.sh",
+    "watch-and-compile-proto": "yarn run npm-watch"
+  },
   "dependencies": {
+    "lodash.clonedeep": "^4.5.0",
     "matter-js": "^0.18.0",
     "replicator": "^1.0.5",
     "uuid": "^9.0.0",
-    "lodash.clonedeep": "^4.5.0"
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@types/matter-js": "^0.18.2",
-    "ts-protoc-gen": "^0.15.0",
-    "@types/uuid": "^9.0.0"
+    "@types/uuid": "^9.0.0",
+    "npm-watch": "^0.11.0",
+    "ts-protoc-gen": "^0.15.0"
   }
 }

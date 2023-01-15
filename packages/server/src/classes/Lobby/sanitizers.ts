@@ -3,7 +3,7 @@ import { ChatChannel, GameRoom } from "../../../../common";
 const cloneDeep = require("lodash.clonedeep");
 
 export function sanitizeChatChannel(channel: ChatChannel) {
-  if (!channel) return console.error("tried to sanitize a channel but no channel was given");
+  if (!channel) return console.log("tried to sanitize a channel but no channel was given or channel no longer exists");
   const sanitizedChatChannel: { name: string; connectedUsers: { [userKey: string]: {} } } = {
     name: channel.name,
     connectedUsers: {},
@@ -30,6 +30,7 @@ export function sanitizeGameRoom(gameRoom: GameRoom): GameRoom | void {
   Object.values(gameRoomForClient.players).forEach((player) => {
     if (player) {
       delete player.socketId;
+      delete player.ipAddress;
       delete player.currentChatChannel;
       delete player.previousChatChannelName;
     }

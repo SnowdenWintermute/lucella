@@ -1,25 +1,23 @@
-import { PlayerRole, Point, BattleRoomGame, Orb } from "../../../../../common";
-import { DebugModes } from "../../../../../common/src/classes/BattleRoomGame/DebugValues";
+import { PlayerRole, Point, BattleRoomGame } from "../../../../../common";
 import drawOrb from "./drawOrb";
 import drawOrbNumber from "./drawOrbNumber";
 import drawSelectionRing from "./drawSelectionRing";
 
 export function drawOrbs(context: CanvasRenderingContext2D, playerRole: PlayerRole, game: BattleRoomGame, canvasDrawFractions: Point, showAsRing?: boolean) {
   if (game.netcode.lastUpdateFromServer && game.debug.mode > 0) {
-    let lastServerOrbSets: keyof typeof game.netcode.lastUpdateFromServer.orbs;
-    for (lastServerOrbSets in game.netcode.lastUpdateFromServer.orbs) {
+    Object.values(game.netcode.lastUpdateFromServer.orbs).forEach((lastServerOrbSet) => {
       // if (lastServerOrbSets !== playerRole) continue;
-      for (let orb in game.netcode.lastUpdateFromServer.orbs[lastServerOrbSets])
-        drawOrb(context, game.netcode.lastUpdateFromServer.orbs[lastServerOrbSets][orb], canvasDrawFractions, game.debug.mode, true);
-    }
+      Object.values(lastServerOrbSet).forEach((orb) => {
+        drawOrb(context, orb, canvasDrawFractions, game.debug.mode, true);
+      });
+    });
   }
 
-  let orbSet: keyof typeof game.orbs;
-  for (orbSet in game.orbs) {
-    for (let orbLabel in game.orbs[orbSet]) {
-      drawOrb(context, game.orbs[orbSet][orbLabel], canvasDrawFractions, game.debug.mode, showAsRing);
-      drawOrbNumber(context, game.orbs[orbSet][orbLabel], playerRole, canvasDrawFractions);
-      drawSelectionRing(context, game.orbs[orbSet][orbLabel]);
-    }
-  }
+  Object.values(game.orbs).forEach((orbSet) => {
+    Object.values(orbSet).forEach((orb) => {
+      drawOrb(context, orb, canvasDrawFractions, game.debug.mode, showAsRing);
+      drawOrbNumber(context, orb, playerRole, canvasDrawFractions);
+      drawSelectionRing(context, orb);
+    });
+  });
 }

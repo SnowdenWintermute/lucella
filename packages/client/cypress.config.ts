@@ -1,15 +1,50 @@
+import axios from "axios";
 import { defineConfig } from "cypress";
 import { Socket } from "socket.io-client";
-import { SocketEventsFromClient } from "../common";
+import { CypressTestRoutePaths, SocketEventsFromClient } from "../common";
 import { TaskNames } from "./cypress/support/TaskNames";
+import { makeEmailAccount } from "./cypress/support/email-account";
 const io = require("socket.io-client");
 
 let socket: Socket;
 
 export default defineConfig({
   e2e: {
-    setupNodeEvents(on, config) {
+    defaultCommandTimeout: 6000,
+    async setupNodeEvents(on, config) {
+      const emailAccount = await makeEmailAccount();
+
       on("task", {
+        [TaskNames.setRateLimiterDisabled]: async (args) => {
+          const response = await axios({
+            method: "put",
+            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.RATE_LIMITER}`,
+            data: { testerKey: args.CYPRESS_TESTER_KEY, rateLimiterDisabled: args.rateLimiterDisabled },
+          });
+          return { status: response.status };
+        },
+        [TaskNames.deleteAllTestUsers]: async (args) => {
+          console.log(`${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`);
+          const response = await axios({
+            method: "put",
+            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`,
+            data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
+
+            headers: { "content-type": "application/json" },
+          });
+          // @ts-ignore
+          return { body: response.body, status: response.status };
+        },
+        [TaskNames.createCypressTestUser]: async (args) => {
+          const response = await axios({
+            method: "post",
+            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.CREATE_CYPRESS_TEST_USER}`,
+            data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
+            headers: { "content-type": "application/json" },
+          });
+          // @ts-ignore
+          return { body: response.body, status: response.status };
+        },
         [TaskNames.connectSocket]: () => {
           socket = io("http://localhost:8080" || "", {
             transports: ["websocket"],
@@ -26,6 +61,20 @@ export default defineConfig({
           const { event, data } = taskData;
           socket.emit(event, data);
           return null;
+        },
+        [TaskNames.getUserEmail]: () => {
+          console.log("emailAccount.email: ", emailAccount.email);
+          return emailAccount.email;
+        },
+        [TaskNames.getLastEmail]: async () => {
+          try {
+            const lastEmail = await emailAccount.getLastEmail();
+            console.log("last email: ", lastEmail);
+            return lastEmail;
+          } catch (error) {
+            console.log("error in getLastEmail");
+            return null;
+          }
         },
       });
       return config;

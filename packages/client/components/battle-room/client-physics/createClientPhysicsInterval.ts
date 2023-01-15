@@ -1,5 +1,8 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
 import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
+import { Detector } from "matter-js";
 import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 import assignDebugValues from "./assignDebugValues";
 import determineRoundTripTime from "./determineRoundTripTime";
@@ -16,7 +19,6 @@ import {
   WidthAndHeight,
 } from "../../../../common";
 import draw from "../canvas-functions/canvasMain";
-import { Detector } from "matter-js";
 import serializeInput from "../user-input-serializers/serialize-input";
 import setNonOrbGameState from "./setNonOrbGameState";
 

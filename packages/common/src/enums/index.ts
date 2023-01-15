@@ -18,3 +18,14 @@ export enum UserInputs {
   SELECT_ORB_AND_ASSIGN_DESTINATION,
   LINE_UP_ORBS_HORIZONTALLY_AT_Y,
 }
+
+export enum UserRole {
+  USER = "user",
+  ADMIN = "admin",
+  MODERATOR = "moderator",
+}
+
+export enum IPBanReason {
+  RATE_LIMIT_ABUSE = "rate_limit_abuse",
+  CHAT = "chat",
+}

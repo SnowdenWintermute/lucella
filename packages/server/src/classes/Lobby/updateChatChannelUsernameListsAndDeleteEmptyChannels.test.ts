@@ -4,9 +4,9 @@ import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatCh
 
 describe("updateChatChannelUsernameListsAndDeleteEmptyChannels", () => {
   const socketId = "1234abcd";
-  const socketMeta = new SocketMetadata(socketId, { username: TEST_USER_NAME, isGuest: false }, battleRoomDefaultChatChannel);
+  const socketMeta = new SocketMetadata(socketId, "192", { username: TEST_USER_NAME, isGuest: false }, battleRoomDefaultChatChannel);
   const socketId2 = "abcd1234";
-  const socketMeta2 = new SocketMetadata(socketId2, { username: TEST_USER_NAME, isGuest: false }, battleRoomDefaultChatChannel);
+  const socketMeta2 = new SocketMetadata(socketId2, "192", { username: TEST_USER_NAME, isGuest: false }, battleRoomDefaultChatChannel);
   let chatChannels: { [channelName: string]: ChatChannel } = {};
 
   beforeEach(() => {

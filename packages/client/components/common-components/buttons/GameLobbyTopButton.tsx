@@ -8,10 +8,7 @@ interface Props {
 
 function GameLobbyTopButton({ title, onClick, displayClass }: Props) {
   return (
-    <button
-      className={`button button-standard-size button-basic game-lobby-top-buttons__button ${displayClass}`}
-      onClick={onClick}
-    >
+    <button type="button" className={`button button-standard-size button-basic game-lobby-top-buttons__button ${displayClass}`} onClick={onClick}>
       {title}
     </button>
   );

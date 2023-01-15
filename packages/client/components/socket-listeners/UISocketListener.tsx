@@ -1,6 +1,8 @@
-import { SocketEventsFromServer } from "../../../common/dist";
+/* eslint-disable no-param-reassign */
+/* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
+import { SocketEventsFromServer } from "../../../common";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -19,13 +21,15 @@ import {
   updatePlayerRole,
   updatePlayersReady,
 } from "../../redux/slices/lobby-ui-slice";
+import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
+// eslint-disable-next-line global-require
 const replicator = new (require("replicator"))();
 
 interface Props {
   socket: Socket;
 }
 
-const UISocketListener = ({ socket }: Props) => {
+function UISocketListener({ socket }: Props) {
   const dispatch = useAppDispatch();
   const { currentGameRoom } = useAppSelector((state) => state.lobbyUi);
   const gameName = currentGameRoom && currentGameRoom.gameName ? currentGameRoom.gameName : null;
@@ -69,6 +73,7 @@ const UISocketListener = ({ socket }: Props) => {
     socket.on(SocketEventsFromServer.SHOW_END_SCREEN, (data) => {
       data.game = replicator.decode(data.game);
       dispatch(setScoreScreenData(data));
+      dispatch(setShowScoreScreenModal(true));
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
       dispatch(setMatchmakingWindowVisible(true));
@@ -98,7 +103,7 @@ const UISocketListener = ({ socket }: Props) => {
   useEffect(() => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => {
-      console.log("error from server: " + data);
+      console.log(`error from server: ${data}`);
       dispatch(setAlert(new Alert(data, AlertType.DANGER)));
     });
     return () => {
@@ -107,6 +112,6 @@ const UISocketListener = ({ socket }: Props) => {
   }, [socket, dispatch]);
   //
   return <div id="socket-listener-for-ui" />;
-};
+}
 
 export default UISocketListener;

@@ -1,6 +1,7 @@
 import request from "supertest";
 import { Application } from "express";
 import nodemailer from "nodemailer";
+import { sendEmail } from "../utils/sendEmail";
 import { AuthRoutePaths, ErrorMessages } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL } from "../../utils/test-utils/consts";
@@ -8,12 +9,7 @@ import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 
-jest.mock("nodemailer", () => ({
-  createTransport: jest.fn().mockReturnValue({
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    sendMail: jest.fn().mockReturnValue((mailoptions: any, callback: () => any) => {}),
-  }),
-}));
+jest.mock("../utils/sendEmail");
 
 describe("passwordResetEmailRequestHandler", () => {
   let context: PGContext | undefined;
@@ -33,7 +29,7 @@ describe("passwordResetEmailRequestHandler", () => {
     await wrappedRedis.context!.cleanup();
   });
 
-  it("calls nodemailer functions when called", async () => {
+  it("calls sendEmail", async () => {
     const response = await request(app)
       .post(`/api${AuthRoutePaths.ROOT + AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL}`)
       .send({
@@ -41,7 +37,7 @@ describe("passwordResetEmailRequestHandler", () => {
       });
 
     expect(response.status).toBe(200);
-    expect(nodemailer.createTransport).toHaveBeenCalled();
+    expect(sendEmail).toHaveBeenCalled();
   });
 
   it("sends appropriate error when no email provided", async () => {

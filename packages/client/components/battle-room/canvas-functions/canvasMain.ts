@@ -1,4 +1,4 @@
-import { BattleRoomGame, GameRoom, GameStatus, WidthAndHeight } from "../../../../common";
+import { BattleRoomGame, WidthAndHeight } from "../../../../common";
 import { drawOrbs } from "./drawOrbs";
 import drawScore from "./drawScore";
 import drawSelectionBox from "./drawSelectionBox";

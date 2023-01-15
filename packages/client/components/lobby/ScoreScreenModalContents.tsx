@@ -1,9 +1,9 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useAppSelector } from "../../redux/hooks";
-import { authApi } from "../../redux/api-slices/auth-api-slice";
+import { usersApi } from "../../redux/api-slices/users-api-slice";
 
 function ScoreScreenModalContents() {
-  const user = authApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
+  const user = usersApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
   const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState("elo-animate-1");
   const [eloAnimatedChange, setEloAnimatedChange] = useState<number | null>();
   const scoreScreenData = useAppSelector((state) => state.lobbyUi.scoreScreenData);

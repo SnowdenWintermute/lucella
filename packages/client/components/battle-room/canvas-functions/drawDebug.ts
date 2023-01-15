@@ -3,13 +3,14 @@ import { BattleRoomGame, inGameFontSizes, Point } from "../../../../common";
 export default function drawDebug(context: CanvasRenderingContext2D, game: BattleRoomGame, canvasDrawFractions: Point) {
   const { mouseData } = game;
 
-  mouseData.position && context.fillRect(mouseData.position?.x * canvasDrawFractions.x - 3, mouseData.position?.y * canvasDrawFractions.y - 3, 5, 5);
+  if (mouseData.position && mouseData.position.x && mouseData.position.y)
+    context.fillRect(mouseData.position.x * canvasDrawFractions.x - 3, mouseData.position.y * canvasDrawFractions.y - 3, 5, 5);
 
   const itemsToShow = [
     {
       name: "inputsToSimulate",
       value:
-        game.debug.clientPrediction.inputsToSimulate && game.debug.clientPrediction.inputsToSimulate.map((item) => item.type + " " + item.number).toString(),
+        game.debug.clientPrediction.inputsToSimulate && game.debug.clientPrediction.inputsToSimulate.map((item) => `${item.type} ${item.number}`).toString(),
     },
     {
       name: "lastProcessedClientInputNumber",
@@ -35,6 +36,6 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
   context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px Arial`;
 
   itemsToShow.forEach((item, i) => {
-    context.fillText(item.name + ": " + item.value, marginLeft, i * spaceFromTop + spaceFromTop);
+    context.fillText(`${item.name}: ${item.value}`, marginLeft, i * spaceFromTop + spaceFromTop);
   });
 }
