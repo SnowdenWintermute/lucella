@@ -8,7 +8,7 @@ import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
-import BattleRoomRecord from "../../models/BattleRoomRecord";
+// import BattleRoomRecord from "../../models/BattleRoomRecord";
 import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
 
 export class LucellaServer {
@@ -70,9 +70,10 @@ export class LucellaServer {
     handleReadyStateToggleRequest(this, socket);
   }
   static async fetchOrCreateBattleRoomRecord(user: User) {
-    let record = await BattleRoomRecord.findOne({ userId: user.id });
-    if (!record) record = new BattleRoomRecord({ userId: user.id });
-    await record.save();
-    return record;
+    return { placeholder: "placeholder" };
+    // let record = await BattleRoomRecord.findOne({ userId: user.id });
+    // if (!record) record = new BattleRoomRecord({ userId: user.id });
+    // await record.save();
+    // return record;
   }
 }

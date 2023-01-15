@@ -10,10 +10,13 @@
     "servers": "nodemon servers",
     "client": "yarn --cwd ../client develop",
     "dev": "concurrently \"yarn serve\" \"yarn client\" \"yarn watch-and-compile-proto\"",
+    "dev-windows": "concurrently \"yarn serve\" \"yarn client\" \"yarn watch-and-compile-proto-windows\"",
     "migrate": "node-pg-migrate",
     "test": "jest --no-cache",
     "compile-proto": "yarn --cwd ../common compile-proto",
-    "watch-and-compile-proto": "yarn --cwd ../common watch-and-compile-proto"
+    "compile-proto-windows": "yarn --cwd ../common compile-proto-windows",
+    "watch-and-compile-proto": "yarn --cwd ../common watch-and-compile-proto",
+    "watch-and-compile-proto-windows": "yarn --cwd ../common watch-and-compile-proto-windows"
   },
   "author": "Mike Silverman",
   "license": "ISC",
@@ -32,7 +35,6 @@
     "lodash.isequal": "^4.5.0",
     "lodash.values": "^4.3.0",
     "matter-js": "^0.18.0",
-    "mongoose": "^6.6.1",
     "nodemailer": "^6.4.2",
     "pg": "^8.8.0",
     "pg-format": "^1.0.4",

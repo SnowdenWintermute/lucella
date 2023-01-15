@@ -12,7 +12,9 @@
     "db:reset": "echo placeholder until we have reset db command",
     "build:test": "yarn db:reset && export NODE_ENV=\"test\" && next build",
     "start:test": "export NODE_ENV=\"test\" && next start",
-    "cypress:open": "env-cmd -f .env.test.local cypress open --e2e --browser firefox",
+    "cypress:firefox": "env-cmd -f .env.test.local cypress open --e2e --browser firefox",
+    "cypress:electron": "env-cmd -f .env.test.local cypress open --e2e --browser electron",
+    "cypress:open": "env-cmd -f .env.test.local cypress open --e2e",
     "cypress:start": "concurrently \"start-server-and-test start:test 3000 cypress:open\" \"yarn --cwd ../server serve\"",
     "cypress:build": "yarn build:test && yarn cypress:start"
   },
