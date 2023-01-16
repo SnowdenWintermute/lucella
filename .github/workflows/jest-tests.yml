@@ -1,0 +1,24 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.18.0
+      - name: Run install
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: install
+
+      - name: Run test in sub-folder
+        uses: borales/actions-yarn@v4
+        with:
+          cmd: test
+          dir: "packages/server"
