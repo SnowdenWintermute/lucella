@@ -37,6 +37,8 @@ export default function createExpressApp() {
   app.use(`/api${ModerationRoutePaths.ROOT}`, moderationRouter);
   app.use(`/api${CypressTestRoutePaths.ROOT}`, cypressTestRouter);
 
+  console.log("remove this console log");
+
   app.all("*", (req: Request, res: Response, next: NextFunction) => {
     const err = new Error(`Route ${req.originalUrl} not found`) as any;
     err.status = 404;
