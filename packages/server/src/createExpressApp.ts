@@ -38,6 +38,7 @@ export default function createExpressApp() {
   app.use(`/api${CypressTestRoutePaths.ROOT}`, cypressTestRouter);
 
   console.log("remove this console log");
+  console.log("remove this console log as well");
 
   app.all("*", (req: Request, res: Response, next: NextFunction) => {
     const err = new Error(`Route ${req.originalUrl} not found`) as any;

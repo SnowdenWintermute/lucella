@@ -16,7 +16,10 @@ jobs:
         uses: borales/actions-yarn@v4
         with:
           cmd: install
-
+      - name: install typescript
+        run: npm install -g typescript
+      - name: compile
+        run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory
       - name: Run test in sub-folder
         uses: borales/actions-yarn@v4
         with:
