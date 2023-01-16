@@ -1,5 +1,6 @@
 import { PlayerRole } from "../../../../common";
-import { IBattleRoomRecord } from "../../models/BattleRoomRecord";
+import { IBattleRoomRecord } from "../../classes/MatchmakingQueue";
+// import { IBattleRoomRecord } from "../../models/BattleRoomRecord";
 
 export default function updateElos(hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord, winnerRole: PlayerRole) {
   const hostElo = hostBattleRoomRecord.elo;

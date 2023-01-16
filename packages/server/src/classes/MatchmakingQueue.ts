@@ -11,8 +11,10 @@ import {
   UserStatuses,
 } from "../../../common";
 import UserRepo from "../database/repos/users";
-import { IBattleRoomRecord } from "../models/BattleRoomRecord";
+// import { IBattleRoomRecord } from "../models/BattleRoomRecord";
 import { LucellaServer } from "./LucellaServer";
+
+export type IBattleRoomRecord = { [key: string]: any }; // placeholder
 
 export interface MatchmakingQueueUser {
   userId: string;

@@ -5,6 +5,7 @@
   ],
   "scripts": {
     "dev": "yarn --cwd packages/server dev",
+    "dev-windows": "yarn --cwd packages/server dev-windows",
     "compile-proto": "./packages/common/src/proto/compile-proto.sh"
   },
   "devDependencies": {

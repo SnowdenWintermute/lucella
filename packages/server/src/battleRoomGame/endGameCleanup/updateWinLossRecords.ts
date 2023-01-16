@@ -1,6 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { PlayerRole } from "../../../../common";
-import { IBattleRoomRecord } from "../../models/BattleRoomRecord";
+import { IBattleRoomRecord } from "../../classes/MatchmakingQueue";
+// import { IBattleRoomRecord } from "../../models/BattleRoomRecord";
 
 export default function updateWinLossRecords(winnerRole: PlayerRole, hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord) {
   if (winnerRole === PlayerRole.HOST) {

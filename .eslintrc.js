@@ -102,6 +102,7 @@ module.exports = {
         singleQuote: false,
         quotes: `backtick`,
         printWidth: 160,
+        endOfLine: "auto",
       },
     ],
   },

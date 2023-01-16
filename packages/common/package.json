@@ -10,11 +10,20 @@
       ],
       "extensions": "proto",
       "quiet": false
+    },
+    "compile-proto-windows": {
+      "patterns": [
+        "./src/proto/*.proto"
+      ],
+      "extensions": "proto",
+      "quiet": false
     }
   },
   "scripts": {
     "compile-proto": "./src/proto/compile-proto.sh",
-    "watch-and-compile-proto": "yarn run npm-watch"
+    "compile-proto-windows": "bash ./src/proto/compile-proto-windows.sh",
+    "watch-and-compile-proto": "yarn run npm-watch compile-proto",
+    "watch-and-compile-proto-windows": "yarn run npm-watch compile-proto-windows"
   },
   "dependencies": {
     "lodash.clonedeep": "^4.5.0",
