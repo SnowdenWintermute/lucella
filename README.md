@@ -26,10 +26,10 @@ Visit the live demo at [lucella.org](https://lucella.org)
 
 ```json
   "liveSassCompile.settings.formats": [
-  	{
-		"format": "expanded",
-		"extensionName": ".css",
-		"savePath": "/packages/client/styles/sassOutput"
+    {
+	format": "expanded",
+	extensionName": ".css",
+	savePath": "/packages/client/styles/sassOutput"
     }
 ]
 ```
