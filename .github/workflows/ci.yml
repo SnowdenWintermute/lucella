@@ -34,6 +34,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: echoer
+        run: echo $POSTGRES_DB
+      - name: apt update
+        run: sudo apt update -y
+      - name: install pg cli
+        run: sudo apt install postgresql postgresql-contrib -y
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
@@ -42,6 +48,8 @@ jobs:
         run: mkdir -p ~/.docker/cli-plugins/ && curl -SL https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose && chmod +x ~/.docker/cli-plugins/docker-compose && docker compose version
       - name: set up postgres and redis containers
         run: cd packages/server && docker compose up -d && cd ../..
+      - name: create postgres test db
+        run: psql -q postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB} -c 'CREATE DATABASE "lucella-test";'
       - name: install yarn
         run: npm install --global yarn
       - name: install dependencies
@@ -54,5 +62,7 @@ jobs:
         run: sudo apt update && sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && sudo unzip -q protoc.zip bin/protoc -d /usr/local && sudo chmod a+x /usr/local/bin/protoc && protoc --version
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
+      - name: docker ps
+        run: docker ps
       - name: Run server tests
         run: cd packages/server && yarn test
