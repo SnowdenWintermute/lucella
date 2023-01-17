@@ -13,6 +13,8 @@
 **/*.env
 **/*.env*.local
 cypress.env.json
+*.secrets
+**/*.secrets
 
 # mac computers add this to all their folders
 **/.DS_Store

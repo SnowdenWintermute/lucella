@@ -1,0 +1,58 @@
+name: CI
+
+on: [pull_request]
+
+env:
+  SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+  NODE_ENV: ${{ secrets.NODE_ENV }}
+  EMAIL_ROOT_URL: ${{ secrets.EMAIL_ROOT_URL }}
+  EMAIL_ROOT_URL_DEV: ${{ secrets.EMAIL_ROOT_URL_DEV }}
+  PORT: ${{ secrets.PORT }}
+  ORIGIN: ${{ secrets.ORIGIN }}
+  POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+  POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+  REDIS_URL: ${{ secrets.REDIS_URL }}
+  ACCESS_TOKEN_EXPIRES_IN: ${{ secrets.ACCESS_TOKEN_EXPIRES_IN }}
+  AUTH_SESSION_EXPIRATION: ${{ secrets.AUTH_SESSION_EXPIRATION }}
+  PASSWORD_RESET_TOKEN_EXPIRES_IN: ${{ secrets.PASSWORD_RESET_TOKEN_EXPIRES_IN }}
+  ACCOUNT_ACTIVATION_SESSION_EXPIRATION: ${{ secrets.ACCOUNT_ACTIVATION_SESSION_EXPIRATION }}
+  TESTER_KEY: ${{ secrets.TESTER_KEY }}
+  CYPRESS_TEST_USER_NAME: ${{ secrets.CYPRESS_TEST_USER_NAME }}
+  ACCESS_TOKEN_PRIVATE_KEY: ${{ secrets.ACCESS_TOKEN_PRIVATE_KEY }}
+  ACCESS_TOKEN_PUBLIC_KEY: ${{ secrets.ACCESS_TOKEN_PUBLIC_KEY }}
+  REFRESH_TOKEN_PRIVATE_KEY: ${{ secrets.REFRESH_TOKEN_PRIVATE_KEY }}
+  REFRESH_TOKEN_PUBLIC_KEY: ${{ secrets.REFRESH_TOKEN_PUBLIC_KEY }}
+  PASSWORD_RESET_TOKEN_PRIVATE_KEY: ${{ secrets.PASSWORD_RESET_TOKEN_PRIVATE_KEY }}
+  PASSWORD_RESET_TOKEN_PUBLIC_KEY: ${{ secrets.PASSWORD_RESET_TOKEN_PUBLIC_KEY }}
+  ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY: ${{ secrets.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY }}
+  ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY: ${{ secrets.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY }}
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.18.0
+      - name: docker compose install
+        run: mkdir -p ~/.docker/cli-plugins/ && curl -SL https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose && chmod +x ~/.docker/cli-plugins/docker-compose && docker compose version
+      - name: set up postgres and redis containers
+        run: cd packages/server && docker compose up -d && cd ../..
+      - name: install yarn
+        run: npm install --global yarn
+      - name: install dependencies
+        run: yarn install
+      - name: install typescript
+        run: npm install -g typescript
+      - name: compile typescript
+        run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory && cd ../..
+      - name: install protoc
+        run: sudo apt update && sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && sudo unzip -q protoc.zip bin/protoc -d /usr/local && sudo chmod a+x /usr/local/bin/protoc && protoc --version
+      - name: compile .proto files to js
+        run: cd packages/common && yarn run compile-proto && cd ../..
+      - name: Run server tests
+        run: cd packages/server && yarn test
