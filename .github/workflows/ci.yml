@@ -47,13 +47,13 @@ jobs:
       - name: docker compose install
         run: mkdir -p ~/.docker/cli-plugins/ && curl -SL https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose && chmod +x ~/.docker/cli-plugins/docker-compose && docker compose version
       - name: set up postgres and redis containers
-        run: cd packages/server && docker compose up -d && cd ../..
-      - name: docker ps
-        run: docker ps
-      - name: create postgres test db
-        run: psql -q postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB} -c 'CREATE DATABASE "lucella-test";'
+        run: cd packages/server && docker compose up -d && cd ../.. && docker ps
       - name: install yarn
         run: npm install --global yarn
+      - name: docker ps -a
+        run: docker ps -a
+      - name: create postgres test db
+        run: psql -q postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB} -c 'CREATE DATABASE "lucella-test";'
       - name: install dependencies
         run: yarn install
       - name: install typescript
