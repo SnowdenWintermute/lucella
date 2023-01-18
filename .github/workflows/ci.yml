@@ -29,31 +29,37 @@ env:
   ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY: ${{ secrets.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY }}
 
 jobs:
-  test:
-    name: Tests
+  ci-tests:
+    name: CI-Tests
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: lucella-test
+        options: >- # Set health checks to wait until postgres has started
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
-      - name: echoer
-        run: echo $POSTGRES_DB
-      - name: apt update
-        run: sudo apt update -y
-      - name: install pg cli
-        run: sudo apt install postgresql postgresql-contrib -y
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16.18.0
-      - name: docker compose install
-        run: mkdir -p ~/.docker/cli-plugins/ && curl -SL https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose && chmod +x ~/.docker/cli-plugins/docker-compose && docker compose version
-      - name: set up postgres and redis containers
-        run: cd packages/server && docker compose up -d && cd ../.. && docker ps
       - name: install yarn
         run: npm install --global yarn
       - name: docker ps -a
         run: docker ps -a
-      - name: create postgres test db
-        run: psql -q postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB} -c 'CREATE DATABASE "lucella-test";'
       - name: install dependencies
         run: yarn install
       - name: install typescript
