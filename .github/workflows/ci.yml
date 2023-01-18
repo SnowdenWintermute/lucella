@@ -73,4 +73,4 @@ jobs:
       - name: docker ps
         run: docker ps
       - name: Run server tests and be done
-        run: cd packages/server && yarn test && echo completed
+        run: cd packages/server && yarn test --forceExit && echo completed
