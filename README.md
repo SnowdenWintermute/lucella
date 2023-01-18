@@ -4,6 +4,8 @@
 
 Visit the live demo at [lucella.org](https://lucella.org)
 
+![CI Workflow Badge](https://github.com/SnowdenWintermute/lucella/actions/workflows/ci.yml/badge.svg)
+
 ## Built With
 
 - [Socket.IO](https://socket.io/docs/v4//) - for chat and muliplayer game packets
