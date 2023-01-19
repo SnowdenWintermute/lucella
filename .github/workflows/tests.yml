@@ -32,6 +32,7 @@ env:
 
 jobs:
   jest-tests:
+    name: Jest-Tests
     runs-on: ubuntu-latest
     services:
       redis:
@@ -77,10 +78,6 @@ jobs:
         run: cd packages/server && yarn test --forceExit && echo completed
   cypress-run:
     runs-on: ubuntu-latest
-    container:
-      # image: cypress/browsers:node12.18.3-chrome87-ff82
-      image: cypress/included:cypress-12.3.0-node-16.18.1-chrome-109.0.5414.74-1-ff-109.0-edge-109.0.1518.52-1
-      options: --user root
     services:
       redis:
         image: redis
@@ -100,18 +97,20 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      # - name: ownership
-      #   run: sudo chown -R 1001:0 "/.npm"
+      - name: apt update
+        run: apt update
+      - name: install cypress dependencies
+        run: apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      - name: install wait-on
+        run: npm install -g wait-on
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          node-version: 16.18.0
-      # - name: install yarn
-      #   run: npm install --global yarn
+      - name: install yarn
+        run: npm install --global yarn
       - name: install curl
-        run: apt update && apt install curl
+        run: apt install curl
       - name: install protoc
-        run: apt update && apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
+        run: apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
       - name: install dependencies
         run: yarn install
       - name: install typescript
@@ -121,6 +120,13 @@ jobs:
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run dev
-        run: yarn dev 
-#      - name: Cypress run
-#        run: cd packages/client && yarn cypress run --browser chrome --headless
+        run: yarn dev
+      - name: await dev server
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: "http://localhost:3000/"
+          responseCode: 200
+          timeout: 20000
+          interval: 500
+      - name: Cypress run
+        run: cd packages/client && yarn cypress run --browser chrome --headless
