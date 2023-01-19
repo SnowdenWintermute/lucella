@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress": "cypress open",
     "test": "jest --watch",
     "db:reset": "echo placeholder until we have reset db command",
     "build:test": "yarn db:reset && export NODE_ENV=\"test\" && next build",
@@ -62,7 +61,7 @@
     "jest-environment-jsdom": "^29.3.1",
     "mailparser": "^3.6.3",
     "nodemailer": "^6.8.0",
-    "sass": "^1.56.1",
+    "sass": "^1.57.1",
     "start-server-and-test": "^1.14.0"
   }
 }

@@ -1,25 +1,19 @@
-import { ErrorMessages, FrontendRoutes, SuccessAlerts } from "../../../common";
-import { TaskNames } from "../support/TaskNames";
+import { ErrorMessages, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { TaskNames } from "../../support/TaskNames";
 
-describe("account deletion", () => {
-  // eslint-disable-next-line no-undef
-  before(() => {
+export default function accountDeletion() {
+  return it(`upon receiving credentials lets user delete their account,
+    user can not log in after account is deleted
+    and new accounts by the same name cannot be created`, () => {
     const args = {
       CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
       CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
     };
-    cy.task(TaskNames.deleteAllTestUsers, args).then((response: Response) => {
-      expect(response.status).to.equal(200);
-    });
     cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
       expect(response.status).to.equal(201);
     });
-  });
-
-  it(`upon receiving credentials lets user delete their account,
-    user can not log in after account is deleted
-    and new accounts by the same name cannot be created`, () => {
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+    cy.findByRole("heading", { name: /login/i }).should("exist");
     cy.findByLabelText(/email address/i).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
     cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
@@ -37,15 +31,17 @@ describe("account deletion", () => {
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
     cy.findByRole("link", { name: /login/i }).click();
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+    cy.findByRole("heading", { name: /login/i }).should("exist");
     cy.findByLabelText(/email address/i).type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
     cy.findByLabelText(/password/).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
     cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, "i")).should("exist");
     cy.findByRole("link", { name: /create account/i }).click();
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
+    cy.findByRole("heading", { name: /create account/i }).should("exist");
     cy.findByLabelText(/email address/i).type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
     cy.findByLabelText(/username/i).type(`${Cypress.env("CYPRESS_TEST_USER_NAME")}`);
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
     cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
     cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE, "i")).should("exist");
   });
-});
+}

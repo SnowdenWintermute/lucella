@@ -1,24 +1,17 @@
-import { ErrorMessages, SuccessAlerts } from "../../../common";
-import { ButtonNames } from "../../consts/ButtonNames";
-import { TaskNames } from "../support/TaskNames";
+import { ErrorMessages, SuccessAlerts } from "../../../../common";
+import { ButtonNames } from "../../../consts/ButtonNames";
+import { TaskNames } from "../../support/TaskNames";
 
-describe("login form", () => {
-  // eslint-disable-next-line no-undef
-  before(() => {
+export default function loginForm() {
+  return it(`login form shows correct errors,
+  field errors dissapear when user starts typing in the respective field`, () => {
     const args = {
       CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
       CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
     };
-    // delete all test users (test users are defined in the UsersRepo deleteTestUsers method)
-    cy.task(TaskNames.deleteAllTestUsers, args).then((response: Response) => {
-      expect(response.status).to.equal(200);
-    });
     cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
       expect(response.status).to.equal(201);
     });
-  });
-  it(`login form shows correct errors,
-  field errors dissapear when user starts typing in the respective field`, () => {
     cy.visit("/login");
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}/login`);
     cy.findByRole("heading", { name: /login/i }).should("exist");
@@ -43,4 +36,4 @@ describe("login form", () => {
     cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}/battle-room`);
   });
-});
+}

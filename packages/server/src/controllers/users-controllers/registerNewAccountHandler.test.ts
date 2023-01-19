@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import { ErrorMessages, InputFields, registrationFixedWindowCounterLimit, UsersRoutePaths } from "../../../../common";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
-import { TEST_USER_EMAIL_2, TEST_USER_NAME_2, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
+import { TEST_USER_EMAIL_ALTERNATE, TEST_USER_NAME_ALTERNATE, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { sendEmail } from "../utils/sendEmail";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
@@ -34,8 +34,8 @@ describe("registerNewAccountHandler", () => {
   it("upon receiving valid input sends an account creation verification email and creates an account creation attempt session", async () => {
     // const startingCount = await UserRepo.count();
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
-      name: TEST_USER_NAME_2,
-      email: TEST_USER_EMAIL_2,
+      name: TEST_USER_NAME_ALTERNATE,
+      email: TEST_USER_EMAIL_ALTERNATE,
       password: TEST_USER_PASSWORD,
       passwordConfirm: TEST_USER_PASSWORD,
     });
@@ -43,10 +43,10 @@ describe("registerNewAccountHandler", () => {
     expect(sendEmail).toHaveBeenCalled();
     expect(response.status).toBe(200);
     // this session is needed to ensure the email link can not be used after a certain time has passed
-    const regitrationAttemptSession = await wrappedRedis.context!.get(`${ACCOUNT_CREATION_SESSION_PREFIX}${TEST_USER_EMAIL_2}`);
+    const regitrationAttemptSession = await wrappedRedis.context!.get(`${ACCOUNT_CREATION_SESSION_PREFIX}${TEST_USER_EMAIL_ALTERNATE}`);
     const parsedSession = JSON.parse(regitrationAttemptSession!);
-    expect(parsedSession.name).toBe(TEST_USER_NAME_2);
-    expect(parsedSession.email).toBe(TEST_USER_EMAIL_2);
+    expect(parsedSession.name).toBe(TEST_USER_NAME_ALTERNATE);
+    expect(parsedSession.email).toBe(TEST_USER_EMAIL_ALTERNATE);
     const hashedPasswordMatchesUserPassword = await bcrypt.compare(TEST_USER_PASSWORD, parsedSession.password);
     expect(hashedPasswordMatchesUserPassword).toBeTruthy();
   });
@@ -77,7 +77,7 @@ describe("registerNewAccountHandler", () => {
 
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
       name: "",
-      email: TEST_USER_EMAIL_2,
+      email: TEST_USER_EMAIL_ALTERNATE,
       password: TEST_USER_PASSWORD,
       passwordConfirm: "",
     });
