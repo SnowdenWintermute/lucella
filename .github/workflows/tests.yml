@@ -1,4 +1,4 @@
-name: CI
+name: Tests
 
 on:
   pull_request:
@@ -126,8 +126,6 @@ jobs:
       # - uses: GuillaumeFalourd/wait-sleep-action@v1
       #   with:
       #     time: "60" # for 60 seconds
-      - name: run curl
-        run:
       - name: await dev server
         uses: nev7n/wait_for_response@v1
         with:
