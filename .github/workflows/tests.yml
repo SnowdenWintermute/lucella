@@ -121,26 +121,6 @@ jobs:
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run dev
-        run: yarn dev &
-      - uses: GuillaumeFalourd/wait-sleep-action@v1
-        with:
-          time: "60" # for 60 seconds
-      - name: curl test
-        run: curl localhost:3000
-#       - name: await dev server
-#         uses: nev7n/wait_for_response@v1
-#         with:
-#           url: "http://localhost:3000/"
-#           responseCode: 200
-#           timeout: 20000
-#           interval: 500
-      - name: Cypress run
-        run: cd packages/client && yarn cypress run --browser chrome --headless
-
-      # - name: "UI Tests - Chrome"
-      #   uses: cypress-io/github-action@v4
-      #   with:
-      #     start: yarn start:ci
-      #     wait-on: "http://localhost:3000"
-      #     wait-on-timeout: 120
-      #     browser: chrome
+        run: yarn dev 
+#      - name: Cypress run
+#        run: cd packages/client && yarn cypress run --browser chrome --headless
