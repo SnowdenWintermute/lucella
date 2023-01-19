@@ -1,4 +1,4 @@
-name: CI
+name: Tests
 
 on:
   pull_request:
@@ -32,7 +32,6 @@ env:
 
 jobs:
   jest-tests:
-    name: Jest-Tests
     runs-on: ubuntu-latest
     services:
       redis:
@@ -127,7 +126,7 @@ jobs:
       #   with:
       #     time: "60" # for 60 seconds
       - name: run curl
-        run:
+        run: curl htt://localhost:3000
       - name: await dev server
         uses: nev7n/wait_for_response@v1
         with:
