@@ -1,6 +1,6 @@
 import format from "pg-format";
 import { User, UserRole } from "../../../../../common";
-import { TEST_USER_NAME } from "../../../utils/test-utils/consts";
+import { TEST_USER_NAME, TEST_USER_NAME_ALTERNATE } from "../../../utils/test-utils/consts";
 import toCamelCase from "../../../utils/toCamelCase";
 import wrappedPool from "../../wrappedPool";
 
@@ -56,8 +56,8 @@ export default class UserRepo {
   static async deleteTestUsers() {
     if (process.env.NODE_ENV === "development")
       await wrappedPool.query(`DELETE FROM users WHERE name = $1 OR name = $2;`, [
-        process.env.CYPRESS_TEST_USER_NAME.toLowerCase(),
         TEST_USER_NAME.toLowerCase().trim(),
+        TEST_USER_NAME_ALTERNATE.toLowerCase().trim(),
       ]);
     else console.log("can't drop all userse unless in development mode");
   }

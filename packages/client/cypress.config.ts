@@ -10,7 +10,8 @@ let socket: Socket;
 
 export default defineConfig({
   e2e: {
-    defaultCommandTimeout: 6000,
+    defaultCommandTimeout: 20000,
+    baseUrl: "http://localhost:3000",
     async setupNodeEvents(on, config) {
       const emailAccount = await makeEmailAccount();
 
@@ -54,7 +55,7 @@ export default defineConfig({
           return null;
         },
         [TaskNames.disconnectSocket]: () => {
-          socket.disconnect();
+          if (socket) socket.disconnect();
           return null;
         },
         [TaskNames.socketEmit]: (taskData: { event: SocketEventsFromClient; data: any }) => {
@@ -69,7 +70,7 @@ export default defineConfig({
         [TaskNames.getLastEmail]: async () => {
           try {
             const lastEmail = await emailAccount.getLastEmail();
-            console.log("last email: ", lastEmail);
+            console.log("last email subject: ", lastEmail?.subject);
             return lastEmail;
           } catch (error) {
             console.log("error in getLastEmail");

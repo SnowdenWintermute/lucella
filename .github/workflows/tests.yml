@@ -1,6 +1,8 @@
 name: CI
 
-on: [pull_request]
+on:
+  pull_request:
+    branches: [main]
 
 env:
   SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
@@ -29,8 +31,8 @@ env:
   ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY: ${{ secrets.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY }}
 
 jobs:
-  ci-tests:
-    name: CI-Tests
+  jest-tests:
+    name: Jest-Tests
     runs-on: ubuntu-latest
     services:
       redis:
@@ -74,3 +76,72 @@ jobs:
         run: docker ps
       - name: Run server tests and be done
         run: cd packages/server && yarn test --forceExit && echo completed
+  cypress-run:
+    runs-on: ubuntu-latest
+    container:
+      # image: cypress/browsers:node12.18.3-chrome87-ff82
+      image: cypress/included:cypress-12.3.0-node-16.18.1-chrome-109.0.5414.74-1-ff-109.0-edge-109.0.1518.52-1
+      options: --user root
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: lucella # note this is different than the lucella-test db used in the jest tests
+        options: >- # Set health checks to wait until postgres has started
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      # - name: ownership
+      #   run: sudo chown -R 1001:0 "/.npm"
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          node-version: 16.18.0
+      # - name: install yarn
+      #   run: npm install --global yarn
+      - name: install curl
+        run: apt update && apt install curl
+      - name: install protoc
+        run: apt update && apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
+      - name: install dependencies
+        run: yarn install
+      - name: install typescript
+        run: npm install -g typescript
+      - name: compile typescript
+        run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory && cd ../..
+      - name: compile .proto files to js
+        run: cd packages/common && yarn run compile-proto && cd ../..
+      - name: run dev
+        run: yarn dev &
+      # - uses: GuillaumeFalourd/wait-sleep-action@v1
+      #   with:
+      #     time: "60" # for 60 seconds
+      - name: run curl
+        run:
+      - name: await dev server
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: "http://localhost:3000/"
+          responseCode: 200
+          timeout: 20000
+          interval: 500
+      - name: Cypress run
+        run: cd packages/client && yarn cypress run --browser chrome --headless
+
+      # - name: "UI Tests - Chrome"
+      #   uses: cypress-io/github-action@v4
+      #   with:
+      #     start: yarn start:ci
+      #     wait-on: "http://localhost:3000"
+      #     wait-on-timeout: 120
+      #     browser: chrome
