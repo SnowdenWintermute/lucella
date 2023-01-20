@@ -135,7 +135,7 @@ jobs:
       - name: test psql migration command
         run: DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}" echo $DATABASE_URL
       - name: run the psql migrations
-        run: cd packages/server && DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}" yarn run migrate up
+        run: cd packages/server && DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/lucella" yarn run migrate up
       - name: run dev
         run: yarn dev & wait-on http://localhost:8080
       - run: curl localhost:8080
