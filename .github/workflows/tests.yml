@@ -134,6 +134,6 @@ jobs:
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run dev
         run: yarn dev & wait-on http://localhost:3001
-      - run: wait-on http://localhost:8080 && curl localhost:8080
+      - run: wait-on localhost:8080 && curl localhost:8080
       - name: run cypress
         run: cd packages/client && yarn cypress run --browser chrome --headless
