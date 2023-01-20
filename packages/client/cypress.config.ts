@@ -31,7 +31,7 @@ export default defineConfig({
           );
           console.log(
             "sliced: ",
-            `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`.split("").join("-").slice(0, 6)
+            `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`.split("").join("-").slice(0, 25)
           );
           return `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`;
         },

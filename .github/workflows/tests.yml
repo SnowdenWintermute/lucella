@@ -133,6 +133,7 @@ jobs:
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run dev
-        run: yarn dev & wait-on http://localhost:3001
+        run: yarn dev & wait-on http://localhost:3001 && wait-on http://localhost:8080
       - name: run cypress
         run: cd packages/client && yarn cypress run --browser chrome --headless
+      - run: curl localhost:8080
