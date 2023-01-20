@@ -25,7 +25,7 @@ export default defineConfig({
             });
             return { status: response.status };
           } catch (error: any) {
-            console.log("setRateLimiterDisabled: ", error?.data);
+            console.log("setRateLimiterDisabled: ", error);
             return error;
           }
         },
@@ -56,7 +56,7 @@ export default defineConfig({
             // @ts-ignore
             return { body: response.body, status: response.status };
           } catch (error: any) {
-            console.log("deleteAllUsers: ", error?.data);
+            console.log("deleteAllUsers: ", error);
             return error;
           }
         },
@@ -71,7 +71,7 @@ export default defineConfig({
             // @ts-ignore
             return { body: response.body, status: response.status };
           } catch (error: any) {
-            console.log("createtestuser: ", error?.data);
+            console.log("createtestuser: ", error);
             return error;
           }
         },
