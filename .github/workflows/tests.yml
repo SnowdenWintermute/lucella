@@ -122,13 +122,13 @@ jobs:
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run dev
-        run: yarn dev
-      - name: await dev server
-        uses: nev7n/wait_for_response@v1
-        with:
-          url: "http://localhost:3001/"
-          responseCode: 200
-          timeout: 20000
-          interval: 500
-      - name: Cypress run
-        run: cd packages/client && yarn cypress run --browser chrome --headless
+        run: yarn dev & wait-on http://localhost:3001 && cd packages/client && yarn cypress run --browser chrome --headless
+      # - name: await dev server
+      #   uses: nev7n/wait_for_response@v1
+      #   with:
+      #     url: "http://localhost:3001/"
+      #     responseCode: 200
+      #     timeout: 20000
+      #     interval: 500
+      # - name: Cypress run
+      #   run: cd packages/client && yarn cypress run --browser chrome --headless
