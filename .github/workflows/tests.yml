@@ -29,6 +29,14 @@ env:
   PASSWORD_RESET_TOKEN_PUBLIC_KEY: ${{ secrets.PASSWORD_RESET_TOKEN_PUBLIC_KEY }}
   ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY: ${{ secrets.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY }}
   ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY: ${{ secrets.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY }}
+  CYPRESS_BACKEND_URL: ${{ secrets.CYPRESS_BACKEND_URL }}
+  CYPRESS_TEST_USER_NAME: ${{ secrets.CYPRESS_TEST_USER_NAME }}
+  CYPRESS_TEST_USER_NAME_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_NAME_ALTERNATE }}
+  CYPRESS_TEST_USER_EMAIL: ${{ secrets.CYPRESS_TEST_USER_EMAIL }}
+  CYPRESS_TEST_USER_EMAIL_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_EMAIL_ALTERNATE }}
+  CYPRESS_TEST_USER_PASSWORD: ${{ secrets.CYPRESS_TEST_USER_PASSWORD }}
+  CYPRESS_TEST_USER_PASSWORD_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_PASSWORD_ALTERNATE }}
+  CYPRESS_TESTER_KEY: ${{ secrets.CYPRESS_TESTER_KEY }}
 
 jobs:
   jest-tests:
@@ -99,6 +107,8 @@ jobs:
     steps:
       - name: apt update
         run: sudo apt update
+      - name: install chrome
+        uses: browser-actions/setup-chrome@latest
       - uses: actions/setup-node@v3
         with:
           node-version: 16.18.0
@@ -122,13 +132,13 @@ jobs:
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run dev
-        run: yarn dev
-      - name: await dev server
-        uses: nev7n/wait_for_response@v1
-        with:
-          url: "http://localhost:3001/"
-          responseCode: 200
-          timeout: 20000
-          interval: 500
-      - name: Cypress run
-        run: cd packages/client && yarn cypress run --browser chrome --headless
+        run: yarn dev & wait-on http://localhost:3001 && cd packages/client && yarn cypress run --browser chrome --headless
+      # - name: await dev server
+      #   uses: nev7n/wait_for_response@v1
+      #   with:
+      #     url: "http://localhost:3001/"
+      #     responseCode: 200
+      #     timeout: 20000
+      #     interval: 500
+      # - name: Cypress run
+      #   run: cd packages/client && yarn cypress run --browser chrome --headless
