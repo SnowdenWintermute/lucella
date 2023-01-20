@@ -131,21 +131,8 @@ jobs:
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run dev
-        run: yarn dev & wait-on http://localhost:3001 && cd packages/client && yarn cypress run --browser chrome --headless
-        env:
-          CYPRESS_BACKEND_URL: ${{ secrets.CYPRESS_BACKEND_URL }}
-          CYPRESS_TEST_USER_NAME_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_NAME_ALTERNATE }}
-          CYPRESS_TEST_USER_EMAIL: ${{ secrets.CYPRESS_TEST_USER_EMAIL }}
-          CYPRESS_TEST_USER_EMAIL_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_EMAIL_ALTERNATE }}
-          CYPRESS_TEST_USER_PASSWORD: ${{ secrets.CYPRESS_TEST_USER_PASSWORD }}
-          CYPRESS_TEST_USER_PASSWORD_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_PASSWORD_ALTERNATE }}
-          CYPRESS_TESTER_KEY: ${{ secrets.CYPRESS_TESTER_KEY }}
-      # - name: await dev server
-      #   uses: nev7n/wait_for_response@v1
-      #   with:
-      #     url: "http://localhost:3001/"
-      #     responseCode: 200
-      #     timeout: 20000
-      #     interval: 500
-      # - name: Cypress run
-      #   run: cd packages/client && yarn cypress run --browser chrome --headless
+        run: yarn dev & wait-on http://localhost:3001
+      - name: write cypress.env.json
+        run: cd packages/client && | echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json
+      - name: run cypress
+        run: yarn cypress run --browser chrome --headless
