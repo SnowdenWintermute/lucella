@@ -32,6 +32,7 @@ export default function createExpressApp() {
   );
 
   app.use(checkForBannedIpAddress, ipRateLimiter);
+  app.get("/", () => "this is the api server");
   app.use(`/api${AuthRoutePaths.ROOT}`, authRouter);
   app.use(`/api${UsersRoutePaths.ROOT}`, usersRouter);
   app.use(`/api${ModerationRoutePaths.ROOT}`, moderationRouter);
