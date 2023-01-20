@@ -17,12 +17,17 @@ export default defineConfig({
 
       on("task", {
         [TaskNames.setRateLimiterDisabled]: async (args) => {
-          const response = await axios({
-            method: "put",
-            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.RATE_LIMITER}`,
-            data: { testerKey: args.CYPRESS_TESTER_KEY, rateLimiterDisabled: args.rateLimiterDisabled },
-          });
-          return { status: response.status };
+          try {
+            const response = await axios({
+              method: "put",
+              url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.RATE_LIMITER}`,
+              data: { testerKey: args.CYPRESS_TESTER_KEY, rateLimiterDisabled: args.rateLimiterDisabled },
+            });
+            return { status: response.status };
+          } catch (error) {
+            console.log(error);
+            return error;
+          }
         },
         "log url": (args) => {
           console.log(
@@ -40,25 +45,35 @@ export default defineConfig({
             "DELETE ALL TEST USERS URL: ",
             `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`
           );
-          const response = await axios({
-            method: "put",
-            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`,
-            data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
+          try {
+            const response = await axios({
+              method: "put",
+              url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`,
+              data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
 
-            headers: { "content-type": "application/json" },
-          });
-          // @ts-ignore
-          return { body: response.body, status: response.status };
+              headers: { "content-type": "application/json" },
+            });
+            // @ts-ignore
+            return { body: response.body, status: response.status };
+          } catch (error) {
+            console.log(error);
+            return error;
+          }
         },
         [TaskNames.createCypressTestUser]: async (args) => {
-          const response = await axios({
-            method: "post",
-            url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.CREATE_CYPRESS_TEST_USER}`,
-            data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
-            headers: { "content-type": "application/json" },
-          });
-          // @ts-ignore
-          return { body: response.body, status: response.status };
+          try {
+            const response = await axios({
+              method: "post",
+              url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.CREATE_CYPRESS_TEST_USER}`,
+              data: { testerKey: args.CYPRESS_TESTER_KEY, email: args.email || null },
+              headers: { "content-type": "application/json" },
+            });
+            // @ts-ignore
+            return { body: response.body, status: response.status };
+          } catch (error) {
+            console.log(error);
+            return error;
+          }
         },
         [TaskNames.connectSocket]: () => {
           socket = io("http://localhost:8080" || "", {
