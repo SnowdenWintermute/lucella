@@ -11,7 +11,7 @@ describe("user stories related to authentication, account creation and deletion"
     CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
   };
   beforeEach(() => {
-    cy.task("log url");
+    cy.task("log url", args);
     cy.task(TaskNames.deleteAllTestUsers, args).then((response: Response) => {
       expect(response.status).to.equal(200);
     });
