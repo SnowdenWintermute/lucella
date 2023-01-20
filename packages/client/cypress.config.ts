@@ -29,6 +29,7 @@ export default defineConfig({
             "DELETE ALL TEST USERS URL: ",
             `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`
           );
+          return `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`;
         },
         [TaskNames.deleteAllTestUsers]: async (args) => {
           console.log(
