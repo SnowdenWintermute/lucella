@@ -24,8 +24,8 @@ export default defineConfig({
               data: { testerKey: args.CYPRESS_TESTER_KEY, rateLimiterDisabled: args.rateLimiterDisabled },
             });
             return { status: response.status };
-          } catch (error) {
-            console.log(error);
+          } catch (error: any) {
+            console.log("setRateLimiterDisabled: ", error?.data);
             return error;
           }
         },
@@ -55,8 +55,8 @@ export default defineConfig({
             });
             // @ts-ignore
             return { body: response.body, status: response.status };
-          } catch (error) {
-            console.log(error);
+          } catch (error: any) {
+            console.log("deleteAllUsers: ", error?.data);
             return error;
           }
         },
@@ -70,8 +70,8 @@ export default defineConfig({
             });
             // @ts-ignore
             return { body: response.body, status: response.status };
-          } catch (error) {
-            console.log(error);
+          } catch (error: any) {
+            console.log("createtestuser: ", error?.data);
             return error;
           }
         },
