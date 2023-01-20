@@ -16,6 +16,7 @@ wrappedPool
   .connect(pgOptions)
   .then(() => {
     const app = createExpressApp();
+    console.log("EXprEsS PoRt", PORT.split("").join("-"));
     const listening = app.listen(PORT, async () => {
       wrappedRedis.context = RedisContext.build();
       await wrappedRedis.context.connect();
