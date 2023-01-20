@@ -139,5 +139,6 @@ jobs:
       - name: run dev
         run: yarn dev & wait-on http://localhost:8080
       - run: curl localhost:8080
+      - run: echo $NODE_ENV
       - name: run cypress
         run: cd packages/client && yarn cypress run --browser chrome --headless
