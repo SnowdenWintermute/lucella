@@ -29,6 +29,10 @@ export default defineConfig({
             "DELETE ALL TEST USERS URL: ",
             `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`
           );
+          console.log(
+            "sliced: ",
+            `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`.split("").join("-").slice(0, 6)
+          );
           return `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`;
         },
         [TaskNames.deleteAllTestUsers]: async (args) => {
