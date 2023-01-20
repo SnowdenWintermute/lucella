@@ -135,4 +135,4 @@ jobs:
       - name: run dev
         run: yarn dev & wait-on http://localhost:3001
       - name: run cypress
-        run: yarn cypress run --browser chrome --headless
+        run: cd packages/client && yarn cypress run --browser chrome --headless
