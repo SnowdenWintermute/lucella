@@ -8,6 +8,8 @@
 *.css.map
 
 .tsbuildinfo
+*.tsbuildinfo
+**/*.tsbuildinfo
 
 
 **/*.env
