@@ -70,7 +70,7 @@ Visit the live demo at [lucella.org](https://lucella.org)
   > yarn cypress:open
 - Commands such as yarn cypress:firefox, or yarn cypress:edge can save you time when opening cypress. You can add other commands in the client package.json using this pattern for the browser you prefer.
 - Cypress should open, run all the specs. They should be passing.
-- Visit [localhost:3001](http://localhost:3001) in your browser. You should see the website.
+- Visit [localhost:3000](http://localhost:3000) in your browser. You should see the website.
   - Click login and then create new account using an email address you can access
   - Click the link in your email to complete registration
 - To make your dev user an admin, go to pgAdmin and select your main (not test) database.

@@ -17,7 +17,7 @@ export default function errorHandler(error: any, req: Request, res: Response, ne
 
   let jsonToSend;
   if (errors) jsonToSend = errors;
-  else jsonToSend = { message: ErrorMessages.SERVER_GENERIC, error };
+  else jsonToSend = [{ message: ErrorMessages.SERVER_GENERIC, error }];
 
-  res.status(status || error.status || 500).json([jsonToSend]);
+  res.status(status || error.status || 500).json(jsonToSend);
 }

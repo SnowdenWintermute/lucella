@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "develop": "next dev -p 3001",
+    "develop": "next dev -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -15,7 +15,7 @@
     "cypress:edge": "env-cmd -f .env.test.local cypress open --e2e --browser edge",
     "cypress:chrome": "env-cmd -f .env.test.local cypress open --e2e --browser chrome",
     "cypress:open": "env-cmd -f .env.test.local cypress open --e2e",
-    "cypress:start": "concurrently \"start-server-and-test start:test 3001 cypress:open\" \"yarn --cwd ../server serve\"",
+    "cypress:start": "concurrently \"start-server-and-test start:test 3000 cypress:open\" \"yarn --cwd ../server serve\"",
     "cypress:build": "yarn build:test && yarn cypress:start"
   },
   "dependencies": {
