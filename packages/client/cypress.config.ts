@@ -24,8 +24,17 @@ export default defineConfig({
           });
           return { status: response.status };
         },
+        "log url": (args) => {
+          console.log(
+            "DELETE ALL TEST USERS URL: ",
+            `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`
+          );
+        },
         [TaskNames.deleteAllTestUsers]: async (args) => {
-          console.log(`${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`);
+          console.log(
+            "DELETE ALL TEST USERS URL: ",
+            `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`
+          );
           const response = await axios({
             method: "put",
             url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`,
