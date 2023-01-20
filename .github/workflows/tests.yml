@@ -105,7 +105,7 @@ jobs:
           - 5432:5432
     steps:
       - name: write cypress.env.json
-        run: cd packages/client && | echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json && cd ../..
+        run: cd packages/client && echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json && cd ../..
       - name: apt update
         run: sudo apt update
       - name: install chrome
