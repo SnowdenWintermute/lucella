@@ -104,6 +104,8 @@ jobs:
         ports:
           - 5432:5432
     steps:
+      - name: write cypress.env.json
+        run: cd packages/client && | echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json && cd ../..
       - name: apt update
         run: sudo apt update
       - name: install chrome
@@ -132,7 +134,5 @@ jobs:
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run dev
         run: yarn dev & wait-on http://localhost:3001
-      - name: write cypress.env.json
-        run: cd packages/client && | echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json
       - name: run cypress
         run: yarn cypress run --browser chrome --headless
