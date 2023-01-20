@@ -23,22 +23,12 @@ export default defineConfig({
               url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.RATE_LIMITER}`,
               data: { testerKey: args.CYPRESS_TESTER_KEY, rateLimiterDisabled: args.rateLimiterDisabled },
             });
+            console.log("disableRateLimiter status: ", response.status);
             return { status: response.status };
           } catch (error: any) {
             console.log("setRateLimiterDisabled: ", error);
             return error;
           }
-        },
-        "log url": (args) => {
-          console.log(
-            "DELETE ALL TEST USERS URL: ",
-            `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`
-          );
-          console.log(
-            "sliced: ",
-            `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`.split("").join("-").slice(0, 25)
-          );
-          return `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.DROP_ALL_TEST_USERS}`;
         },
         [TaskNames.deleteAllTestUsers]: async (args) => {
           console.log(
@@ -53,6 +43,7 @@ export default defineConfig({
 
               headers: { "content-type": "application/json" },
             });
+            console.log("deleteTestUsers status: ", response.status);
             // @ts-ignore
             return { body: response.body, status: response.status };
           } catch (error: any) {
