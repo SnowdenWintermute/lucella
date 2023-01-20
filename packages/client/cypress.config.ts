@@ -11,7 +11,7 @@ let socket: Socket;
 export default defineConfig({
   e2e: {
     defaultCommandTimeout: 20000,
-    baseUrl: "http://localhost:3000",
+    baseUrl: "http://localhost:3001",
     async setupNodeEvents(on, config) {
       const emailAccount = await makeEmailAccount();
 
