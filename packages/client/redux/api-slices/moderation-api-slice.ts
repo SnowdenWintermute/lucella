@@ -1,10 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { IPBanReason, ModerationRoutePaths } from "../../../common";
 
-const API_URL = process.env.NEXT_PUBLIC_API;
+const { API_URL } = process.env;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${API_URL}/api${ModerationRoutePaths.ROOT}`,
+  baseUrl: `http://localhost:8080/api${ModerationRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

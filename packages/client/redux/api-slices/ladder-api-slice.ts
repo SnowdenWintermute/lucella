@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { UserRecord } from "../../classes/UserRecord";
-const API_URL = process.env.NEXT_PUBLIC_API;
+const { API_URL } = process.env;
 
 export interface ILadderPageResponse {
   pageNumber: number;
@@ -9,7 +9,7 @@ export interface ILadderPageResponse {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${API_URL}/api`,
+  baseUrl: `http://localhost:8080/api`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

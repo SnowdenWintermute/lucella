@@ -3,7 +3,7 @@ import { LoginInput } from "../types";
 import { AuthRoutePaths } from "../../../common";
 import { usersApi } from "./users-api-slice";
 
-const API_URL = process.env.NEXT_PUBLIC_API;
+const { API_URL } = process.env;
 
 const baseQuery = fetchBaseQuery({
   baseUrl: `http://localhost:8080/api${AuthRoutePaths.ROOT}`,

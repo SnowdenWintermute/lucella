@@ -39,6 +39,7 @@ env:
   NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
   NEXT_PUBLIC_SOCKET_API: ${{ secrets.NEXT_PUBLIC_SOCKET_API }}
   ELECTRON_ENABLE_LOGGING: 1
+  API_URL: ${{ secrets.API_URL }}
 
 jobs:
   jest-tests:
