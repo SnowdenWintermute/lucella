@@ -18,7 +18,7 @@ export default function loginLockoutAndResetFlow() {
         expect(response.status).to.equal(201);
       });
 
-      cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+      cy.visit(`${FrontendRoutes.LOGIN}`);
       const genArr = Array.from({ length: failedLoginCountTolerance }, (v, k) => k + 1); // https://stackoverflow.com/questions/52212868/cypress-io-writing-a-for-loop
       let failedAttempts = 0;
       // attemp with wrong password up to the limit

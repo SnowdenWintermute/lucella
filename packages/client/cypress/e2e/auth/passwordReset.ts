@@ -11,7 +11,7 @@ export default function passwordResetTest() {
       expect(email).to.be.a("string");
       userEmail = email;
 
-      cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
+      cy.visit(`${FrontendRoutes.REGISTER}`);
       cy.findByLabelText(/email address/i).type(userEmail);
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
       cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);

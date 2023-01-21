@@ -28,7 +28,7 @@ export default function fullUserAuthFlow() {
       userEmail = email;
 
       // test deleting account with user created in test setup
-      cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+      cy.visit(`${FrontendRoutes.LOGIN}`);
       cy.findByLabelText(/email address/i).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
       cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
@@ -60,7 +60,7 @@ export default function fullUserAuthFlow() {
       cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE, "i")).should("exist");
       // at this point we should be logged out
       // can't visit protected route if not logged in
-      cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.SETTINGS}`);
+      cy.visit(`${FrontendRoutes.SETTINGS}`);
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
       cy.findByRole("heading", { name: /login/i }).should("exist");
       // show login instead of profile icon if not logged in
