@@ -139,6 +139,7 @@ jobs:
         run: cd packages/server && DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/lucella" yarn run migrate up
       - name: serve dev
         run: yarn dev & wait-on http://localhost:3000
+      - run: curl http://localhost:3000/login
       - name: cypress run
         run: cd packages/client && yarn cypress run --browser chrome --headless
       # - name: run backend
@@ -147,6 +148,5 @@ jobs:
       #   run: cd packages/client && yarn next build && NODE_ENV=production yarn next start & wait-on http://localhost:3000
       # - run: curl localhost:8080
       # - run: echo $NODE_ENV
-      # - run: curl http://localhost:3000/login
       # - name: run cypress
       #   run: cd packages/client && yarn cypress run
