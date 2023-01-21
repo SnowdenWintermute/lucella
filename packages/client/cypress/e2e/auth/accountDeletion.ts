@@ -13,7 +13,7 @@ export default function accountDeletion() {
       expect(response.status).to.equal(201);
     });
     //
-    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+    cy.visit(`${FrontendRoutes.LOGIN}`);
     cy.findByRole("heading", { name: /login/i }).should("exist");
     cy.findByLabelText(/email address/i).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
@@ -29,15 +29,15 @@ export default function accountDeletion() {
     cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_CREDENTIALS, "i")).should("exist");
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
     cy.findByText(new RegExp(SuccessAlerts.USERS.ACCOUNT_DELETED, "i")).should("exist");
-    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
+    cy.url().should("be.equal", `${FrontendRoutes.REGISTER}`);
     cy.findByRole("link", { name: /login/i }).click();
-    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+    cy.url().should("be.equal", `${FrontendRoutes.LOGIN}`);
     cy.findByRole("heading", { name: /login/i }).should("exist");
     cy.findByLabelText(/email address/i).type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
     cy.findByLabelText(/password/).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
     cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, "i")).should("exist");
     cy.findByRole("link", { name: /create account/i }).click();
-    cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
+    cy.url().should("be.equal", `${FrontendRoutes.REGISTER}`);
     cy.findByRole("heading", { name: /create account/i }).should("exist");
     cy.findByLabelText(/email address/i).type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
     cy.findByLabelText(/username/i).type(`${Cypress.env("CYPRESS_TEST_USER_NAME")}`);
