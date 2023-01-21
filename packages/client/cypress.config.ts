@@ -10,9 +10,11 @@ let socket: Socket;
 
 export default defineConfig({
   e2e: {
-    defaultCommandTimeout: 60000,
+    defaultCommandTimeout: 45000,
     // baseUrl: "localhost:3000",
     async setupNodeEvents(on, config) {
+      // eslint-disable-next-line global-require
+      require("cypress-terminal-report/src/installLogsPrinter")(on);
       const emailAccount = await makeEmailAccount();
       on("task", {
         [TaskNames.setRateLimiterDisabled]: async (args) => {
