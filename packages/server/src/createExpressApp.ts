@@ -26,7 +26,7 @@ export default function createExpressApp() {
   app.use(
     cors({
       // methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-      origin: process.env.ORIGIN,
+      origin: true,
       credentials: true,
     })
   );
