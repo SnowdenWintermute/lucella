@@ -10,7 +10,8 @@ let socket: Socket;
 
 export default defineConfig({
   e2e: {
-    defaultCommandTimeout: 45000,
+    defaultCommandTimeout: 3000,
+    retries: 3,
     // baseUrl: "localhost:3000",
     async setupNodeEvents(on, config) {
       // eslint-disable-next-line global-require
