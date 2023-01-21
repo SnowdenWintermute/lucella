@@ -55,6 +55,7 @@
     "concurrently": "^7.6.0",
     "cypress": "^11.2.0",
     "cypress-recurse": "^1.26.0",
+    "cypress-terminal-report": "^5.0.0",
     "env-cmd": "^10.1.0",
     "imap": "^0.8.19",
     "imap-simple": "^5.1.0",
