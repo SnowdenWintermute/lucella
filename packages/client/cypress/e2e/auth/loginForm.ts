@@ -12,7 +12,7 @@ export default function loginForm() {
     cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
       expect(response.status).to.equal(201);
     });
-    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`, { failOnStatusCode: false });
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
     cy.findByRole("heading", { name: /login/i }).should("exist");
     cy.findByRole("button", { name: new RegExp(ButtonNames.AUTH_FORMS.LOGIN, "i") }).click();

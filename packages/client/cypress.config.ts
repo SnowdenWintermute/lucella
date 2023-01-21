@@ -14,7 +14,6 @@ export default defineConfig({
     // baseUrl: "localhost:3000",
     async setupNodeEvents(on, config) {
       const emailAccount = await makeEmailAccount();
-
       on("task", {
         [TaskNames.setRateLimiterDisabled]: async (args) => {
           try {
