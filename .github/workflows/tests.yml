@@ -138,7 +138,7 @@ jobs:
       - name: run the psql migrations
         run: cd packages/server && DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/lucella" yarn run migrate up
       - name: run backend
-        run: yarn serve & wait-on http://localhost:8080
+        run: ls && cat package.json && yarn serve & wait-on http://localhost:8080
       - name: build and run frontend
         run: cd ../client && yarn next build && yarn next start & wait-on http://localhost:3000
       - run: curl localhost:8080
