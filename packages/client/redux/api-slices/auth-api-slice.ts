@@ -6,7 +6,7 @@ import { usersApi } from "./users-api-slice";
 const API_URL = process.env.NEXT_PUBLIC_API;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${API_URL}/api${AuthRoutePaths.ROOT}`,
+  baseUrl: `http://localhost:8080/api${AuthRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },
