@@ -143,4 +143,4 @@ jobs:
       - run: echo $NODE_ENV
       - run: curl http://localhost:3000/login
       - name: run cypress
-        run: cd packages/client && yarn cypress run --browser chrome --headless
+        run: cd packages/client && yarn cypress run
