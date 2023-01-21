@@ -21,6 +21,7 @@ export default function loginLockoutAndResetFlow() {
       cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`, { failOnStatusCode: false });
       const genArr = Array.from({ length: failedLoginCountTolerance }, (v, k) => k + 1); // https://stackoverflow.com/questions/52212868/cypress-io-writing-a-for-loop
       let failedAttempts = 0;
+      cy.findByRole("heading", { name: /login/i }).should("exist");
       // attemp with wrong password up to the limit
       cy.findByLabelText(/email address/i)
         .clear()
@@ -63,6 +64,7 @@ export default function loginLockoutAndResetFlow() {
           cy.document({ log: false }).invoke({ log: false }, "write", html);
         });
       cy.get('[data-cy="password-reset-link"]').click();
+      cy.findByRole("heading", { name: /change password/i }).should("exist");
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
       cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
       cy.findByText(new RegExp(SuccessAlerts.AUTH.PASSWORD_CHANGED, "i")).should("exist");

@@ -18,13 +18,25 @@
   opacity: 0;
   transition: 0.3s ease-out;
   cursor: pointer;
-  // pointer-events: none;
+  animation: alert-animation-appear 0.3s ease-in-out forwards;
 }
-.alert-animate {
-  margin-left: 100px;
-  opacity: 1;
-  transition: 0.3s;
+// .alert-animate {
+//   margin-left: 100px;
+//   opacity: 1;
+//   transition: 0.3s;
+// }
+
+@keyframes alert-animation-appear {
+  0% {
+    margin-left: 0px;
+    opacity: 0;
+  }
+  100% {
+    margin-left: 100px;
+    opacity: 1;
+  }
 }
+
 .alert-danger {
   background-color: color(danger);
 }

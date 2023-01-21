@@ -1,10 +1,10 @@
-import { SocketEventsFromClient, battleRoomDefaultChatChannel } from "../../../../common";
+import { SocketEventsFromClient, battleRoomDefaultChatChannel, FrontendRoutes } from "../../../../common";
 import { veryLongTestText, mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
 export default function chatAndChangeChannels() {
   return it("users can see other users in their channel chat, not see chat from other channels, change channels, and see other user list update when users change channels or disconnect", () => {
-    cy.visit("/battle-room");
+    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
     cy.findByText("Server : Welcome to battle-room-chat.").should("exist");
 
     cy.task(TaskNames.connectSocket);

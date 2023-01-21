@@ -1,10 +1,10 @@
-import { gameRoomCountdownDuration, GameStatus, SocketEventsFromClient } from "../../../../common";
+import { FrontendRoutes, GameStatus, SocketEventsFromClient } from "../../../../common";
 import { veryLongTestText, shortTestText, shortTestText2 } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
 export default function unauthedJoinLeaveAndDisconnectFromGameRoom() {
   it("unauthed user can see a list of games update correctly and join a game and be kicked from a game", () => {
-    cy.visit("/battle-room");
+    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
     // wait for connection
     cy.findByText(/anon/i).should("exist");
     // view the list of games

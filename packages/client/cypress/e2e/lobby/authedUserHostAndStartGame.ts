@@ -1,4 +1,4 @@
-import { AuthRoutePaths, ErrorMessages, gameRoomCountdownDuration, GameStatus, SocketEventsFromClient } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, FrontendRoutes, gameRoomCountdownDuration, GameStatus, SocketEventsFromClient } from "../../../../common";
 import { mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -24,7 +24,7 @@ export default function authedUserHostAndStartGame() {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
       password: Cypress.env("CYPRESS_TEST_USER_PASSWORD"),
     });
-    cy.visit("/battle-room");
+    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
     cy.findByText(new RegExp(username, "i")).should("exist");
     cy.findByRole("button", { name: /Host/i }).click();
     cy.get('[data-cy="game-name-input"]').click().type("{enter}");

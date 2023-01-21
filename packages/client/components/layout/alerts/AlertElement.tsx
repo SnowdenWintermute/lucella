@@ -18,7 +18,7 @@ function AlertElement({ message, type, id }: Props) {
   const [animateClass, setAnimateClass] = useState("");
 
   useEffect(() => {
-    setTimeout(() => setAnimateClass("alert-animate"), 1);
+    // setTimeout(() => setAnimateClass("alert-animate"), 1);
     setTimeout(() => dispatch(clearAlert(id)), defaultAlertTimeout);
   }, []);
 
@@ -29,15 +29,12 @@ function AlertElement({ message, type, id }: Props) {
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
     <li
       role="status"
       data-cy="alert-element"
       className={`${styles.alert} ${styles[`alert-${type.toLowerCase()}`]} ${animateClass ? styles[animateClass] : ""}`}
-      onClick={(e) => removeAlert()}
-      onKeyUp={(e) => {
-        if (e.key === "Enter") removeAlert();
-      }}
+      onClick={removeAlert}
     >
       {alertIcon}
       {message}
