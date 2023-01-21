@@ -143,7 +143,7 @@ jobs:
         run: yarn dev & wait-on http://localhost:3000
       - run: curl http://localhost:3000/login
       - name: cypress run
-        run: cd packages/client && ELECTRON_ENABLE_LOGGING=1 yarn cypress run --browser chrome --headless
+        run: cd packages/client && ELECTRON_ENABLE_LOGGING=1 yarn cypress run --browser chrome --headless --record --key 007b6744-5f0e-46c2-a8d1-f7a6a20ac253
       # - name: run backend
       #   run: cd packages/server && yarn serve & wait-on http://localhost:8080
       # - name: build and run frontend

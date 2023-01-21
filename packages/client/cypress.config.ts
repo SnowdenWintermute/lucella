@@ -12,6 +12,7 @@ export default defineConfig({
   e2e: {
     defaultCommandTimeout: 3000,
     retries: 3,
+    projectId: "n9r7rz",
     // baseUrl: "localhost:3000",
     async setupNodeEvents(on, config) {
       // eslint-disable-next-line global-require
