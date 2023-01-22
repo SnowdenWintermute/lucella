@@ -17,6 +17,7 @@
 cypress.env.json
 *.secrets
 **/*.secrets
+**/cypress/videos
 
 # mac computers add this to all their folders
 **/.DS_Store
