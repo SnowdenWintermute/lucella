@@ -4,7 +4,7 @@
 
 Visit the live demo at [lucella.org](https://lucella.org)
 
-![Tests Workflow Badge](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml/badge.svg)
+[![Tests](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml/badge.svg?event=pull_request)](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml)
 
 ## Built With
 
