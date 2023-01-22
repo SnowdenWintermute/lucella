@@ -17,7 +17,7 @@ export async function makeEmailAccount() {
     host: "imap.ethereal.email",
     port: 993,
     tls: true,
-    authTimeout: 20000,
+    authTimeout: 60000,
   };
 
   const userEmail = {

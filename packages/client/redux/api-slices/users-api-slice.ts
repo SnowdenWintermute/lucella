@@ -2,10 +2,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RegisterInput } from "../types";
 import { Ban, SanitizedUser, UsersRoutePaths } from "../../../common";
 
-const API_URL = process.env.NEXT_PUBLIC_API;
+// must use the plain text string for localhost because CI doesn't play nice with using an env variable for some reason
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${API_URL}/api${UsersRoutePaths.ROOT}`,
+  baseUrl: `http://localhost:8080/api${UsersRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

@@ -1,3 +1,4 @@
+import { createWrapper } from "next-redux-wrapper";
 import { Action, configureStore, ThunkAction } from "@reduxjs/toolkit";
 import { ladderApi } from "./api-slices/ladder-api-slice";
 import { authApi } from "./api-slices/auth-api-slice";
@@ -24,6 +25,10 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat([authApi.middleware, usersApi.middleware, ladderApi.middleware, moderationApi.middleware]),
 }); // disabled serializable check because we are using instances of classes for alerts, game rooms etc
+
+const makeStore = () => store;
+
+export const wrapper = createWrapper(makeStore);
 
 export default store;
 // export type AppStore = ReturnType<typeof store>;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DangerIcon from "../../../img/alertIcons/danger.svg";
 import SuccessIcon from "../../../img/alertIcons/success.svg";
 import { AlertType } from "../../../enums";
@@ -15,11 +15,13 @@ interface Props {
 
 function AlertElement({ message, type, id }: Props) {
   const dispatch = useAppDispatch();
-  const [animateClass, setAnimateClass] = useState("");
+  const timeoutRef = useRef<NodeJS.Timer | null>(null);
 
   useEffect(() => {
-    setTimeout(() => setAnimateClass("alert-animate"), 1);
-    setTimeout(() => dispatch(clearAlert(id)), defaultAlertTimeout);
+    timeoutRef.current = setTimeout(() => dispatch(clearAlert(id)), defaultAlertTimeout);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, []);
 
   const alertIcon = type === AlertType.DANGER ? <DangerIcon className={styles["alert-icon"]} /> : <SuccessIcon className={styles["alert-icon"]} />;
@@ -29,16 +31,8 @@ function AlertElement({ message, type, id }: Props) {
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-    <li
-      role="status"
-      data-cy="alert-element"
-      className={`${styles.alert} ${styles[`alert-${type.toLowerCase()}`]} ${animateClass ? styles[animateClass] : ""}`}
-      onClick={(e) => removeAlert()}
-      onKeyUp={(e) => {
-        if (e.key === "Enter") removeAlert();
-      }}
-    >
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
+    <li role="status" data-cy="alert-element" className={`${styles.alert} ${styles[`alert-${type.toLowerCase()}`]}`} onClick={removeAlert}>
       {alertIcon}
       {message}
     </li>

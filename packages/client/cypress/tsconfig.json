@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
+    "baseUrl": "localhost:3000",
     "target": "es5",
+    "esModuleInterop": true,
     "lib": ["es5", "dom"],
     "types": ["cypress", "node", "@testing-library/cypress"]
   },

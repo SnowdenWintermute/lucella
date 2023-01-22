@@ -26,12 +26,13 @@ export default function createExpressApp() {
   app.use(
     cors({
       // methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-      origin: process.env.ORIGIN,
+      origin: true,
       credentials: true,
     })
   );
 
   app.use(checkForBannedIpAddress, ipRateLimiter);
+  app.get("/", (req, res) => res.send("this is the api server"));
   app.use(`/api${AuthRoutePaths.ROOT}`, authRouter);
   app.use(`/api${UsersRoutePaths.ROOT}`, usersRouter);
   app.use(`/api${ModerationRoutePaths.ROOT}`, moderationRouter);

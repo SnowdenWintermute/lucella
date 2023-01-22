@@ -28,7 +28,8 @@ export default function fullUserAuthFlow() {
       userEmail = email;
 
       // test deleting account with user created in test setup
-      cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+      cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`, { failOnStatusCode: false });
+      cy.findByRole("heading", { name: /login/i }).should("exist");
       cy.findByLabelText(/email address/i).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
       cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
@@ -60,7 +61,7 @@ export default function fullUserAuthFlow() {
       cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE, "i")).should("exist");
       // at this point we should be logged out
       // can't visit protected route if not logged in
-      cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.SETTINGS}`);
+      cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.SETTINGS}`, { failOnStatusCode: false });
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
       cy.findByRole("heading", { name: /login/i }).should("exist");
       // show login instead of profile icon if not logged in
@@ -170,6 +171,7 @@ export default function fullUserAuthFlow() {
           cy.document({ log: false }).invoke({ log: false }, "write", html);
         });
       cy.get('[data-cy="password-reset-link"]').click();
+      cy.findByRole("heading", { name: /change password/i }).should("exist");
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}`);
       cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}{enter}`);
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
@@ -183,6 +185,7 @@ export default function fullUserAuthFlow() {
       cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, "i")).should("exist");
       // able to log in with new password
       cy.findByRole("link", { name: /login/i }).click();
+      cy.findByRole("heading", { name: /login/i }).should("exist");
       cy.findByLabelText(/email address/i).type(userEmail);
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}{enter}`);
       cy.get('[data-cy="profile-icon"]').click();

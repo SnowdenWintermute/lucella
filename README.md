@@ -18,23 +18,13 @@ Visit the live demo at [lucella.org](https://lucella.org)
 ## How to set get set up for development 💻
 
 - Install and set up VS Code
-  - Install the following extensions: "Prettier - Code formatter", "ESlint", "Live Sass Compiler"
+
+  - Install the following extensions: "Prettier - Code formatter", "ESlint"
   - Optional but useful extension: "ES7+ React/Redux/React-Native snippets"
   - Open VS Code settings
   - Enable "Format on Save" option
   - Set "Default Formatter" option to prettier
   - Set "Print Width" option to 160
-  - Select Extensions -> Live Sass Compiler -> Edit settings in JSON, then add
-
-```json
-  "liveSassCompile.settings.formats": [
-    {
-	"format": "expanded",
-	"extensionName": ".css",
-	"savePath": "/packages/client/styles/sassOutput"
-    }
-]
-```
 
 - Install nodejs
 - Install typescript globally using the terminal
@@ -61,7 +51,6 @@ Visit the live demo at [lucella.org](https://lucella.org)
       * you should see that the redis and postgres containers are now running.
 - Open a terminal or cd into /packages/common directory and run
   > tsc
-- Open vs code in the top level directory and click "watch sass" in the bottom blue bar. Confirm that files were compiled in /packages/client/styles/sassOutput folder.
 - Run tsc from the /packages/common directory
 - Go to the /packages/server directory and run the following migration command found in the env template. This will add all the tables and enums to your postgres instance.
   > DATABASE_URL=postgres://username:password@localhost:5432/dbname yarn run migrate up) from the /packages/server directory, making sure to replace the name, password and dbname with the variables you assigned in the .env file. This adds all the tables and enums to your local postgres instance.

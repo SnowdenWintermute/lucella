@@ -1,0 +1,20 @@
+three days and 77 commits later, cypress runs in CI
+the following measures were taken:
+
+- several updates to the tests.yml
+- useage of curl to test servers
+- configuration of secrets in github actions
+- adding a step to the yml which writes a cypress.env file from the github actions secrets
+- using string split to view logged secrets
+- added a string return for a simple get request to the base url of the backend api so we are able to use it with wait-on npm module
+- remembered to run the psql migrations
+- removed the condition of NODE_ENV=development for the cypress delete test users route
+- manipulation of our custom express error handler to return complete logs of all errors for debugging purposes (later reset after finding out we were getting 500 status codes due to missing NEXT_PUBLIC_API environment variable/secret)
+- somewhere along the way corrupted yarn lock, deleted and recommited
+- fixed the mixed cy.visit commands which had a mishmash of urls that depended on cypress base url, which having never figured out how to get that working in CI now just use explicit urls
+- used the failOnStatusCode: false option of cypress to find out that we were getting 500 status codes because of the redux provider allegedly being missing, even though it wasn't
+- learned that each step/run in the tests.yml starts with the cli in the top level directory, and that cd ing back and forth isn't needed
+- added the next-redux-wrapper to fix the missing provider error in ci- added the cypress logger plugin on the suggestion of a stackoverflow comment claiming it was a "game changer" and they weren't lying
+- tried using plain text url in place of NEXT_PUBLIC_API in rtk mutations because socket tests were passing but http requests weren't working
+- come to find out, on a yolo guess it was actually a cors error. ci must have a different "origin" than what we were using which was http://localhost:3000 stored in env, maybe mistyped? 
+- after cors was set to true, http requests mostly worked. had to set cypress timeout longer to recognize the toast alerts. previously the timeout was lowered to 3 seconds and retries increased to 3, but put back to 15 seconds and 1

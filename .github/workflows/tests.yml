@@ -29,6 +29,16 @@ env:
   PASSWORD_RESET_TOKEN_PUBLIC_KEY: ${{ secrets.PASSWORD_RESET_TOKEN_PUBLIC_KEY }}
   ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY: ${{ secrets.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY }}
   ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY: ${{ secrets.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY }}
+  CYPRESS_BACKEND_URL: ${{ secrets.CYPRESS_BACKEND_URL }}
+  CYPRESS_TEST_USER_NAME_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_NAME_ALTERNATE }}
+  CYPRESS_TEST_USER_EMAIL: ${{ secrets.CYPRESS_TEST_USER_EMAIL }}
+  CYPRESS_TEST_USER_EMAIL_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_EMAIL_ALTERNATE }}
+  CYPRESS_TEST_USER_PASSWORD: ${{ secrets.CYPRESS_TEST_USER_PASSWORD }}
+  CYPRESS_TEST_USER_PASSWORD_ALTERNATE: ${{ secrets.CYPRESS_TEST_USER_PASSWORD_ALTERNATE }}
+  CYPRESS_TESTER_KEY: ${{ secrets.CYPRESS_TESTER_KEY }}
+  NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
+  NEXT_PUBLIC_SOCKET_API: ${{ secrets.NEXT_PUBLIC_SOCKET_API }}
+  ELECTRON_ENABLE_LOGGING: 1
 
 jobs:
   jest-tests:
@@ -78,10 +88,6 @@ jobs:
         run: cd packages/server && yarn test --forceExit && echo completed
   cypress-run:
     runs-on: ubuntu-latest
-    container:
-      # image: cypress/browsers:node12.18.3-chrome87-ff82
-      image: cypress/included:cypress-12.3.0-node-16.18.1-chrome-109.0.5414.74-1-ff-109.0-edge-109.0.1518.52-1
-      options: --user root
     services:
       redis:
         image: redis
@@ -101,18 +107,26 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      # - name: ownership
-      #   run: sudo chown -R 1001:0 "/.npm"
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: apt update
+        run: sudo apt update
+      - name: install chrome
+        uses: browser-actions/setup-chrome@latest
+      - uses: actions/setup-node@v3
         with:
           node-version: 16.18.0
-      # - name: install yarn
-      #   run: npm install --global yarn
+      - name: install cypress dependencies
+        run: sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+      - name: install wait-on
+        run: npm install -g wait-on
+      - uses: actions/checkout@v3
+      - name: write cypress.env.json
+        run: cd packages/client && echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json && cd ../..
+      - name: install yarn
+        run: npm install --global yarn
       - name: install curl
-        run: apt update && apt install curl
+        run: sudo apt install curl
       - name: install protoc
-        run: apt update && apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
+        run: sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
       - name: install dependencies
         run: yarn install
       - name: install typescript
@@ -121,25 +135,20 @@ jobs:
         run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory && cd ../..
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
-      - name: run dev
-        run: yarn dev &
-      # - uses: GuillaumeFalourd/wait-sleep-action@v1
-      #   with:
-      #     time: "60" # for 60 seconds
-      - name: await dev server
-        uses: nev7n/wait_for_response@v1
-        with:
-          url: "http://localhost:3000/"
-          responseCode: 200
-          timeout: 20000
-          interval: 500
-      - name: Cypress run
-        run: cd packages/client && yarn cypress run --browser chrome --headless
-
-      # - name: "UI Tests - Chrome"
-      #   uses: cypress-io/github-action@v4
-      #   with:
-      #     start: yarn start:ci
-      #     wait-on: "http://localhost:3000"
-      #     wait-on-timeout: 120
-      #     browser: chrome
+      - name: test psql migration command
+        run: DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}" echo $DATABASE_URL
+      - name: run the psql migrations
+        run: cd packages/server && DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/lucella" yarn run migrate up
+      - name: serve dev
+        run: yarn dev & wait-on http://localhost:3000
+      - run: curl http://localhost:3000/login
+      - name: cypress run
+        run: cd packages/client && ELECTRON_ENABLE_LOGGING=1 yarn cypress run --browser chrome --headless --record --key ${{ secrets.RECORDING_KEY_CYPRESS }}
+      # - name: run backend
+      #   run: cd packages/server && yarn serve & wait-on http://localhost:8080
+      # - name: build and run frontend
+      #   run: cd packages/client && yarn next build && NODE_ENV=production yarn next start & wait-on http://localhost:3000
+      # - run: curl localhost:8080
+      # - run: echo $NODE_ENV
+      # - name: run cypress
+      #   run: cd packages/client && yarn cypress run

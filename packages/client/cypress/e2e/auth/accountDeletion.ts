@@ -12,7 +12,8 @@ export default function accountDeletion() {
     cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
       expect(response.status).to.equal(201);
     });
-    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
+
+    cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`, { failOnStatusCode: false });
     cy.findByRole("heading", { name: /login/i }).should("exist");
     cy.findByLabelText(/email address/i).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);

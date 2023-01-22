@@ -16,7 +16,7 @@ import { Provider } from "react-redux";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next/types";
 import LayoutWithAlertsAndModals from "../components/layout/LayoutWithAlertsAndModals";
-import store from "../redux/store";
+import store, { wrapper } from "../redux/store";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -39,4 +39,4 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   );
 }
 
-export default MyApp;
+export default wrapper.withRedux(MyApp);

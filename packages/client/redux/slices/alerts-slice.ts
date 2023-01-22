@@ -1,3 +1,4 @@
+import { HYDRATE } from "next-redux-wrapper";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Alert } from "../../classes/Alert";
 
@@ -16,6 +17,15 @@ const alertsSlice = createSlice({
         alerts: [...state.alerts].filter((alert) => {
           return alert.id !== action.payload;
         }),
+      };
+    },
+  },
+  extraReducers: {
+    [HYDRATE]: (state, action) => {
+      console.log("HYDRATE", state, action.payload);
+      return {
+        ...state,
+        ...action.payload.subject,
       };
     },
   },

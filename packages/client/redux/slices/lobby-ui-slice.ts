@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { HYDRATE } from "next-redux-wrapper";
 import { EloUpdates, GameRoom, BattleRoomGame, GameStatus, PlayerRole } from "../../../common";
 
 export interface IGameScoreScreen {
@@ -99,6 +100,15 @@ const ladderSlice = createSlice({
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
       // @ts-ignore
       state.scoreScreenData = action.payload;
+    },
+  },
+  extraReducers: {
+    [HYDRATE]: (state, action) => {
+      console.log("HYDRATE", state, action.payload);
+      return {
+        ...state,
+        ...action.payload.subject,
+      };
     },
   },
 });
