@@ -14,7 +14,7 @@ export default function errorHandler(error: any, req: Request, res: Response, ne
       return errorToReturn;
     });
   } else console.error("non-custom error in handler: ", error);
-
+  //
   let jsonToSend;
   if (errors) jsonToSend = errors;
   else jsonToSend = [{ message: ErrorMessages.SERVER_GENERIC, error }];
