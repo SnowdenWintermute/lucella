@@ -29,7 +29,6 @@
     "bcryptjs": "^2.4.3",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
-    "jsonwebtoken": "^8.5.1",
     "lodash.clonedeep": "^4.5.0",
     "lodash.isequal": "^4.5.0",
     "matter-js": "^0.18.0",
