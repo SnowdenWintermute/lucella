@@ -4,6 +4,7 @@ import { gameChannelNamePrefix, maxGameNameLength, rankedGameChannelNamePrefix }
 export const ErrorMessages = {
   SERVER_GENERIC: "Internal server error",
   LOBBY: {
+    ERROR_CONNECTING: "Error connecting to lobby server",
     SOCKET_NOT_REGISTERED: "Socket not registered. Server likely restarted, please refresh",
     GAME_EXISTS: "A game by that name already exists",
     GAME_DOES_NOT_EXIST: "No game by that name exists",

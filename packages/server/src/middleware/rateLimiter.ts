@@ -51,6 +51,7 @@ export default function createRateLimiterMiddleware(
 
     async function updateRateCountersAndDetermineLimiting(key: string) {
       const keyWithLabel = key + label;
+      console.log("key with label: ", keyWithLabel);
       const requestsInCurrentCounter = await context!.hIncrBy(keyWithLabel, currentCounterIntervalTimestamp.toString(), 1);
       await context!.expire(keyWithLabel, slidingWindowMs / ONE_SECOND);
       // determine if the fixed window counter limit has been reached
@@ -95,8 +96,9 @@ export default function createRateLimiterMiddleware(
       await updateRateCountersAndDetermineLimiting(user.email);
     }
     if (mode === RateLimiterModes.IP) {
-      const { ip } = req;
-      await updateRateCountersAndDetermineLimiting(ip);
+      const ip = req.ip ? req.ip : req.socket.remoteAddress;
+      if (ip) await updateRateCountersAndDetermineLimiting(ip);
+      else console.error("CUSTOM ERROR: No Ip found in ip rate limiter");
     }
     if (mode === RateLimiterModes.GLOBAL) {
       await updateRateCountersAndDetermineLimiting("GLOBAL_REQUESTS");

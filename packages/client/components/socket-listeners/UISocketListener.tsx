@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { SocketEventsFromServer } from "../../../common";
+import { ErrorMessages, SocketEventsFromServer } from "../../../common";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -39,12 +39,13 @@ function UISocketListener({ socket }: Props) {
     socket.on("connect", () => {
       dispatch(clearLobbyUi());
     });
+    socket.on("connect_error", (error) => {
+      dispatch(setAlert(new Alert(ErrorMessages.LOBBY.ERROR_CONNECTING, AlertType.DANGER)));
+    });
     socket.on(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, (data) => {
-      console.log("new list of games: ", data);
       dispatch(updateGameList(data));
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
-      console.log("SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE", data);
       dispatch(setCurrentGameRoom(data));
       if (data) {
         dispatch(setViewingGamesList(false));
@@ -64,7 +65,6 @@ function UISocketListener({ socket }: Props) {
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, (gameStatus) => {
       dispatch(updateGameStatus(gameStatus));
-      console.log("game status updated: ", gameStatus);
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, (countdown) => {
       if (!gameName) return;
@@ -85,6 +85,8 @@ function UISocketListener({ socket }: Props) {
       dispatch(setMatchmakingWindowVisible(false));
     });
     return () => {
+      socket.off("connect");
+      socket.off("connect_error");
       socket.off(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE);
       socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
       socket.off(SocketEventsFromServer.GAME_CLOSED_BY_HOST);
