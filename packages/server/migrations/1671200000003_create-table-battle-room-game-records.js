@@ -7,11 +7,14 @@ exports.up = (pgm) => {
         CREATE TABLE battle_room_game_records (
             id SERIAL PRIMARY KEY,
             created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-            player_1_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            player_2_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-            player_1_score INTEGER NOT NULL,
-            player_2_score INTEGER NOT NULL
+            first_player_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            first_player_score INTEGER NOT NULL,
+            first_player_pre_game_elo INTEGER NOT NULL,
+            first_player_post_game_elo INTEGER NOT NULL,
+            second_player_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+            second_player_score INTEGER NOT NULL,
+            second_player_pre_game_elo INTEGER NOT NULL,
+            second_player_post_game_elo INTEGER NOT NULL
         );
     `);
 };

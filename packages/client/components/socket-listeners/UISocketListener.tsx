@@ -39,7 +39,7 @@ function UISocketListener({ socket }: Props) {
     socket.on("connect", () => {
       dispatch(clearLobbyUi());
     });
-    socket.on("connect_error", (error) => {
+    socket.on("connect_error", () => {
       dispatch(setAlert(new Alert(ErrorMessages.LOBBY.ERROR_CONNECTING, AlertType.DANGER)));
     });
     socket.on(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, (data) => {
@@ -71,7 +71,6 @@ function UISocketListener({ socket }: Props) {
       dispatch(updateGameCountdown(countdown));
     });
     socket.on(SocketEventsFromServer.SHOW_END_SCREEN, (data) => {
-      data.game = replicator.decode(data.game);
       dispatch(setScoreScreenData(data));
       dispatch(setShowScoreScreenModal(true));
     });

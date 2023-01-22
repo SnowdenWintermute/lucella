@@ -9,16 +9,17 @@ import {
   OfficialChannels,
   ONE_SECOND,
   UserStatuses,
+  IBattleRoomGameRecord,
+  IBattleRoomScoreCard,
 } from "../../../common";
 import UserRepo from "../database/repos/users";
+import { wrappedRedis } from "../utils/RedisContext";
 // import { IBattleRoomRecord } from "../models/BattleRoomRecord";
 import { LucellaServer } from "./LucellaServer";
 
-export type IBattleRoomRecord = { [key: string]: any }; // placeholder
-
 export interface MatchmakingQueueUser {
   userId: string;
-  record: IBattleRoomRecord;
+  record: IBattleRoomScoreCard;
   socketId: string;
   username: string;
 }
@@ -39,13 +40,19 @@ export class MatchmakingQueue {
   async addUser(socket: Socket) {
     const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id].associatedUser.username);
     if (!user || user.status === UserStatuses.DELETED) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED);
-    const userBattleRoomRecord = await LucellaServer.fetchOrCreateBattleRoomRecord(user);
+    const userBattleRoomRecord = await LucellaServer.fetchOrCreateBattleRoomScoreCard(user);
+    console.log("user: ", user, "userBattleRoomRecord: ", userBattleRoomRecord);
     this.users[socket.id] = {
       userId: user.id.toString(), // todo- investigate why this needs to be a string and not anumber
       record: userBattleRoomRecord,
       socketId: socket.id,
       username: user.name,
     };
+    // refresh their session because they took an action that requires being logged in
+    wrappedRedis.context!.set(user.id.toString(), JSON.stringify(user), {
+      EX: parseInt(process.env.AUTH_SESSION_EXPIRATION!, 10),
+    });
+    //
     socket.join(OfficialChannels.matchmakingQueue);
     socket.emit(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
     this.currentEloDiffThreshold = 0;

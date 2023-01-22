@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { EloUpdates, GameRoom, BattleRoomGame, GameStatus, PlayerRole } from "../../../common";
+import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord } from "../../../common";
 
 export interface IGameScoreScreen {
   gameRoom: GameRoom;
   game: BattleRoomGame;
-  eloUpdates: EloUpdates;
+  gameRecord: IBattleRoomGameRecord;
 }
 
 export interface ILobbyUIState {

@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
-import { BattleRoomGame, User } from "../../../../common";
+import { BattleRoomGame, IBattleRoomGameRecord, User } from "../../../../common";
 import { Lobby } from "../Lobby";
 import initializeListeners from "./initializeListeners";
 import { SocketIDsByUsername, SocketMetadataList } from "../../types";
@@ -12,6 +12,7 @@ import { MatchmakingQueue } from "../MatchmakingQueue";
 import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
 import { ipRateLimiter } from "../../middleware/rateLimiter";
 import { wrapExpressMiddlewareForSocketIO } from "../../utils/wrapExpressMiddlewareForSocketIO";
+import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
 
 export class LucellaServer {
   io: SocketIO.Server;
@@ -72,11 +73,9 @@ export class LucellaServer {
   handleReadyStateToggleRequest(socket: Socket) {
     handleReadyStateToggleRequest(this, socket);
   }
-  static async fetchOrCreateBattleRoomRecord(user: User) {
-    return { placeholder: "placeholder" };
-    // let record = await BattleRoomRecord.findOne({ userId: user.id });
-    // if (!record) record = new BattleRoomRecord({ userId: user.id });
-    // await record.save();
-    // return record;
+  static async fetchOrCreateBattleRoomScoreCard(user: User) {
+    let scoreCard = await BattleRoomScoreCardRepo.findByUserId(user.id);
+    if (!scoreCard) scoreCard = await BattleRoomScoreCardRepo.insert(user.id);
+    return scoreCard;
   }
 }

@@ -1,4 +1,5 @@
 export * from "./types";
+export { IBattleRoomGameRecord, IBattleRoomScoreCard } from "./types/BattleRoomGameRecords";
 export { GameStatus, PlayerRole, UserInputs, UserRole, IPBanReason } from "./enums";
 export { SocketEventsFromClient, SocketEventsFromServer } from "./enums/SocketEvents";
 export { AuthRoutePaths, UsersRoutePaths, ModerationRoutePaths, CypressTestRoutePaths } from "./enums/APIRoutePaths";
