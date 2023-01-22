@@ -10,6 +10,8 @@ import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
 // import BattleRoomRecord from "../../models/BattleRoomRecord";
 import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
+import { ipRateLimiter } from "../../middleware/rateLimiter";
+import { wrapExpressMiddlewareForSocketIO } from "../../utils/wrapExpressMiddlewareForSocketIO";
 
 export class LucellaServer {
   io: SocketIO.Server;
@@ -27,6 +29,7 @@ export class LucellaServer {
       // },
     });
     this.io.use(socketCheckForBannedIpAddress);
+    this.io.use(wrapExpressMiddlewareForSocketIO(ipRateLimiter));
     this.matchmakingQueue = new MatchmakingQueue(this);
     this.lobby = new Lobby(this);
     initializeListeners(this);

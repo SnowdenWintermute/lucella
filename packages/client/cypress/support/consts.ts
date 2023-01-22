@@ -4,3 +4,5 @@ export const longTestText = "Darkness loomed in the alley. Darkness loomed in mo
 export const shortTestText = "Hi";
 export const shortTestText2 = "Hello There";
 export const mediumTestText = "Ayy lmao, let's go raid area 51";
+
+export const cypressCloudProjectId = "n9r7rz";

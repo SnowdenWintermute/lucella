@@ -4,6 +4,7 @@ import { Socket } from "socket.io-client";
 import { CypressTestRoutePaths, SocketEventsFromClient } from "../common";
 import { TaskNames } from "./cypress/support/TaskNames";
 import { makeEmailAccount } from "./cypress/support/email-account";
+import { cypressCloudProjectId } from "./cypress/support/consts";
 const io = require("socket.io-client");
 
 let socket: Socket;
@@ -11,7 +12,7 @@ let socket: Socket;
 export default defineConfig({
   e2e: {
     defaultCommandTimeout: 15000,
-    projectId: "n9r7rz",
+    projectId: cypressCloudProjectId,
     // baseUrl: "localhost:3000",
     async setupNodeEvents(on, config) {
       // eslint-disable-next-line global-require
