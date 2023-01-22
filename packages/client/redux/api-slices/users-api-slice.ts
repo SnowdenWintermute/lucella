@@ -5,7 +5,7 @@ import { Ban, SanitizedUser, UsersRoutePaths } from "../../../common";
 const { API_URL } = process.env;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `http://localhost:8080/api${UsersRoutePaths.ROOT}`,
+  baseUrl: `${process.env.API_URL}/api${UsersRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },
