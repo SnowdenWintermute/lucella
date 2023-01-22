@@ -9,7 +9,7 @@ export interface ILadderPageResponse {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.API_URL}/api`,
+  baseUrl: `${process.env.NEXT_PUBLIC_API}/api`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

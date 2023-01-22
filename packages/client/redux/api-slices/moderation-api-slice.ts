@@ -4,7 +4,7 @@ import { IPBanReason, ModerationRoutePaths } from "../../../common";
 const { API_URL } = process.env;
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.API_URL}/api${ModerationRoutePaths.ROOT}`,
+  baseUrl: `${process.env.NEXT_PUBLIC_API}/api${ModerationRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },
