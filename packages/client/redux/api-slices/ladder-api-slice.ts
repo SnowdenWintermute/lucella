@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { UserRecord } from "../../classes/UserRecord";
-const { API_URL } = process.env;
 
 export interface ILadderPageResponse {
   pageNumber: number;
@@ -8,8 +7,10 @@ export interface ILadderPageResponse {
   pageData: UserRecord[];
 }
 
+// must use the plain text string for localhost because CI doesn't play nice with using an env variable for some reason
+
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.NEXT_PUBLIC_API}/api`,
+  baseUrl: `http://localhost:8080/api`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

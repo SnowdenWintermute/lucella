@@ -3,10 +3,10 @@ import { LoginInput } from "../types";
 import { AuthRoutePaths } from "../../../common";
 import { usersApi } from "./users-api-slice";
 
-const { API_URL } = process.env;
+// must use the plain text string for localhost because CI doesn't play nice with using an env variable for some reason
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.NEXT_PUBLIC_API}/api${AuthRoutePaths.ROOT}`,
+  baseUrl: `http://localhost:8080/api${AuthRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

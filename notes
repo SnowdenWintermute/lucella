@@ -15,4 +15,6 @@ the following measures were taken:
 - used the failOnStatusCode: false option of cypress to find out that we were getting 500 status codes because of the redux provider allegedly being missing, even though it wasn't
 - learned that each step/run in the tests.yml starts with the cli in the top level directory, and that cd ing back and forth isn't needed
 - added the next-redux-wrapper to fix the missing provider error in ci- added the cypress logger plugin on the suggestion of a stackoverflow comment claiming it was a "game changer" and they weren't lying
-- 
+- tried using plain text url in place of NEXT_PUBLIC_API in rtk mutations because socket tests were passing but http requests weren't working
+- come to find out, on a yolo guess it was actually a cors error. ci must have a different "origin" than what we were using which was http://localhost:3000 stored in env, maybe mistyped? 
+- after cors was set to true, http requests mostly worked. had to set cypress timeout longer to recognize the toast alerts. previously the timeout was lowered to 3 seconds and retries increased to 3, but put back to 15 seconds and 1
