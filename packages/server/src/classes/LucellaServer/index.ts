@@ -22,13 +22,7 @@ export class LucellaServer {
   connectedUsers: SocketIDsByUsername = {};
   matchmakingQueue: MatchmakingQueue;
   constructor(expressServer: any) {
-    this.io = new SocketIO.Server(expressServer, {
-      // cors: {
-      //   origin: process.env.ORIGIN,
-      //   methods: ["GET", "POST"],
-      //   credentials: true,
-      // },
-    });
+    this.io = new SocketIO.Server(expressServer);
     this.io.use(socketCheckForBannedIpAddress);
     this.io.use(wrapExpressMiddlewareForSocketIO(ipRateLimiter));
     this.matchmakingQueue = new MatchmakingQueue(this);

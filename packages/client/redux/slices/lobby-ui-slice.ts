@@ -6,7 +6,7 @@ import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord
 export interface IGameScoreScreen {
   gameRoom: GameRoom;
   game: BattleRoomGame;
-  gameRecord: IBattleRoomGameRecord;
+  gameRecord: IBattleRoomGameRecord | null;
 }
 
 export interface ILobbyUIState {

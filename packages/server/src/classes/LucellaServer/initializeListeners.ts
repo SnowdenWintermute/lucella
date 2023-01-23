@@ -7,6 +7,7 @@ import { LucellaServer } from ".";
 
 export default function initializeListeners(server: LucellaServer) {
   server.io.sockets.on("connect", async (socket) => {
+    console.log(socket.handshake);
     await handleNewSocketConnection(server, socket);
     socket.emit(SocketEventsFromServer.AUTHENTICATION_COMPLETE, null);
     socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, server.lobby.getSanitizedGameRooms());
