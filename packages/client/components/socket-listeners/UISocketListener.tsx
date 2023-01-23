@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { ErrorMessages, SocketEventsFromServer } from "../../../common";
+import { ErrorMessages, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "../../../common";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -36,10 +36,10 @@ function UISocketListener({ socket }: Props) {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("connect", () => {
+    socket.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
       dispatch(clearLobbyUi());
     });
-    socket.on("connect_error", () => {
+    socket.on(GENERIC_SOCKET_EVENTS.CONNECT_ERROR, () => {
       dispatch(setAlert(new Alert(ErrorMessages.LOBBY.ERROR_CONNECTING, AlertType.DANGER)));
     });
     socket.on(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, (data) => {
@@ -70,7 +70,7 @@ function UISocketListener({ socket }: Props) {
       if (!gameName) return;
       dispatch(updateGameCountdown(countdown));
     });
-    socket.on(SocketEventsFromServer.SHOW_END_SCREEN, (data) => {
+    socket.on(SocketEventsFromServer.SHOW_SCORE_SCREEN, (data) => {
       dispatch(setScoreScreenData(data));
       dispatch(setShowScoreScreenModal(true));
     });
@@ -84,8 +84,8 @@ function UISocketListener({ socket }: Props) {
       dispatch(setMatchmakingWindowVisible(false));
     });
     return () => {
-      socket.off("connect");
-      socket.off("connect_error");
+      socket.off(GENERIC_SOCKET_EVENTS.CONNECT);
+      socket.off(GENERIC_SOCKET_EVENTS.CONNECT_ERROR);
       socket.off(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE);
       socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
       socket.off(SocketEventsFromServer.GAME_CLOSED_BY_HOST);
@@ -93,7 +93,7 @@ function UISocketListener({ socket }: Props) {
       socket.off(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT);
       socket.off(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE);
       socket.off(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE);
-      socket.off(SocketEventsFromServer.SHOW_END_SCREEN);
+      socket.off(SocketEventsFromServer.SHOW_SCORE_SCREEN);
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE);
       socket.off(SocketEventsFromServer.MATCH_FOUND);

@@ -15,6 +15,7 @@ export default function mouseUpHandler(
   if (!(e.button === 0 || e.button === 2) || !playerRole) return;
   const { mouseData } = currentGame;
   if (!mouseData || !mouseData.position) return;
+  console.log("mouse button ", e.button, " released at: ", mouseData.position.x, mouseData.position.y);
   let input;
   if (e.button === 2) {
     mouseData.rightReleasedAt = new Point(mouseData.position.y, mouseData.position.x);

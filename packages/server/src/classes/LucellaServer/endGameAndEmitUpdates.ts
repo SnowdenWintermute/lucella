@@ -20,9 +20,13 @@ export default async function endGameAndEmitUpdates(server: LucellaServer, game:
   const loser = gameRoom.winner === players.host?.associatedUser.username ? players.challenger?.associatedUser.username : players.host?.associatedUser.username;
 
   // eslint-disable-next-line prefer-const
-  let gameRecord: IBattleRoomGameRecord | null = null;
+  let gameRecord: IBattleRoomGameRecord | { firstPlayerScore: number; secondPlayerScore: number } | null = {
+    firstPlayerScore: game.score.host,
+    secondPlayerScore: game.score.challenger,
+  };
+  console.log("game ended: ", game);
   if (!gameRoom.winner || !loser) console.error("Tried to update game records but either winner or loser wasn't found");
-  else gameRecord = await updateScoreCardsAndSaveGameRecord(gameRoom.winner, gameRoom, game, gameRoom.isRanked);
+  else if (game.isRanked) gameRecord = await updateScoreCardsAndSaveGameRecord(gameRoom.winner, gameRoom, game, gameRoom.isRanked);
   // determineNewLadderRanks() not yet created
   io.in(gameChatChannelName).emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
 
@@ -33,7 +37,8 @@ export default async function endGameAndEmitUpdates(server: LucellaServer, game:
     if (game.gameOverCountdown.current! >= 1) return;
     game.clearGameEndingCountdownInterval();
 
-    io.in(gameChatChannelName).emit(SocketEventsFromServer.SHOW_END_SCREEN, {
+    console.log("gameRecord: ", gameRecord);
+    io.in(gameChatChannelName).emit(SocketEventsFromServer.SHOW_SCORE_SCREEN, {
       gameRoom,
       gameRecord,
     });

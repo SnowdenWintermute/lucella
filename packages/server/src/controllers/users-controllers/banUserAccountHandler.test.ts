@@ -15,6 +15,7 @@ import {
   SocketEventsFromServer,
   UserRole,
   UsersRoutePaths,
+  GENERIC_SOCKET_EVENTS,
 } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -83,9 +84,9 @@ describe("banUserAccountHandler", () => {
       const banDuration = 60 * ONE_MINUTE;
 
       // ensure they are connected so we know banning the account actually disconnects them
-      socket.on("connect", async () => {
+      socket.on(GENERIC_SOCKET_EVENTS.CONNECT, async () => {
         expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
-        socket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, async (data) => {
+        socket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, async () => {
           socket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannelNames.BATTLE_ROOM_CHAT);
         });
         socket.on(SocketEventsFromServer.NEW_CHAT_MESSAGE, async () => {
@@ -104,7 +105,7 @@ describe("banUserAccountHandler", () => {
           expect(response.status).toBe(204);
         });
         // sockets are disconnected
-        socket.on("disconnect", async () => {
+        socket.on(GENERIC_SOCKET_EVENTS.DISCONNECT, async () => {
           expect(Object.keys(lucella.server!.connectedSockets!).length).toBe(0);
           expect(lucella.server?.connectedUsers[user.name]).toBeUndefined();
           // can't log in after acconut ban

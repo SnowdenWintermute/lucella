@@ -1,13 +1,12 @@
 /* eslint-disable consistent-return */
-import { ErrorMessages, SocketEventsFromServer } from "../../../../common";
+import { ErrorMessages, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "../../../../common";
 import handleNewSocketConnection from "./handleNewSocketConnection";
 import lobbyUiListeners from "./listeners/lobbyUiListeners";
 import battleRoomGameListeners from "./listeners/battleRoomGameListeners";
 import { LucellaServer } from ".";
 
 export default function initializeListeners(server: LucellaServer) {
-  server.io.sockets.on("connect", async (socket) => {
-    console.log(socket.handshake);
+  server.io.sockets.on(GENERIC_SOCKET_EVENTS.CONNECT, async (socket) => {
     await handleNewSocketConnection(server, socket);
     socket.emit(SocketEventsFromServer.AUTHENTICATION_COMPLETE, null);
     socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, server.lobby.getSanitizedGameRooms());
@@ -17,6 +16,6 @@ export default function initializeListeners(server: LucellaServer) {
     });
     lobbyUiListeners(server, socket);
     battleRoomGameListeners(server, socket);
-    socket.on("disconnect", () => server.handleSocketDisconnection(socket));
+    socket.on(GENERIC_SOCKET_EVENTS.DISCONNECT, () => server.handleSocketDisconnection(socket));
   });
 }

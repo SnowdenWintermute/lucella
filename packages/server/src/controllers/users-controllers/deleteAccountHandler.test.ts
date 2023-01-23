@@ -2,7 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import io from "socket.io-client";
 import { IncomingMessage, Server, ServerResponse } from "node:http";
-import { AuthRoutePaths, ErrorMessages, randBetween, UsersRoutePaths } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, randBetween, UsersRoutePaths, GENERIC_SOCKET_EVENTS } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import UserRepo from "../../database/repos/users";
@@ -66,7 +66,7 @@ describe("deleteAccountHandler", () => {
         extraHeaders: { cookie: `access_token=${accessToken};` },
       });
 
-      socket.on("connect", async () => {
+      socket.on(GENERIC_SOCKET_EVENTS.CONNECT, async () => {
         // ensure they are connected so we know deleting account actually disconnects them
         expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
         // user deletes their account

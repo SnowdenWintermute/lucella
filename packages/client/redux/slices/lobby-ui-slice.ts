@@ -98,7 +98,6 @@ const ladderSlice = createSlice({
       state.gameList.games = action.payload;
     },
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
-      // @ts-ignore
       state.scoreScreenData = action.payload;
     },
   },

@@ -20,7 +20,7 @@ export default function handleSocketLeavingGame(server: LucellaServer, socket: S
   else {
     const game = games[currentGameName];
     game.winner = playerToKick ? players.host?.associatedUser.username : players.challenger?.associatedUser.username;
-    if (gameRoom.gameStatus === GameStatus.ENDING) return;
+    // if (gameRoom.gameStatus === GameStatus.ENDING) return;
     gameRoom.winner = game.winner === PlayerRole.HOST ? players!.host!.associatedUser.username : players!.challenger!.associatedUser.username;
     server.endGameAndEmitUpdates(game);
   }

@@ -1,5 +1,5 @@
 import { ThunkAction } from "@reduxjs/toolkit";
-import React, { useEffect, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import { useAppDispatch } from "../../../redux/hooks";
 
 interface Props {
@@ -17,7 +17,6 @@ const Modal = ({ isOpen, children, setParentDisplay, title, screenClass, frameCl
   const dispatch = useAppDispatch();
 
   function handleClick() {
-    console.log("modal x button");
     dispatch(setParentDisplay(false));
   }
 

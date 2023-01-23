@@ -17,6 +17,7 @@ import {
   SocketEventsFromServer,
   UserRole,
   UsersRoutePaths,
+  GENERIC_SOCKET_EVENTS,
 } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -80,7 +81,7 @@ describe("banIpHandler.test", () => {
 
       const banDuration = 60 * ONE_MINUTE;
       // ensure they are connected so we know banning the account actually disconnects them
-      socket.on("connect", async () => {
+      socket.on(GENERIC_SOCKET_EVENTS.CONNECT, async () => {
         expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
         socket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, async (data) => {
           socket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannelNames.BATTLE_ROOM_CHAT);
@@ -105,7 +106,7 @@ describe("banIpHandler.test", () => {
 
         expect(response.status).toBe(201);
       });
-      socket.on("disconnect", async () => {
+      socket.on(GENERIC_SOCKET_EVENTS.DISCONNECT, async () => {
         // sockets are disconnected
         expect(Object.keys(lucella.server!.connectedSockets!).length).toBe(0);
         expect(lucella.server?.connectedUsers[nameOfAnonUserToBan]).toBeUndefined();
@@ -127,12 +128,12 @@ describe("banIpHandler.test", () => {
         });
 
         // should never receive connection event
-        secondSocketConnection.on("connect", () => {
+        secondSocketConnection.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
           // eslint-disable-next-line no-undef
           fail("it should not reach here");
         });
 
-        secondSocketConnection.on("connect_error", async () => {
+        secondSocketConnection.on(GENERIC_SOCKET_EVENTS.CONNECT_ERROR, async () => {
           // socket should not be allowed to connect due to the middleware that checks for banned ips
           // after waiting the duration of their ban, they can log in again
           const currentTime = Date.now();
@@ -148,7 +149,7 @@ describe("banIpHandler.test", () => {
             transports: ["websocket"],
           });
           // should now be allowed to connect to socket server once again
-          thirdSocketConnection.on("connect", () => {
+          thirdSocketConnection.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
             global.Date.now = realDateNow;
             done();
           });

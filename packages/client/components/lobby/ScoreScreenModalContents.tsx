@@ -60,13 +60,13 @@ function ScoreScreenModalContents() {
         <tbody>
           <tr>
             <td>{scoreScreenData.gameRoom.players.host!.associatedUser.username}:</td>
-            <td>{scoreScreenData.gameRecord!.firstPlayerScore}</td>
+            <td>{scoreScreenData.gameRecord?.firstPlayerScore}</td>
           </tr>
           <tr>
             <td>{scoreScreenData.gameRoom.players.challenger!.associatedUser.username}:</td>
-            <td>{scoreScreenData.gameRecord!.firstPlayerScore}</td>
+            <td>{scoreScreenData.gameRecord?.secondPlayerScore}</td>
           </tr>
-          {!scoreScreenData.gameRecord ? (
+          {!scoreScreenData.gameRecord?.firstPlayerPreGameElo ? (
             <tr>
               <td>No changes to ladder rating</td>
             </tr>

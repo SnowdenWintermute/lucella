@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
-import { BattleRoomGame, IBattleRoomGameRecord, User } from "../../../../common";
+import { BattleRoomGame, User } from "../../../../common";
 import { Lobby } from "../Lobby";
 import initializeListeners from "./initializeListeners";
 import { SocketIDsByUsername, SocketMetadataList } from "../../types";

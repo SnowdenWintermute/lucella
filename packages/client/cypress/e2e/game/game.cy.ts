@@ -6,10 +6,13 @@ import {
   gameRoomCountdownDuration,
   GameStatus,
   OfficialChannels,
+  ONE_SECOND,
+  rankedGameChannelNamePrefix,
   SocketEventsFromClient,
 } from "../../../../common";
 import { mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
+import { MATCHMAKING_QUEUE } from "../../../consts/lobby-text";
 
 describe("play game", () => {
   // eslint-disable-next-line no-undef
@@ -29,7 +32,6 @@ describe("play game", () => {
         name: Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE"),
         email: Cypress.env("CYPRESS_TEST_USER_EMAIL_ALTERNATE"),
       }).then((secondCreateTestUserResponse: Response) => {
-        console.log("othre user");
         expect(secondCreateTestUserResponse.status).to.equal(201);
       });
     });
@@ -42,6 +44,7 @@ describe("play game", () => {
 
   it("joins the matchmaking queue and plays a game", () => {
     const username = Cypress.env("CYPRESS_TEST_USER_NAME");
+    const alternateUsername = Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE");
     // log in so we can play ranked
     cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
@@ -49,11 +52,44 @@ describe("play game", () => {
     });
     // log in other user
     cy.task(TaskNames.logUserIn, { email: Cypress.env("CYPRESS_TEST_USER_EMAIL_ALTERNATE"), password: Cypress.env("CYPRESS_TEST_USER_PASSWORD") }).then(() => {
-      cy.task(TaskNames.connectSocket);
+      cy.task(TaskNames.connectSocket, { withHeaders: true });
       cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, data: battleRoomDefaultChatChannel });
     });
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
-    cy.wait(4000);
+    cy.findByRole("heading", { name: /battle room/i }).should("be.visible");
+    cy.findByText(username).should("be.visible");
+    cy.findByText(alternateUsername).should("be.visible");
+    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
+    cy.findByRole("button", { name: /ranked/i }).click();
+    cy.findByText(new RegExp(MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
+    cy.wait(gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND);
+    cy.get('[data-cy="battle-room-canvas"]').should("be.visible");
+    cy.get("body").click("topLeft");
+    cy.get('[data-cy="battle-room-canvas"]').then((canvas) => {
+      cy.wrap(canvas)
+        .trigger("keydown", { key: "0" })
+        .trigger("keydown", { key: "0" })
+        .trigger("mousemove", 20, 20, { force: true, eventConstructor: "MouseEvent" })
+        .wait(1000)
+        .trigger("mousedown", { button: 0, force: true, eventConstructor: "MouseEvent" })
+        .trigger("mousemove", 100, 100, { force: true, eventConstructor: "MouseEvent" })
+        .wait(1000)
+        .trigger("mouseup", { force: true, eventConstructor: "MouseEvent" })
+        .trigger("mousemove", 3, 730, { force: true, eventConstructor: "MouseEvent" })
+        .wait(1000)
+        .trigger("mouseup", 3, 730, { button: 2, force: true, eventConstructor: "MouseEvent" });
+    });
+
+    cy.get('[data-cy="score-screen-modal"]')
+      .findByText(new RegExp(`Game ${rankedGameChannelNamePrefix}\\d+ final score:`, "i"))
+      .should("exist");
+    cy.get('[data-cy="score-screen-modal"]')
+      .contains(new RegExp(`${username}:`, "i"))
+      .should("be.visible");
+    cy.get('[data-cy="score-screen-modal"]')
+      .contains(new RegExp(`${alternateUsername}:`, "i"))
+      .should("be.visible");
+
     // cy.findByText(new RegExp(username, "i")).should("exist");
     // cy.findByRole("button", { name: /ranked/i }).click();
     // cy.get('[data-cy="game-name-input"]').click().type("{enter}");

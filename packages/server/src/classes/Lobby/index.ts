@@ -48,6 +48,7 @@ export class Lobby {
   handleNewChatMessage(socket: Socket, data: { style: ChatMessageStyles; text: string }) {
     // @todo - check the style the user sends against a list of valid styles for that user (can sell styles)
     const { style, text } = data;
+    if (!this.server.connectedSockets[socket.id]) return console.log("error sending chat message, the socket is not registered");
     if (!this.server.connectedSockets[socket.id].currentChatChannel) return console.error("error sending chat message, the socket is not in a chat channel");
     this.server.io
       .in(this.server.connectedSockets[socket.id].currentChatChannel!)
@@ -77,6 +78,7 @@ export class Lobby {
   }
   handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
     gameName = gameName.toLowerCase();
+    if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_HOST_IF_ALREADY_IN_GAME);
     const gameCreationError = this.createGameRoom(gameName, isRanked);
@@ -89,6 +91,7 @@ export class Lobby {
     if (!this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
     if (this.gameRooms[gameName].isRanked && !assignedToGameByMatchmaking)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
+    if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
     this.changeSocketChatChannelAndEmitUpdates(socket, gameChannelNamePrefix + gameName, true);

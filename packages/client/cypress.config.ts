@@ -80,15 +80,22 @@ export default defineConfig({
             return error;
           }
         },
-        [TaskNames.connectSocket]: () => {
-          socket = io("http://localhost:8080" || "", {
-            transports: ["websocket"],
-            withCredentials: true,
-            // reconnectionAttempts: 3,
-            extraHeaders: {
-              cookie: accessToken,
-            },
-          });
+        [TaskNames.connectSocket]: (args: { withHeaders?: boolean }) => {
+          if (args?.withHeaders)
+            socket = io("http://localhost:8080" || "", {
+              transports: ["websocket"],
+              withCredentials: true,
+              // reconnectionAttempts: 3,
+              extraHeaders: {
+                cookie: accessToken,
+              },
+            });
+          else
+            socket = io("http://localhost:8080" || "", {
+              transports: ["websocket"],
+              withCredentials: true,
+              // reconnectionAttempts: 3,
+            });
           return null;
         },
         [TaskNames.disconnectSocket]: () => {

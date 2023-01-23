@@ -54,17 +54,6 @@ export default class UserRepo {
     const { rows } = await wrappedPool.query(`DELETE FROM ${PSQL_TABLES.USERS} WHERE id = $1 RETURNING *;`, [id]);
     return toCamelCase(rows)![0] as unknown as User;
   }
-  static async deleteTestUsers() {
-    // if (process.env.NODE_ENV === "development")
-    await wrappedPool.query(`DELETE FROM ${PSQL_TABLES.USERS} WHERE name = $1 OR name = $2;`, [
-      TEST_USER_NAME.toLowerCase().trim(),
-      TEST_USER_NAME_ALTERNATE.toLowerCase().trim(),
-    ]);
-    // else {
-    //   console.log("can't drop all userse unless in development mode");
-    //   throw new Error("can't drop users unless in development mode");
-    // }
-  }
   static async count() {
     const { rows } = await wrappedPool.query(`SELECT COUNT(*) FROM ${PSQL_TABLES.USERS};`);
     return parseInt(rows[0].count, 10);

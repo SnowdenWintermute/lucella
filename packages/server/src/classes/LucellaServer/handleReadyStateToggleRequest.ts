@@ -28,7 +28,7 @@ export default function handleReadyStateToggleRequest(server: LucellaServer, soc
       if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
       gameRoom.gameStatus = GameStatus.IN_PROGRESS;
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-      games[currentGameName] = new BattleRoomGame(currentGameName);
+      games[currentGameName] = new BattleRoomGame(currentGameName, true);
       const game = games[currentGameName];
       io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
       game.intervals.physics = createGamePhysicsInterval(io, socket, server, currentGameName);

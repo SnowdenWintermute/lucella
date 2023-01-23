@@ -48,7 +48,7 @@ export default function authedUserHostAndStartGame() {
     // challenger rejoins, all players ready up then challenger disconnects
     cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
     cy.findByText(/Awaiting challenger.../i).should("not.exist");
-    cy.get('[data-cy="challenger-info"]').findByText(/Anon/i).should("exist");
+    cy.get('[data-cy="challenger-info"]').findByText(/Anon/i).should("be.visible");
     cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.CLICKS_READY });
     cy.findByLabelText("challenger status").find("svg").should("exist");
     cy.findByLabelText("host status").find("svg").should("not.exist");
@@ -82,7 +82,7 @@ export default function authedUserHostAndStartGame() {
     cy.wait(gameRoomCountdownDuration);
     cy.get('[data-cy="battle-room-canvas"]').should("exist");
     // challenger leaves game
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.LEAVES_GAME, data: shortTestText });
+    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.LEAVES_GAME });
     cy.get('[data-cy="score-screen-modal"]')
       .findByText(new RegExp(`Game ${shortTestText} final score:`, "i"))
       .should("exist");
