@@ -1,16 +1,14 @@
 import {
   AuthRoutePaths,
   battleRoomDefaultChatChannel,
-  ErrorMessages,
+  BattleRoomGame,
   FrontendRoutes,
   gameRoomCountdownDuration,
-  GameStatus,
-  OfficialChannels,
   ONE_SECOND,
   rankedGameChannelNamePrefix,
   SocketEventsFromClient,
+  createAdjustedCoordinateCalculator,
 } from "../../../../common";
-import { mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 import { MATCHMAKING_QUEUE } from "../../../consts/lobby-text";
 
@@ -64,22 +62,28 @@ describe("play game", () => {
     cy.findByText(new RegExp(MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
     cy.wait(gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND);
     cy.get('[data-cy="battle-room-canvas"]').should("be.visible");
+    // select all orbs and send them to opponent end zone
     cy.get("body").click("topLeft");
     cy.get('[data-cy="battle-room-canvas"]').then((canvas) => {
+      const getAdjustedX = createAdjustedCoordinateCalculator(BattleRoomGame.baseWindowDimensions.width, 0.6);
+      const getAdjustedY = createAdjustedCoordinateCalculator(BattleRoomGame.baseWindowDimensions.height, 1);
+      const windowHeight = Cypress.config("viewportHeight");
       cy.wrap(canvas)
         .trigger("keydown", { key: "0" })
         .trigger("keydown", { key: "0" })
-        .trigger("mousemove", 20, 20, { force: true, eventConstructor: "MouseEvent" })
-        .wait(1000)
-        .trigger("mousedown", { button: 0, force: true, eventConstructor: "MouseEvent" })
-        .trigger("mousemove", 100, 100, { force: true, eventConstructor: "MouseEvent" })
-        .wait(1000)
-        .trigger("mouseup", { force: true, eventConstructor: "MouseEvent" })
-        .trigger("mousemove", 3, 730, { force: true, eventConstructor: "MouseEvent" })
-        .wait(1000)
-        .trigger("mouseup", 3, 730, { button: 2, force: true, eventConstructor: "MouseEvent" });
+        .trigger("mousemove", getAdjustedX(10, windowHeight), getAdjustedY(10, windowHeight), {
+          eventConstructor: "MouseEvent",
+        })
+        .wait(100)
+        .trigger("mousedown", { button: 0, eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedX(200, windowHeight), { eventConstructor: "MouseEvent" })
+        .wait(100)
+        .trigger("mouseup", { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(10, windowHeight), getAdjustedX(730, windowHeight), { eventConstructor: "MouseEvent" })
+        .wait(100)
+        .trigger("mouseup", { button: 2, eventConstructor: "MouseEvent" });
     });
-
+    //
     cy.get('[data-cy="score-screen-modal"]')
       .findByText(new RegExp(`Game ${rankedGameChannelNamePrefix}\\d+ final score:`, "i"))
       .should("exist");
