@@ -14,6 +14,7 @@ export default async function updateScoreCardsAndSaveGameRecord(
   isRanked: boolean
 ): Promise<IBattleRoomGameRecord | null> {
   if (!isRanked) return null;
+  console.log("updating score cards for game ", game.gameName);
 
   const winnerRole = gameRoom.players.host?.associatedUser.username === winner ? PlayerRole.HOST : PlayerRole.CHALLENGER;
 

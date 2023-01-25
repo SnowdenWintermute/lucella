@@ -25,6 +25,7 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
     server.handleReadyStateToggleRequest(socket);
   });
   socket.on(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE, () => {
+    console.log(socket.id, " ENTERS MATCHMAKING HEARD");
     server.matchmakingQueue.addUser(socket);
   });
   socket.on(SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE, () => {

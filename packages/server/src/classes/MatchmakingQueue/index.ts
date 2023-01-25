@@ -9,13 +9,11 @@ import {
   OfficialChannels,
   ONE_SECOND,
   UserStatuses,
-  IBattleRoomGameRecord,
   IBattleRoomScoreCard,
-} from "../../../common";
-import UserRepo from "../database/repos/users";
-import { wrappedRedis } from "../utils/RedisContext";
-// import { IBattleRoomRecord } from "../models/BattleRoomRecord";
-import { LucellaServer } from "./LucellaServer";
+} from "../../../../common";
+import UserRepo from "../../database/repos/users";
+import { wrappedRedis } from "../../utils/RedisContext";
+import { LucellaServer } from "../LucellaServer";
 
 export interface MatchmakingQueueUser {
   userId: string;
@@ -40,6 +38,7 @@ export class MatchmakingQueue {
   async addUser(socket: Socket) {
     const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id].associatedUser.username);
     if (!user || user.status === UserStatuses.DELETED) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED);
+    if (this.users[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.ALREADY_IN_MATCHMAKING_QUEUE);
     const userBattleRoomRecord = await LucellaServer.fetchOrCreateBattleRoomScoreCard(user);
     this.users[socket.id] = {
       userId: user.id.toString(), // todo- investigate why this needs to be a string and not anumber
@@ -51,12 +50,11 @@ export class MatchmakingQueue {
     wrappedRedis.context!.set(user.id.toString(), JSON.stringify(user), {
       EX: parseInt(process.env.AUTH_SESSION_EXPIRATION!, 10),
     });
-    //
+
     socket.join(OfficialChannels.matchmakingQueue);
     socket.emit(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
     this.currentEloDiffThreshold = 0;
-    if (this.matchmakingInterval) return;
-    this.createMatchmakingInterval();
+    if (!this.matchmakingInterval) this.createMatchmakingInterval();
   }
   removeUser(socketId: string) {
     delete this.users[socketId];
@@ -77,6 +75,18 @@ export class MatchmakingQueue {
       });
       const bestMatch = this.getBestMatch();
       const { players, eloDiff } = bestMatch;
+      console.log(
+        "matchmaking interval ",
+        this.currentIntervalIteration,
+        "users in queue: ",
+        Object.values(this.users).map((value) => value.username),
+        "currThreshold: ",
+        this.currentEloDiffThreshold,
+        "bestMatch: ",
+        players?.challenger.username,
+        players?.host.username,
+        eloDiff
+      );
 
       if (players === null || eloDiff === null || eloDiff >= this.currentEloDiffThreshold) return this.increaseEloDiffMatchingThreshold();
 
@@ -130,24 +140,25 @@ export class MatchmakingQueue {
     const usersSortedByElo = Object.keys(this.users)
       .reduce((accumulator, socketId: string) => {
         if (!this.server.io.sockets.sockets.get(socketId)) {
-          console.log("User in matchmaking queue is no longer connected, removing them from queue.");
+          // console.log("User in matchmaking queue is no longer connected, removing them from queue.");
           delete this.users[socketId];
         } else accumulator.push(this.users[socketId]);
         return accumulator;
       }, [] as MatchmakingQueueUser[])
       .sort((a, b) => a.record.elo - b.record.elo);
 
+    // we sorted them by elo so the closest elo matched players will be next to each other
+    // just check the next player up the list and see if the difference in elo is smaller
     usersSortedByElo.forEach((user, i) => {
-      // we sorted them by elo so the closest elo matched players will be next to each other
-      const usersToCompare = [usersSortedByElo[i - 1], usersSortedByElo[i + 1]];
-      usersToCompare.forEach((userToCompare) => {
-        if (!userToCompare) return;
-        const eloDiff = Math.abs(userToCompare.record.elo - user!.record.elo);
-        if (!twoBestMatchedPlayersInQueue.eloDiff || (twoBestMatchedPlayersInQueue.eloDiff && eloDiff > twoBestMatchedPlayersInQueue.eloDiff)) {
-          twoBestMatchedPlayersInQueue.eloDiff = eloDiff;
-          twoBestMatchedPlayersInQueue.players = { host: user!, challenger: userToCompare };
-        }
-      });
+      const userWithHigherElo = usersSortedByElo[i + 1];
+      if (!userWithHigherElo) return;
+      const eloDiff = Math.abs(userWithHigherElo.record.elo - user.record.elo);
+      console.log("elo diff between ", user.username, " and ", userWithHigherElo.username, ": ", eloDiff);
+
+      if (!twoBestMatchedPlayersInQueue.eloDiff || eloDiff < twoBestMatchedPlayersInQueue.eloDiff) {
+        twoBestMatchedPlayersInQueue.eloDiff = eloDiff;
+        twoBestMatchedPlayersInQueue.players = { host: user, challenger: userWithHigherElo };
+      }
     });
     return twoBestMatchedPlayersInQueue;
   }

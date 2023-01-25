@@ -31,13 +31,13 @@ export class LucellaServer {
     // this.rankedQueue = new RankedQueue()
   }
 
-  handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {
-    handleSocketLeavingGame(this, socket, isDisconnecting);
+  async handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {
+    await handleSocketLeavingGame(this, socket, isDisconnecting);
   }
-  handleSocketDisconnection(socket: Socket) {
+  async handleSocketDisconnection(socket: Socket) {
     if (!this.connectedSockets[socket.id]) return;
     const socketMetaLeaving = this.connectedSockets[socket.id];
-    if (socketMetaLeaving.currentGameName) this.handleSocketLeavingGame(socket, true);
+    if (socketMetaLeaving.currentGameName) await this.handleSocketLeavingGame(socket, true);
     else this.lobby.changeSocketChatChannelAndEmitUpdates(socket, null, false);
 
     const userLeaving = socketMetaLeaving.associatedUser;
@@ -61,8 +61,8 @@ export class LucellaServer {
     });
     console.log(`forcibly disconnected user ${username} and their socket(s) ${socketIdsDisconnected.join(", ")}`);
   }
-  endGameAndEmitUpdates(game: BattleRoomGame) {
-    endGameAndEmitUpdates(this, game);
+  async endGameAndEmitUpdates(game: BattleRoomGame) {
+    await endGameAndEmitUpdates(this, game);
   }
   handleReadyStateToggleRequest(socket: Socket) {
     handleReadyStateToggleRequest(this, socket);

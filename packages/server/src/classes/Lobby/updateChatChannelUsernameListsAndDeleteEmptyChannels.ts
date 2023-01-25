@@ -35,6 +35,6 @@ export default function updateChatChannelUsernameListsAndDeleteEmptyChannels(
         connectedSockets: [socketMeta.socketId!],
       };
     else channelJoining.connectedUsers[username].connectedSockets.push(socketMeta.socketId!);
-    console.log(`${socketMeta.socketId} added to ${channelNameJoining}'s list`);
+    console.log(`${socketMeta.associatedUser.username} added to ${channelNameJoining}'s list`);
   }
 }

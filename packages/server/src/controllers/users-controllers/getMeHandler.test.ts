@@ -3,12 +3,12 @@ import request from "supertest";
 import { ErrorMessages, UsersRoutePaths, UserStatuses, User } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
-import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import { signJwtAsymmetric } from "../utils/jwt";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
+import logTestUserIn from "../../utils/test-utils/logTestUserIn";
 
 describe("getMeHandler", () => {
   let context: PGContext | undefined;
@@ -29,8 +29,7 @@ describe("getMeHandler", () => {
   });
 
   it("gets user information in response", async () => {
-    const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-    const { accessToken } = await signTokenAndCreateSession(user);
+    const { accessToken } = await logTestUserIn(TEST_USER_EMAIL);
 
     const response = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)

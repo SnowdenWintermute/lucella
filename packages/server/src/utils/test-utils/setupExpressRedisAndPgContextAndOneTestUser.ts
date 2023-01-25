@@ -1,16 +1,14 @@
-import bcrypt from "bcryptjs";
 import createExpressApp from "../../createExpressApp";
 import PGContext from "../PGContext";
 import { RedisContext, wrappedRedis } from "../RedisContext";
-import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "./consts";
-import UserRepo from "../../database/repos/users";
+import { TEST_USER_EMAIL, TEST_USER_NAME } from "./consts";
+import createTestUser from "./createTestUser";
 
 export default async function setupExpressRedisAndPgContextAndOneTestUser() {
   const pgContext = await PGContext.build();
   const expressApp = createExpressApp();
   wrappedRedis.context = RedisContext.build(true);
   await wrappedRedis.context.connect();
-  const hashedPassword = await bcrypt.hash(TEST_USER_PASSWORD, 12);
-  await UserRepo.insert(TEST_USER_NAME, TEST_USER_EMAIL, hashedPassword);
+  await createTestUser(TEST_USER_NAME, TEST_USER_EMAIL);
   return { pgContext, expressApp };
 }

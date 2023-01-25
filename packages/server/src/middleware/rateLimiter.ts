@@ -51,7 +51,6 @@ export default function createRateLimiterMiddleware(
 
     async function updateRateCountersAndDetermineLimiting(key: string) {
       const keyWithLabel = key + label;
-      console.log("key with label: ", keyWithLabel);
       const requestsInCurrentCounter = await context!.hIncrBy(keyWithLabel, currentCounterIntervalTimestamp.toString(), 1);
       await context!.expire(keyWithLabel, slidingWindowMs / ONE_SECOND);
       // determine if the fixed window counter limit has been reached

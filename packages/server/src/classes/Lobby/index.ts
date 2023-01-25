@@ -56,7 +56,7 @@ export class Lobby {
   }
   changeSocketChatChannelAndEmitUpdates(socket: Socket, channelNameJoining: string | null, authorizedForGameChannel?: boolean) {
     const { io, connectedSockets } = this.server;
-    if (!socket || !connectedSockets[socket.id]) return console.error("error handling change chat channel request - no socket registered with server");
+    if (!socket || !connectedSockets[socket.id]) return;
     if (channelNameJoining) channelNameJoining = toKebabCase(channelNameJoining);
 
     const channelNameLeaving = connectedSockets[socket.id].currentChatChannel;

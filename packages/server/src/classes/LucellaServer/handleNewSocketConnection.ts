@@ -39,7 +39,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
       server.connectedUsers[userToReturn.name!].push(socket.id);
     }
 
-    console.log(`user ${userToReturn.name} with ip of ${ipAddress} connected on socket ${socket.id}`);
+    // console.log(`user ${userToReturn.name} with ip of ${ipAddress} connected on socket ${socket.id}`);
   } catch (error) {
     // @ todo - handle this better
     console.log(error);

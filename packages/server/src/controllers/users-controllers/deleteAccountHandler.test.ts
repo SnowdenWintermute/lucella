@@ -5,13 +5,12 @@ import { IncomingMessage, Server, ServerResponse } from "node:http";
 import { AuthRoutePaths, ErrorMessages, randBetween, UsersRoutePaths, GENERIC_SOCKET_EVENTS } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
-import UserRepo from "../../database/repos/users";
-import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { lucella } from "../../lucella";
 import { LucellaServer } from "../../classes/LucellaServer";
+import logTestUserIn from "../../utils/test-utils/logTestUserIn";
 
 describe("deleteAccountHandler", () => {
   let context: PGContext | undefined;
@@ -47,8 +46,7 @@ describe("deleteAccountHandler", () => {
   });
 
   it("doesn't let a user delete an account without providing their password", async () => {
-    const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-    const { accessToken } = await signTokenAndCreateSession(user);
+    const { accessToken } = await logTestUserIn(TEST_USER_EMAIL);
     const response = await request(app)
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`)
       .set("Cookie", [`access_token=${accessToken}`]);
@@ -58,8 +56,7 @@ describe("deleteAccountHandler", () => {
 
   it("flags account as deleted, logs out user and doesn't let them log in with the deleted account", (done) => {
     async function thisTest() {
-      const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-      const { accessToken } = await signTokenAndCreateSession(user);
+      const { user, accessToken } = await logTestUserIn(TEST_USER_EMAIL);
 
       const socket = await io(`http://localhost:${port}`, {
         transports: ["websocket"],
