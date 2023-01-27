@@ -130,6 +130,19 @@ export class Lobby {
   handleSocketLeavingGameRoom(socket: Socket, gameRoom: GameRoom, isDisconnecting: boolean, playerToKick?: SocketMetadata) {
     handleSocketLeavingGameRoom(this.server, socket, gameRoom, isDisconnecting, playerToKick);
   }
+  handleSocketLeavingRankedGameRoom(socket: Socket, gameRoom: GameRoom) {
+    const { challenger, host } = gameRoom.players;
+    const otherPlayer = challenger?.socketId === socket.id ? host : challenger;
+    gameRoom.cancelCountdownInterval();
+    delete this.server.lobby.gameRooms[gameRoom.gameName];
+    if (!otherPlayer) return;
+    otherPlayer!.currentGameName = null;
+    const otherPlayerSocket = this.server.io.sockets.sockets.get(otherPlayer!.socketId!);
+    this.changeSocketChatChannelAndEmitUpdates(otherPlayerSocket!, otherPlayer!.previousChatChannelName!);
+    otherPlayerSocket?.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
+    this.server.matchmakingQueue.removeUser(otherPlayer!.socketId!);
+    this.server.matchmakingQueue.addUser(otherPlayerSocket!);
+  }
   removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom: GameRoom, socketMeta: SocketMetadata) {
     if (!socketMeta) return console.log("Tried to remove a player from game room but player did not exist in that room");
     this.server.io.sockets.sockets.get(socketMeta.socketId!)?.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);

@@ -72,19 +72,12 @@ export default function createRateLimiterMiddleware(
       for (let i = 0; i < entries.length; i += 1) {
         const [key, value] = entries[i];
         const thisCounterTimestamp = parseInt(key, 10);
-        if (now - window >= thisCounterTimestamp) {
-          console.log("deleting old counter: ", key);
-          console.log("now - window: ", now - window, "Key: ", key, "diff: ", now - window - parseInt(key, 10));
-          context!.hDel(keyWithLabel, key);
-        } else {
+        if (now - window >= thisCounterTimestamp) context!.hDel(keyWithLabel, key);
+        else {
           const reqsInThisCounter = parseInt(value, 10);
           totalReqsInWindow += reqsInThisCounter;
           // determine if request should be allowed or denied
-          if (totalReqsInWindow > windowLimit) {
-            console.log("now - window: ", now - window, "Key: ", key, "diff: ", now - window - parseInt(key, 10));
-            console.log(`denied request at ${totalReqsInWindow} on iteration ${i + 1} for window size of ${window / ONE_MINUTE} minutes`);
-            return onSlidingWindowLimitReached(next);
-          }
+          if (totalReqsInWindow > windowLimit) return onSlidingWindowLimitReached(next);
         }
       }
     }

@@ -8,7 +8,6 @@ import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
-// import BattleRoomRecord from "../../models/BattleRoomRecord";
 import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
 import { ipRateLimiter } from "../../middleware/rateLimiter";
 import { wrapExpressMiddlewareForSocketIO } from "../../utils/wrapExpressMiddlewareForSocketIO";
@@ -28,7 +27,6 @@ export class LucellaServer {
     this.matchmakingQueue = new MatchmakingQueue(this);
     this.lobby = new Lobby(this);
     initializeListeners(this);
-    // this.rankedQueue = new RankedQueue()
   }
 
   async handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {

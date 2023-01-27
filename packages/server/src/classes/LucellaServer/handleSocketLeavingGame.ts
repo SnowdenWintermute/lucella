@@ -15,9 +15,10 @@ export default async function handleSocketLeavingGame(server: LucellaServer, soc
   const { players } = gameRoom;
   const playerToKick = players.challenger && players.host?.associatedUser.username === usernameOfPlayerLeaving ? players.challenger : undefined;
 
-  if (gameRoom.gameStatus === GameStatus.IN_LOBBY || gameRoom.gameStatus === GameStatus.COUNTING_DOWN)
-    server.lobby.handleSocketLeavingGameRoom(socket, gameRoom, isDisconnecting, playerToKick);
-  else {
+  if (gameRoom.gameStatus === GameStatus.IN_LOBBY || gameRoom.gameStatus === GameStatus.COUNTING_DOWN) {
+    if (gameRoom.isRanked) server.lobby.handleSocketLeavingRankedGameRoom(socket, gameRoom);
+    else server.lobby.handleSocketLeavingGameRoom(socket, gameRoom, isDisconnecting, playerToKick);
+  } else {
     const game = games[currentGameName];
     game.winner = playerToKick ? players.host?.associatedUser.username : players.challenger?.associatedUser.username;
     if (gameRoom.gameStatus === GameStatus.ENDING) return;

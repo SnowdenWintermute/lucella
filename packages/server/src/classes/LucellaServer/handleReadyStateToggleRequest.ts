@@ -20,10 +20,10 @@ export default function handleReadyStateToggleRequest(server: LucellaServer, soc
 
   if (playersReady.host && playersReady.challenger) {
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
-    gameRoom.countdown.current -= 1;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     gameRoom.countdownInterval = setInterval(() => {
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
+      gameRoom.countdown.current -= 1;
       if (gameRoom.countdown.current > 0) return;
       if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
       gameRoom.gameStatus = GameStatus.IN_PROGRESS;

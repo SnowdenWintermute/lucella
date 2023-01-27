@@ -3,7 +3,7 @@ import { Socket } from "socket.io";
 import {
   ErrorMessages,
   maxEloDiffThreshold,
-  eloDiffThresholdDebuggerAdditive,
+  eloDiffThresholdAdditive,
   rankedGameChannelNamePrefix,
   SocketEventsFromServer,
   OfficialChannels,
@@ -30,13 +30,14 @@ export class MatchmakingQueue {
   currentEloDiffThreshold = 0;
   rankedGameCurrentNumber = 0;
   currentIntervalIteration = 0;
+  eloDiffThresholdAdditive = eloDiffThresholdAdditive;
   server: LucellaServer;
   constructor(server: LucellaServer) {
     this.server = server;
   }
 
   async addUser(socket: Socket) {
-    const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id].associatedUser.username);
+    const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id]?.associatedUser.username);
     if (!user || user.status === UserStatuses.DELETED) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED);
     if (this.users[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.ALREADY_IN_MATCHMAKING_QUEUE);
     const userBattleRoomRecord = await LucellaServer.fetchOrCreateBattleRoomScoreCard(user);
@@ -65,7 +66,7 @@ export class MatchmakingQueue {
   }
   createMatchmakingInterval() {
     const { io } = this.server;
-    this.currentIntervalIteration = 0;
+    this.currentIntervalIteration = 1;
     this.matchmakingInterval = setInterval(() => {
       this.currentIntervalIteration += 1;
       if (Object.keys(this.users).length < 1) return this.clearMatchmakingInterval();
@@ -76,19 +77,19 @@ export class MatchmakingQueue {
       const bestMatch = this.getBestMatch();
       const { players, eloDiff } = bestMatch;
       console.log(
-        "matchmaking interval ",
-        this.currentIntervalIteration,
-        "users in queue: ",
-        Object.values(this.users).map((value) => value.username),
-        "currThreshold: ",
-        this.currentEloDiffThreshold,
-        "bestMatch: ",
-        players?.challenger.username,
-        players?.host.username,
-        eloDiff
+        `matchmaking iteration number: ${this.currentIntervalIteration}, players in queue: ${Object.values(this.users).map(
+          (value) => value.username
+        )}, currThreshold: ${
+          this.currentEloDiffThreshold
+        }, bestMatch: ${`${players?.challenger.username} ${players?.host.username}`} with a difference of ${eloDiff} elo
+      `
       );
 
-      if (players === null || eloDiff === null || eloDiff >= this.currentEloDiffThreshold) return this.increaseEloDiffMatchingThreshold();
+      if (players === null || eloDiff === null || eloDiff >= this.currentEloDiffThreshold) {
+        // console.log("no acceptable match found");
+        this.increaseEloDiffMatchingThreshold();
+        return;
+      }
 
       const hostSocket = io.sockets.sockets.get(players.host.socketId);
       const challengerSocket = io.sockets.sockets.get(players.challenger.socketId);
@@ -117,8 +118,8 @@ export class MatchmakingQueue {
     }, ONE_SECOND);
   }
   increaseEloDiffMatchingThreshold() {
-    if (this.currentEloDiffThreshold >= maxEloDiffThreshold) return;
-    const exponentiallyIncreasedThreshold = Math.round(0.35 * 1.5 ** this.currentIntervalIteration + eloDiffThresholdDebuggerAdditive);
+    if (this.currentEloDiffThreshold >= maxEloDiffThreshold) return console.log("cannot increase the elo diff threshold beyond the maximum");
+    const exponentiallyIncreasedThreshold = Math.round(0.35 * 1.5 ** this.currentIntervalIteration + this.eloDiffThresholdAdditive);
     this.currentEloDiffThreshold = exponentiallyIncreasedThreshold;
   }
   startRankedGame(hostSocket: Socket, challengerSocket: Socket) {
@@ -127,6 +128,7 @@ export class MatchmakingQueue {
     this.server.lobby.handleJoinGameRoomRequest(challengerSocket, gameName, true);
     this.server.handleReadyStateToggleRequest(hostSocket);
     this.server.handleReadyStateToggleRequest(challengerSocket);
+    console.log(`game ${gameName} started`);
   }
   getBestMatch() {
     const twoBestMatchedPlayersInQueue: {
