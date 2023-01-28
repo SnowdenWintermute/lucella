@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
 import bcrypt from "bcryptjs";
-import { ErrorMessages, InputFields, registrationFixedWindowCounterLimit, UsersRoutePaths } from "../../../../common";
+import { ErrorMessages, InputFields, UsersRoutePaths } from "../../../../common";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL_ALTERNATE, TEST_USER_NAME_ALTERNATE, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";

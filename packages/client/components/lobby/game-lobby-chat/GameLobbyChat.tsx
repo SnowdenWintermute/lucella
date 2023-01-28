@@ -107,7 +107,7 @@ function GameLobbyChat({ socket }: Props) {
 
   return (
     <>
-      <div className={`game-lobby-chat-stream ${chatClass}}`}>
+      <div className={`game-lobby-chat-stream ${chatClass}`}>
         <ul>{messagesToDisplay}</ul>
       </div>
       <div className={styles["game-lobby-chat-input-holder"]}>

@@ -47,6 +47,13 @@ export function numberInRangeToBetweenZeroAndOne(value: number, max: number) {
   return (100 * value) / max / 100;
 }
 
+export function createAdjustedCoordinateCalculator(coordinateMax: number, relationship: number) {
+  return (coordinate: number, adjustedBy: number) => {
+    if (coordinate === coordinateMax) return coordinateMax;
+    return (coordinate / coordinateMax) * (relationship * adjustedBy);
+  };
+}
+
 export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet, withPositionBuffer?: boolean) {
   Object.entries(a).forEach(([orbLabel, orb]) => {
     const { isSelected, isGhost, destination, positionBuffer } = b[orbLabel];

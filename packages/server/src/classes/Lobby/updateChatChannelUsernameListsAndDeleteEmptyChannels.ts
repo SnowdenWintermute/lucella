@@ -22,7 +22,7 @@ export default function updateChatChannelUsernameListsAndDeleteEmptyChannels(
     if (newListOfUsersSocketsInThisRoom.length < 1) delete channelLeaving.connectedUsers[username];
     else userInRoom.connectedSockets = newListOfUsersSocketsInThisRoom;
     if (Object.keys(channelLeaving.connectedUsers).length < 1) delete chatChannels[channelNameLeaving];
-    console.log(`${socketMeta.socketId} removed from ${channelNameLeaving}'s list`);
+    console.log(`user ${socketMeta.associatedUser.username} on socket ${socketMeta.socketId} removed from ${channelNameLeaving}'s list`);
   }
 
   if (channelNameJoining) {
@@ -35,6 +35,6 @@ export default function updateChatChannelUsernameListsAndDeleteEmptyChannels(
         connectedSockets: [socketMeta.socketId!],
       };
     else channelJoining.connectedUsers[username].connectedSockets.push(socketMeta.socketId!);
-    console.log(`${socketMeta.socketId} added to ${channelNameJoining}'s list`);
+    console.log(`${socketMeta.associatedUser.username} added to ${channelNameJoining}'s list`);
   }
 }

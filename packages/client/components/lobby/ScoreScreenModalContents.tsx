@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Fragment } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { usersApi } from "../../redux/api-slices/users-api-slice";
 
@@ -8,39 +8,30 @@ function ScoreScreenModalContents() {
   const [eloAnimatedChange, setEloAnimatedChange] = useState<number | null>();
   const scoreScreenData = useAppSelector((state) => state.lobbyUi.scoreScreenData);
 
-  let playerOldElo: number | null = null;
-  let playerNewElo: number | null = null;
-  let playerOldRank = null;
-  let playerNewRank = null;
-  let eloDiff: number | null = null;
+  let playerPreGameElo: number | undefined;
+  let playerPostGameElo: number | undefined;
+  let eloDiff: number | undefined;
 
-  if (scoreScreenData && scoreScreenData.gameRoom) {
-    playerOldElo =
+  if (scoreScreenData && scoreScreenData.gameRoom && scoreScreenData.gameRecord) {
+    playerPreGameElo =
       scoreScreenData.gameRoom!.players!.challenger!.associatedUser.username === user?.name
-        ? scoreScreenData.eloUpdates?.challengerElo
-        : scoreScreenData.eloUpdates?.hostElo;
-    playerNewElo =
+        ? scoreScreenData.gameRecord.secondPlayerPreGameElo
+        : scoreScreenData.gameRecord.firstPlayerPreGameElo;
+    playerPostGameElo =
       scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === user?.name
-        ? scoreScreenData.eloUpdates?.newChallengerElo
-        : scoreScreenData.eloUpdates?.newHostElo;
-    playerOldRank =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === user?.name
-        ? scoreScreenData.eloUpdates?.oldChallengerRank
-        : scoreScreenData.eloUpdates?.oldHostRank;
-    playerNewRank =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === user?.name
-        ? scoreScreenData.eloUpdates?.newChallengerRank
-        : scoreScreenData.eloUpdates?.newHostRank;
-    eloDiff = playerNewElo - playerOldElo;
+        ? scoreScreenData.gameRecord.secondPlayerPostGameElo
+        : scoreScreenData.gameRecord.firstPlayerPostGameElo;
+
+    eloDiff = playerPostGameElo - playerPreGameElo;
   }
 
   useEffect(() => {
     let didCancel = false;
-    if (!didCancel) setEloAnimatedChange(playerOldElo);
+    if (!didCancel) setEloAnimatedChange(playerPreGameElo);
     return () => {
       didCancel = true;
     };
-  }, [playerOldElo]);
+  }, [playerPreGameElo]);
 
   useEffect(() => {
     const animateTimeoutOne = setTimeout(() => {
@@ -49,7 +40,7 @@ function ScoreScreenModalContents() {
       setEloAnimatedChangeClass(newEloAnimateClass);
     }, 1000);
     const animateTimeoutTwo = setTimeout(() => {
-      setEloAnimatedChange(playerNewElo);
+      setEloAnimatedChange(playerPostGameElo);
     }, 1300);
     const animateTimeoutThree = setTimeout(() => {
       setEloAnimatedChangeClass("elo-animate-3");
@@ -59,7 +50,7 @@ function ScoreScreenModalContents() {
       clearTimeout(animateTimeoutTwo);
       clearTimeout(animateTimeoutThree);
     };
-  }, [eloDiff, playerNewElo]);
+  }, [eloDiff, playerPostGameElo]);
 
   if (!scoreScreenData) return <div>Error - no score screen data received</div>;
   return (
@@ -68,14 +59,14 @@ function ScoreScreenModalContents() {
       <table>
         <tbody>
           <tr>
-            <td>{scoreScreenData!.gameRoom!.players!.host!.associatedUser.username}:</td>
-            <td>{scoreScreenData!.game.score.host}</td>
+            <td>{scoreScreenData.gameRoom.players.host!.associatedUser.username}:</td>
+            <td>{scoreScreenData.gameRecord?.firstPlayerScore}</td>
           </tr>
           <tr>
-            <td>{scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username}:</td>
-            <td>{scoreScreenData!.game.score.challenger}</td>
+            <td>{scoreScreenData.gameRoom.players.challenger!.associatedUser.username}:</td>
+            <td>{scoreScreenData.gameRecord?.secondPlayerScore}</td>
           </tr>
-          {!scoreScreenData!.eloUpdates ? (
+          {!scoreScreenData.gameRecord?.firstPlayerPreGameElo ? (
             <tr>
               <td>No changes to ladder rating</td>
             </tr>
@@ -89,7 +80,7 @@ function ScoreScreenModalContents() {
               ${eloDiff})`}
                 </td>
               </tr>
-              {playerOldRank !== playerNewRank ? (
+              {/* {playerOldRank !== playerNewRank ? (
                 <tr>
                   <td className="">Rank:</td>
                   <td className="">
@@ -106,7 +97,7 @@ function ScoreScreenModalContents() {
                     {` (unchanged)`}
                   </td>
                 </tr>
-              )}
+              )} */}
             </>
           )}
         </tbody>

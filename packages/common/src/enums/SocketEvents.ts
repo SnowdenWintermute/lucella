@@ -25,7 +25,7 @@ export enum SocketEventsFromServer {
   PLAYER_ROLE_ASSIGNMENT = "19",
   CURRENT_GAME_STATUS_UPDATE = "20",
   CURRENT_GAME_COUNTDOWN_UPDATE = "21",
-  SHOW_END_SCREEN = "22",
+  SHOW_SCORE_SCREEN = "22",
   MATCHMAKING_QUEUE_ENTERED = "23",
   MATCHMAKING_QUEUE_UPDATE = "24",
   MATCH_FOUND = "25",
@@ -35,3 +35,9 @@ export enum SocketEventsFromServer {
   GAME_ENDING_COUNTDOWN_UPDATE = "29",
   NAME_OF_GAME_WINNER = "30",
 }
+
+export const GENERIC_SOCKET_EVENTS = {
+  CONNECT: "connect",
+  DISCONNECT: "disconnect",
+  CONNECT_ERROR: "connect_error",
+};

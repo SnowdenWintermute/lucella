@@ -9,4 +9,5 @@ export default function mouseDownHandler(e: React.MouseEvent<HTMLCanvasElement, 
   if (!mouseData.leftPressedAt) mouseData.leftPressedAt = new Point(x, y);
   mouseData.leftPressedAt.x = x;
   mouseData.leftPressedAt.y = y;
+  console.log("mouse button ", e.button, " pressed at: ", mouseData.position.x, mouseData.position.y);
 }

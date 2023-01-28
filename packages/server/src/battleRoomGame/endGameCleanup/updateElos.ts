@@ -1,10 +1,8 @@
-import { PlayerRole } from "../../../../common";
-import { IBattleRoomRecord } from "../../classes/MatchmakingQueue";
-// import { IBattleRoomRecord } from "../../models/BattleRoomRecord";
+import { IBattleRoomScoreCard, PlayerRole } from "../../../../common";
 
-export default function updateElos(hostBattleRoomRecord: IBattleRoomRecord, challengerBattleRoomRecord: IBattleRoomRecord, winnerRole: PlayerRole) {
-  const hostElo = hostBattleRoomRecord.elo;
-  const challengerElo = challengerBattleRoomRecord.elo;
+export default function updateElos(hostBattleRoomScoreCard: IBattleRoomScoreCard, challengerBattleRoomScoreCard: IBattleRoomScoreCard, winnerRole: PlayerRole) {
+  const hostElo = hostBattleRoomScoreCard.elo;
+  const challengerElo = challengerBattleRoomScoreCard.elo;
   let hostS: number;
   let challengerS: number;
   const hostR = 10 ** (hostElo / 400);

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { MATCHMAKING_QUEUE } from "../../consts/lobby-text";
 import { useAppSelector } from "../../redux/hooks";
 
 function MatchmakingQueueDisplay() {
@@ -15,7 +16,7 @@ function MatchmakingQueueDisplay() {
   return (
     <div className={`matchmaking-queue-screen ${hideClass}`}>
       <div className="p-10">
-        <div>Seeking ranked match...</div>
+        <div>{MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH}</div>
         <div>Players in Queue: {matchmakingQueueScreen.currentData.queueSize ? matchmakingQueueScreen.currentData.queueSize : "..."}</div>
         <div>
           Current Elo difference threshold: {matchmakingQueueScreen.currentData.queueSize ? matchmakingQueueScreen.currentData.currentEloDiffThreshold : "..."}

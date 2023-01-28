@@ -1,12 +1,12 @@
 /* eslint-disable no-param-reassign */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { EloUpdates, GameRoom, BattleRoomGame, GameStatus, PlayerRole } from "../../../common";
+import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord } from "../../../common";
 
 export interface IGameScoreScreen {
   gameRoom: GameRoom;
   game: BattleRoomGame;
-  eloUpdates: EloUpdates;
+  gameRecord: IBattleRoomGameRecord | null;
 }
 
 export interface ILobbyUIState {
@@ -98,7 +98,6 @@ const ladderSlice = createSlice({
       state.gameList.games = action.payload;
     },
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
-      // @ts-ignore
       state.scoreScreenData = action.payload;
     },
   },

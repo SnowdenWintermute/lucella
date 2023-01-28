@@ -16,6 +16,7 @@ export const ErrorMessages = {
     CANT_JOIN_IF_ALREADY_IN_GAME: "You can't join a game if you are already one",
     LOG_IN_TO_PLAY_RANKED: "Log in or create an account to play ranked games",
     CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED: "You can't join a ranked game that the matchmaking didn't assign you to",
+    ALREADY_IN_MATCHMAKING_QUEUE: "You are already in the matchmaking queue",
     GAME_NAME: {
       NOT_ENTERED: "Please enter a game name",
       MIN_LENGTH: "Game name must be at least one character long",

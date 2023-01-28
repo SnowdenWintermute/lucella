@@ -1,14 +1,14 @@
 import { Application } from "express";
 import request from "supertest";
-import { ErrorMessages, UsersRoutePaths, UserStatuses, User } from "../../../../common";
+import { ErrorMessages, UsersRoutePaths, UserStatuses, User, CookieNames } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
-import UserRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import { signJwtAsymmetric } from "../utils/jwt";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
+import logTestUserIn from "../../utils/test-utils/logTestUserIn";
 
 describe("getMeHandler", () => {
   let context: PGContext | undefined;
@@ -29,12 +29,11 @@ describe("getMeHandler", () => {
   });
 
   it("gets user information in response", async () => {
-    const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
-    const { accessToken } = await signTokenAndCreateSession(user);
+    const { accessToken } = await logTestUserIn(TEST_USER_EMAIL);
 
     const response = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
 
     expect(response.status).toBe(200);
     expect(response.body.user).not.toHaveProperty("password");
@@ -51,7 +50,9 @@ describe("getMeHandler", () => {
   });
 
   it("should return invalid token error", async () => {
-    const response = await request(app).get(`/api${UsersRoutePaths.ROOT}`).set("Cookie", [`access_token=some invalid token`]);
+    const response = await request(app)
+      .get(`/api${UsersRoutePaths.ROOT}`)
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=some invalid token`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
   });
@@ -63,7 +64,7 @@ describe("getMeHandler", () => {
     });
     const response = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.EXPIRED_SESSION)).toBeTruthy();
   });
@@ -74,7 +75,7 @@ describe("getMeHandler", () => {
     const { accessToken } = await signTokenAndCreateSession(testUser);
     const response = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NO_USER_EXISTS)).toBeTruthy();
   });

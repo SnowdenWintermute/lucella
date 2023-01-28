@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "../../common-components/modal/Modal";
 import { SocketEventsFromClient } from "../../../../common";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";

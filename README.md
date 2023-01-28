@@ -80,3 +80,9 @@ Visit the live demo at [lucella.org](https://lucella.org)
   - Find the column "role" and double click where it says "user". Change it to say "admin".
   - Find and click the "save changes" button or hit f6
   - Go back to the website and refresh. Now when you right click on a user in the left chat sidebar you should see options to ban users.
+
+## Common Error Messages
+
+- Module parse failed: Unexpected token (8:7)
+  You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+  - SOLUTION: Search for any "/dist" or "/src" that were added automatically added to import paths by vs code and remove them. Our importing method must use a generic path so it works both in the typescript server editor and after it has been compiled to js.

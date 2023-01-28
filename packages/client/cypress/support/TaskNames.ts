@@ -7,4 +7,5 @@ export enum TaskNames {
   getUserEmail = "getUserEmail",
   getLastEmail = "getLastEmail",
   setRateLimiterDisabled = "setRateLimiterDisabled",
+  logUserIn = "logUserIn",
 }

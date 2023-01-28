@@ -8,10 +8,10 @@ import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import handleReadyStateToggleRequest from "./handleReadyStateToggleRequest";
 import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "../MatchmakingQueue";
-// import BattleRoomRecord from "../../models/BattleRoomRecord";
 import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
 import { ipRateLimiter } from "../../middleware/rateLimiter";
 import { wrapExpressMiddlewareForSocketIO } from "../../utils/wrapExpressMiddlewareForSocketIO";
+import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
 
 export class LucellaServer {
   io: SocketIO.Server;
@@ -21,19 +21,12 @@ export class LucellaServer {
   connectedUsers: SocketIDsByUsername = {};
   matchmakingQueue: MatchmakingQueue;
   constructor(expressServer: any) {
-    this.io = new SocketIO.Server(expressServer, {
-      // cors: {
-      //   origin: process.env.ORIGIN,
-      //   methods: ["GET", "POST"],
-      //   credentials: true,
-      // },
-    });
+    this.io = new SocketIO.Server(expressServer);
     this.io.use(socketCheckForBannedIpAddress);
     this.io.use(wrapExpressMiddlewareForSocketIO(ipRateLimiter));
     this.matchmakingQueue = new MatchmakingQueue(this);
     this.lobby = new Lobby(this);
     initializeListeners(this);
-    // this.rankedQueue = new RankedQueue()
   }
 
   handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {
@@ -42,8 +35,10 @@ export class LucellaServer {
   handleSocketDisconnection(socket: Socket) {
     if (!this.connectedSockets[socket.id]) return;
     const socketMetaLeaving = this.connectedSockets[socket.id];
+    console.log(`user ${socketMetaLeaving.associatedUser.username} disconnecting, currentGameName: ${socketMetaLeaving.currentGameName}`);
     if (socketMetaLeaving.currentGameName) this.handleSocketLeavingGame(socket, true);
     else this.lobby.changeSocketChatChannelAndEmitUpdates(socket, null, false);
+    if (this.matchmakingQueue.users[socket.id]) this.matchmakingQueue.removeUser(socket.id);
 
     const userLeaving = socketMetaLeaving.associatedUser;
     const { username } = userLeaving;
@@ -66,17 +61,15 @@ export class LucellaServer {
     });
     console.log(`forcibly disconnected user ${username} and their socket(s) ${socketIdsDisconnected.join(", ")}`);
   }
-  endGameAndEmitUpdates(game: BattleRoomGame) {
-    endGameAndEmitUpdates(this, game);
+  async endGameAndEmitUpdates(game: BattleRoomGame) {
+    await endGameAndEmitUpdates(this, game);
   }
   handleReadyStateToggleRequest(socket: Socket) {
     handleReadyStateToggleRequest(this, socket);
   }
-  static async fetchOrCreateBattleRoomRecord(user: User) {
-    return { placeholder: "placeholder" };
-    // let record = await BattleRoomRecord.findOne({ userId: user.id });
-    // if (!record) record = new BattleRoomRecord({ userId: user.id });
-    // await record.save();
-    // return record;
+  static async fetchOrCreateBattleRoomScoreCard(user: User) {
+    let scoreCard = await BattleRoomScoreCardRepo.findByUserId(user.id);
+    if (!scoreCard) scoreCard = await BattleRoomScoreCardRepo.insert(user.id);
+    return scoreCard;
   }
 }

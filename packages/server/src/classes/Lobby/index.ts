@@ -48,6 +48,7 @@ export class Lobby {
   handleNewChatMessage(socket: Socket, data: { style: ChatMessageStyles; text: string }) {
     // @todo - check the style the user sends against a list of valid styles for that user (can sell styles)
     const { style, text } = data;
+    if (!this.server.connectedSockets[socket.id]) return console.log("error sending chat message, the socket is not registered");
     if (!this.server.connectedSockets[socket.id].currentChatChannel) return console.error("error sending chat message, the socket is not in a chat channel");
     this.server.io
       .in(this.server.connectedSockets[socket.id].currentChatChannel!)
@@ -55,7 +56,7 @@ export class Lobby {
   }
   changeSocketChatChannelAndEmitUpdates(socket: Socket, channelNameJoining: string | null, authorizedForGameChannel?: boolean) {
     const { io, connectedSockets } = this.server;
-    if (!socket || !connectedSockets[socket.id]) return console.error("error handling change chat channel request - no socket registered with server");
+    if (!socket || !connectedSockets[socket.id]) return;
     if (channelNameJoining) channelNameJoining = toKebabCase(channelNameJoining);
 
     const channelNameLeaving = connectedSockets[socket.id].currentChatChannel;
@@ -77,6 +78,7 @@ export class Lobby {
   }
   handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
     gameName = gameName.toLowerCase();
+    if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_HOST_IF_ALREADY_IN_GAME);
     const gameCreationError = this.createGameRoom(gameName, isRanked);
@@ -89,6 +91,7 @@ export class Lobby {
     if (!this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
     if (this.gameRooms[gameName].isRanked && !assignedToGameByMatchmaking)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
+    if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
     this.changeSocketChatChannelAndEmitUpdates(socket, gameChannelNamePrefix + gameName, true);
@@ -126,6 +129,25 @@ export class Lobby {
   }
   handleSocketLeavingGameRoom(socket: Socket, gameRoom: GameRoom, isDisconnecting: boolean, playerToKick?: SocketMetadata) {
     handleSocketLeavingGameRoom(this.server, socket, gameRoom, isDisconnecting, playerToKick);
+  }
+  handleSocketLeavingRankedGameRoom(socket: Socket, gameRoom: GameRoom) {
+    console.log(`${this.server.connectedSockets[socket.id].associatedUser.username} leaving a ranked game room`);
+    const { challenger, host } = gameRoom.players;
+    const otherPlayer = challenger?.socketId === socket.id ? host : challenger;
+    console.log(
+      `${otherPlayer?.associatedUser.username} was the other player in the ranked game room, sending them back to chat channel `,
+      otherPlayer!.previousChatChannelName!
+    );
+    gameRoom.cancelCountdownInterval();
+    delete this.server.lobby.gameRooms[gameRoom.gameName];
+    if (!otherPlayer) return;
+    otherPlayer!.currentGameName = null;
+    const otherPlayerSocket = this.server.io.sockets.sockets.get(otherPlayer!.socketId!);
+    this.changeSocketChatChannelAndEmitUpdates(otherPlayerSocket!, otherPlayer!.previousChatChannelName!);
+    otherPlayerSocket?.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
+    this.server.connectedSockets[otherPlayer.socketId!].currentGameName = null;
+    this.server.matchmakingQueue.removeUser(otherPlayer!.socketId!);
+    this.server.matchmakingQueue.addUser(otherPlayerSocket!);
   }
   removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom: GameRoom, socketMeta: SocketMetadata) {
     if (!socketMeta) return console.log("Tried to remove a player from game room but player did not exist in that room");

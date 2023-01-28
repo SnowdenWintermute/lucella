@@ -6,5 +6,5 @@ import { LucellaServer } from "../../../classes/LucellaServer";
 
 export default function handleScoringPoints(io: Server, socket: Socket, server: LucellaServer, game: BattleRoomGame) {
   updateScoreNeededToWin(game); // players must win by at least 2 points
-  assignWinner(game);
+  assignWinner(server, game);
 }

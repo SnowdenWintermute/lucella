@@ -1,9 +1,10 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 import { ChatChannel, GameRoom } from "../../../../common";
 const cloneDeep = require("lodash.clonedeep");
 
 export function sanitizeChatChannel(channel: ChatChannel) {
-  if (!channel) return console.log("tried to sanitize a channel but no channel was given or channel no longer exists");
+  if (!channel) return;
   const sanitizedChatChannel: { name: string; connectedUsers: { [userKey: string]: {} } } = {
     name: channel.name,
     connectedUsers: {},
@@ -24,7 +25,7 @@ export function sanitizeChatChannel(channel: ChatChannel) {
 }
 
 export function sanitizeGameRoom(gameRoom: GameRoom): GameRoom | void {
-  if (!gameRoom) return console.log("tried to sanitize a game room but no game room was provided");
+  if (!gameRoom) return;
   const gameRoomForClient: GameRoom = cloneDeep(gameRoom);
   gameRoomForClient.countdownInterval = null;
   Object.values(gameRoomForClient.players).forEach((player) => {

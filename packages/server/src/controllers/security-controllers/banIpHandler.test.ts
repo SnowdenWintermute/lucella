@@ -3,7 +3,6 @@ import { Application } from "express";
 import request from "supertest";
 import io from "socket.io-client";
 import { IncomingMessage, Server, ServerResponse } from "node:http";
-import bcrypt from "bcryptjs";
 import {
   AuthRoutePaths,
   CookieNames,
@@ -17,16 +16,17 @@ import {
   SocketEventsFromServer,
   UserRole,
   UsersRoutePaths,
+  GENERIC_SOCKET_EVENTS,
 } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_ADMIN_EMAIL, TEST_ADMIN_NAME, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
-import UserRepo from "../../database/repos/users";
-import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { lucella } from "../../lucella";
 import { LucellaServer } from "../../classes/LucellaServer";
+import createTestUser from "../../utils/test-utils/createTestUser";
+import logTestUserIn from "../../utils/test-utils/logTestUserIn";
 
 describe("banIpHandler.test", () => {
   let context: PGContext | undefined;
@@ -36,8 +36,7 @@ describe("banIpHandler.test", () => {
   beforeAll(async () => {
     const { pgContext, expressApp } = await setupExpressRedisAndPgContextAndOneTestUser();
     // create test admin
-    const hashedPassword = await bcrypt.hash(TEST_USER_PASSWORD, 12);
-    await UserRepo.insert(TEST_ADMIN_NAME, TEST_ADMIN_EMAIL, hashedPassword, UserRole.ADMIN);
+    await createTestUser(TEST_ADMIN_NAME, TEST_ADMIN_EMAIL, undefined, UserRole.ADMIN);
     context = pgContext;
     app = expressApp;
 
@@ -60,8 +59,7 @@ describe("banIpHandler.test", () => {
   const realDateNow = Date.now.bind(global.Date);
 
   it("requires a user to be admin or moderator to ban an ip address", async () => {
-    const user = await UserRepo.findOne("email", TEST_USER_EMAIL); // not a moderator/admin user
-    const { accessToken } = await signTokenAndCreateSession(user);
+    const { accessToken } = await logTestUserIn(TEST_USER_EMAIL);
     const response = await request(app)
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_BAN}`)
       .set("Cookie", [`access_token=${accessToken}`]);
@@ -80,7 +78,7 @@ describe("banIpHandler.test", () => {
 
       const banDuration = 60 * ONE_MINUTE;
       // ensure they are connected so we know banning the account actually disconnects them
-      socket.on("connect", async () => {
+      socket.on(GENERIC_SOCKET_EVENTS.CONNECT, async () => {
         expect(lucella.server?.io.sockets.sockets.get(socket.id)!.id).toBe(socket.id);
         socket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, async (data) => {
           socket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannelNames.BATTLE_ROOM_CHAT);
@@ -91,12 +89,10 @@ describe("banIpHandler.test", () => {
         console.log("lucella.server?.connectedUsers: ", lucella.server?.connectedUsers);
         nameOfAnonUserToBan = Object.keys(lucella.server?.connectedUsers!)[0];
         // log in as admin and ban user
-        const admin = await UserRepo.findOne("email", TEST_ADMIN_EMAIL);
-        const objWithToken = await signTokenAndCreateSession(admin);
-        const adminAccessToken = objWithToken.accessToken;
+        const userAndToken = await logTestUserIn(TEST_ADMIN_EMAIL);
         const response = await request(app)
           .post(`/api${ModerationRoutePaths.ROOT}${ModerationRoutePaths.IP_BAN}`)
-          .set("Cookie", [`access_token=${adminAccessToken}`])
+          .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${userAndToken.accessToken}`])
           .send({
             name: nameOfAnonUserToBan,
             duration: banDuration,
@@ -105,7 +101,7 @@ describe("banIpHandler.test", () => {
 
         expect(response.status).toBe(201);
       });
-      socket.on("disconnect", async () => {
+      socket.on(GENERIC_SOCKET_EVENTS.DISCONNECT, async () => {
         // sockets are disconnected
         expect(Object.keys(lucella.server!.connectedSockets!).length).toBe(0);
         expect(lucella.server?.connectedUsers[nameOfAnonUserToBan]).toBeUndefined();
@@ -127,12 +123,12 @@ describe("banIpHandler.test", () => {
         });
 
         // should never receive connection event
-        secondSocketConnection.on("connect", () => {
+        secondSocketConnection.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
           // eslint-disable-next-line no-undef
           fail("it should not reach here");
         });
 
-        secondSocketConnection.on("connect_error", async () => {
+        secondSocketConnection.on(GENERIC_SOCKET_EVENTS.CONNECT_ERROR, async () => {
           // socket should not be allowed to connect due to the middleware that checks for banned ips
           // after waiting the duration of their ban, they can log in again
           const currentTime = Date.now();
@@ -148,7 +144,7 @@ describe("banIpHandler.test", () => {
             transports: ["websocket"],
           });
           // should now be allowed to connect to socket server once again
-          thirdSocketConnection.on("connect", () => {
+          thirdSocketConnection.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
             global.Date.now = realDateNow;
             done();
           });

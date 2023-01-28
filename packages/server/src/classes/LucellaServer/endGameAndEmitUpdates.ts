@@ -1,10 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable global-require */
-import { BattleRoomGame, EloUpdates, gameChannelNamePrefix, GameStatus, SocketEventsFromServer } from "../../../../common";
+import { BattleRoomGame, gameChannelNamePrefix, GameStatus, IBattleRoomGameRecord, ONE_SECOND, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from ".";
-const replicator = new (require("replicator"))();
+import updateScoreCardsAndSaveGameRecord from "../../battleRoomGame/endGameCleanup/updateScoreCardsAndSaveGameRecord";
 
-export default function endGameAndEmitUpdates(server: LucellaServer, game: BattleRoomGame) {
+export default async function endGameAndEmitUpdates(server: LucellaServer, game: BattleRoomGame) {
   const { io, lobby, games } = server;
   const gameRoom = lobby.gameRooms[game.gameName];
   const gameChatChannelName = gameChannelNamePrefix + game.gameName;
@@ -20,9 +20,14 @@ export default function endGameAndEmitUpdates(server: LucellaServer, game: Battl
   const loser = gameRoom.winner === players.host?.associatedUser.username ? players.challenger?.associatedUser.username : players.host?.associatedUser.username;
 
   // eslint-disable-next-line prefer-const
-  let eloUpdates: EloUpdates | null = null;
+  let gameRecord: IBattleRoomGameRecord | { firstPlayerScore: number; secondPlayerScore: number } | null = {
+    firstPlayerScore: game.score.host,
+    secondPlayerScore: game.score.challenger,
+  };
+
   if (!gameRoom.winner || !loser) console.error("Tried to update game records but either winner or loser wasn't found");
-  // else eloUpdates = await updateGameRecords(gameRoom.winner, loser, gameRoom, game, gameRoom.isRanked);
+  else if (game.isRanked) gameRecord = await updateScoreCardsAndSaveGameRecord(gameRoom.winner, gameRoom, game, gameRoom.isRanked);
+  // determineNewLadderRanks() not yet created
   io.in(gameChatChannelName).emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
 
   game.gameOverCountdown.current = game.gameOverCountdown.duration;
@@ -32,10 +37,9 @@ export default function endGameAndEmitUpdates(server: LucellaServer, game: Battl
     if (game.gameOverCountdown.current! >= 1) return;
     game.clearGameEndingCountdownInterval();
 
-    io.in(gameChatChannelName).emit(SocketEventsFromServer.SHOW_END_SCREEN, {
+    io.in(gameChatChannelName).emit(SocketEventsFromServer.SHOW_SCORE_SCREEN, {
       gameRoom,
-      game: replicator.encode(new BattleRoomGame("test")), // todo - remove this placeholder
-      eloUpdates,
+      gameRecord,
     });
 
     Object.values(gameRoom.players).forEach((player) => {
@@ -49,5 +53,5 @@ export default function endGameAndEmitUpdates(server: LucellaServer, game: Battl
     delete lobby.gameRooms[game.gameName];
     delete games[game.gameName];
     io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobby.getSanitizedGameRooms());
-  }, 1000);
+  }, ONE_SECOND);
 }

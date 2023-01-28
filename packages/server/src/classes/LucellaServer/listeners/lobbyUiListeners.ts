@@ -4,6 +4,7 @@ import { LucellaServer } from "..";
 
 export default function gameUiListeners(server: LucellaServer, socket: Socket) {
   socket.on(SocketEventsFromClient.NEW_CHAT_MESSAGE, (data) => {
+    console.log("NEW_CHAT_MESSAGE: ", data);
     server.lobby.handleNewChatMessage(socket, data);
   });
   socket.on(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST, () => {
