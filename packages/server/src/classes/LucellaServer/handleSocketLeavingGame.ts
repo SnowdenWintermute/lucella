@@ -3,7 +3,7 @@ import { Socket } from "socket.io";
 import { ErrorMessages, GameStatus, PlayerRole, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from "../LucellaServer";
 
-export default async function handleSocketLeavingGame(server: LucellaServer, socket: Socket, isDisconnecting: boolean) {
+export default function handleSocketLeavingGame(server: LucellaServer, socket: Socket, isDisconnecting: boolean) {
   const { io, lobby, connectedSockets, games } = server;
   const { currentGameName } = connectedSockets[socket.id];
   const usernameOfPlayerLeaving = connectedSockets[socket.id].associatedUser.username;
@@ -23,7 +23,7 @@ export default async function handleSocketLeavingGame(server: LucellaServer, soc
     game.winner = playerToKick ? players.host?.associatedUser.username : players.challenger?.associatedUser.username;
     if (gameRoom.gameStatus === GameStatus.ENDING) return;
     gameRoom.winner = game.winner === PlayerRole.HOST ? players!.host!.associatedUser.username : players!.challenger!.associatedUser.username;
-    await server.endGameAndEmitUpdates(game);
+    server.endGameAndEmitUpdates(game);
   }
   io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobby.getSanitizedGameRooms());
 }

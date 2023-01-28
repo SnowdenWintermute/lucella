@@ -92,7 +92,7 @@ describe("banIpHandler.test", () => {
         const userAndToken = await logTestUserIn(TEST_ADMIN_EMAIL);
         const response = await request(app)
           .post(`/api${ModerationRoutePaths.ROOT}${ModerationRoutePaths.IP_BAN}`)
-          .set("Cookie", [`access_token=${userAndToken.accessToken}`])
+          .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${userAndToken.accessToken}`])
           .send({
             name: nameOfAnonUserToBan,
             duration: banDuration,

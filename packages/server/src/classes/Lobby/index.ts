@@ -131,8 +131,13 @@ export class Lobby {
     handleSocketLeavingGameRoom(this.server, socket, gameRoom, isDisconnecting, playerToKick);
   }
   handleSocketLeavingRankedGameRoom(socket: Socket, gameRoom: GameRoom) {
+    console.log(`${this.server.connectedSockets[socket.id].associatedUser.username} leaving a ranked game room`);
     const { challenger, host } = gameRoom.players;
     const otherPlayer = challenger?.socketId === socket.id ? host : challenger;
+    console.log(
+      `${otherPlayer?.associatedUser.username} was the other player in the ranked game room, sending them back to chat channel `,
+      otherPlayer!.previousChatChannelName!
+    );
     gameRoom.cancelCountdownInterval();
     delete this.server.lobby.gameRooms[gameRoom.gameName];
     if (!otherPlayer) return;
@@ -140,6 +145,7 @@ export class Lobby {
     const otherPlayerSocket = this.server.io.sockets.sockets.get(otherPlayer!.socketId!);
     this.changeSocketChatChannelAndEmitUpdates(otherPlayerSocket!, otherPlayer!.previousChatChannelName!);
     otherPlayerSocket?.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
+    this.server.connectedSockets[otherPlayer.socketId!].currentGameName = null;
     this.server.matchmakingQueue.removeUser(otherPlayer!.socketId!);
     this.server.matchmakingQueue.addUser(otherPlayerSocket!);
   }

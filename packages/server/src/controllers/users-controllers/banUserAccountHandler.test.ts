@@ -61,7 +61,7 @@ describe("banUserAccountHandler", () => {
     const { accessToken } = await logTestUserIn(TEST_USER_EMAIL);
     const response = await request(app)
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_BAN}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.ROLE_RESTRICTED)).toBeTruthy();
     expect(response.status).toBe(403);
   });
@@ -75,7 +75,7 @@ describe("banUserAccountHandler", () => {
 
       const socket = await io(`http://localhost:${port}`, {
         transports: ["websocket"],
-        extraHeaders: { cookie: `access_token=${accessToken};` },
+        extraHeaders: { cookie: `${CookieNames.ACCESS_TOKEN}=${accessToken};` },
       });
       const banDuration = 60 * ONE_MINUTE;
 
@@ -91,7 +91,7 @@ describe("banUserAccountHandler", () => {
           const adminAccessToken = userAndToken.accessToken;
           const response = await request(app)
             .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_BAN}`)
-            .set("Cookie", [`access_token=${adminAccessToken}`])
+            .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${adminAccessToken}`])
             .send({
               name: user.name,
               ban: new Ban("ACCOUNT", banDuration),

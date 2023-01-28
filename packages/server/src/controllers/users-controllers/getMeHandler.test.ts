@@ -1,6 +1,6 @@
 import { Application } from "express";
 import request from "supertest";
-import { ErrorMessages, UsersRoutePaths, UserStatuses, User } from "../../../../common";
+import { ErrorMessages, UsersRoutePaths, UserStatuses, User, CookieNames } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
@@ -33,7 +33,7 @@ describe("getMeHandler", () => {
 
     const response = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
 
     expect(response.status).toBe(200);
     expect(response.body.user).not.toHaveProperty("password");
@@ -50,7 +50,9 @@ describe("getMeHandler", () => {
   });
 
   it("should return invalid token error", async () => {
-    const response = await request(app).get(`/api${UsersRoutePaths.ROOT}`).set("Cookie", [`access_token=some invalid token`]);
+    const response = await request(app)
+      .get(`/api${UsersRoutePaths.ROOT}`)
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=some invalid token`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
   });
@@ -62,7 +64,7 @@ describe("getMeHandler", () => {
     });
     const response = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.EXPIRED_SESSION)).toBeTruthy();
   });
@@ -73,7 +75,7 @@ describe("getMeHandler", () => {
     const { accessToken } = await signTokenAndCreateSession(testUser);
     const response = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(response.status).toBe(401);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NO_USER_EXISTS)).toBeTruthy();
   });

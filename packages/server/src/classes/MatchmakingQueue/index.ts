@@ -59,6 +59,7 @@ export class MatchmakingQueue {
   }
   removeUser(socketId: string) {
     delete this.users[socketId];
+    if (Object.keys(this.users).length < 1) this.clearMatchmakingInterval();
   }
   clearMatchmakingInterval() {
     if (this.matchmakingInterval) clearInterval(this.matchmakingInterval);
@@ -76,17 +77,8 @@ export class MatchmakingQueue {
       });
       const bestMatch = this.getBestMatch();
       const { players, eloDiff } = bestMatch;
-      console.log(
-        `matchmaking iteration number: ${this.currentIntervalIteration}, players in queue: ${Object.values(this.users).map(
-          (value) => value.username
-        )}, currThreshold: ${
-          this.currentEloDiffThreshold
-        }, bestMatch: ${`${players?.challenger.username} ${players?.host.username}`} with a difference of ${eloDiff} elo
-      `
-      );
 
       if (players === null || eloDiff === null || eloDiff >= this.currentEloDiffThreshold) {
-        // console.log("no acceptable match found");
         this.increaseEloDiffMatchingThreshold();
         return;
       }
@@ -109,10 +101,8 @@ export class MatchmakingQueue {
         io.sockets.sockets.get(player.socketId)!.leave(OfficialChannels.matchmakingQueue);
       });
 
-      if (Object.keys(this.users).length < 1) {
-        if (this.matchmakingInterval) clearInterval(this.matchmakingInterval);
-        this.matchmakingInterval = null;
-      }
+      if (Object.keys(this.users).length < 1) this.clearMatchmakingInterval();
+
       bestMatch.eloDiff = null;
       bestMatch.players = null;
     }, ONE_SECOND);
@@ -128,7 +118,6 @@ export class MatchmakingQueue {
     this.server.lobby.handleJoinGameRoomRequest(challengerSocket, gameName, true);
     this.server.handleReadyStateToggleRequest(hostSocket);
     this.server.handleReadyStateToggleRequest(challengerSocket);
-    console.log(`game ${gameName} started`);
   }
   getBestMatch() {
     const twoBestMatchedPlayersInQueue: {
@@ -141,10 +130,8 @@ export class MatchmakingQueue {
 
     const usersSortedByElo = Object.keys(this.users)
       .reduce((accumulator, socketId: string) => {
-        if (!this.server.io.sockets.sockets.get(socketId)) {
-          // console.log("User in matchmaking queue is no longer connected, removing them from queue.");
-          delete this.users[socketId];
-        } else accumulator.push(this.users[socketId]);
+        if (!this.server.io.sockets.sockets.get(socketId)) delete this.users[socketId];
+        else accumulator.push(this.users[socketId]);
         return accumulator;
       }, [] as MatchmakingQueueUser[])
       .sort((a, b) => a.record.elo - b.record.elo);
@@ -155,7 +142,6 @@ export class MatchmakingQueue {
       const userWithHigherElo = usersSortedByElo[i + 1];
       if (!userWithHigherElo) return;
       const eloDiff = Math.abs(userWithHigherElo.record.elo - user.record.elo);
-      console.log("elo diff between ", user.username, " and ", userWithHigherElo.username, ": ", eloDiff);
 
       if (!twoBestMatchedPlayersInQueue.eloDiff || eloDiff < twoBestMatchedPlayersInQueue.eloDiff) {
         twoBestMatchedPlayersInQueue.eloDiff = eloDiff;

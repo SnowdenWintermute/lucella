@@ -2,7 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import io from "socket.io-client";
 import { IncomingMessage, Server, ServerResponse } from "node:http";
-import { AuthRoutePaths, ErrorMessages, randBetween, UsersRoutePaths, GENERIC_SOCKET_EVENTS } from "../../../../common";
+import { AuthRoutePaths, ErrorMessages, randBetween, UsersRoutePaths, GENERIC_SOCKET_EVENTS, CookieNames } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -49,7 +49,7 @@ describe("deleteAccountHandler", () => {
     const { accessToken } = await logTestUserIn(TEST_USER_EMAIL);
     const response = await request(app)
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_CREDENTIALS)).toBeTruthy();
     expect(response.status).toBe(401);
   });
@@ -60,7 +60,7 @@ describe("deleteAccountHandler", () => {
 
       const socket = await io(`http://localhost:${port}`, {
         transports: ["websocket"],
-        extraHeaders: { cookie: `access_token=${accessToken};` },
+        extraHeaders: { cookie: `${CookieNames.ACCESS_TOKEN}=${accessToken};` },
       });
 
       socket.on(GENERIC_SOCKET_EVENTS.CONNECT, async () => {
@@ -69,10 +69,10 @@ describe("deleteAccountHandler", () => {
         // user deletes their account
         const response = await request(app)
           .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`)
-          .set("Cookie", [`access_token=${accessToken}`])
+          .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`])
           .send({ password: TEST_USER_PASSWORD });
         // logs user out
-        expect(response.headers["set-cookie"][0].includes("access_token=;")).toBeTruthy();
+        expect(response.headers["set-cookie"][0].includes(`${CookieNames.ACCESS_TOKEN}=;`)).toBeTruthy();
         expect(response.status).toBe(204);
         // sockets are disconnected
         expect(lucella.server?.io.sockets.sockets.get(socket.id)).toBeUndefined();

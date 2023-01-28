@@ -56,7 +56,7 @@ describe("changePasswordHandler", () => {
     // user should be logged out now and unable to perform auth protected actions such as account deletion
     const deleteAccountResponse = await request(app)
       .delete(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(responseBodyIncludesCustomErrorMessage(deleteAccountResponse, ErrorMessages.AUTH.NOT_LOGGED_IN));
 
     const loginWithOldPasswordResponse = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({

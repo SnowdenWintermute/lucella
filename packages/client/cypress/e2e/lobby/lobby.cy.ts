@@ -7,7 +7,7 @@ import unauthedJoinLeaveAndDisconnectFromGameRoom from "./unauthedJoinLeaveAndDi
 describe("lobby chat, hosting, joining and game start and end functionality", () => {
   afterEach(() => cy.task(TaskNames.disconnectSocket));
   startGameAndDisconnect();
-  // authedUserHostAndStartGame();
-  // chatAndChangeChannels();
-  // unauthedJoinLeaveAndDisconnectFromGameRoom();
+  authedUserHostAndStartGame();
+  chatAndChangeChannels();
+  unauthedJoinLeaveAndDisconnectFromGameRoom();
 });

@@ -14,4 +14,5 @@ export default async function createTestUser(name: string, email: string, passwo
       elo: battleRoomElo,
     });
   }
+  return user;
 }

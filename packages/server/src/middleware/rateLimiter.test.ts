@@ -7,6 +7,7 @@ import {
   perIpFixedWindowCounterTime,
   perIpSlidingWindowLimit,
   UsersRoutePaths,
+  CookieNames,
 } from "../../../common";
 import signTokenAndCreateSession from "../controllers/utils/signTokenAndCreateSession";
 import UserRepo from "../database/repos/users";
@@ -59,7 +60,7 @@ describe("rate limiter", () => {
       allowedReqPromises.push(
         request(app)
           .get(`/api${UsersRoutePaths.ROOT}`)
-          .set("Cookie", [`access_token=${accessToken}`])
+          .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`])
       );
 
     const values = await Promise.all(allowedReqPromises);
@@ -70,7 +71,7 @@ describe("rate limiter", () => {
     // even though it is a different route path it is behind the same rate limiting middleware
     const response = await request(app)
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(response.status).toBe(429);
     expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.RATE_LIMITER.REQUESTING_TOO_QUICKLY)).toBeTruthy();
 
@@ -79,7 +80,7 @@ describe("rate limiter", () => {
 
     const responseThatShouldNotBeLimited = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(responseThatShouldNotBeLimited.status).toBe(200);
   });
 
@@ -104,7 +105,7 @@ describe("rate limiter", () => {
         currentBatchOfRequestPromises.push(
           request(app)
             .get(`/api${UsersRoutePaths.ROOT}`)
-            .set("Cookie", [`access_token=${accessToken}`])
+            .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`])
         );
       }
       // eslint-disable-next-line no-await-in-loop
@@ -122,7 +123,7 @@ describe("rate limiter", () => {
     // this next request should now be over the sliding window limit
     const slidingWindowLimitedResponse = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     numReqsInThisSlidingWindow += 1;
 
     expect(slidingWindowLimitedResponse.status).toBe(429);
@@ -138,7 +139,7 @@ describe("rate limiter", () => {
     console.log("currentTime: ", currentTime, perIpSlidingWindowTime + perIpFixedWindowCounterTime);
     const responseAfterWaiting = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     numReqsInThisSlidingWindow += 1;
     expect(responseAfterWaiting.status).toBe(200);
   });

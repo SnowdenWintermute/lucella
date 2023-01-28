@@ -29,14 +29,16 @@ export class LucellaServer {
     initializeListeners(this);
   }
 
-  async handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {
-    await handleSocketLeavingGame(this, socket, isDisconnecting);
+  handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {
+    handleSocketLeavingGame(this, socket, isDisconnecting);
   }
-  async handleSocketDisconnection(socket: Socket) {
+  handleSocketDisconnection(socket: Socket) {
     if (!this.connectedSockets[socket.id]) return;
     const socketMetaLeaving = this.connectedSockets[socket.id];
-    if (socketMetaLeaving.currentGameName) await this.handleSocketLeavingGame(socket, true);
+    console.log(`user ${socketMetaLeaving.associatedUser.username} disconnecting, currentGameName: ${socketMetaLeaving.currentGameName}`);
+    if (socketMetaLeaving.currentGameName) this.handleSocketLeavingGame(socket, true);
     else this.lobby.changeSocketChatChannelAndEmitUpdates(socket, null, false);
+    if (this.matchmakingQueue.users[socket.id]) this.matchmakingQueue.removeUser(socket.id);
 
     const userLeaving = socketMetaLeaving.associatedUser;
     const { username } = userLeaving;

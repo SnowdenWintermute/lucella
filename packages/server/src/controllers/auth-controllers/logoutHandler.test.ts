@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
 import UserRepo from "../../database/repos/users";
-import { AuthRoutePaths, ErrorMessages, UsersRoutePaths, UserStatuses } from "../../../../common";
+import { AuthRoutePaths, CookieNames, ErrorMessages, UsersRoutePaths, UserStatuses } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
@@ -33,7 +33,7 @@ describe("loginHandler", () => {
 
     const getMeResponse = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(getMeResponse.body.user).not.toHaveProperty("password");
     expect(getMeResponse.body.user.name).toBe(TEST_USER_NAME.toLowerCase());
     expect(getMeResponse.body.user.email).toBe(TEST_USER_EMAIL);
@@ -41,12 +41,12 @@ describe("loginHandler", () => {
 
     const logoutResponse = await request(app)
       .post(`/api${AuthRoutePaths.ROOT + AuthRoutePaths.LOGOUT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(logoutResponse.status).toBe(200);
 
     const getMeAfterLogoutResponse = await request(app)
       .get(`/api${UsersRoutePaths.ROOT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(getMeAfterLogoutResponse.body).not.toHaveProperty("user");
     expect(responseBodyIncludesCustomErrorMessage(getMeAfterLogoutResponse, ErrorMessages.AUTH.EXPIRED_SESSION)).toBeTruthy();
   });
@@ -57,7 +57,7 @@ describe("loginHandler", () => {
     wrappedRedis.context!.removeAllKeys();
     const logoutResponse = await request(app)
       .post(`/api${AuthRoutePaths.ROOT + AuthRoutePaths.LOGOUT}`)
-      .set("Cookie", [`access_token=${accessToken}`]);
+      .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(logoutResponse.status).toBe(200);
   });
 });
