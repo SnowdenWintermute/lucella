@@ -40,8 +40,8 @@ export const colors = {
   hostEndZone: "rgb(50,50,70)",
   challengerEndZone: "rgb(50,70,50)",
   inGameTextLight: "rgb(200,200,200)",
-  hostOrbs: "0, 153, 0",
-  challengerOrbs: "89,0,179",
+  hostOrbs: "13, 28, 46",
+  challengerOrbs: "0, 75, 79",
   selectionRingColor: "rgb(30,200,30)",
 };
 export const renderRate = 33;

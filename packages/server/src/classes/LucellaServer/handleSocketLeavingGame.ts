@@ -7,7 +7,7 @@ export default function handleSocketLeavingGame(server: LucellaServer, socket: S
   const { io, lobby, connectedSockets, games } = server;
   const { currentGameName } = connectedSockets[socket.id];
   const usernameOfPlayerLeaving = connectedSockets[socket.id].associatedUser.username;
-  console.log(`${usernameOfPlayerLeaving} leaving game ${currentGameName}`);
+  // console.log(`${usernameOfPlayerLeaving} leaving game ${currentGameName}`);
   if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
   const gameRoom = lobby.gameRooms[currentGameName];
   if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
@@ -16,11 +16,12 @@ export default function handleSocketLeavingGame(server: LucellaServer, socket: S
   const playerToKick = players.challenger && players.host?.associatedUser.username === usernameOfPlayerLeaving ? players.challenger : undefined;
 
   if (gameRoom.gameStatus === GameStatus.IN_LOBBY || gameRoom.gameStatus === GameStatus.COUNTING_DOWN) {
-    if (gameRoom.isRanked) server.lobby.handleSocketLeavingRankedGameRoom(socket, gameRoom);
+    if (gameRoom.isRanked) server.lobby.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
     else server.lobby.handleSocketLeavingGameRoom(socket, gameRoom, isDisconnecting, playerToKick);
   } else {
     const game = games[currentGameName];
-    game.winner = playerToKick ? players.host?.associatedUser.username : players.challenger?.associatedUser.username;
+    const remainingPlayer = usernameOfPlayerLeaving === players!.host!.associatedUser.username ? PlayerRole.CHALLENGER : PlayerRole.HOST;
+    game.winner = remainingPlayer;
     if (gameRoom.gameStatus === GameStatus.ENDING) return;
     gameRoom.winner = game.winner === PlayerRole.HOST ? players!.host!.associatedUser.username : players!.challenger!.associatedUser.username;
     server.endGameAndEmitUpdates(game);

@@ -32,9 +32,12 @@ export default function mapUnpackedPacketToUpdateObject(game: BattleRoomGame, un
 
   if (!unpacked) return prevGamestateWithNewDeltas;
 
+  console.log(unpacked.orbs);
+
   Object.entries(unpacked.orbs).forEach(([playerRole, orbSet]) => {
     Object.entries(orbSet).forEach(([orbLabel, orb]) => {
       Object.keys(orb).forEach((key) => {
+        console.log("orbLabel: ", orbLabel);
         if (key === "position") Matter.Body.setPosition(prevGamestateWithNewDeltas.orbs[playerRole as PlayerRole][orbLabel].body, cloneDeep(orb.position!));
         if (key === "velocity") Matter.Body.setVelocity(prevGamestateWithNewDeltas.orbs[playerRole as PlayerRole][orbLabel].body, cloneDeep(orb.velocity!));
         if (key === "force") prevGamestateWithNewDeltas.orbs[playerRole as PlayerRole][orbLabel].body.force = cloneDeep(orb.force!);

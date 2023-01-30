@@ -1,7 +1,4 @@
-import { createTestGameWithPrevGameState } from "./determineOrbDeltas.test";
-import { OrbsProto, PlayerRole } from "../../../../../common";
-import determineOrbDeltas from "./determineOrbDeltas";
-import packOrbSet from "./packOrbSet";
+import { createTestGameWithPrevGameState, determineOrbDeltas, OrbsProto, packOrbSet, PlayerRole } from "../../../common";
 
 test("pack and unpack orb deltas and be able to know if a field was not set", () => {
   const game = createTestGameWithPrevGameState();

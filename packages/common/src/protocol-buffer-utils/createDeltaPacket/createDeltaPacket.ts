@@ -1,9 +1,11 @@
 import isEqual from "lodash.isequal";
-import { BattleRoomGame, PlayerRole, DeltasProto, ScoreProto } from "../../../../../common";
-import determineOrbDeltas from "./determineOrbDeltas";
-import packOrbSet from "./packOrbSet";
+import { BattleRoomGame } from "../../classes/BattleRoomGame";
+import { PlayerRole } from "../../enums";
+import { DeltasProto, ScoreProto } from "../../proto/generated/src/proto/deltas_pb";
+import { determineOrbDeltas } from "./determineOrbDeltas";
+import { packOrbSet } from "./packOrbSet";
 
-export default function createDeltaPacket(game: BattleRoomGame, playerRole: PlayerRole) {
+export function createDeltaPacket(game: BattleRoomGame, playerRole: PlayerRole) {
   if (!game.netcode.prevGameState) return; // send full data // @todo - serialize this in its own protobuf and remove the consistent-renturn eslint disable comment at bottom of file
   const opponentRole = playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
   const playerOrbDeltas = determineOrbDeltas(game, playerRole);

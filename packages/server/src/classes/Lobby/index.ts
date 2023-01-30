@@ -130,7 +130,7 @@ export class Lobby {
   handleSocketLeavingGameRoom(socket: Socket, gameRoom: GameRoom, isDisconnecting: boolean, playerToKick?: SocketMetadata) {
     handleSocketLeavingGameRoom(this.server, socket, gameRoom, isDisconnecting, playerToKick);
   }
-  handleSocketLeavingRankedGameRoom(socket: Socket, gameRoom: GameRoom) {
+  handleSocketLeavingRankedGameRoomInLobby(socket: Socket, gameRoom: GameRoom) {
     console.log(`${this.server.connectedSockets[socket.id].associatedUser.username} leaving a ranked game room`);
     const { challenger, host } = gameRoom.players;
     const otherPlayer = challenger?.socketId === socket.id ? host : challenger;

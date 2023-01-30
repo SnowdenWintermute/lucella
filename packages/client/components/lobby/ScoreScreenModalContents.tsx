@@ -56,7 +56,7 @@ function ScoreScreenModalContents() {
   return (
     <div data-cy="score-screen-modal">
       <h3>Game {scoreScreenData!.gameRoom.gameName} final score:</h3>
-      <table>
+      <table style={{ width: "200px" }}>
         <tbody>
           <tr>
             <td>{scoreScreenData.gameRoom.players.host!.associatedUser.username}:</td>

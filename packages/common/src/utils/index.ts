@@ -54,14 +54,13 @@ export function createAdjustedCoordinateCalculator(coordinateMax: number, relati
   };
 }
 
-export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet, withPositionBuffer?: boolean) {
+export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet) {
   Object.entries(a).forEach(([orbLabel, orb]) => {
-    const { isSelected, isGhost, destination, positionBuffer } = b[orbLabel];
+    const { isSelected, isGhost, destination } = b[orbLabel];
     orb.isSelected = isSelected;
     orb.isGhost = isGhost;
     if (destination) orb.destination = new Point(destination.x, destination.y);
     else orb.destination = null;
-    if (withPositionBuffer) orb.positionBuffer = cloneDeep(positionBuffer);
   });
 }
 
@@ -77,5 +76,11 @@ export function setOrbSetPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet) {
       // angularVelocity,
     };
     setBodyProperties(orb.body, newProperties);
+  });
+}
+
+export function setOrbSetPositionBuffersFromAnotherSet(a: OrbSet, b: OrbSet) {
+  Object.entries(a).forEach(([orbLabel, orb]) => {
+    orb.positionBuffer = cloneDeep(b[orbLabel].positionBuffer);
   });
 }

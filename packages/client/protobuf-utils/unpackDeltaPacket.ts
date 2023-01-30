@@ -10,7 +10,7 @@ export interface IUnpackedGameStateDeltas {
   gameSpeedModifier?: number;
 }
 
-export default function (serializedMessage: Uint8Array, playerRole: PlayerRole | null) {
+export default function unpackDeltaPacket(serializedMessage: Uint8Array, playerRole: PlayerRole | null) {
   if (!playerRole) {
     console.log("no player role assigned - abandoning unpacking of delta packet");
     return undefined;

@@ -1,8 +1,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 import { Socket } from "socket.io-client";
-import { BattleRoomGame, PlayerRole, Point, SelectOrbs, simulatedLagMs, simulateLag, SocketEventsFromClient } from "../../../../common";
-import laggedSocketEmit from "../../../utils/laggedSocketEmit";
+import { BattleRoomGame, PlayerRole, Point, SelectOrbs, SocketEventsFromClient } from "../../../../common";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
 import serializeInput from "../user-input-serializers/serialize-input";
 // const replicator = new (require("replicator"))();
@@ -21,7 +20,6 @@ export default function mouseLeaveHandler(currentGame: BattleRoomGame, socket: S
     );
     currentGame.queues.client.localInputs.push(input);
     const serialized = serializeInput(input);
-    if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, serialized, simulatedLagMs);
-    else socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
+    socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
   }
 }

@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { BattleRoomGame, endScreenCountdownDelay, simulatedLagMs, simulateLag, SocketEventsFromServer, WidthAndHeight } from "../../../common";
+import { BattleRoomGame, endScreenCountdownDelay, SocketEventsFromServer, WidthAndHeight } from "../../../common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
@@ -28,17 +28,10 @@ function GameListener(props: Props) {
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
       if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
       const unpacked = unpackDeltaPacket(data, playerRole);
-      if (simulateLag)
-        setTimeout(() => {
-          const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
-          game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
-          game.netcode.timeLastUpdateReceived = +Date.now();
-        }, simulatedLagMs);
-      else {
-        const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
-        game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
-        game.netcode.timeLastUpdateReceived = +Date.now();
-      }
+
+      const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
+      game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
+      game.netcode.timeLastUpdateReceived = +Date.now();
     });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));

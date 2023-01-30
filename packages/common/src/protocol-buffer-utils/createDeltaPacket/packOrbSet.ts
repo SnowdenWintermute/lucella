@@ -1,7 +1,9 @@
-import { OrbDeltas, OrbsProto, VectorProto } from "../../../../../common";
+import { OrbsProto, VectorProto } from "../../proto/generated/src/proto/deltas_pb";
+import { OrbDeltas } from "../../types";
 
-export default function packOrbSet(orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas }) {
+export function packOrbSet(orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas }) {
   const orbsPacket = new OrbsProto();
+
   Object.values(orbsDeltasToSerialize).forEach((currOrb, i) => {
     const orbPacket = orbsPacket.addOrbs();
     orbPacket.setId(i + 1);

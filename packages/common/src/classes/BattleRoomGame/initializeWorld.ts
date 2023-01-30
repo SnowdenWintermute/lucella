@@ -4,8 +4,16 @@ import { BattleRoomGame } from ".";
 import { challengerOrbCollisionCategory, colors, hostOrbCollisionCategory } from "../../consts";
 import { orbDensity, frictionAir } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
-import { setOrbSetNonPhysicsPropertiesFromAnotherSet, setOrbSetPhysicsPropertiesFromAnotherSet } from "../../utils";
+import { setOrbSetNonPhysicsPropertiesFromAnotherSet, setOrbSetPhysicsPropertiesFromAnotherSet, setOrbSetPositionBuffersFromAnotherSet } from "../../utils";
 import { Orb } from "../Orb";
+
+/**
+ * Sets the matterjs body properties of a new battleRoomGame, and if a second game object is provided sets
+ * the first game's bodies to the proporties of the second game.
+ *
+ * @param game - The game object to set
+ * @param prevGameState - The game object from which properties will be copied
+ */
 
 export default function initializeWorld(game: BattleRoomGame, prevGameState?: BattleRoomGame) {
   game.physicsEngine = Matter.Engine.create();
@@ -39,7 +47,8 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
   if (prevGameState) {
     Object.entries(game.orbs).forEach(([playerRole, orbSet]) => {
       setOrbSetPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
-      setOrbSetNonPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole], true);
+      setOrbSetNonPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
+      setOrbSetPositionBuffersFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
     });
   }
 }

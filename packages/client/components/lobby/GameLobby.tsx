@@ -13,7 +13,7 @@ import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
+import { setAuthenticating, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -31,7 +31,6 @@ function GameLobby({ defaultChatChannel }: Props) {
   const { currentGameRoom } = lobbyUiState;
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
-  const [authenticating, setAuthenticating] = useState(true);
   const socket = useRef<Socket>();
 
   // setup socket
@@ -53,15 +52,15 @@ function GameLobby({ defaultChatChannel }: Props) {
   useEffect(() => {
     if (socket.current)
       socket.current.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
-        setAuthenticating(false);
+        dispatch(setAuthenticating(false));
       });
   });
 
   // join initial room
   useEffect(() => {
-    if (authenticating || !socket.current) return;
+    if (lobbyUiState.authenticating || !socket.current) return;
     socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannel);
-  }, [authenticating, defaultChatChannel]);
+  }, [lobbyUiState.authenticating, defaultChatChannel]);
 
   // joining new rooms
   const joinRoom = (chatChannelToJoin: string) => {

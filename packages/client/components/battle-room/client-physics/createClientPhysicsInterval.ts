@@ -3,21 +3,11 @@
 import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
 import { Detector } from "matter-js";
-import laggedSocketEmit from "../../../utils/laggedSocketEmit";
 import assignDebugValues from "./assignDebugValues";
 import determineRoundTripTime from "./determineRoundTripTime";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
-import {
-  BattleRoomGame,
-  ClientTickNumber,
-  PlayerRole,
-  renderRate,
-  simulatedLagMs,
-  SocketEventsFromClient,
-  simulateLag,
-  WidthAndHeight,
-} from "../../../../common";
+import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, simulateLag, WidthAndHeight } from "../../../../common";
 import draw from "../canvas-functions/canvasMain";
 import serializeInput from "../user-input-serializers/serialize-input";
 import setNonOrbGameState from "./setNonOrbGameState";
@@ -44,10 +34,8 @@ export default function createClientPhysicsInterval(
     const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
     const serialized = serializeInput(input);
     newGameState.queues.client.localInputs.push(input);
-    newGameState.queues.client.inputsFromLastTick.push(input); // probs remove all these
 
-    if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, serialized, simulatedLagMs);
-    else socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
+    socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
 
     interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);

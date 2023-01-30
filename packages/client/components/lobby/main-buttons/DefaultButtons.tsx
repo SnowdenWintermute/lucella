@@ -5,10 +5,11 @@ import { SocketEventsFromClient } from "../../../../common";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import GameLobbyModalButton from "../../common-components/buttons/GameLobbyModalButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
+import { setMatchmakingLoading, setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 import { mobileViewWidthThreshold } from "../../../consts";
 import { setShowChangeChatChannelModal, setShowMobileLobbyMenuModal } from "../../../redux/slices/ui-slice";
 import useWindowDimensions from "../../../hooks/useWindowDimensions";
+import CircularProgress from "../../common-components/CircularProgress";
 
 interface Props {
   socket: Socket;
@@ -38,28 +39,43 @@ function DefaultButtons({ socket }: Props) {
     }
   }, [gameListIsOpen, preGameScreenIsOpen, matchmakingScreenIsOpen]);
 
-  const onChannelClick = () => {
+  const handleChannelClick = () => {
     dispatch(setShowChangeChatChannelModal(true));
     dispatch(setShowMobileLobbyMenuModal(false));
   };
 
-  const onViewGamesListClick = () => {
+  const handleViewGamesListClick = () => {
     if (!socket) return;
     socket.emit(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST);
     dispatch(setViewingGamesList(true));
     dispatch(setShowMobileLobbyMenuModal(false));
   };
 
-  const onSetupNewGameClick = () => {
+  const handleSetupNewGameClick = () => {
     dispatch(setPreGameScreenDisplayed(true));
     dispatch(setShowMobileLobbyMenuModal(false));
   };
 
-  const onRankedClick = () => {
+  const handleRankedClick = () => {
     if (!socket) return;
     socket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
     dispatch(setShowMobileLobbyMenuModal(false));
+    dispatch(setMatchmakingLoading(true));
   };
+
+  function handleKeypress(event: KeyboardEvent) {
+    const { key } = event;
+    if (key === "q" || key === "Q") {
+      handleRankedClick();
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keyup", handleKeypress);
+    return () => {
+      window.removeEventListener("keyup", handleKeypress);
+    };
+  }, []);
 
   // for mobile view
   const onMenuClick = () => {
@@ -73,19 +89,29 @@ function DefaultButtons({ socket }: Props) {
   }, [windowDimensions, setMobileViewActive]);
 
   const buttons = [
-    { title: "Channel", onClick: onChannelClick },
-    { title: "Ranked", onClick: onRankedClick },
-    { title: "Host", onClick: onSetupNewGameClick },
-    { title: "Join", onClick: onViewGamesListClick },
+    { title: "Channel", onClick: handleChannelClick },
+    { title: "Ranked", onClick: handleRankedClick },
+    { title: "Host", onClick: handleSetupNewGameClick },
+    { title: "Join", onClick: handleViewGamesListClick },
   ];
 
   return !mobileViewActive ? (
     <ul className={`chat-buttons-list ${chatButtonsDisplayClass}`}>
-      {buttons.map((button) => (
-        <li key={button.title}>
-          <GameLobbyTopButton title={button.title} onClick={button.onClick} displayClass={chatButtonDisplayClass} />
-        </li>
-      ))}
+      {buttons.map((button) => {
+        let title;
+        let disabled;
+        if (button.title === "Ranked") {
+          if (lobbyUiState.matchmakingScreen.isLoading) {
+            title = "...";
+            disabled = true;
+          }
+        }
+        return (
+          <li key={button.title}>
+            <GameLobbyTopButton title={title || button.title} onClick={button.onClick} disabled={disabled} displayClass={chatButtonDisplayClass} />
+          </li>
+        );
+      })}
     </ul>
   ) : (
     <>

@@ -1,5 +1,9 @@
 version: "3.8"
 services:
+  # toxiproxy:
+  #   image: ghcr.io/shopify/toxiproxy
+  #   ports:
+  #     - "22220:22220"
   posgres:
     image: postgres:15
     volumes:

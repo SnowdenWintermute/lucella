@@ -10,9 +10,9 @@ import {
   renderRate,
   SocketEventsFromServer,
   UserInput,
+  createDeltaPacket,
 } from "../../../../common";
 import { LucellaServer } from "../../classes/LucellaServer";
-import createDeltaPacket from "./createDeltaPacket/createDeltaPacket";
 import handleScoringPoints from "./handleScoringPoints";
 // const replicator = new (require("replicator"))();
 

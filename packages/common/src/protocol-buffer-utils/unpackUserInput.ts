@@ -9,9 +9,9 @@ import {
   SelectOrbAndAssignDestination,
   SelectOrbs,
   UserInputs,
-} from "../../../common";
+} from "../index";
 
-export default function unpackUserInput(
+export function unpackUserInput(
   serializedMessage: Uint8Array,
   playerRole: PlayerRole
 ): SelectOrbAndAssignDestination | ClientTickNumber | SelectOrbs | AssignOrbDestinations | undefined {
