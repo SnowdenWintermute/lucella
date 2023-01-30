@@ -43,6 +43,7 @@ export default function createGamePhysicsInterval(io: Server, socket: Socket, se
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
     // io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
     if (game.winner) server.endGameAndEmitUpdates(game);
+
     io.to(server.lobby.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
     io.to(server.lobby.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
 

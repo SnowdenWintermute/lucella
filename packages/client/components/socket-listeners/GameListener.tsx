@@ -28,7 +28,6 @@ function GameListener(props: Props) {
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
       if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
       const unpacked = unpackDeltaPacket(data, playerRole);
-
       const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);
       game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
       game.netcode.timeLastUpdateReceived = +Date.now();

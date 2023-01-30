@@ -20,6 +20,7 @@ export function unpackUserInput(
   const inputNumber = deserialized.getNumber();
   if (type === UserInputs.CLIENT_TICK_NUMBER) return new ClientTickNumber(null, inputNumber, playerRole);
   const orbIds = deserialized.getOrbidsList();
+
   if (type === UserInputs.SELECT_ORBS) return new SelectOrbs({ orbIds }, inputNumber, playerRole);
   const mousePosition = deserialized.getMouseposition();
   let x;

@@ -21,7 +21,8 @@ export default function predictClientOrbs(game: BattleRoomGame, newGameState: Ba
   setNonOrbGameState(newGameState, lastUpdateFromServerCopy);
 
   Detector.setBodies(newGameState.physicsEngine!.detector, newGameState.physicsEngine!.world.bodies);
-  newGameState.queues.client.localInputs.forEach((input, i) => {
+
+  newGameState.queues.client.localInputs.forEach((input) => {
     if (lastProcessedClientInputNumber && input.number <= lastProcessedClientInputNumber) return;
     processPlayerInput(input, newGameState, renderRate, playerRole);
     const collisions = Detector.collisions(newGameState.physicsEngine!.detector);

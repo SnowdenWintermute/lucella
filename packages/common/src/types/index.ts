@@ -11,6 +11,15 @@ export interface IUnpackedOrbDeltas extends OrbDeltas {
 }
 export type OrbSetDeltas = { [orbLabel: string]: OrbDeltas };
 
+type OrbDeltaSet = { [key: string]: IUnpackedOrbDeltas };
+
+export interface IUnpackedGameStateDeltas {
+  orbs: { host?: OrbDeltaSet; challenger?: OrbDeltaSet };
+  score?: { host?: number; challenger?: number; neededToWin?: number };
+  serverlastprocessedinputnumber?: number;
+  gameSpeedModifier?: number;
+}
+
 export interface ServerPacket {
   orbs: HostAndChallengerOrbSets;
   serverLastProcessedInputNumber: number;

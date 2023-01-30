@@ -4,42 +4,42 @@ import { OrbDeltas } from "../../types";
 export function packOrbSet(orbsDeltasToSerialize: { [orbLabel: string]: OrbDeltas }) {
   const orbsPacket = new OrbsProto();
 
-  Object.values(orbsDeltasToSerialize).forEach((currOrb, i) => {
+  Object.entries(orbsDeltasToSerialize).forEach(([orbLabel, orb], i) => {
     const orbPacket = orbsPacket.addOrbs();
-    orbPacket.setId(i + 1);
+    orbPacket.setId(parseInt(orbLabel.slice(-1), 10));
 
-    if (currOrb.position) {
+    if (orb.position) {
       const positionPacket = new VectorProto();
-      const x = +currOrb.position.x;
-      const y = +currOrb.position.y;
+      const x = +orb.position.x;
+      const y = +orb.position.y;
       positionPacket.setX(x);
       positionPacket.setY(y);
       orbPacket.setPosition(positionPacket);
     }
-    if (typeof currOrb.destination !== "undefined") {
+    if (typeof orb.destination !== "undefined") {
       let destinationPacket;
-      if (currOrb.destination) {
+      if (orb.destination) {
         destinationPacket = new VectorProto();
-        destinationPacket.setX(currOrb.destination.x);
-        destinationPacket.setY(currOrb.destination.y);
+        destinationPacket.setX(orb.destination.x);
+        destinationPacket.setY(orb.destination.y);
         orbPacket.setDestination(destinationPacket);
       } else orbPacket.setNodestination(true);
     }
-    if (currOrb.velocity) {
+    if (orb.velocity) {
       const velocityPacket = new VectorProto();
-      velocityPacket.setX(currOrb.velocity.x);
-      velocityPacket.setY(currOrb.velocity.y);
+      velocityPacket.setX(orb.velocity.x);
+      velocityPacket.setY(orb.velocity.y);
       orbPacket.setVelocity(velocityPacket);
     }
-    if (currOrb.force) {
+    if (orb.force) {
       const forcePacket = new VectorProto();
-      forcePacket.setX(currOrb.force.x);
-      forcePacket.setY(currOrb.force.y);
+      forcePacket.setX(orb.force.x);
+      forcePacket.setY(orb.force.y);
       orbPacket.setForce(forcePacket);
     }
 
-    if (Object.prototype.hasOwnProperty.call(currOrb, "isSelected")) orbPacket.setIsselected(currOrb.isSelected!);
-    if (Object.prototype.hasOwnProperty.call(currOrb, "isGhost")) orbPacket.setIsghost(currOrb.isGhost!);
+    if (Object.prototype.hasOwnProperty.call(orb, "isSelected")) orbPacket.setIsselected(orb.isSelected!);
+    if (Object.prototype.hasOwnProperty.call(orb, "isGhost")) orbPacket.setIsghost(orb.isGhost!);
   });
 
   return orbsPacket;

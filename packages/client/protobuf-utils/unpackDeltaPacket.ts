@@ -1,14 +1,5 @@
-import { DeltasProto, IUnpackedOrbDeltas, PlayerRole } from "../../common";
+import { DeltasProto, IUnpackedGameStateDeltas, PlayerRole } from "../../common";
 import unpackOrbProto from "./unpackOrbProto";
-
-type OrbDeltaSet = { [key: string]: IUnpackedOrbDeltas };
-
-export interface IUnpackedGameStateDeltas {
-  orbs: { host?: OrbDeltaSet; challenger?: OrbDeltaSet };
-  score?: { host?: number; challenger?: number; neededToWin?: number };
-  serverlastprocessedinputnumber?: number;
-  gameSpeedModifier?: number;
-}
 
 export default function unpackDeltaPacket(serializedMessage: Uint8Array, playerRole: PlayerRole | null) {
   if (!playerRole) {
