@@ -8,6 +8,5 @@ export default function handleSelectOrbs(input: SelectOrbs, game: BattleRoomGame
   });
   input.data.orbIds.forEach((id: number) => {
     game.orbs[input.playerRole!][`${input.playerRole}-orb-${id}`].isSelected = true;
-    console.log(`selecting ${input.playerRole}-orb-${id}`, game.orbs[input.playerRole!][`${input.playerRole}-orb-${id}`].isSelected);
   });
 }

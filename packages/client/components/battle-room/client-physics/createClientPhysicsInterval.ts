@@ -7,9 +7,9 @@ import assignDebugValues from "./assignDebugValues";
 import determineRoundTripTime from "./determineRoundTripTime";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
-import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, simulateLag, WidthAndHeight } from "../../../../common";
+import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, WidthAndHeight } from "../../../../common";
 import draw from "../canvas-functions/canvasMain";
-import serializeInput from "../user-input-serializers/serialize-input";
+import serializeInput from "../../../protobuf-utils/serialize-input";
 import setNonOrbGameState from "./setNonOrbGameState";
 
 export default function createClientPhysicsInterval(

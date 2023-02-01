@@ -24,5 +24,19 @@ export default function draw(context: CanvasRenderingContext2D, canvasSize: Widt
     if (game.winner) gameOverText(context, game, canvasDrawFractions);
     const selectionBoxSize = getSelectionBoxSize(game.mouseData, canvasDrawFractions);
     if (selectionBoxSize) drawSelectionBox(context, mouseData, canvasDrawFractions, selectionBoxSize);
+
+    if (!game.netcode.lastUpdateFromServer) {
+      const fontSize = 25;
+      context.beginPath();
+      context.fillStyle = "rgb(255,255,255)";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px Arial`;
+      context.fillText(
+        `Loading...`,
+        (BattleRoomGame.baseWindowDimensions.width * canvasDrawFractions.x) / 2,
+        (BattleRoomGame.baseWindowDimensions.height * canvasDrawFractions.y) / 2
+      );
+    }
   });
 }

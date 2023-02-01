@@ -20,9 +20,8 @@ export default function battleRoomGameListeners(server: LucellaServer, socket: S
     if (!playerRole) return console.log("error: received an input from a user not in this game");
     const inputToQueue: UserInput | undefined = unpackUserInput(data, playerRole);
     if (inputToQueue?.type === UserInputs.SELECT_ORB_AND_ASSIGN_DESTINATION)
-      console.log("input data for SELECT_ORB_AND_ASSIGN_DESTINATION: ", inputToQueue.data);
-    if (!inputToQueue) return console.log("invalid BR game input received from client");
-    const clientTryingToMoveTooFast = antiCheat(game, inputToQueue, playerRole);
+      if (!inputToQueue) return console.log("invalid BR game input received from client");
+    const clientTryingToMoveTooFast = antiCheat(game, inputToQueue!, playerRole);
     if (!clientTryingToMoveTooFast) games[connectedSockets[socket.id].currentGameName!].queues.server.receivedInputs.push(inputToQueue);
   });
 }

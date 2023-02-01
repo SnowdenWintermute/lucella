@@ -14,7 +14,6 @@ function GlobalModals() {
   }
 
   function handleUserKeyPress(e: KeyboardEvent) {
-    console.log("esc listener in global modal listener");
     const { key } = e;
     if (key === "Escape" || key === "Esc") hideModal();
   }

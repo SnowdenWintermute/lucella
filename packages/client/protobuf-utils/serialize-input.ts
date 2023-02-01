@@ -1,12 +1,4 @@
-import {
-  InputProto,
-  LineUpOrbsHorizontallyAtMouseY,
-  SelectOrbAndAssignDestination,
-  SelectOrbs,
-  SmallVectorProto,
-  UserInput,
-  UserInputs,
-} from "../../../../common";
+import { InputProto, LineUpOrbsHorizontallyAtMouseY, SelectOrbAndAssignDestination, SelectOrbs, SmallVectorProto, UserInput, UserInputs } from "../../common";
 
 export default function serializeInput(input: UserInput | SelectOrbs | SelectOrbAndAssignDestination | LineUpOrbsHorizontallyAtMouseY) {
   const { data } = input;

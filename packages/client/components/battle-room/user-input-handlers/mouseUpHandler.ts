@@ -2,7 +2,7 @@
 import { Socket } from "socket.io-client";
 import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, WidthAndHeight } from "../../../../common";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
-import serializeInput from "../user-input-serializers/serialize-input";
+import serializeInput from "../../../protobuf-utils/serialize-input";
 // const replicator = new (require("replicator"))();
 
 export default function mouseUpHandler(

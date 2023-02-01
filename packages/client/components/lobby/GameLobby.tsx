@@ -11,11 +11,12 @@ import ScoreScreenModalContents from "./ScoreScreenModalContents";
 import Modal from "../common-components/modal/Modal";
 import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
-import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
+import { GameStatus, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setAuthenticating, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../redux/slices/ui-slice";
+import { pingIntervalMs } from "../../consts";
 
 const socketAddress = process.env.NEXT_PUBLIC_SOCKET_API;
 
@@ -32,6 +33,9 @@ function GameLobby({ defaultChatChannel }: Props) {
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const socket = useRef<Socket>();
+  const pingInterval = useRef<NodeJS.Timeout | null>(null);
+  const latency = useRef<number>();
+  const lastPingSentAt = useRef<number>();
 
   // setup socket
   useEffect(() => {
@@ -50,10 +54,23 @@ function GameLobby({ defaultChatChannel }: Props) {
   }, [dispatch]);
 
   useEffect(() => {
-    if (socket.current)
+    if (socket.current) {
       socket.current.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
+        pingInterval.current = setInterval(() => {
+          if (!socket.current) return;
+          socket.current.emit(GENERIC_SOCKET_EVENTS.PING);
+          lastPingSentAt.current = +Date.now();
+        }, pingIntervalMs);
         dispatch(setAuthenticating(false));
       });
+      socket.current.on(GENERIC_SOCKET_EVENTS.PONG, () => {
+        if (lastPingSentAt.current) latency.current = +Date.now() - lastPingSentAt.current;
+      });
+    }
+    return () => {
+      if (pingInterval.current) clearInterval(pingInterval.current);
+      if (socket.current) socket.current.off(SocketEventsFromServer.AUTHENTICATION_COMPLETE);
+    };
   });
 
   // join initial room

@@ -43,7 +43,6 @@ function GameListener(props: Props) {
     return () => {
       clearInterval(game.intervals.physics);
       socket.off(SocketEventsFromServer.GAME_INITIALIZATION);
-      socket.off(SocketEventsFromServer.GAME_PACKET);
       socket.off(SocketEventsFromServer.COMPRESSED_GAME_PACKET);
       socket.off(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE);
       socket.off(SocketEventsFromServer.NAME_OF_GAME_WINNER);
