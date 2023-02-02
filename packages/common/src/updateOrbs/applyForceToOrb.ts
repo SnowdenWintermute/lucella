@@ -1,12 +1,12 @@
-import Matter, { Body, Vector } from "matter-js";
+/* eslint-disable no-param-reassign */
+import { Body, Vector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
 import { renderRate } from "../consts";
 import { orbMaxSpeed, decelerationDistance } from "../consts/battle-room-game-config";
-import { PlayerRole } from "../enums";
 import { distanceBetweenTwoPoints, findAngle, numberInRangeToBetweenZeroAndOne, slope } from "../utils";
 
-export default function (orb: Orb, game: BattleRoomGame) {
+export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   if (!orb.destination) {
     if (Vector.magnitude(orb.body.force) < 0.4) orb.body.force = Vector.create(0, 0);
     else Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.2)));

@@ -1,16 +1,16 @@
 import cloneDeep from "lodash.clonedeep";
 import Matter from "matter-js";
-import { BattleRoomGame, Orb, PlayerRole } from "../../common";
-import { IUnpackedGameStateDeltas } from "./unpackDeltaPacket";
+import { BattleRoomGame, IUnpackedGameStateDeltas, PlayerRole } from "../../common";
 
 export default function mapUnpackedPacketToUpdateObject(game: BattleRoomGame, unpacked?: IUnpackedGameStateDeltas) {
   const { lastUpdateFromServer } = game.netcode;
 
-  let prevGamestateWithNewDeltas: {
-    orbs: BattleRoomGame["orbs"];
-    serverLastProcessedInputNumber: number;
-    score: BattleRoomGame["score"];
-    speedModifier: number;
+  // start with whatever we already have from the current game state in case there hasn't even been an update from the server yet
+  let prevGamestateWithNewDeltas = {
+    orbs: { host: cloneDeep(game.orbs.host), challenger: cloneDeep(game.orbs.challenger) },
+    serverLastProcessedInputNumber: 0,
+    score: { host: game.score.host, challenger: game.score.challenger, neededToWin: game.score.neededToWin },
+    speedModifier: game.speedModifier,
   };
 
   if (lastUpdateFromServer) {
@@ -20,14 +20,6 @@ export default function mapUnpackedPacketToUpdateObject(game: BattleRoomGame, un
       score: { host: lastUpdateFromServer.score.host, challenger: lastUpdateFromServer.score.challenger, neededToWin: lastUpdateFromServer.score.neededToWin },
       speedModifier: lastUpdateFromServer.speedModifier,
     };
-  } else {
-    prevGamestateWithNewDeltas = {
-      orbs: { host: cloneDeep(game.orbs.host), challenger: cloneDeep(game.orbs.challenger) },
-      serverLastProcessedInputNumber: 0,
-      score: { host: game.score.host, challenger: game.score.challenger, neededToWin: game.score.neededToWin },
-      speedModifier: game.speedModifier,
-    };
-    console.log("created new update from current game");
   }
 
   if (!unpacked) return prevGamestateWithNewDeltas;

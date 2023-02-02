@@ -5,7 +5,7 @@ export class MouseData {
   leftReleasedAt: Point | null = null;
   rightReleasedAt: Point | null = null;
   touchStart: Point | null = null;
-  position: Point | null = new Point(0, 0);
+  position: Point | null = null;
   leftCurrentlyPressed = false;
   mouseOnScreen = true;
   touchStartTime: number | null = null;

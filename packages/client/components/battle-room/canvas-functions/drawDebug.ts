@@ -1,6 +1,6 @@
 import { BattleRoomGame, inGameFontSizes, Point } from "../../../../common";
 
-export default function drawDebug(context: CanvasRenderingContext2D, game: BattleRoomGame, canvasDrawFractions: Point) {
+export default function drawDebug(context: CanvasRenderingContext2D, game: BattleRoomGame, latency: number | undefined, canvasDrawFractions: Point) {
   const { mouseData } = game;
 
   if (mouseData.position && mouseData.position.x && mouseData.position.y)
@@ -17,8 +17,8 @@ export default function drawDebug(context: CanvasRenderingContext2D, game: Battl
       value: game.debug.clientPrediction.lastProcessedClientInputNumber?.toString(),
     },
     {
-      name: "roundTripTime",
-      value: game.debug.clientPrediction.roundTripTime?.toString(),
+      name: "latency",
+      value: latency?.toString(),
     },
     {
       name: "frameTime",

@@ -1,18 +1,4 @@
-import cloneDeep from "lodash.clonedeep";
-import { BattleRoomGame, GameElementsOfConstantInterest, PlayerRole, Point } from "../../../../../common";
-import determineOrbDeltas from "./determineOrbDeltas";
-
-export function createTestGameWithPrevGameState() {
-  const game = new BattleRoomGame("test-game-name");
-  BattleRoomGame.initializeWorld(game);
-  game.netcode.prevGameState = new GameElementsOfConstantInterest(
-    cloneDeep(game.orbs),
-    cloneDeep(game.score),
-    game.speedModifier,
-    cloneDeep(game.netcode.serverLastProcessedInputNumbers)
-  );
-  return game;
-}
+import { createTestGameWithPrevGameState, determineOrbDeltas, PlayerRole, Point } from "../../../common";
 
 test("determine changed orb position and selection", () => {
   const game = createTestGameWithPrevGameState();

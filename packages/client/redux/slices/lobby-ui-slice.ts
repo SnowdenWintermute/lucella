@@ -10,6 +10,7 @@ export interface IGameScoreScreen {
 }
 
 export interface ILobbyUIState {
+  authenticating: boolean;
   gameList: {
     games: {
       [roomName: string]: GameRoom;
@@ -21,6 +22,7 @@ export interface ILobbyUIState {
     isOpen: boolean;
   };
   matchmakingScreen: {
+    isLoading: boolean;
     isOpen: boolean;
     currentData: {
       currentEloDiffThreshold: number | null;
@@ -32,6 +34,7 @@ export interface ILobbyUIState {
 }
 
 const initialState: ILobbyUIState = {
+  authenticating: true,
   gameList: {
     games: {},
     isOpen: false,
@@ -41,6 +44,7 @@ const initialState: ILobbyUIState = {
     isOpen: false,
   },
   matchmakingScreen: {
+    isLoading: false,
     isOpen: false,
     currentData: {
       queueSize: null,
@@ -58,6 +62,9 @@ const ladderSlice = createSlice({
     clearLobbyUi() {
       return initialState;
     },
+    setAuthenticating(state, action: PayloadAction<boolean>) {
+      state.authenticating = action.payload;
+    },
     setPreGameScreenDisplayed(state, action: PayloadAction<boolean>) {
       state.preGameScreen.isOpen = action.payload;
     },
@@ -74,11 +81,13 @@ const ladderSlice = createSlice({
       if (state.currentGameRoom) state.currentGameRoom.gameStatus = action.payload;
     },
     updatePlayerRole(state, action: PayloadAction<PlayerRole>) {
-      console.log("player role received: ", action.payload);
       state.playerRole = action.payload;
     },
     setGameWinner(state, action: PayloadAction<string>) {
       if (state.currentGameRoom) state.currentGameRoom.winner = action.payload;
+    },
+    setMatchmakingLoading(state, action: PayloadAction<boolean>) {
+      state.matchmakingScreen.isLoading = action.payload;
     },
     setMatchmakingWindowVisible(state, action: PayloadAction<boolean>) {
       state.matchmakingScreen.isOpen = action.payload;
@@ -114,6 +123,7 @@ const ladderSlice = createSlice({
 
 export const {
   clearLobbyUi,
+  setAuthenticating,
   setPreGameScreenDisplayed,
   setCurrentGameRoom,
   updatePlayersReady,
@@ -121,6 +131,7 @@ export const {
   updateGameStatus,
   updatePlayerRole,
   setGameWinner,
+  setMatchmakingLoading,
   setMatchmakingWindowVisible,
   setMatchmakingData,
   setViewingGamesList,

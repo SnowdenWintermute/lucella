@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import io, { Socket } from "socket.io-client";
 import React, { useEffect, useState, useRef } from "react";
 import GameLobbyChat from "./game-lobby-chat/GameLobbyChat";
@@ -11,11 +12,12 @@ import ScoreScreenModalContents from "./ScoreScreenModalContents";
 import Modal from "../common-components/modal/Modal";
 import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
-import { GameStatus, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
+import { GameStatus, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
+import { setAuthenticating, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../redux/slices/ui-slice";
+import { pingIntervalMs } from "../../consts";
 
 const socketAddress = process.env.NEXT_PUBLIC_SOCKET_API;
 
@@ -31,18 +33,14 @@ function GameLobby({ defaultChatChannel }: Props) {
   const { currentGameRoom } = lobbyUiState;
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
-  const [authenticating, setAuthenticating] = useState(true);
   const socket = useRef<Socket>();
+  const pingInterval = useRef<NodeJS.Timeout | null>(null);
+  const latencyRef = useRef<number>();
+  const lastPingSentAtRef = useRef<number>();
 
   // setup socket
   useEffect(() => {
-    socket.current = io(socketAddress || "", {
-      transports: ["websocket"],
-      // transports: ["polling", "websocket"],
-      // extraHeaders: { "x-forwarded-for": "192.168.1.12" },
-      // withCredentials: true,
-      // reconnectionAttempts: 3,
-    });
+    socket.current = io(socketAddress || "", { transports: ["websocket"] });
     return () => {
       if (socket.current) socket.current.disconnect();
       dispatch(setCurrentGameRoom(null));
@@ -51,17 +49,39 @@ function GameLobby({ defaultChatChannel }: Props) {
   }, [dispatch]);
 
   useEffect(() => {
-    if (socket.current)
+    if (socket.current) {
       socket.current.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
-        setAuthenticating(false);
+        dispatch(setAuthenticating(false));
       });
+    }
+    return () => {
+      if (socket.current) socket.current.off(SocketEventsFromServer.AUTHENTICATION_COMPLETE);
+    };
+  });
+
+  // calculate latency and with each ping send current latency to the server
+  useEffect(() => {
+    if (!lobbyUiState.authenticating) {
+      pingInterval.current = setInterval(() => {
+        if (!socket.current) return;
+        lastPingSentAtRef.current = Date.now();
+        socket.current.volatile.emit(GENERIC_SOCKET_EVENTS.PING, latencyRef.current);
+      }, pingIntervalMs);
+      if (socket.current)
+        socket.current.on(GENERIC_SOCKET_EVENTS.PONG, () => {
+          if (lastPingSentAtRef.current) latencyRef.current = Date.now() - lastPingSentAtRef.current;
+        });
+    }
+    return () => {
+      if (pingInterval.current) clearInterval(pingInterval.current);
+    };
   });
 
   // join initial room
   useEffect(() => {
-    if (authenticating || !socket.current) return;
+    if (lobbyUiState.authenticating || !socket.current) return;
     socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannel);
-  }, [authenticating, defaultChatChannel]);
+  }, [lobbyUiState.authenticating, defaultChatChannel]);
 
   // joining new rooms
   const joinRoom = (chatChannelToJoin: string) => {
@@ -108,7 +128,7 @@ function GameLobby({ defaultChatChannel }: Props) {
           </div>
         </div>
       ) : (
-        <BattleRoomGameInstance socket={socket.current} />
+        <BattleRoomGameInstance socket={socket.current} latencyRef={latencyRef} />
       )}
     </>
   );

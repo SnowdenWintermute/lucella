@@ -17,7 +17,12 @@ export default function updateElos(hostBattleRoomScoreCard: IBattleRoomScoreCard
     hostS = 0;
     challengerS = 1;
   }
-  const newHostElo = Math.round(hostElo + 32 * (hostS! - hostE));
-  const newChallengerElo = Math.round(challengerElo + 32 * (challengerS! - challengerE));
+  let newHostElo = Math.round(hostElo + 32 * (hostS! - hostE));
+  let newChallengerElo = Math.round(challengerElo + 32 * (challengerS! - challengerE));
+
+  if (newHostElo === hostElo) newHostElo = winnerRole === PlayerRole.HOST ? newHostElo + 1 : newHostElo - 1;
+  if (newChallengerElo === challengerElo) newChallengerElo = winnerRole === PlayerRole.CHALLENGER ? newChallengerElo + 1 : newChallengerElo - 1;
+
+  console.log("winnerRole, hostS!, challengerS!, newHostElo, newChallengerElo", winnerRole, hostS!, challengerS!, newHostElo, newChallengerElo);
   return { hostElo, challengerElo, newHostElo, newChallengerElo };
 }

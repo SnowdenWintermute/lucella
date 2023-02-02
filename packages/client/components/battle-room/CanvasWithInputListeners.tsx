@@ -54,10 +54,10 @@ function Canvas(props: Props) {
         touchEndHandler(e, currentGame, canvasSizeRef.current!);
       }}
       onMouseDown={(e) => {
-        mouseDownHandler(e, currentGame);
+        mouseDownHandler(e, currentGame, canvasSizeRef.current!);
       }}
       onMouseUp={(e) => {
-        mouseUpHandler(e, currentGame, socket, playerRole);
+        mouseUpHandler(e, currentGame, socket, playerRole, canvasSizeRef.current!);
       }}
       onMouseMove={(e) => {
         throttle(eventLimiterRate, mouseMoveHandler(e, currentGame, canvasSizeRef.current!));

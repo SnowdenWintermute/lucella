@@ -1,6 +1,7 @@
 export enum ChatMessageStyles {
   PRIVATE = "private",
   NORMAL = "normal",
+  ERROR = "error",
 }
 
 export class ChatMessage {

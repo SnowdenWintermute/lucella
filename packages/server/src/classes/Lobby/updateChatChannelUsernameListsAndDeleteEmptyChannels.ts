@@ -11,6 +11,7 @@ export default function updateChatChannelUsernameListsAndDeleteEmptyChannels(
   if (channelNameJoining) channelNameJoining = toKebabCase(channelNameJoining);
 
   const { username, isGuest } = socketMeta.associatedUser;
+  const { latency } = socketMeta;
 
   if (channelNameLeaving) {
     const channelLeaving = chatChannels[channelNameLeaving];
@@ -33,6 +34,7 @@ export default function updateChatChannelUsernameListsAndDeleteEmptyChannels(
         username,
         isGuest,
         connectedSockets: [socketMeta.socketId!],
+        latency,
       };
     else channelJoining.connectedUsers[username].connectedSockets.push(socketMeta.socketId!);
     console.log(`${socketMeta.associatedUser.username} added to ${channelNameJoining}'s list`);

@@ -2,15 +2,18 @@
 /* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { ErrorMessages, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "../../../common";
+import { ErrorMessages, SocketEventsFromServer, GENERIC_SOCKET_EVENTS, ChatMessage, ChatMessageStyles } from "../../../common";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
+import { newChatMessage, setNewChatChannelLoading } from "../../redux/slices/chat-slice";
 import {
   clearLobbyUi,
+  setAuthenticating,
   setCurrentGameRoom,
   setMatchmakingData,
+  setMatchmakingLoading,
   setMatchmakingWindowVisible,
   setPreGameScreenDisplayed,
   setScoreScreenData,
@@ -23,7 +26,7 @@ import {
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 // eslint-disable-next-line global-require
-const replicator = new (require("replicator"))();
+// const replicator = new (require("replicator"))();
 
 interface Props {
   socket: Socket;
@@ -40,7 +43,12 @@ function UISocketListener({ socket }: Props) {
       dispatch(clearLobbyUi());
     });
     socket.on(GENERIC_SOCKET_EVENTS.CONNECT_ERROR, () => {
-      dispatch(setAlert(new Alert(ErrorMessages.LOBBY.ERROR_CONNECTING, AlertType.DANGER)));
+      dispatch(newChatMessage(new ChatMessage(ErrorMessages.LOBBY.ERROR_CONNECTING, "Error", ChatMessageStyles.ERROR)));
+    });
+    socket.on(GENERIC_SOCKET_EVENTS.DISCONNECT, () => {
+      dispatch(newChatMessage(new ChatMessage("Server disconnected", "Server", ChatMessageStyles.PRIVATE)));
+      dispatch(setAuthenticating(false));
+      dispatch(setNewChatChannelLoading(true));
     });
     socket.on(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, (data) => {
       dispatch(updateGameList(data));
@@ -76,6 +84,7 @@ function UISocketListener({ socket }: Props) {
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
       dispatch(setMatchmakingWindowVisible(true));
+      dispatch(setMatchmakingLoading(false));
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, (data) => {
       dispatch(setMatchmakingData(data));
@@ -86,6 +95,7 @@ function UISocketListener({ socket }: Props) {
     return () => {
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT);
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT_ERROR);
+      socket.off(GENERIC_SOCKET_EVENTS.DISCONNECT);
       socket.off(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE);
       socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
       socket.off(SocketEventsFromServer.GAME_CLOSED_BY_HOST);

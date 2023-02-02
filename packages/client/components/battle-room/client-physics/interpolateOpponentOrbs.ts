@@ -2,13 +2,12 @@
 import cloneDeep from "lodash.clonedeep";
 import Matter from "matter-js";
 import {
+  applyValuesFromOneOrbSetToAnother,
   BattleRoomGame,
   physicsTickRate,
   PlayerRole,
-  renderRate,
   ServerPacket,
   setOrbSetNonPhysicsPropertiesFromAnotherSet,
-  setOrbSetPhysicsPropertiesFromAnotherSet,
 } from "../../../../common";
 
 export default function interpolateOpponentOrbs(
@@ -29,29 +28,31 @@ export default function interpolateOpponentOrbs(
   }
 
   const mostRecentOpponentOrbUpdate = cloneDeep(lastUpdateFromServerCopy.orbs[opponentRole]);
-  const renderTimestamp = +Date.now() - physicsTickRate;
+
+  const renderTimestamp = +Date.now() - physicsTickRate * 2;
 
   Object.entries(mostRecentOpponentOrbUpdate).forEach(([orbLabel, orb]) => {
-    const { positionBuffer } = orb;
-    if (firstTimeProcessingThisUpdate && timeLastUpdateReceived) {
-      positionBuffer.push({ position: orb.body.position, timestamp: timeLastUpdateReceived });
-    }
-    while (positionBuffer.length >= 3 && positionBuffer[2].timestamp <= renderTimestamp) positionBuffer.shift();
+    const { positionBuffer } = newGameState.orbs[opponentRole][orbLabel];
+    if (firstTimeProcessingThisUpdate && timeLastUpdateReceived) positionBuffer.push({ position: orb.body.position, timestamp: timeLastUpdateReceived });
 
-    if (positionBuffer.length >= 3 && positionBuffer[0].timestamp <= renderTimestamp && renderTimestamp <= positionBuffer[2].timestamp) {
+    while (positionBuffer.length > 2 && positionBuffer[1].timestamp <= renderTimestamp) positionBuffer.shift();
+
+    if (positionBuffer[1] && positionBuffer.length >= 2 && positionBuffer[0].timestamp <= renderTimestamp && renderTimestamp <= positionBuffer[1].timestamp) {
       const lerpStartPosition = positionBuffer[0].position;
-      const lerpEndPosition = positionBuffer[2].position;
+      const lerpEndPosition = positionBuffer[1].position;
       const lerpStartTime = positionBuffer[0].timestamp;
-      const lerpEndTime = positionBuffer[2].timestamp;
+      const lerpEndTime = positionBuffer[1].timestamp;
       const newX = lerpStartPosition.x + ((lerpEndPosition.x - lerpStartPosition.x) * (renderTimestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime);
       const newY = lerpStartPosition.y + ((lerpEndPosition.y - lerpStartPosition.y) * (renderTimestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime);
-      Matter.Body.setPosition(orb.body, Matter.Vector.create(newX, newY));
-      Matter.Body.update(orb.body, renderRate, 1, 1);
+
+      Matter.Body.setPosition(newGameState.orbs[opponentRole][orbLabel].body, Matter.Vector.create(newX, newY));
     }
-    orb.isGhost = lastUpdateFromServerCopy.orbs[opponentRole][orbLabel].isGhost; // todo - do we really need this?
   });
 
-  setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole]);
-  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole], true);
-  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate, false); // we only want to interpolate positions, not selections or ghost status
+  applyValuesFromOneOrbSetToAnother(newGameState.orbs[opponentRole], game.orbs[opponentRole], {
+    applyPhysicsProperties: true,
+    applyNonPhysicsProperties: false,
+    applyPositionBuffers: true,
+  });
+  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate);
 }

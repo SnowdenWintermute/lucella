@@ -9,9 +9,9 @@ import {
   SelectOrbAndAssignDestination,
   SelectOrbs,
   UserInputs,
-} from "../../../common";
+} from "../index";
 
-export default function unpackUserInput(
+export function unpackUserInput(
   serializedMessage: Uint8Array,
   playerRole: PlayerRole
 ): SelectOrbAndAssignDestination | ClientTickNumber | SelectOrbs | AssignOrbDestinations | undefined {
@@ -20,6 +20,7 @@ export default function unpackUserInput(
   const inputNumber = deserialized.getNumber();
   if (type === UserInputs.CLIENT_TICK_NUMBER) return new ClientTickNumber(null, inputNumber, playerRole);
   const orbIds = deserialized.getOrbidsList();
+
   if (type === UserInputs.SELECT_ORBS) return new SelectOrbs({ orbIds }, inputNumber, playerRole);
   const mousePosition = deserialized.getMouseposition();
   let x;

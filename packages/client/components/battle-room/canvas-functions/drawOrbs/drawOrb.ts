@@ -7,6 +7,7 @@ import drawVectors from "./drawVectors";
 export default function drawOrb(context: CanvasRenderingContext2D, orb: Orb, canvasDrawFractions: Point, debugMode: number, showAsRing?: boolean) {
   const { x, y } = orb.body.position;
   const { circleRadius } = orb.body;
+  if (!circleRadius) console.log("NO CIRCLE RADIUS");
   const rx = x * canvasDrawFractions.x;
   const ry = y * canvasDrawFractions.y;
   context.beginPath();

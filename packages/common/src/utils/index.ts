@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import cloneDeep from "lodash.clonedeep";
+import { Orb } from "../classes/Orb";
 import { Point } from "../classes/Point";
 import { OrbSet } from "../types";
 import { setBodyProperties } from "./setBodyProperties";
@@ -31,6 +32,10 @@ export function slope(x1: number, y1: number, x2: number, y2: number) {
   return Number.MAX_VALUE;
 }
 
+export function clamp(num: number, min: number, max: number) {
+  return Math.min(Math.max(num, min), max);
+}
+
 export function findAngle(M1: number, M2: number) {
   // Store the tan value of the angle
   const angle = Math.abs((M2 - M1) / (1 + M1 * M2));
@@ -54,28 +59,63 @@ export function createAdjustedCoordinateCalculator(coordinateMax: number, relati
   };
 }
 
-export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet, withPositionBuffer?: boolean) {
+function setOrbPhysicsPropertiesFromAnother(a: Orb, b: Orb) {
+  const { position, velocity, force } = b.body;
+  const newProperties = { position, velocity, force };
+  setBodyProperties(a.body, newProperties);
+}
+
+function setOrbNonPhysicsPropertiesFromAnother(a: Orb, b: Orb) {
+  const { isSelected, isGhost, destination } = b;
+  a.isSelected = isSelected;
+  a.isGhost = isGhost;
+  if (destination) a.destination = new Point(destination.x, destination.y);
+  else a.destination = null;
+}
+
+export function applyValuesFromOneOrbSetToAnother(
+  newValues: OrbSet,
+  orbsToUpdate: OrbSet,
+  options: {
+    applyPhysicsProperties?: boolean;
+    applyNonPhysicsProperties?: boolean;
+    applyPositionBuffers?: boolean;
+    applyPhysicsWithLerp?: boolean;
+  }
+) {
+  Object.entries(orbsToUpdate).forEach(([orbLabel, orb]) => {
+    const { applyPhysicsProperties, applyNonPhysicsProperties, applyPositionBuffers, applyPhysicsWithLerp } = options;
+    if (applyPhysicsProperties) setOrbPhysicsPropertiesFromAnother(orb, newValues[orbLabel]);
+    else if (applyPhysicsWithLerp) {
+      const movementSkipThreshold = 12;
+
+      console.log(Math.abs(orb.body.position.x - newValues[orbLabel].body.position.x), Math.abs(orb.body.position.y - newValues[orbLabel].body.position.y));
+      if (
+        Math.abs(orb.body.position.x - newValues[orbLabel].body.position.x) > movementSkipThreshold ||
+        Math.abs(orb.body.position.y - newValues[orbLabel].body.position.y) > movementSkipThreshold
+      ) {
+        console.log("first");
+      }
+    }
+    if (applyNonPhysicsProperties) setOrbNonPhysicsPropertiesFromAnother(orb, newValues[orbLabel]);
+    if (applyPositionBuffers) orb.positionBuffer = cloneDeep(newValues[orbLabel].positionBuffer);
+  });
+}
+
+export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet) {
   Object.entries(a).forEach(([orbLabel, orb]) => {
-    const { isSelected, isGhost, destination, positionBuffer } = b[orbLabel];
-    orb.isSelected = isSelected;
-    orb.isGhost = isGhost;
-    if (destination) orb.destination = new Point(destination.x, destination.y);
-    else orb.destination = null;
-    if (withPositionBuffer) orb.positionBuffer = cloneDeep(positionBuffer);
+    setOrbNonPhysicsPropertiesFromAnother(orb, b[orbLabel]);
   });
 }
 
 export function setOrbSetPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet) {
   Object.entries(a).forEach(([orbLabel, orb]) => {
-    const { position, inertia, velocity, angle, angularVelocity, force } = b[orbLabel].body;
-    const newProperties = {
-      position,
-      // inertia,
-      velocity,
-      force,
-      // angle,
-      // angularVelocity,
-    };
-    setBodyProperties(orb.body, newProperties);
+    setOrbPhysicsPropertiesFromAnother(orb, b[orbLabel]);
+  });
+}
+
+export function setOrbSetPositionBuffersFromAnotherSet(a: OrbSet, b: OrbSet) {
+  Object.entries(a).forEach(([orbLabel, orb]) => {
+    orb.positionBuffer = cloneDeep(b[orbLabel].positionBuffer);
   });
 }

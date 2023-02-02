@@ -7,7 +7,13 @@ import getSelectionBoxSize from "./getSelectionBoxSize";
 import drawEndzones from "./drawEndzones";
 import drawDebug from "./drawDebug";
 
-export default function draw(context: CanvasRenderingContext2D, canvasSize: WidthAndHeight, playerRole: any, game: BattleRoomGame) {
+export default function draw(
+  context: CanvasRenderingContext2D,
+  canvasSize: WidthAndHeight,
+  playerRole: any,
+  game: BattleRoomGame,
+  latency: number | undefined
+) {
   return requestAnimationFrame(() => {
     if (!game) return;
     const { mouseData } = game;
@@ -20,9 +26,23 @@ export default function draw(context: CanvasRenderingContext2D, canvasSize: Widt
     drawEndzones(context, game, canvasSize);
     drawScore(context, game, canvasSize);
     drawOrbs(context, playerRole, game, canvasDrawFractions);
-    if (game.debug.mode) drawDebug(context, game, canvasDrawFractions);
+    if (game.debug.mode) drawDebug(context, game, latency, canvasDrawFractions);
     if (game.winner) gameOverText(context, game, canvasDrawFractions);
     const selectionBoxSize = getSelectionBoxSize(game.mouseData, canvasDrawFractions);
     if (selectionBoxSize) drawSelectionBox(context, mouseData, canvasDrawFractions, selectionBoxSize);
+
+    if (!game.netcode.lastUpdateFromServer) {
+      const fontSize = 25;
+      context.beginPath();
+      context.fillStyle = "rgb(255,255,255)";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px Arial`;
+      context.fillText(
+        `Loading...`,
+        (BattleRoomGame.baseWindowDimensions.width * canvasDrawFractions.x) / 2,
+        (BattleRoomGame.baseWindowDimensions.height * canvasDrawFractions.y) / 2
+      );
+    }
   });
 }

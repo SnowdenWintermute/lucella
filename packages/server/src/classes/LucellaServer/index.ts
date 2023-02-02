@@ -61,8 +61,8 @@ export class LucellaServer {
     });
     console.log(`forcibly disconnected user ${username} and their socket(s) ${socketIdsDisconnected.join(", ")}`);
   }
-  async endGameAndEmitUpdates(game: BattleRoomGame) {
-    await endGameAndEmitUpdates(this, game);
+  endGameAndEmitUpdates(game: BattleRoomGame) {
+    endGameAndEmitUpdates(this, game);
   }
   handleReadyStateToggleRequest(socket: Socket) {
     handleReadyStateToggleRequest(this, socket);

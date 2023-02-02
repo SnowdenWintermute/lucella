@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import { UserRole } from "../../../../common/src";
+import { UserRole } from "../../../../common";
 import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
 import UserRepo from "../../database/repos/users";
 import { TEST_USER_PASSWORD } from "./consts";

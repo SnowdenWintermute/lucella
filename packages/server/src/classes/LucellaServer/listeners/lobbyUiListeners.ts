@@ -1,10 +1,14 @@
+/* eslint-disable no-param-reassign */
 import { Socket } from "socket.io";
-import { SocketEventsFromClient, SocketEventsFromServer } from "../../../../../common";
+import { GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../../common";
 import { LucellaServer } from "..";
 
 export default function gameUiListeners(server: LucellaServer, socket: Socket) {
+  socket.on(GENERIC_SOCKET_EVENTS.PING, (latencyOfLastPing) => {
+    server.connectedSockets[socket.id].latency = latencyOfLastPing;
+    socket.emit(GENERIC_SOCKET_EVENTS.PONG);
+  });
   socket.on(SocketEventsFromClient.NEW_CHAT_MESSAGE, (data) => {
-    console.log("NEW_CHAT_MESSAGE: ", data);
     server.lobby.handleNewChatMessage(socket, data);
   });
   socket.on(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST, () => {

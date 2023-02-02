@@ -1,7 +1,9 @@
 import isEqual from "lodash.isequal";
-import { BattleRoomGame, OrbDeltas, OrbSetDeltas, PlayerRole } from "../../../../../common";
+import { BattleRoomGame } from "../../classes/BattleRoomGame";
+import { PlayerRole } from "../../enums";
+import { OrbDeltas, OrbSetDeltas } from "../../types";
 
-export default function determineOrbDeltas(game: BattleRoomGame, playerRole: PlayerRole, isOpponent?: boolean) {
+export function determineOrbDeltas(game: BattleRoomGame, playerRole: PlayerRole, isOpponent?: boolean) {
   if (!game.netcode.prevGameState) return console.log("no prev game state yet", game.netcode.prevGameState); // send full game data
   const orbsDeltasToSerialize: OrbSetDeltas = {};
   Object.entries(game.netcode.prevGameState.orbs[playerRole]).forEach(([orbLabel, prevOrbState]) => {

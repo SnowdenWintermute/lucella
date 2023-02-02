@@ -12,7 +12,11 @@
   stroke: color(textPrimary);
 }
 
-@keyframes anim {
+.circle-animate {
+  animation: rotate 3s ease-in-out forwards infinite;
+}
+
+@keyframes rotate {
   50% {
     transform: translateY(-50%) rotate(-360deg);
   }

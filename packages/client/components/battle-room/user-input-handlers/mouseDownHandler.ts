@@ -1,13 +1,11 @@
-import { BattleRoomGame, Point } from "../../../../common";
+import { BattleRoomGame, Point, WidthAndHeight } from "../../../../common";
 
-export default function mouseDownHandler(e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, currentGame: BattleRoomGame) {
+export default function mouseDownHandler(e: React.MouseEvent<HTMLCanvasElement, MouseEvent>, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) {
   if (!(e.button === 0)) return;
   const { mouseData } = currentGame;
   mouseData.leftCurrentlyPressed = true;
-  if (!mouseData.position) return;
-  const { x, y } = mouseData.position;
-  if (!mouseData.leftPressedAt) mouseData.leftPressedAt = new Point(x, y);
-  mouseData.leftPressedAt.x = x;
-  mouseData.leftPressedAt.y = y;
-  console.log("mouse button ", e.button, " pressed at: ", mouseData.position.x, mouseData.position.y);
+  const x = Math.round((e.nativeEvent.offsetX / canvasSize.width) * BattleRoomGame.baseWindowDimensions.width);
+  const y = Math.round((e.nativeEvent.offsetY / canvasSize.height) * BattleRoomGame.baseWindowDimensions.height);
+  if (mouseData.position === null) mouseData.position = new Point(x, y);
+  mouseData.leftPressedAt = new Point(x, y);
 }

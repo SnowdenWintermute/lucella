@@ -1,6 +1,4 @@
-import { createTestGameWithPrevGameState } from "./determineOrbDeltas.test";
-import { DeltasProto, PlayerRole, Point, baseSpeedModifier } from "../../../../../common";
-import createDeltaPacket from "./createDeltaPacket";
+import { baseSpeedModifier, createDeltaPacket, createTestGameWithPrevGameState, DeltasProto, PlayerRole, Point } from "../../../common";
 
 test("delta packet doesn't contain destinations of opponent orbs", () => {
   const game = createTestGameWithPrevGameState();

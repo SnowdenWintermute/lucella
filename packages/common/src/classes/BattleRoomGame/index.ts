@@ -31,7 +31,7 @@ export class BattleRoomGame {
   queues = new BattleRoomQueues();
   mouseData = new MouseData();
   gameOverCountdown: { duration: number; current: number | null } = { duration: gameOverCountdownDuration, current: null };
-  winner: string | null | undefined = null;
+  winner: PlayerRole | null | undefined = null;
   currentCollisionPairs: Matter.Pair[] = [];
   orbs: HostAndChallengerOrbSets = { [PlayerRole.HOST]: {}, [PlayerRole.CHALLENGER]: {} };
   score = {

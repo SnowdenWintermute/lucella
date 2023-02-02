@@ -8,7 +8,6 @@ import BattleRoomGameRecordRepo from "../../database/repos/battle-room-game/game
 // import updateLadder from "./updateLadder";
 
 export default async function updateScoreCardsAndSaveGameRecord(
-  winner: string,
   gameRoom: GameRoom,
   game: BattleRoomGame,
   isRanked: boolean
@@ -16,7 +15,7 @@ export default async function updateScoreCardsAndSaveGameRecord(
   if (!isRanked) return null;
   console.log("updating score cards for game ", game.gameName);
 
-  const winnerRole = gameRoom.players.host?.associatedUser.username === winner ? PlayerRole.HOST : PlayerRole.CHALLENGER;
+  const winnerRole = game.winner!;
 
   // determine if both players have accounts in the database
   const hostUser = await UserRepo.findOne("name", gameRoom.players.host?.associatedUser.username);

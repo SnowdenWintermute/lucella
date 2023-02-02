@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React from "react";
 import styles from "./circular-progress.module.scss";
 
@@ -7,9 +8,10 @@ import styles from "./circular-progress.module.scss";
 
 type Props = {
   percentage: number;
+  rotateAnimation?: boolean;
 };
 
-export default function CircularProgress({ percentage }: Props) {
+export default function CircularProgress({ percentage, rotateAnimation }: Props) {
   const outerDiameter = 20;
   const thickness = 5;
   const radius = outerDiameter / 2;
@@ -25,7 +27,7 @@ export default function CircularProgress({ percentage }: Props) {
       strokeDasharray={dashArray}
       strokeDashoffset={strokeDashoffset}
       strokeWidth={thickness}
-      className={styles.circle}
+      className={`${styles.circle} ${rotateAnimation && styles["circle-animate"]}`}
     >
       <circle cx={radius} cy={radius} r={radius} />
     </svg>

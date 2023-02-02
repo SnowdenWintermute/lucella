@@ -1,6 +1,7 @@
 @import "../abstracts/variables";
 .button {
   display: block;
+  position: relative;
   text-align: center;
   text-justify: middle;
   padding-left: 10px;
@@ -8,6 +9,9 @@
   border: none;
   font-size: 18px;
   cursor: pointer;
+  &:disabled {
+    cursor: progress;
+  }
   @media (max-width: 420px) {
     font-size: 14px;
   }

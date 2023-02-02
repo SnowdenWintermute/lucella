@@ -1,21 +1,25 @@
 /* eslint-disable no-param-reassign */
 import { Socket } from "socket.io-client";
-import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, simulatedLagMs, simulateLag } from "../../../../common";
-import laggedSocketEmit from "../../../utils/laggedSocketEmit";
+import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, WidthAndHeight } from "../../../../common";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
-import serializeInput from "../user-input-serializers/serialize-input";
+import serializeInput from "../../../protobuf-utils/serialize-input";
 // const replicator = new (require("replicator"))();
 
 export default function mouseUpHandler(
   e: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
   currentGame: BattleRoomGame,
   socket: Socket,
-  playerRole: PlayerRole | null
+  playerRole: PlayerRole | null,
+  canvasSize: WidthAndHeight
 ) {
   if (!(e.button === 0 || e.button === 2) || !playerRole) return;
   const { mouseData } = currentGame;
-  if (!mouseData || !mouseData.position) return;
-  console.log("mouse button ", e.button, " released at: ", mouseData.position.x, mouseData.position.y);
+  if (!mouseData) return;
+
+  const x = Math.round((e.nativeEvent.offsetX / canvasSize.width) * BattleRoomGame.baseWindowDimensions.width);
+  const y = Math.round((e.nativeEvent.offsetY / canvasSize.height) * BattleRoomGame.baseWindowDimensions.height);
+  if (mouseData.position === null) mouseData.position = new Point(x, y);
+
   let input;
   if (e.button === 2) {
     mouseData.rightReleasedAt = new Point(mouseData.position.y, mouseData.position.x);
@@ -33,6 +37,5 @@ export default function mouseUpHandler(
   if (!input) return;
   currentGame.queues.client.localInputs.push(input);
   const serialized = serializeInput(input);
-  if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, serialized, simulatedLagMs);
-  else socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
+  socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
 }

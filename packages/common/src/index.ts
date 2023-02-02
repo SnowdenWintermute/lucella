@@ -32,3 +32,8 @@ export { setBodyProperties } from "./utils/setBodyProperties";
 export { OrbsProto, VectorProto, OrbProto, ScoreProto, DeltasProto } from "./proto/generated/src/proto/deltas_pb";
 export { InputProto, SmallVectorProto } from "./proto/generated/src/proto/client-inputs_pb";
 export { Ban } from "./classes/Ban";
+export { createDeltaPacket } from "./protocol-buffer-utils/createDeltaPacket/createDeltaPacket";
+export { determineOrbDeltas } from "./protocol-buffer-utils/createDeltaPacket/determineOrbDeltas";
+export { packOrbSet } from "./protocol-buffer-utils/createDeltaPacket/packOrbSet";
+export { unpackUserInput } from "./protocol-buffer-utils/unpackUserInput";
+export * from "./utils/test-utils";

@@ -7,12 +7,9 @@ import {
   Point,
   SelectOrbAndAssignDestination,
   SelectOrbs,
-  simulatedLagMs,
-  simulateLag,
   SocketEventsFromClient,
 } from "../../../../common";
-import laggedSocketEmit from "../../../utils/laggedSocketEmit";
-import serializeInput from "../user-input-serializers/serialize-input";
+import serializeInput from "../../../protobuf-utils/serialize-input";
 // const replicator = new (require("replicator"))();
 
 export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRole: PlayerRole | null) => {
@@ -40,6 +37,5 @@ export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRo
   game.queues.client.localInputs.push(input);
 
   const serialized = serializeInput(input);
-  if (simulateLag) laggedSocketEmit(socket, SocketEventsFromClient.NEW_INPUT, serialized, simulatedLagMs);
-  else socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
+  socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
 };
