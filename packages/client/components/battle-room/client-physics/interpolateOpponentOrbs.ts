@@ -2,14 +2,12 @@
 import cloneDeep from "lodash.clonedeep";
 import Matter from "matter-js";
 import {
+  applyValuesFromOneOrbSetToAnother,
   BattleRoomGame,
   physicsTickRate,
   PlayerRole,
-  renderRate,
   ServerPacket,
   setOrbSetNonPhysicsPropertiesFromAnotherSet,
-  setOrbSetPhysicsPropertiesFromAnotherSet,
-  setOrbSetPositionBuffersFromAnotherSet,
 } from "../../../../common";
 
 export default function interpolateOpponentOrbs(
@@ -30,14 +28,14 @@ export default function interpolateOpponentOrbs(
   }
 
   const mostRecentOpponentOrbUpdate = cloneDeep(lastUpdateFromServerCopy.orbs[opponentRole]);
-  // console.log("mostRecentOpponentOrbUpdate: ", Object.values(mostRecentOpponentOrbUpdate)[0]);
-  const renderTimestamp = +Date.now() - physicsTickRate;
+
+  const renderTimestamp = +Date.now() - physicsTickRate * 2;
 
   Object.entries(mostRecentOpponentOrbUpdate).forEach(([orbLabel, orb]) => {
     const { positionBuffer } = newGameState.orbs[opponentRole][orbLabel];
     if (firstTimeProcessingThisUpdate && timeLastUpdateReceived) positionBuffer.push({ position: orb.body.position, timestamp: timeLastUpdateReceived });
 
-    while (positionBuffer.length >= 2 && positionBuffer[1].timestamp <= renderTimestamp) positionBuffer.shift();
+    while (positionBuffer.length > 2 && positionBuffer[1].timestamp <= renderTimestamp) positionBuffer.shift();
 
     if (positionBuffer[1] && positionBuffer.length >= 2 && positionBuffer[0].timestamp <= renderTimestamp && renderTimestamp <= positionBuffer[1].timestamp) {
       const lerpStartPosition = positionBuffer[0].position;
@@ -48,12 +46,13 @@ export default function interpolateOpponentOrbs(
       const newY = lerpStartPosition.y + ((lerpEndPosition.y - lerpStartPosition.y) * (renderTimestamp - lerpStartTime)) / (lerpEndTime - lerpStartTime);
 
       Matter.Body.setPosition(newGameState.orbs[opponentRole][orbLabel].body, Matter.Vector.create(newX, newY));
-      Matter.Body.update(newGameState.orbs[opponentRole][orbLabel].body, renderRate, 1, 1);
     }
   });
 
-  setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole]);
-  // setOrbSetPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate);
+  applyValuesFromOneOrbSetToAnother(newGameState.orbs[opponentRole], game.orbs[opponentRole], {
+    applyPhysicsProperties: true,
+    applyNonPhysicsProperties: false,
+    applyPositionBuffers: true,
+  });
   setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate);
-  setOrbSetPositionBuffersFromAnotherSet(game.orbs[opponentRole], newGameState.orbs[opponentRole]);
 }

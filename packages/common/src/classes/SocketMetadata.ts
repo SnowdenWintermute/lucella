@@ -9,6 +9,7 @@ export class SocketMetadata {
   uuid: string;
   currentChatChannel?: string | null;
   previousChatChannelName?: string | null;
+  latency = 0;
   ipAddress?: string; // optional so it can be omitted when sent to client
   socketId?: string; // optional so it can be omitted when sent to client
   constructor(

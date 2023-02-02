@@ -1,6 +1,6 @@
 import { ChatMessage } from "./ChatMessage";
 
-export type ChatChannelUsersList = { [username: string]: { username: string; isGuest: boolean; connectedSockets: string[] } };
+export type ChatChannelUsersList = { [username: string]: { username: string; isGuest: boolean; connectedSockets: string[]; latency: number } };
 
 export class ChatChannel {
   name: string;

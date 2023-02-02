@@ -17,7 +17,8 @@ export default function createClientPhysicsInterval(
   game: BattleRoomGame,
   playerRole: PlayerRole | null,
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
-  canvasSizeRef: React.RefObject<WidthAndHeight | null>
+  canvasSizeRef: React.RefObject<WidthAndHeight | null>,
+  latencyRef: React.MutableRefObject<number | undefined>
 ) {
   let frameTime = renderRate;
   BattleRoomGame.initializeWorld(game);
@@ -45,6 +46,7 @@ export default function createClientPhysicsInterval(
 
     frameTime = +Date.now() - timeAtStartOfFrameSimulation;
 
-    if (canvasRef && canvasRef.current && canvasSizeRef.current) draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game);
+    if (canvasRef && canvasRef.current && canvasSizeRef.current)
+      draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game, latencyRef.current);
   }, renderRate);
 }

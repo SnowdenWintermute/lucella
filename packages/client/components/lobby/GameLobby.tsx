@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import io, { Socket } from "socket.io-client";
 import React, { useEffect, useState, useRef } from "react";
 import GameLobbyChat from "./game-lobby-chat/GameLobbyChat";
@@ -34,18 +35,12 @@ function GameLobby({ defaultChatChannel }: Props) {
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const socket = useRef<Socket>();
   const pingInterval = useRef<NodeJS.Timeout | null>(null);
-  const latency = useRef<number>();
-  const lastPingSentAt = useRef<number>();
+  const latencyRef = useRef<number>();
+  const lastPingSentAtRef = useRef<number>();
 
   // setup socket
   useEffect(() => {
-    socket.current = io(socketAddress || "", {
-      transports: ["websocket"],
-      // transports: ["polling", "websocket"],
-      // extraHeaders: { "x-forwarded-for": "192.168.1.12" },
-      // withCredentials: true,
-      // reconnectionAttempts: 3,
-    });
+    socket.current = io(socketAddress || "", { transports: ["websocket"] });
     return () => {
       if (socket.current) socket.current.disconnect();
       dispatch(setCurrentGameRoom(null));
@@ -56,20 +51,29 @@ function GameLobby({ defaultChatChannel }: Props) {
   useEffect(() => {
     if (socket.current) {
       socket.current.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
-        pingInterval.current = setInterval(() => {
-          if (!socket.current) return;
-          socket.current.emit(GENERIC_SOCKET_EVENTS.PING);
-          lastPingSentAt.current = +Date.now();
-        }, pingIntervalMs);
         dispatch(setAuthenticating(false));
-      });
-      socket.current.on(GENERIC_SOCKET_EVENTS.PONG, () => {
-        if (lastPingSentAt.current) latency.current = +Date.now() - lastPingSentAt.current;
       });
     }
     return () => {
-      if (pingInterval.current) clearInterval(pingInterval.current);
       if (socket.current) socket.current.off(SocketEventsFromServer.AUTHENTICATION_COMPLETE);
+    };
+  });
+
+  // calculate latency and with each ping send current latency to the server
+  useEffect(() => {
+    if (!lobbyUiState.authenticating) {
+      pingInterval.current = setInterval(() => {
+        if (!socket.current) return;
+        lastPingSentAtRef.current = Date.now();
+        socket.current.volatile.emit(GENERIC_SOCKET_EVENTS.PING, latencyRef.current);
+      }, pingIntervalMs);
+      if (socket.current)
+        socket.current.on(GENERIC_SOCKET_EVENTS.PONG, () => {
+          if (lastPingSentAtRef.current) latencyRef.current = Date.now() - lastPingSentAtRef.current;
+        });
+    }
+    return () => {
+      if (pingInterval.current) clearInterval(pingInterval.current);
     };
   });
 
@@ -124,7 +128,7 @@ function GameLobby({ defaultChatChannel }: Props) {
           </div>
         </div>
       ) : (
-        <BattleRoomGameInstance socket={socket.current} />
+        <BattleRoomGameInstance socket={socket.current} latencyRef={latencyRef} />
       )}
     </>
   );
