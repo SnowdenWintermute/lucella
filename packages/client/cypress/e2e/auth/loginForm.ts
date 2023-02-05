@@ -1,5 +1,5 @@
 import { ErrorMessages, FrontendRoutes, SuccessAlerts } from "../../../../common";
-import { ButtonNames } from "../../../consts/ButtonNames";
+import { ButtonNames } from "../../../src/consts/ButtonNames";
 import { TaskNames } from "../../support/TaskNames";
 
 export default function loginForm() {

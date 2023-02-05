@@ -10,7 +10,7 @@ import {
   createAdjustedCoordinateCalculator,
 } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
-import { MATCHMAKING_QUEUE } from "../../../consts/lobby-text";
+import { MATCHMAKING_QUEUE } from "../../../src/consts/lobby-text";
 
 describe("play game", () => {
   // eslint-disable-next-line no-undef
