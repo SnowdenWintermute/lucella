@@ -38,11 +38,13 @@ env:
   CYPRESS_TESTER_KEY: ${{ secrets.CYPRESS_TESTER_KEY }}
   NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
   NEXT_PUBLIC_SOCKET_API: ${{ secrets.NEXT_PUBLIC_SOCKET_API }}
-  ELECTRON_ENABLE_LOGGING: 1
+  POSTGRES_CONNECTION_STRING_PRODUCTION: ${{ secrets.POSTGRES_CONNECTION_STRING_PRODUCTION }}
+  POSTGRES_USER_PRODUCTION: ${{ secrets.POSTGRES_USER_PRODUCTION }}
+  POSTGRES_PASSWORD_PRODUCTION: ${{ secrets.POSTGRES_PASSWORD_PRODUCTION }}
+  POSTGRES_DB_PRODUCTION: ${{ secrets.POSTGRES_DB_PRODUCTION }}
 
 jobs:
   jest-tests:
-    name: Jest-Tests
     runs-on: ubuntu-latest
     services:
       redis:
@@ -144,11 +146,39 @@ jobs:
       - run: curl http://localhost:3000/login
       - name: cypress run
         run: cd packages/client && ELECTRON_ENABLE_LOGGING=1 yarn cypress run --browser chrome --headless --record --key ${{ secrets.RECORDING_KEY_CYPRESS }}
-      # - name: run backend
-      #   run: cd packages/server && yarn serve & wait-on http://localhost:8080
-      # - name: build and run frontend
-      #   run: cd packages/client && yarn next build && NODE_ENV=production yarn next start & wait-on http://localhost:3000
-      # - run: curl localhost:8080
-      # - run: echo $NODE_ENV
-      # - name: run cypress
-      #   run: cd packages/client && yarn cypress run
+  build-and-push:
+    # needs: [jest-tests, cypress-run]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.18.0
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push server
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: snowd3n/lucella:server
+          file: ./dockerfiles/server.Dockerfile
+      - name: Build and push client
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: snowd3n/lucella:client
+          file: ./dockerfiles/client.Dockerfile
+    # install docker
+    # build client
+    # build server
+    # push to docker hub
+
+    # require that "build" is complete
+    # ssh into the host server
+    # run a script to pull docker images
+    # run docker compose
