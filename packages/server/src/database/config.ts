@@ -1,5 +1,7 @@
+import { POSTGRES_HOSTNAME_PRODUCTION } from "../../../common";
+
 export const pgOptions = {
-  host: "localhost",
+  host: process.env.NODE_ENV === "production" ? POSTGRES_HOSTNAME_PRODUCTION : "localhost",
   port: 5432,
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,

@@ -1,5 +1,8 @@
 // basics
 export const websiteName = "melphina.com";
+export const SERVER_HOSTNAME_DOCKER_COMPOSE = "localhost";
+export const POSTGRES_HOSTNAME_PRODUCTION = "postgres";
+export const REDIS_HOSTNAME_PRODUCTION = "redis";
 // times
 export const ONE_SECOND = 1000;
 export const ONE_MINUTE = ONE_SECOND * 60;

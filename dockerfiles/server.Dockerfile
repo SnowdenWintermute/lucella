@@ -1,4 +1,14 @@
-FROM node:alpine
+FROM node:alpine AS deployDeps
+WORKDIR /app
+RUN mkdir /app/packages
+RUN mkdir /app/packages/common
+RUN mkdir /app/packages/server
+
+COPY package.json .
+COPY packages/common/package.json ./packages/common
+COPY packages/server/package.json ./packages/server
+
+RUN yarn install --pure-lockfile --non-interactive
 FROM node:alpine AS buildDeps
 WORKDIR /app
 RUN mkdir /app/packages
@@ -11,12 +21,10 @@ COPY packages/server/package.json ./packages/server
 
 RUN yarn install --pure-lockfile --non-interactive
 
-FROM ubuntu:latest AS builder
+FROM node:latest AS builder
 WORKDIR /app
-RUN apt-get update
-RUN apt-get install nodejs -y
-RUN apt-get install npm -y
-RUN npm install -g yarn -y
+RUN apt-get install -y unzip
+RUN apt-get install -y curl
 RUN npm install -g typescript -y
 
 COPY --from=buildDeps /app/package.json ./package.json
@@ -45,14 +53,14 @@ WORKDIR /app
 COPY --from=builder /app/packages/server/dist ./packages/server/dist
 COPY --from=builder /app/packages/common/dist ./packages/common/dist
 
-COPY --from=builder /app/package.json ./package.json
+COPY --from=deployDeps /app/package.json ./package.json
 COPY --from=builder /app/node_modules ./node_modules
 
 COPY --from=builder /app/packages/server/package.json ./packages/server/package.json
-COPY --from=builder /app/packages/server/node_modules ./packages/server/node_modules
+COPY --from=deployDeps /app/packages/server/node_modules ./packages/server/node_modules
 
 COPY --from=builder /app/packages/common/package.json ./packages/common/package.json
-COPY --from=builder /app/packages/common/node_modules ./packages/common/node_modules
+COPY --from=deployDeps /app/packages/common/node_modules ./packages/common/node_modules
 
 WORKDIR /app/packages/server/dist
 CMD ["node", "index.js"]
