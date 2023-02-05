@@ -1,12 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { LoginInput } from "../types";
-import { AuthRoutePaths, SERVER_HOSTNAME_DOCKER_COMPOSE } from "../../../../common";
+import { AuthRoutePaths, SERVER_HOSTNAME_DOCKER_PRODUCTION } from "../../../../common";
 import { usersApi } from "./users-api-slice";
 
 // must use the plain text string for localhost because CI doesn't play nice with using an env variable for some reason
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.NODE_ENV === "production" ? `${SERVER_HOSTNAME_DOCKER_COMPOSE}:8080` : `http://localhost:8080/api${AuthRoutePaths.ROOT}`,
+  baseUrl:
+    process.env.NODE_ENV === "production" ? `${SERVER_HOSTNAME_DOCKER_PRODUCTION}${AuthRoutePaths.ROOT}` : `http://localhost:8080/api${AuthRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

@@ -22,10 +22,12 @@ COPY packages/server/package.json ./packages/server
 RUN yarn install --pure-lockfile --non-interactive
 
 FROM node:latest AS builder
-WORKDIR /app
 RUN apt-get install -y unzip
 RUN apt-get install -y curl
 RUN npm install -g typescript -y
+WORKDIR /
+RUN curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
+WORKDIR /app
 
 COPY --from=buildDeps /app/package.json ./package.json
 COPY --from=buildDeps /app/node_modules ./node_modules
@@ -41,10 +43,6 @@ WORKDIR /app/packages/common
 RUN tsc && echo compiled common directory
 WORKDIR /app/packages/server
 RUN tsc && echo compiled server directory
-WORKDIR /
-RUN apt-get install -y unzip
-RUN apt-get install -y curl
-RUN curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
 WORKDIR /app/packages/common
 RUN yarn run compile-proto
 

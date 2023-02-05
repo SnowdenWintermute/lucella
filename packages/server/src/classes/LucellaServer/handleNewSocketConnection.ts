@@ -23,10 +23,11 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
       const session = await wrappedRedis.context!.get(decoded.sub.toString());
       if (!session) {
         console.log(`User session has expired`);
-        return new Error(`User session has expired`);
+        isGuest = true;
+      } else {
+        userToReturn = await UserRepo.findById(JSON.parse(session).id);
+        isGuest = false;
       }
-      userToReturn = await UserRepo.findById(JSON.parse(session).id);
-      isGuest = false;
     }
 
     if (!userToReturn) userToReturn = { name: makeRandomAnonUsername(), isGuest: true };

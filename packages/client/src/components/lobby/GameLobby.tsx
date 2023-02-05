@@ -12,14 +12,14 @@ import ScoreScreenModalContents from "./ScoreScreenModalContents";
 import Modal from "../common-components/modal/Modal";
 import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
-import { SERVER_HOSTNAME_DOCKER_COMPOSE, GameStatus, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
+import { GameStatus, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer, SOCKET_ADDRESS_PRODUCTION } from "../../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setAuthenticating, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 import { pingIntervalMs } from "../../consts";
 
-const socketAddress = process.env.NODE_ENV === "production" ? `${SERVER_HOSTNAME_DOCKER_COMPOSE}:8080` : process.env.NEXT_PUBLIC_SOCKET_API;
+const socketAddress = process.env.NODE_ENV === "production" ? SOCKET_ADDRESS_PRODUCTION : process.env.NEXT_PUBLIC_SOCKET_API;
 
 interface Props {
   defaultChatChannel: string;
@@ -40,6 +40,7 @@ function GameLobby({ defaultChatChannel }: Props) {
 
   // setup socket
   useEffect(() => {
+    console.log("socket address: ", socketAddress);
     socket.current = io(socketAddress || "", { transports: ["websocket"] });
     return () => {
       if (socket.current) socket.current.disconnect();

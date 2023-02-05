@@ -26,11 +26,14 @@ RUN yarn install --pure-lockfile --non-interactive
 
 # build the app using the needed dev deps (saas, protoc)
 FROM node:latest AS builder
-WORKDIR /app
+WORKDIR /
 RUN apt-get install -y unzip
 RUN apt-get install -y curl
+RUN curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip"
+RUN unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
 RUN npm install -g typescript -y
 
+WORKDIR /app
 COPY --from=buildDeps /app/package.json ./package.json
 COPY --from=buildDeps /app/node_modules ./node_modules
 COPY --from=deployDeps /app/packages/client/node_modules ./packages/client/node_modules
@@ -43,9 +46,6 @@ COPY packages/client/package.json packages/client/next.config.js ./packages/clie
 
 WORKDIR /app/packages/common
 RUN tsc && echo compiled common directory
-WORKDIR /
-RUN curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip"
-RUN unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
 WORKDIR /app/packages/common
 RUN yarn run compile-proto
 
@@ -53,8 +53,6 @@ WORKDIR /app/packages/client
 RUN yarn run build
 
 # copy only production deps from the first layer of the dockerfile
-WORKDIR /app
-
 FROM node:alpine
 WORKDIR /app
 COPY --from=builder /app/packages/client/.next ./packages/client/.next
