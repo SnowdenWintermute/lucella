@@ -174,10 +174,10 @@ jobs:
           tags: snowd3n/lucella:client
           file: ./dockerfiles/client.Dockerfile
           - name: copy file via ssh password
-    deploy:
-      needs: build-and-push
-      runs-on: ubuntu-latest
-      steps:
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
       - name: copy docker-compose file
         uses: appleboy/scp-action@master
         with:
