@@ -173,9 +173,8 @@ jobs:
           push: true
           tags: snowd3n/lucella:client
           file: ./dockerfiles/client.Dockerfile
-          - name: copy file via ssh password
   deploy:
-    needs: build-and-push
+    # needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: copy docker-compose file
@@ -185,7 +184,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           source: "docker-compose.deploy.yml"
-          target: "/app"
+          target: "app"
       - name: write .env file
         run: cd packages/client && echo '${{ secrets.SERVER_ENV }}' > .env
       - name: copy env secrets
@@ -195,8 +194,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           source: ".env"
-          target: "/app"
-        
+          target: "app"
 
     # require that "build" is complete
     # ssh into the host server

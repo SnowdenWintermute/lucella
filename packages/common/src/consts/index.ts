@@ -1,7 +1,7 @@
 // basics
 export const websiteName = "melphina.com";
-export const SOCKET_ADDRESS_PRODUCTION = "http://localhost:8080";
-export const SERVER_HOSTNAME_DOCKER_PRODUCTION = "http://localhost:8080/api";
+export const SOCKET_ADDRESS_PRODUCTION = "melphina.com";
+export const SERVER_HOSTNAME_DOCKER_PRODUCTION = "melphina.com/api";
 export const REDIS_HOSTNAME_PRODUCTION = "redis";
 // times
 export const ONE_SECOND = 1000;
