@@ -173,7 +173,7 @@ jobs:
           push: true
           tags: snowd3n/lucella:client
           file: ./dockerfiles/client.Dockerfile
-          - name: copy file via ssh password
+      - name: copy file via ssh password
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
@@ -196,7 +196,6 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           source: ".env"
           target: "/app"
-        
 
     # require that "build" is complete
     # ssh into the host server
