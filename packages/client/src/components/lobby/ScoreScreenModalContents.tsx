@@ -4,7 +4,6 @@ import { usersApi } from "../../redux/api-slices/users-api-slice";
 
 function ScoreScreenModalContents() {
   const user = usersApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
-  const [eloAnimatedChangeClass, setEloAnimatedChangeClass] = useState("elo-animate-1");
   const [eloAnimatedChange, setEloAnimatedChange] = useState<number | null>();
   const scoreScreenData = useAppSelector((state) => state.lobbyUi.scoreScreenData);
 
@@ -26,29 +25,11 @@ function ScoreScreenModalContents() {
   }
 
   useEffect(() => {
-    let didCancel = false;
-    if (!didCancel) setEloAnimatedChange(playerPreGameElo);
-    return () => {
-      didCancel = true;
-    };
-  }, [playerPreGameElo]);
-
-  useEffect(() => {
-    const animateTimeoutOne = setTimeout(() => {
-      if (!eloDiff) return;
-      const newEloAnimateClass = Math.sign(eloDiff) === 1 ? "elo-animate-2-win" : "elo-animate-2-loss";
-      setEloAnimatedChangeClass(newEloAnimateClass);
-    }, 1000);
-    const animateTimeoutTwo = setTimeout(() => {
+    const animateEloChangeTimeout = setTimeout(() => {
       setEloAnimatedChange(playerPostGameElo);
-    }, 1300);
-    const animateTimeoutThree = setTimeout(() => {
-      setEloAnimatedChangeClass("elo-animate-3");
-    }, 3000);
+    }, 1500);
     return () => {
-      clearTimeout(animateTimeoutOne);
-      clearTimeout(animateTimeoutTwo);
-      clearTimeout(animateTimeoutThree);
+      clearTimeout(animateEloChangeTimeout);
     };
   }, [eloDiff, playerPostGameElo]);
 
@@ -73,8 +54,8 @@ function ScoreScreenModalContents() {
           ) : (
             <>
               <tr>
-                <td className={eloAnimatedChangeClass}>Elo: {eloAnimatedChange}</td>
-                <td className={eloAnimatedChangeClass}>
+                <td className={eloDiff && Math.sign(eloDiff) === 1 ? "elo-animate-win" : "elo-animate-loss"}>Elo: {eloAnimatedChange}</td>
+                <td className={eloDiff && Math.sign(eloDiff) === 1 ? "elo-animate-win" : "elo-animate-loss"}>
                   {eloDiff &&
                     `(${Math.sign(eloDiff) === 1 ? "+" : ""}
               ${eloDiff})`}

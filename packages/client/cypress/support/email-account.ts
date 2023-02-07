@@ -3,6 +3,7 @@
 /* eslint-disable prefer-destructuring */
 /* eslint-disable func-names */
 // @ts-nocheck
+import { getLastEmailTimeout } from "./consts";
 const nodemailer = require("nodemailer");
 const Imap = require("imap");
 const simpleParser = require("mailparser").simpleParser;
@@ -17,7 +18,7 @@ export async function makeEmailAccount() {
     host: "imap.ethereal.email",
     port: 993,
     tls: true,
-    authTimeout: 60000,
+    authTimeout: getLastEmailTimeout,
   };
 
   const userEmail = {

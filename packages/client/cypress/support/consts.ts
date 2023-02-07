@@ -6,3 +6,5 @@ export const shortTestText2 = "Hello There";
 export const mediumTestText = "Ayy lmao, let's go raid area 51";
 
 export const cypressCloudProjectId = "n9r7rz";
+
+export const getLastEmailTimeout = 90000;

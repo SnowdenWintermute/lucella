@@ -25,20 +25,17 @@ export default function createExpressApp() {
   if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
   app.use(
     cors({
-      // methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
       origin: true,
       credentials: true,
     })
   );
 
-  const apiRootUrl = process.env.NODE_ENV === "production" ? "" : "/api";
-
   app.use(checkForBannedIpAddress, ipRateLimiter);
   app.get("/", (req, res) => res.send("this is the api server"));
-  app.use(`/${apiRootUrl}${AuthRoutePaths.ROOT}`, authRouter);
-  app.use(`/${apiRootUrl}${UsersRoutePaths.ROOT}`, usersRouter);
-  app.use(`/${apiRootUrl}${ModerationRoutePaths.ROOT}`, moderationRouter);
-  app.use(`/${apiRootUrl}${CypressTestRoutePaths.ROOT}`, cypressTestRouter);
+  app.use(`/api${AuthRoutePaths.ROOT}`, authRouter);
+  app.use(`/api${UsersRoutePaths.ROOT}`, usersRouter);
+  app.use(`/api${ModerationRoutePaths.ROOT}`, moderationRouter);
+  app.use(`/api${CypressTestRoutePaths.ROOT}`, cypressTestRouter);
 
   app.all("*", (req: Request, res: Response, next: NextFunction) => {
     const err = new Error(`Route ${req.originalUrl} not found`) as any;

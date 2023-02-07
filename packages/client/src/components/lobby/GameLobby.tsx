@@ -40,8 +40,8 @@ function GameLobby({ defaultChatChannel }: Props) {
 
   // setup socket
   useEffect(() => {
-    console.log("socket address: ", socketAddress);
     socket.current = io(socketAddress || "", { transports: ["websocket"] });
+    console.log("socket address: ", socketAddress);
     return () => {
       if (socket.current) socket.current.disconnect();
       dispatch(setCurrentGameRoom(null));
