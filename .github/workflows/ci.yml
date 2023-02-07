@@ -194,11 +194,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           password: ${{ secrets.VPS_PASSWORD }}
           source: ".env"
-<<<<<<< HEAD
           target: "app"
-=======
-          target: "/app"
->>>>>>> bd4b4f1e83d49e546caada02bae9572cea309136
 
     # require that "build" is complete
     # ssh into the host server
