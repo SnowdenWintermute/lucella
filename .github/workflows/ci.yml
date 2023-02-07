@@ -173,7 +173,6 @@ jobs:
           push: true
           tags: snowd3n/lucella:client
           file: ./dockerfiles/client.Dockerfile
-      - name: copy file via ssh password
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
