@@ -174,7 +174,7 @@ jobs:
           tags: snowd3n/lucella:client
           file: ./dockerfiles/client.Dockerfile
   deploy:
-    needs: build-and-push
+    # needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: connect to vps, pull docker images and relaunch docker compose
