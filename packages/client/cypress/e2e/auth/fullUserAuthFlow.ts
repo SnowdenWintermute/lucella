@@ -1,7 +1,7 @@
 import { recurse } from "cypress-recurse";
 import { ErrorMessages, FrontendRoutes, nameMaxLength, passwordMaxLength, SuccessAlerts } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
-import { ButtonNames } from "../../../consts/ButtonNames";
+import { ButtonNames } from "../../../src/consts/ButtonNames";
 
 export default function fullUserAuthFlow() {
   let userEmail;

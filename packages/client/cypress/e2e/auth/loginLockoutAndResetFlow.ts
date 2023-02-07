@@ -1,5 +1,6 @@
 import { recurse } from "cypress-recurse";
 import { ErrorMessages, failedLoginCountTolerance, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { getLastEmailTimeout } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
 export default function loginLockoutAndResetFlow() {
@@ -58,7 +59,7 @@ export default function loginLockoutAndResetFlow() {
         .type(`${userEmail}{enter}`);
       cy.findByText(new RegExp(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("exist");
       // follow the link in email to change password
-      recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: 60000, delay: 5000 })
+      recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: getLastEmailTimeout, delay: 5000 })
         .its("html")
         .then((html) => {
           cy.document({ log: false }).invoke({ log: false }, "write", html);

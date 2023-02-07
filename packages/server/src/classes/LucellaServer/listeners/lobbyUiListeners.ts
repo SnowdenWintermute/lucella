@@ -5,7 +5,7 @@ import { LucellaServer } from "..";
 
 export default function gameUiListeners(server: LucellaServer, socket: Socket) {
   socket.on(GENERIC_SOCKET_EVENTS.PING, (latencyOfLastPing) => {
-    server.connectedSockets[socket.id].latency = latencyOfLastPing;
+    if (server.connectedSockets[socket.id]) server.connectedSockets[socket.id].latency = latencyOfLastPing;
     socket.emit(GENERIC_SOCKET_EVENTS.PONG);
   });
   socket.on(SocketEventsFromClient.NEW_CHAT_MESSAGE, (data) => {

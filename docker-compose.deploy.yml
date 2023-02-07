@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  next-client:
+    image: snowd3n/lucella:client
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    ports:
+      - 3000:3000
+  node-server:
+    image: snowd3n/lucella:server
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    container_name: redis
+    volumes:
+      - redis:/data
+volumes:
+  postgres_data:
+  redis:

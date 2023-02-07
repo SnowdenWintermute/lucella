@@ -1,5 +1,6 @@
 import { recurse } from "cypress-recurse";
 import { ErrorMessages, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { getLastEmailTimeout } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
 export default function passwordResetTest() {
@@ -19,7 +20,7 @@ export default function passwordResetTest() {
       cy.findByLabelText(/username/i).type(`${Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE")}{enter}`);
       cy.findByText(new RegExp(SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, "i")).should("exist");
       // follow the link in email to complete registration
-      recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: 60000, delay: 5000 })
+      recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: getLastEmailTimeout, delay: 5000 })
         .its("html")
         .then((html) => {
           cy.document({ log: false }).invoke({ log: false }, "write", html);
@@ -35,7 +36,7 @@ export default function passwordResetTest() {
       cy.findByRole("button", { name: /change password/i }).click();
       cy.findByText(new RegExp(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("exist");
       // follow the link in email to change password
-      recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: 60000, delay: 5000 })
+      recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: getLastEmailTimeout, delay: 5000 })
         .its("html")
         .then((html) => {
           cy.document({ log: false }).invoke({ log: false }, "write", html);

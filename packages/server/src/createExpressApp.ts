@@ -7,7 +7,6 @@ const helmet = require("helmet");
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import morgan from "morgan";
 import authRouter from "./routes/auth-route";
 import usersRouter from "./routes/users-route";
 import moderationRouter from "./routes/moderation-route";
@@ -16,6 +15,7 @@ import errorHandler from "./middleware/errorHandler";
 import { AuthRoutePaths, CypressTestRoutePaths, ModerationRoutePaths, UsersRoutePaths } from "../../common";
 import { ipRateLimiter } from "./middleware/rateLimiter";
 import checkForBannedIpAddress from "./middleware/checkForBannedIpAddress";
+import morgan from "morgan";
 
 export default function createExpressApp() {
   const app = express();
@@ -25,7 +25,6 @@ export default function createExpressApp() {
   if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
   app.use(
     cors({
-      // methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
       origin: true,
       credentials: true,
     })
