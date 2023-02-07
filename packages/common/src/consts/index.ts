@@ -1,6 +1,6 @@
 // basics
 export const websiteName = "melphina.com";
-export const SOCKET_ADDRESS_PRODUCTION = "melphina.com";
+export const SOCKET_ADDRESS_PRODUCTION = "melphina.com/api";
 export const SERVER_HOSTNAME_DOCKER_PRODUCTION = "melphina.com/api";
 export const REDIS_HOSTNAME_PRODUCTION = "redis";
 // times
