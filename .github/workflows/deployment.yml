@@ -1,0 +1,44 @@
+name: Deployment
+
+on:
+  merge:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.18.0
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push server
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: snowd3n/lucella:server
+          file: ./dockerfiles/server.Dockerfile
+      - name: Build and push client
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: snowd3n/lucella:client
+          file: ./dockerfiles/client.Dockerfile
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: connect to vps, pull docker images and relaunch docker compose
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: cd /app && docker compose down && docker compose pull && docker compose up -d
+          host: ${{ secrets.VPS_HOST_ADDRESS }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
