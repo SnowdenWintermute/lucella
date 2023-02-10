@@ -13,6 +13,7 @@ services:
     depends_on:
       - postgres
       - redis
+      - toxiproxy
     build:
       context: .
       dockerfile: ./dockerfiles/server.dev.Dockerfile
@@ -23,10 +24,16 @@ services:
     volumes:
       - ./packages/server:/app/packages/server
       - ./packages/common:/app/packages/common
-  # toxiproxy:
-  #   image: ghcr.io/shopify/toxiproxy
-  #   ports:
-  #     - "22220:22220"
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy
+    ports:
+      - "8474:8474"
+      - "26379:26379"
+  toxiproxy-config:
+    image: shopify/toxiproxy
+    entrypoint: >
+      sh -c "/go/bin/toxiproxy-cli -h toxiproxy:8474 create lucella_test_nodeserver_main --listen 0.0.0.0:26379 --upstream node-server:8080;
+      /go/bin/toxiproxy-cli -h toxiproxy:8474 toxic add --type latency --toxicName latency_with_jitter --attribute jitter=50 --attribute latency=500 lucella_test_nodeserver_main;"
   postgres:
     image: postgres:15
     volumes:
