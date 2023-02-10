@@ -1,6 +1,6 @@
 # Lucella - Battle Room
 
-#### A simple [Real-time strategy](https://en.wikipedia.org/wiki/Real-time_strategy) in the web browser game with ranked matchmaking
+#### A simple [Real-time strategy](https://en.wikipedia.org/wiki/Real-time_strategy) game in the web browser with ranked matchmaking
 
 Visit the live demo at [lucella.org](https://lucella.org)
 
