@@ -3,7 +3,6 @@ import { Socket } from "socket.io";
 import { PlayerRole, SocketEventsFromClient, UserInput, UserInputs, unpackUserInput } from "../../../../../common";
 import antiCheat from "../../../battleRoomGame/antiCheat";
 import { LucellaServer } from "..";
-// const replicator = new (require("replicator"))();
 
 export default function battleRoomGameListeners(server: LucellaServer, socket: Socket) {
   const { connectedSockets, games } = server;

@@ -14,7 +14,6 @@ import {
 } from "../../../../common";
 import { LucellaServer } from "../../classes/LucellaServer";
 import handleScoringPoints from "./handleScoringPoints";
-// const replicator = new (require("replicator"))();
 
 export default function createGamePhysicsInterval(io: Server, socket: Socket, server: LucellaServer, gameName: string) {
   const game = server.games[gameName];
@@ -41,7 +40,6 @@ export default function createGamePhysicsInterval(io: Server, socket: Socket, se
     handleScoringPoints(io, socket, server, game);
     const updateForHost = createDeltaPacket(game, PlayerRole.HOST);
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
-    // io.to(`game-${game.gameName}`).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game));
     if (game.winner) server.endGameAndEmitUpdates(game);
 
     io.to(server.lobby.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);

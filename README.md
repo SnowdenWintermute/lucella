@@ -6,6 +6,8 @@ Visit the live demo at [lucella.org](https://lucella.org)
 
 [![Tests](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml/badge.svg?event=pull_request)](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml)
 
+[![Deployment](https://github.com/SnowdenWintermute/lucella/actions/workflows/deployment.yml/badge.svg)](https://github.com/SnowdenWintermute/lucella/actions/workflows/deployment.yml)
+
 ## Built With
 
 - [Socket.IO](https://socket.io/docs/v4//) - for chat and muliplayer game packets
