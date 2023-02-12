@@ -6,7 +6,7 @@ on:
 
 env:
   SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
-  NODE_ENV: ${{ secrets.NODE_ENV }}
+  NODE_ENV: development
   EMAIL_ROOT_URL: ${{ secrets.EMAIL_ROOT_URL }}
   EMAIL_ROOT_URL_DEV: ${{ secrets.EMAIL_ROOT_URL_DEV }}
   PORT: ${{ secrets.PORT }}
