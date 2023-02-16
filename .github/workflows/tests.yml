@@ -123,18 +123,18 @@ jobs:
         run: echo '${{ secrets.DEV_ENV }}' > .env
       - name: run docker compose
         run: docker compose -f docker-compose.dev.yml up -d
-      # - name: install yarn
-      #   run: npm install --global yarn
+      - name: install yarn
+        run: npm install --global yarn
       # - name: install curl
       #   run: sudo apt install curl
       # - name: install protoc
       #   run: sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
       # - name: install dependencies
       #   run: yarn install
-      # - name: install typescript
-      #   run: npm install -g typescript
-      # - name: compile typescript
-      #   run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory && cd ../..
+      - name: install typescript
+        run: npm install -g typescript
+      - name: compile typescript
+        run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory && cd ../..
       # - name: compile .proto files to js
       #   run: cd packages/common && yarn run compile-proto && cd ../..
       # - name: test psql migration command
