@@ -72,8 +72,6 @@ jobs:
           node-version: 16.18.0
       - name: install yarn
         run: npm install --global yarn
-      - name: docker ps -a
-        run: docker ps -a
       - name: install dependencies
         run: yarn install
       - name: install typescript
@@ -84,30 +82,28 @@ jobs:
         run: sudo apt update && sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && sudo unzip -q protoc.zip bin/protoc -d /usr/local && sudo chmod a+x /usr/local/bin/protoc && protoc --version
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
-      - name: docker ps
-        run: docker ps
       - name: Run server tests and be done
         run: cd packages/server && yarn test --forceExit && echo completed
   cypress-run:
     runs-on: ubuntu-latest
-    services:
-      redis:
-        image: redis
-        ports:
-          - 6379:6379
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: lucella # note this is different than the lucella-test db used in the jest tests
-        options: >- # Set health checks to wait until postgres has started
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+    # services:
+    #   redis:
+    #     image: redis
+    #     ports:
+    #       - 6379:6379
+    #   postgres:
+    #     image: postgres
+    #     env:
+    #       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+    #       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+    #       POSTGRES_DB: lucella # note this is different than the lucella-test db used in the jest tests
+    #     options: >- # Set health checks to wait until postgres has started
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       - 5432:5432
     steps:
       - name: apt update
         run: sudo apt update
@@ -122,27 +118,31 @@ jobs:
         run: npm install -g wait-on
       - uses: actions/checkout@v3
       - name: write cypress.env.json
-        run: cd packages/client && echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json && cd ../..
-      - name: install yarn
-        run: npm install --global yarn
-      - name: install curl
-        run: sudo apt install curl
-      - name: install protoc
-        run: sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
-      - name: install dependencies
-        run: yarn install
-      - name: install typescript
-        run: npm install -g typescript
-      - name: compile typescript
-        run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory && cd ../..
-      - name: compile .proto files to js
-        run: cd packages/common && yarn run compile-proto && cd ../..
-      - name: test psql migration command
-        run: DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}" echo $DATABASE_URL
+        run: cd packages/client && echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json
+      - name: write env for docker compose
+        run: echo '${{ secrets.DEV_ENV }}' > .env
+      - name: run docker compose
+        run: docker compose -f docker-compose.dev.yml up -d
+      # - name: install yarn
+      #   run: npm install --global yarn
+      # - name: install curl
+      #   run: sudo apt install curl
+      # - name: install protoc
+      #   run: sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
+      # - name: install dependencies
+      #   run: yarn install
+      # - name: install typescript
+      #   run: npm install -g typescript
+      # - name: compile typescript
+      #   run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory && cd ../..
+      # - name: compile .proto files to js
+      #   run: cd packages/common && yarn run compile-proto && cd ../..
+      # - name: test psql migration command
+      #   run: DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}" echo $DATABASE_URL
       - name: run the psql migrations
         run: cd packages/server && DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/lucella" yarn run migrate up
-      - name: serve dev
-        run: yarn dev & wait-on http://localhost:3000
-      - run: curl http://localhost:3000/login
+      # - name: serve dev
+      #   run: yarn dev & wait-on http://localhost:3000
+      # - run: curl http://localhost:3000/login
       - name: cypress run
-        run: cd packages/client && ELECTRON_ENABLE_LOGGING=1 yarn cypress run --browser chrome --headless --record --key ${{ secrets.RECORDING_KEY_CYPRESS }}
+        run: cd packages/client && yarn cypress run --browser chrome --headless --record --key ${{ secrets.RECORDING_KEY_CYPRESS }}

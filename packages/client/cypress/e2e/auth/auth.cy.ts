@@ -29,7 +29,7 @@ describe("user stories related to authentication, account creation and deletion"
     });
   });
 
-  // loginForm();
+  loginForm();
   loginLockoutAndResetFlow();
   passwordReset();
   accountDeletion();
