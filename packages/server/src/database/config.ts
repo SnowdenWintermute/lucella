@@ -1,5 +1,5 @@
 export const pgOptions = {
-  host: process.env.NODE_ENV === "production" ? process.env.POSTGRES_CONNECTION_STRING_PRODUCTION : "postgres",
+  host: process.env.NODE_ENV === "production" ? process.env.POSTGRES_CONNECTION_STRING_PRODUCTION : process.env.POSTGRES_CONNECTION_STRING_DEV,
   port: 5432,
   database: process.env.NODE_ENV === "production" ? process.env.POSTGRES_DB_PRODUCTION : process.env.POSTGRES_DB,
   user: process.env.NODE_ENV === "production" ? process.env.POSTGRES_USER_PRODUCTION : process.env.POSTGRES_USER,

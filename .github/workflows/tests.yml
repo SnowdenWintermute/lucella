@@ -127,7 +127,8 @@ jobs:
         run: cd packages/common && yarn run compile-proto && cd ../..
       - name: run the psql migrations
         run: cd packages/server && DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/lucella" yarn run migrate up
+      - run: curl http://localhost:8080
       - name: serve app in dev mode
-        run: yarn dev & wait-on http://localhost:3000 & wait-on http://localhost:8080
+        run: yarn dev & wait-on http://localhost:3000
       - name: cypress run
         run: cd packages/client && yarn cypress run --browser chrome --headless --record --key ${{ secrets.RECORDING_KEY_CYPRESS }}
