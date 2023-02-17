@@ -1,12 +1,13 @@
 /* eslint-disable consistent-return */
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } from "../../redux/api-slices/ladder-api-slice";
+import { useGetLadderPageQuery } from "../../redux/api-slices/ladder-api-slice";
 import { setViewingSearchedUser } from "../../redux/slices/ladder-slice";
-import { CustomErrorDetails } from "../../../../common";
+import { CustomErrorDetails, pageSize } from "../../../../common";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
+import LadderTableDatum from "../../components/ladder/LadderTableDatum";
 
 function Ladder() {
   const dispatch = useAppDispatch();
@@ -14,44 +15,44 @@ function Ladder() {
   const [searchText, setSearchText] = useState("");
   const [submittedSearchText, setSubmittedSearchText] = useState("");
   const [pageNumberAnimateClass, setPageNumberAnimateClass] = useState("");
-  const [currentPageViewing, setCurrentPageViewing] = useState(1);
+  const [currentPageViewing, setCurrentPageViewing] = useState(0);
   const {
     isLoading: ladderPageIsLoading,
     data: ladderPageData,
     isError: ladderPageIsError,
     error: ladderPageError,
   } = useGetLadderPageQuery(currentPageViewing);
-  const {
-    isLoading: searchedUserIsLoading,
-    data: searchedUserData,
-    isError: searchedUserIsError,
-    error: searchedUserError,
-  } = useGetUserBattleRoomRecordQuery(submittedSearchText, { skip: !submittedSearchText });
+  // const {
+  //   isLoading: searchedUserIsLoading,
+  //   data: searchedUserData,
+  //   isError: searchedUserIsError,
+  //   error: searchedUserError,
+  // } = useGetUserBattleRoomRecordQuery(submittedSearchText, { skip: !submittedSearchText });
 
-  useEffect(() => {
-    if (ladderPageIsError && ladderPageError && "data" in ladderPageError) {
-      const errors: CustomErrorDetails[] = ladderPageError.data as CustomErrorDetails[];
-      errors.forEach((currError) => {
-        dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
-      });
-    }
-  }, [ladderPageIsLoading, ladderPageError]);
+  // useEffect(() => {
+  //   if (ladderPageIsError && ladderPageError && "data" in ladderPageError) {
+  //     const errors: CustomErrorDetails[] = ladderPageError.data as CustomErrorDetails[];
+  //     errors.forEach((currError) => {
+  //       dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
+  //     });
+  //   }
+  // }, [ladderPageIsLoading, ladderPageError]);
 
-  useEffect(() => {
-    if (searchedUserError && searchedUserError && "data" in searchedUserError) {
-      const errors: CustomErrorDetails[] = searchedUserError.data as CustomErrorDetails[];
-      errors.forEach((currError) => {
-        dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
-      });
-    }
-  }, [searchedUserIsError, searchedUserError]);
+  // useEffect(() => {
+  //   if (searchedUserError && searchedUserError && "data" in searchedUserError) {
+  //     const errors: CustomErrorDetails[] = searchedUserError.data as CustomErrorDetails[];
+  //     errors.forEach((currError) => {
+  //       dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
+  //     });
+  //   }
+  // }, [searchedUserIsError, searchedUserError]);
 
-  const onSearchUserRecord = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!searchText) return dispatch(setViewingSearchedUser(false));
-    dispatch(setViewingSearchedUser(true));
-    setSubmittedSearchText(searchText);
-  };
+  // const onSearchUserRecord = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   if (!searchText) return dispatch(setViewingSearchedUser(false));
+  //   dispatch(setViewingSearchedUser(true));
+  //   setSubmittedSearchText(searchText);
+  // };
 
   const onTurnPage = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, direction: string) => {
     let newPageVewing = currentPageViewing + (direction === "foreward" ? 1 : -1);
@@ -72,36 +73,25 @@ function Ladder() {
   ) : (
     ladderPageData &&
     ladderPageData.pageData &&
-    ladderPageData.pageData.map((entry) => {
-      return (
-        <tr key={entry.user.name} className="ladder-table-row">
-          <td className="ladder-table-datum">test</td>
-          <td className="ladder-table-datum">{entry.user.name}</td>
-          <td className="ladder-table-datum">{entry.elo}</td>
-          <td className="ladder-table-datum">{entry.wins}</td>
-          <td className="ladder-table-datum">{entry.losses}</td>
-          <td className="ladder-table-datum">{Math.round(entry.winrate)}%</td>
-        </tr>
-      );
-    })
+    ladderPageData.pageData.map((entry, i) => <LadderTableDatum key={entry.name} entry={entry} rank={i + currentPageViewing * pageSize + 1} />)
   );
 
-  const searchedUserToShow = searchedUserIsLoading ? (
-    <tr>
-      <td>...</td>
-    </tr>
-  ) : (
-    searchedUserData?.user && (
-      <tr key={searchedUserData.user.name} className="ladder-table-row">
-        <td className="ladder-table-datum">{searchedUserData.rank.toString()}</td>
-        <td className="ladder-table-datum">{searchedUserData.user.name}</td>
-        <td className="ladder-table-datum">{searchedUserData.elo}</td>
-        <td className="ladder-table-datum">{searchedUserData.wins}</td>
-        <td className="ladder-table-datum">{searchedUserData.losses}</td>
-        <td className="ladder-table-datum">{Math.round(searchedUserData.winrate)}%</td>
-      </tr>
-    )
-  );
+  // const searchedUserToShow = searchedUserIsLoading ? (
+  //   <tr>
+  //     <td>...</td>
+  //   </tr>
+  // ) : (
+  //   searchedUserData?.user && (
+  //     <tr key={searchedUserData.user.name} className="ladder-table-row">
+  //       <td className="ladder-table-datum">{searchedUserData.rank.toString()}</td>
+  //       <td className="ladder-table-datum">{searchedUserData.user.name}</td>
+  //       <td className="ladder-table-datum">{searchedUserData.elo}</td>
+  //       <td className="ladder-table-datum">{searchedUserData.wins}</td>
+  //       <td className="ladder-table-datum">{searchedUserData.losses}</td>
+  //       <td className="ladder-table-datum">{Math.round(searchedUserData.winrate)}%</td>
+  //     </tr>
+  //   )
+  // );
 
   return (
     <section className="page-frame">
@@ -111,7 +101,7 @@ function Ladder() {
           <form
             className="ladder-search"
             onSubmit={(e) => {
-              onSearchUserRecord(e);
+              // onSearchUserRecord(e);
             }}
           >
             <label htmlFor="ladder-search-input">
@@ -139,7 +129,7 @@ function Ladder() {
               }}
             >{`<`}</button>
             <span className="ladder-current-page-number-holder">
-              <div className={`ladder-current-page-number ${pageNumberAnimateClass}`}>{currentPageViewing}</div>
+              <div className={`ladder-current-page-number ${pageNumberAnimateClass}`}>{currentPageViewing + 1}</div>
             </span>
             <button
               type="button"
@@ -160,7 +150,7 @@ function Ladder() {
               <td className="ladder-table-datum">Losses</td>
               <td className="ladder-table-datum">Win Rate</td>
             </tr>
-            {!ladder.viewingSearchedUser ? ladderEntriesToShow : searchedUserToShow}
+            {!ladder.viewingSearchedUser ? ladderEntriesToShow : "searchedUserToShow"}
           </tbody>
         </table>
       </div>

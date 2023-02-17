@@ -1,16 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { UserRecord } from "../../classes/UserRecord";
+import { BattleRoomLadderEntry, LadderRoutePaths, SERVER_HOSTNAME_DOCKER_PRODUCTION } from "../../../../common";
 
 export interface ILadderPageResponse {
-  pageNumber: number;
   totalNumberOfPages: number;
-  pageData: UserRecord[];
+  pageData: BattleRoomLadderEntry[];
 }
 
 // must use the plain text string for localhost because CI doesn't play nice with using an env variable for some reason
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: `http://localhost:8080/api`,
+  baseUrl:
+    process.env.NODE_ENV === "production"
+      ? `${SERVER_HOSTNAME_DOCKER_PRODUCTION}${LadderRoutePaths.ROOT + LadderRoutePaths.BATTLE_ROOM}`
+      : `http://localhost:8080/api${LadderRoutePaths.ROOT + LadderRoutePaths.BATTLE_ROOM}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },
@@ -24,21 +26,17 @@ export const ladderApi = createApi({
       getLadderPage: builder.query<ILadderPageResponse, number>({
         query(pageNumber) {
           return {
-            url: `/gameRecords/battle-room-ladder-page/${pageNumber}`,
+            url: `/${pageNumber}`,
             method: "GET",
           };
         },
-      }),
-      getUserBattleRoomRecord: builder.query<UserRecord, string>({
-        query(username) {
-          return {
-            url: `/gameRecords/battle-room-ladder/${username}`,
-            method: "GET",
-          };
+        transformResponse: (result: any) => {
+          console.log(result);
+          return result;
         },
       }),
     };
   },
 });
 
-export const { useGetLadderPageQuery, useGetUserBattleRoomRecordQuery } = ladderApi;
+export const { useGetLadderPageQuery } = ladderApi;

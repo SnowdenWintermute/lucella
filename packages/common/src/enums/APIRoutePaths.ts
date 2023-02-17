@@ -23,3 +23,8 @@ export enum CypressTestRoutePaths {
   CREATE_CYPRESS_TEST_USER = "/create-cypress-test-user",
   RATE_LIMITER = "/rate-limiter",
 }
+
+export enum LadderRoutePaths {
+  ROOT = "/ladder",
+  BATTLE_ROOM = "/battle-room",
+}

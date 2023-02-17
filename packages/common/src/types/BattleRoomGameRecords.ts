@@ -21,3 +21,5 @@ export interface IBattleRoomGameRecord {
   secondPlayerPreGameElo: number;
   secondPlayerPostGameElo: number;
 }
+
+export type BattleRoomLadderEntry = { name: string; elo: number; wins: number; losses: number };

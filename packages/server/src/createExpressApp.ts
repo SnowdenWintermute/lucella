@@ -12,10 +12,11 @@ import usersRouter from "./routes/users-route";
 import moderationRouter from "./routes/moderation-route";
 import cypressTestRouter from "./routes/cypress-test-route";
 import errorHandler from "./middleware/errorHandler";
-import { AuthRoutePaths, CypressTestRoutePaths, ModerationRoutePaths, UsersRoutePaths } from "../../common";
+import { AuthRoutePaths, CypressTestRoutePaths, ModerationRoutePaths, UsersRoutePaths, LadderRoutePaths } from "../../common";
 import { ipRateLimiter } from "./middleware/rateLimiter";
 import checkForBannedIpAddress from "./middleware/checkForBannedIpAddress";
 import morgan from "morgan";
+import battleRoomLadderRouter from "./routes/battle-room-ladder";
 
 export default function createExpressApp() {
   const app = express();
@@ -34,6 +35,7 @@ export default function createExpressApp() {
   app.get("/", (req, res) => res.send("this is the api server"));
   app.use(`/api${AuthRoutePaths.ROOT}`, authRouter);
   app.use(`/api${UsersRoutePaths.ROOT}`, usersRouter);
+  app.use(`/api${LadderRoutePaths.ROOT + LadderRoutePaths.BATTLE_ROOM}`, battleRoomLadderRouter);
   app.use(`/api${ModerationRoutePaths.ROOT}`, moderationRouter);
   app.use(`/api${CypressTestRoutePaths.ROOT}`, cypressTestRouter);
 
