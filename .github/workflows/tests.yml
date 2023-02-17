@@ -105,41 +105,29 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - name: apt update
-        run: sudo apt update
-      - name: install chrome
-        uses: browser-actions/setup-chrome@latest
+      - run: sudo apt update
+      - uses: browser-actions/setup-chrome@latest
+      - run: npm install -g wait-on
+      - run: sudo apt install curl
+      - run: sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
+      - run: npm install -g typescript
+      - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: 16.18.0
           cache: yarn
+      - run: yarn install
       - name: install cypress dependencies
         run: sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-      - name: install wait-on
-        run: npm install -g wait-on
-      - uses: actions/checkout@v3
       - name: write cypress.env.json
         run: cd packages/client && echo '${{ secrets.CYPRESS_ENV_CI }}' > cypress.env.json
-      - name: install yarn
-        run: npm install --global yarn
-      - name: install curl
-        run: sudo apt install curl
-      - name: install protoc
-        run: sudo apt install -y unzip && curl -Lo protoc.zip "https://github.com/protocolbuffers/protobuf/releases/download/v3.19.6/protoc-3.19.6-linux-x86_64.zip" && unzip -q protoc.zip bin/protoc -d /usr/local && chmod a+x /usr/local/bin/protoc && protoc --version
-      - name: install dependencies
-        run: yarn install
-      - name: install typescript
-        run: npm install -g typescript
       - name: compile typescript
         run: cd packages/common && tsc && echo compiled common directory && cd ../server && tsc && echo compiled server directory && cd ../..
       - name: compile .proto files to js
         run: cd packages/common && yarn run compile-proto && cd ../..
-      - name: test psql migration command
-        run: DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}" echo $DATABASE_URL
       - name: run the psql migrations
         run: cd packages/server && DATABASE_URL="postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/lucella" yarn run migrate up
-      - name: serve dev
+      - name: serve app in dev mode
         run: yarn dev & wait-on http://localhost:3000 & wait-on http://localhost:8080
-      - run: curl http://localhost:3000/login
       - name: cypress run
         run: cd packages/client && yarn cypress run --browser chrome --headless --record --key ${{ secrets.RECORDING_KEY_CYPRESS }}
