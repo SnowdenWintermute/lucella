@@ -23,4 +23,4 @@ wrappedPool
       lucella.server = new LucellaServer(listening);
     });
   })
-  .catch((error: DatabaseError) => console.error(error));
+  .catch((error: DatabaseError) => console.error(JSON.stringify(error).split("").join("-")));
