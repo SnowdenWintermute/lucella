@@ -1,6 +1,6 @@
 import { FrontendRoutes, websiteName } from "../../../../common";
 
-const rootUrl = process.env.NODE_ENV === "development" ? process.env.EMAIL_ROOT_URL_DEV : process.env.EMAIL_ROOT_URL;
+const rootUrl = process.env.NODE_ENV === "production" ? process.env.EMAIL_ROOT_URL : process.env.EMAIL_ROOT_URL_DEV;
 const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
 
 export const RESET_PASSWORD_SUBJECT = "Reset your password";

@@ -1,10 +1,12 @@
 # Lucella - Battle Room
 
-#### A simple [Real-time strategy](https://en.wikipedia.org/wiki/Real-time_strategy) in the web browser game with ranked matchmaking
+#### A simple [Real-time strategy](https://en.wikipedia.org/wiki/Real-time_strategy) game in the web browser with ranked matchmaking
 
 Visit the live demo at [lucella.org](https://lucella.org)
 
 [![Tests](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml/badge.svg?event=pull_request)](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml)
+
+[![Deployment](https://github.com/SnowdenWintermute/lucella/actions/workflows/deployment.yml/badge.svg)](https://github.com/SnowdenWintermute/lucella/actions/workflows/deployment.yml)
 
 ## Built With
 
@@ -32,33 +34,25 @@ Visit the live demo at [lucella.org](https://lucella.org)
 - Install yarn (npm will not work because packages are managed with yarn workspaces)
   > npm install --global yarn
 - Install docker (linux) or docker desktop (windows/mac)
-  - Linux must install docker-compose seperately
-  - Windows must enable WSL2 and install a linux distro in the linux subsystem: https://learn.microsoft.com/en-us/windows/wsl/install
-- Install protoc - (some versions are broken with the npm package we use, this one seems to be working: https://github.com/protocolbuffers/protobuf/releases/tag/v3.19.6)
-  - If on windows, add protoc to the path environtment variable and restart computer: https://zwbetz.com/how-to-add-a-binary-to-your-path-on-macos-linux-windows/#windows-gui
+
+  - Ubuntu: https://docs.docker.com/engine/install/ubuntu/
+  - Windows: must enable WSL2 and install a linux distro in the linux subsystem: https://learn.microsoft.com/en-us/windows/wsl/install
+
 - Clone the repository https://github.com/SnowdenWintermute/lucella.git
 - Open a terminal in the top level directory of the cloned repo and run
   > yarn install
 - Create .env files in client and server package folders based on the templates provided. **DO NOT delete the templates. Contact mike for api keys.**
-- Launch docker desktop (if on windows/mac) or check that docker server is running (linux)
+- Launch docker desktop (if on windows/mac) or check that docker is running (linux)
   _ On windows you may need to click the bug icon then "clean / purge data" to get docker desktop to start
-  _ If on windows or mac, open a terminal in the /packages/server directory and run
-  > docker compose up -d
-      * if on linux, instead run
-  > docker-compose up -d
+  _ Open a terminal in the top level directory and run
+  > docker compose -f docker-compose.dev.yml up -d
       * Then run
   > docker ps
-      * you should see that the redis and postgres containers are now running.
-- Open a terminal or cd into /packages/common directory and run
-  > tsc
-- Run tsc from the /packages/common directory
-- Go to the /packages/server directory and run the following migration command found in the env template. This will add all the tables and enums to your postgres instance.
-  > DATABASE_URL=postgres://username:password@localhost:5432/dbname yarn run migrate up) from the /packages/server directory, making sure to replace the name, password and dbname with the variables you assigned in the .env file. This adds all the tables and enums to your local postgres instance.
-- Go to the top level directory of the repo and if on linux or mac run
-  > yarn dev
-- If you are on windows, instead run
-  > dev-windows
-- The above command uses a different script to compile protobuf files. It should auto-compile the protobuf and watch typescript in all packages for changes and automatically recompile to js and restart the server.
+      * you should see that the client, server, redis, postgres and toxiproxy containers are now running.
+- Go to the /packages/server directory and run the following migration command found in the env template, making sure to replace the name, password and dbname with the variables you assigned in the .env file. This will add all the tables and enums to your postgres local volume (local storage managed by docker).
+
+  > DATABASE_URL=postgres://username:password@localhost:5432/dbname yarn run migrate up
+
 - Install pgAdmin: https://www.pgadmin.org/download/
 - Open pgAdmin and add a new server. Address should be localhost and user/password should be the same you used for migrations (same as you put in the server .env file)
 - Create a new database named "lucella-test" under the server you added. This will be used by the jest tests.

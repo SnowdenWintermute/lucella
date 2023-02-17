@@ -25,8 +25,6 @@ import {
   updatePlayersReady,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
-// eslint-disable-next-line global-require
-// const replicator = new (require("replicator"))();
 
 interface Props {
   socket: Socket;

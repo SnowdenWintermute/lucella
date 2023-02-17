@@ -14,8 +14,6 @@ export default async function endGameAndEmitUpdates(server: LucellaServer, game:
   io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
   io.in(gameChatChannelName).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
   game.clearPhysicsInterval();
-  // @ todo - change this to a score only broadcast
-  // io.to(gameChatChannelName).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, replicator.encode(game)); // since we stop the physics/broadcast interval we need one last snapshot to show the winning point
 
   const loser = gameRoom.winner === players.host?.associatedUser.username ? players.challenger?.associatedUser.username : players.host?.associatedUser.username;
 

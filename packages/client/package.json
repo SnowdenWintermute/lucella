@@ -16,7 +16,8 @@
     "cypress:chrome": "env-cmd -f .env.test.local cypress open --e2e --browser chrome",
     "cypress:open": "env-cmd -f .env.test.local cypress open --e2e",
     "cypress:start": "concurrently \"start-server-and-test start:test 3000 cypress:open\" \"yarn --cwd ../server serve\"",
-    "cypress:build": "yarn build:test && yarn cypress:start"
+    "cypress:build": "yarn build:test && yarn cypress:start",
+    "watch-and-compile-proto": "yarn --cwd ../common watch-and-compile-proto"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.1",
@@ -37,7 +38,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-redux": "^8.0.5",
-    "replicator": "^1.0.5",
     "socket.io-client": "^4.5.4",
     "typescript": "4.9.3",
     "uuid": "^9.0.0"

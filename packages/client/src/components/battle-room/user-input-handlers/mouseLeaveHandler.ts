@@ -4,7 +4,6 @@ import { Socket } from "socket.io-client";
 import { BattleRoomGame, PlayerRole, Point, SelectOrbs, SocketEventsFromClient } from "../../../../../common";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
 import serializeInput from "../../../protobuf-utils/serialize-input";
-// const replicator = new (require("replicator"))();
 
 export default function mouseLeaveHandler(currentGame: BattleRoomGame, socket: Socket, playerRole: PlayerRole | null) {
   const { mouseData } = currentGame;

@@ -6,6 +6,7 @@ import { TEST_USER_EMAIL, TEST_USER_NAME, TEST_USER_PASSWORD } from "../../utils
 
 export default async function createCypressTestUser(req: Request, res: Response, next: NextFunction) {
   try {
+    console.log("creating test user");
     const email = req.body.email || TEST_USER_EMAIL;
     const name = req.body.name || TEST_USER_NAME;
     const hashedPassword = await bcrypt.hash(TEST_USER_PASSWORD, 12);

@@ -10,7 +10,6 @@ import {
   SocketEventsFromClient,
 } from "../../../../../common";
 import serializeInput from "../../../protobuf-utils/serialize-input";
-// const replicator = new (require("replicator"))();
 
 export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRole: PlayerRole | null) => {
   if (!playerRole) return;

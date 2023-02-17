@@ -1,0 +1,58 @@
+version: "3.8"
+services:
+  next-client:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/client.dev.Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./packages/client:/app/packages/client
+      - ./packages/common:/app/packages/common
+  node-server:
+    depends_on:
+      - postgres
+      - redis
+      - toxiproxy
+    build:
+      context: .
+      dockerfile: ./dockerfiles/server.dev.Dockerfile
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    volumes:
+      - ./packages/server:/app/packages/server
+      - ./packages/common:/app/packages/common
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy
+    ports:
+      - "8474:8474"
+      - "26379:26379"
+  toxiproxy-config:
+    image: shopify/toxiproxy
+    entrypoint: >
+      sh -c "/go/bin/toxiproxy-cli -h toxiproxy:8474 create lucella_test_nodeserver_main --listen 0.0.0.0:26379 --upstream node-server:8080;
+      /go/bin/toxiproxy-cli -h toxiproxy:8474 toxic add --type latency --toxicName latency_with_jitter --attribute jitter=50 --attribute latency=500 lucella_test_nodeserver_main;"
+  postgres:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER:${POSTGRES_USER}
+      - POSTGRES_PASSWORD:${POSTGRES_PASSWORD}
+      - POSTGRES_DB:${POSTGRES_DB}
+    ports:
+      - 5432:5432
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+volumes:
+  postgres_data:
+  redis:
