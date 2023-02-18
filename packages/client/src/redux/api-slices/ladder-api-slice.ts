@@ -30,13 +30,17 @@ export const ladderApi = createApi({
             method: "GET",
           };
         },
-        transformResponse: (result: any) => {
-          console.log(result);
-          return result;
+      }),
+      getLadderEntry: builder.query<BattleRoomLadderEntry, string>({
+        query(username) {
+          return {
+            url: `${LadderRoutePaths.ENTRIES}/${username}`,
+            method: "GET",
+          };
         },
       }),
     };
   },
 });
 
-export const { useGetLadderPageQuery } = ladderApi;
+export const { useGetLadderPageQuery, useGetLadderEntryQuery } = ladderApi;

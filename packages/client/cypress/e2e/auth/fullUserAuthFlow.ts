@@ -1,7 +1,7 @@
 import { recurse } from "cypress-recurse";
 import { ErrorMessages, FrontendRoutes, nameMaxLength, passwordMaxLength, SuccessAlerts } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
-import { ButtonNames } from "../../../src/consts/ButtonNames";
+import { BUTTON_NAMES } from "../../../src/consts/button-names";
 
 export default function fullUserAuthFlow() {
   let userEmail;
@@ -68,11 +68,11 @@ export default function fullUserAuthFlow() {
       cy.get('[data-cy="profile-icon"]').should("not.exist");
       cy.findByRole("link", { name: /login/i }).should("exist");
       // start account creation process
-      cy.findByRole("link", { name: new RegExp(ButtonNames.AUTH_FORMS.CREATE_ACCOUNT, "i") }).click();
+      cy.findByRole("link", { name: new RegExp(BUTTON_NAMES.AUTH_FORMS.CREATE_ACCOUNT, "i") }).click();
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}/register`);
-      cy.findByRole("heading", { name: new RegExp(ButtonNames.AUTH_FORMS.CREATE_ACCOUNT, "i") }).should("exist");
+      cy.findByRole("heading", { name: new RegExp(BUTTON_NAMES.AUTH_FORMS.CREATE_ACCOUNT, "i") }).should("exist");
       // test registration form errors
-      cy.findByRole("button", { name: new RegExp(ButtonNames.AUTH_FORMS.CREATE_ACCOUNT, "i") }).click();
+      cy.findByRole("button", { name: new RegExp(BUTTON_NAMES.AUTH_FORMS.CREATE_ACCOUNT, "i") }).click();
       cy.get(`[data-cy="error-email"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.INVALID_EMAIL, "i"));
       cy.get(`[data-cy="error-name"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.NAME_MIN_LENGTH, "i"));
       cy.get(`[data-cy="error-password"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH, "i"));
@@ -128,7 +128,7 @@ export default function fullUserAuthFlow() {
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
       cy.findByRole("heading", { name: /login/i }).should("exist");
       // test possible login form errors
-      cy.findByRole("button", { name: new RegExp(ButtonNames.AUTH_FORMS.LOGIN, "i") }).click();
+      cy.findByRole("button", { name: new RegExp(BUTTON_NAMES.AUTH_FORMS.LOGIN, "i") }).click();
       cy.get(`[data-cy="error-email"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL, "i"));
       cy.get(`[data-cy="error-password"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD, "i"));
       cy.findByLabelText(/email/).type("unregistered@gmail.com");

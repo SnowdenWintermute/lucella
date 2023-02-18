@@ -27,4 +27,5 @@ export enum CypressTestRoutePaths {
 export enum LadderRoutePaths {
   ROOT = "/ladder",
   BATTLE_ROOM = "/battle-room",
+  ENTRIES = "/entries",
 }

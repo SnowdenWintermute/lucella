@@ -10,7 +10,7 @@ import { useGetMeQuery, useRegisterUserMutation } from "../redux/api-slices/user
 import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/layout/auth/AuthPage";
-import { ButtonNames } from "../consts/ButtonNames";
+import { BUTTON_NAMES } from "../consts/button-names";
 
 function Register() {
   const router = useRouter();
@@ -113,7 +113,7 @@ function Register() {
       <div className="auth-bottom-links">
         <Link href="/login">Log in to existing account</Link>
         <button type="submit" className="button button-standard-size button-primary" disabled={isLoading}>
-          {isLoading || isSuccess ? "..." : ButtonNames.AUTH_FORMS.CREATE_ACCOUNT}
+          {isLoading || isSuccess ? "..." : BUTTON_NAMES.AUTH_FORMS.CREATE_ACCOUNT}
         </button>
       </div>
     </AuthPage>

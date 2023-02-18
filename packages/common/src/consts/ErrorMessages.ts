@@ -26,7 +26,8 @@ export const ErrorMessages = {
     },
   },
   LADDER: {
-    USER_NOT_FOUND: "User not found (please note that names are case sensitive)",
+    USER_NOT_FOUND: "No record found for that user",
+    NO_ENTRIES_FOUND: "No ladder entries found",
   },
   RATE_LIMITER: {
     REQUESTING_TOO_QUICKLY: "You are sending requests too quickly, please wait a while before trying again",

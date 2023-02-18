@@ -11,6 +11,7 @@ import wrappedPool from "./database/wrappedPool";
 import { wrappedRedis, RedisContext } from "./utils/RedisContext";
 import { lucella } from "./lucella";
 import loadLadderIntoRedis from "./utils/loadLadderIntoRedis";
+import UserRepo from "./database/repos/users";
 
 const { PORT } = process.env;
 

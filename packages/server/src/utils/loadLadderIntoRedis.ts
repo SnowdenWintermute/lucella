@@ -8,13 +8,14 @@ export default async function loadLadderIntoRedis() {
   let currentPage = 0;
   let lastPageReached = false;
   while (!lastPageReached) {
-    const currentPageOfScoreCards = await BattleRoomScoreCardRepo.getEloAndUserIdByPage(pageSize, currentPage * pageSize);
+    const currentPageOfScoreCards = await BattleRoomScoreCardRepo.getEloAndUserIdByPage(pageSize, currentPage);
     if (currentPageOfScoreCards) {
       const forRedis = currentPageOfScoreCards.map((scoreCard) => {
         return { value: scoreCard.userId.toString(), score: scoreCard.elo };
       });
       await wrappedRedis.context?.zAdd(REDIS_KEYS.BATTLE_ROOM_LADDER, forRedis);
     }
+    console.log("currentPageOfScoreCards.length: ", currentPageOfScoreCards?.length);
     if (!currentPageOfScoreCards || currentPageOfScoreCards.length < pageSize) lastPageReached = true;
     currentPage += 1;
   }

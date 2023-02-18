@@ -9,7 +9,6 @@ import "../styles/pages/game-shell.scss";
 import "../styles/abstracts/lucellaStrap.scss";
 import "../styles/pages/battle-room.scss";
 import "../styles/components/score-screen.scss";
-import "../styles/pages/ladder.scss";
 import "../styles/base/style.scss";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
