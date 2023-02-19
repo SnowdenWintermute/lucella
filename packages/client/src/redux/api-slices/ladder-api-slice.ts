@@ -30,6 +30,7 @@ export const ladderApi = createApi({
             method: "GET",
           };
         },
+        keepUnusedDataFor: 0,
       }),
       getLadderEntry: builder.query<{ ladderEntry: BattleRoomLadderEntry }, string>({
         query(username) {

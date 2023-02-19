@@ -1,14 +1,14 @@
 /* eslint-disable consistent-return */
 import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../../redux/hooks";
-import { useGetLadderEntryQuery, useGetLadderPageQuery } from "../../redux/api-slices/ladder-api-slice";
-import { CustomErrorDetails } from "../../../../common";
-import { setAlert } from "../../redux/slices/alerts-slice";
-import { Alert } from "../../classes/Alert";
-import { AlertType } from "../../enums";
-import LadderTableDatum from "../../components/ladder/LadderTableDatum";
-import LadderNav from "../../components/ladder/LadderNav";
-import { LadderTable } from "../../components/ladder/LadderTable";
+import { useAppDispatch } from "../redux/hooks";
+import { useGetLadderEntryQuery, useGetLadderPageQuery } from "../redux/api-slices/ladder-api-slice";
+import { CustomErrorDetails } from "../../../common/dist";
+import { setAlert } from "../redux/slices/alerts-slice";
+import { Alert } from "../classes/Alert";
+import { AlertType } from "../enums";
+import LadderTableDatum from "../components/ladder/LadderTableDatum";
+import LadderNav from "../components/ladder/LadderNav";
+import { LadderTable } from "../components/ladder/LadderTable";
 
 function Ladder() {
   const dispatch = useAppDispatch();
@@ -22,7 +22,7 @@ function Ladder() {
     data: ladderPageData,
     isError: ladderPageIsError,
     error: ladderPageError,
-  } = useGetLadderPageQuery(currentPageViewing);
+  } = useGetLadderPageQuery(currentPageViewing, { refetchOnMountOrArgChange: true });
   const {
     isLoading: searchedEntryIsLoading,
     isFetching: searchedEntryIsFetching,

@@ -72,6 +72,7 @@
     "node-pg-migrate": "^6.2.2",
     "nodemon": "^2.0.2",
     "object-sizeof": "^1.6.1",
+    "randomstring": "^1.2.3",
     "socket.io-client": "^4.5.4",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.3",

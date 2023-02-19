@@ -54,7 +54,7 @@ function ScoreScreenModalContents() {
           ) : (
             <>
               <tr>
-                <td className={eloDiff && Math.sign(eloDiff) === 1 ? "elo-animate-win" : "elo-animate-loss"}>Elo: {eloAnimatedChange}</td>
+                <td className={eloDiff && Math.sign(eloDiff) === 1 ? "elo-animate-win" : "elo-animate-loss"}>Elo: {eloAnimatedChange || playerPreGameElo}</td>
                 <td className={eloDiff && Math.sign(eloDiff) === 1 ? "elo-animate-win" : "elo-animate-loss"}>
                   {eloDiff &&
                     `(${Math.sign(eloDiff) === 1 ? "+" : ""}

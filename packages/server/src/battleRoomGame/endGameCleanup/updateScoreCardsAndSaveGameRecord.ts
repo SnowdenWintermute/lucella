@@ -5,6 +5,8 @@ import updateElos from "./updateElos";
 import UserRepo from "../../database/repos/users";
 import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
 import BattleRoomGameRecordRepo from "../../database/repos/battle-room-game/game-records";
+import { wrappedRedis } from "../../utils/RedisContext";
+import { REDIS_KEYS } from "../../consts";
 // import updateLadder from "./updateLadder";
 
 export default async function updateScoreCardsAndSaveGameRecord(
@@ -41,6 +43,10 @@ export default async function updateScoreCardsAndSaveGameRecord(
 
   await BattleRoomScoreCardRepo.update(hostScoreCard);
   await BattleRoomScoreCardRepo.update(challengerScoreCard);
+  await wrappedRedis.context?.zAdd(REDIS_KEYS.BATTLE_ROOM_LADDER, [
+    { value: hostScoreCard.userId.toString(), score: hostScoreCard.elo },
+    { value: challengerScoreCard.userId.toString(), score: challengerScoreCard.elo },
+  ]);
 
   // save game record
   const gameRecord = await BattleRoomGameRecordRepo.insert(
