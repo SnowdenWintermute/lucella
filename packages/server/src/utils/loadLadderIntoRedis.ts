@@ -15,11 +15,10 @@ export default async function loadLadderIntoRedis() {
       });
       await wrappedRedis.context?.zAdd(REDIS_KEYS.BATTLE_ROOM_LADDER, forRedis);
     }
-    console.log("currentPageOfScoreCards.length: ", currentPageOfScoreCards?.length);
+
     if (!currentPageOfScoreCards || currentPageOfScoreCards.length < pageSize) lastPageReached = true;
     currentPage += 1;
   }
 
-  const inRedis = await wrappedRedis.context?.zRangeWithScores(REDIS_KEYS.BATTLE_ROOM_LADDER, 0, 100000, { REV: true });
-  console.log("inRedis:,", inRedis);
+  // const inRedis = await wrappedRedis.context?.zRangeWithScores(REDIS_KEYS.BATTLE_ROOM_LADDER, 0, 100000, { REV: true });
 }

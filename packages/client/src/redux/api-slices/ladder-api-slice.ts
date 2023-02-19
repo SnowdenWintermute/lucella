@@ -31,7 +31,7 @@ export const ladderApi = createApi({
           };
         },
       }),
-      getLadderEntry: builder.query<BattleRoomLadderEntry, string>({
+      getLadderEntry: builder.query<{ ladderEntry: BattleRoomLadderEntry }, string>({
         query(username) {
           return {
             url: `${LadderRoutePaths.ENTRIES}/${username}`,

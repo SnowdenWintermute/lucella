@@ -60,6 +60,9 @@ export class RedisContext {
   async zRangeWithScores(key: string, min: number, max: number, options: {}) {
     return this.redisClient.zRangeWithScores(this.keyPrefix + key, min, max, options);
   }
+  async zRevRank(key: string, member: string) {
+    return this.redisClient.zRevRank(this.keyPrefix + key, member);
+  }
   async zCard(key: string) {
     return this.redisClient.zCard(key);
   }

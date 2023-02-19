@@ -67,6 +67,7 @@
   border-collapse: collapse;
   display: flex;
   width: 100%;
+  overflow: scroll;
 }
 .ladder-table-body {
   width: 100%;
@@ -80,7 +81,7 @@
   min-width: 80px;
   border-bottom: 1px solid color(textPrimary);
   margin: 0px;
-  padding: 0px;
+  padding-right: 10px;
   display: flex;
   align-items: flex-end;
   @media (max-width: 556px) {
@@ -92,6 +93,9 @@
   @media (max-width: 380px) {
     min-width: 50px;
   }
+}
+.ladder-table-datum-username {
+  min-width: 140px;
 }
 .ladder-table-datum:last-child {
   width: 100%;
