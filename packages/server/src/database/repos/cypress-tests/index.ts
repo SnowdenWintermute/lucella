@@ -21,5 +21,6 @@ export default class CypressTestRepo {
       TEST_USER_NAME.toLowerCase().trim(),
       TEST_USER_NAME_ALTERNATE.toLowerCase().trim(),
     ]);
+    await wrappedPool.query(`DELETE FROM users WHERE email LIKE '%test%';`);
   }
 }

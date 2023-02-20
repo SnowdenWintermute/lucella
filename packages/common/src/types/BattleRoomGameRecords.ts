@@ -13,13 +13,17 @@ export interface IBattleRoomGameRecord {
   id: number;
   createdAt: number | Date;
   firstPlayerId: number;
-  secondPlayerId: number;
   firstPlayerScore: number;
-  secondPlayerScore: number;
   firstPlayerPreGameElo: number;
   firstPlayerPostGameElo: number;
+  firstPlayerPreGameRank: number;
+  firstPlayerPostGameRank: number;
+  secondPlayerId: number;
+  secondPlayerScore: number;
   secondPlayerPreGameElo: number;
   secondPlayerPostGameElo: number;
+  secondPlayerPreGameRank: number;
+  secondPlayerPostGameRank: number;
 }
 
 export type BattleRoomLadderEntry = { name: string; rank?: number; elo: number; wins: number; losses: number };

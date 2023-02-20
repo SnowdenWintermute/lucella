@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { usersApi } from "../../redux/api-slices/users-api-slice";
+import styles from "./game-lobby.module.scss";
 
 function ScoreScreenModalContents() {
   const user = usersApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
@@ -9,17 +10,22 @@ function ScoreScreenModalContents() {
 
   let playerPreGameElo: number | undefined;
   let playerPostGameElo: number | undefined;
+  let playerPreGameRank: number | undefined;
+  let playerPostGameRank: number | undefined;
   let eloDiff: number | undefined;
 
   if (scoreScreenData && scoreScreenData.gameRoom && scoreScreenData.gameRecord) {
-    playerPreGameElo =
-      scoreScreenData.gameRoom!.players!.challenger!.associatedUser.username === user?.name
-        ? scoreScreenData.gameRecord.secondPlayerPreGameElo
-        : scoreScreenData.gameRecord.firstPlayerPreGameElo;
-    playerPostGameElo =
-      scoreScreenData!.gameRoom!.players!.challenger!.associatedUser.username === user?.name
-        ? scoreScreenData.gameRecord.secondPlayerPostGameElo
-        : scoreScreenData.gameRecord.firstPlayerPostGameElo;
+    if (scoreScreenData.gameRoom!.players!.challenger!.associatedUser.username === user?.name) {
+      playerPreGameElo = scoreScreenData.gameRecord.secondPlayerPreGameElo;
+      playerPostGameElo = scoreScreenData.gameRecord.secondPlayerPostGameElo;
+      playerPreGameRank = scoreScreenData.gameRecord.secondPlayerPreGameRank;
+      playerPostGameRank = scoreScreenData.gameRecord.secondPlayerPostGameRank;
+    } else {
+      playerPreGameElo = scoreScreenData.gameRecord.firstPlayerPreGameElo;
+      playerPostGameElo = scoreScreenData.gameRecord.firstPlayerPostGameElo;
+      playerPreGameRank = scoreScreenData.gameRecord.firstPlayerPreGameRank;
+      playerPostGameRank = scoreScreenData.gameRecord.firstPlayerPostGameRank;
+    }
 
     eloDiff = playerPostGameElo - playerPreGameElo;
   }
@@ -36,11 +42,11 @@ function ScoreScreenModalContents() {
   if (!scoreScreenData) return <div>Error - no score screen data received</div>;
   return (
     <div data-cy="score-screen-modal">
-      <h3>Game {scoreScreenData!.gameRoom.gameName} final score:</h3>
+      <h3 style={{ marginBottom: "10px" }}>Game {scoreScreenData!.gameRoom.gameName} final score:</h3>
       <table style={{ width: "200px" }}>
         <tbody>
           <tr>
-            <td>{scoreScreenData.gameRoom.players.host!.associatedUser.username}:</td>
+            <td className={styles["score-screen-table-cell"]}>{scoreScreenData.gameRoom.players.host!.associatedUser.username}:</td>
             <td>{scoreScreenData.gameRecord?.firstPlayerScore}</td>
           </tr>
           <tr>
@@ -54,31 +60,32 @@ function ScoreScreenModalContents() {
           ) : (
             <>
               <tr>
-                <td className={eloDiff && Math.sign(eloDiff) === 1 ? "elo-animate-win" : "elo-animate-loss"}>Elo: {eloAnimatedChange || playerPreGameElo}</td>
+                <td className={eloDiff && Math.sign(eloDiff) === 1 ? "elo-animate-win" : "elo-animate-loss"}>Elo:</td>
                 <td className={eloDiff && Math.sign(eloDiff) === 1 ? "elo-animate-win" : "elo-animate-loss"}>
+                  {eloAnimatedChange || playerPreGameElo}{" "}
                   {eloDiff &&
                     `(${Math.sign(eloDiff) === 1 ? "+" : ""}
               ${eloDiff})`}
                 </td>
               </tr>
-              {/* {playerOldRank !== playerNewRank ? (
+              {typeof playerPreGameRank === "number" && typeof playerPostGameRank === "number" && playerPostGameRank !== playerPreGameRank ? (
                 <tr>
-                  <td className="">Rank:</td>
-                  <td className="">
-                    {playerOldRank && playerOldRank + 1 === 0 ? "Unranked" : playerOldRank && playerOldRank + 1}
+                  <td>Rank:</td>
+                  <td>
+                    {playerPreGameRank + 1}
                     {` -> `}
-                    {playerNewRank && playerNewRank + 1}
+                    {playerPostGameRank + 1}
                   </td>
                 </tr>
               ) : (
                 <tr>
                   <td>Rank:</td>
                   <td>
-                    {playerOldRank && playerOldRank + 1}
+                    {playerPreGameRank && playerPreGameRank + 1}
                     {` (unchanged)`}
                   </td>
                 </tr>
-              )} */}
+              )}
             </>
           )}
         </tbody>

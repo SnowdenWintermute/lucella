@@ -11,10 +11,14 @@ exports.up = (pgm) => {
             first_player_score INTEGER NOT NULL,
             first_player_pre_game_elo INTEGER NOT NULL,
             first_player_post_game_elo INTEGER NOT NULL,
+            first_player_pre_game_rank INTEGER,
+            first_player_post_game_rank INTEGER NOT NULL,
             second_player_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
             second_player_score INTEGER NOT NULL,
             second_player_pre_game_elo INTEGER NOT NULL,
-            second_player_post_game_elo INTEGER NOT NULL
+            second_player_post_game_elo INTEGER NOT NULL,
+            second_player_pre_game_rank INTEGER,
+            second_player_post_game_rank INTEGER NOT NULL
         );
     `);
 };

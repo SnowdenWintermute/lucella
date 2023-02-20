@@ -24,7 +24,7 @@ export default async function endGameAndEmitUpdates(server: LucellaServer, game:
   };
 
   if (!gameRoom.winner || !loser) console.error("Tried to update game records but either winner or loser wasn't found");
-  else if (game.isRanked) gameRecord = await updateScoreCardsAndSaveGameRecord(gameRoom, game, gameRoom.isRanked);
+  else if (game.isRanked) gameRecord = await updateScoreCardsAndSaveGameRecord(gameRoom, game);
   // determineNewLadderRanks() not yet created
   io.in(gameChatChannelName).emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
 

@@ -14,7 +14,9 @@ function LadderTableDatum({ entry }: Props) {
       <td className={styles["ladder-table-datum"]}>{entry.elo}</td>
       <td className={styles["ladder-table-datum"]}>{entry.wins}</td>
       <td className={styles["ladder-table-datum"]}>{entry.losses}</td>
-      <td className={styles["ladder-table-datum"]}>{Math.round((entry.wins / (entry.wins + entry.losses)) * 100)}%</td>
+      <td className={styles["ladder-table-datum"]}>
+        {entry.wins + entry.losses === 0 ? "No games played" : `${Math.round((entry.wins / (entry.wins + entry.losses)) * 100)}%`}
+      </td>
     </tr>
   );
 }

@@ -12,6 +12,8 @@ import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAd
 import { ipRateLimiter } from "../../middleware/rateLimiter";
 import { wrapExpressMiddlewareForSocketIO } from "../../utils/wrapExpressMiddlewareForSocketIO";
 import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
+import { wrappedRedis } from "../../utils/RedisContext";
+import { REDIS_KEYS } from "../../consts";
 
 export class LucellaServer {
   io: SocketIO.Server;
@@ -71,6 +73,7 @@ export class LucellaServer {
   static async fetchOrCreateBattleRoomScoreCard(user: User) {
     let scoreCard = await BattleRoomScoreCardRepo.findByUserId(user.id);
     if (!scoreCard) scoreCard = await BattleRoomScoreCardRepo.insert(user.id);
+    await wrappedRedis.context?.zAdd(REDIS_KEYS.BATTLE_ROOM_LADDER, [{ value: user.id.toString(), score: scoreCard.elo }]);
     return scoreCard;
   }
 }

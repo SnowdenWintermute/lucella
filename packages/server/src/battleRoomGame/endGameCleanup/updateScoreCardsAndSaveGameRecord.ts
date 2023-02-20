@@ -9,12 +9,8 @@ import { wrappedRedis } from "../../utils/RedisContext";
 import { REDIS_KEYS } from "../../consts";
 // import updateLadder from "./updateLadder";
 
-export default async function updateScoreCardsAndSaveGameRecord(
-  gameRoom: GameRoom,
-  game: BattleRoomGame,
-  isRanked: boolean
-): Promise<IBattleRoomGameRecord | null> {
-  if (!isRanked) return null;
+export default async function updateScoreCardsAndSaveGameRecord(gameRoom: GameRoom, game: BattleRoomGame): Promise<IBattleRoomGameRecord | null> {
+  if (!gameRoom.isRanked) return null;
   console.log("updating score cards for game ", game.gameName);
 
   const winnerRole = game.winner!;
@@ -41,6 +37,8 @@ export default async function updateScoreCardsAndSaveGameRecord(
     hostScoreCard.losses += 1;
   }
 
+  const hostPreGameRank = await wrappedRedis.context?.zRevRank(REDIS_KEYS.BATTLE_ROOM_LADDER, hostUser.id.toString());
+  const challengerPreGameRank = await wrappedRedis.context?.zRevRank(REDIS_KEYS.BATTLE_ROOM_LADDER, challengerUser.id.toString());
   await BattleRoomScoreCardRepo.update(hostScoreCard);
   await BattleRoomScoreCardRepo.update(challengerScoreCard);
   await wrappedRedis.context?.zAdd(REDIS_KEYS.BATTLE_ROOM_LADDER, [
@@ -48,16 +46,38 @@ export default async function updateScoreCardsAndSaveGameRecord(
     { value: challengerScoreCard.userId.toString(), score: challengerScoreCard.elo },
   ]);
 
+  const hostPostGameRank = await wrappedRedis.context?.zRevRank(REDIS_KEYS.BATTLE_ROOM_LADDER, hostUser.id.toString());
+  const challengerPostGameRank = await wrappedRedis.context?.zRevRank(REDIS_KEYS.BATTLE_ROOM_LADDER, challengerUser.id.toString());
+
+  if (
+    typeof hostPreGameRank !== "number" ||
+    typeof hostPostGameRank !== "number" ||
+    typeof challengerPreGameRank !== "number" ||
+    typeof challengerPostGameRank !== "number"
+  ) {
+    console.error(
+      hostPreGameRank,
+      hostPostGameRank,
+      challengerPreGameRank,
+      challengerPostGameRank,
+      "couldn't find ladder ranks for a player when trying to create a game record"
+    );
+    return null;
+  }
   // save game record
   const gameRecord = await BattleRoomGameRecordRepo.insert(
     hostUser.id,
     game.score.host,
     hostElo,
     newHostElo,
+    hostPreGameRank,
+    hostPostGameRank,
     challengerUser.id,
     game.score.challenger,
     challengerElo,
-    newChallengerElo
+    newChallengerElo,
+    challengerPreGameRank,
+    challengerPostGameRank
   );
 
   return gameRecord;

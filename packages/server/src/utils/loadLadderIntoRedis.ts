@@ -4,12 +4,13 @@ import BattleRoomScoreCardRepo from "../database/repos/battle-room-game/score-ca
 import { wrappedRedis } from "./RedisContext";
 
 export default async function loadLadderIntoRedis() {
+  await wrappedRedis.context?.del(REDIS_KEYS.BATTLE_ROOM_LADDER);
   const pageSize = 10;
   let currentPage = 0;
   let lastPageReached = false;
   while (!lastPageReached) {
     const currentPageOfScoreCards = await BattleRoomScoreCardRepo.getEloAndUserIdByPage(pageSize, currentPage);
-    if (currentPageOfScoreCards) {
+    if (currentPageOfScoreCards?.length) {
       const forRedis = currentPageOfScoreCards.map((scoreCard) => {
         return { value: scoreCard.userId.toString(), score: scoreCard.elo };
       });

@@ -1,15 +1,14 @@
 import format from "pg-format";
 import { User, UserRole } from "../../../../../common";
 import { PSQL_TABLES } from "../../../consts";
-import { TEST_USER_NAME, TEST_USER_NAME_ALTERNATE } from "../../../utils/test-utils/consts";
 import toCamelCase from "../../../utils/toCamelCase";
 import wrappedPool from "../../wrappedPool";
 
 export default class UserRepo {
-  // static async find() {
-  //   const { rows } = await wrappedPool.query(`SELECT * FROM users ORDER BY id;`);
-  //   return toCamelCase(rows) as unknown as User;
-  // }
+  static async find() {
+    const { rows } = await wrappedPool.query(`SELECT * FROM users ORDER BY id DESC;`);
+    return toCamelCase(rows) as unknown as User;
+  }
   static async findOne(field: keyof User, value: any): Promise<User> {
     const { rows } = await wrappedPool.query(format(`SELECT * FROM ${PSQL_TABLES.USERS} WHERE %I = %L;`, field, value));
     // @ts-ignore

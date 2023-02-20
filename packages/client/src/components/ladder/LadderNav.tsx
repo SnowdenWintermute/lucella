@@ -25,7 +25,7 @@ function LadderNav({ searchText, setSearchText, onTurnPage, currentPageViewing, 
             }}
             placeholder="Enter a username..."
           />
-          <button type="button" className={`button button-primary ${styles["ladder-search-button"]}`}>
+          <button type="submit" className={`button button-primary ${styles["ladder-search-button"]}`}>
             {BUTTON_NAMES.GENERAL.SEARCH}
           </button>
         </label>

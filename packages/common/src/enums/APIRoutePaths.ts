@@ -20,6 +20,7 @@ export enum ModerationRoutePaths {
 export enum CypressTestRoutePaths {
   ROOT = "/cypress-tests",
   DROP_ALL_TEST_USERS = "/drop-all-test-users",
+  CREATE_SEQUENTIAL_ELO_TEST_USERS = "/create-sequential-elo-test-users",
   CREATE_CYPRESS_TEST_USER = "/create-cypress-test-user",
   RATE_LIMITER = "/rate-limiter",
 }
