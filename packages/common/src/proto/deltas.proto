@@ -33,6 +33,6 @@ message DeltasProto{
   optional OrbsProto challengerOrbs = 1;
   optional OrbsProto hostOrbs = 2;
   optional ScoreProto score = 3;
-  optional int32 gameSpeedModifier = 4;
+  optional float gameSpeedModifier = 4;
   optional int32 serverLastProcessedInputNumber = 5;
 }

@@ -82,13 +82,13 @@ describe("ladder", () => {
     cy.get('[data-cy="loading-data').should("not.exist");
     cy.get('[data-cy="ladder-page-back"]').click({ force: true });
     cy.get('[data-cy="ladder-current-page"]').findByText("2").should("exist");
-    cy.findByText("25").next().should("contain.text", Cypress.env("CYPRESS_TEST_USER_NAME")).next().should("contain.text", "1501");
-    cy.findByText("26").next().should("contain.text", Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE")).next().should("contain.text", "1500");
+    cy.findByText("25").next().should("contain.text", username).next().should("contain.text", "1501");
+    cy.findByText("26").next().should("contain.text", alternateUsername).next().should("contain.text", "1500");
     // by searching
     cy.findByLabelText("ladder search").type("test_user{enter}");
-    cy.findByText("25").next().should("contain.text", Cypress.env("CYPRESS_TEST_USER_NAME")).next().should("contain.text", "1501");
+    cy.findByText("25").next().should("contain.text", username).next().should("contain.text", "1501");
     cy.findByLabelText("ladder search").clear().type("alternate_test_user{enter}");
-    cy.findByText("26").next().should("contain.text", Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE")).next().should("contain.text", "1500");
+    cy.findByText("26").next().should("contain.text", alternateUsername).next().should("contain.text", "1500");
     // test clearing search and searching for non existant records
     cy.findByLabelText("ladder search").clear().type("{enter}");
     cy.get('[data-cy="ladder-table"]').find("tr").should("have.length", 21); // 20 entries per page plus the row headers
@@ -121,11 +121,11 @@ describe("ladder", () => {
     cy.clickLinkAndVerifyHeading("ladder", "ladder");
     cy.get('[data-cy="loading-data').should("not.exist");
     cy.get('[data-cy="ladder-page-forward"]').click({ force: true });
-    cy.findByText("24").next().should("contain.text", Cypress.env("CYPRESS_TEST_USER_NAME")).next().should("contain.text", "1517");
-    cy.findByText("26").next().should("contain.text", Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE")).next().should("contain.text", "1484");
+    cy.findByText("24").next().should("contain.text", username).next().should("contain.text", "1517");
+    cy.findByText("26").next().should("contain.text", alternateUsername).next().should("contain.text", "1484");
     cy.findByLabelText("ladder search").type("test_user{enter}");
-    cy.findByText("24").next().should("contain.text", Cypress.env("CYPRESS_TEST_USER_NAME")).next().should("contain.text", "1517");
+    cy.findByText("24").next().should("contain.text", username).next().should("contain.text", "1517");
     cy.findByLabelText("ladder search").clear().type("alternate_test_user{enter}");
-    cy.findByText("26").next().should("contain.text", Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE")).next().should("contain.text", "1484");
+    cy.findByText("26").next().should("contain.text", alternateUsername).next().should("contain.text", "1484");
   });
 });

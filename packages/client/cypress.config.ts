@@ -51,7 +51,6 @@ export default defineConfig({
         },
         [TaskNames.createCypressTestUser]: async (args) => {
           try {
-            console.log("args for createCypressTestUser: ", args);
             const response = await axios({
               method: "post",
               url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.CREATE_CYPRESS_TEST_USER}`,
@@ -90,7 +89,6 @@ export default defineConfig({
               headers: { "content-type": "application/json" },
             });
             accessToken = response.headers["set-cookie"]?.join("");
-            console.log("accessToken: ", accessToken);
             return { status: response.status };
           } catch (error) {
             console.log(error);
