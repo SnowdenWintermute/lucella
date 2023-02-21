@@ -19,6 +19,7 @@ function LadderNav({ searchText, setSearchText, onTurnPage, currentPageViewing, 
             className={`simple-text-input ${styles["ladder-search-input"]}`}
             id="ladder-search-input"
             name="Search"
+            aria-label="ladder search"
             value={searchText}
             onChange={(e) => {
               setSearchText(e.target.value);
@@ -34,16 +35,22 @@ function LadderNav({ searchText, setSearchText, onTurnPage, currentPageViewing, 
         <button
           type="button"
           className={`button button-basic ${styles["ladder-page-button"]}`}
+          data-cy="ladder-page-back"
+          aria-label="page back"
           onClick={(e) => {
             onTurnPage(e, "back");
           }}
         >{`<`}</button>
         <span className={styles["ladder-current-page-number-holder"]}>
-          <div className={styles["ladder-current-page-number"]}>{currentPageViewing + 1}</div>
+          <div className={styles["ladder-current-page-number"]} data-cy="ladder-current-page" aria-label="current page">
+            {currentPageViewing + 1}
+          </div>
         </span>
         <button
           type="button"
           className={`button button-basic ${styles["ladder-page-button"]}`}
+          data-cy="ladder-page-forward"
+          aria-label="page forward"
           onClick={(e) => {
             onTurnPage(e, "foreward");
           }}

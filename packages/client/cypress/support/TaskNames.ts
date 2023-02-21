@@ -8,4 +8,5 @@ export enum TaskNames {
   getLastEmail = "getLastEmail",
   setRateLimiterDisabled = "setRateLimiterDisabled",
   logUserIn = "logUserIn",
+  createSequentialEloTestUsers = "createSequentialEloTestUsers",
 }

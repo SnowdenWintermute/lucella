@@ -7,7 +7,7 @@ type Props = {
 
 export function LadderTable({ ladderEntriesToShow }: Props) {
   return (
-    <table className={styles["ladder-table"]}>
+    <table className={styles["ladder-table"]} data-cy="ladder-table">
       <tbody className={styles["ladder-table-body"]}>
         <tr className={styles["ladder-table-row"]}>
           <td className={styles["ladder-table-datum"]}>Rank</td>

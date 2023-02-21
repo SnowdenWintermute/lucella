@@ -6,7 +6,7 @@ import { CustomErrorDetails } from "../../../common/dist";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { Alert } from "../classes/Alert";
 import { AlertType } from "../enums";
-import LadderTableDatum from "../components/ladder/LadderTableDatum";
+import LadderTableRow from "../components/ladder/LadderTableRow";
 import LadderNav from "../components/ladder/LadderNav";
 import { LadderTable } from "../components/ladder/LadderTable";
 
@@ -30,7 +30,7 @@ function Ladder() {
     isError: searchedEntryIsError,
     error: searchedEntryError,
     refetch: searchedEntryRefetch,
-  } = useGetLadderEntryQuery(submittedSearchText, { skip: !submittedSearchText });
+  } = useGetLadderEntryQuery(submittedSearchText, { refetchOnMountOrArgChange: true, skip: !submittedSearchText });
 
   useEffect(() => {
     if (ladderPageIsError && ladderPageError && "data" in ladderPageError) {
@@ -60,7 +60,7 @@ function Ladder() {
   };
 
   let ladderEntriesToShow: JSX.Element | JSX.Element[] = (
-    <tr>
+    <tr data-cy="loading-data">
       <td>...</td>
     </tr>
   );
@@ -68,15 +68,14 @@ function Ladder() {
   if (viewingSearchedEntry) {
     if (searchedEntryError)
       ladderEntriesToShow = (
-        <tr>
-          {/* @ts-ignore */}
-          <td>{searchedEntryError.data[0].message}</td>
+        <tr style={{ display: "flex" }}>
+          <td />
         </tr>
       );
     if (searchedEntryData && !searchedEntryIsLoading && !searchedEntryIsFetching && !searchedEntryError)
-      ladderEntriesToShow = <LadderTableDatum entry={searchedEntryData.ladderEntry} />;
+      ladderEntriesToShow = <LadderTableRow entry={searchedEntryData.ladderEntry} />;
   } else if (!viewingSearchedEntry && ladderPageData && !ladderPageIsLoading && !ladderPageIsFetching && !ladderPageError)
-    ladderEntriesToShow = ladderPageData.pageData.map((entry, i) => <LadderTableDatum key={entry.name} entry={entry} />);
+    ladderEntriesToShow = ladderPageData.pageData.map((entry, i) => <LadderTableRow key={entry.name} entry={entry} />);
 
   return (
     <section className="page-frame">
@@ -90,6 +89,8 @@ function Ladder() {
           handleSubmit={handleSubmitSearch}
         />
         <LadderTable ladderEntriesToShow={ladderEntriesToShow} />
+        {/* @ts-ignore */}
+        {viewingSearchedEntry && searchedEntryError && <div style={{ marginTop: "10px" }}>{searchedEntryError?.data[0].message} </div>}
       </div>
     </section>
   );

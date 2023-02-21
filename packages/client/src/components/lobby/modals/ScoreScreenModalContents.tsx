@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../../redux/hooks";
-import { usersApi } from "../../redux/api-slices/users-api-slice";
-import styles from "./game-lobby.module.scss";
+import { useAppSelector } from "../../../redux/hooks";
+import { usersApi } from "../../../redux/api-slices/users-api-slice";
+import styles from "../game-lobby.module.scss";
 
 function ScoreScreenModalContents() {
   const user = usersApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });
@@ -43,19 +43,19 @@ function ScoreScreenModalContents() {
   return (
     <div data-cy="score-screen-modal">
       <h3 style={{ marginBottom: "10px" }}>Game {scoreScreenData!.gameRoom.gameName} final score:</h3>
-      <table style={{ width: "200px" }}>
+      <table className={styles["score-screen-table"]}>
         <tbody>
           <tr>
             <td className={styles["score-screen-table-cell"]}>{scoreScreenData.gameRoom.players.host!.associatedUser.username}:</td>
-            <td>{scoreScreenData.gameRecord?.firstPlayerScore}</td>
+            <td className={styles["score-screen-table-cell"]}>{scoreScreenData.gameRecord?.firstPlayerScore}</td>
           </tr>
           <tr>
-            <td>{scoreScreenData.gameRoom.players.challenger!.associatedUser.username}:</td>
-            <td>{scoreScreenData.gameRecord?.secondPlayerScore}</td>
+            <td className={styles["score-screen-table-cell"]}>{scoreScreenData.gameRoom.players.challenger!.associatedUser.username}:</td>
+            <td className={styles["score-screen-table-cell"]}>{scoreScreenData.gameRecord?.secondPlayerScore}</td>
           </tr>
           {!scoreScreenData.gameRecord?.firstPlayerPreGameElo ? (
             <tr>
-              <td>No changes to ladder rating</td>
+              <td className={styles["score-screen-table-cell"]}>No changes to ladder rating</td>
             </tr>
           ) : (
             <>
@@ -70,8 +70,8 @@ function ScoreScreenModalContents() {
               </tr>
               {typeof playerPreGameRank === "number" && typeof playerPostGameRank === "number" && playerPostGameRank !== playerPreGameRank ? (
                 <tr>
-                  <td>Rank:</td>
-                  <td>
+                  <td className={styles["score-screen-table-cell"]}>Rank:</td>
+                  <td className={styles["score-screen-table-cell"]}>
                     {playerPreGameRank + 1}
                     {` -> `}
                     {playerPostGameRank + 1}
@@ -79,8 +79,8 @@ function ScoreScreenModalContents() {
                 </tr>
               ) : (
                 <tr>
-                  <td>Rank:</td>
-                  <td>
+                  <td className={styles["score-screen-table-cell"]}>Rank:</td>
+                  <td className={styles["score-screen-table-cell"]}>
                     {playerPreGameRank && playerPreGameRank + 1}
                     {` (unchanged)`}
                   </td>

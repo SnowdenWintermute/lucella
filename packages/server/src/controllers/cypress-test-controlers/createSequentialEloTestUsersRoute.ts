@@ -4,6 +4,7 @@ import createSequentialEloTestUsers from "../../utils/test-utils/createSequentia
 export default async function createSequentialEloTestUsersRoute(req: Request, res: Response, next: NextFunction) {
   try {
     const { numberToCreate, eloOfFirst, eloBetweenEach } = req.body;
+    console.log(numberToCreate, eloOfFirst, eloBetweenEach);
     await createSequentialEloTestUsers(numberToCreate, eloOfFirst, eloBetweenEach);
     return res.sendStatus(200);
   } catch (error) {
