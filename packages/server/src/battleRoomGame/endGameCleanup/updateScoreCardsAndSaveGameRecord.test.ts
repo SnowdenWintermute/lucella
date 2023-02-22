@@ -40,6 +40,7 @@ describe("updateScoreCardsAndSaveGameRecord (ladder and elo change behavior)", (
     expect(userWith210Elo.body.ladderEntry.rank).toBe(9);
     expect(userWith220Elo.body.ladderEntry.rank).toBe(8);
     const ladderPage0BeforeGame = await request(app).get(`/api${LadderRoutePaths.ROOT}${LadderRoutePaths.BATTLE_ROOM}/0`);
+    console.log("ladderPage0BeforeGame.body: ", ladderPage0BeforeGame.body);
     expect(ladderPage0BeforeGame.body.pageData[8].name).toBe("test-210");
     expect(ladderPage0BeforeGame.body.pageData[7].name).toBe("test-220");
 
