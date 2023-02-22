@@ -4,7 +4,7 @@ import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../common"
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/layout/auth/AuthPage";
-import { ButtonNames } from "../consts/ButtonNames";
+import { BUTTON_NAMES } from "../consts/button-names";
 import { AlertType } from "../enums";
 import { useRequestPasswordResetEmailMutation } from "../redux/api-slices/auth-api-slice";
 import { useAppDispatch } from "../redux/hooks";
@@ -56,7 +56,7 @@ function RequestPasswordResetEmail() {
       <div className="auth-bottom-links">
         <Link href="/login">Back to login</Link>
         <button type="submit" className="button button-standard-size button-primary">
-          {isLoading ? "..." : ButtonNames.AUTH_FORMS.SEND}
+          {isLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.SEND}
         </button>
       </div>
     </AuthPage>

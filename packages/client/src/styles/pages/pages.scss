@@ -27,9 +27,10 @@ body {
   border: 1px solid color(textPrimary);
   margin: 0 auto;
   padding-top: 50px;
-  padding-bottom: 100px;
+  padding-bottom: 20px;
   padding-left: 20px;
   padding-right: 20px;
+  margin-bottom: 100px;
   @media (max-width: 800px) {
     min-height: 100%;
   }

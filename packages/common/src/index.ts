@@ -1,11 +1,12 @@
 export * from "./types";
-export { IBattleRoomGameRecord, IBattleRoomScoreCard } from "./types/BattleRoomGameRecords";
+export { IBattleRoomGameRecord, IBattleRoomScoreCard, BattleRoomLadderEntry, BattleRoomLadderEntryWithUserId } from "./types/BattleRoomGameRecords";
 export { GameStatus, PlayerRole, UserInputs, UserRole, IPBanReason } from "./enums";
 export { SocketEventsFromClient, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "./enums/SocketEvents";
-export { AuthRoutePaths, UsersRoutePaths, ModerationRoutePaths, CypressTestRoutePaths } from "./enums/APIRoutePaths";
+export { AuthRoutePaths, UsersRoutePaths, ModerationRoutePaths, CypressTestRoutePaths, LadderRoutePaths } from "./enums/APIRoutePaths";
 export { FrontendRoutes } from "./enums/FrontendRoutePaths";
 export * from "./consts";
 export * from "./consts/battle-room-game-config";
+export * from "./consts/battle-room-ladder-config";
 export * from "./consts/game-lobby-config";
 export * from "./consts/auth-validation-config";
 export { ErrorMessages } from "./consts/ErrorMessages";

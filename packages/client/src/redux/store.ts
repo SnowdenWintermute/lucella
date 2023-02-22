@@ -5,7 +5,6 @@ import { authApi } from "./api-slices/auth-api-slice";
 import { usersApi } from "./api-slices/users-api-slice";
 import alertsSlice from "./slices/alerts-slice";
 import chatSlice from "./slices/chat-slice";
-import ladderSlice from "./slices/ladder-slice";
 import lobbyUiSlice from "./slices/lobby-ui-slice";
 import UISlice from "./slices/ui-slice";
 import { moderationApi } from "./api-slices/moderation-api-slice";
@@ -16,7 +15,6 @@ const store = configureStore({
     [usersApi.reducerPath]: usersApi.reducer,
     [ladderApi.reducerPath]: ladderApi.reducer,
     [moderationApi.reducerPath]: moderationApi.reducer,
-    ladder: ladderSlice,
     alerts: alertsSlice,
     chat: chatSlice,
     lobbyUi: lobbyUiSlice,

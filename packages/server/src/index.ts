@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable import/first */
 // eslint-disable-next-line import/newline-after-import
 import * as dotenv from "dotenv";
@@ -9,6 +10,7 @@ import createExpressApp from "./createExpressApp";
 import wrappedPool from "./database/wrappedPool";
 import { wrappedRedis, RedisContext } from "./utils/RedisContext";
 import { lucella } from "./lucella";
+import loadLadderIntoRedis from "./utils/loadLadderIntoRedis";
 
 const { PORT } = process.env;
 
@@ -19,8 +21,9 @@ wrappedPool
     const listening = app.listen(PORT, async () => {
       wrappedRedis.context = RedisContext.build();
       await wrappedRedis.context.connect();
+      await loadLadderIntoRedis();
       console.log(`express server on port ${PORT}`);
       lucella.server = new LucellaServer(listening);
     });
   })
-  .catch((error: DatabaseError) => console.error(JSON.stringify(error).split("").join("-")));
+  .catch((error: DatabaseError) => console.error(error));

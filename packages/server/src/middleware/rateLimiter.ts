@@ -88,7 +88,6 @@ export default function createRateLimiterMiddleware(
       await updateRateCountersAndDetermineLimiting(user.email);
     }
     if (mode === RateLimiterModes.IP) {
-      console.log("Ip according to rate limiter: ", req.socket.remoteAddress);
       const ip = req.ip ? req.ip : req.socket.remoteAddress;
       if (ip) await updateRateCountersAndDetermineLimiting(ip);
       else console.error("CUSTOM ERROR: No Ip found in ip rate limiter");

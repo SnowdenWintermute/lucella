@@ -22,10 +22,14 @@ export default class BattleRoomGameRecordRepo {
     firstPlayerScore: number,
     firstPlayerPreGameElo: number,
     firstPlayerPostGameElo: number,
+    firstPlayerPreGameRank: number,
+    firstPlayerPostGameRank: number,
     secondPlayerId: number,
     secondPlayerScore: number,
     secondPlayerPreGameElo: number,
-    secondPlayerPostGameElo: number
+    secondPlayerPostGameElo: number,
+    secondPlayerPreGameRank: number,
+    secondPlayerPostGameRank: number
   ) {
     const { rows } = await wrappedPool.query(
       format(
@@ -35,20 +39,28 @@ export default class BattleRoomGameRecordRepo {
           first_player_score,
           first_player_pre_game_elo,
           first_player_post_game_elo,
+          first_player_pre_game_rank,
+          first_player_post_game_rank,
           second_player_id,
           second_player_score,
           second_player_pre_game_elo,
-          second_player_post_game_elo
+          second_player_post_game_elo,
+          second_player_pre_game_rank,
+          second_player_post_game_rank
         )
-         VALUES (%L, %L, %L, %L, %L, %L, %L, %L) RETURNING *;`,
+         VALUES (%L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L, %L) RETURNING *;`,
         firstPlayerId,
         firstPlayerScore,
         firstPlayerPreGameElo,
         firstPlayerPostGameElo,
+        firstPlayerPreGameRank,
+        firstPlayerPostGameRank,
         secondPlayerId,
         secondPlayerScore,
         secondPlayerPreGameElo,
-        secondPlayerPostGameElo
+        secondPlayerPostGameElo,
+        secondPlayerPreGameRank,
+        secondPlayerPostGameRank
       )
     );
     return toCamelCase(rows)[0] as unknown as IBattleRoomGameRecord;

@@ -13,8 +13,10 @@ let accessToken: string | undefined;
 
 export default defineConfig({
   e2e: {
-    defaultCommandTimeout: 15 * ONE_SECOND,
+    defaultCommandTimeout: 25 * ONE_SECOND,
     projectId: cypressCloudProjectId,
+    baseUrl: "http://localhost:3000",
+    chromeWebSecurity: false,
     async setupNodeEvents(on, config) {
       // eslint-disable-next-line global-require
       require("cypress-terminal-report/src/installLogsPrinter")(on); // provides better logs in ci
@@ -54,13 +56,29 @@ export default defineConfig({
             const response = await axios({
               method: "post",
               url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.CREATE_CYPRESS_TEST_USER}`,
-              data: { testerKey: args.CYPRESS_TESTER_KEY, name: args.name || null, email: args.email || null },
+              data: { testerKey: args.CYPRESS_TESTER_KEY, name: args.name || null, email: args.email || null, elo: args.elo || undefined },
               headers: { "content-type": "application/json" },
             });
             // @ts-ignore
             return { body: response.body, status: response.status };
           } catch (error: any) {
             console.log("createtestuser: ", error);
+            return error;
+          }
+        },
+        [TaskNames.createSequentialEloTestUsers]: async (args) => {
+          const { numberToCreate, eloOfFirst, eloBetweenEach } = args;
+          try {
+            const response = await axios({
+              method: "post",
+              url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.CREATE_SEQUENTIAL_ELO_TEST_USERS}`,
+              data: { testerKey: args.CYPRESS_TESTER_KEY, numberToCreate, eloOfFirst, eloBetweenEach },
+              headers: { "content-type": "application/json" },
+            });
+            // @ts-ignore
+            return { body: response.body, status: response.status };
+          } catch (error: any) {
+            console.log("createSequentialEloUsers: ", error);
             return error;
           }
         },
@@ -73,12 +91,24 @@ export default defineConfig({
               headers: { "content-type": "application/json" },
             });
             accessToken = response.headers["set-cookie"]?.join("");
-            console.log("accessToken: ", accessToken);
             return { status: response.status };
           } catch (error) {
             console.log(error);
             return error;
           }
+        },
+        [TaskNames.logUserOut]: async () => {
+          // try {
+          //   const response = await axios({
+          //     method: "post",
+          //     url: `http://localhost:8080/api${AuthRoutePaths.ROOT}${AuthRoutePaths.LOGOUT}`,
+          //     headers: { "content-type": "application/json" },
+          //   });
+          //   return { status: response.status };
+          // } catch (error) {
+          //   console.log(error);
+          //   return error;
+          // }
         },
         [TaskNames.connectSocket]: (args: { withHeaders?: boolean }) => {
           if (args?.withHeaders)

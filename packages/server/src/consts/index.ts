@@ -6,3 +6,7 @@ export const PSQL_TABLES = {
   BANNED_IP_ADDRESSES: "banned_ip_addresses",
   USERS: "users",
 };
+
+export const REDIS_KEYS = {
+  BATTLE_ROOM_LADDER: "battle_room_ladder",
+};

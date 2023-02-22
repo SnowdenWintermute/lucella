@@ -1,5 +1,5 @@
 import { ErrorMessages, FrontendRoutes, SuccessAlerts } from "../../../../common";
-import { ButtonNames } from "../../../src/consts/ButtonNames";
+import { BUTTON_NAMES } from "../../../src/consts/button-names";
 import { TaskNames } from "../../support/TaskNames";
 
 export default function loginForm() {
@@ -15,7 +15,7 @@ export default function loginForm() {
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`, { failOnStatusCode: false });
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
     cy.findByRole("heading", { name: /login/i }).should("exist");
-    cy.findByRole("button", { name: new RegExp(ButtonNames.AUTH_FORMS.LOGIN, "i") }).click();
+    cy.findByRole("button", { name: new RegExp(BUTTON_NAMES.AUTH_FORMS.LOGIN, "i") }).click();
     cy.get(`[data-cy="error-email"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL, "i"));
     cy.get(`[data-cy="error-password"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD, "i"));
     cy.findByLabelText(/email/).type("some_unregistered_email@gmail.com");

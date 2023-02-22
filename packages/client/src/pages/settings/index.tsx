@@ -11,7 +11,7 @@ import { useDeleteAccountMutation, useGetMeQuery } from "../../redux/api-slices/
 import { CustomErrorDetails, ErrorMessages, InputFields, SuccessAlerts } from "../../../../common";
 import LabeledTextInputWithErrorDisplay from "../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import { LoginInput } from "../../redux/types";
-import { ButtonNames } from "../../consts/ButtonNames";
+import { BUTTON_NAMES } from "../../consts/button-names";
 import { setShowDeleteAccountModal } from "../../redux/slices/ui-slice";
 
 function Settings() {
@@ -128,7 +128,7 @@ function Settings() {
             autofocus={false}
           />
           <button type="submit" className="button button-standard-size button-danger modal-submit-button" disabled={deleteAccountIsLoading}>
-            {deleteAccountIsLoading ? "..." : ButtonNames.AUTH_FORMS.DELETE_ACCOUNT}
+            {deleteAccountIsLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.DELETE_ACCOUNT}
           </button>
         </form>
       </Modal>

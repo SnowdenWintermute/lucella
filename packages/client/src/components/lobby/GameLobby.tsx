@@ -8,7 +8,7 @@ import PreGameRoom from "./PreGameRoom";
 import MatchmakingQueueDisplay from "./MatchmakingQueueDisplay";
 import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
-import ScoreScreenModalContents from "./ScoreScreenModalContents";
+import ScoreScreenModalContents from "./modals/ScoreScreenModalContents";
 import Modal from "../common-components/modal/Modal";
 import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";

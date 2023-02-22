@@ -9,7 +9,7 @@ import { useChangePasswordMutation } from "../../../redux/api-slices/users-api-s
 import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../../../common";
 import AuthPage from "../../../components/layout/auth/AuthPage";
 import LabeledTextInputWithErrorDisplay from "../../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
-import { ButtonNames } from "../../../consts/ButtonNames";
+import { BUTTON_NAMES } from "../../../consts/button-names";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 
 function ChangePassword() {
@@ -79,7 +79,7 @@ function ChangePassword() {
       />
       <div className="auth-bottom-links">
         <Link href="/login">Log in to existing account</Link>
-        <input type="submit" className="button button-standard-size button-primary" value={isLoading ? "..." : ButtonNames.AUTH_FORMS.SET} />
+        <input type="submit" className="button button-standard-size button-primary" value={isLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.SET} />
       </div>
     </AuthPage>
   );

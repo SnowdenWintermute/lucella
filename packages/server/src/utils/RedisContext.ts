@@ -54,6 +54,18 @@ export class RedisContext {
   async hDel(key: string, fields: string | string[]) {
     await this.redisClient.hDel(this.keyPrefix + key, fields);
   }
+  async zAdd(key: string, entries: { value: string; score: number }[]) {
+    await this.redisClient.zAdd(this.keyPrefix + key, entries);
+  }
+  async zRangeWithScores(key: string, min: number, max: number, options: {}) {
+    return this.redisClient.zRangeWithScores(this.keyPrefix + key, min, max, options);
+  }
+  async zRevRank(key: string, member: string) {
+    return this.redisClient.zRevRank(this.keyPrefix + key, member);
+  }
+  async zCard(key: string) {
+    return this.redisClient.zCard(this.keyPrefix + key);
+  }
   async getKeysByPrefix() {
     let currentCursor: number | undefined;
     let keysToReturn: string[] = [];

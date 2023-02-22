@@ -52,10 +52,10 @@ describe("MatchmakingQueue", () => {
   });
 
   afterAll(async () => {
-    if (context) await context.cleanup();
-    await wrappedRedis.context!.cleanup();
     lucella.server?.io.close();
     httpServer?.close();
+    if (context) await context.cleanup();
+    await wrappedRedis.context!.cleanup();
   });
 
   it("lets a logged in user enter the queue and forbids a guest user from doing so", (done) => {
