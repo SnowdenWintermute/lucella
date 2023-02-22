@@ -16,6 +16,7 @@ export default defineConfig({
     defaultCommandTimeout: 25 * ONE_SECOND,
     projectId: cypressCloudProjectId,
     baseUrl: "http://localhost:3000",
+    chromeWebSecurity: false,
     async setupNodeEvents(on, config) {
       // eslint-disable-next-line global-require
       require("cypress-terminal-report/src/installLogsPrinter")(on); // provides better logs in ci
