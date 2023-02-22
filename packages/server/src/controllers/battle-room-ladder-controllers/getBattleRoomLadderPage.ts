@@ -13,7 +13,6 @@ export default async function getBattleRoomLadderPage(req: Request, res: Respons
   if (typeof pageNumber !== "number" || Number.isNaN(pageNumber)) return next([new CustomError("Invalid page number", 501)]);
 
   const totalNumEntries = await wrappedRedis.context?.zCard(REDIS_KEYS.BATTLE_ROOM_LADDER);
-  console.log("totalNumEntries: ", totalNumEntries);
   if (!totalNumEntries) return next([new CustomError(ErrorMessages.LADDER.NO_ENTRIES_FOUND, 404)]);
   const totalNumberOfPages = Math.ceil(totalNumEntries / pageSize);
   const start = pageNumber * pageSize;
@@ -22,7 +21,7 @@ export default async function getBattleRoomLadderPage(req: Request, res: Respons
   const inRedis = await wrappedRedis.context?.zRangeWithScores(REDIS_KEYS.BATTLE_ROOM_LADDER, start, end - 1, {
     REV: true,
   });
-  console.log("ladder page in redis: ", inRedis);
+
   if (!inRedis) {
     console.log("no ladder entries in redis");
     return next([new CustomError(`${ErrorMessages.LADDER.NO_ENTRIES_FOUND}no ladder entries in redis`, 404)]);

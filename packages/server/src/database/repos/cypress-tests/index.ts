@@ -10,7 +10,6 @@ export default class CypressTestRepo {
     const firstTestUser = toCamelCase(firstTestUserQueryResult.rows)[0];
     const secondTestUserQueryResult = await wrappedPool.query(format(`SELECT * FROM ${PSQL_TABLES.USERS} WHERE name = %L;`, TEST_USER_NAME_ALTERNATE));
     const secondTestUser = toCamelCase(secondTestUserQueryResult.rows)[0];
-    console.log("user ids to delete game records for: ", firstTestUser, secondTestUser);
     await wrappedPool.query(
       format(`DELETE FROM ${PSQL_TABLES.BATTLE_ROOM_GAME_RECORDS} WHERE first_player_id = %L OR first_player_id = %L;`, firstTestUser?.id, secondTestUser?.id)
     );

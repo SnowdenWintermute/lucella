@@ -15,6 +15,7 @@ export default defineConfig({
   e2e: {
     defaultCommandTimeout: 25 * ONE_SECOND,
     projectId: cypressCloudProjectId,
+    baseUrl: "http://localhost:3000",
     async setupNodeEvents(on, config) {
       // eslint-disable-next-line global-require
       require("cypress-terminal-report/src/installLogsPrinter")(on); // provides better logs in ci
@@ -121,7 +122,7 @@ export default defineConfig({
           else
             socket = io("http://localhost:8080" || "", {
               transports: ["websocket"],
-              // withCredentials: true,
+              withCredentials: true,
               // reconnectionAttempts: 3,
             });
           return null;
