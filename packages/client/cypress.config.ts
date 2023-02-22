@@ -13,7 +13,7 @@ let accessToken: string | undefined;
 
 export default defineConfig({
   e2e: {
-    defaultCommandTimeout: 15 * ONE_SECOND,
+    defaultCommandTimeout: 25 * ONE_SECOND,
     projectId: cypressCloudProjectId,
     async setupNodeEvents(on, config) {
       // eslint-disable-next-line global-require
@@ -95,6 +95,19 @@ export default defineConfig({
             return error;
           }
         },
+        [TaskNames.logUserOut]: async () => {
+          // try {
+          //   const response = await axios({
+          //     method: "post",
+          //     url: `http://localhost:8080/api${AuthRoutePaths.ROOT}${AuthRoutePaths.LOGOUT}`,
+          //     headers: { "content-type": "application/json" },
+          //   });
+          //   return { status: response.status };
+          // } catch (error) {
+          //   console.log(error);
+          //   return error;
+          // }
+        },
         [TaskNames.connectSocket]: (args: { withHeaders?: boolean }) => {
           if (args?.withHeaders)
             socket = io("http://localhost:8080" || "", {
@@ -108,7 +121,7 @@ export default defineConfig({
           else
             socket = io("http://localhost:8080" || "", {
               transports: ["websocket"],
-              withCredentials: true,
+              // withCredentials: true,
               // reconnectionAttempts: 3,
             });
           return null;

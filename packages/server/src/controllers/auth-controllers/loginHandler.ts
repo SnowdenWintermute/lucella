@@ -31,9 +31,7 @@ if (process.env.NODE_ENV === "production") accessTokenCookieOptions.secure = tru
 
 export default async function loginHandler(req: Request<object, object, LoginUserInput>, res: Response, next: NextFunction) {
   try {
-    console.log("user logging in: ", req.body);
     const user = await UserRepo.findOne("email", req.body.email);
-    console.log("user found: ", user);
     if (!user || user.status === UserStatuses.DELETED) return next([new CustomError(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, 401)]);
     if (user.status === UserStatuses.LOCKED_OUT) return next([new CustomError(ErrorMessages.AUTH.ACCOUNT_LOCKED, 401)]);
     if (user.status === UserStatuses.BANNED) {

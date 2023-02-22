@@ -17,7 +17,7 @@ export default function startGameAndDisconnect() {
       expect(response.status).to.equal(201);
     });
   });
-  it("lets authed user host a game that another player can join and leave", () => {
+  it("lets disconnecting from a game yeilds the win to the opponent", () => {
     const username = Cypress.env("CYPRESS_TEST_USER_NAME");
     // log in and host a game
     cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
