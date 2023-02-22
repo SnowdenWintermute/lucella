@@ -21,12 +21,22 @@ export default async function getBattleRoomLadderPage(req: Request, res: Respons
   const inRedis = await wrappedRedis.context?.zRangeWithScores(REDIS_KEYS.BATTLE_ROOM_LADDER, start, end - 1, {
     REV: true,
   });
-  if (!inRedis) return next([new CustomError(ErrorMessages.LADDER.NO_ENTRIES_FOUND, 404)]);
+  console.log("ladder page in redis: ", inRedis);
+  if (!inRedis) {
+    console.log("no ladder entries in redis");
+    return next([new CustomError(ErrorMessages.LADDER.NO_ENTRIES_FOUND, 404)]);
+  }
 
   const ids = inRedis.map((item) => parseInt(item.value, 10));
-  if (!ids.length) return next([new CustomError(ErrorMessages.LADDER.NO_ENTRIES_FOUND, 404)]);
+  if (!ids.length) {
+    console.log("redis entries didn't contain ids");
+    return next([new CustomError(ErrorMessages.LADDER.NO_ENTRIES_FOUND, 404)]);
+  }
   const scoreCardsWithUsernames = await BattleRoomScoreCardRepo.getScoreCardsWithUsernameByUserIds(ids);
-  if (!scoreCardsWithUsernames) return next([new CustomError(ErrorMessages.LADDER.NO_ENTRIES_FOUND, 404)]);
+  if (!scoreCardsWithUsernames) {
+    console.log("didn't find score cards in psql");
+    return next([new CustomError(ErrorMessages.LADDER.NO_ENTRIES_FOUND, 404)]);
+  }
   const sortedByElo = scoreCardsWithUsernames.sort((a, b) => b.elo - a.elo);
   const withRanks = sortedByElo.map((item, i) => {
     item.rank = i + start + 1;

@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { UserRole } from "../../../../common";
+import CustomError from "../../classes/CustomError";
 import { REDIS_KEYS } from "../../consts";
 import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
 import UserRepo from "../../database/repos/users";
@@ -26,7 +27,6 @@ export default async function createTestUser(
       losses: losses || 0,
     });
     const forRedis = [{ value: updatedScoreCard.userId.toString(), score: updatedScoreCard.elo }];
-
     await wrappedRedis.context?.zAdd(REDIS_KEYS.BATTLE_ROOM_LADDER, forRedis);
   }
   return user;
