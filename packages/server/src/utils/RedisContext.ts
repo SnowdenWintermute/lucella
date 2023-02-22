@@ -64,7 +64,7 @@ export class RedisContext {
     return this.redisClient.zRevRank(this.keyPrefix + key, member);
   }
   async zCard(key: string) {
-    return this.redisClient.zCard(key);
+    return this.redisClient.zCard(this.keyPrefix + key);
   }
   async getKeysByPrefix() {
     let currentCursor: number | undefined;
