@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import io, { Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import React, { useEffect, useState, useRef } from "react";
 import GameLobbyChat from "./game-lobby-chat/GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
@@ -12,15 +12,11 @@ import ScoreScreenModalContents from "./modals/ScoreScreenModalContents";
 import Modal from "../common-components/modal/Modal";
 import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
-import { GameStatus, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer, SOCKET_ADDRESS_PRODUCTION } from "../../../../common";
+import { GameStatus, SocketEventsFromClient } from "../../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setAuthenticating, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../redux/slices/ui-slice";
-import { pingIntervalMs } from "../../consts";
-import { handleNewPong, setLastPingSentAtNow } from "../../redux/slices/network-performance-metrics-slice";
-
-const socketAddress = process.env.NODE_ENV === "production" ? SOCKET_ADDRESS_PRODUCTION : process.env.NEXT_PUBLIC_SOCKET_API;
+import { INetworkPerformanceMetrics } from "../../types";
 
 interface Props {
   defaultChatChannel: string;
@@ -31,51 +27,20 @@ function GameLobby({ defaultChatChannel }: Props) {
   const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const uiState = useAppSelector((state) => state.UI);
-  const networkPerformanceMetrics = useAppSelector((state) => state.networkPerformanceMetrics);
   const { currentGameRoom } = lobbyUiState;
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const socket = useRef<Socket>();
-  const pingInterval = useRef<NodeJS.Timeout | null>(null);
-
-  // setup socket
-  useEffect(() => {
-    socket.current = io(socketAddress || "", { transports: ["websocket"] });
-    console.log("socket address: ", socketAddress);
-    return () => {
-      if (socket.current) socket.current.disconnect();
-      dispatch(setCurrentGameRoom(null));
-      dispatch(setPreGameScreenDisplayed(false));
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (socket.current) {
-      socket.current.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
-        dispatch(setAuthenticating(false));
-      });
-    }
-    return () => {
-      if (socket.current) socket.current.off(SocketEventsFromServer.AUTHENTICATION_COMPLETE);
-    };
-  });
-
-  // calculate latency and with each ping send current latency to the server
-  useEffect(() => {
-    if (!lobbyUiState.authenticating) {
-      pingInterval.current = setInterval(() => {
-        if (!socket.current) return;
-        dispatch(setLastPingSentAtNow());
-        socket.current.volatile.emit(GENERIC_SOCKET_EVENTS.PING, networkPerformanceMetrics.lastPingSentAt);
-      }, pingIntervalMs);
-      if (socket.current)
-        socket.current.on(GENERIC_SOCKET_EVENTS.PONG, () => {
-          dispatch(handleNewPong());
-        });
-    }
-    return () => {
-      if (pingInterval.current) clearInterval(pingInterval.current);
-    };
+  const networkPerformanceMetricsRef = useRef<INetworkPerformanceMetrics>({
+    recentLatencies: [],
+    averageLatency: 0,
+    jitter: 0,
+    maxJitter: 0,
+    minJitter: 0,
+    lastPingSentAt: 0,
+    latency: 0,
+    maxLatency: 0,
+    minLatency: 0,
   });
 
   // join initial room
@@ -95,11 +60,17 @@ function GameLobby({ defaultChatChannel }: Props) {
     joinRoom(joinNewRoomInput);
   };
 
-  if (!socket.current) return <p>Awaiting socket connection...</p>;
+  if (!socket.current)
+    return (
+      <>
+        <SocketManager socket={socket} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
+        <p>Awaiting socket connection...</p>;
+      </>
+    );
 
   return (
     <>
-      <SocketManager socket={socket.current} />
+      <SocketManager socket={socket} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
       <Modal
         screenClass=""
         frameClass="modal-frame-dark"
@@ -129,7 +100,7 @@ function GameLobby({ defaultChatChannel }: Props) {
           </div>
         </div>
       ) : (
-        <BattleRoomGameInstance socket={socket.current} />
+        <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
       )}
     </>
   );

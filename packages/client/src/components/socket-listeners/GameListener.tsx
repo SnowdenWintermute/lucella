@@ -7,19 +7,20 @@ import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
 import mapUnpackedPacketToUpdateObject from "../../protobuf-utils/mapUnpackedPacketToUpdateObject";
+import { INetworkPerformanceMetrics } from "../../types";
 
 interface Props {
   socket: Socket;
   game: BattleRoomGame;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   canvasSizeRef: React.RefObject<WidthAndHeight | null>;
+  networkPerformanceMetrics: INetworkPerformanceMetrics;
 }
 
 function GameListener(props: Props) {
   const dispatch = useAppDispatch();
   const { playerRole } = useAppSelector((state) => state.lobbyUi);
-  const { socket, game, canvasRef, canvasSizeRef } = props;
-  const networkPerformanceMetrics = useAppSelector((state) => state.networkPerformanceMetrics);
+  const { socket, game, canvasRef, canvasSizeRef, networkPerformanceMetrics } = props;
 
   useEffect(() => {
     if (!socket) return;

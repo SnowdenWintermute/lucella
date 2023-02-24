@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { Fragment } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -6,7 +5,6 @@ import { UserMenu } from "./UserMenu";
 // import logo from "../../../img/logo.png";
 import Logo from "../../../img/logo.svg";
 import GamesIcon from "../../../img/menuIcons/queen.svg";
-import LadderIcon from "../../../img/menuIcons/podium.svg";
 import styles from "./nav.module.scss";
 
 function Navbar() {
@@ -29,7 +27,6 @@ function Navbar() {
             </Link>
             <Link href="/ladder" className={`nav-tab ${router.pathname === "/ladder" && "tab-active"}`}>
               <span className="tab-title-text">LADDER</span>
-              <LadderIcon className="tab-icon-svg" />
             </Link>
           </div>
         </div>

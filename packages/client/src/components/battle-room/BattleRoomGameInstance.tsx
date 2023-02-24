@@ -5,13 +5,14 @@ import GameListener from "../socket-listeners/GameListener";
 import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../../common";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import { INetworkPerformanceMetrics } from "../../types";
 
 interface Props {
   socket: Socket;
+  networkPerformanceMetricsRef: React.MutableRefObject<INetworkPerformanceMetrics>;
 }
 
-function BattleRoomGameInstance(props: Props) {
-  const { socket } = props;
+function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props) {
   const windowDimensions = useWindowDimensions();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { currentGameRoom } = lobbyUiState;
@@ -42,7 +43,15 @@ function BattleRoomGameInstance(props: Props) {
 
   return (
     <div className="battle-room-canvas-holder" onContextMenu={(e) => e.preventDefault()}>
-      {currentGame.current && <GameListener socket={socket} game={currentGame.current} canvasRef={canvasRef} canvasSizeRef={canvasSizeRef} />}
+      {currentGame.current && (
+        <GameListener
+          socket={socket}
+          game={currentGame.current}
+          canvasRef={canvasRef}
+          canvasSizeRef={canvasSizeRef}
+          networkPerformanceMetrics={networkPerformanceMetricsRef.current}
+        />
+      )}
       {(currentGame.current && currentGameRoom?.gameStatus === GameStatus.IN_PROGRESS) || currentGameRoom?.gameStatus === GameStatus.ENDING ? (
         <CanvasWithInputListeners canvasSizeRef={canvasSizeRef} canvasRef={canvasRef} currentGame={currentGame.current!} socket={socket} />
       ) : (

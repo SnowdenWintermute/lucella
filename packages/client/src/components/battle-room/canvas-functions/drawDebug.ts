@@ -1,10 +1,10 @@
 import { BattleRoomGame, inGameFontSizes, Point } from "../../../../../common";
-import { INetworkPerformanceMetricsState } from "../../../redux/slices/network-performance-metrics-slice";
+import { INetworkPerformanceMetrics } from "../../../types";
 
 export default function drawDebug(
   context: CanvasRenderingContext2D,
   game: BattleRoomGame,
-  networkPerformanceMetrics: INetworkPerformanceMetricsState,
+  networkPerformanceMetrics: INetworkPerformanceMetrics,
   canvasDrawFractions: Point
 ) {
   const { mouseData } = game;
@@ -23,8 +23,20 @@ export default function drawDebug(
     //   value: game.debug.clientPrediction.lastProcessedClientInputNumber?.toString(),
     // },
     {
-      name: "networkPerformance",
-      value: JSON.stringify(networkPerformanceMetrics),
+      name: "recent latencies",
+      value: networkPerformanceMetrics.recentLatencies,
+    },
+    {
+      name: "jitter",
+      value: networkPerformanceMetrics.jitter,
+    },
+    {
+      name: "min jitter",
+      value: networkPerformanceMetrics.minJitter,
+    },
+    {
+      name: "max jitter",
+      value: networkPerformanceMetrics.maxJitter,
     },
     // {
     //   name: "frameTime",

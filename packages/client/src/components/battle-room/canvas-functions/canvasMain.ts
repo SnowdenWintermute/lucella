@@ -6,14 +6,14 @@ import gameOverText from "./gameOverText";
 import getSelectionBoxSize from "./getSelectionBoxSize";
 import drawEndzones from "./drawEndzones";
 import drawDebug from "./drawDebug";
-import { INetworkPerformanceMetricsState } from "../../../redux/slices/network-performance-metrics-slice";
+import { INetworkPerformanceMetrics } from "../../../types";
 
 export default function draw(
   context: CanvasRenderingContext2D,
   canvasSize: WidthAndHeight,
   playerRole: any,
   game: BattleRoomGame,
-  networkPerformanceMetrics: INetworkPerformanceMetricsState
+  networkPerformanceMetrics: INetworkPerformanceMetrics
 ) {
   return requestAnimationFrame(() => {
     if (!game) return;

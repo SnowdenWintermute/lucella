@@ -9,7 +9,7 @@ import predictClientOrbs from "./predictClientOrbs";
 import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, WidthAndHeight } from "../../../../../common";
 import draw from "../canvas-functions/canvasMain";
 import serializeInput from "../../../protobuf-utils/serialize-input";
-import { INetworkPerformanceMetricsState } from "../../../redux/slices/network-performance-metrics-slice";
+import { INetworkPerformanceMetrics } from "../../../types";
 
 export default function createClientPhysicsInterval(
   socket: Socket,
@@ -17,7 +17,7 @@ export default function createClientPhysicsInterval(
   playerRole: PlayerRole | null,
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   canvasSizeRef: React.RefObject<WidthAndHeight | null>,
-  networkPerformanceMetrics: INetworkPerformanceMetricsState
+  networkPerformanceMetrics: INetworkPerformanceMetrics
 ) {
   let frameTime = renderRate;
   BattleRoomGame.initializeWorld(game);

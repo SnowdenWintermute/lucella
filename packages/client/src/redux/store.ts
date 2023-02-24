@@ -8,7 +8,6 @@ import chatSlice from "./slices/chat-slice";
 import lobbyUiSlice from "./slices/lobby-ui-slice";
 import UISlice from "./slices/ui-slice";
 import { moderationApi } from "./api-slices/moderation-api-slice";
-import networkPerformanceMetricsSlice from "./slices/network-performance-metrics-slice";
 
 const store = configureStore({
   reducer: {
@@ -20,7 +19,6 @@ const store = configureStore({
     chat: chatSlice,
     lobbyUi: lobbyUiSlice,
     UI: UISlice,
-    networkPerformanceMetrics: networkPerformanceMetricsSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat([authApi.middleware, usersApi.middleware, ladderApi.middleware, moderationApi.middleware]),
