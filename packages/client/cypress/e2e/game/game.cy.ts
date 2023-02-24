@@ -76,10 +76,10 @@ describe("play game", () => {
         })
         .wait(100)
         .trigger("mousedown", { button: 0, eventConstructor: "MouseEvent" })
-        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedX(200, windowHeight), { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedY(200, windowHeight), { eventConstructor: "MouseEvent" })
         .wait(100)
         .trigger("mouseup", { eventConstructor: "MouseEvent" })
-        .trigger("mousemove", getAdjustedX(10, windowHeight), getAdjustedX(730, windowHeight), { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(10, windowHeight), getAdjustedY(730, windowHeight), { eventConstructor: "MouseEvent" })
         .wait(100)
         .trigger("mouseup", { button: 2, eventConstructor: "MouseEvent" })
         //
@@ -88,10 +88,10 @@ describe("play game", () => {
         })
         .wait(100)
         .trigger("mousedown", { button: 0, eventConstructor: "MouseEvent" })
-        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedX(730, windowHeight), { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedY(730, windowHeight), { eventConstructor: "MouseEvent" })
         .wait(100)
         .trigger("mouseup", { eventConstructor: "MouseEvent" })
-        .trigger("mousemove", getAdjustedX(430, windowHeight), getAdjustedX(10, windowHeight), { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(430, windowHeight), getAdjustedY(10, windowHeight), { eventConstructor: "MouseEvent" })
         .wait(100)
         .trigger("mouseup", { button: 2, eventConstructor: "MouseEvent" });
     });

@@ -24,7 +24,7 @@ function GameListener(props: Props) {
   useEffect(() => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
-      game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole, canvasRef, canvasSizeRef, latencyRef);
+      createClientPhysicsInterval(socket, game, playerRole, canvasRef, canvasSizeRef, latencyRef);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
       if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");

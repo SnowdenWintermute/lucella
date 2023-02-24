@@ -41,8 +41,13 @@ export default function mapUnpackedPacketToUpdateObject(game: BattleRoomGame, un
   });
 
   if (unpacked && unpacked.score) {
-    Object.entries(unpacked.score).forEach(([key]) => {
-      if (typeof key === "number") prevGamestateWithNewDeltas.score[key] = unpacked!.score![key]!;
+    Object.entries(unpacked.score).forEach(([key, value]) => {
+      if (typeof value === "number") {
+        console.log(`new score for ${key}was a number: ${value}`);
+        // @ts-ignore
+        prevGamestateWithNewDeltas.score[key] = value;
+      }
+      console.log("score updated: ", prevGamestateWithNewDeltas);
     });
   }
   if (unpacked.gameSpeedModifier) prevGamestateWithNewDeltas.speedModifier = unpacked.gameSpeedModifier;

@@ -19,7 +19,7 @@ export default function createGamePhysicsInterval(io: Server, socket: Socket, se
   const game = server.games[gameName];
   BattleRoomGame.initializeWorld(game);
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
-
+  console.log(`game physics started for ${gameName}`);
   // eslint-disable-next-line consistent-return
   return setInterval(() => {
     if (!game) return console.log("tried to update physics in a game that wasn't found");

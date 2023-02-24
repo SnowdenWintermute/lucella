@@ -88,8 +88,11 @@ export class Lobby {
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
   handleJoinGameRoomRequest(socket: Socket, gameName: string, assignedToGameByMatchmaking?: boolean) {
-    if (!this.gameRooms[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
-    if (this.gameRooms[gameName].isRanked && !assignedToGameByMatchmaking)
+    // console.log("client requesting to join game ", gameName, "current game rooms: ", this.gameRooms);
+    const gameRoom = this.gameRooms[gameName];
+    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
+    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_IS_FULL);
+    if (gameRoom.isRanked && !assignedToGameByMatchmaking)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)

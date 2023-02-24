@@ -24,19 +24,21 @@ export default function createClientPhysicsInterval(
   BattleRoomGame.initializeWorld(game);
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
 
-  return setInterval(() => {
+  function clientPhysics() {
+    console.log("game tick");
     const timeAtStartOfFrameSimulation = +Date.now();
     const lastUpdateFromServerCopy = cloneDeep(game.netcode.lastUpdateFromServer);
     const newGameState = cloneDeep(game);
     BattleRoomGame.initializeWorld(newGameState, game);
 
-    if (!lastUpdateFromServerCopy || !playerRole) return console.log("awaiting first server update before starting client physics");
+    if (!lastUpdateFromServerCopy || !playerRole) {
+      game.intervals.physics = setTimeout(clientPhysics, renderRate);
+      return console.log("awaiting first server update before starting client physics");
+    }
 
     const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
     const serialized = serializeInput(input);
     newGameState.queues.client.localInputs.push(input);
-
-    socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
 
     interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
@@ -48,5 +50,10 @@ export default function createClientPhysicsInterval(
 
     if (canvasRef && canvasRef.current && canvasSizeRef.current)
       draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game, latencyRef.current);
-  }, renderRate);
+
+    socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
+    game.intervals.physics = setTimeout(clientPhysics, renderRate);
+  }
+
+  clientPhysics();
 }

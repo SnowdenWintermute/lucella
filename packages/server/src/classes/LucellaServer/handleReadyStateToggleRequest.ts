@@ -7,7 +7,7 @@ import createGamePhysicsInterval from "../../battleRoomGame/createGamePhysicsInt
 export default function handleReadyStateToggleRequest(server: LucellaServer, socket: Socket) {
   const { io, connectedSockets, lobby, games } = server;
   const { currentGameName } = connectedSockets[socket.id];
-  if (!currentGameName) return console.error("client clicked ready but wasn't in a game");
+  if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} clicked ready but wasn't in a game`);
   const gameRoom = lobby.gameRooms[currentGameName];
   if (!gameRoom) return console.error("No such game exists");
   if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.error("Can't unready from ranked game");
@@ -22,6 +22,7 @@ export default function handleReadyStateToggleRequest(server: LucellaServer, soc
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     gameRoom.countdownInterval = setInterval(() => {
+      console.log(`${gameRoom.gameName} :${gameRoom.countdown.current}`);
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
       gameRoom.countdown.current -= 1;
       if (gameRoom.countdown.current > 0) return;
