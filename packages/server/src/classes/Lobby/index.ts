@@ -126,7 +126,7 @@ export class Lobby {
       playerRole = PlayerRole.CHALLENGER;
     }
     socket.emit(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT, playerRole);
-    io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.getSanitizedGameRooms());
+    // io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.getSanitizedGameRooms());
     io.in(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
     return gameRoom;
   }

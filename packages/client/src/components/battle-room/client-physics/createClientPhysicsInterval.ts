@@ -4,13 +4,12 @@ import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
 import { Detector } from "matter-js";
 import assignDebugValues from "./assignDebugValues";
-import determineRoundTripTime from "./determineRoundTripTime";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
 import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, WidthAndHeight } from "../../../../../common";
 import draw from "../canvas-functions/canvasMain";
 import serializeInput from "../../../protobuf-utils/serialize-input";
-import setNonOrbGameState from "./setNonOrbGameState";
+import { INetworkPerformanceMetricsState } from "../../../redux/slices/network-performance-metrics-slice";
 
 export default function createClientPhysicsInterval(
   socket: Socket,
@@ -18,14 +17,13 @@ export default function createClientPhysicsInterval(
   playerRole: PlayerRole | null,
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   canvasSizeRef: React.RefObject<WidthAndHeight | null>,
-  latencyRef: React.MutableRefObject<number | undefined>
+  networkPerformanceMetrics: INetworkPerformanceMetricsState
 ) {
   let frameTime = renderRate;
   BattleRoomGame.initializeWorld(game);
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
 
   function clientPhysics() {
-    console.log("game tick");
     const timeAtStartOfFrameSimulation = +Date.now();
     const lastUpdateFromServerCopy = cloneDeep(game.netcode.lastUpdateFromServer);
     const newGameState = cloneDeep(game);
@@ -49,7 +47,7 @@ export default function createClientPhysicsInterval(
     frameTime = +Date.now() - timeAtStartOfFrameSimulation;
 
     if (canvasRef && canvasRef.current && canvasSizeRef.current)
-      draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game, latencyRef.current);
+      draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game, networkPerformanceMetrics);
 
     socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
     game.intervals.physics = setTimeout(clientPhysics, renderRate);

@@ -18,6 +18,7 @@ import { setAuthenticating, setCurrentGameRoom, setPreGameScreenDisplayed } from
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 import { pingIntervalMs } from "../../consts";
+import { handleNewPong, setLastPingSentAtNow } from "../../redux/slices/network-performance-metrics-slice";
 
 const socketAddress = process.env.NODE_ENV === "production" ? SOCKET_ADDRESS_PRODUCTION : process.env.NEXT_PUBLIC_SOCKET_API;
 
@@ -30,13 +31,12 @@ function GameLobby({ defaultChatChannel }: Props) {
   const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const uiState = useAppSelector((state) => state.UI);
+  const networkPerformanceMetrics = useAppSelector((state) => state.networkPerformanceMetrics);
   const { currentGameRoom } = lobbyUiState;
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
   const socket = useRef<Socket>();
   const pingInterval = useRef<NodeJS.Timeout | null>(null);
-  const latencyRef = useRef<number>();
-  const lastPingSentAtRef = useRef<number>();
 
   // setup socket
   useEffect(() => {
@@ -65,12 +65,12 @@ function GameLobby({ defaultChatChannel }: Props) {
     if (!lobbyUiState.authenticating) {
       pingInterval.current = setInterval(() => {
         if (!socket.current) return;
-        lastPingSentAtRef.current = Date.now();
-        socket.current.volatile.emit(GENERIC_SOCKET_EVENTS.PING, latencyRef.current);
+        dispatch(setLastPingSentAtNow());
+        socket.current.volatile.emit(GENERIC_SOCKET_EVENTS.PING, networkPerformanceMetrics.lastPingSentAt);
       }, pingIntervalMs);
       if (socket.current)
         socket.current.on(GENERIC_SOCKET_EVENTS.PONG, () => {
-          if (lastPingSentAtRef.current) latencyRef.current = Date.now() - lastPingSentAtRef.current;
+          dispatch(handleNewPong());
         });
     }
     return () => {
@@ -129,7 +129,7 @@ function GameLobby({ defaultChatChannel }: Props) {
           </div>
         </div>
       ) : (
-        <BattleRoomGameInstance socket={socket.current} latencyRef={latencyRef} />
+        <BattleRoomGameInstance socket={socket.current} />
       )}
     </>
   );

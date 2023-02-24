@@ -13,18 +13,18 @@ interface Props {
   game: BattleRoomGame;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   canvasSizeRef: React.RefObject<WidthAndHeight | null>;
-  latencyRef: React.MutableRefObject<number | undefined>;
 }
 
 function GameListener(props: Props) {
   const dispatch = useAppDispatch();
   const { playerRole } = useAppSelector((state) => state.lobbyUi);
-  const { socket, game, canvasRef, canvasSizeRef, latencyRef } = props;
+  const { socket, game, canvasRef, canvasSizeRef } = props;
+  const networkPerformanceMetrics = useAppSelector((state) => state.networkPerformanceMetrics);
 
   useEffect(() => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
-      createClientPhysicsInterval(socket, game, playerRole, canvasRef, canvasSizeRef, latencyRef);
+      createClientPhysicsInterval(socket, game, playerRole, canvasRef, canvasSizeRef, networkPerformanceMetrics);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
       if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");

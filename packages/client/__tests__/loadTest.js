@@ -11,9 +11,9 @@ function sleep(ms) {
 }
 
 async function emitRandomMoveCommands(socket, numberOfCommands) {
-  for (let i = numberOfCommands; i > 0; i -= 1) {
-    // eslint-disable-next-line no-await-in-loop
-    await sleep(33);
+  let count = 0;
+  let timeout;
+  function loopCommands() {
     socket.emit(
       SocketEventsFromClient.NEW_INPUT,
       serializeInput(
@@ -23,16 +23,21 @@ async function emitRandomMoveCommands(socket, numberOfCommands) {
         })
       )
     );
-    if (i === 0) socket.disconnect();
+    count += 1;
+    if (count === numberOfCommands) {
+      clearTimeout(timeout);
+      socket.disconnect();
+    } else timeout = setTimeout(loopCommands, 33);
   }
+  loopCommands();
 }
 
 async function loadTest() {
-  const numberOfClients = 300;
-  const numberOfGameInputsEachClientShouldSend = 5000;
+  const numberOfClients = 10;
+  const numberOfGameInputsEachClientShouldSend = 3000;
 
   for (let i = numberOfClients; i > 1; i -= 1) {
-    sleep(Math.max(i * 50)).then(() => {
+    setTimeout(() => {
       const hostSocket = io(websiteAddress, { transports: ["websocket"] });
       const challengerSocket = io(websiteAddress, { transports: ["websocket"] });
       let hostReadied = false;
@@ -72,7 +77,7 @@ async function loadTest() {
           emitRandomMoveCommands(challengerSocket, numberOfGameInputsEachClientShouldSend);
         }
       });
-    });
+    }, i * 50);
   }
 }
 

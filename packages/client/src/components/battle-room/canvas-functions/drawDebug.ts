@@ -1,29 +1,35 @@
 import { BattleRoomGame, inGameFontSizes, Point } from "../../../../../common";
+import { INetworkPerformanceMetricsState } from "../../../redux/slices/network-performance-metrics-slice";
 
-export default function drawDebug(context: CanvasRenderingContext2D, game: BattleRoomGame, latency: number | undefined, canvasDrawFractions: Point) {
+export default function drawDebug(
+  context: CanvasRenderingContext2D,
+  game: BattleRoomGame,
+  networkPerformanceMetrics: INetworkPerformanceMetricsState,
+  canvasDrawFractions: Point
+) {
   const { mouseData } = game;
 
   if (mouseData.position && mouseData.position.x && mouseData.position.y)
     context.fillRect(mouseData.position.x * canvasDrawFractions.x - 3, mouseData.position.y * canvasDrawFractions.y - 3, 5, 5);
 
   const itemsToShow = [
+    // {
+    //   name: "inputsToSimulate",
+    //   value:
+    //     game.debug.clientPrediction.inputsToSimulate && game.debug.clientPrediction.inputsToSimulate.map((item) => `${item.type} ${item.number}`).toString(),
+    // },
+    // {
+    //   name: "lastProcessedClientInputNumber",
+    //   value: game.debug.clientPrediction.lastProcessedClientInputNumber?.toString(),
+    // },
     {
-      name: "inputsToSimulate",
-      value:
-        game.debug.clientPrediction.inputsToSimulate && game.debug.clientPrediction.inputsToSimulate.map((item) => `${item.type} ${item.number}`).toString(),
+      name: "networkPerformance",
+      value: JSON.stringify(networkPerformanceMetrics),
     },
-    {
-      name: "lastProcessedClientInputNumber",
-      value: game.debug.clientPrediction.lastProcessedClientInputNumber?.toString(),
-    },
-    {
-      name: "latency",
-      value: latency?.toString(),
-    },
-    {
-      name: "frameTime",
-      value: game.debug.clientPrediction.frameTime?.toString(),
-    },
+    // {
+    //   name: "frameTime",
+    //   value: game.debug.clientPrediction.frameTime?.toString(),
+    // },
   ];
 
   const marginLeft = 10;

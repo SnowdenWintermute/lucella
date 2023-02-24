@@ -10,6 +10,7 @@ import "../styles/abstracts/lucellaStrap.scss";
 import "../styles/pages/battle-room.scss";
 import "../styles/components/score-screen.scss";
 import "../styles/base/style.scss";
+import "../styles/globals.scss";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { ReactElement, ReactNode } from "react";

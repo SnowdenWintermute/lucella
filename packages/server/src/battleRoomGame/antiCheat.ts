@@ -15,20 +15,32 @@ export default function antiCheat(game: BattleRoomGame, inputToQueue: UserInput,
   let clientTryingToMoveTooFast = false;
   if (inputToQueue.type !== UserInputs.CLIENT_TICK_NUMBER) return;
 
-  let timeSinceLastMovementRequestAccepted = +Date.now() - game.netcode.serverLastSeenMovementInputTimestamps[playerRole];
-  if (timeSinceLastMovementRequestAccepted > firstMovementRequestTimeLimiter) timeSinceLastMovementRequestAccepted = renderRate;
-  game.antiCheat.cumulativeTimeBetweenMovementRequests[playerRole] += timeSinceLastMovementRequestAccepted;
-  game.antiCheat.numberOfMovementRequests[playerRole] += 1;
-  game.antiCheat.averageMovementRequestRate[playerRole] =
-    game.antiCheat.cumulativeTimeBetweenMovementRequests[playerRole] / game.antiCheat.numberOfMovementRequests[playerRole];
-
-  if (
-    game.antiCheat.averageMovementRequestRate[playerRole] < renderRate - movementRequestRateMarginOfError &&
-    game.antiCheat.numberOfMovementRequests[playerRole] > movementRequestAntiCheatGracePeriod
-  ) {
+  const timeSinceGameStarted = Date.now() - game.antiCheat.gameStartedAt;
+  const numberOfPossibleCommandsSinceGameStarted = Math.ceil(timeSinceGameStarted / renderRate);
+  if (numberOfPossibleCommandsSinceGameStarted < game.antiCheat.numberOfMovementRequests[playerRole]) {
     clientTryingToMoveTooFast = true;
-    console.log("Client sending move requests too quickly - averageMovementRequestRate: ", game.antiCheat.averageMovementRequestRate[playerRole]);
+    console.log(
+      "Client sending move requests too quickly - numAllowed: ",
+      numberOfPossibleCommandsSinceGameStarted,
+      " num received: ",
+      game.antiCheat.numberOfMovementRequests[playerRole]
+    );
   }
+
+  // let timeSinceLastMovementRequestAccepted = +Date.now() - game.netcode.serverLastSeenMovementInputTimestamps[playerRole];
+  // if (timeSinceLastMovementRequestAccepted > firstMovementRequestTimeLimiter) timeSinceLastMovementRequestAccepted = renderRate;
+  // game.antiCheat.cumulativeTimeBetweenMovementRequests[playerRole] += timeSinceLastMovementRequestAccepted;
+  game.antiCheat.numberOfMovementRequests[playerRole] += 1;
+  // game.antiCheat.averageMovementRequestRate[playerRole] =
+  //   game.antiCheat.cumulativeTimeBetweenMovementRequests[playerRole] / game.antiCheat.numberOfMovementRequests[playerRole];
+
+  // if (
+  //   game.antiCheat.averageMovementRequestRate[playerRole] < renderRate - movementRequestRateMarginOfError &&
+  //   game.antiCheat.numberOfMovementRequests[playerRole] > movementRequestAntiCheatGracePeriod
+  // ) {
+  //   clientTryingToMoveTooFast = true;
+  //   console.log("Client sending move requests too quickly - averageMovementRequestRate: ", game.antiCheat.averageMovementRequestRate[playerRole]);
+  // }
 
   // if (timeSinceLastMovementRequestAccepted < renderRate) {
   //   clientTryingToMoveTooFast = true;
