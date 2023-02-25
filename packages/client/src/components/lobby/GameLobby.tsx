@@ -43,12 +43,6 @@ function GameLobby({ defaultChatChannel }: Props) {
     minLatency: 0,
   });
 
-  // join initial room
-  useEffect(() => {
-    if (lobbyUiState.authenticating || !socket.current) return;
-    socket.current.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannel);
-  }, [lobbyUiState.authenticating, defaultChatChannel]);
-
   // joining new rooms
   const joinRoom = (chatChannelToJoin: string) => {
     dispatch(setShowChangeChatChannelModal(false));
@@ -60,47 +54,51 @@ function GameLobby({ defaultChatChannel }: Props) {
     joinRoom(joinNewRoomInput);
   };
 
-  if (!socket.current)
-    return (
-      <>
-        <SocketManager socket={socket} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
-        <p>Awaiting socket connection...</p>;
-      </>
-    );
-
   return (
     <>
-      <SocketManager socket={socket} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
-      <Modal
-        screenClass=""
-        frameClass="modal-frame-dark"
-        isOpen={uiState.modals.changeChatChannel}
-        setParentDisplay={setShowChangeChatChannelModal}
-        title="Join Channel"
-      >
-        <ChangeChannelModalContents
-          setJoinNewRoomInput={setJoinNewRoomInput}
-          joinNewRoomInput={joinNewRoomInput}
-          onJoinRoomSubmit={onJoinRoomSubmit}
-          joinRoom={joinRoom}
-        />
-      </Modal>
-      <Modal screenClass="" frameClass="modal-frame-dark" isOpen={uiState.modals.scoreScreen} setParentDisplay={setShowScoreScreenModal} title="Score Screen">
-        <ScoreScreenModalContents />
-      </Modal>
-      {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? (
-        <div className="game-lobby">
-          <MainButtons socket={socket.current} />
-          <ChannelBar />
-          <div className="game-lobby-main-window">
-            <PreGameRoom socket={socket.current} />
-            <MatchmakingQueueDisplay />
-            <GameList socket={socket.current} />
-            <GameLobbyChat socket={socket.current} />
-          </div>
-        </div>
+      <SocketManager socket={socket} defaultChatChannel={defaultChatChannel} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
+      {!socket.current ? (
+        <p>Awaiting socket connection...</p>
       ) : (
-        <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
+        <>
+          <Modal
+            screenClass=""
+            frameClass="modal-frame-dark"
+            isOpen={uiState.modals.changeChatChannel}
+            setParentDisplay={setShowChangeChatChannelModal}
+            title="Join Channel"
+          >
+            <ChangeChannelModalContents
+              setJoinNewRoomInput={setJoinNewRoomInput}
+              joinNewRoomInput={joinNewRoomInput}
+              onJoinRoomSubmit={onJoinRoomSubmit}
+              joinRoom={joinRoom}
+            />
+          </Modal>
+          <Modal
+            screenClass=""
+            frameClass="modal-frame-dark"
+            isOpen={uiState.modals.scoreScreen}
+            setParentDisplay={setShowScoreScreenModal}
+            title="Score Screen"
+          >
+            <ScoreScreenModalContents />
+          </Modal>
+          {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? (
+            <div className="game-lobby">
+              <MainButtons socket={socket.current} />
+              <ChannelBar />
+              <div className="game-lobby-main-window">
+                <PreGameRoom socket={socket.current} />
+                <MatchmakingQueueDisplay />
+                <GameList socket={socket.current} />
+                <GameLobbyChat socket={socket.current} />
+              </div>
+            </div>
+          ) : (
+            <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
+          )}
+        </>
       )}
     </>
   );

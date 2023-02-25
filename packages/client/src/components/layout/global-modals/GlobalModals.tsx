@@ -19,7 +19,6 @@ function GlobalModals() {
   }
 
   function handleClickOutOfModal(e: MouseEvent) {
-    console.log("clicked out of global modal listener");
     const node = e.target as HTMLElement;
     if (node.id === "modal-screen") hideModal();
   }

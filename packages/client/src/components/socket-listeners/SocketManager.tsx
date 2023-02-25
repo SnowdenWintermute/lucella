@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import React, { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
-import { GENERIC_SOCKET_EVENTS, SocketEventsFromServer, SOCKET_ADDRESS_PRODUCTION } from "../../../../common";
+import { GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer, SOCKET_ADDRESS_PRODUCTION } from "../../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setAuthenticating, setCurrentGameRoom, setPreGameScreenDisplayed } from "../../redux/slices/lobby-ui-slice";
 import { INetworkPerformanceMetrics } from "../../types";
@@ -13,11 +13,12 @@ import handlePong from "./handlePong";
 interface Props {
   socket: React.MutableRefObject<Socket | undefined>;
   networkPerformanceMetricsRef: React.MutableRefObject<INetworkPerformanceMetrics>;
+  defaultChatChannel: string;
 }
 
 const socketAddress = process.env.NODE_ENV === "production" ? SOCKET_ADDRESS_PRODUCTION : process.env.NEXT_PUBLIC_SOCKET_API;
 
-function SocketManager({ socket, networkPerformanceMetricsRef }: Props) {
+function SocketManager({ socket, defaultChatChannel, networkPerformanceMetricsRef }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const pingInterval = useRef<NodeJS.Timeout | null>(null);
@@ -37,6 +38,7 @@ function SocketManager({ socket, networkPerformanceMetricsRef }: Props) {
     if (socket.current) {
       socket.current.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
         dispatch(setAuthenticating(false));
+        socket.current!.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, defaultChatChannel);
       });
     }
     return () => {
@@ -49,7 +51,6 @@ function SocketManager({ socket, networkPerformanceMetricsRef }: Props) {
     if (!lobbyUiState.authenticating) {
       pingInterval.current = setInterval(() => {
         if (!socket.current) return;
-        console.log("set last ping sent at");
         networkPerformanceMetricsRef.current.lastPingSentAt = Date.now();
         socket.current.volatile.emit(GENERIC_SOCKET_EVENTS.PING, networkPerformanceMetricsRef.current.latency);
       }, pingIntervalMs);
