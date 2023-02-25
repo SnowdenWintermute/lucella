@@ -16,6 +16,7 @@ export interface ILobbyUIState {
       [roomName: string]: GameRoom;
     };
     isOpen: boolean;
+    isFetching: boolean;
   };
   scoreScreenData: IGameScoreScreen | null;
   preGameScreen: {
@@ -38,6 +39,7 @@ const initialState: ILobbyUIState = {
   gameList: {
     games: {},
     isOpen: false,
+    isFetching: true,
   },
   scoreScreenData: null,
   preGameScreen: {
@@ -98,6 +100,9 @@ const ladderSlice = createSlice({
     setViewingGamesList(state, action: PayloadAction<boolean>) {
       state.gameList.isOpen = action.payload;
     },
+    setGameListFetching(state, action: PayloadAction<boolean>) {
+      state.gameList.isFetching = action.payload;
+    },
     updateGameList(
       state,
       action: PayloadAction<{
@@ -105,6 +110,7 @@ const ladderSlice = createSlice({
       }>
     ) {
       state.gameList.games = action.payload;
+      state.gameList.isFetching = false;
     },
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
       state.scoreScreenData = action.payload;
@@ -135,6 +141,7 @@ export const {
   setMatchmakingWindowVisible,
   setMatchmakingData,
   setViewingGamesList,
+  setGameListFetching,
   updateGameList,
   setScoreScreenData,
 } = ladderSlice.actions;

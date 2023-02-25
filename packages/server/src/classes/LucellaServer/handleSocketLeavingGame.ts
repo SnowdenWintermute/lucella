@@ -26,5 +26,5 @@ export default function handleSocketLeavingGame(server: LucellaServer, socket: S
     gameRoom.winner = game.winner === PlayerRole.HOST ? players!.host!.associatedUser.username : players!.challenger!.associatedUser.username;
     server.endGameAndEmitUpdates(game);
   }
-  io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobby.getSanitizedGameRooms());
+  // io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, lobby.getSanitizedGameRooms());
 }

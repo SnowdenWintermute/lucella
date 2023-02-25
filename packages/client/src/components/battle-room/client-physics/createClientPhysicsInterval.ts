@@ -38,7 +38,7 @@ export default function createClientPhysicsInterval(
     const serialized = serializeInput(input);
     newGameState.queues.client.localInputs.push(input);
 
-    interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
+    interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole, networkPerformanceMetrics);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 
     game.debug.general = newGameState.debug.general;

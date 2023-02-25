@@ -9,12 +9,14 @@ import {
   ServerPacket,
   setOrbSetNonPhysicsPropertiesFromAnotherSet,
 } from "../../../../../common";
+import { INetworkPerformanceMetrics } from "../../../types";
 
 export default function interpolateOpponentOrbs(
   game: BattleRoomGame,
   newGameState: BattleRoomGame,
   lastUpdateFromServerCopy: ServerPacket,
-  playerRole: PlayerRole
+  playerRole: PlayerRole,
+  networkPerformanceMetrics: INetworkPerformanceMetrics
 ) {
   const opponentRole = playerRole === PlayerRole.HOST ? PlayerRole.CHALLENGER : PlayerRole.HOST;
 
@@ -29,7 +31,8 @@ export default function interpolateOpponentOrbs(
 
   const mostRecentOpponentOrbUpdate = cloneDeep(lastUpdateFromServerCopy.orbs[opponentRole]);
 
-  const renderTimestamp = +Date.now() - physicsTickRate * 2;
+  // adjust to account for jitter
+  const renderTimestamp = +Date.now() - physicsTickRate - Math.max(physicsTickRate, networkPerformanceMetrics.jitter);
 
   Object.entries(mostRecentOpponentOrbUpdate).forEach(([orbLabel, orb]) => {
     const { positionBuffer } = newGameState.orbs[opponentRole][orbLabel];

@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { Socket } from "socket.io";
-import { PlayerRole, SocketEventsFromClient, UserInput, UserInputs, unpackUserInput } from "../../../../../common";
+import { PlayerRole, SocketEventsFromClient, UserInput, unpackUserInput } from "../../../../../common";
 import antiCheat from "../../../battleRoomGame/antiCheat";
 import { LucellaServer } from "..";
 

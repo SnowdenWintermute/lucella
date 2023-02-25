@@ -92,7 +92,7 @@ function DefaultButtons({ socket }: Props) {
     { title: "Channel", onClick: handleChannelClick },
     { title: "Ranked", onClick: handleRankedClick },
     { title: "Host", onClick: handleSetupNewGameClick },
-    { title: "Join", onClick: handleViewGamesListClick },
+    { title: "Join", onClick: handleViewGamesListClick, dataCy: "view-games-list-button" },
   ];
 
   return !mobileViewActive ? (
@@ -108,14 +108,20 @@ function DefaultButtons({ socket }: Props) {
         }
         return (
           <li key={button.title}>
-            <GameLobbyTopButton title={title || button.title} onClick={button.onClick} disabled={disabled} displayClass={chatButtonDisplayClass} />
+            <GameLobbyTopButton
+              title={title || button.title}
+              onClick={button.onClick}
+              disabled={disabled}
+              displayClass={chatButtonDisplayClass}
+              dataCy={button.dataCy || ""}
+            />
           </li>
         );
       })}
     </ul>
   ) : (
     <>
-      <GameLobbyTopButton title="≡" onClick={onMenuClick} displayClass={chatButtonDisplayClass} />
+      <GameLobbyTopButton title="≡" onClick={onMenuClick} displayClass={chatButtonDisplayClass} dataCy="" />
       <Modal
         screenClass=""
         frameClass="modal-frame-dark"
@@ -124,11 +130,14 @@ function DefaultButtons({ socket }: Props) {
         title="Menu"
       >
         <ul className="chat-buttons-modal-list">
-          {buttons.map((button) => (
-            <li key={button.title}>
-              <GameLobbyModalButton title={button.title} onClick={button.onClick} />
-            </li>
-          ))}
+          {buttons.map((button) => {
+            console.log(button);
+            return (
+              <li key={button.title}>
+                <GameLobbyModalButton title={button.title} onClick={button.onClick} dataCy={button.dataCy || ""} />
+              </li>
+            );
+          })}
         </ul>
       </Modal>
     </>

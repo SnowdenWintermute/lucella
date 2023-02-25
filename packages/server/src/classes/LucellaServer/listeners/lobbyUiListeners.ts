@@ -18,7 +18,7 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
     server.lobby.changeSocketChatChannelAndEmitUpdates(socket, channelName, false);
   });
   socket.on(SocketEventsFromClient.HOSTS_NEW_GAME, (gameName) => {
-    server.lobby.handleHostNewGameRequest(socket, gameName);
+    server.lobby.handleHostNewGameRequest(socket, gameName, false);
   });
   socket.on(SocketEventsFromClient.LEAVES_GAME, () => {
     server.handleSocketLeavingGame(socket, false);
