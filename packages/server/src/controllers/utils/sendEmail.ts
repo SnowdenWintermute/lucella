@@ -6,7 +6,7 @@ export async function sendEmail(emailAddress: string, subject: string, textOutpu
   else return console.error("No sendgrid api key was found");
   const msg = {
     to: emailAddress, // Change to your recipient
-    from: "no-reply@melphina.com", // Change to your verified sender
+    from: "no-reply@battleschool.io", // Change to your verified sender
     subject,
     text: textOutput,
     html: htmlOutput,

@@ -1,5 +1,5 @@
 config:
-  target: "https://melphina.com"
+  target: "https://battleschool.io"
   socketio:
     transports: ["websocket"]
   phases:

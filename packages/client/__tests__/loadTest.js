@@ -4,11 +4,7 @@ const { SocketEventsFromClient, SocketEventsFromServer, UserInput, UserInputs, P
 const serializeInput = require("./serializeInputForLoadTest");
 
 // const websiteAddress = "http://localhost:8080";
-const websiteAddress = "https://melphina.com";
-
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+const websiteAddress = "https://battleschool.io";
 
 async function emitRandomMoveCommands(socket, numberOfCommands) {
   let count = 0;
@@ -24,7 +20,7 @@ async function emitRandomMoveCommands(socket, numberOfCommands) {
       )
     );
     count += 1;
-    if (count === numberOfCommands) {
+    if (count >= numberOfCommands) {
       clearTimeout(timeout);
       socket.disconnect();
     } else timeout = setTimeout(loopCommands, 33);
@@ -33,10 +29,10 @@ async function emitRandomMoveCommands(socket, numberOfCommands) {
 }
 
 async function loadTest() {
-  const numberOfClients = 10;
-  const numberOfGameInputsEachClientShouldSend = 3000;
+  const numberOfClientPairs = 15;
+  const numberOfGameInputsEachClientShouldSend = 5000;
 
-  for (let i = numberOfClients; i > 1; i -= 1) {
+  for (let i = numberOfClientPairs; i > 0; i -= 1) {
     setTimeout(() => {
       const hostSocket = io(websiteAddress, { transports: ["websocket"] });
       const challengerSocket = io(websiteAddress, { transports: ["websocket"] });
