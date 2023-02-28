@@ -2,7 +2,7 @@
 import { Socket } from "socket.io";
 import { Lobby } from ".";
 import { ChatMessage, ChatMessageStyles, gameChannelNamePrefix, GameRoom, PlayerRole, SocketEventsFromServer, SocketMetadata } from "../../../../common";
-import { LucellaServer } from "../LucellaServer";
+import { LucellaServer } from "../../LucellaServer";
 
 export default function handleSocketLeavingGameRoom(
   server: LucellaServer,

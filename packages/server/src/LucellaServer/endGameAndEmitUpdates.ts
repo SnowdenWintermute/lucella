@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable global-require */
-import { BattleRoomGame, gameChannelNamePrefix, GameStatus, IBattleRoomGameRecord, ONE_SECOND, SocketEventsFromServer } from "../../../../common";
+import { BattleRoomGame, gameChannelNamePrefix, GameStatus, IBattleRoomGameRecord, ONE_SECOND, SocketEventsFromServer } from "../../../common";
 import { LucellaServer } from ".";
-import updateScoreCardsAndSaveGameRecord from "../../battleRoomGame/endGameCleanup/updateScoreCardsAndSaveGameRecord";
+import updateScoreCardsAndSaveGameRecord from "../battleRoomGame/endGameCleanup/updateScoreCardsAndSaveGameRecord";
 
 export default async function endGameAndEmitUpdates(server: LucellaServer, game: BattleRoomGame) {
   const { io, lobby, games } = server;
@@ -35,7 +35,7 @@ export default async function endGameAndEmitUpdates(server: LucellaServer, game:
     io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
     if (game.gameOverCountdown.current! >= 1) return;
     game.clearGameEndingCountdownInterval();
-    console.log("gameRecord: ", gameRecord);
+    // console.log("gameRecord: ", gameRecord);
     io.in(gameChatChannelName).emit(SocketEventsFromServer.SHOW_SCORE_SCREEN, {
       gameRoom,
       gameRecord,

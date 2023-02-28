@@ -4,11 +4,11 @@
 /* eslint-disable consistent-return */
 import cookie from "cookie";
 import { Socket } from "socket.io";
-import { SocketMetadata } from "../../../../common";
-import { verifyJwtAsymmetric } from "../../controllers/utils/jwt";
+import { SocketMetadata } from "../../../common";
+import { verifyJwtAsymmetric } from "../controllers/utils/jwt";
 import { LucellaServer } from ".";
-import UserRepo from "../../database/repos/users";
-import { wrappedRedis } from "../../utils/RedisContext";
+import UserRepo from "../database/repos/users";
+import { wrappedRedis } from "../utils/RedisContext";
 import getIpFromSocketHandshake from "./utils/getIpFromSocketHandshake";
 
 export default async function handleNewSocketConnection(server: LucellaServer, socket: Socket) {

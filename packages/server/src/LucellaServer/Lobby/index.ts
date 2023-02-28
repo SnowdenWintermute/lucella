@@ -12,11 +12,12 @@ import {
   ChatMessage,
   ChatMessageStyles,
   toKebabCase,
+  OfficialChannels,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
 import validateGameName from "./validateGameName";
-import { LucellaServer } from "../LucellaServer";
+import { LucellaServer } from "../../LucellaServer";
 import handleSocketLeavingGameRoom from "./handleSocketLeavingGameRoom";
 import validateChannelName from "./validateChannelName";
 

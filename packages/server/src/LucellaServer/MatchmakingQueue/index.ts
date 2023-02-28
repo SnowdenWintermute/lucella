@@ -13,7 +13,7 @@ import {
 } from "../../../../common";
 import UserRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";
-import { LucellaServer } from "../LucellaServer";
+import { LucellaServer } from "..";
 
 export interface MatchmakingQueueUser {
   userId: string;

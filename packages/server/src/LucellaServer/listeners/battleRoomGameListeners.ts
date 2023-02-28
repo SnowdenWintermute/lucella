@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { Socket } from "socket.io";
-import { PlayerRole, SocketEventsFromClient, UserInput, unpackUserInput } from "../../../../../common";
-import antiCheat from "../../../battleRoomGame/antiCheat";
+import { PlayerRole, SocketEventsFromClient, UserInput, unpackUserInput } from "../../../../common";
+import antiCheat from "../../battleRoomGame/antiCheat";
 import { LucellaServer } from "..";
 
 export default function battleRoomGameListeners(server: LucellaServer, socket: Socket) {

@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import { ErrorMessages, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "../../../../common";
+import { ErrorMessages, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "../../../common";
 import handleNewSocketConnection from "./handleNewSocketConnection";
 import lobbyUiListeners from "./listeners/lobbyUiListeners";
 import battleRoomGameListeners from "./listeners/battleRoomGameListeners";

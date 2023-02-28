@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { Socket } from "socket.io";
-import { GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../../common";
+import { GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from "..";
 
 export default function gameUiListeners(server: LucellaServer, socket: Socket) {

@@ -12,10 +12,10 @@ import {
   UserInput,
   createDeltaPacket,
 } from "../../../../common";
-import { LucellaServer } from "../../classes/LucellaServer";
+import { LucellaServer } from "../../LucellaServer";
 import handleScoringPoints from "./handleScoringPoints";
 
-export default function createGamePhysicsInterval(io: Server, socket: Socket, server: LucellaServer, gameName: string) {
+export default function createGamePhysicsInterval(io: Server, server: LucellaServer, gameName: string) {
   const game = server.games[gameName];
   BattleRoomGame.initializeWorld(game);
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
@@ -37,7 +37,7 @@ export default function createGamePhysicsInterval(io: Server, socket: Socket, se
       });
     }
 
-    handleScoringPoints(io, socket, server, game);
+    handleScoringPoints(server, game);
     const updateForHost = createDeltaPacket(game, PlayerRole.HOST);
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
     if (game.winner) server.endGameAndEmitUpdates(game);

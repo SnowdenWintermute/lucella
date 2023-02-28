@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../redux/hooks";
 import { useGetLadderEntryQuery, useGetLadderPageQuery } from "../redux/api-slices/ladder-api-slice";
-import { CustomErrorDetails } from "../../../common/dist";
+import { CustomErrorDetails } from "../../../common";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { Alert } from "../classes/Alert";
 import { AlertType } from "../enums";

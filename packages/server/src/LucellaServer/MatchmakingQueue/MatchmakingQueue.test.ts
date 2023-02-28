@@ -22,12 +22,13 @@ import {
   TEST_USER_NAME_THIRD,
 } from "../../utils/test-utils/consts";
 import { lucella } from "../../lucella";
-import { LucellaServer } from "../LucellaServer";
+import { LucellaServer } from "..";
 import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
 import createTestUser from "../../utils/test-utils/createTestUser";
 import logTestUserIn from "../../utils/test-utils/logTestUserIn";
 import getAuthenticatedUserAndSocket from "../../utils/test-utils/getAuthenticatedUserAndSocket";
+import createLoggedInUsersWithConnectedSockets from "../../utils/test-utils/createTestUsersAndReturnSockets";
 
 describe("MatchmakingQueue", () => {
   let context: PGContext | undefined;
@@ -157,25 +158,7 @@ describe("MatchmakingQueue", () => {
         { email: "sixthplace@lucella.com", elo: 1700 },
       ];
 
-      const clients: { [username: string]: Socket } = {};
-      const userCreationAndSocketConnectionPromises: any[] = [];
-
-      players.forEach((player) => {
-        userCreationAndSocketConnectionPromises.push(
-          new Promise(async (resolve, reject) => {
-            const user = await createTestUser(player.email.split("@")[0], player.email, undefined, undefined, player.elo);
-            const loginResult = await logTestUserIn(user.email);
-            const playerSocket = io(socketUrl, {
-              transports: ["websocket"],
-              extraHeaders: { cookie: `${CookieNames.ACCESS_TOKEN}=${loginResult.accessToken};` },
-            });
-            clients[user.name] = playerSocket;
-            resolve(true);
-          })
-        );
-      });
-
-      await Promise.all(userCreationAndSocketConnectionPromises);
+      const clients = await createLoggedInUsersWithConnectedSockets(players, socketUrl);
 
       Object.values(clients).forEach((clientSocket) => {
         clientSocket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {

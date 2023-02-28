@@ -65,9 +65,9 @@ function DefaultButtons({ socket }: Props) {
 
   function handleKeypress(event: KeyboardEvent) {
     const { key } = event;
-    if (key === "q" || key === "Q") {
-      handleRankedClick();
-    }
+    // if (key === "q" || key === "Q") {
+    //   handleRankedClick();
+    // }
   }
 
   useEffect(() => {
