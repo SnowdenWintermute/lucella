@@ -3,6 +3,11 @@ import { SocketEventsFromClient, SocketEventsFromServer } from "../../../../comm
 
 export default function putTwoClientSocketsInGameAndStartIt(socket1: Socket, socket2: Socket, gameName: string) {
   return new Promise((resolve, reject) => {
+    if (!socket1.connected || !socket2.connected) {
+      // eslint-disable-next-line no-promise-executor-return
+      return reject(new Error(`${gameName} tried to start a game between two sockets but one of them was not connected`));
+    }
+
     const eventsOccurred = {
       client2JoinedGame: false,
       client1ClickedReady: false,
@@ -13,7 +18,7 @@ export default function putTwoClientSocketsInGameAndStartIt(socket1: Socket, soc
     socket1.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, (data) => {
       if (!eventsOccurred.client1GotCompressedGamePacket) {
         eventsOccurred.client1GotCompressedGamePacket = true;
-        console.log(`${socket1.id} putTwoClientSocketsInGameAndStartIt got compressed game packet`);
+        // console.log(`${socket1.id} putTwoClientSocketsInGameAndStartIt got compressed game packet in game ${gameName}`);
         resolve(true);
       }
     });
@@ -29,8 +34,8 @@ export default function putTwoClientSocketsInGameAndStartIt(socket1: Socket, soc
     socket1.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
       if (!data) return;
       if (!eventsOccurred.client2JoinedGame) {
-        eventsOccurred.client2JoinedGame = true;
         socket2.emit(SocketEventsFromClient.JOINS_GAME, gameName);
+        eventsOccurred.client2JoinedGame = true;
       }
       if (!eventsOccurred.client1ClickedReady) {
         eventsOccurred.client1ClickedReady = true;

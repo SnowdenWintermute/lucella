@@ -1,12 +1,21 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
-import { BattleRoomGame, gameChannelNamePrefix, GameRoom, GameStatus, ONE_SECOND, SocketEventsFromServer, User } from "../../../common";
+import {
+  BattleRoomGame,
+  ErrorMessages,
+  gameChannelNamePrefix,
+  GameRoom,
+  GameStatus,
+  ONE_SECOND,
+  PlayerRole,
+  SocketEventsFromServer,
+  User,
+} from "../../../common";
 import { Lobby } from "./Lobby";
 import initializeListeners from "./initializeListeners";
 import { SocketIDsByUsername, SocketMetadataList } from "../types";
 import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
-import handleSocketLeavingGame from "./handleSocketLeavingGame";
 import { MatchmakingQueue } from "./MatchmakingQueue";
 import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
 import { ipRateLimiter } from "../middleware/rateLimiter";
@@ -38,7 +47,28 @@ export class LucellaServer {
   }
 
   handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {
-    handleSocketLeavingGame(this, socket, isDisconnecting);
+    const { currentGameName } = this.connectedSockets[socket.id];
+    const usernameOfPlayerLeaving = this.connectedSockets[socket.id].associatedUser.username;
+    // console.log(`${usernameOfPlayerLeaving} leaving game ${currentGameName}`);
+    if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
+    const gameRoom = this.lobby.gameRooms[currentGameName];
+    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
+
+    const { players } = gameRoom;
+    const playerToKick = players.challenger && players.host?.associatedUser.username === usernameOfPlayerLeaving ? players.challenger : undefined;
+
+    if (gameRoom.gameStatus === GameStatus.IN_LOBBY || gameRoom.gameStatus === GameStatus.COUNTING_DOWN || gameRoom.gameStatus === GameStatus.IN_WAITING_LIST) {
+      if (gameRoom.isRanked) this.lobby.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
+      else this.lobby.handleSocketLeavingGameRoom(socket, gameRoom, isDisconnecting, playerToKick);
+    } else {
+      const game = this.games[currentGameName];
+      if (!game) return console.log(`tried to assign game ${currentGameName} winner but no game was found.`);
+      const remainingPlayer = usernameOfPlayerLeaving === players!.host!.associatedUser.username ? PlayerRole.CHALLENGER : PlayerRole.HOST;
+      game.winner = remainingPlayer;
+      if (gameRoom.gameStatus === GameStatus.ENDING) return;
+      gameRoom.winner = game.winner === PlayerRole.HOST ? players!.host!.associatedUser.username : players!.challenger!.associatedUser.username;
+      this.endGameAndEmitUpdates(game);
+    }
   }
   handleSocketDisconnection(socket: Socket) {
     if (!this.connectedSockets[socket.id]) return;
@@ -99,7 +129,6 @@ export class LucellaServer {
       }
     } else {
       if (previousHostReadyState && previousChallengerReadyState) this.gameCreationWaitingList.removeGameRoom(gameRoom.gameName);
-
       gameRoom.cancelCountdownInterval();
       this.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
       this.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);

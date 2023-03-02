@@ -85,7 +85,7 @@ export class Lobby {
     const gameCreationError = this.createGameRoom(gameName, isRanked);
     if (gameCreationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, gameCreationError);
     console.log(`game room created: ${gameName}`);
-    this.changeSocketChatChannelAndEmitUpdates(socket, gameChannelNamePrefix + gameName, true);
+    this.changeSocketChatChannelAndEmitUpdates(socket, this.gameRooms[gameName].chatChannel, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
   handleJoinGameRoomRequest(socket: Socket, gameName: string, assignedToGameByMatchmaking?: boolean) {
@@ -98,7 +98,7 @@ export class Lobby {
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
-    this.changeSocketChatChannelAndEmitUpdates(socket, gameChannelNamePrefix + gameName, true);
+    this.changeSocketChatChannelAndEmitUpdates(socket, gameRoom.chatChannel, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
   createGameRoom(gameName: string, isRanked?: boolean) {
@@ -128,7 +128,7 @@ export class Lobby {
     }
     socket.emit(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT, playerRole);
     // io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.getSanitizedGameRooms());
-    io.in(gameChannelNamePrefix + gameName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
+    io.in(gameRoom.chatChannel).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
     return gameRoom;
   }
   handleSocketLeavingGameRoom(socket: Socket, gameRoom: GameRoom, isDisconnecting: boolean, playerToKick?: SocketMetadata) {

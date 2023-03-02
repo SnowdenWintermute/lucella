@@ -1,6 +1,6 @@
 /* eslint-disable no-async-promise-executor */
 import { io, Socket } from "socket.io-client";
-import { CookieNames } from "../../../../common";
+import { CookieNames, GENERIC_SOCKET_EVENTS, SocketEventsFromServer } from "../../../../common";
 import createTestUser from "./createTestUser";
 import logTestUserIn from "./logTestUserIn";
 
@@ -18,7 +18,16 @@ export default async function createLoggedInUsersWithConnectedSockets(usersToCre
           extraHeaders: { cookie: `${CookieNames.ACCESS_TOKEN}=${loginResult.accessToken};` },
         });
         clients[user.name] = userSocket;
-        resolve(true);
+        userSocket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => console.error(`${user.name} got error: ${data}`));
+        userSocket.on(GENERIC_SOCKET_EVENTS.CONNECT_ERROR, () => {
+          console.log(`${user.name}'s socket unable to connect`);
+          reject(new Error(`${user.name}'s socket unable to connect`));
+        });
+        userSocket.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
+          console.log(`${user.name}'s socket connected`);
+          userSocket.off(GENERIC_SOCKET_EVENTS.CONNECT);
+          resolve(true);
+        });
       })
     );
   });
