@@ -23,9 +23,10 @@ export default async function createLoggedInUsersWithConnectedSockets(usersToCre
           console.log(`${user.name}'s socket unable to connect`);
           reject(new Error(`${user.name}'s socket unable to connect`));
         });
-        userSocket.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
-          console.log(`${user.name}'s socket connected`);
-          userSocket.off(GENERIC_SOCKET_EVENTS.CONNECT);
+        userSocket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
+          console.log(`${user.name}'s socket connected and authorized`);
+          userSocket.off(SocketEventsFromServer.AUTHENTICATION_COMPLETE);
+          userSocket.off(GENERIC_SOCKET_EVENTS.CONNECT_ERROR);
           resolve(true);
         });
       })

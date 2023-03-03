@@ -24,7 +24,7 @@ function GameLobbyChat({ socket }: Props) {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
-  const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
+  const gameRoomDisplayIsOpen = lobbyUiState.gameRoomDisplay.isOpen;
   const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
   const chatState = useAppSelector((state) => state.chat);
   const { messages } = chatState;
@@ -62,9 +62,9 @@ function GameLobbyChat({ socket }: Props) {
   }, []);
 
   useEffect(() => {
-    if (gameListIsOpen || preGameScreenIsOpen || matchmakingScreenIsOpen) setChatClass("chat-stream-top-border");
+    if (gameListIsOpen || gameRoomDisplayIsOpen || matchmakingScreenIsOpen) setChatClass("chat-stream-top-border");
     else setChatClass("");
-  }, [gameListIsOpen, preGameScreenIsOpen, matchmakingScreenIsOpen]);
+  }, [gameListIsOpen, gameRoomDisplayIsOpen, matchmakingScreenIsOpen]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatInput(e.target.value);

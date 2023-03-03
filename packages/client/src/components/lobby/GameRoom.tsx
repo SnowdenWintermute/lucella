@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import React, { Fragment, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SuccessIcon from "../../img/alertIcons/success.svg";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -7,6 +7,7 @@ import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { ErrorMessages, GameStatus, SocketEventsFromClient } from "../../../../common";
 import styles from "./game-lobby.module.scss";
+import { BUTTON_NAMES } from "../../consts/button-names";
 
 interface Props {
   socket: Socket;
@@ -15,10 +16,11 @@ interface Props {
 function PreGameRoom({ socket }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
+  const preGameScreenIsOpen = lobbyUiState.gameRoomDisplay.isOpen;
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState("height-0-hidden");
   const [gameNameInput, setGameNameInput] = useState("");
   const gameStatus = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.gameStatus;
+  const currentWaitingListPosition = lobbyUiState.currentGameRoom && lobbyUiState.gameCreationWaitingList.currentPosition;
   const playersReady = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.playersReady;
   const players = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.players;
   const isRanked = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.isRanked;
@@ -41,7 +43,7 @@ function PreGameRoom({ socket }: Props) {
   const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const gameNameToCreate = gameNameInput;
-    // todo - run validation reuse server function
+    // todo - run client side validation (reuse server function)
     if (gameNameToCreate && socket) socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameNameToCreate);
     else dispatch(setAlert(new Alert(ErrorMessages.LOBBY.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
   };
@@ -79,8 +81,14 @@ function PreGameRoom({ socket }: Props) {
       </table>
       {!isRanked && (
         <button type="button" className="button button-standard-size button-primary" onClick={handleReadyClick}>
-          READY
+          {BUTTON_NAMES.GAME_ROOM.READY}
         </button>
+      )}
+      {typeof currentWaitingListPosition === "number" && (
+        <div>
+          <p>Server is experiencing high load, waiting for current games to finish.</p>
+          <p>Position in line: {currentWaitingListPosition}</p>
+        </div>
       )}
     </>
   ) : (
@@ -104,7 +112,7 @@ function PreGameRoom({ socket }: Props) {
         }}
       />
       <button type="submit" className="button button-standard-size button-primary">
-        Make Public
+        {BUTTON_NAMES.GAME_ROOM.MAKE_PUBLIC}
       </button>
     </form>
   );

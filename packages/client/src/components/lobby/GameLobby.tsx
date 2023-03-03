@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Socket } from "socket.io-client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import GameLobbyChat from "./game-lobby-chat/GameLobbyChat";
 import MainButtons from "./main-buttons/MainButtons";
 import ChannelBar from "./channel-bar/ChannelBar";
-import PreGameRoom from "./PreGameRoom";
+import GameRoom from "./GameRoom";
 import MatchmakingQueueDisplay from "./MatchmakingQueueDisplay";
 import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
@@ -89,7 +89,7 @@ function GameLobby({ defaultChatChannel }: Props) {
               <MainButtons socket={socket.current} />
               <ChannelBar />
               <div className="game-lobby-main-window">
-                <PreGameRoom socket={socket.current} />
+                <GameRoom socket={socket.current} />
                 <MatchmakingQueueDisplay />
                 <GameList socket={socket.current} />
                 <GameLobbyChat socket={socket.current} />

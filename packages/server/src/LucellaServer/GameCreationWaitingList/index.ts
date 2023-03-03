@@ -15,6 +15,7 @@ export class GameCreationWaitingList {
   addGameRoom(gameName: string) {
     if (this.gameRoomsWaitingToStart.map.get(gameName)) return;
     this.gameRoomsWaitingToStart.enqueue(gameName);
+    console.log("adding game room, current interval: ", this.interval);
     if (!this.interval) this.createWaitingListUpdateInterval();
     this.emitWaitingListUpdateInGameRoom(gameName, this.gameRoomsWaitingToStart.size);
   }
@@ -28,6 +29,7 @@ export class GameCreationWaitingList {
   removeGameRoom(gameName: string) {
     const removed = this.gameRoomsWaitingToStart.remove(gameName);
     console.log("removed game room: ", removed);
+    if (!this.gameRoomsWaitingToStart.head) return this.clearWaitingListUpdateInterval();
   }
   updateWaitingList() {
     console.log(
@@ -38,7 +40,7 @@ export class GameCreationWaitingList {
       "\n games in waiting list: ",
       this.gameRoomsWaitingToStart
     );
-    if (!this.server.games || Object.keys(this.server.games).length <= 0) return this.clearWaitingListUpdateInterval(); // no games left
+
     while (this.gameRoomsWaitingToStart.head && (!this.server.games || Object.keys(this.server.games).length < this.server.config.maxConcurrentGames)) {
       // check if the game has two players and both are ready, then start this game
       const nameOfGameToStart = this.gameRoomsWaitingToStart.dequeue();
@@ -67,5 +69,6 @@ export class GameCreationWaitingList {
   clearWaitingListUpdateInterval() {
     console.log("clearing interval for game waiting list");
     if (this.interval) clearInterval(this.interval);
+    this.interval = null;
   }
 }

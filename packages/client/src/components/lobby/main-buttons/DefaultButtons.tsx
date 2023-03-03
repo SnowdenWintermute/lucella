@@ -5,7 +5,7 @@ import { SocketEventsFromClient } from "../../../../../common";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import GameLobbyModalButton from "../../common-components/buttons/GameLobbyModalButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { setMatchmakingLoading, setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
+import { setMatchmakingLoading, setGameRoomDisplayVisible, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 import { mobileViewWidthThreshold } from "../../../consts";
 import { setShowChangeChatChannelModal, setShowMobileLobbyMenuModal } from "../../../redux/slices/ui-slice";
 import useWindowDimensions from "../../../hooks/useWindowDimensions";
@@ -22,22 +22,22 @@ function DefaultButtons({ socket }: Props) {
   const uiState = useAppSelector((state) => state.UI);
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
   const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
-  const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
+  const gameRoomDisplayIsOpen = lobbyUiState.gameRoomDisplay.isOpen;
   const [chatButtonsDisplayClass, setChatButtonsDisplayClass] = useState("");
   const [chatButtonDisplayClass, setChatButtonDisplayClass] = useState("");
   const [mobileViewActive, setMobileViewActive] = useState(false);
 
   // manage button visibility
   useEffect(() => {
-    if (gameListIsOpen || preGameScreenIsOpen || matchmakingScreenIsOpen) {
+    if (gameListIsOpen || gameRoomDisplayIsOpen || matchmakingScreenIsOpen) {
       setChatButtonDisplayClass("chat-button-hidden");
       setChatButtonsDisplayClass("chat-buttons-hidden");
     }
-    if (!gameListIsOpen && !preGameScreenIsOpen && !matchmakingScreenIsOpen) {
+    if (!gameListIsOpen && !gameRoomDisplayIsOpen && !matchmakingScreenIsOpen) {
       setChatButtonDisplayClass("");
       setChatButtonsDisplayClass("");
     }
-  }, [gameListIsOpen, preGameScreenIsOpen, matchmakingScreenIsOpen]);
+  }, [gameListIsOpen, gameRoomDisplayIsOpen, matchmakingScreenIsOpen]);
 
   const handleChannelClick = () => {
     dispatch(setShowChangeChatChannelModal(true));
@@ -52,7 +52,7 @@ function DefaultButtons({ socket }: Props) {
   };
 
   const handleSetupNewGameClick = () => {
-    dispatch(setPreGameScreenDisplayed(true));
+    dispatch(setGameRoomDisplayVisible(true));
     dispatch(setShowMobileLobbyMenuModal(false));
   };
 

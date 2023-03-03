@@ -5,150 +5,47 @@ import { IncomingMessage, Server, ServerResponse } from "http";
 import { io, Socket } from "socket.io-client";
 import {
   battleRoomDefaultChatChannel,
-  CookieNames,
   ErrorMessages,
+  gameOverCountdownDuration,
   GENERIC_SOCKET_EVENTS,
+  ONE_SECOND,
   randBetween,
   SocketEventsFromClient,
   SocketEventsFromServer,
 } from "../../../../common";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
-import {
-  TEST_USER_EMAIL,
-  TEST_USER_EMAIL_ALTERNATE,
-  TEST_USER_EMAIL_THIRD,
-  TEST_USER_NAME,
-  TEST_USER_NAME_ALTERNATE,
-  TEST_USER_NAME_THIRD,
-} from "../../utils/test-utils/consts";
+import { TEST_USER_EMAIL_ALTERNATE, TEST_USER_NAME_ALTERNATE } from "../../utils/test-utils/consts";
 import { lucella } from "../../lucella";
 import { LucellaServer } from "..";
 import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
 import createTestUser from "../../utils/test-utils/createTestUser";
-import logTestUserIn from "../../utils/test-utils/logTestUserIn";
-import getAuthenticatedUserAndSocket from "../../utils/test-utils/getAuthenticatedUserAndSocket";
 import createLoggedInUsersWithConnectedSockets from "../../utils/test-utils/createTestUsersAndReturnSockets";
-
+import putTwoClientSocketsInGameAndStartIt from "../../utils/test-utils/putTwoClientSocketsInGameAndStartIt";
+//
+// WORD OF CAUTION: this test suite involves reusing authenticated users who's elo changes persist from test to test
+//
 describe("MatchmakingQueue", () => {
   let context: PGContext | undefined;
   let app: Application | undefined;
   let httpServer: Server<typeof IncomingMessage, typeof ServerResponse> | undefined;
   const port = Math.round(randBetween(8081, 65535));
   const socketUrl = `http://localhost:${port}`;
-  beforeAll(async () => {
-    const { pgContext, expressApp } = await setupExpressRedisAndPgContextAndOneTestUser();
-    // create a test user with a high elo
-    await createTestUser(TEST_USER_NAME_ALTERNATE, TEST_USER_EMAIL_ALTERNATE, undefined, undefined, 1700);
-    context = pgContext;
-    app = expressApp;
+  let clients: { [name: string]: Socket } = {};
+  beforeAll((done) => {
+    const tasks = new Promise(async (resolve, reject) => {
+      const { pgContext, expressApp } = await setupExpressRedisAndPgContextAndOneTestUser();
+      // create a test user with a high elo
+      await createTestUser(TEST_USER_NAME_ALTERNATE, TEST_USER_EMAIL_ALTERNATE, undefined, undefined, 1700);
+      context = pgContext;
+      app = expressApp;
 
-    httpServer = app.listen(port, () => {
-      lucella.server = new LucellaServer(httpServer);
-    });
-  });
-
-  beforeEach(async () => {
-    await wrappedRedis.context!.removeAllKeys();
-  });
-
-  afterAll(async () => {
-    lucella.server?.io.close();
-    httpServer?.close();
-    if (context) await context.cleanup();
-    await wrappedRedis.context!.cleanup();
-  });
-
-  it("lets a logged in user enter the queue and forbids a guest user from doing so", (done) => {
-    const thisTest = new Promise(async (resolve, reject) => {
-      const [testUser, testUserSocket] = await getAuthenticatedUserAndSocket(socketUrl, TEST_USER_NAME, TEST_USER_EMAIL);
-
-      const guestSocket = io(socketUrl, {
-        transports: ["websocket"],
+      httpServer = app.listen(port, () => {
+        lucella.server = new LucellaServer(httpServer);
       });
-      // set up the conditions for a passing test so they can happen in any order
-      const conditions = { authedSocketJoinedMatchmaking: false, guestSocketRejectedFromMatchmaking: false };
-      function disconnectAllSockets() {
-        testUserSocket.disconnect();
-        guestSocket.disconnect();
-      }
-
-      // whichever one completes last should end the test
-      testUserSocket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
-        conditions.authedSocketJoinedMatchmaking = true;
-        if (conditions.guestSocketRejectedFromMatchmaking) {
-          disconnectAllSockets();
-          resolve(true);
-        }
-      });
-      guestSocket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => {
-        expect(data).toBe(ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED);
-        if (data === ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED) conditions.guestSocketRejectedFromMatchmaking = true;
-        if (conditions.authedSocketJoinedMatchmaking) {
-          disconnectAllSockets();
-          resolve(true);
-        }
-      });
-      // conncet and attemp to join queue
-      testUserSocket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
-        testUserSocket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
-      });
-
-      guestSocket.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
-        guestSocket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
-      });
-    });
-    thisTest.then(() => {
-      done();
-    });
-  });
-
-  jest.setTimeout(25000);
-  it("matches the two closest elo players in the queue first", (done) => {
-    const thisTest = new Promise(async (resolve, reject) => {
-      lucella.server!.matchmakingQueue.eloDiffThresholdAdditive = 100;
-      // this user's elo more closely matches the TEST_USER_ALTERNATE created in the beforeAll(), they should be matched instead of the default test user
-      // await createTestUser(TEST_USER_NAME_THIRD, TEST_USER_EMAIL_THIRD, undefined, undefined, 1650);
-      const [testUserThird, testUserThirdSocket] = await getAuthenticatedUserAndSocket(socketUrl, TEST_USER_NAME_THIRD, TEST_USER_EMAIL_THIRD, 1650);
-      const [testUser, testUserSocket] = await getAuthenticatedUserAndSocket(socketUrl, TEST_USER_NAME, TEST_USER_EMAIL);
-      const [testUserAlternate, testUserAlternateSocket] = await getAuthenticatedUserAndSocket(socketUrl, TEST_USER_NAME_ALTERNATE, TEST_USER_EMAIL_ALTERNATE);
-
-      const clients = [testUserSocket, testUserAlternateSocket, testUserThirdSocket];
-      clients.forEach((clientSocket) => {
-        clientSocket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
-          clientSocket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
-        });
-      });
-
-      testUserThirdSocket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, () => {
-        // disconnect testUser now so the matchmaking queue has a moment to shut down and doesn't log after test completion
-        testUserSocket.disconnect();
-        // disconnect testUserThird to concede the game to testUserAlternate
-        testUserThirdSocket.disconnect();
-      });
-
-      testUserAlternateSocket.on(SocketEventsFromServer.SHOW_SCORE_SCREEN, () => {
-        // they should get the score screen because testUserThird disconnected and testUser never should have been placed in a game
-        clients.forEach((clientSocket) => {
-          clientSocket.disconnect();
-        });
-        resolve(true);
-      });
-    });
-    thisTest.then(() => {
-      done();
-    });
-  });
-
-  jest.setTimeout(25000);
-
-  it("correctly matches the closest elo players sequentially until no players are left in the queue", (done) => {
-    const thisTest = new Promise(async (resolve, reject) => {
-      lucella.server!.matchmakingQueue.eloDiffThresholdAdditive = 100;
-      // set up 6 players
-      const players = [
+      const usersToCreate = [
         // difference of 20 (should be matched first)
-        { email: "topranked@lucella.com", elo: 2000 },
+        { email: "firstplace@lucella.com", elo: 2000 },
         { email: "secondplace@lucella.com", elo: 1980 },
         // difference of 50 (should be matched second)
         { email: "thirdplace@lucella.com", elo: 1950 },
@@ -158,13 +55,132 @@ describe("MatchmakingQueue", () => {
         { email: "sixthplace@lucella.com", elo: 1700 },
       ];
 
-      const clients = await createLoggedInUsersWithConnectedSockets(players, socketUrl);
+      clients = await createLoggedInUsersWithConnectedSockets(usersToCreate, socketUrl);
+      resolve(true);
+    });
+    tasks.then(() => {
+      done();
+    });
+  });
 
-      Object.values(clients).forEach((clientSocket) => {
-        clientSocket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
-          clientSocket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
-        });
+  beforeEach((done) => {
+    const tasks = new Promise(async (resolve, reject) => {
+      const reconnectionPromises: Promise<boolean>[] = [];
+      if (!Object.keys(clients).length) done();
+      Object.values(clients).forEach((socket) => {
+        if (!socket.connected)
+          reconnectionPromises.push(
+            new Promise((resolve, reject) => {
+              socket.removeAllListeners();
+              socket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => console.error(data));
+              socket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
+                socket.off(SocketEventsFromServer.AUTHENTICATION_COMPLETE);
+                resolve(true);
+              });
+              socket.connect();
+            })
+          );
       });
+      await Promise.all(reconnectionPromises);
+      resolve(true);
+    });
+    tasks.then(() => {
+      done();
+    });
+  });
+
+  afterEach((done) => {
+    const tasks = new Promise(async (resolve, reject) => {
+      Object.values(clients).forEach((socket) => {
+        socket.disconnect();
+      });
+      await setTimeout(() => {
+        resolve(true);
+        console.log("waiting for games to wrap up");
+      }, gameOverCountdownDuration * ONE_SECOND + ONE_SECOND); // allow any ongoing games to wrap up, giving one extra second to do so
+    });
+    tasks.then(() => {
+      done();
+    });
+  });
+
+  afterAll(async () => {
+    lucella.server?.io.close();
+    httpServer?.close();
+    if (context) await context.cleanup();
+    await wrappedRedis.context!.cleanup();
+  });
+
+  jest.setTimeout(25000);
+
+  it("lets a logged in user enter the queue and forbids a guest user from doing so", (done) => {
+    const thisTest = new Promise(async (resolve, reject) => {
+      const guestSocket = io(socketUrl, { transports: ["websocket"] });
+      // set up the conditions for a passing test so they can happen in any order
+      const eventsOccurred = { authedSocketJoinedMatchmaking: false, guestSocketRejectedFromMatchmaking: false };
+
+      // whichever one completes last should end the test
+      clients.firstplace.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
+        eventsOccurred.authedSocketJoinedMatchmaking = true;
+        if (eventsOccurred.guestSocketRejectedFromMatchmaking) {
+          resolve(true);
+        }
+      });
+      guestSocket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => {
+        expect(data).toBe(ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED);
+        if (data === ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED) eventsOccurred.guestSocketRejectedFromMatchmaking = true;
+        if (eventsOccurred.authedSocketJoinedMatchmaking) {
+          resolve(true);
+        }
+      });
+
+      guestSocket.on(GENERIC_SOCKET_EVENTS.CONNECT, () => {
+        guestSocket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+      });
+
+      clients.firstplace.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+    });
+    thisTest.then(() => {
+      done();
+    });
+  });
+
+  it("matches the two closest elo players in the queue first", (done) => {
+    const thisTest = new Promise(async (resolve, reject) => {
+      lucella.server!.matchmakingQueue.eloDiffThresholdAdditive = 100;
+
+      const { firstplace, secondplace, fourthplace } = clients;
+
+      function resolveIfMatchedWithCorrectOpponent(data: any, expectedOpponent: string) {
+        if (!data) return;
+        Object.values(data.players).forEach((playerInGameRoom: any) => {
+          if (!playerInGameRoom) return;
+          if (playerInGameRoom.associatedUser.username === expectedOpponent) resolve(true);
+        });
+      }
+
+      // 1.a the two closely matched players should get a game room update
+      firstplace.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+        resolveIfMatchedWithCorrectOpponent(data, "secondplace");
+      });
+      secondplace.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+        resolveIfMatchedWithCorrectOpponent(data, "firstplace");
+      });
+
+      // 1. queue up three users for ranked, two of them closely matched
+      firstplace.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+      secondplace.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+      fourthplace.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+    });
+    thisTest.then(() => {
+      done();
+    });
+  });
+
+  it("correctly matches the closest elo players sequentially until no players are left in the queue", (done) => {
+    const thisTest = new Promise(async (resolve, reject) => {
+      lucella.server!.matchmakingQueue.eloDiffThresholdAdditive = 100;
+      const { firstplace, thirdplace, fifthplace } = clients;
 
       const expectedMatchupsSucceeded = {
         firstAndSecond: false,
@@ -174,14 +190,14 @@ describe("MatchmakingQueue", () => {
       type ExpectedMatchupsKey = keyof typeof expectedMatchupsSucceeded;
 
       // concede the games by disconnecting so we can check the score screens
-      clients.topranked.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, () => {
-        clients.topranked.disconnect();
+      firstplace.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, () => {
+        firstplace.disconnect();
       });
-      clients.thirdplace.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, () => {
-        clients.thirdplace.disconnect();
+      thirdplace.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, () => {
+        thirdplace.disconnect();
       });
-      clients.fifthplace.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, () => {
-        clients.fifthplace.disconnect();
+      fifthplace.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, () => {
+        fifthplace.disconnect();
       });
 
       let previousMatchup: ExpectedMatchupsKey | null = null;
@@ -209,13 +225,17 @@ describe("MatchmakingQueue", () => {
       }
 
       clients.secondplace.on(SocketEventsFromServer.SHOW_SCORE_SCREEN, (data) => {
-        handleScoreScreen(data, "firstAndSecond", "topranked", null);
+        handleScoreScreen(data, "firstAndSecond", "firstplace", null);
       });
       clients.fourthplace.on(SocketEventsFromServer.SHOW_SCORE_SCREEN, (data) => {
         handleScoreScreen(data, "thirdAndForth", "thirdplace", "firstAndSecond");
       });
       clients.sixthplace.on(SocketEventsFromServer.SHOW_SCORE_SCREEN, (data) => {
         handleScoreScreen(data, "fifthAndSixth", "fifthplace", "thirdAndForth");
+      });
+
+      Object.values(clients).forEach((clientSocket) => {
+        clientSocket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
       });
     });
     thisTest
@@ -228,64 +248,128 @@ describe("MatchmakingQueue", () => {
   });
 
   jest.setTimeout(25000);
-  it("puts a user back into the queue, as well as their previous chat channel, if their opponent disconnects while the lobby countdown is in progress", (done) => {
+  it("puts a user back into the queue and their previous chat channel if their opponent disconnects while the lobby countdown is in progress", (done) => {
     const thisTest = new Promise(async (resolve, reject) => {
       lucella.server!.matchmakingQueue.eloDiffThresholdAdditive = 300;
+      const { firstplace, secondplace } = clients;
 
       const conditionsToMeet = {
-        testUserSocketGotCountdownEvent: false,
-        testUserSocketPutBackInQueue: false,
-        testUserSentToTheirPreviousRoomAfterTheirOpponentDisconnectedDuringRankedGameCountdownSequence: false,
+        firstPlaceSentToTheirPreviousRoom: false,
+        firstPlacePutBackInMatchmakingQueue: false,
       };
 
-      const eventsThatHaveOccurred = {
-        testUserJoinedChatChannelForTheFirstTime: false,
-        testUserAlternateJoinedChatChannelForTheFirstTime: false,
+      const eventsOccurred = {
+        firstPlaceJoinedChatChannelForTheFirstTime: false,
+        secondPlaceJoinedChatChannel: false,
+        secondPlaceDisconnectedAfterReceivingCountdownUpdate: false,
       };
 
-      const [testUser, testUserSocket] = await getAuthenticatedUserAndSocket(socketUrl, TEST_USER_NAME, TEST_USER_EMAIL);
-      const [testUserAlternate, testUserAlternateSocket] = await getAuthenticatedUserAndSocket(socketUrl, TEST_USER_NAME_ALTERNATE, TEST_USER_EMAIL_ALTERNATE);
+      // 3.a[1/2] firstplace should get put back in matchmaking queue and their previous chat channel
+      firstplace.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
+        if (eventsOccurred.secondPlaceDisconnectedAfterReceivingCountdownUpdate) conditionsToMeet.firstPlacePutBackInMatchmakingQueue = true;
+        if (Object.values(conditionsToMeet).every((condition) => condition)) resolve(true);
+      });
 
-      const clients = { testUser: testUserSocket, testUserAlternate: testUserAlternateSocket };
+      // 3. once users receive the game start countdown, have one of them disconnect
+      secondplace.on(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, () => {
+        secondplace.disconnect();
+        eventsOccurred.secondPlaceDisconnectedAfterReceivingCountdownUpdate = true;
+      });
 
+      // 2. have the two users queue for ranked
+      // 3.a[2/2] firstplace should get put back in matchmaking queue and their previous chat channel
+      firstplace.on(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, (data) => {
+        if (!eventsOccurred.firstPlaceJoinedChatChannelForTheFirstTime) {
+          firstplace.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+          eventsOccurred.firstPlaceJoinedChatChannelForTheFirstTime = true;
+        } else if (data.name === battleRoomDefaultChatChannel && eventsOccurred.secondPlaceDisconnectedAfterReceivingCountdownUpdate)
+          conditionsToMeet.firstPlaceSentToTheirPreviousRoom = true;
+        if (Object.values(conditionsToMeet).every((condition) => condition)) resolve(true);
+      });
+
+      secondplace.on(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, () => {
+        if (eventsOccurred.secondPlaceJoinedChatChannel) return;
+        secondplace.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+        eventsOccurred.secondPlaceJoinedChatChannel = true;
+      });
+
+      // 1. join a chat channel so we can see if they get sent back to it after the other player disconnects during the game room coundown sequence
       Object.values(clients).forEach((clientSocket) => {
-        clientSocket.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
-          // join a chat channel so we can see if they get sent back to it after the other player disconnects during the game room coundown sequence
-          clientSocket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, battleRoomDefaultChatChannel);
-        });
+        clientSocket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, battleRoomDefaultChatChannel);
+      });
+    });
+    thisTest.then(() => {
+      done();
+    });
+  });
+
+  it("puts a user back into the queue and their previous chat channel if their opponent unreadies while the game is in the waiting list", (done) => {
+    const thisTest = new Promise(async (resolve, reject) => {
+      lucella.server!.matchmakingQueue.eloDiffThresholdAdditive = 300;
+      const { firstplace, secondplace } = clients;
+
+      const conditionsToMeet = {
+        firstPlaceSentToTheirPreviousRoom: false,
+        firstPlacePutBackInMatchmakingQueue: false,
+        secondPlaceRemovedFromMatchmaking: false,
+      };
+
+      const eventsOccurred = {
+        firstPlaceJoinedChatChannelForTheFirstTime: false,
+        secondPlaceJoinedChatChannel: false,
+        secondPlaceUnreadiededAfterReceivingWaitingListUpdate: false,
+      };
+
+      // set the limit to two games and reduce the waiting list interval to make the test go faster
+      lucella.server!.config.maxConcurrentGames = 2;
+      lucella.server!.config.gameCreationWaitingListLoopInterval = 1000;
+      // start two games to reach the limit
+      const gameStartPromises = [
+        putTwoClientSocketsInGameAndStartIt(clients.thirdplace, clients.fourthplace, "game1"),
+        putTwoClientSocketsInGameAndStartIt(clients.fifthplace, clients.sixthplace, "game2"),
+      ];
+      await Promise.all(gameStartPromises);
+      console.log("two games started");
+
+      // 3.a[1/3] firstplace should get put back in matchmaking queue and their previous chat channel, and secondplace should be removed from matchmaking queue
+      secondplace.on(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING, () => {
+        conditionsToMeet.secondPlaceRemovedFromMatchmaking = true;
+        if (Object.values(conditionsToMeet).every((condition) => condition)) resolve(true);
       });
 
-      testUserSocket.on(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, (data) => {
-        // once they have joined a chat channel they can queue up for ranked, but only join ranked once
-        if (!eventsThatHaveOccurred.testUserJoinedChatChannelForTheFirstTime) testUserSocket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
-        else if (data.name === battleRoomDefaultChatChannel)
-          conditionsToMeet.testUserSentToTheirPreviousRoomAfterTheirOpponentDisconnectedDuringRankedGameCountdownSequence = true;
-        eventsThatHaveOccurred.testUserJoinedChatChannelForTheFirstTime = true;
+      // 3.a[1/3] firstplace should get put back in matchmaking queue and their previous chat channel, and secondplace should be removed from matchmaking queue
+      firstplace.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
+        if (eventsOccurred.secondPlaceUnreadiededAfterReceivingWaitingListUpdate) conditionsToMeet.firstPlacePutBackInMatchmakingQueue = true;
+        if (Object.values(conditionsToMeet).every((condition) => condition)) resolve(true);
       });
 
-      testUserAlternateSocket.on(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, () => {
-        if (!eventsThatHaveOccurred.testUserAlternateJoinedChatChannelForTheFirstTime)
-          testUserAlternateSocket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
-        eventsThatHaveOccurred.testUserAlternateJoinedChatChannelForTheFirstTime = true;
+      // 3. once users receive the game start countdown, have one of them unready
+      secondplace.on(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION, () => {
+        if (eventsOccurred.secondPlaceUnreadiededAfterReceivingWaitingListUpdate) return;
+        secondplace.emit(SocketEventsFromClient.CLICKS_READY);
+        eventsOccurred.secondPlaceUnreadiededAfterReceivingWaitingListUpdate = true;
       });
 
-      testUserAlternateSocket.on(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, () => {
-        testUserAlternateSocket.disconnect();
+      // 2. have the two users queue for ranked
+      // 3.a[2/3] firstplace should get put back in matchmaking queue and their previous chat channel, and secondplace should be removed from matchmaking queue
+      firstplace.on(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, (data) => {
+        if (!eventsOccurred.firstPlaceJoinedChatChannelForTheFirstTime) {
+          firstplace.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+          eventsOccurred.firstPlaceJoinedChatChannelForTheFirstTime = true;
+        } else if (data.name === battleRoomDefaultChatChannel && eventsOccurred.secondPlaceUnreadiededAfterReceivingWaitingListUpdate)
+          conditionsToMeet.firstPlaceSentToTheirPreviousRoom = true;
+        if (Object.values(conditionsToMeet).every((condition) => condition)) resolve(true);
       });
 
-      testUserSocket.on(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, () => {
-        conditionsToMeet.testUserSocketGotCountdownEvent = true;
+      secondplace.on(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, () => {
+        if (eventsOccurred.secondPlaceJoinedChatChannel) return;
+        secondplace.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);
+        eventsOccurred.secondPlaceJoinedChatChannel = true;
       });
 
-      testUserSocket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
-        if (conditionsToMeet.testUserSocketGotCountdownEvent) {
-          conditionsToMeet.testUserSocketPutBackInQueue = true;
-          testUserSocket.disconnect();
-        }
-      });
-
-      testUserSocket.on(GENERIC_SOCKET_EVENTS.DISCONNECT, () => {
-        if (Object.values(conditionsToMeet).every((item) => item === true)) resolve(true);
+      // 1. join a chat channel so we can see if they get sent back to it after the other player disconnects during the game room coundown sequence
+      Object.values(clients).forEach((clientSocket) => {
+        clientSocket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, battleRoomDefaultChatChannel);
       });
     });
     thisTest.then(() => {

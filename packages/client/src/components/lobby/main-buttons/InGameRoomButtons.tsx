@@ -3,7 +3,7 @@ import { Socket } from "socket.io-client";
 import { SocketEventsFromClient } from "../../../../../common";
 import GameLobbyTopButton from "../../common-components/buttons/GameLobbyTopButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { clearLobbyUi, setPreGameScreenDisplayed, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
+import { clearLobbyUi, setGameRoomDisplayVisible, setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 
 interface Props {
   socket: Socket;
@@ -20,13 +20,13 @@ function InGameButtons({ socket }: Props) {
   const isRanked = lobbyUiState.currentGameRoom ? lobbyUiState.currentGameRoom.isRanked : null;
   const gameListIsOpen = lobbyUiState.gameList.isOpen;
   const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
-  const preGameScreenIsOpen = lobbyUiState.preGameScreen.isOpen;
+  const gameRoomDisplayIsOpen = lobbyUiState.gameRoomDisplay.isOpen;
 
   // button visibility
   useEffect(() => {
     if (gameListIsOpen) setGoBackButtonDisplayClass("");
     else setGoBackButtonDisplayClass("chat-button-hidden");
-    if (preGameScreenIsOpen) setCancelGameSetupButtonDisplayClass("");
+    if (gameRoomDisplayIsOpen) setCancelGameSetupButtonDisplayClass("");
     else setCancelGameSetupButtonDisplayClass("chat-button-hidden");
     if (gameName) {
       if (!isRanked) setLeaveGameButtonDisplayClass("");
@@ -36,7 +36,7 @@ function InGameButtons({ socket }: Props) {
     if (!gameName) setLeaveGameButtonDisplayClass("chat-button-hidden");
     if (matchmakingScreenIsOpen) setButtonsDisplayClass("chat-button-hidden");
     else setButtonsDisplayClass("");
-  }, [gameListIsOpen, preGameScreenIsOpen, gameName, matchmakingScreenIsOpen, isRanked]);
+  }, [gameListIsOpen, gameRoomDisplayIsOpen, gameName, matchmakingScreenIsOpen, isRanked]);
 
   const onViewGamesListBackClick = () => {
     dispatch(setViewingGamesList(false));
@@ -44,11 +44,11 @@ function InGameButtons({ socket }: Props) {
   };
 
   const onCancelGameSetupClick = () => {
-    dispatch(setPreGameScreenDisplayed(false));
+    dispatch(setGameRoomDisplayVisible(false));
   };
 
   const onLeaveGameClick = () => {
-    dispatch(setPreGameScreenDisplayed(false));
+    dispatch(setGameRoomDisplayVisible(false));
     dispatch(clearLobbyUi());
     socket.emit(SocketEventsFromClient.LEAVES_GAME);
   };

@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React from "react";
 
 interface Props {
@@ -6,7 +7,7 @@ interface Props {
   displayClass: string;
   // eslint-disable-next-line react/require-default-props
   disabled?: boolean;
-  dataCy: string;
+  dataCy?: string;
 }
 
 function GameLobbyTopButton({ title, onClick, displayClass, disabled, dataCy }: Props) {

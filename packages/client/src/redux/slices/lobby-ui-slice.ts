@@ -19,8 +19,11 @@ export interface ILobbyUIState {
     isFetching: boolean;
   };
   scoreScreenData: IGameScoreScreen | null;
-  preGameScreen: {
+  gameRoomDisplay: {
     isOpen: boolean;
+  };
+  gameCreationWaitingList: {
+    currentPosition: number | null;
   };
   matchmakingScreen: {
     isLoading: boolean;
@@ -42,8 +45,11 @@ const initialState: ILobbyUIState = {
     isFetching: true,
   },
   scoreScreenData: null,
-  preGameScreen: {
+  gameRoomDisplay: {
     isOpen: false,
+  },
+  gameCreationWaitingList: {
+    currentPosition: null,
   },
   matchmakingScreen: {
     isLoading: false,
@@ -67,8 +73,8 @@ const ladderSlice = createSlice({
     setAuthenticating(state, action: PayloadAction<boolean>) {
       state.authenticating = action.payload;
     },
-    setPreGameScreenDisplayed(state, action: PayloadAction<boolean>) {
-      state.preGameScreen.isOpen = action.payload;
+    setGameRoomDisplayVisible(state, action: PayloadAction<boolean>) {
+      state.gameRoomDisplay.isOpen = action.payload;
     },
     setCurrentGameRoom(state, action: PayloadAction<GameRoom | null>) {
       state.currentGameRoom = action.payload;
@@ -96,6 +102,9 @@ const ladderSlice = createSlice({
     },
     setMatchmakingData(state, action: PayloadAction<{ queueSize: number; currentEloDiffThreshold: number }>) {
       state.matchmakingScreen.currentData = action.payload;
+    },
+    setGameCreationWaitingListPosition(state, action: PayloadAction<number>) {
+      state.gameCreationWaitingList.currentPosition = action.payload;
     },
     setViewingGamesList(state, action: PayloadAction<boolean>) {
       state.gameList.isOpen = action.payload;
@@ -130,7 +139,7 @@ const ladderSlice = createSlice({
 export const {
   clearLobbyUi,
   setAuthenticating,
-  setPreGameScreenDisplayed,
+  setGameRoomDisplayVisible,
   setCurrentGameRoom,
   updatePlayersReady,
   updateGameCountdown,
@@ -140,6 +149,7 @@ export const {
   setMatchmakingLoading,
   setMatchmakingWindowVisible,
   setMatchmakingData,
+  setGameCreationWaitingListPosition,
   setViewingGamesList,
   setGameListFetching,
   updateGameList,

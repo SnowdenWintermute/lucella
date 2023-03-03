@@ -2,11 +2,13 @@
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
 import {
+  battleRoomDefaultChatChannel,
   BattleRoomGame,
   ErrorMessages,
   gameChannelNamePrefix,
   GameRoom,
   GameStatus,
+  OfficialChannels,
   ONE_SECOND,
   PlayerRole,
   SocketEventsFromServer,
@@ -107,7 +109,7 @@ export class LucellaServer {
     if (!currentGameName) return console.error(`${this.connectedSockets[socket.id].associatedUser.username} clicked ready but wasn't in a game`);
     const gameRoom = this.lobby.gameRooms[currentGameName];
     if (!gameRoom) return console.error("No such game exists");
-    if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.error("Can't unready from ranked game");
+    if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.error("Can't unready from ranked game that is starting");
     const { players, playersReady } = gameRoom;
     const gameChatChannelName = gameChannelNamePrefix + currentGameName;
     const previousHostReadyState = playersReady.host;
@@ -128,8 +130,17 @@ export class LucellaServer {
         this.initiateGameStartCountdown(gameRoom);
       }
     } else {
-      if (previousHostReadyState && previousChallengerReadyState) this.gameCreationWaitingList.removeGameRoom(gameRoom.gameName);
-      gameRoom.cancelCountdownInterval();
+      // handle unreadying (ranked users should already be removed from queue and have their socket left from the matchmaking info channel when their game)
+      // was started. they can only unready if their game was started anyway, which starting the game would have had those effects already so we don't need to do it here.
+      if (previousHostReadyState && previousChallengerReadyState) {
+        this.gameCreationWaitingList.removeGameRoom(gameRoom.gameName);
+        gameRoom.cancelCountdownInterval();
+        if (gameRoom.isRanked) {
+          this.lobby.changeSocketChatChannelAndEmitUpdates(socket, this.connectedSockets[socket.id].previousChatChannelName || battleRoomDefaultChatChannel);
+          this.lobby.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
+          socket.emit(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
+        }
+      }
       this.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
       this.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     }
