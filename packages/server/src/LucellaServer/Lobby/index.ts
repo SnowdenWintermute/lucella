@@ -8,11 +8,12 @@ import {
   SocketMetadata,
   ErrorMessages,
   PlayerRole,
-  gameChannelNamePrefix,
   ChatMessage,
   ChatMessageStyles,
   toKebabCase,
-  OfficialChannels,
+  gameChannelNamePrefix,
+  GameStatus,
+  battleRoomDefaultChatChannel,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
@@ -24,10 +25,12 @@ import validateChannelName from "./validateChannelName";
 export class Lobby {
   chatChannels: { [name: string]: ChatChannel };
   gameRooms: { [roomName: string]: GameRoom };
+  gameRoomsExecutingGameStartCountdown: { [roomName: string]: GameRoom }; // used to keep track of how many and add that to total number of games for waiting list calculations
   server: LucellaServer;
   constructor(server: LucellaServer) {
     this.chatChannels = {};
     this.gameRooms = {};
+    this.gameRoomsExecutingGameStartCountdown = {};
     this.server = server;
   }
   static getSanitizedGameRoom(gameRoom: GameRoom) {
@@ -101,6 +104,48 @@ export class Lobby {
     this.changeSocketChatChannelAndEmitUpdates(socket, gameRoom.chatChannel, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
+  handleReadyStateToggleRequest(socket: Socket) {
+    const { connectedSockets, io } = this.server;
+    const { currentGameName } = connectedSockets[socket.id];
+    if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} clicked ready but wasn't in a game`);
+    const gameRoom = this.gameRooms[currentGameName];
+    if (!gameRoom) return console.error("No such game exists");
+    if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.error("Can't unready from ranked game that is starting");
+    const { players, playersReady } = gameRoom;
+    const gameChatChannelName = gameChannelNamePrefix + currentGameName;
+    const previousHostReadyState = playersReady.host;
+    const previousChallengerReadyState = playersReady.challenger;
+
+    if (players.host!.uuid === connectedSockets[socket.id].uuid) playersReady.host = !playersReady.host;
+    else if (players.challenger!.uuid === connectedSockets[socket.id].uuid) playersReady.challenger = !playersReady.challenger;
+    io.to(gameChatChannelName).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
+
+    if (playersReady.host && playersReady.challenger) {
+      if (Object.keys(this.server.games).length >= this.server.config.maxConcurrentGames) {
+        console.log(`putting game ${gameRoom.gameName} in waiting list`);
+        gameRoom.gameStatus = GameStatus.IN_WAITING_LIST;
+        this.server.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+        this.server.gameCreationWaitingList.addGameRoom(gameRoom.gameName);
+      } else {
+        console.log("starting game countdown for game: ", gameRoom.gameName);
+        this.server.initiateGameStartCountdown(gameRoom);
+      }
+    } else {
+      // handle unreadying (ranked users should already be removed from queue and have their socket left from the matchmaking info channel when their game)
+      // was started. they can only unready if their game was started anyway, which starting the game would have had those effects already so we don't need to do it here.
+      if (previousHostReadyState && previousChallengerReadyState) {
+        this.server.gameCreationWaitingList.removeGameRoom(gameRoom.gameName);
+        this.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
+        if (gameRoom.isRanked) {
+          this.changeSocketChatChannelAndEmitUpdates(socket, connectedSockets[socket.id].previousChatChannelName || battleRoomDefaultChatChannel);
+          this.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
+          socket.emit(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
+        }
+      }
+      io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
+      io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+    }
+  }
   createGameRoom(gameName: string, isRanked?: boolean) {
     if (this.gameRooms[gameName]) return ErrorMessages.LOBBY.GAME_EXISTS;
     const gameNameValidationError = validateGameName(gameName, isRanked);
@@ -142,7 +187,7 @@ export class Lobby {
       `${otherPlayer?.associatedUser.username} was the other player in the ranked game room, sending them back to chat channel `,
       otherPlayer!.previousChatChannelName!
     );
-    gameRoom.cancelCountdownInterval();
+    this.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
     delete this.server.lobby.gameRooms[gameRoom.gameName];
     if (!otherPlayer) return;
     otherPlayer!.currentGameName = null;
@@ -152,6 +197,10 @@ export class Lobby {
     this.server.connectedSockets[otherPlayer.socketId!].currentGameName = null;
     this.server.matchmakingQueue.removeUser(otherPlayer!.socketId!);
     this.server.matchmakingQueue.addUser(otherPlayerSocket!);
+  }
+  cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom: GameRoom) {
+    gameRoom.cancelCountdownInterval();
+    delete this.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
   }
   removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom: GameRoom, socketMeta: SocketMetadata) {
     if (!socketMeta) return console.log("Tried to remove a player from game room but player did not exist in that room");

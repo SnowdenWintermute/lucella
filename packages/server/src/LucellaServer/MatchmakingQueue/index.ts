@@ -116,8 +116,8 @@ export class MatchmakingQueue {
     const gameName = rankedGameChannelNamePrefix + this.rankedGameCurrentNumber;
     this.server.lobby.handleHostNewGameRequest(hostSocket, gameName, true);
     this.server.lobby.handleJoinGameRoomRequest(challengerSocket, gameName, true);
-    this.server.handleReadyStateToggleRequest(hostSocket);
-    this.server.handleReadyStateToggleRequest(challengerSocket);
+    this.server.lobby.handleReadyStateToggleRequest(hostSocket);
+    this.server.lobby.handleReadyStateToggleRequest(challengerSocket);
   }
   getBestMatch() {
     const twoBestMatchedPlayersInQueue: {

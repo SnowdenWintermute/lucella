@@ -87,6 +87,7 @@ const ladderSlice = createSlice({
     },
     updateGameStatus(state, action: PayloadAction<GameStatus>) {
       if (state.currentGameRoom) state.currentGameRoom.gameStatus = action.payload;
+      if (action.payload !== GameStatus.IN_WAITING_LIST) state.gameCreationWaitingList.currentPosition = null;
     },
     updatePlayerRole(state, action: PayloadAction<PlayerRole>) {
       state.playerRole = action.payload;

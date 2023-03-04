@@ -23,6 +23,7 @@ import {
   updateGameStatus,
   updatePlayerRole,
   updatePlayersReady,
+  setGameCreationWaitingListPosition,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -90,6 +91,9 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.MATCH_FOUND, () => {
       dispatch(setMatchmakingWindowVisible(false));
     });
+    socket.on(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION, (data) => {
+      dispatch(setGameCreationWaitingListPosition(data));
+    });
     return () => {
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT);
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT_ERROR);
@@ -105,6 +109,7 @@ function UISocketListener({ socket }: Props) {
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE);
       socket.off(SocketEventsFromServer.MATCH_FOUND);
+      socket.off(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION);
     };
   }, [socket, dispatch, gameName]);
 

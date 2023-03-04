@@ -2,13 +2,12 @@
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
 import {
-  battleRoomDefaultChatChannel,
   BattleRoomGame,
   ErrorMessages,
   gameChannelNamePrefix,
   GameRoom,
   GameStatus,
-  OfficialChannels,
+  IBattleRoomGameRecord,
   ONE_SECOND,
   PlayerRole,
   SocketEventsFromServer,
@@ -17,7 +16,6 @@ import {
 import { Lobby } from "./Lobby";
 import initializeListeners from "./initializeListeners";
 import { SocketIDsByUsername, SocketMetadataList } from "../types";
-import endGameAndEmitUpdates from "./endGameAndEmitUpdates";
 import { MatchmakingQueue } from "./MatchmakingQueue";
 import socketCheckForBannedIpAddress from "./middleware/socketCheckForBannedIpAddress";
 import { ipRateLimiter } from "../middleware/rateLimiter";
@@ -28,6 +26,7 @@ import { REDIS_KEYS } from "../consts";
 import { GameCreationWaitingList } from "./GameCreationWaitingList";
 import createGamePhysicsInterval from "../battleRoomGame/createGamePhysicsInterval";
 import LucellaServerConfig from "./LucellaServerConfig";
+import updateScoreCardsAndSaveGameRecord from "../battleRoomGame/endGameCleanup/updateScoreCardsAndSaveGameRecord";
 
 export class LucellaServer {
   io: SocketIO.Server;
@@ -101,54 +100,58 @@ export class LucellaServer {
     });
     console.log(`forcibly disconnected user ${username} and their socket(s) ${socketIdsDisconnected.join(", ")}`);
   }
-  endGameAndEmitUpdates(game: BattleRoomGame) {
-    endGameAndEmitUpdates(this, game);
-  }
-  handleReadyStateToggleRequest(socket: Socket) {
-    const { currentGameName } = this.connectedSockets[socket.id];
-    if (!currentGameName) return console.error(`${this.connectedSockets[socket.id].associatedUser.username} clicked ready but wasn't in a game`);
-    const gameRoom = this.lobby.gameRooms[currentGameName];
-    if (!gameRoom) return console.error("No such game exists");
-    if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.error("Can't unready from ranked game that is starting");
-    const { players, playersReady } = gameRoom;
-    const gameChatChannelName = gameChannelNamePrefix + currentGameName;
-    const previousHostReadyState = playersReady.host;
-    const previousChallengerReadyState = playersReady.challenger;
+  async endGameAndEmitUpdates(game: BattleRoomGame) {
+    const gameRoom = this.lobby.gameRooms[game.gameName];
+    const gameChatChannelName = gameChannelNamePrefix + game.gameName;
+    const { players } = gameRoom;
 
-    if (players.host!.uuid === this.connectedSockets[socket.id].uuid) playersReady.host = !playersReady.host;
-    else if (players.challenger!.uuid === this.connectedSockets[socket.id].uuid) playersReady.challenger = !playersReady.challenger;
-    this.io.to(gameChatChannelName).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
+    gameRoom.gameStatus = GameStatus.ENDING;
+    this.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+    this.io.in(gameChatChannelName).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
+    game.clearPhysicsInterval();
 
-    if (playersReady.host && playersReady.challenger) {
-      if (Object.keys(this.games).length >= this.config.maxConcurrentGames) {
-        console.log(`putting game ${gameRoom.gameName} in waiting list`);
-        gameRoom.gameStatus = GameStatus.IN_WAITING_LIST;
-        this.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-        this.gameCreationWaitingList.addGameRoom(gameRoom.gameName);
-      } else {
-        console.log("starting game countdown for game: ", gameRoom.gameName);
-        this.initiateGameStartCountdown(gameRoom);
-      }
-    } else {
-      // handle unreadying (ranked users should already be removed from queue and have their socket left from the matchmaking info channel when their game)
-      // was started. they can only unready if their game was started anyway, which starting the game would have had those effects already so we don't need to do it here.
-      if (previousHostReadyState && previousChallengerReadyState) {
-        this.gameCreationWaitingList.removeGameRoom(gameRoom.gameName);
-        gameRoom.cancelCountdownInterval();
-        if (gameRoom.isRanked) {
-          this.lobby.changeSocketChatChannelAndEmitUpdates(socket, this.connectedSockets[socket.id].previousChatChannelName || battleRoomDefaultChatChannel);
-          this.lobby.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
-          socket.emit(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
-        }
-      }
-      this.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
-      this.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-    }
+    const loser =
+      gameRoom.winner === players.host?.associatedUser.username ? players.challenger?.associatedUser.username : players.host?.associatedUser.username;
+
+    let gameRecord: IBattleRoomGameRecord | { firstPlayerScore: number; secondPlayerScore: number } | null = {
+      firstPlayerScore: game.score.host,
+      secondPlayerScore: game.score.challenger,
+    };
+
+    if (!gameRoom.winner || !loser) console.error("Tried to update game records but either winner or loser wasn't found");
+    else if (game.isRanked) gameRecord = await updateScoreCardsAndSaveGameRecord(gameRoom, game);
+    this.io.in(gameChatChannelName).emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
+
+    game.gameOverCountdown.current = game.gameOverCountdown.duration;
+    game.intervals.endingCountdown = setInterval(() => {
+      game.gameOverCountdown.current! -= 1;
+      this.io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
+      if (game.gameOverCountdown.current! >= 1) return;
+      game.clearGameEndingCountdownInterval();
+      this.io.in(gameChatChannelName).emit(SocketEventsFromServer.SHOW_SCORE_SCREEN, {
+        gameRoom,
+        gameRecord,
+      });
+
+      Object.values(gameRoom.players).forEach((player) => {
+        if (!player) return;
+        this.lobby.changeSocketChatChannelAndEmitUpdates(this.io.sockets.sockets.get(player.socketId!)!, player.previousChatChannelName || null);
+        this.lobby.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, player);
+      });
+      // this cleans out the names of any players that disconnected
+      delete this.lobby.chatChannels[gameChatChannelName];
+
+      delete this.lobby.gameRooms[game.gameName];
+      delete this.games[game.gameName];
+      this.io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.lobby.getSanitizedGameRooms());
+    }, ONE_SECOND);
   }
+
   initiateGameStartCountdown(gameRoom: GameRoom) {
-    const { io, games } = this;
+    const { io, lobby, games } = this;
     const gameChatChannelName = gameChannelNamePrefix + gameRoom.gameName;
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
+    lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName] = gameRoom;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     gameRoom.countdownInterval = setInterval(() => {
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
@@ -156,6 +159,7 @@ export class LucellaServer {
       if (gameRoom.countdown.current > 0) return;
       if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
       gameRoom.gameStatus = GameStatus.IN_PROGRESS;
+      delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
       games[gameRoom.gameName] = new BattleRoomGame(gameRoom.gameName, gameRoom.isRanked);
       const game = games[gameRoom.gameName];

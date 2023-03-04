@@ -114,6 +114,7 @@ describe("GameCreationWaitingList", () => {
   });
 
   jest.setTimeout(60000);
+
   it("after both players ready up and the maximum number of allowed games are in progress, delays game start until an open spot becomes available", (done) => {
     const thisTest = new Promise(async (resolve, reject) => {
       try {
@@ -191,6 +192,74 @@ describe("GameCreationWaitingList", () => {
       } catch (error) {
         console.error(error);
       }
+    });
+    thisTest
+      .then(() => {
+        done();
+      })
+      .catch((error) => {
+        expect(false).toBeTruthy();
+      });
+  });
+
+  it("only starts one game in the waiting list if only one open spot is available", (done) => {
+    const thisTest = new Promise(async (resolve, reject) => {
+      const { user1, user2, user3, user4, user5, user6, user7, user8 } = clients;
+      // 1. start games up to the limit
+      const gameStartPromises = [putTwoClientSocketsInGameAndStartIt(user1, user2, "game1"), putTwoClientSocketsInGameAndStartIt(user3, user4, "game2")];
+      await Promise.all(gameStartPromises);
+      console.log("two games started");
+      // 2. ready up two more games
+      const gameStartPromisesThatShouldBePlacedInWaitingList = [
+        putTwoSocketClientsInRoomAndHaveBothReadyUp(user5, user6, "game3"),
+        putTwoSocketClientsInRoomAndHaveBothReadyUp(user7, user8, "game4"),
+      ];
+      await Promise.all(gameStartPromisesThatShouldBePlacedInWaitingList);
+      console.log("two more started");
+      // attempt to start a third game, it should put them in the waiting list
+      const eventsOccurred = {
+        gamesPlacedInWaitingList: {
+          game3: false,
+          game4: false,
+        },
+        gameInProgressDisconnected: false,
+        gamesStartedFromWaitingList: {
+          game3: false,
+          game4: false,
+        },
+      };
+
+      user5.on(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, () => {
+        if (!eventsOccurred.gamesStartedFromWaitingList.game3) eventsOccurred.gamesStartedFromWaitingList.game3 = true;
+      });
+      user7.on(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, () => {
+        if (!eventsOccurred.gamesStartedFromWaitingList.game4) eventsOccurred.gamesStartedFromWaitingList.game4 = true;
+      });
+
+      // 2.a they should both be in the waiting list
+      // 3. disconnect one of the first games
+      user5.on(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION, (data) => {
+        if (!eventsOccurred.gamesPlacedInWaitingList.game3) {
+          eventsOccurred.gamesPlacedInWaitingList.game3 = true;
+          if (Object.values(eventsOccurred.gamesPlacedInWaitingList).every((value) => value) && !eventsOccurred.gameInProgressDisconnected) {
+            user1.disconnect();
+            eventsOccurred.gameInProgressDisconnected = true;
+          }
+        }
+        if (eventsOccurred.gamesStartedFromWaitingList.game4 && !eventsOccurred.gamesStartedFromWaitingList.game3) resolve(true);
+      });
+      user7.on(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION, (data) => {
+        if (!eventsOccurred.gamesPlacedInWaitingList.game4) {
+          eventsOccurred.gamesPlacedInWaitingList.game4 = true;
+          if (Object.values(eventsOccurred.gamesPlacedInWaitingList).every((value) => value) && !eventsOccurred.gameInProgressDisconnected) {
+            user1.disconnect();
+            eventsOccurred.gameInProgressDisconnected = true;
+          }
+        }
+        if (eventsOccurred.gamesStartedFromWaitingList.game3 && !eventsOccurred.gamesStartedFromWaitingList.game4) resolve(true);
+      });
+
+      // 3.a only one of the games in the waiting list should have their game started
     });
     thisTest
       .then(() => {

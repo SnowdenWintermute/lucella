@@ -15,7 +15,6 @@ export class GameCreationWaitingList {
   addGameRoom(gameName: string) {
     if (this.gameRoomsWaitingToStart.map.get(gameName)) return;
     this.gameRoomsWaitingToStart.enqueue(gameName);
-    console.log("adding game room, current interval: ", this.interval);
     if (!this.interval) this.createWaitingListUpdateInterval();
     this.emitWaitingListUpdateInGameRoom(gameName, this.gameRoomsWaitingToStart.size);
   }
@@ -41,7 +40,12 @@ export class GameCreationWaitingList {
       this.gameRoomsWaitingToStart
     );
 
-    while (this.gameRoomsWaitingToStart.head && (!this.server.games || Object.keys(this.server.games).length < this.server.config.maxConcurrentGames)) {
+    while (
+      this.gameRoomsWaitingToStart.head &&
+      (!this.server.games ||
+        Object.keys(this.server.games).length + Object.keys(this.server.lobby.gameRoomsExecutingGameStartCountdown).length <
+          this.server.config.maxConcurrentGames)
+    ) {
       // check if the game has two players and both are ready, then start this game
       const nameOfGameToStart = this.gameRoomsWaitingToStart.dequeue();
       if (!nameOfGameToStart) return console.log("dequeued gameName from waiting list but got null");

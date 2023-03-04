@@ -21,7 +21,7 @@ export default function handleSocketLeavingGameRoom(
   lobby.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, gameRoom.players[playerRoleLeaving]!);
 
   gameRoom.playersReady = { host: false, challenger: false };
-  gameRoom.cancelCountdownInterval();
+  lobby.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
   io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
   io.in(gameChatChannelName).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, lobby.getSanitizedChatChannel(gameChatChannelName));
 
