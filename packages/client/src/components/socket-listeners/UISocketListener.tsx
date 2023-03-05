@@ -88,6 +88,9 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, (data) => {
       dispatch(setMatchmakingData(data));
     });
+    socket.on(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING, () => {
+      dispatch(clearLobbyUi());
+    });
     socket.on(SocketEventsFromServer.MATCH_FOUND, () => {
       dispatch(setMatchmakingWindowVisible(false));
     });
@@ -108,6 +111,7 @@ function UISocketListener({ socket }: Props) {
       socket.off(SocketEventsFromServer.SHOW_SCORE_SCREEN);
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE);
+      socket.off(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
       socket.off(SocketEventsFromServer.MATCH_FOUND);
       socket.off(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION);
     };

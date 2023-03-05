@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
-import { ChatChannel, GameRoom } from "../../../../common";
+import { ChatChannel, GameRoom, SanitizedSocketMetadata } from "../../../../common";
 const cloneDeep = require("lodash.clonedeep");
 
 export function sanitizeChatChannel(channel: ChatChannel) {
@@ -28,13 +28,9 @@ export function sanitizeGameRoom(gameRoom: GameRoom): GameRoom | void {
   if (!gameRoom) return;
   const gameRoomForClient: GameRoom = cloneDeep(gameRoom);
   gameRoomForClient.countdownInterval = null;
-  Object.values(gameRoomForClient.players).forEach((player) => {
-    if (player) {
-      delete player.socketId;
-      delete player.ipAddress;
-      delete player.currentChatChannel;
-      delete player.previousChatChannelName;
-    }
+  Object.entries(gameRoomForClient.players).forEach(([role, socketMeta]) => {
+    // @ts-ignore
+    if (socketMeta) gameRoomForClient.players[role] = new SanitizedSocketMetadata(socketMeta);
   });
   return gameRoomForClient;
 }

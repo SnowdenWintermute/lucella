@@ -84,6 +84,11 @@ function PreGameRoom({ socket }: Props) {
           {BUTTON_NAMES.GAME_ROOM.READY}
         </button>
       )}
+      {isRanked && gameStatus === GameStatus.IN_WAITING_LIST && (
+        <button type="button" className="button button-standard-size button-primary" onClick={handleReadyClick}>
+          {BUTTON_NAMES.GAME_ROOM.LEAVE_WAITING_LIST}
+        </button>
+      )}
       {typeof currentWaitingListPosition === "number" && (
         <div>
           <p>Server is experiencing high load, waiting for current games to finish.</p>

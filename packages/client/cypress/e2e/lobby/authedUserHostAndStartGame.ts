@@ -19,6 +19,7 @@ export default function authedUserHostAndStartGame() {
   });
   it("lets authed user host a game that another player can join and leave", () => {
     const username = Cypress.env("CYPRESS_TEST_USER_NAME");
+    const anonUsernameForCypressSocketList = "Anon1234";
     // log in and host a game
     cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
@@ -37,25 +38,25 @@ export default function authedUserHostAndStartGame() {
     cy.findByText(/Awaiting challenger.../i).should("exist");
     cy.findByLabelText("challenger status").find("svg").should("not.exist");
     // challenger joins game, toggles buttons and leaves
-    cy.task(TaskNames.connectSocket);
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
+    cy.task(TaskNames.connectSocket, { username: anonUsernameForCypressSocketList });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
     cy.findByText(/Awaiting challenger.../i).should("not.exist");
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.CLICKS_READY });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.CLICKS_READY });
     cy.findByLabelText("challenger status").find("svg").should("exist");
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.LEAVES_GAME });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.LEAVES_GAME });
     cy.findByLabelText("challenger status").find("svg").should("not.exist");
     cy.findByText(/Awaiting challenger.../i).should("exist");
     // challenger rejoins, all players ready up then challenger disconnects
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
     cy.findByText(/Awaiting challenger.../i).should("not.exist");
     cy.get('[data-cy="challenger-info"]').findByText(/Anon/i).should("be.visible");
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.CLICKS_READY });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.CLICKS_READY });
     cy.findByLabelText("challenger status").find("svg").should("exist");
     cy.findByLabelText("host status").find("svg").should("not.exist");
     cy.findByRole("button", { name: /Ready/i }).click();
     cy.findByLabelText("host status").find("svg").should("exist");
     cy.findByText(GameStatus.COUNTING_DOWN).should("exist");
-    cy.task(TaskNames.disconnectSocket);
+    cy.task(TaskNames.disconnectSocket, { username: anonUsernameForCypressSocketList });
     cy.findByText(GameStatus.COUNTING_DOWN).should("not.exist");
     cy.findByText(GameStatus.IN_LOBBY).should("exist");
     cy.findByLabelText("challenger status").find("svg").should("not.exist");
@@ -75,14 +76,14 @@ export default function authedUserHostAndStartGame() {
     cy.findByText(new RegExp(`You are the host of game: ${shortTestText}`, "i")).should("exist");
     cy.findByText(/Awaiting challenger.../i).should("exist");
     // challenger reconnects, rejoins game and all players ready - game starts
-    cy.task(TaskNames.connectSocket);
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.CLICKS_READY });
+    cy.task(TaskNames.connectSocket, { username: anonUsernameForCypressSocketList });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.CLICKS_READY });
     cy.findByRole("button", { name: /Ready/i }).click();
     cy.wait(gameRoomCountdownDuration);
     cy.get('[data-cy="battle-room-canvas"]').should("exist");
     // challenger leaves game
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.LEAVES_GAME });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.LEAVES_GAME });
     cy.get('[data-cy="score-screen-modal"]')
       .findByText(new RegExp(`Game ${shortTestText} final score:`, "i"))
       .should("exist");

@@ -11,6 +11,7 @@ export const BUTTON_NAMES = {
   },
   GAME_ROOM: {
     READY: "READY",
+    LEAVE_WAITING_LIST: "LEAVE",
     MAKE_PUBLIC: "Make Public",
   },
 };

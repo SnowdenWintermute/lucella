@@ -55,3 +55,26 @@ ul {
 .logo-background {
   position: absolute;
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: color(primary);
+  border-left: 1px solid color(textPrimary);
+  border-bottom: 1px solid color(textPrimary);
+}
+::-webkit-scrollbar-thumb {
+  border: 1px solid color(textPrimary);
+  background: color(menuPrimary);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color(textPrimary);
+}
+
+@supports (scrollbar-color: color(menuPrimary) color(primary)) {
+  * {
+    scrollbar-color: color(menuPrimary) color(primary);
+    scrollbar-width: auto;
+  }
+}

@@ -19,7 +19,6 @@ import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./s
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
 import validateGameName from "./validateGameName";
 import { LucellaServer } from "../../LucellaServer";
-import handleSocketLeavingGameRoom from "./handleSocketLeavingGameRoom";
 import validateChannelName from "./validateChannelName";
 
 export class Lobby {
@@ -116,8 +115,8 @@ export class Lobby {
     const previousHostReadyState = playersReady.host;
     const previousChallengerReadyState = playersReady.challenger;
 
-    if (players.host!.uuid === connectedSockets[socket.id].uuid) playersReady.host = !playersReady.host;
-    else if (players.challenger!.uuid === connectedSockets[socket.id].uuid) playersReady.challenger = !playersReady.challenger;
+    if (players.host?.socketId === socket.id) playersReady.host = !playersReady.host;
+    else if (players.challenger!.socketId === socket.id) playersReady.challenger = !playersReady.challenger;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
 
     if (playersReady.host && playersReady.challenger) {
@@ -177,22 +176,56 @@ export class Lobby {
     return gameRoom;
   }
   handleSocketLeavingGameRoom(socket: Socket, gameRoom: GameRoom, isDisconnecting: boolean, playerToKick?: SocketMetadata) {
-    handleSocketLeavingGameRoom(this.server, socket, gameRoom, isDisconnecting, playerToKick);
+    const gameChatChannelName = gameChannelNamePrefix + gameRoom.gameName;
+    const { io, connectedSockets } = this.server;
+    const usernameOfPlayerLeaving = connectedSockets[socket.id].associatedUser.username;
+    const playerRoleLeaving = gameRoom.players.host?.associatedUser.username === usernameOfPlayerLeaving ? PlayerRole.HOST : PlayerRole.CHALLENGER;
+
+    console.log("sending player back to previous channel: ", connectedSockets[socket.id].previousChatChannelName);
+    this.changeSocketChatChannelAndEmitUpdates(socket, isDisconnecting ? null : connectedSockets[socket.id].previousChatChannelName);
+    this.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, gameRoom.players[playerRoleLeaving]!);
+
+    gameRoom.playersReady = { host: false, challenger: false };
+    this.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
+    io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
+    io.in(gameChatChannelName).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, this.getSanitizedChatChannel(gameChatChannelName));
+
+    if (playerToKick) {
+      // below only happens if host left, then we are kicking the other player
+      const removedPlayerSocket = io.sockets.sockets.get(playerToKick.socketId!)!;
+      if (!removedPlayerSocket) console.log("tried to return a socket to a chat channel but no socket found");
+      if (!connectedSockets[removedPlayerSocket.id]) console.log("tried to remove a socket that is no longer in our list");
+      this.changeSocketChatChannelAndEmitUpdates(this.server.io.sockets.sockets.get(playerToKick.socketId!)!, playerToKick.previousChatChannelName!);
+      this.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, gameRoom.players[PlayerRole.CHALLENGER]!);
+      removedPlayerSocket.emit(
+        SocketEventsFromServer.NEW_CHAT_MESSAGE,
+        new ChatMessage(`Game ${gameRoom.gameName} closed by host.`, "Server", ChatMessageStyles.PRIVATE)
+      );
+    }
+
+    if (!gameRoom.players.host) {
+      delete this.gameRooms[gameRoom.gameName];
+      delete this.chatChannels[gameChatChannelName];
+    }
   }
   handleSocketLeavingRankedGameRoomInLobby(socket: Socket, gameRoom: GameRoom) {
     console.log(`${this.server.connectedSockets[socket.id].associatedUser.username} leaving a ranked game room`);
     const { challenger, host } = gameRoom.players;
+    const playerLeaving = this.server.connectedSockets[socket.id];
+    this.changeSocketChatChannelAndEmitUpdates(socket, playerLeaving.previousChatChannelName!);
+    this.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, playerLeaving);
+
     const otherPlayer = challenger?.socketId === socket.id ? host : challenger;
     console.log(
       `${otherPlayer?.associatedUser.username} was the other player in the ranked game room, sending them back to chat channel `,
-      otherPlayer!.previousChatChannelName!
+      otherPlayer?.previousChatChannelName
     );
     this.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
     delete this.server.lobby.gameRooms[gameRoom.gameName];
     if (!otherPlayer) return;
     otherPlayer!.currentGameName = null;
     const otherPlayerSocket = this.server.io.sockets.sockets.get(otherPlayer!.socketId!);
-    this.changeSocketChatChannelAndEmitUpdates(otherPlayerSocket!, otherPlayer!.previousChatChannelName!);
+    this.changeSocketChatChannelAndEmitUpdates(otherPlayerSocket!, otherPlayer!.previousChatChannelName);
     otherPlayerSocket?.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
     this.server.connectedSockets[otherPlayer.socketId!].currentGameName = null;
     this.server.matchmakingQueue.removeUser(otherPlayer!.socketId!);
@@ -205,7 +238,7 @@ export class Lobby {
   removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom: GameRoom, socketMeta: SocketMetadata) {
     if (!socketMeta) return console.log("Tried to remove a player from game room but player did not exist in that room");
     this.server.io.sockets.sockets.get(socketMeta.socketId!)?.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
-    if (this.server.connectedSockets[socketMeta.socketId!]) this.server.connectedSockets[socketMeta.socketId!].currentGameName = null;
+    socketMeta.currentGameName = null;
     const playerRoleLeaving = gameRoom.players.host?.associatedUser.username === socketMeta.associatedUser.username ? PlayerRole.HOST : PlayerRole.CHALLENGER;
     gameRoom.players[playerRoleLeaving] = null;
   }

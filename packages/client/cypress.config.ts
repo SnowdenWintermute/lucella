@@ -2,7 +2,7 @@
 import axios from "axios";
 import { defineConfig } from "cypress";
 import { Socket } from "socket.io-client";
-import { AuthRoutePaths, CypressTestRoutePaths, ONE_SECOND, SocketEventsFromClient } from "../common";
+import { AuthRoutePaths, ConfigRoutePaths, CypressTestRoutePaths, ONE_SECOND, SocketEventsFromClient } from "../common";
 import { TaskNames } from "./cypress/support/TaskNames";
 import { makeEmailAccount } from "./cypress/support/email-account";
 import { cypressCloudProjectId } from "./cypress/support/consts";
@@ -10,6 +10,12 @@ const io = require("socket.io-client");
 
 let socket: Socket;
 let accessToken: string | undefined;
+const users: {
+  [name: string]: {
+    socket: Socket | undefined;
+    accessToken: string | undefined;
+  };
+} = {};
 
 export default defineConfig({
   e2e: {
@@ -35,6 +41,19 @@ export default defineConfig({
             return error;
           }
         },
+        [TaskNames.setMaxConcurrentGames]: async (args) => {
+          try {
+            const response = await axios({
+              method: "put",
+              url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${ConfigRoutePaths.MAX_CONCURRENT_GAMES}`,
+              data: { testerKey: args.CYPRESS_TESTER_KEY, maxConcurrentGames: args.maxConcurrentGames },
+            });
+            return { status: response.status };
+          } catch (error: any) {
+            console.log("setMaxConcurrentGames: ", error);
+            return error;
+          }
+        },
         [TaskNames.deleteAllTestUsers]: async (args) => {
           try {
             const response = await axios({
@@ -56,7 +75,7 @@ export default defineConfig({
             const response = await axios({
               method: "post",
               url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${CypressTestRoutePaths.CREATE_CYPRESS_TEST_USER}`,
-              data: { testerKey: args.CYPRESS_TESTER_KEY, name: args.name || null, email: args.email || null, elo: args.elo || undefined },
+              data: { testerKey: args.CYPRESS_TESTER_KEY, name: args.name || null, email: args.email || null, elo: args.elo, role: args.role },
               headers: { "content-type": "application/json" },
             });
             // @ts-ignore
@@ -82,7 +101,7 @@ export default defineConfig({
             return error;
           }
         },
-        [TaskNames.logUserIn]: async ({ email, password }: { email: string; password: string }) => {
+        [TaskNames.logUserIn]: async ({ name, email, password }: { name: string; email: string; password: string }) => {
           try {
             const response = await axios({
               method: "post",
@@ -90,51 +109,45 @@ export default defineConfig({
               data: { email, password },
               headers: { "content-type": "application/json" },
             });
-            accessToken = response.headers["set-cookie"]?.join("");
+            users[name] = { socket: undefined, accessToken: response.headers["set-cookie"]?.join("") };
             return { status: response.status };
           } catch (error) {
             console.log(error);
             return error;
           }
         },
-        [TaskNames.logUserOut]: async () => {
-          // try {
-          //   const response = await axios({
-          //     method: "post",
-          //     url: `http://localhost:8080/api${AuthRoutePaths.ROOT}${AuthRoutePaths.LOGOUT}`,
-          //     headers: { "content-type": "application/json" },
-          //   });
-          //   return { status: response.status };
-          // } catch (error) {
-          //   console.log(error);
-          //   return error;
-          // }
-        },
-        [TaskNames.connectSocket]: (args: { withHeaders?: boolean }) => {
+        [TaskNames.connectSocket]: (args: { username: string; withHeaders?: boolean }) => {
+          if (!users[args.username]) users[args.username] = { socket: undefined, accessToken: undefined };
           if (args?.withHeaders)
-            socket = io("http://localhost:8080" || "", {
+            users[args.username].socket = io("http://localhost:8080" || "", {
               transports: ["websocket"],
               withCredentials: true,
               // reconnectionAttempts: 3,
               extraHeaders: {
-                cookie: accessToken,
+                cookie: users[args.username].accessToken,
               },
             });
           else
-            socket = io("http://localhost:8080" || "", {
+            users[args.username].socket = io("http://localhost:8080" || "", {
               transports: ["websocket"],
               withCredentials: true,
               // reconnectionAttempts: 3,
             });
           return null;
         },
-        [TaskNames.disconnectSocket]: () => {
-          if (socket) socket.disconnect();
+        [TaskNames.disconnectSocket]: ({ username }) => {
+          if (users[username]) users[username].socket?.disconnect();
           return null;
         },
-        [TaskNames.socketEmit]: (taskData: { event: SocketEventsFromClient; data: any }) => {
-          const { event, data } = taskData;
-          socket.emit(event, data);
+        [TaskNames.disconnectAllSockets]: () => {
+          Object.values(users).forEach((user) => {
+            if (user.socket) user.socket.disconnect();
+          });
+          return null;
+        },
+        [TaskNames.socketEmit]: (taskData: { username: string; event: SocketEventsFromClient; data: any }) => {
+          const { username, event, data } = taskData;
+          users[username].socket?.emit(event, data);
           return null;
         },
         [TaskNames.getUserEmail]: () => {
