@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
-import { SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
+import { SocketEventsFromClient, SocketEventsFromServer } from "../../index";
 
-export default function putTwoClientSocketsInGameAndStartIt(socket1: Socket, socket2: Socket, gameName: string) {
+export function putTwoClientSocketsInGameAndStartIt(socket1: Socket, socket2: Socket, gameName: string) {
   return new Promise((resolve, reject) => {
     if (!socket1.connected || !socket2.connected) {
       // eslint-disable-next-line no-promise-executor-return

@@ -9,6 +9,7 @@ import {
   gameOverCountdownDuration,
   GENERIC_SOCKET_EVENTS,
   ONE_SECOND,
+  putTwoClientSocketsInGameAndStartIt,
   randBetween,
   SocketEventsFromClient,
   SocketEventsFromServer,
@@ -21,7 +22,6 @@ import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
 import createTestUser from "../../utils/test-utils/createTestUser";
 import createLoggedInUsersWithConnectedSockets from "../../utils/test-utils/createTestUsersAndReturnSockets";
-import putTwoClientSocketsInGameAndStartIt from "../../utils/test-utils/putTwoClientSocketsInGameAndStartIt";
 //
 // WORD OF CAUTION: this test suite involves reusing authenticated users who's elo changes persist from test to test
 //

@@ -80,6 +80,7 @@ export class Lobby {
     }
   }
   handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
+    if (!gameName) return console.error(ErrorMessages.LOBBY.GAME_NAME.MAX_LENGTH);
     gameName = gameName.toLowerCase();
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)

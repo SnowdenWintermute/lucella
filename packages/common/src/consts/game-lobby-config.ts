@@ -9,11 +9,12 @@ export const eloDiffThresholdAdditive = 1000;
 export const baseGameCreationWaitingListLoopInterval = 3 * ONE_SECOND;
 export enum OfficialChannels {
   matchmakingQueue = "matchmaking-queue",
-  gameCreationWaitingList = "matchmaking-queue",
 }
 export const maxGameNameLength = 20;
 
 export const battleRoomDefaultChatChannel = "battle-room-chat";
+
+// for frontend chat selection buttons
 export const defaultChatChannelNames = {
   LINDBLUM: "Lindblum",
   ALEXANDRIA: "Alexandria",

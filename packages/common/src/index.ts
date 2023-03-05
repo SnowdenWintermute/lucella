@@ -37,4 +37,7 @@ export { createDeltaPacket } from "./protocol-buffer-utils/createDeltaPacket/cre
 export { determineOrbDeltas } from "./protocol-buffer-utils/createDeltaPacket/determineOrbDeltas";
 export { packOrbSet } from "./protocol-buffer-utils/createDeltaPacket/packOrbSet";
 export { unpackUserInput } from "./protocol-buffer-utils/unpackUserInput";
+export * from "./utils";
 export * from "./utils/test-utils";
+export { putTwoSocketClientsInRoomAndHaveBothReadyUp } from "./utils/test-utils/putTwoSocketClientsInRoomAndHaveBothReadyUp";
+export { putTwoClientSocketsInGameAndStartIt } from "./utils/test-utils/putTwoClientSocketsInGameAndStartIt";

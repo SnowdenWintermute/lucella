@@ -2,14 +2,21 @@
 import axios from "axios";
 import { defineConfig } from "cypress";
 import { Socket } from "socket.io-client";
-import { AuthRoutePaths, ConfigRoutePaths, CypressTestRoutePaths, ONE_SECOND, SocketEventsFromClient } from "../common";
+import {
+  AuthRoutePaths,
+  ConfigRoutePaths,
+  CypressTestRoutePaths,
+  ONE_SECOND,
+  putTwoClientSocketsInGameAndStartIt,
+  putTwoSocketClientsInRoomAndHaveBothReadyUp,
+  SocketEventsFromClient,
+  SocketEventsFromServer,
+} from "../common";
 import { TaskNames } from "./cypress/support/TaskNames";
 import { makeEmailAccount } from "./cypress/support/email-account";
 import { cypressCloudProjectId } from "./cypress/support/consts";
 const io = require("socket.io-client");
 
-let socket: Socket;
-let accessToken: string | undefined;
 const users: {
   [name: string]: {
     socket: Socket | undefined;
@@ -95,7 +102,7 @@ export default defineConfig({
               headers: { "content-type": "application/json" },
             });
             // @ts-ignore
-            return { body: response.body, status: response.status };
+            return { data: response.data, status: response.status };
           } catch (error: any) {
             console.log("createSequentialEloUsers: ", error);
             return error;
@@ -109,30 +116,42 @@ export default defineConfig({
               data: { email, password },
               headers: { "content-type": "application/json" },
             });
-            users[name] = { socket: undefined, accessToken: response.headers["set-cookie"]?.join("") };
+            if (!users[name]) users[name] = { socket: undefined, accessToken: undefined };
+            users[name].accessToken = response.headers["set-cookie"]?.join("");
             return { status: response.status };
           } catch (error) {
             console.log(error);
             return error;
           }
         },
-        [TaskNames.connectSocket]: (args: { username: string; withHeaders?: boolean }) => {
-          if (!users[args.username]) users[args.username] = { socket: undefined, accessToken: undefined };
-          if (args?.withHeaders)
-            users[args.username].socket = io("http://localhost:8080" || "", {
-              transports: ["websocket"],
-              withCredentials: true,
-              // reconnectionAttempts: 3,
-              extraHeaders: {
-                cookie: users[args.username].accessToken,
-              },
+        [TaskNames.connectSocket]: async (args: { username: string; withHeaders?: boolean }) => {
+          const { username, withHeaders } = args;
+          if (!users[username]) users[username] = { socket: undefined, accessToken: undefined };
+          const getConnectedSocket = new Promise((resolve, reject) => {
+            if (withHeaders) {
+              console.log(`connecting user ${username}'s socket with accessToken: ${users[username].accessToken}`);
+              users[username].socket = io("http://localhost:8080" || "", {
+                transports: ["websocket"],
+                withCredentials: true,
+                // reconnectionAttempts: 3,
+                extraHeaders: {
+                  cookie: users[username].accessToken,
+                },
+              });
+            } else {
+              users[username].socket = io("http://localhost:8080" || "", {
+                transports: ["websocket"],
+                withCredentials: true,
+                // reconnectionAttempts: 3,
+              });
+            }
+            users[username].socket?.on(SocketEventsFromServer.AUTHENTICATION_COMPLETE, () => {
+              console.log("socket auth completed for socket: ", users[username].socket?.id);
+              users[username].socket?.off(SocketEventsFromServer.AUTHENTICATION_COMPLETE);
+              resolve(true);
             });
-          else
-            users[args.username].socket = io("http://localhost:8080" || "", {
-              transports: ["websocket"],
-              withCredentials: true,
-              // reconnectionAttempts: 3,
-            });
+          });
+          await getConnectedSocket;
           return null;
         },
         [TaskNames.disconnectSocket]: ({ username }) => {
@@ -147,7 +166,26 @@ export default defineConfig({
         },
         [TaskNames.socketEmit]: (taskData: { username: string; event: SocketEventsFromClient; data: any }) => {
           const { username, event, data } = taskData;
+          if (!users[username].socket) console.error(`tried to emit event ${event} but no socket was found`);
           users[username].socket?.emit(event, data);
+          return null;
+        },
+        [TaskNames.putTwoSocketsInGameAndStartIt]: async ({ username1, username2, gameName }: { username1: string; username2: string; gameName: string }) => {
+          if (!users[username1].socket || !users[username2].socket) return new Error("tried to start a game but one of the sockets wasn't found");
+          await putTwoClientSocketsInGameAndStartIt(users[username1].socket!, users[username2].socket!, gameName);
+          return null;
+        },
+        [TaskNames.putTwoSocketClientsInRoomAndHaveBothReadyUp]: async ({
+          username1,
+          username2,
+          gameName,
+        }: {
+          username1: string;
+          username2: string;
+          gameName: string;
+        }) => {
+          if (!users[username1].socket || !users[username2].socket) return new Error("tried to have two players ready up but one of the sockets wasn't found");
+          await putTwoSocketClientsInRoomAndHaveBothReadyUp(users[username1].socket!, users[username2].socket!, gameName);
           return null;
         },
         [TaskNames.getUserEmail]: () => {

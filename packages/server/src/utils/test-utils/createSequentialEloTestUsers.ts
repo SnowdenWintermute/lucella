@@ -1,5 +1,6 @@
 /* eslint-disable no-async-promise-executor */
 import { User, UserRole } from "../../../../common";
+import { TEST_USER_PASSWORD } from "./consts";
 import createTestUser from "./createTestUser";
 
 export default async function createSequentialEloTestUsers(numberToCreate: number, eloOfFirst: number, eloBetweenEach: number) {
@@ -14,13 +15,15 @@ export default async function createSequentialEloTestUsers(numberToCreate: numbe
         const user = await createTestUser(
           `test-${thisIterationCurrUserElo}`,
           `test-${thisIterationCurrUserElo}@gmail.com`,
-          "111111",
+          TEST_USER_PASSWORD,
           UserRole.USER,
           thisIterationCurrUserElo,
           1,
           1
         );
         createdUsers[user.name] = user;
+        // @ts-ignore
+        delete createdUsers[user.name].password;
         resolve(true);
       })
     );

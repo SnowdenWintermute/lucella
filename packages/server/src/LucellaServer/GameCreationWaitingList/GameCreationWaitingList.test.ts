@@ -8,6 +8,8 @@ import {
   GameStatus,
   GENERIC_SOCKET_EVENTS,
   ONE_SECOND,
+  putTwoClientSocketsInGameAndStartIt,
+  putTwoSocketClientsInRoomAndHaveBothReadyUp,
   randBetween,
   SocketEventsFromClient,
   SocketEventsFromServer,
@@ -18,8 +20,6 @@ import { LucellaServer } from "..";
 import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
 import createLoggedInUsersWithConnectedSockets from "../../utils/test-utils/createTestUsersAndReturnSockets";
-import putTwoClientSocketsInGameAndStartIt from "../../utils/test-utils/putTwoClientSocketsInGameAndStartIt";
-import putTwoSocketClientsInRoomAndHaveBothReadyUp from "../../utils/test-utils/putTwoSocketClientsInRoomAndHaveBothReadyUp";
 
 describe("GameCreationWaitingList", () => {
   let context: PGContext | undefined;

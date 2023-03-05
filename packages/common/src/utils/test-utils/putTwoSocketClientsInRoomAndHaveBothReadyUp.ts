@@ -1,7 +1,7 @@
 import { Socket } from "socket.io-client";
-import { SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
+import { SocketEventsFromClient, SocketEventsFromServer } from "../../index";
 
-export default function putTwoSocketClientsInRoomAndHaveBothReadyUp(socket1: Socket, socket2: Socket, gameName: string) {
+export function putTwoSocketClientsInRoomAndHaveBothReadyUp(socket1: Socket, socket2: Socket, gameName: string) {
   return new Promise((resolve, reject) => {
     const eventsOccurred = {
       socket1HostedGame: false,

@@ -56,7 +56,6 @@ export class GameCreationWaitingList {
         return console.log("tried to start a game but one of the players wasn't ready");
       this.server.initiateGameStartCountdown(gameToStart);
       console.log("waiting list started game: ", nameOfGameToStart);
-      if (!this.gameRoomsWaitingToStart.head) return this.clearWaitingListUpdateInterval();
     }
     // notify game rooms of their positions in line
     let currentPosition = 1;
@@ -66,6 +65,7 @@ export class GameCreationWaitingList {
       currentPosition += 1;
       currentNode = currentNode.next;
     }
+    if (!this.gameRoomsWaitingToStart.head) return this.clearWaitingListUpdateInterval();
   }
   createWaitingListUpdateInterval() {
     this.interval = setInterval(() => this.updateWaitingList(), this.server.config.gameCreationWaitingListLoopInterval);

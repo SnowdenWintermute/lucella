@@ -8,6 +8,7 @@ import { setAlert } from "../../redux/slices/alerts-slice";
 import { ErrorMessages, GameStatus, SocketEventsFromClient } from "../../../../common";
 import styles from "./game-lobby.module.scss";
 import { BUTTON_NAMES } from "../../consts/button-names";
+import { LOBBY_TEXT } from "../../consts/lobby-text";
 
 interface Props {
   socket: Socket;
@@ -91,8 +92,11 @@ function PreGameRoom({ socket }: Props) {
       )}
       {typeof currentWaitingListPosition === "number" && (
         <div>
-          <p>Server is experiencing high load, waiting for current games to finish.</p>
-          <p>Position in line: {currentWaitingListPosition}</p>
+          <p style={{ marginTop: "10px" }}>{LOBBY_TEXT.GAME_ROOM.SERVER_EXPERIENCING_HIGH_LOAD}</p>
+          <p style={{ marginBottom: "0px" }}>
+            {LOBBY_TEXT.GAME_ROOM.POSITION_IN_WAITING_LIST}
+            {currentWaitingListPosition}
+          </p>
         </div>
       )}
     </>

@@ -12,4 +12,6 @@ export enum TaskNames {
   logUserIn = "logUserIn",
   logUserOut = "logUserOut",
   createSequentialEloTestUsers = "createSequentialEloTestUsers",
+  putTwoSocketsInGameAndStartIt = "putTwoSocketsInGameAndStartIt",
+  putTwoSocketClientsInRoomAndHaveBothReadyUp = "putTwoSocketClientsInRoomAndHaveBothReadyUp",
 }
