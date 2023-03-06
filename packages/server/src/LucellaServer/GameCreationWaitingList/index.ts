@@ -68,7 +68,7 @@ export class GameCreationWaitingList {
     if (!this.gameRoomsWaitingToStart.head) return this.clearWaitingListUpdateInterval();
   }
   createWaitingListUpdateInterval() {
-    this.interval = setInterval(() => this.updateWaitingList(), this.server.config.gameCreationWaitingListLoopInterval);
+    this.interval = setInterval(() => this.updateWaitingList(), this.server.config.gameCreationWaitingListLoopIntervalLength);
   }
   clearWaitingListUpdateInterval() {
     console.log("clearing interval for game waiting list");

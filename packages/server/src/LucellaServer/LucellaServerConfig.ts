@@ -1,6 +1,7 @@
-import { baseGameCreationWaitingListLoopInterval, baseMaxConcurrentGames } from "../../../common";
+import { baseGameCreationWaitingListLoopIntervalLength, baseMatchmakingQueueIntervalLength, baseMaxConcurrentGames } from "../../../common";
 
 export default class LucellaServerConfig {
   maxConcurrentGames = baseMaxConcurrentGames;
-  gameCreationWaitingListLoopInterval = baseGameCreationWaitingListLoopInterval;
+  gameCreationWaitingListLoopIntervalLength = baseGameCreationWaitingListLoopIntervalLength;
+  matchmakingQueueIntervalLength = baseMatchmakingQueueIntervalLength;
 }

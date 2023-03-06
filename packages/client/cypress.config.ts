@@ -17,7 +17,7 @@ import { makeEmailAccount } from "./cypress/support/email-account";
 import { cypressCloudProjectId } from "./cypress/support/consts";
 const io = require("socket.io-client");
 
-const users: {
+let users: {
   [name: string]: {
     socket: Socket | undefined;
     accessToken: string | undefined;
@@ -73,7 +73,7 @@ export default defineConfig({
             // @ts-ignore
             return { body: response.body, status: response.status };
           } catch (error: any) {
-            console.log("deleteAllUsers: ", error, error.response.data);
+            console.log("deleteAllUsers: ", error, error?.response?.data);
             return error;
           }
         },
@@ -129,7 +129,7 @@ export default defineConfig({
           if (!users[username]) users[username] = { socket: undefined, accessToken: undefined };
           const getConnectedSocket = new Promise((resolve, reject) => {
             if (withHeaders) {
-              console.log(`connecting user ${username}'s socket with accessToken: ${users[username].accessToken}`);
+              console.log(`connecting user ${username}'s socket, has accessToken: ${!!users[username].accessToken}`);
               users[username].socket = io("http://localhost:8080" || "", {
                 transports: ["websocket"],
                 withCredentials: true,
@@ -159,9 +159,16 @@ export default defineConfig({
           return null;
         },
         [TaskNames.disconnectAllSockets]: () => {
-          Object.values(users).forEach((user) => {
-            if (user.socket) user.socket.disconnect();
+          Object.entries(users).forEach(([name, user]) => {
+            if (user.socket) {
+              console.log("disconnecting socket ", user.socket.id);
+              user.socket.disconnect();
+            } else console.log(`tried to disconnect a user socket for user ${name}but couldn't find one`);
           });
+          return null;
+        },
+        [TaskNames.deleteAllSocketsAndAccessTokens]: () => {
+          users = {};
           return null;
         },
         [TaskNames.socketEmit]: (taskData: { username: string; event: SocketEventsFromClient; data: any }) => {

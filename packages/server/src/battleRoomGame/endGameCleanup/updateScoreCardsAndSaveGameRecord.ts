@@ -18,7 +18,10 @@ export default async function updateScoreCardsAndSaveGameRecord(gameRoom: GameRo
   // determine if both players have accounts in the database
   const hostUser = await UserRepo.findOne("name", gameRoom.players.host?.associatedUser.username);
   const challengerUser = await UserRepo.findOne("name", gameRoom.players.challenger?.associatedUser.username);
-  if (!challengerUser || !hostUser) throw new Error("tried to update ranked game record in a game in which at least one user wasn't registered");
+  if (!challengerUser || !hostUser) {
+    console.error("tried to update ranked game record in a game in which at least one user wasn't registered");
+    return null;
+  }
   // if both players are registered users, update their win loss records
   const hostScoreCard = await BattleRoomScoreCardRepo.findByUserId(hostUser.id);
   const challengerScoreCard = await BattleRoomScoreCardRepo.findByUserId(challengerUser.id);

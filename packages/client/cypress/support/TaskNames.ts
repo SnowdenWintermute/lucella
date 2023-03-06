@@ -4,6 +4,7 @@ export enum TaskNames {
   connectSocket = "connectSocket",
   disconnectSocket = "disconnectSocket",
   disconnectAllSockets = "disconnectSoAllckets",
+  deleteAllSocketsAndAccessTokens = "deleteAllSocketsAndAccessTokens",
   socketEmit = "socketEmit",
   getUserEmail = "getUserEmail",
   getLastEmail = "getLastEmail",

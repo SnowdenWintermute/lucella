@@ -17,8 +17,9 @@ function Navbar() {
         <div className="nav-right-holder">
           {/* <Image className="logo-img" alt="lucella logo" src={logo} /> */}
           <Logo className={styles["site-logo"]} />
-          <Link href="/" className="brand-text">
+          <Link href="/" className={styles["brand-text"]}>
             <h1>Battle School</h1>
+            <span className={styles["app-version"]}>alpha 0.1.0</span>
           </Link>
           <div className="nav-tabs">
             <Link href="/battle-room" className={`nav-tab ${router.pathname === "/battle-room" && "tab-active"}`}>

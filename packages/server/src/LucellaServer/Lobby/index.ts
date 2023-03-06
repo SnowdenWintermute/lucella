@@ -131,13 +131,12 @@ export class Lobby {
         this.server.initiateGameStartCountdown(gameRoom);
       }
     } else {
-      // handle unreadying (ranked users should already be removed from queue and have their socket left from the matchmaking info channel when their game)
+      // handle unreadying. ranked users should already be removed from queue and have their socket left from the matchmaking info channel when their game
       // was started. they can only unready if their game was started anyway, which starting the game would have had those effects already so we don't need to do it here.
       if (previousHostReadyState && previousChallengerReadyState) {
         this.server.gameCreationWaitingList.removeGameRoom(gameRoom.gameName);
         this.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
         if (gameRoom.isRanked) {
-          this.changeSocketChatChannelAndEmitUpdates(socket, connectedSockets[socket.id].previousChatChannelName || battleRoomDefaultChatChannel);
           this.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
           socket.emit(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
         }

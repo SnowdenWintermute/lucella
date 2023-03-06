@@ -40,7 +40,7 @@ describe("GameCreationWaitingList", () => {
         lucella.server = new LucellaServer(httpServer);
         // set the limit to two games and reduce the waiting list interval to make the test go faster
         lucella.server.config.maxConcurrentGames = 2;
-        lucella.server.config.gameCreationWaitingListLoopInterval = 1000;
+        lucella.server.config.gameCreationWaitingListLoopIntervalLength = 1000;
         const usersToCreate = [
           { email: "user1@lucella.com", elo: 2000 },
           { email: "user2@lucella.com", elo: 1980 },

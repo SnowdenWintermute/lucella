@@ -14,6 +14,7 @@ import {
 import UserRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { LucellaServer } from "..";
+import { lucella } from "../../lucella";
 
 export interface MatchmakingQueueUser {
   userId: string;
@@ -105,10 +106,10 @@ export class MatchmakingQueue {
 
       bestMatch.eloDiff = null;
       bestMatch.players = null;
-    }, ONE_SECOND);
+    }, lucella.server!.config.matchmakingQueueIntervalLength);
   }
   increaseEloDiffMatchingThreshold() {
-    if (this.currentEloDiffThreshold >= maxEloDiffThreshold) return console.log("cannot increase the elo diff threshold beyond the maximum");
+    if (this.currentEloDiffThreshold >= maxEloDiffThreshold) return;
     const exponentiallyIncreasedThreshold = Math.round(0.35 * 1.5 ** this.currentIntervalIteration + this.eloDiffThresholdAdditive);
     this.currentEloDiffThreshold = exponentiallyIncreasedThreshold;
   }

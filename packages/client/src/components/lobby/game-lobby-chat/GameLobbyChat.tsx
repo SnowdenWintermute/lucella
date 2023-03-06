@@ -13,6 +13,7 @@ import {
 import styles from "./game-lobby-chat.module.scss";
 import CircularProgress from "../../common-components/CircularProgress";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
+import replaceUrlsWithAnchorTags from "../../../utils/replaceUrlsWithAnchorTags";
 
 interface Props {
   socket: Socket;
@@ -97,9 +98,11 @@ function GameLobbyChat({ socket }: Props) {
   let messagesToDisplay;
   if (messages) {
     messagesToDisplay = messages.map((message) => {
+      const textToDisplay = replaceUrlsWithAnchorTags(message.text, styles[`chat-message-${message.style}`]);
       return (
         <li className={styles[`chat-message-${message.style}`]} key={`${message.timeStamp} ${message.text}`}>
-          {message.author} : {message.text}
+          {/* eslint-disable-next-line react/no-danger */}
+          {message.author} : <span className={styles[`chat-message-${message.style}`]} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
         </li>
       );
     });

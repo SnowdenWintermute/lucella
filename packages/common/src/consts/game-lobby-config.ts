@@ -6,7 +6,8 @@ export const gameChannelNamePrefix = "game-";
 export const rankedGameChannelNamePrefix = "ranked-";
 export const maxEloDiffThreshold = 3000;
 export const eloDiffThresholdAdditive = 1000;
-export const baseGameCreationWaitingListLoopInterval = 3 * ONE_SECOND;
+export const baseGameCreationWaitingListLoopIntervalLength = 3 * ONE_SECOND;
+export const baseMatchmakingQueueIntervalLength = ONE_SECOND;
 export enum OfficialChannels {
   matchmakingQueue = "matchmaking-queue",
 }

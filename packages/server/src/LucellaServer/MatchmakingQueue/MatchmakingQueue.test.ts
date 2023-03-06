@@ -322,7 +322,7 @@ describe("MatchmakingQueue", () => {
 
       // set the limit to two games and reduce the waiting list interval to make the test go faster
       lucella.server!.config.maxConcurrentGames = 2;
-      lucella.server!.config.gameCreationWaitingListLoopInterval = 1000;
+      lucella.server!.config.gameCreationWaitingListLoopIntervalLength = 1000;
       // start two games to reach the limit
       const gameStartPromises = [
         putTwoClientSocketsInGameAndStartIt(clients.thirdplace, clients.fourthplace, "game1"),

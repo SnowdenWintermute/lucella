@@ -11,3 +11,18 @@
   //   border-right: 1px solid color(textLight);
   border-radius: 50%;
 }
+
+.brand-text {
+  font-family: "Nunito Sans";
+  position: relative;
+  margin-right: 64px;
+  @media (max-width: $mobileNavWidth) {
+    display: none;
+  }
+}
+
+.app-version {
+  position: absolute;
+  bottom: -12px;
+  right: 0px;
+}

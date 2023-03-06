@@ -16,6 +16,7 @@ $colors: (
   dangerBright: #e42933,
   success: #2d6a2d,
   chatMessagePrivate: pink,
+  warning: rgb(255, 187, 0),
 );
 
 @function color($color-name) {
