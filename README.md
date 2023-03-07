@@ -1,8 +1,8 @@
-# Lucella - Battle Room
+# Battle School
 
 #### A simple [Real-time strategy](https://en.wikipedia.org/wiki/Real-time_strategy) game in the web browser with ranked matchmaking
 
-Visit the live demo at [lucella.org](https://lucella.org)
+Visit the live demo at [battleschool.io](https://battleschool.io)
 
 [![Tests](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml/badge.svg?event=pull_request)](https://github.com/SnowdenWintermute/lucella/actions/workflows/tests.yml)
 
