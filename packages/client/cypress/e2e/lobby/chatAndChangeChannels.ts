@@ -6,7 +6,7 @@ export default function chatAndChangeChannels() {
   return it("users can see other users in their channel chat, not see chat from other channels, change channels, and see other user list update when users change channels or disconnect", () => {
     const anonUsernameForCypressSocketList = "Anon1234";
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
-    cy.findByText("Server : Welcome to battle-room-chat.").should("exist");
+    cy.findByText(/Server : Welcome to battle-room-chat/, { timeout: 15000 }).should("be.visible");
 
     cy.task(TaskNames.connectSocket, { username: anonUsernameForCypressSocketList });
     cy.task(TaskNames.socketEmit, {

@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   ChatMessage,
   SocketEventsFromClient,
@@ -9,17 +9,20 @@ import {
   chatDelayUnregisteredUser,
   percentNumberIsOfAnotherNumber,
   positiveNumberOrZero,
+  ChatMessageStyles,
 } from "../../../../../common";
 import styles from "./game-lobby-chat.module.scss";
 import CircularProgress from "../../common-components/CircularProgress";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import replaceUrlsWithAnchorTags from "../../../utils/replaceUrlsWithAnchorTags";
+import { newChatMessage } from "../../../redux/slices/chat-slice";
 
 interface Props {
   socket: Socket;
 }
 
 function GameLobbyChat({ socket }: Props) {
+  const dispatch = useAppDispatch();
   const [chatInput, setChatInput] = useState("");
   const [chatClass, setChatClass] = useState("");
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
@@ -95,11 +98,25 @@ function GameLobbyChat({ socket }: Props) {
     sendNewMessageAfterAnyRemainingDelay(chatInput);
   };
 
-  let messagesToDisplay;
+  const messagesToDisplay: JSX.Element[] = [
+    <li className={styles[`chat-message-private`]} key={`${Date.now()} ${"1234"}`}>
+      {/* eslint-disable-next-line react/no-danger */}
+      <span
+        className={styles[`chat-message-private`]}
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{
+          __html: replaceUrlsWithAnchorTags(
+            "Battle School is in alpha. All accounts are likely to be deleted upon the first beta release. Please report any issues here: https://github.com/SnowdenWintermute/lucella/issues",
+            styles[`chat-message-private`]
+          ),
+        }}
+      />
+    </li>,
+  ];
   if (messages) {
-    messagesToDisplay = messages.map((message) => {
+    messages.forEach((message) => {
       const textToDisplay = replaceUrlsWithAnchorTags(message.text, styles[`chat-message-${message.style}`]);
-      return (
+      messagesToDisplay.push(
         <li className={styles[`chat-message-${message.style}`]} key={`${message.timeStamp} ${message.text}`}>
           {/* eslint-disable-next-line react/no-danger */}
           {message.author} : <span className={styles[`chat-message-${message.style}`]} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
