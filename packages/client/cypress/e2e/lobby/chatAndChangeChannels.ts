@@ -6,7 +6,7 @@ export default function chatAndChangeChannels() {
   return it("users can see other users in their channel chat, not see chat from other channels, change channels, and see other user list update when users change channels or disconnect", () => {
     const anonUsernameForCypressSocketList = "Anon1234";
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
-    cy.findByText(/Server : Welcome to battle-room-chat/, { timeout: 15000 }).should("be.visible");
+    cy.findByText(/Welcome to battle-room-chat/, { timeout: 15000 }).should("be.visible");
 
     cy.task(TaskNames.connectSocket, { username: anonUsernameForCypressSocketList });
     cy.task(TaskNames.socketEmit, {
@@ -44,7 +44,7 @@ export default function chatAndChangeChannels() {
     cy.findByText(new RegExp(`${shortTestText}`)).should("not.exist"); // because haven't joined the channel it was sent to yet
     cy.findByRole("button", { name: /channel/i }).click();
     cy.findByLabelText("channel to join").click().type("test{enter}");
-    cy.findByText("Server : Welcome to test.").should("exist");
+    cy.findByText(/Welcome to test/i).should("exist");
     cy.findByLabelText(/users in this channel/i)
       .findAllByText(/anon/i)
       .should("have.length", 2);
