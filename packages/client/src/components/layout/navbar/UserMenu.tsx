@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
+import styles from "./user-menu.module.scss";
 
 export function UserMenu() {
   const [showUserDropdown, toggleUserDropdown] = useState(false);
@@ -36,24 +37,24 @@ export function UserMenu() {
     <>
       <button
         type="button"
-        className="user-icon-circle"
+        className={styles["user-icon-circle"]}
         data-name="profile-icon"
         data-cy="profile-icon"
         onClick={(e) => {
           toggleUserDropdown(!showUserDropdown);
         }}
       >
-        <div className="user-icon-letter" data-name="profile-icon">
-          {user?.name && user.name.slice(0, 1)}
+        <div className={styles["user-icon-letter"]} data-name="profile-icon">
+          {user?.name && user.name.slice(0, 1).toUpperCase()}
         </div>
       </button>
       {showUserDropdown && (
-        <ul className="user-menu">
-          <Link href="/settings" className="user-menu-item">
+        <ul className={styles["user-menu"]}>
+          <Link href="/settings" className={styles["user-menu-item"]}>
             {/* <SettingsIcon className="menu-icon-svg" height="100" width="100" color="red" stroke="red" fill="red" /> */}
             Settings
           </Link>
-          <Link href="/login" onClick={handleLogout} className="user-menu-item">
+          <Link href="/login" onClick={handleLogout} className={styles["user-menu-item"]}>
             {/* <Image alt="logout icon" src={logoutIcon} /> */}
             Logout
           </Link>

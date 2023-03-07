@@ -6,7 +6,7 @@ function ChannelInfoBox() {
   const { newChatChannelLoading, currentChatChannelName, currentChatChannelUsers } = chatState;
   const numUsers = Object.keys(currentChatChannelUsers).length;
   return (
-    <div className="game-lobby-info-box">
+    <div aria-label="chat channel name and number of users" className="game-lobby-info-box">
       {currentChatChannelName} ({newChatChannelLoading ? "..." : numUsers})
     </div>
   );

@@ -22,7 +22,7 @@ import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { lucella } from "../../lucella";
-import { LucellaServer } from "../../classes/LucellaServer";
+import { LucellaServer } from "../../LucellaServer";
 import createTestUser from "../../utils/test-utils/createTestUser";
 import logTestUserIn from "../../utils/test-utils/logTestUserIn";
 

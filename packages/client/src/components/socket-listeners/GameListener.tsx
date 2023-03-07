@@ -7,24 +7,25 @@ import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
 import mapUnpackedPacketToUpdateObject from "../../protobuf-utils/mapUnpackedPacketToUpdateObject";
+import { INetworkPerformanceMetrics } from "../../types";
 
 interface Props {
   socket: Socket;
   game: BattleRoomGame;
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
   canvasSizeRef: React.RefObject<WidthAndHeight | null>;
-  latencyRef: React.MutableRefObject<number | undefined>;
+  networkPerformanceMetrics: INetworkPerformanceMetrics;
 }
 
 function GameListener(props: Props) {
   const dispatch = useAppDispatch();
   const { playerRole } = useAppSelector((state) => state.lobbyUi);
-  const { socket, game, canvasRef, canvasSizeRef, latencyRef } = props;
+  const { socket, game, canvasRef, canvasSizeRef, networkPerformanceMetrics } = props;
 
   useEffect(() => {
     if (!socket) return;
     socket.on(SocketEventsFromServer.GAME_INITIALIZATION, () => {
-      game.intervals.physics = createClientPhysicsInterval(socket, game, playerRole, canvasRef, canvasSizeRef, latencyRef);
+      createClientPhysicsInterval(socket, game, playerRole, canvasRef, canvasSizeRef, networkPerformanceMetrics);
     });
     socket.on(SocketEventsFromServer.COMPRESSED_GAME_PACKET, async (data: Uint8Array) => {
       if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");

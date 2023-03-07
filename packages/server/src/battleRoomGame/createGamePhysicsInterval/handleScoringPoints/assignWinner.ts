@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { BattleRoomGame, PlayerRole } from "../../../../../common";
-import { LucellaServer } from "../../../classes/LucellaServer";
+import { LucellaServer } from "../../../LucellaServer";
 
 export default function assignWinner(server: LucellaServer, game: BattleRoomGame) {
   const gameRoom = server.lobby.gameRooms[game.gameName];

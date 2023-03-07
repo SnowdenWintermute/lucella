@@ -58,6 +58,7 @@ $gameListHeight: 300px;
 }
 .game-list-table {
   border-collapse: collapse;
+  width: 100%;
 }
 .game-list-table td {
   padding: 2px;
@@ -114,7 +115,7 @@ $gameListHeight: 300px;
   border-right: 1px solid color(textPrimary);
   display: flex;
   flex-direction: column-reverse;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .game-lobby-chat-input-holder {
   // border-top: 1px solid color(textPrimary);

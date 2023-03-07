@@ -10,7 +10,8 @@ export default async function createCypressTestUser(req: Request, res: Response,
     const email = req.body.email || TEST_USER_EMAIL;
     const name = req.body.name || TEST_USER_NAME;
     const hashedPassword = await bcrypt.hash(TEST_USER_PASSWORD, 12);
-    const user = await UserRepo.insert(name, email, hashedPassword);
+    const { role } = req.body;
+    const user = await UserRepo.insert(name, email, hashedPassword, role);
     if (req.body.elo) {
       const scoreCard = await BattleRoomScoreCardRepo.insert(user.id);
       await BattleRoomScoreCardRepo.update({ ...scoreCard, elo: req.body.elo });

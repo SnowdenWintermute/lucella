@@ -12,14 +12,14 @@ import {
   UserInput,
   createDeltaPacket,
 } from "../../../../common";
-import { LucellaServer } from "../../classes/LucellaServer";
+import { LucellaServer } from "../../LucellaServer";
 import handleScoringPoints from "./handleScoringPoints";
 
-export default function createGamePhysicsInterval(io: Server, socket: Socket, server: LucellaServer, gameName: string) {
+export default function createGamePhysicsInterval(io: Server, server: LucellaServer, gameName: string) {
   const game = server.games[gameName];
   BattleRoomGame.initializeWorld(game);
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
-
+  console.log(`game physics started for ${gameName}`);
   // eslint-disable-next-line consistent-return
   return setInterval(() => {
     if (!game) return console.log("tried to update physics in a game that wasn't found");
@@ -37,13 +37,15 @@ export default function createGamePhysicsInterval(io: Server, socket: Socket, se
       });
     }
 
-    handleScoringPoints(io, socket, server, game);
+    handleScoringPoints(server, game);
     const updateForHost = createDeltaPacket(game, PlayerRole.HOST);
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
     if (game.winner) server.endGameAndEmitUpdates(game);
 
-    io.to(server.lobby.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
-    io.to(server.lobby.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
+    if (server.lobby.gameRooms[gameName].players.host!.socketId)
+      io.to(server.lobby.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
+    if (server.lobby.gameRooms[gameName].players.challenger!.socketId)
+      io.to(server.lobby.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
 
     game.netcode.prevGameState = new GameElementsOfConstantInterest(
       cloneDeep(game.orbs),

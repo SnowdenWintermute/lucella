@@ -5,8 +5,8 @@ export default async function createSequentialEloTestUsersRoute(req: Request, re
   try {
     const { numberToCreate, eloOfFirst, eloBetweenEach } = req.body;
     console.log(numberToCreate, eloOfFirst, eloBetweenEach);
-    await createSequentialEloTestUsers(numberToCreate, eloOfFirst, eloBetweenEach);
-    return res.sendStatus(200);
+    const createdUsers = await createSequentialEloTestUsers(numberToCreate, eloOfFirst, eloBetweenEach);
+    return res.status(201).json(createdUsers);
   } catch (error) {
     console.log("createSequentialEloTestUsersRoute error: ", error);
     return next(error);

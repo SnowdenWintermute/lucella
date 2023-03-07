@@ -4,13 +4,12 @@ import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
 import { Detector } from "matter-js";
 import assignDebugValues from "./assignDebugValues";
-import determineRoundTripTime from "./determineRoundTripTime";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
 import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, WidthAndHeight } from "../../../../../common";
 import draw from "../canvas-functions/canvasMain";
 import serializeInput from "../../../protobuf-utils/serialize-input";
-import setNonOrbGameState from "./setNonOrbGameState";
+import { INetworkPerformanceMetrics } from "../../../types";
 
 export default function createClientPhysicsInterval(
   socket: Socket,
@@ -18,27 +17,28 @@ export default function createClientPhysicsInterval(
   playerRole: PlayerRole | null,
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   canvasSizeRef: React.RefObject<WidthAndHeight | null>,
-  latencyRef: React.MutableRefObject<number | undefined>
+  networkPerformanceMetrics: INetworkPerformanceMetrics
 ) {
   let frameTime = renderRate;
   BattleRoomGame.initializeWorld(game);
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
 
-  return setInterval(() => {
+  function clientPhysics() {
     const timeAtStartOfFrameSimulation = +Date.now();
     const lastUpdateFromServerCopy = cloneDeep(game.netcode.lastUpdateFromServer);
     const newGameState = cloneDeep(game);
     BattleRoomGame.initializeWorld(newGameState, game);
 
-    if (!lastUpdateFromServerCopy || !playerRole) return console.log("awaiting first server update before starting client physics");
+    if (!lastUpdateFromServerCopy || !playerRole) {
+      game.intervals.physics = setTimeout(clientPhysics, renderRate);
+      return console.log("awaiting first server update before starting client physics");
+    }
 
     const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
     const serialized = serializeInput(input);
     newGameState.queues.client.localInputs.push(input);
 
-    socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
-
-    interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
+    interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole, networkPerformanceMetrics);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);
 
     game.debug.general = newGameState.debug.general;
@@ -47,6 +47,11 @@ export default function createClientPhysicsInterval(
     frameTime = +Date.now() - timeAtStartOfFrameSimulation;
 
     if (canvasRef && canvasRef.current && canvasSizeRef.current)
-      draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game, latencyRef.current);
-  }, renderRate);
+      draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game, networkPerformanceMetrics);
+
+    socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
+    game.intervals.physics = setTimeout(clientPhysics, renderRate);
+  }
+
+  clientPhysics();
 }

@@ -17,6 +17,11 @@ export enum ModerationRoutePaths {
   IP_BAN = "/ip-ban",
 }
 
+export enum ConfigRoutePaths {
+  ROOT = "/config",
+  MAX_CONCURRENT_GAMES = "/max-concurrent-games",
+}
+
 export enum CypressTestRoutePaths {
   ROOT = "/cypress-tests",
   DROP_ALL_TEST_USERS = "/drop-all-test-users",

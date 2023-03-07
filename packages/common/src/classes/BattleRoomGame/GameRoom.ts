@@ -1,7 +1,7 @@
 import { BattleRoomGame } from "../BattleRoomGame";
 import { SocketMetadata } from "../SocketMetadata";
 import { GameStatus } from "../../enums";
-import { gameRoomCountdownDuration } from "../../consts/game-lobby-config";
+import { gameChannelNamePrefix, gameRoomCountdownDuration } from "../../consts/game-lobby-config";
 
 export class GameRoom {
   gameName: string;
@@ -17,8 +17,10 @@ export class GameRoom {
   score = { host: 0, challenger: 0, neededToWin: BattleRoomGame.initialScoreNeededToWin };
   winner: string | null = null;
   isRanked: boolean;
+  chatChannel: string;
   constructor(gameName: string, isRanked: boolean | undefined) {
     this.gameName = gameName;
+    this.chatChannel = gameChannelNamePrefix + this.gameName;
     this.spectators = [];
     this.isRanked = isRanked || false;
   }

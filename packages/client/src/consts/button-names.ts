@@ -9,4 +9,9 @@ export const BUTTON_NAMES = {
   GENERAL: {
     SEARCH: "SEARCH",
   },
+  GAME_ROOM: {
+    READY: "READY",
+    LEAVE_WAITING_LIST: "LEAVE",
+    MAKE_PUBLIC: "Make Public",
+  },
 };

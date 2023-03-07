@@ -1,4 +1,4 @@
-import { v4 } from "uuid";
+/* eslint-disable max-classes-per-file */
 
 export class SocketMetadata {
   currentGameName: string | null;
@@ -6,12 +6,11 @@ export class SocketMetadata {
     username: string;
     isGuest: boolean;
   };
-  uuid: string;
-  currentChatChannel?: string | null;
-  previousChatChannelName?: string | null;
+  currentChatChannel: string | null = null;
+  previousChatChannelName: string | null = null;
   latency = 0;
-  ipAddress?: string; // optional so it can be omitted when sent to client
-  socketId?: string; // optional so it can be omitted when sent to client
+  ipAddress: string;
+  socketId: string;
   constructor(
     socketId: string,
     ipAddress: string,
@@ -28,6 +27,19 @@ export class SocketMetadata {
     this.currentGameName = currentGameName || null;
     this.currentChatChannel = currentChatChannel || null;
     this.previousChatChannelName = null;
-    this.uuid = v4();
+  }
+}
+
+export class SanitizedSocketMetadata {
+  currentGameName: string | null;
+  associatedUser: {
+    username: string;
+    isGuest: boolean;
+  };
+  latency = 0;
+  constructor(socketMeta: SocketMetadata) {
+    this.currentGameName = socketMeta.currentGameName;
+    this.associatedUser = socketMeta.associatedUser;
+    this.latency = socketMeta.latency;
   }
 }

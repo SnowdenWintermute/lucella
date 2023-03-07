@@ -27,7 +27,7 @@ describe("user stories related to authentication, account creation and deletion"
     cy.task(TaskNames.setRateLimiterDisabled, { ...args, rateLimiterDisabled: false }).then((response: Response) => {
       expect(response.status).to.equal(200);
     });
-    cy.task(TaskNames.disconnectSocket);
+    cy.task(TaskNames.disconnectAllSockets);
   });
 
   loginForm();

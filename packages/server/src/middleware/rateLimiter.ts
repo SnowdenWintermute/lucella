@@ -44,7 +44,7 @@ export default function createRateLimiterMiddleware(
       console.log("rate limiter disabled"); // can be toggled by cypress task
       return next();
     }
-    const { context } = wrappedRedis; // redis store
+    const { context } = wrappedRedis;
     // get the current fixed window counter timestamp
     const now = Date.now();
     const currentCounterIntervalTimestamp = now - (now % counterFixedWindowMs);

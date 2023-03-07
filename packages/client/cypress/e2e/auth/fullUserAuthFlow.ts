@@ -33,7 +33,7 @@ export default function fullUserAuthFlow() {
       cy.findByLabelText(/email address/i).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
       cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
-      cy.get('[data-cy="profile-icon"]').click();
+      cy.get('[data-cy="profile-icon"]').should("be.visible").click();
       cy.findByRole("link", { name: /settings/i }).click();
       cy.findByRole("button", { name: /delete account/i }).click();
       cy.findByLabelText(/email address/i).type("wrong_email@gmail.com{enter}");
@@ -148,11 +148,11 @@ export default function fullUserAuthFlow() {
       // after successful login...
       cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}/battle-room`);
-      cy.get('[data-cy="profile-icon"]').click();
+      cy.get('[data-cy="profile-icon"]').should("be.visible").click();
       cy.findByRole("link", { name: /settings/i }).click();
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.SETTINGS}`);
       // logout should kick user from authed routes and show login link instead of user menu
-      cy.get('[data-cy="profile-icon"]').click();
+      cy.get('[data-cy="profile-icon"]').should("be.visible").click();
       cy.findByRole("link", { name: /logout/i }).click();
       cy.get('[data-cy="profile-icon"]').should("not.exist");
       cy.findByRole("link", { name: /login/i }).should("exist");
@@ -160,7 +160,7 @@ export default function fullUserAuthFlow() {
       cy.findByLabelText(/password/i).type(Cypress.env("CYPRESS_TEST_USER_PASSWORD"));
       cy.findByLabelText(/email address/i).type(`${userEmail}{enter}`);
 
-      cy.get('[data-cy="profile-icon"]').click();
+      cy.get('[data-cy="profile-icon"]').should("be.visible").click();
       cy.findByRole("link", { name: /settings/i }).click();
       cy.findByRole("button", { name: /change password/i }).click();
       cy.findByText(new RegExp(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("exist");
@@ -188,7 +188,7 @@ export default function fullUserAuthFlow() {
       cy.findByRole("heading", { name: /login/i }).should("exist");
       cy.findByLabelText(/email address/i).type(userEmail);
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}{enter}`);
-      cy.get('[data-cy="profile-icon"]').click();
+      cy.get('[data-cy="profile-icon"]').should("be.visible").click();
       cy.findByRole("link", { name: /settings/i }).click();
       cy.findByRole("heading", { name: /settings/i }).should("exist");
     });

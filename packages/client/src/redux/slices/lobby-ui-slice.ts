@@ -16,10 +16,14 @@ export interface ILobbyUIState {
       [roomName: string]: GameRoom;
     };
     isOpen: boolean;
+    isFetching: boolean;
   };
   scoreScreenData: IGameScoreScreen | null;
-  preGameScreen: {
+  gameRoomDisplay: {
     isOpen: boolean;
+  };
+  gameCreationWaitingList: {
+    currentPosition: number | null;
   };
   matchmakingScreen: {
     isLoading: boolean;
@@ -38,10 +42,14 @@ const initialState: ILobbyUIState = {
   gameList: {
     games: {},
     isOpen: false,
+    isFetching: true,
   },
   scoreScreenData: null,
-  preGameScreen: {
+  gameRoomDisplay: {
     isOpen: false,
+  },
+  gameCreationWaitingList: {
+    currentPosition: null,
   },
   matchmakingScreen: {
     isLoading: false,
@@ -65,8 +73,8 @@ const ladderSlice = createSlice({
     setAuthenticating(state, action: PayloadAction<boolean>) {
       state.authenticating = action.payload;
     },
-    setPreGameScreenDisplayed(state, action: PayloadAction<boolean>) {
-      state.preGameScreen.isOpen = action.payload;
+    setGameRoomDisplayVisible(state, action: PayloadAction<boolean>) {
+      state.gameRoomDisplay.isOpen = action.payload;
     },
     setCurrentGameRoom(state, action: PayloadAction<GameRoom | null>) {
       state.currentGameRoom = action.payload;
@@ -79,6 +87,7 @@ const ladderSlice = createSlice({
     },
     updateGameStatus(state, action: PayloadAction<GameStatus>) {
       if (state.currentGameRoom) state.currentGameRoom.gameStatus = action.payload;
+      if (action.payload !== GameStatus.IN_WAITING_LIST) state.gameCreationWaitingList.currentPosition = null;
     },
     updatePlayerRole(state, action: PayloadAction<PlayerRole>) {
       state.playerRole = action.payload;
@@ -95,8 +104,14 @@ const ladderSlice = createSlice({
     setMatchmakingData(state, action: PayloadAction<{ queueSize: number; currentEloDiffThreshold: number }>) {
       state.matchmakingScreen.currentData = action.payload;
     },
+    setGameCreationWaitingListPosition(state, action: PayloadAction<number>) {
+      state.gameCreationWaitingList.currentPosition = action.payload;
+    },
     setViewingGamesList(state, action: PayloadAction<boolean>) {
       state.gameList.isOpen = action.payload;
+    },
+    setGameListFetching(state, action: PayloadAction<boolean>) {
+      state.gameList.isFetching = action.payload;
     },
     updateGameList(
       state,
@@ -105,6 +120,7 @@ const ladderSlice = createSlice({
       }>
     ) {
       state.gameList.games = action.payload;
+      state.gameList.isFetching = false;
     },
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
       state.scoreScreenData = action.payload;
@@ -124,7 +140,7 @@ const ladderSlice = createSlice({
 export const {
   clearLobbyUi,
   setAuthenticating,
-  setPreGameScreenDisplayed,
+  setGameRoomDisplayVisible,
   setCurrentGameRoom,
   updatePlayersReady,
   updateGameCountdown,
@@ -134,7 +150,9 @@ export const {
   setMatchmakingLoading,
   setMatchmakingWindowVisible,
   setMatchmakingData,
+  setGameCreationWaitingListPosition,
   setViewingGamesList,
+  setGameListFetching,
   updateGameList,
   setScoreScreenData,
 } = ladderSlice.actions;

@@ -1,3 +1,3 @@
-import { LucellaServer } from "./classes/LucellaServer";
+import { LucellaServer } from "./LucellaServer";
 
 export const lucella: { [server: string]: LucellaServer | undefined } = { server: undefined };

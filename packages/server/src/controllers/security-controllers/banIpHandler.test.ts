@@ -24,7 +24,7 @@ import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { lucella } from "../../lucella";
-import { LucellaServer } from "../../classes/LucellaServer";
+import { LucellaServer } from "../../LucellaServer";
 import createTestUser from "../../utils/test-utils/createTestUser";
 import logTestUserIn from "../../utils/test-utils/logTestUserIn";
 
@@ -85,7 +85,8 @@ describe("banIpHandler.test", () => {
         });
       });
       let nameOfAnonUserToBan = "";
-      socket.on(SocketEventsFromServer.NEW_CHAT_MESSAGE, async () => {
+      socket.on(SocketEventsFromServer.NEW_CHAT_MESSAGE, async (data) => {
+        if (data.text !== "Welcome to battle-room-chat.") return;
         console.log("lucella.server?.connectedUsers: ", lucella.server?.connectedUsers);
         nameOfAnonUserToBan = Object.keys(lucella.server?.connectedUsers!)[0];
         // log in as admin and ban user

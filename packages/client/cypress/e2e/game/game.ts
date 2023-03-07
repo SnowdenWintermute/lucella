@@ -10,7 +10,7 @@ import {
   createAdjustedCoordinateCalculator,
 } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
-import { MATCHMAKING_QUEUE } from "../../../src/consts/lobby-text";
+import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
 
 describe("play game", () => {
   // eslint-disable-next-line no-undef
@@ -37,7 +37,7 @@ describe("play game", () => {
 
   // eslint-disable-next-line no-undef
   after(() => {
-    cy.task(TaskNames.disconnectSocket);
+    cy.task(TaskNames.disconnectSocket, { username: Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE") });
   });
 
   it("joins the matchmaking queue and plays a game", () => {
@@ -49,19 +49,26 @@ describe("play game", () => {
       password: Cypress.env("CYPRESS_TEST_USER_PASSWORD"),
     });
     // log in other user
-    cy.task(TaskNames.logUserIn, { email: Cypress.env("CYPRESS_TEST_USER_EMAIL_ALTERNATE"), password: Cypress.env("CYPRESS_TEST_USER_PASSWORD") }).then(() => {
-      cy.task(TaskNames.connectSocket, { withHeaders: true });
-      cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, data: battleRoomDefaultChatChannel });
+    cy.task(TaskNames.logUserIn, {
+      name: alternateUsername,
+      email: Cypress.env("CYPRESS_TEST_USER_EMAIL_ALTERNATE"),
+      password: Cypress.env("CYPRESS_TEST_USER_PASSWORD"),
+    }).then(() => {
+      cy.task(TaskNames.connectSocket, { username: alternateUsername, withHeaders: true });
+      cy.task(TaskNames.socketEmit, {
+        username: alternateUsername,
+        event: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL,
+        data: battleRoomDefaultChatChannel,
+      });
     });
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
     cy.findByRole("heading", { name: /battle room/i }).should("be.visible");
     cy.findByText(username).should("be.visible");
     cy.findByText(alternateUsername).should("be.visible");
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
+    cy.task(TaskNames.socketEmit, { username: alternateUsername, event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
     cy.findByRole("button", { name: /ranked/i }).click();
-    cy.findByText(new RegExp(MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
-    cy.wait(gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND);
-    cy.get('[data-cy="battle-room-canvas"]').should("be.visible");
+    cy.findByText(new RegExp(LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
+    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("be.visible");
     // select all orbs and send them to opponent end zone
     cy.get("body").click("topLeft");
     cy.get('[data-cy="battle-room-canvas"]').then((canvas) => {
@@ -76,10 +83,10 @@ describe("play game", () => {
         })
         .wait(100)
         .trigger("mousedown", { button: 0, eventConstructor: "MouseEvent" })
-        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedX(200, windowHeight), { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedY(200, windowHeight), { eventConstructor: "MouseEvent" })
         .wait(100)
         .trigger("mouseup", { eventConstructor: "MouseEvent" })
-        .trigger("mousemove", getAdjustedX(10, windowHeight), getAdjustedX(730, windowHeight), { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(10, windowHeight), getAdjustedY(730, windowHeight), { eventConstructor: "MouseEvent" })
         .wait(100)
         .trigger("mouseup", { button: 2, eventConstructor: "MouseEvent" })
         //
@@ -88,10 +95,10 @@ describe("play game", () => {
         })
         .wait(100)
         .trigger("mousedown", { button: 0, eventConstructor: "MouseEvent" })
-        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedX(730, windowHeight), { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(400, windowHeight), getAdjustedY(730, windowHeight), { eventConstructor: "MouseEvent" })
         .wait(100)
         .trigger("mouseup", { eventConstructor: "MouseEvent" })
-        .trigger("mousemove", getAdjustedX(430, windowHeight), getAdjustedX(10, windowHeight), { eventConstructor: "MouseEvent" })
+        .trigger("mousemove", getAdjustedX(430, windowHeight), getAdjustedY(10, windowHeight), { eventConstructor: "MouseEvent" })
         .wait(100)
         .trigger("mouseup", { button: 2, eventConstructor: "MouseEvent" });
     });

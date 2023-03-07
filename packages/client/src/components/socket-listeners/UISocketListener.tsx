@@ -15,7 +15,7 @@ import {
   setMatchmakingData,
   setMatchmakingLoading,
   setMatchmakingWindowVisible,
-  setPreGameScreenDisplayed,
+  setGameRoomDisplayVisible,
   setScoreScreenData,
   setViewingGamesList,
   updateGameCountdown,
@@ -23,6 +23,7 @@ import {
   updateGameStatus,
   updatePlayerRole,
   updatePlayersReady,
+  setGameCreationWaitingListPosition,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -55,13 +56,13 @@ function UISocketListener({ socket }: Props) {
       dispatch(setCurrentGameRoom(data));
       if (data) {
         dispatch(setViewingGamesList(false));
-        dispatch(setPreGameScreenDisplayed(true));
+        dispatch(setGameRoomDisplayVisible(true));
       } else {
-        dispatch(setPreGameScreenDisplayed(false));
+        dispatch(setGameRoomDisplayVisible(false));
       }
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
-      dispatch(setPreGameScreenDisplayed(false));
+      dispatch(setGameRoomDisplayVisible(false));
     });
     socket.on(SocketEventsFromServer.PLAYER_READINESS_UPDATE, (playersReady) => {
       dispatch(updatePlayersReady(playersReady));
@@ -87,8 +88,14 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, (data) => {
       dispatch(setMatchmakingData(data));
     });
+    socket.on(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING, () => {
+      dispatch(clearLobbyUi());
+    });
     socket.on(SocketEventsFromServer.MATCH_FOUND, () => {
       dispatch(setMatchmakingWindowVisible(false));
+    });
+    socket.on(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION, (data) => {
+      dispatch(setGameCreationWaitingListPosition(data));
     });
     return () => {
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT);
@@ -104,7 +111,9 @@ function UISocketListener({ socket }: Props) {
       socket.off(SocketEventsFromServer.SHOW_SCORE_SCREEN);
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE);
+      socket.off(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
       socket.off(SocketEventsFromServer.MATCH_FOUND);
+      socket.off(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION);
     };
   }, [socket, dispatch, gameName]);
 

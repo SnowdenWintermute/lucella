@@ -8,7 +8,7 @@ import {
   rankedGameChannelNamePrefix,
   SocketEventsFromClient,
 } from "../../../../common";
-import { MATCHMAKING_QUEUE } from "../../../src/consts/lobby-text";
+import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
 import { TaskNames } from "../../support/TaskNames";
 
 describe("ladder", () => {
@@ -38,10 +38,10 @@ describe("ladder", () => {
   });
 
   afterEach(() => {
-    cy.task(TaskNames.disconnectSocket);
+    cy.task(TaskNames.disconnectSocket, { username: Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE") });
   });
   beforeEach(() => {
-    cy.task(TaskNames.disconnectSocket);
+    cy.task(TaskNames.disconnectSocket, { username: Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE") });
   });
 
   it(`finds own rank and opponent rank via page and search, then plays a game and sees updated results in
@@ -54,9 +54,17 @@ describe("ladder", () => {
       password: Cypress.env("CYPRESS_TEST_USER_PASSWORD"),
     });
     // log in other user
-    cy.task(TaskNames.logUserIn, { email: Cypress.env("CYPRESS_TEST_USER_EMAIL_ALTERNATE"), password: Cypress.env("CYPRESS_TEST_USER_PASSWORD") }).then(() => {
-      cy.task(TaskNames.connectSocket, { withHeaders: true });
-      cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, data: battleRoomDefaultChatChannel });
+    cy.task(TaskNames.logUserIn, {
+      name: alternateUsername,
+      email: Cypress.env("CYPRESS_TEST_USER_EMAIL_ALTERNATE"),
+      password: Cypress.env("CYPRESS_TEST_USER_PASSWORD"),
+    }).then(() => {
+      cy.task(TaskNames.connectSocket, { username: alternateUsername, withHeaders: true });
+      cy.task(TaskNames.socketEmit, {
+        username: alternateUsername,
+        event: SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL,
+        data: battleRoomDefaultChatChannel,
+      });
     });
     // check ladder pages loop around correctly
     cy.visitPageAndVerifyHeading(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`, "battle room");
@@ -74,8 +82,8 @@ describe("ladder", () => {
     cy.get('[data-cy="ladder-current-page"]').findByText("2").should("exist");
     // both users should join and leave matchmaking so their score cards are created
     cy.clickLinkAndVerifyHeading("game", "battle room");
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE });
+    cy.task(TaskNames.socketEmit, { username: alternateUsername, event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
+    cy.task(TaskNames.socketEmit, { username: alternateUsername, event: SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE });
     cy.findByRole("button", { name: /ranked/i }).click();
     cy.findByRole("button", { name: /cancel search/i }).click();
     // find and verify both user's records and elo by flipping through ladder pages
@@ -102,12 +110,11 @@ describe("ladder", () => {
     cy.clickLinkAndVerifyHeading("game", "battle room");
     cy.findByText(username).should("be.visible");
     cy.findByText(alternateUsername).should("be.visible");
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
+    cy.task(TaskNames.socketEmit, { username: alternateUsername, event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
     cy.findByRole("button", { name: /ranked/i }).click();
-    cy.findByText(new RegExp(MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
-    cy.wait(gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND);
+    cy.findByText(new RegExp(LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
     cy.get('[data-cy="battle-room-canvas"]').should("be.visible");
-    cy.task(TaskNames.disconnectSocket);
+    cy.task(TaskNames.disconnectSocket, { username: Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE") });
     // check the score screen
     cy.get('[data-cy="score-screen-modal"]')
       .findByText(new RegExp(`Game ${rankedGameChannelNamePrefix}\\d+ final score:`, "i"))
@@ -131,6 +138,6 @@ describe("ladder", () => {
     cy.findByText("24").next().should("contain.text", username).next().should("contain.text", "1517");
     cy.findByLabelText("ladder search").clear().type("alternate_test_user{enter}");
     cy.findByText("26").next().should("contain.text", alternateUsername).next().should("contain.text", "1484");
-    cy.task(TaskNames.disconnectSocket);
+    cy.task(TaskNames.disconnectSocket, { username: Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE") });
   });
 });

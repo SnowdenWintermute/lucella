@@ -2,13 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../redux/hooks";
 import { useGetLadderEntryQuery, useGetLadderPageQuery } from "../redux/api-slices/ladder-api-slice";
-import { CustomErrorDetails } from "../../../common/dist";
+import { CustomErrorDetails } from "../../../common";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { Alert } from "../classes/Alert";
 import { AlertType } from "../enums";
 import LadderTableRow from "../components/ladder/LadderTableRow";
 import LadderNav from "../components/ladder/LadderNav";
 import { LadderTable } from "../components/ladder/LadderTable";
+import Logo from "../img/logo.svg";
 
 function Ladder() {
   const dispatch = useAppDispatch();

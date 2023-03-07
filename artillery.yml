@@ -1,0 +1,26 @@
+config:
+  target: "https://battleschool.io"
+  socketio:
+    transports: ["websocket"]
+  phases:
+    - duration: 8
+      arrivalRate: 4
+  processor: "./artillery.js"
+scenarios:
+  - name: Socket server load test
+    engine: socketio # Enable the Socket.IO engine
+    flow:
+      # - get:
+      #     url: "/"
+      - emit:
+          channel: "3"
+          data: "battle-room-chat"
+      - loop:
+          - function: "setMessage"
+          - emit:
+              channel: "0"
+              data: { text: "{{ message }}", timeStamp: 1677161076 }
+              ifTrue: 0 == 1
+          - think: 10
+        count: 10
+      - think: 10

@@ -1,5 +1,9 @@
 @import "../abstracts/variables";
-@import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
+// @import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
+@font-face {
+  font-family: "DM Sans";
+  src: local("DM Sans"), url("../../fonts/DM_Sans/DMSans-Regular.ttf") format("ttf");
+}
 // IBM Plex Sans Condensed
 // Public Sans
 // DM Sans
@@ -46,4 +50,31 @@ ul {
   cursor: pointer;
   width: fit-content;
   color: color(textLight);
+}
+
+.logo-background {
+  position: absolute;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: color(primary);
+  border-left: 1px solid color(textPrimary);
+  border-bottom: 1px solid color(textPrimary);
+}
+::-webkit-scrollbar-thumb {
+  border: 1px solid color(textPrimary);
+  background: color(menuPrimary);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color(textPrimary);
+}
+
+@supports (scrollbar-color: color(menuPrimary) color(primary)) {
+  * {
+    scrollbar-color: color(menuPrimary) color(primary);
+    scrollbar-width: auto;
+  }
 }

@@ -28,6 +28,8 @@ describe("changePasswordHandler", () => {
     await wrappedRedis.context!.cleanup();
   });
 
+  jest.setTimeout(20000);
+
   it(`successfully updates password when given a valid token, email and matching new passwords,
   even if the account is locked out, user session is deleted
   and user can't log in with old password but can with new password

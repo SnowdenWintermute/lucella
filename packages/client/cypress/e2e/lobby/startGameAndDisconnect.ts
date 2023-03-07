@@ -1,4 +1,4 @@
-import { AuthRoutePaths, FrontendRoutes, gameRoomCountdownDuration, SocketEventsFromClient } from "../../../../common";
+import { AuthRoutePaths, FrontendRoutes, gameRoomCountdownDuration, ONE_SECOND, SocketEventsFromClient } from "../../../../common";
 import { shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -19,6 +19,7 @@ export default function startGameAndDisconnect() {
   });
   it("lets disconnecting from a game yeilds the win to the opponent", () => {
     const username = Cypress.env("CYPRESS_TEST_USER_NAME");
+    const anonUsernameForCypressSocketList = "Anon1234";
     // log in and host a game
     cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
@@ -32,14 +33,13 @@ export default function startGameAndDisconnect() {
     cy.findByText(/Awaiting challenger.../i).should("exist");
     cy.findByLabelText("challenger status").find("svg").should("not.exist");
     // challenger joins game and both players ready up
-    cy.task(TaskNames.connectSocket);
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.CLICKS_READY });
+    cy.task(TaskNames.connectSocket, { username: anonUsernameForCypressSocketList });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.CLICKS_READY });
     cy.findByRole("button", { name: /Ready/i }).click();
-    cy.wait(gameRoomCountdownDuration);
-    cy.get('[data-cy="battle-room-canvas"]').should("exist");
+    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("exist");
     // challenger leaves game
-    cy.task(TaskNames.socketEmit, { event: SocketEventsFromClient.LEAVES_GAME });
+    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.LEAVES_GAME });
     cy.get('[data-cy="score-screen-modal"]')
       .findByText(new RegExp(`Game ${shortTestText} final score:`, "i"))
       .should("exist");

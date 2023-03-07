@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import { UserRole } from "../../../../common";
-import CustomError from "../../classes/CustomError";
 import { REDIS_KEYS } from "../../consts";
 import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
 import UserRepo from "../../database/repos/users";

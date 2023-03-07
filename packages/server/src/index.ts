@@ -4,7 +4,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 import { DatabaseError } from "pg";
-import { LucellaServer } from "./classes/LucellaServer";
+import { LucellaServer } from "./LucellaServer";
 import { pgOptions } from "./database/config";
 import createExpressApp from "./createExpressApp";
 import wrappedPool from "./database/wrappedPool";

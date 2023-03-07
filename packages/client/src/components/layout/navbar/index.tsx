@@ -1,11 +1,11 @@
-import Image from "next/image";
 import React, { Fragment } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { UserMenu } from "./UserMenu";
-import logo from "../../../img/logo.png";
+// import logo from "../../../img/logo.png";
+import Logo from "../../../img/logo.svg";
 import GamesIcon from "../../../img/menuIcons/queen.svg";
-import LadderIcon from "../../../img/menuIcons/podium.svg";
+import styles from "./nav.module.scss";
 
 function Navbar() {
   const router = useRouter();
@@ -15,9 +15,11 @@ function Navbar() {
       <nav className="nav">
         {/* Nav tabs */}
         <div className="nav-right-holder">
-          <Image className="logo-img" alt="lucella logo" src={logo} />
-          <Link href="/" className="brand-text">
-            <h1>Lucella.org</h1>
+          {/* <Image className="logo-img" alt="lucella logo" src={logo} /> */}
+          <Logo className={styles["site-logo"]} />
+          <Link href="/" className={styles["brand-text"]}>
+            <h1>Battle School</h1>
+            <span className={styles["app-version"]}>alpha 0.1.0</span>
           </Link>
           <div className="nav-tabs">
             <Link href="/battle-room" className={`nav-tab ${router.pathname === "/battle-room" && "tab-active"}`}>
@@ -26,7 +28,6 @@ function Navbar() {
             </Link>
             <Link href="/ladder" className={`nav-tab ${router.pathname === "/ladder" && "tab-active"}`}>
               <span className="tab-title-text">LADDER</span>
-              <LadderIcon className="tab-icon-svg" />
             </Link>
           </div>
         </div>

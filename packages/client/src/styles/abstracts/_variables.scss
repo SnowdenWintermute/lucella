@@ -1,3 +1,8 @@
+@font-face {
+  font-family: "DM Sans";
+  src: local("DM Sans"), url("../../fonts/DM_Sans/DMSans-Regular.ttf") format("ttf");
+}
+
 $colors: (
   primary: #162229,
   dark: #080b11,
@@ -11,6 +16,7 @@ $colors: (
   dangerBright: #e42933,
   success: #2d6a2d,
   chatMessagePrivate: pink,
+  warning: rgb(255, 187, 0),
 );
 
 @function color($color-name) {

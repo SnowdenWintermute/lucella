@@ -80,3 +80,5 @@ Visit the live demo at [lucella.org](https://lucella.org)
 - Module parse failed: Unexpected token (8:7)
   You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
   - SOLUTION: Search for any "/dist" or "/src" that were added automatically added to import paths by vs code and remove them. Our importing method must use a generic path so it works both in the typescript server editor and after it has been compiled to js.
+- code: 'MODULE_NOT_FOUND'
+  - SOLUTION: If you created something in the common package and did not export it from common's index.ts, it won't be seen by other packages. All exports from common must be done like this { thingToExport } and cannot be default exports. VS Code's autoimport will still "work" though, and create an incorrect import string (see the error message before this one).
