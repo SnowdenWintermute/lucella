@@ -41,7 +41,7 @@ Visit the live demo at [battleschool.io](https://battleschool.io)
 - Clone the repository https://github.com/SnowdenWintermute/lucella.git
 - Open a terminal in the top level directory of the cloned repo and run
   > yarn install
-- Create .env files in client and server package folders based on the templates provided. **DO NOT delete the templates. Contact mike for api keys.**
+- Create a .env.local.development file and a cypress.env.json file in client package folder, and a .env file in the top level directory based on the templates provided. **DO NOT delete the templates. Contact mike for api keys.**
 - Launch docker desktop (if on windows/mac) or check that docker is running (linux)
   _ On windows you may need to click the bug icon then "clean / purge data" to get docker desktop to start
   _ Open a terminal in the top level directory and run

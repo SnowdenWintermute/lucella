@@ -1,10 +1,9 @@
+#!/bin/sh
 protoc \
  --plugin="protoc-gen-ts=./node_modules/.bin/protoc-gen-ts" \
 --js_out="import_style=commonjs,binary:./dist/proto/generated" \
  --ts_out="./src/proto/generated" \
- ./src/proto/deltas.proto
-
- protoc \
+ ./src/proto/deltas.proto && protoc \
  --plugin="protoc-gen-ts=./node_modules/.bin/protoc-gen-ts" \
 --js_out="import_style=commonjs,binary:./dist/proto/generated" \
  --ts_out="./src/proto/generated" \
