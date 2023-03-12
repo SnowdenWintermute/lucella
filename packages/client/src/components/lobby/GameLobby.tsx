@@ -66,7 +66,7 @@ function GameLobby({ defaultChatChannel }: Props) {
             frameClass="modal-frame-dark"
             isOpen={uiState.modals.changeChatChannel}
             setParentDisplay={setShowChangeChatChannelModal}
-            title="Join Channel"
+            title="Change Chat Channel"
           >
             <ChangeChannelModalContents
               setJoinNewRoomInput={setJoinNewRoomInput}

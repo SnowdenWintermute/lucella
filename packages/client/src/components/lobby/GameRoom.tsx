@@ -109,8 +109,6 @@ function PreGameRoom({ socket }: Props) {
       <h3 className="mb-10">Host a friendly match:</h3>
       <input
         ref={channelNameInput}
-        // eslint-disable-next-line jsx-a11y/no-autofocus
-        autoFocus
         className="text-input-transparent  mb-10"
         aria-label="Enter a game name"
         placeholder="Enter a game name"

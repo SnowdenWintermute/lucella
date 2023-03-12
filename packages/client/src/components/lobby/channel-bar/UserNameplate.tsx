@@ -25,7 +25,6 @@ function UserNameplate({ username, isGuest, tabindex, contextMenuId }: Props) {
 
   return (
     <div
-      className={styles["user-nameplate"]}
       tabIndex={tabindex}
       onClick={(e) => handleClick(e)}
       data-custom-context-menu-id={contextMenuId}

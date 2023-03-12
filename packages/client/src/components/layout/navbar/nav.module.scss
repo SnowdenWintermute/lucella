@@ -1,28 +1,37 @@
 @import "../../../styles/abstracts/variables";
 
-.site-logo {
-  height: 40px;
-  width: 40px;
-  padding: 5px;
-  margin-right: 10px;
-  fill: color(textLight);
-  border-left: 1px solid color(textLight);
-  //   border-bottom: 1px solid color(textLight);
-  //   border-right: 1px solid color(textLight);
-  border-radius: 50%;
+.main-navigation {
+  padding: spacing(2) spacing(4) spacing(2) spacing(4);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
 }
 
-.brand-text {
-  font-family: "Nunito Sans";
-  position: relative;
-  margin-right: 64px;
-  @media (max-width: $mobileNavWidth) {
-    display: none;
+.main-navigation__left-side {
+  display: flex;
+  align-items: center;
+}
+
+.main-navigation__site-logo {
+  height: height(3);
+  fill: color(textPrimary);
+  margin-right: spacing(4);
+}
+
+.main-navigation__logo-text {
+  font-size: fontSize(4);
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: spacing(5);
+}
+
+.main-navigation__page-link {
+  text-decoration: none;
+  font-size: fontSize(3);
+  margin-right: spacing(3);
+  box-sizing: border-box;
+  &--active {
+    margin-bottom: -1px;
+    border-bottom: 1px solid color(textPrimary);
   }
-}
-
-.app-version {
-  position: absolute;
-  bottom: -12px;
-  right: 0px;
 }

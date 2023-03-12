@@ -145,7 +145,14 @@ function Settings() {
             </button>
           </li>
           <li>
-            <button type="button" className="button button-basic" onClick={() => dispatch(setShowDeleteAccountModal(true))} disabled={deleteAccountIsLoading}>
+            <button
+              type="button"
+              className="button button-basic"
+              aria-controls="Delete Account modal"
+              aria-expanded={uiState.modals.deleteAccount}
+              onClick={() => dispatch(setShowDeleteAccountModal(true))}
+              disabled={deleteAccountIsLoading}
+            >
               {deleteAccountIsLoading ? "..." : "Delete Account"}
             </button>
           </li>

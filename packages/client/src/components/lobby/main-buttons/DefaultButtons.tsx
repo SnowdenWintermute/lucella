@@ -63,20 +63,6 @@ function DefaultButtons({ socket }: Props) {
     dispatch(setMatchmakingLoading(true));
   };
 
-  function handleKeypress(event: KeyboardEvent) {
-    const { key } = event;
-    // if (key === "q" || key === "Q") {
-    //   handleRankedClick();
-    // }
-  }
-
-  useEffect(() => {
-    window.addEventListener("keyup", handleKeypress);
-    return () => {
-      window.removeEventListener("keyup", handleKeypress);
-    };
-  }, []);
-
   // for mobile view
   const onMenuClick = () => {
     dispatch(setShowMobileLobbyMenuModal(true));
@@ -89,7 +75,7 @@ function DefaultButtons({ socket }: Props) {
   }, [windowDimensions, setMobileViewActive]);
 
   const buttons = [
-    { title: "Channel", onClick: handleChannelClick },
+    { title: "Channel", onClick: handleChannelClick, ariaControls: "Change Chat Channel modal", ariaExpanded: uiState.modals.changeChatChannel },
     { title: "Ranked", onClick: handleRankedClick },
     { title: "Host", onClick: handleSetupNewGameClick },
     { title: "Join", onClick: handleViewGamesListClick, dataCy: "view-games-list-button" },

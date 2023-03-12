@@ -18,7 +18,7 @@ export default function accountDeletion() {
     cy.findByLabelText(/email address/i).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
     cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
-    cy.get('[data-cy="profile-icon"]').click();
+    cy.get('[data-cy="user-menu-button"]').click();
     cy.findByRole("link", { name: /settings/i }).click();
     cy.findByRole("button", { name: /delete account/i }).click();
     cy.findByLabelText(/email address/i).type("wrong_email@gmail.com{enter}");

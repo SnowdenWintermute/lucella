@@ -77,6 +77,10 @@ Visit the live demo at [battleschool.io](https://battleschool.io)
 
 ## Common Error Messages
 
+- The term 'DATABASE_URL=postgres://Mike:Admin101@localhost:5432/lucella-test' is not recognized as the name of a cmdlet,
+  function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the
+  path is correct and try again.
+- SOLUTION: If you are using a windows computer, download a unix style terminal like git bash and use that to run the command.
 - Module parse failed: Unexpected token (8:7)
   You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
   - SOLUTION: Search for any "/dist" or "/src" that were added automatically added to import paths by vs code and remove them. Our importing method must use a generic path so it works both in the typescript server editor and after it has been compiled to js.

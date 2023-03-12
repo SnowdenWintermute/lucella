@@ -14,7 +14,7 @@
   line-height: 36px;
   padding: 5px 15px 5px 15px;
   font-size: 22px;
-  color: color(textLight);
+  color: color(textBright);
   opacity: 0;
   transition: 0.3s ease-out;
   cursor: pointer;
@@ -46,6 +46,6 @@
 .alert-icon {
   height: 16px;
   width: 16px;
-  fill: color(textLight);
+  fill: color(textBright);
   margin-right: 10px;
 }

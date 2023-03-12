@@ -8,20 +8,13 @@ export function UserMenu() {
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const [logoutUser, { isUninitialized: logoutIsUninitialized }] = useLogoutUserMutation();
   const { data: user, isLoading, isFetching, isError } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
-
-  const MENU = {
-    LOADING: "LOADING",
-    USER: "USER",
-    LOGIN: "LOGIN",
-  };
-
+  const MENU = { LOADING: "LOADING", USER: "USER", LOGIN: "LOGIN" };
   const [menuToShow, setMenuToShow] = useState(MENU.LOADING);
 
-  // show/hide menu
   useEffect(() => {
     const clearUserDropdown = (e: MouseEvent) => {
       const node = e.target as HTMLElement;
-      if (node.getAttribute("data-name") !== "profile-icon") toggleUserDropdown(false);
+      if (node.id !== "user-menu-button") toggleUserDropdown(false);
     };
     window.addEventListener("click", clearUserDropdown);
     return () => window.removeEventListener("click", clearUserDropdown);
@@ -31,50 +24,49 @@ export function UserMenu() {
     await logoutUser();
   };
 
-  const menuLoading = <span>...</span>;
-
-  const loggedInUserMenu = (
-    <>
-      <button
-        type="button"
-        className={styles["user-icon-circle"]}
-        data-name="profile-icon"
-        data-cy="profile-icon"
-        onClick={(e) => {
-          toggleUserDropdown(!showUserDropdown);
-        }}
-      >
-        <div className={styles["user-icon-letter"]} data-name="profile-icon">
-          {user?.name && user.name.slice(0, 1).toUpperCase()}
-        </div>
-      </button>
-      {showUserDropdown && (
-        <ul className={styles["user-menu"]}>
-          <Link href="/settings" className={styles["user-menu-item"]}>
-            {/* <SettingsIcon className="menu-icon-svg" height="100" width="100" color="red" stroke="red" fill="red" /> */}
-            Settings
-          </Link>
-          <Link href="/login" onClick={handleLogout} className={styles["user-menu-item"]}>
-            {/* <Image alt="logout icon" src={logoutIcon} /> */}
-            Logout
-          </Link>
-        </ul>
-      )}
-    </>
-  );
-
-  const guestMenu = (
-    <Link href="/login" className="button button-standard-size button-basic">
-      LOGIN
-    </Link>
-  );
-
   useEffect(() => {
-    // console.log("user: ", user, "isLoading: ", isLoading, "isError: ", isError, "logoutIsUninitialized: ", logoutIsUninitialized, "isFetching: ", isFetching);
     if (user) setMenuToShow(MENU.USER);
     else if (isFetching && isLoading && logoutIsUninitialized && !isError) setMenuToShow(MENU.LOADING);
     else setMenuToShow(MENU.LOGIN);
   }, [user, isLoading, isError, logoutIsUninitialized]);
+
+  const menuLoading = <span>...</span>;
+
+  const loggedInUserMenu = (
+    <div className={styles["user-menu"]}>
+      <button
+        id="user-menu-button"
+        type="button"
+        className={styles["user-menu__button"]}
+        aria-controls="user-menu-items"
+        aria-expanded={showUserDropdown}
+        data-cy="user-menu-button"
+        onClick={(e) => {
+          toggleUserDropdown(!showUserDropdown);
+        }}
+      >
+        <span className="screenreader-only">User Menu</span>
+        {user?.name && user.name.slice(0, 1).toUpperCase()}
+      </button>
+
+      {showUserDropdown && (
+        <ul id="user-menu-items" className={styles["user-menu__items"]}>
+          <Link href="/settings" className={styles["user-menu__menu-item"]}>
+            Settings
+          </Link>
+          <Link href="/login" className={styles["user-menu__menu-item"]} onClick={handleLogout}>
+            Logout
+          </Link>
+        </ul>
+      )}
+    </div>
+  );
+
+  const guestMenu = (
+    <Link href="/login" className="button">
+      LOGIN
+    </Link>
+  );
 
   if (menuToShow === MENU.LOADING) return menuLoading;
   if (menuToShow === MENU.USER) return loggedInUserMenu;

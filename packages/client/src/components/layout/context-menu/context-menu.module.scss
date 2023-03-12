@@ -4,7 +4,7 @@
   position: absolute;
   z-index: 1;
   border: 1px solid color(textPrimary);
-  background-color: color(primary);
+  background-color: color(backgroundColor);
 }
 
 .context-menu-item {
@@ -17,7 +17,7 @@
 
 .context-menu-button {
   padding: 10px;
-  background-color: color(primary);
+  background-color: color(backgroundColor);
   width: 100%;
   border: none;
   text-align: left;

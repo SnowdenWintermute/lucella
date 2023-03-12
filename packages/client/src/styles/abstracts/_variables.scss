@@ -4,11 +4,11 @@
 }
 
 $colors: (
-  primary: #162229,
+  backgroundColor: #162229,
   dark: #080b11,
   textPrimary: #9ba8b8,
-  textLight: #bcd2e8,
-  textDark: #656b72,
+  textFaded: #656b72,
+  textBright: #bcd2e8,
   menuPrimary: #3c5766,
   buttonPrimary: #2f5f5c,
   oldDanger: #972121,
@@ -23,8 +23,66 @@ $colors: (
   @return map-get($colors, $color-name);
 }
 
-$navHeight: 56px;
-$minAppWidth: 370px;
-$navThinBarHeight: 6px;
-$mobileNavWidth: 786px;
-$navTinyWidth: 450px;
+$baseAppWidth: 1440px;
+$baseAppHeight: 1024px;
+
+$spacings: (
+  // 10px
+  1: 0.625rem,
+  // 15px
+  2: 0.938rem,
+  // 20px
+  3: 1.25rem,
+  // 25px
+  4: 1.563rem,
+  // 65px
+  5: 4.0625rem
+);
+
+@function spacing($spacing-name) {
+  @return map-get($spacings, $spacing-name);
+}
+
+$fontSizes: (
+  0: 0.8rem,
+  // 14px
+  1: 0.875rem,
+  // 16px
+  2: 1rem,
+  // 20px
+  3: 1.25rem,
+  // 25px
+  4: 1.5625rem,
+);
+
+@function fontSize($fontSize-name) {
+  @return map-get($fontSizes, $fontSize-name);
+}
+$heights: (
+  // 20px
+  1: 1.25rem,
+  // 25px
+  2: 1.5625rem,
+  // 40px
+  3: 2.5rem,
+  // 70px
+  4: 4.375rem
+);
+
+@function height($height-name) {
+  @return map-get($heights, $height-name);
+}
+$widths: (
+  // 125px
+  1: 7.834375rem,
+  // 203px
+  2: 12.6875rem,
+  // 328px
+  3: 20.5rem,
+  // 531px
+  4: 33.1875rem
+);
+
+@function width($width-name) {
+  @return map-get($widths, $width-name);
+}

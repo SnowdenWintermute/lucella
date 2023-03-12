@@ -23,7 +23,7 @@ function UserNameplateContextMenu() {
   if (!uiState.nameplateContextMenuData.isGuest)
     moderatorOptions.push(
       <ContextMenuItem key="BAN USER">
-        <button className={styles["context-menu-button"]} type="button" onClick={handleBanUserClick}>
+        <button type="button" onClick={handleBanUserClick}>
           BAN USER
         </button>
       </ContextMenuItem>
@@ -31,7 +31,7 @@ function UserNameplateContextMenu() {
 
   moderatorOptions.push(
     <ContextMenuItem key="BAN IP ADDRESS">
-      <button className={styles["context-menu-button"]} type="button" onClick={handleBanIpAddressClick}>
+      <button type="button" onClick={handleBanIpAddressClick}>
         BAN IP ADDRESS
       </button>
     </ContextMenuItem>
@@ -41,9 +41,7 @@ function UserNameplateContextMenu() {
     <>
       {user && (user.role === UserRole.ADMIN || user.role === UserRole.MODERATOR) && moderatorOptions}
       <ContextMenuItem>
-        <button className={styles["context-menu-button"]} type="button">
-          PLACEHOLDER
-        </button>
+        <button type="button">PLACEHOLDER</button>
       </ContextMenuItem>
     </>
   );

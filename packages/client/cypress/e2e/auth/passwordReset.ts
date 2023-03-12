@@ -31,7 +31,7 @@ export default function passwordResetTest() {
       cy.findByLabelText(/email/).type(`${userEmail}`);
       cy.findByLabelText(/password/).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
       // go to settings page and request password reset email
-      cy.get('[data-cy="profile-icon"]').click();
+      cy.get('[data-cy="user-menu-button"]').click();
       cy.findByRole("link", { name: /settings/i }).click();
       cy.findByRole("button", { name: /change password/i }).click();
       cy.findByText(new RegExp(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("exist");
@@ -46,7 +46,7 @@ export default function passwordResetTest() {
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
       cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
-      cy.get('[data-cy="profile-icon"]').should("not.exist");
+      cy.get('[data-cy="user-menu-button"]').should("not.exist");
       cy.findByRole("link", { name: /login/i }).should("exist");
       cy.go("back");
       cy.findByRole("heading", { name: /change password/i }).should("exist");

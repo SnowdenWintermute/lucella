@@ -2,7 +2,7 @@ import { PlayerRole, colors, inGameFontSizes, Orb, Point } from "../../../../../
 
 export default function drawOrbNumber(context: CanvasRenderingContext2D, orb: Orb, playerRole: PlayerRole, canvasDrawFractions: Point) {
   if (orb.owner !== playerRole) return;
-  context.fillStyle = colors.inGameTextLight;
+  context.fillStyle = colors.inGametextBright;
   context.textAlign = "center";
   context.textBaseline = "middle";
   context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px Arial`;
