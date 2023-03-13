@@ -1,0 +1,8 @@
+@import "../abstracts/variables";
+
+.page-body {
+  max-width: $baseAppWidth;
+  padding: spacing(4);
+  padding-top: 0px;
+  margin: 0 auto;
+}

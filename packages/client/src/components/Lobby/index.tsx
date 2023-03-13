@@ -2,8 +2,8 @@
 import { Socket } from "socket.io-client";
 import React, { useState, useRef } from "react";
 import GameLobbyChat from "./game-lobby-chat/GameLobbyChat";
-import MainButtons from "./main-buttons/MainButtons";
-import ChannelBar from "./channel-bar/ChannelBar";
+import LobbyButtons from "./LobbyButtons";
+import ChannelBar from "./ChannelBar";
 import GameRoom from "./GameRoom";
 import MatchmakingQueueDisplay from "./MatchmakingQueueDisplay";
 import GameList from "./GameList";
@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 import { INetworkPerformanceMetrics } from "../../types";
+import styles from "./game-lobby.module.scss";
 
 interface Props {
   defaultChatChannel: string;
@@ -85,8 +86,8 @@ function GameLobby({ defaultChatChannel }: Props) {
             <ScoreScreenModalContents />
           </Modal>
           {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? (
-            <div className="game-lobby">
-              <MainButtons socket={socket.current} />
+            <main className={styles["lobby"]}>
+              <LobbyButtons socket={socket.current} />
               <ChannelBar />
               <div className="game-lobby-main-window">
                 <GameRoom socket={socket.current} />
@@ -94,7 +95,7 @@ function GameLobby({ defaultChatChannel }: Props) {
                 <GameList socket={socket.current} />
                 <GameLobbyChat socket={socket.current} />
               </div>
-            </div>
+            </main>
           ) : (
             <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
           )}

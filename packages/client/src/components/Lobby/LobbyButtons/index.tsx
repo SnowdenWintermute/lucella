@@ -5,6 +5,7 @@ import { useAppSelector } from "../../../redux/hooks";
 import DefaultButtons from "./DefaultButtons";
 import InGameRoomButtons from "./InGameRoomButtons";
 import MatchmakingButtons from "./MatchmakingButtons";
+import styles from "./lobby-buttons.module.scss";
 
 interface Props {
   socket: Socket;
@@ -16,7 +17,7 @@ function MainButtons({ socket }: Props) {
   const { currentGameRoom } = lobbyUiState;
 
   return (
-    <div className="game-lobby-top-buttons">
+    <div className={styles["lobby-buttons"]}>
       {!currentGameRoom && <DefaultButtons socket={socket} />}
       {!currentGameRoom?.isRanked && <InGameRoomButtons socket={socket} />}
       {currentGameRoom?.isRanked && <span>{LOBBY_TEXT.MATCHMAKING_QUEUE.RANKED_GAME_STARTING}</span>}

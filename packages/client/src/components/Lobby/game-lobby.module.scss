@@ -1,0 +1,29 @@
+@import "../../styles/abstracts/variables";
+
+.lobby {
+  height: $baseAppHeight;
+  max-height: calc(100vh - spacing(4) - height(4));
+  display: grid;
+  grid-template-columns: auto width(3);
+  grid-template-rows: height(4) width(3) auto;
+  gap: 0px;
+  border: 1px solid color(textPrimary);
+}
+
+.refresh-button {
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  border: 1px solid color(textPrimary);
+  cursor: pointer;
+  padding: 4px;
+  &:disabled {
+    opacity: 40%;
+    cursor: progress;
+  }
+}
+.refresh-icon {
+  height: 100%;
+  width: 100%;
+  fill: color(textPrimary);
+}

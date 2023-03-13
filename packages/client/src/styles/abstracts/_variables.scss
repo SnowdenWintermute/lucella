@@ -23,9 +23,6 @@ $colors: (
   @return map-get($colors, $color-name);
 }
 
-$baseAppWidth: 1440px;
-$baseAppHeight: 1024px;
-
 $spacings: (
   // 10px
   1: 0.625rem,
@@ -86,3 +83,6 @@ $widths: (
 @function width($width-name) {
   @return map-get($widths, $width-name);
 }
+
+$baseAppWidth: 1440px;
+$baseAppHeight: calc(1024px - height(3));

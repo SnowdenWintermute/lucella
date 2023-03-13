@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { hideAllModals, setShowBanIpAddressModal, setShowBanUserModal } from "../../../redux/slices/ui-slice";
 import Modal from "../../common-components/modal/Modal";
-import BanIpAddressModalContents from "../../lobby/modals/BanIpAddressModalContents";
-import BanUserModalContents from "../../lobby/modals/BanUserModalContents";
+import BanIpAddressModalContents from "../../Lobby/modals/BanIpAddressModalContents";
+import BanUserModalContents from "../../Lobby/modals/BanUserModalContents";
 
 function GlobalModals() {
   const dispatch = useAppDispatch();

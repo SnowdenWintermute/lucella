@@ -1,7 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import "../styles/globals.scss";
 import "../styles/base/style.scss";
-import "../styles/components/buttons.scss";
+import "../styles/common/buttons.scss";
+import "../styles/common/pages.scss";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { ReactElement, ReactNode } from "react";
