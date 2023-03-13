@@ -33,7 +33,9 @@ $spacings: (
   // 25px
   4: 1.563rem,
   // 65px
-  5: 4.0625rem
+  5: 4.0625rem,
+  // 105
+  6: 6.5625rem
 );
 
 @function spacing($spacing-name) {

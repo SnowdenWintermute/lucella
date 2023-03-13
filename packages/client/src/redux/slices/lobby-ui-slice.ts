@@ -100,6 +100,7 @@ const ladderSlice = createSlice({
     },
     setMatchmakingWindowVisible(state, action: PayloadAction<boolean>) {
       state.matchmakingScreen.isOpen = action.payload;
+      if (!action.payload) state.matchmakingScreen = initialState.matchmakingScreen;
     },
     setMatchmakingData(state, action: PayloadAction<{ queueSize: number; currentEloDiffThreshold: number }>) {
       state.matchmakingScreen.currentData = action.payload;

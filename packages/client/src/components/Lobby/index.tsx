@@ -2,7 +2,7 @@
 import { Socket } from "socket.io-client";
 import React, { useState, useRef } from "react";
 import GameLobbyChat from "./game-lobby-chat/GameLobbyChat";
-import LobbyButtons from "./LobbyButtons";
+import LobbyTopButtons from "./LobbyTopButtons";
 import ChannelBar from "./ChannelBar";
 import GameRoom from "./GameRoom";
 import MatchmakingQueueDisplay from "./MatchmakingQueueDisplay";
@@ -87,7 +87,7 @@ function GameLobby({ defaultChatChannel }: Props) {
           </Modal>
           {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? (
             <main className={styles["lobby"]}>
-              <LobbyButtons socket={socket.current} />
+              <LobbyTopButtons socket={socket.current} />
               <ChannelBar />
               <div className="game-lobby-main-window">
                 <GameRoom socket={socket.current} />

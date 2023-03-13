@@ -1,0 +1,15 @@
+@import "../../../styles/abstracts/variables";
+
+.lobby-buttons {
+  grid-row-start: 1;
+  grid-row-end: 2;
+  border-bottom: 1px solid color(textPrimary);
+  display: flex;
+  list-style: none;
+  padding: spacing(2);
+}
+
+.lobby-buttons__button {
+  min-width: spacing(6);
+  margin-right: spacing(1);
+}
