@@ -5,15 +5,16 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import DefaultButtons from "./DefaultButtons";
 import GameRoomTopButtons from "./GameRoomTopButtons";
 import MatchmakingButtons from "./MatchmakingButtons";
-import styles from "./lobby-buttons.module.scss";
 import { setViewingGamesList } from "../../../redux/slices/lobby-ui-slice";
 import GameLobbyTopButton from "./LobbyTopButton";
+import styles from "./lobby-menus.module.scss";
+import WelcomeDropdown from "./WelcomeDropdown";
 
 interface Props {
   socket: Socket;
 }
 
-function MainButtons({ socket }: Props) {
+function LobbyMenus({ socket }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
 
@@ -27,14 +28,17 @@ function MainButtons({ socket }: Props) {
   };
 
   return (
-    <ul className={styles["lobby-buttons"]}>
-      {showDefaultButtons && <DefaultButtons socket={socket} />}
-      {viewingGameRoom && !currentGameRoom?.isRanked && <GameRoomTopButtons socket={socket} />}
-      {lobbyUiState.matchmakingScreen.isOpen && <MatchmakingButtons socket={socket} />}
-      {currentGameRoom?.isRanked && <span>{LOBBY_TEXT.MATCHMAKING_QUEUE.RANKED_GAME_STARTING}</span>}
-      {lobbyUiState.gameList.isOpen && <GameLobbyTopButton title="Back" onClick={onViewGamesListBackClick} displayClass="" />}
-    </ul>
+    <section className={styles["lobby-menus"]}>
+      <ul className={styles["lobby-menus__buttons"]}>
+        {showDefaultButtons && <DefaultButtons socket={socket} />}
+        {viewingGameRoom && !currentGameRoom?.isRanked && <GameRoomTopButtons socket={socket} />}
+        {lobbyUiState.matchmakingScreen.isOpen && <MatchmakingButtons socket={socket} />}
+        {currentGameRoom?.isRanked && <span>{LOBBY_TEXT.MATCHMAKING_QUEUE.RANKED_GAME_STARTING}</span>}
+        {lobbyUiState.gameList.isOpen && <GameLobbyTopButton title="Back" onClick={onViewGamesListBackClick} displayClass="" />}
+      </ul>
+      <WelcomeDropdown />
+    </section>
   );
 }
 
-export default MainButtons;
+export default LobbyMenus;

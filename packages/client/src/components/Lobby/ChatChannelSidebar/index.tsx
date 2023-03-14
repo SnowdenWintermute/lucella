@@ -13,12 +13,12 @@ function ChatChannelSidebar() {
     usersInChannelToDisplay.push(<UserNameplate key={username} username={username} isGuest={user.isGuest} tabindex={i} contextMenuId={i + 1} />);
   });
 
-  // for (let i = 50; i > 0; i -= 1) usersInChannelToDisplay.push(<UserNameplate key={i} username="test" isGuest tabindex={i} contextMenuId={i + 1} />);
-
   return (
     <section className={styles["chat-channel-sidebar"]}>
       <div className={styles["chat-channel-sidebar__header-box"]} aria-label="chat channel name and number of users">
-        {currentChatChannelName} ({newChatChannelLoading ? "..." : numUsers})
+        <span>
+          {currentChatChannelName} ({newChatChannelLoading ? "..." : numUsers})
+        </span>
       </div>
       <div className={styles["chat-channel-sidebar__users-list-container"]} aria-label="users in this channel">
         <ul className={styles["chat-channel-sidebar__users-list"]}>{newChatChannelLoading ? "..." : usersInChannelToDisplay}</ul>

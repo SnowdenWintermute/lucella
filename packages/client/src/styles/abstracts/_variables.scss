@@ -65,7 +65,9 @@ $heights: (
   // 40px
   3: 2.5rem,
   // 70px
-  4: 4.375rem
+  4: 4.375rem,
+  // 260
+  6: 16.25rem
 );
 
 @function height($height-name) {
@@ -86,5 +88,9 @@ $widths: (
   @return map-get($widths, $width-name);
 }
 
-$baseAppWidth: 1440px;
-$baseAppHeight: calc(1024px - height(3));
+// 1440px
+$baseAppWidth: 90rem;
+//1024px
+$baseAppHeight: calc(64rem - height(3));
+
+$lobbyHeight: calc(100vh - spacing(4) - height(4));

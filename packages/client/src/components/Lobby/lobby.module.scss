@@ -2,12 +2,15 @@
 
 .lobby {
   height: $baseAppHeight;
-  max-height: calc(100vh - spacing(4) - height(4));
-  display: grid;
-  grid-template-columns: 1fr width(3);
-  grid-template-rows: height(4) width(3) 1fr;
-  gap: 0px;
+  max-height: $lobbyHeight;
   border: 1px solid color(textPrimary);
+  display: flex;
+}
+
+.lobby__menus-and-chat {
+  display: flex;
+  flex-direction: column;
+  width: calc($baseAppWidth - spacing(3) * 2 - width(3));
 }
 
 .refresh-button {

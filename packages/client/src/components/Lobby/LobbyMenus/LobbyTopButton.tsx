@@ -1,6 +1,6 @@
 /* eslint-disable react/require-default-props */
 import React from "react";
-import styles from "./lobby-buttons.module.scss";
+import styles from "./lobby-menus.module.scss";
 
 interface Props {
   title: string | JSX.Element;
@@ -18,7 +18,7 @@ function LobbyTopButton({ title, onClick, displayClass, ariaControls, ariaExpand
       <button
         type="button"
         disabled={disabled}
-        className={`button ${styles["lobby-buttons__button"]} ${displayClass}`}
+        className={`button ${styles["lobby-menus__button"]} ${displayClass}`}
         onClick={onClick}
         data-cy={dataCy}
         aria-controls={ariaControls}

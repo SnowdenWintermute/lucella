@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { useAppSelector } from "../../../redux/hooks";
 import {
   ChatMessage,
   SocketEventsFromClient,
@@ -9,26 +9,20 @@ import {
   chatDelayUnregisteredUser,
   percentNumberIsOfAnotherNumber,
   positiveNumberOrZero,
-  ChatMessageStyles,
 } from "../../../../../common";
 import CircularProgress from "../../common-components/CircularProgress";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import replaceUrlsWithAnchorTags from "../../../utils/replaceUrlsWithAnchorTags";
 import styles from "./chat.module.scss";
+import ClientGeneratedChatNotice from "./ClientGeneratedChatNotice";
 
 interface Props {
   socket: Socket;
 }
 
-function GameLobbyChat({ socket }: Props) {
-  const dispatch = useAppDispatch();
+function Chat({ socket }: Props) {
   const [chatInput, setChatInput] = useState("");
-  const [chatClass, setChatClass] = useState("");
-  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
-  const gameListIsOpen = lobbyUiState.gameList.isOpen;
-  const gameRoomDisplayIsOpen = lobbyUiState.gameRoomDisplay.isOpen;
-  const matchmakingScreenIsOpen = lobbyUiState.matchmakingScreen.isOpen;
   const chatState = useAppSelector((state) => state.chat);
   const { messages } = chatState;
   const baseDelayMilliseconds = useRef<number>(3000);
@@ -64,11 +58,6 @@ function GameLobbyChat({ socket }: Props) {
     };
   }, []);
 
-  useEffect(() => {
-    if (gameListIsOpen || gameRoomDisplayIsOpen || matchmakingScreenIsOpen) setChatClass("chat-stream-top-border");
-    else setChatClass("");
-  }, [gameListIsOpen, gameRoomDisplayIsOpen, matchmakingScreenIsOpen]);
-
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChatInput(e.target.value);
   };
@@ -97,28 +86,15 @@ function GameLobbyChat({ socket }: Props) {
     sendNewMessageAfterAnyRemainingDelay(chatInput);
   };
 
-  const messagesToDisplay: JSX.Element[] = [
-    <li className={styles[`chat__message--private`]} key={`${Date.now()} ${"1234"}`}>
-      {/* eslint-disable-next-line react/no-danger */}
-      <span
-        className={styles[`chat__message--private`]}
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{
-          __html: replaceUrlsWithAnchorTags(
-            "Battle School is in alpha. All accounts are likely to be deleted upon the first beta release. Please report any issues here: https://github.com/SnowdenWintermute/lucella/issues",
-            styles[`chat__message--private`]
-          ),
-        }}
-      />
-    </li>,
-  ];
+  // can add any message here that the client will show once in chat stream upon page load
+  const messagesToDisplay: JSX.Element[] = [<ClientGeneratedChatNotice />];
   if (messages) {
     messages.forEach((message) => {
-      const textToDisplay = replaceUrlsWithAnchorTags(message.text, styles[`chat__message--${message.style}`]);
+      const textToDisplay = replaceUrlsWithAnchorTags(message.text, `${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`);
       messagesToDisplay.push(
-        <li className={styles[`chat__message--${message.style}`]} key={`${message.timeStamp} ${message.text}`}>
-          {/* eslint-disable-next-line react/no-danger */}
-          {message.author} : <span className={styles[`chat__message--${message.style}`]} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
+        <li className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} key={`${message.timeStamp} ${message.text}`}>
+          {message.author} : {/* eslint-disable-next-line react/no-danger */}
+          <span className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
         </li>
       );
     });
@@ -126,24 +102,23 @@ function GameLobbyChat({ socket }: Props) {
 
   return (
     <section className={styles["chat"]}>
-      <div>
+      <div className={styles["chat__message-stream"]}>
         <ul>{messagesToDisplay}</ul>
       </div>
-      <div>
-        <form onSubmit={handleSubmit}>
-          <input
-            aria-label="chat-input"
-            type="text"
-            onChange={(e) => onChange(e)}
-            value={chatInput}
-            placeholder="Enter a message to chat..."
-            disabled={waitingToSendMessage}
-          />
-        </form>
+      <form onSubmit={handleSubmit}>
+        <input
+          className={styles["chat__input"]}
+          aria-label="chat-input"
+          type="text"
+          onChange={(e) => onChange(e)}
+          value={chatInput}
+          placeholder="Enter a message to chat..."
+          disabled={waitingToSendMessage}
+        />
         <CircularProgress percentage={percentageChatDelayRemaining} />
-      </div>
+      </form>
     </section>
   );
 }
 
-export default GameLobbyChat;
+export default Chat;
