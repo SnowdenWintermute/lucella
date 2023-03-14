@@ -14,8 +14,8 @@ function MatchmakingQueueDisplay() {
   }, [matchmakingQueueScreen]);
 
   return (
-    <div className={`matchmaking-queue-screen ${hideClass}`}>
-      <div className="p-10">
+    <div>
+      <div>
         <div>{LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH}</div>
         <div>Players in Queue: {matchmakingQueueScreen.currentData.queueSize ? matchmakingQueueScreen.currentData.queueSize : "..."}</div>
         <div>

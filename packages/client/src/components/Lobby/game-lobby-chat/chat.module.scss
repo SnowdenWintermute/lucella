@@ -1,0 +1,20 @@
+@import "../../../styles/abstracts/variables";
+
+.chat {
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+.chat__message--private {
+  color: color(chatMessagePrivate);
+}
+
+.chat__message--error {
+  color: color(dangerBright);
+}
+
+.chat__message--warning {
+  color: color(warning);
+}

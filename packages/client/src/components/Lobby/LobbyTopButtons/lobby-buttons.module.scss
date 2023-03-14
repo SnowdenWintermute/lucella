@@ -1,6 +1,8 @@
 @import "../../../styles/abstracts/variables";
 
 .lobby-buttons {
+  grid-column-start: 1;
+  grid-column-end: 2;
   grid-row-start: 1;
   grid-row-end: 2;
   border-bottom: 1px solid color(textPrimary);

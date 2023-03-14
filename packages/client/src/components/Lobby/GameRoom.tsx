@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Alert } from "../../classes/Alert";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { ErrorMessages, GameStatus, SocketEventsFromClient } from "../../../../common";
-import styles from "./game-lobby.module.scss";
+import styles from "./lobby.module.scss";
 import { BUTTON_NAMES } from "../../consts/button-names";
 import { LOBBY_TEXT } from "../../consts/lobby-text";
 

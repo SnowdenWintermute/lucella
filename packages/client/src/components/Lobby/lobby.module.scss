@@ -4,8 +4,8 @@
   height: $baseAppHeight;
   max-height: calc(100vh - spacing(4) - height(4));
   display: grid;
-  grid-template-columns: auto width(3);
-  grid-template-rows: height(4) width(3) auto;
+  grid-template-columns: 1fr width(3);
+  grid-template-rows: height(4) width(3) 1fr;
   gap: 0px;
   border: 1px solid color(textPrimary);
 }

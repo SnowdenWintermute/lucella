@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux/hooks";
 import { usersApi } from "../../../redux/api-slices/users-api-slice";
-import styles from "../game-lobby.module.scss";
+import styles from "../lobby.module.scss";
 
 function ScoreScreenModalContents() {
   const user = usersApi.endpoints.getMe.useQueryState(null, { selectFromResult: ({ data }) => data! });

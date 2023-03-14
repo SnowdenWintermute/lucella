@@ -2,7 +2,7 @@
 import React from "react";
 import { useAppDispatch } from "../../../redux/hooks";
 import { openUserNameplateContextMenu } from "../../../redux/slices/ui-slice";
-import styles from "./user-nameplate.module.scss";
+import styles from "./chat-channel-sidebar.module.scss";
 
 type Props = {
   username: string;
@@ -24,9 +24,10 @@ function UserNameplate({ username, isGuest, tabindex, contextMenuId }: Props) {
   };
 
   return (
-    <div
-      tabIndex={tabindex}
+    <button
+      type="button"
       onClick={(e) => handleClick(e)}
+      className={styles["chat-channel-sidebar__user-nameplate"]}
       data-custom-context-menu-id={contextMenuId}
       onContextMenu={(e) => handleClick(e)}
       onKeyUp={(e) => {
@@ -34,7 +35,7 @@ function UserNameplate({ username, isGuest, tabindex, contextMenuId }: Props) {
       }}
     >
       {username}
-    </div>
+    </button>
   );
 }
 

@@ -11,11 +11,10 @@ import {
   positiveNumberOrZero,
   ChatMessageStyles,
 } from "../../../../../common";
-import styles from "./game-lobby-chat.module.scss";
 import CircularProgress from "../../common-components/CircularProgress";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import replaceUrlsWithAnchorTags from "../../../utils/replaceUrlsWithAnchorTags";
-import { newChatMessage } from "../../../redux/slices/chat-slice";
+import styles from "./chat.module.scss";
 
 interface Props {
   socket: Socket;
@@ -99,15 +98,15 @@ function GameLobbyChat({ socket }: Props) {
   };
 
   const messagesToDisplay: JSX.Element[] = [
-    <li className={styles[`chat-message-private`]} key={`${Date.now()} ${"1234"}`}>
+    <li className={styles[`chat__message--private`]} key={`${Date.now()} ${"1234"}`}>
       {/* eslint-disable-next-line react/no-danger */}
       <span
-        className={styles[`chat-message-private`]}
+        className={styles[`chat__message--private`]}
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
           __html: replaceUrlsWithAnchorTags(
             "Battle School is in alpha. All accounts are likely to be deleted upon the first beta release. Please report any issues here: https://github.com/SnowdenWintermute/lucella/issues",
-            styles[`chat-message-private`]
+            styles[`chat__message--private`]
           ),
         }}
       />
@@ -115,27 +114,26 @@ function GameLobbyChat({ socket }: Props) {
   ];
   if (messages) {
     messages.forEach((message) => {
-      const textToDisplay = replaceUrlsWithAnchorTags(message.text, styles[`chat-message-${message.style}`]);
+      const textToDisplay = replaceUrlsWithAnchorTags(message.text, styles[`chat__message--${message.style}`]);
       messagesToDisplay.push(
-        <li className={styles[`chat-message-${message.style}`]} key={`${message.timeStamp} ${message.text}`}>
+        <li className={styles[`chat__message--${message.style}`]} key={`${message.timeStamp} ${message.text}`}>
           {/* eslint-disable-next-line react/no-danger */}
-          {message.author} : <span className={styles[`chat-message-${message.style}`]} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
+          {message.author} : <span className={styles[`chat__message--${message.style}`]} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
         </li>
       );
     });
   }
 
   return (
-    <>
-      <div className={`game-lobby-chat-stream ${chatClass}`}>
+    <section className={styles["chat"]}>
+      <div>
         <ul>{messagesToDisplay}</ul>
       </div>
-      <div className={styles["game-lobby-chat-input-holder"]}>
+      <div>
         <form onSubmit={handleSubmit}>
           <input
             aria-label="chat-input"
             type="text"
-            className="text-input-transparent game-lobby-chat-input"
             onChange={(e) => onChange(e)}
             value={chatInput}
             placeholder="Enter a message to chat..."
@@ -144,7 +142,7 @@ function GameLobbyChat({ socket }: Props) {
         </form>
         <CircularProgress percentage={percentageChatDelayRemaining} />
       </div>
-    </>
+    </section>
   );
 }
 

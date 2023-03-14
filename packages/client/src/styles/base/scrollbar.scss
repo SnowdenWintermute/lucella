@@ -5,11 +5,11 @@
 }
 ::-webkit-scrollbar-track {
   background: color(backgroundColor);
-  border-left: 1px solid color(textPrimary);
-  border-bottom: 1px solid color(textPrimary);
+  border: 1px solid color(textPrimary);
 }
 ::-webkit-scrollbar-thumb {
-  border: 1px solid color(textPrimary);
+  border-top: 1px solid color(textPrimary);
+  border-bottom: 1px solid color(textPrimary);
   background: color(textPrimary);
 }
 ::-webkit-scrollbar-thumb:hover {

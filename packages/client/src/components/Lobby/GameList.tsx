@@ -3,8 +3,8 @@ import { Socket } from "socket.io-client";
 import { GameRoom, GameStatus, SocketEventsFromClient } from "../../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import RefreshSvg from "../../img/menuIcons/refresh.svg";
-import styles from "./game-lobby.module.scss";
 import { setGameListFetching } from "../../redux/slices/lobby-ui-slice";
+import styles from "./lobby.module.scss";
 
 interface Props {
   socket: Socket;
@@ -30,13 +30,13 @@ function GameList({ socket }: Props) {
     const { host, challenger } = gameRoom.players;
     const { gameName } = gameRoom;
     return (
-      <tr className="game-list-item" key={gameName}>
+      <tr key={gameName}>
         <td>{gameName}</td>
         <td>Host: {host?.associatedUser.username}</td>
         <td>Challenger: {challenger ? challenger.associatedUser.username : "Awaiting Opponent"}</td>
         <td>
           {gameRoom.gameStatus === GameStatus.IN_LOBBY && (
-            <button type="button" className="button button-standard-size button-primary" onClick={() => handleJoinGameClick(gameName)}>
+            <button type="button" onClick={() => handleJoinGameClick(gameName)}>
               Join
             </button>
           )}
@@ -53,21 +53,17 @@ function GameList({ socket }: Props) {
     });
   }
 
-  let elementToDispay = (
-    <p data-cy="list-of-current-games" style={{ margin: "0px" }}>
-      No games are currently being hosted
-    </p>
-  );
+  let elementToDispay = <p data-cy="list-of-current-games">No games are currently being hosted</p>;
   if (gamesToDisplay.length)
     elementToDispay = (
-      <table className="game-list-table" data-cy="list-of-current-games">
+      <table data-cy="list-of-current-games">
         <tbody>{gamesToDisplay}</tbody>
       </table>
     );
 
   return (
-    <div className={`game-list-frame ${gameListDisplayClass}`}>
-      <div className={styles["current-games-with-refresh-button"]}>
+    <div>
+      <div>
         <h3>Current Games</h3>
         <button
           type="button"
@@ -79,7 +75,7 @@ function GameList({ socket }: Props) {
           <RefreshSvg className={`${styles["refresh-icon"]}`} />
         </button>
       </div>
-      <div className={styles["game-list-table-holder"]}>
+      <div>
         {elementToDispay}
         {/* <tbody>{[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(() => gameListTableRow(new GameRoom("ay")))}</tbody> */}
       </div>
