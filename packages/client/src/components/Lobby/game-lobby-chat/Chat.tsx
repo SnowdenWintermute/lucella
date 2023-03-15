@@ -107,7 +107,7 @@ function Chat({ socket }: Props) {
       </div>
       <form onSubmit={handleSubmit}>
         <input
-          className={styles["chat__input"]}
+          className={`input input--transparent ${styles["chat__input"]}`}
           aria-label="chat-input"
           type="text"
           onChange={(e) => onChange(e)}

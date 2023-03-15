@@ -20,15 +20,7 @@
 }
 
 .chat__input {
-  height: height(3);
-  border: 1px solid color(textPrimary);
-  background-color: transparent;
-  padding-left: spacing(2);
   width: 100%;
-  font-size: fontSize(2);
-  &::placeholder {
-    color: color(textFaded);
-  }
 }
 
 .chat__message {

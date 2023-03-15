@@ -6,7 +6,7 @@ import styles from "./welcome-dropdown.module.scss";
 
 function WelcomeDropdown() {
   return (
-    <section className={`${lobbyMenusStyles["lobby-menus__menu"]} ${styles["welcome-dropdown"]}`}>
+    <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["welcome-dropdown"]}`}>
       <div className={styles["welcome-dropdown__copy-with-links"]}>
         <p>Welcome to Battle School, a space station orbiting Earth at the 5th Lagrange Point.</p>
         <p>Create an account to have your name listed on the ladder, or play a casual game to learn the rules before entering the competition.</p>

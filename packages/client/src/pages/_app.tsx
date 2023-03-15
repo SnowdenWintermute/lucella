@@ -3,6 +3,7 @@ import "../styles/globals.scss";
 import "../styles/base/style.scss";
 import "../styles/base/scrollbar.scss";
 import "../styles/common/buttons.scss";
+import "../styles/common/inputs.scss";
 import "../styles/common/pages.scss";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";

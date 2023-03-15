@@ -98,7 +98,6 @@ export class MatchmakingQueue {
       Object.values(players).forEach((player) => {
         this.removeUser(player.socketId);
         if (!io.sockets.sockets.get(player.socketId)) return;
-        io.sockets.sockets.get(player.socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
         io.sockets.sockets.get(player.socketId)!.leave(OfficialChannels.matchmakingQueue);
       });
 

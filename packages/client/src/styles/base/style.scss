@@ -3,12 +3,19 @@
   font-family: "DM Sans";
   src: local("DM Sans"), url("../../fonts/DM_Sans/DMSans-Regular.ttf") format("ttf");
 }
+@font-face {
+  font-family: "VT323";
+  src: local("VT323"), url("../../fonts/VT323/VT323-Regular.ttf") format("ttf");
+  font-style: normal;
+}
 
 * {
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
+  // font-family: "VT323";
   font-family: "DM Sans";
+  // letter-spacing: 0.05ch;
   color: color(textPrimary);
 }
 

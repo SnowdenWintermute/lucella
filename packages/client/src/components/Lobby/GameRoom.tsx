@@ -17,7 +17,7 @@ interface Props {
 function PreGameRoom({ socket }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const preGameScreenIsOpen = lobbyUiState.gameRoomDisplay.isOpen;
+  const gameSetupDropdownIsOpen = lobbyUiState.dropdownsVisibility.gameSetup;
   const [preGameRoomDisplayClass, setPreGameRoomDisplayClass] = useState("height-0-hidden");
   const [gameNameInput, setGameNameInput] = useState("");
   const gameStatus = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom.gameStatus;
@@ -32,13 +32,13 @@ function PreGameRoom({ socket }: Props) {
   const channelNameInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (preGameScreenIsOpen) {
+    if (gameSetupDropdownIsOpen) {
       setPreGameRoomDisplayClass("");
       if (!channelNameInput.current) return;
       channelNameInput.current.focus();
     }
-    if (!preGameScreenIsOpen) setPreGameRoomDisplayClass("height-0-hidden");
-  }, [preGameScreenIsOpen]);
+    if (!gameSetupDropdownIsOpen) setPreGameRoomDisplayClass("height-0-hidden");
+  }, [gameSetupDropdownIsOpen]);
 
   // 'make public' actually request to server to host a game (until now it is just the creation input window/box)
   const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
@@ -119,7 +119,7 @@ function PreGameRoom({ socket }: Props) {
         }}
       />
       <button type="submit" className="button button-standard-size button-primary">
-        {BUTTON_NAMES.GAME_ROOM.MAKE_PUBLIC}
+        {BUTTON_NAMES.GAME_ROOM.CREATE_GAME}
       </button>
     </form>
   );

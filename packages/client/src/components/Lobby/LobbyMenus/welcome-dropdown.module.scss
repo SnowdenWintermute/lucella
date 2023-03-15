@@ -1,8 +1,8 @@
 @import "../../../styles/abstracts/variables";
 
 .welcome-dropdown {
-  display: flex;
   align-items: center;
+  padding: spacing(2);
 }
 
 .welcome-dropdown__copy-with-links {

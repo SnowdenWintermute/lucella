@@ -18,7 +18,7 @@ function LobbyTopButton({ title, onClick, displayClass, ariaControls, ariaExpand
       <button
         type="button"
         disabled={disabled}
-        className={`button ${styles["lobby-menus__button"]} ${displayClass}`}
+        className={`button ${styles["lobby-menus__top-button"]} ${displayClass}`}
         onClick={onClick}
         data-cy={dataCy}
         aria-controls={ariaControls}

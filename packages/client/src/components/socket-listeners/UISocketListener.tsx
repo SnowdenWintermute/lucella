@@ -14,16 +14,15 @@ import {
   setCurrentGameRoom,
   setMatchmakingData,
   setMatchmakingLoading,
-  setMatchmakingWindowVisible,
-  setGameRoomDisplayVisible,
   setScoreScreenData,
-  setViewingGamesList,
   updateGameCountdown,
   updateGameList,
   updateGameStatus,
   updatePlayerRole,
   updatePlayersReady,
   setGameCreationWaitingListPosition,
+  setDropdownVisibility,
+  DropdownMenus,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -54,15 +53,11 @@ function UISocketListener({ socket }: Props) {
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
       dispatch(setCurrentGameRoom(data));
-      if (data) {
-        dispatch(setViewingGamesList(false));
-        dispatch(setGameRoomDisplayVisible(true));
-      } else {
-        dispatch(setGameRoomDisplayVisible(false));
-      }
+      if (data) dispatch(setDropdownVisibility(DropdownMenus.GAME_ROOM));
+      else dispatch(setDropdownVisibility(DropdownMenus.WELCOME));
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
-      dispatch(setGameRoomDisplayVisible(false));
+      dispatch(setDropdownVisibility(DropdownMenus.WELCOME));
     });
     socket.on(SocketEventsFromServer.PLAYER_READINESS_UPDATE, (playersReady) => {
       dispatch(updatePlayersReady(playersReady));
@@ -82,7 +77,7 @@ function UISocketListener({ socket }: Props) {
       dispatch(setShowScoreScreenModal(true));
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
-      dispatch(setMatchmakingWindowVisible(true));
+      dispatch(setDropdownVisibility(DropdownMenus.MATCHMAKING_QUEUE));
       dispatch(setMatchmakingLoading(false));
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, (data) => {
@@ -90,9 +85,6 @@ function UISocketListener({ socket }: Props) {
     });
     socket.on(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING, () => {
       dispatch(clearLobbyUi());
-    });
-    socket.on(SocketEventsFromServer.MATCH_FOUND, () => {
-      dispatch(setMatchmakingWindowVisible(false));
     });
     socket.on(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION, (data) => {
       dispatch(setGameCreationWaitingListPosition(data));
@@ -112,7 +104,6 @@ function UISocketListener({ socket }: Props) {
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED);
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE);
       socket.off(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
-      socket.off(SocketEventsFromServer.MATCH_FOUND);
       socket.off(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION);
     };
   }, [socket, dispatch, gameName]);

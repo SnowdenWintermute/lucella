@@ -1,6 +1,6 @@
 @import "../../../styles/abstracts/variables";
 
-.lobby-menus__buttons {
+.lobby-menus__top-buttons {
   border-bottom: 1px solid color(textPrimary);
   display: flex;
   list-style: none;
@@ -8,14 +8,28 @@
   height: height(4);
 }
 
-.lobby-menus__button {
+.lobby-menus__top-button {
   min-width: spacing(6);
   margin-right: spacing(1);
 }
 
-.lobby-menus__menu {
+.lobby-menu {
   height: height(6);
   height: calc(324);
-  padding: spacing(2);
   border-bottom: 1px solid color(textPrimary);
+  display: flex;
+}
+
+.lobby-menu__left {
+  width: 62%;
+  border-right: 1px solid color(textPrimary);
+  padding: spacing(2);
+}
+.lobby-menu__right {
+  flex: 1;
+  padding: spacing(2);
+}
+
+.lobby-menu__header {
+  font-size: fontSize(3);
 }
