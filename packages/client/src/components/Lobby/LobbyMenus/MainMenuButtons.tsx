@@ -11,7 +11,7 @@ interface Props {
   socket: Socket;
 }
 
-function DefaultButtons({ socket }: Props) {
+function MainMenuButtons({ socket }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const uiState = useAppSelector((state) => state.UI);
@@ -45,15 +45,15 @@ function DefaultButtons({ socket }: Props) {
       <GameLobbyTopButton
         title="Channel"
         onClick={handleChannelClick}
-        displayClass=""
+        extraStyles=""
         ariaControls="Change Chat Channel modal"
         ariaExpanded={uiState.modals.changeChatChannel}
       />
-      <GameLobbyTopButton title="Ranked" onClick={handleRankedClick} disabled={lobbyUiState.matchmakingScreen.isLoading} displayClass="" />
-      <GameLobbyTopButton title="Host" onClick={handleSetupNewGameClick} displayClass="" />
-      <GameLobbyTopButton title="Join" onClick={handleViewGamesListClick} displayClass="" />
+      <GameLobbyTopButton title="Ranked" onClick={handleRankedClick} disabled={lobbyUiState.matchmakingScreen.isLoading} extraStyles="" />
+      <GameLobbyTopButton title="Host" onClick={handleSetupNewGameClick} extraStyles="" />
+      <GameLobbyTopButton title="Join" onClick={handleViewGamesListClick} extraStyles="" />
     </>
   );
 }
 
-export default DefaultButtons;
+export default MainMenuButtons;

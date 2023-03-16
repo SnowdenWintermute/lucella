@@ -1,8 +1,10 @@
 import React from "react";
+import { Socket } from "socket.io-client";
 import Link from "next/link";
+import MainMenuButtons from "./MainMenuButtons";
 import lobbyMenusStyles from "./lobby-menus.module.scss";
 import Logo from "../../../img/logo.svg";
-import styles from "./welcome-dropdown.module.scss";
+import styles from "./main-menu.module.scss";
 
 function WelcomeDropdown() {
   return (
@@ -25,4 +27,15 @@ function WelcomeDropdown() {
   );
 }
 
-export default WelcomeDropdown;
+function MainMenu({ socket }: { socket: Socket }) {
+  return (
+    <>
+      <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
+        <MainMenuButtons socket={socket} />
+      </ul>
+      <WelcomeDropdown />
+    </>
+  );
+}
+
+export default MainMenu;

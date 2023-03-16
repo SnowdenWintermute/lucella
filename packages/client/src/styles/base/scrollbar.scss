@@ -1,7 +1,7 @@
 @import "../abstracts/variables";
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: $scrollbarWidth;
 }
 ::-webkit-scrollbar-track {
   background: color(backgroundColor);

@@ -11,22 +11,5 @@
   display: flex;
   flex-direction: column;
   width: calc($baseAppWidth - spacing(3) * 2 - width(3));
-}
-
-.refresh-button {
-  width: 30px;
-  height: 30px;
-  background-color: transparent;
-  border: 1px solid color(textPrimary);
-  cursor: pointer;
-  padding: 4px;
-  &:disabled {
-    opacity: 40%;
-    cursor: progress;
-  }
-}
-.refresh-icon {
-  height: 100%;
-  width: 100%;
-  fill: color(textPrimary);
+  min-width: 0px;
 }

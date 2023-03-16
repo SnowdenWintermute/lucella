@@ -1,50 +1,26 @@
 import React from "react";
 import { Socket } from "socket.io-client";
-import { LOBBY_TEXT } from "../../../consts/lobby-text";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import DefaultButtons from "./DefaultButtons";
-import MatchmakingButtons from "./MatchmakingButtons";
-import GameLobbyTopButton from "./LobbyTopButton";
+import { useAppSelector } from "../../../redux/hooks";
 import styles from "./lobby-menus.module.scss";
-import WelcomeDropdown from "./WelcomeDropdown";
-import GameSetupDropdown from "./GameSetupDropdown";
-import { DropdownMenus, setDropdownVisibility } from "../../../redux/slices/lobby-ui-slice";
-import GameRoomDropdown from "./GameRoomDropdown";
-import { SocketEventsFromClient } from "../../../../../common";
+import GameSetupMenu from "./GameSetupMenu";
+import GameRoomMenu from "./GameRoomMenu";
+import GameListMenu from "./GameListMenu";
+import MainMenu from "./MainMenu";
 
-interface Props {
-  socket: Socket;
-}
-
-function LobbyMenus({ socket }: Props) {
-  const dispatch = useAppDispatch();
+function LobbyMenus({ socket }: { socket: Socket }) {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { dropdownsVisibility } = lobbyUiState;
 
-  const { currentGameRoom } = lobbyUiState;
-
-  const onGoBackClick = () => {
-    dispatch(setDropdownVisibility(DropdownMenus.WELCOME));
-  };
-
-  const onLeaveGameClick = () => {
-    dispatch(setDropdownVisibility(DropdownMenus.WELCOME));
-    socket.emit(SocketEventsFromClient.LEAVES_GAME);
-  };
-
   return (
     <section className={styles["lobby-menus"]}>
-      <ul className={styles["lobby-menus__top-buttons"]}>
-        {dropdownsVisibility.welcome && <DefaultButtons socket={socket} />}
-        {dropdownsVisibility.gameSetup && <GameLobbyTopButton title="Cancel" onClick={onGoBackClick} displayClass="" />}
-        {dropdownsVisibility.gameRoom && !currentGameRoom?.isRanked && <GameLobbyTopButton title="Leave Game" onClick={onLeaveGameClick} displayClass="" />}
-        {lobbyUiState.gameList.isOpen && <GameLobbyTopButton title="Back" onClick={onGoBackClick} displayClass="" />}
+      {/* <ul className={styles["lobby-menus__top-buttons"]}>
         {lobbyUiState.matchmakingScreen.isOpen && <MatchmakingButtons socket={socket} />}
         {currentGameRoom?.isRanked && <span>{LOBBY_TEXT.MATCHMAKING_QUEUE.RANKED_GAME_STARTING}</span>}
-      </ul>
-      {dropdownsVisibility.welcome && <WelcomeDropdown />}
-      {dropdownsVisibility.gameSetup && <GameSetupDropdown socket={socket} />}
-      {dropdownsVisibility.gameRoom && <GameRoomDropdown socket={socket} />}
+      </ul> */}
+      {dropdownsVisibility.welcome && <MainMenu socket={socket} />}
+      {dropdownsVisibility.gameSetup && <GameSetupMenu socket={socket} />}
+      {dropdownsVisibility.gameRoom && <GameRoomMenu socket={socket} />}
+      {dropdownsVisibility.gameList && <GameListMenu socket={socket} />}
     </section>
   );
 }

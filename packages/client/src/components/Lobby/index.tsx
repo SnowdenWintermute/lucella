@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import { Socket } from "socket.io-client";
 import React, { useState, useRef } from "react";
-import Chat from "./game-lobby-chat/Chat";
+import Chat from "./Chat";
 import LobbyMenus from "./LobbyMenus";
 import ChatChannelSidebar from "./ChatChannelSidebar";
-import GameRoom from "./GameRoom";
-import MatchmakingQueueDisplay from "./MatchmakingQueueDisplay";
-import GameList from "./GameList";
 import ChangeChannelModalContents from "./ChangeChannelModalContents";
 import ScoreScreenModalContents from "./modals/ScoreScreenModalContents";
 import Modal from "../common-components/modal/Modal";
@@ -19,11 +16,7 @@ import { setShowChangeChatChannelModal, setShowScoreScreenModal } from "../../re
 import { INetworkPerformanceMetrics } from "../../types";
 import styles from "./lobby.module.scss";
 
-interface Props {
-  defaultChatChannel: string;
-}
-
-function GameLobby({ defaultChatChannel }: Props) {
+function Lobby({ defaultChatChannel }: { defaultChatChannel: string }) {
   const dispatch = useAppDispatch();
   const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
@@ -92,9 +85,6 @@ function GameLobby({ defaultChatChannel }: Props) {
                 <Chat socket={socket.current} />
               </div>
               <ChatChannelSidebar />
-              {/* <GameRoom socket={socket.current} /> */}
-              {/* <MatchmakingQueueDisplay /> */}
-              {/* <GameList socket={socket.current} /> */}
             </main>
           ) : (
             <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
@@ -105,4 +95,4 @@ function GameLobby({ defaultChatChannel }: Props) {
   );
 }
 
-export default GameLobby;
+export default Lobby;

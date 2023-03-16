@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable consistent-return */
 import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
@@ -87,12 +88,18 @@ function Chat({ socket }: Props) {
   };
 
   // can add any message here that the client will show once in chat stream upon page load
-  const messagesToDisplay: JSX.Element[] = [<ClientGeneratedChatNotice />];
+  // can't make <li> part of <ClientGenerated... because it will give unique list key prop error
+  const messagesToDisplay: JSX.Element[] = [
+    <li key={`${Date.now()} ${"1234"}`}>
+      <ClientGeneratedChatNotice />
+    </li>,
+  ];
   if (messages) {
-    messages.forEach((message) => {
+    messages.forEach((message, i) => {
       const textToDisplay = replaceUrlsWithAnchorTags(message.text, `${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`);
       messagesToDisplay.push(
         <li className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} key={`${message.timeStamp} ${message.text}`}>
+          {/* <li className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} key={i}> */}
           {message.author} : {/* eslint-disable-next-line react/no-danger */}
           <span className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
         </li>

@@ -1,0 +1,74 @@
+import React, { useEffect, useState } from "react";
+import { Socket } from "socket.io-client";
+import { GameStatus, SocketEventsFromClient, SocketMetadata } from "../../../../../common";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import LobbyTopButton from "./LobbyTopButton";
+import { DropdownMenus, setDropdownVisibility } from "../../../redux/slices/lobby-ui-slice";
+import lobbyMenusStyles from "./lobby-menus.module.scss";
+import styles from "./game-room-menu.module.scss";
+
+function PlayerWithReadyStatus({ player, playerReady }: { player: SocketMetadata | null; playerReady: boolean }) {
+  return (
+    <div className={styles["game-room-dropdown__player-with-ready-status"]}>
+      <span className={styles["game-room-dropdown__player"]}>{player ? player.associatedUser.username : "..."}</span>
+      {player && <span>{playerReady ? "ready" : "not ready"}</span>}
+      {!player && <span />}
+    </div>
+  );
+}
+
+function GameRoomMenu({ socket }: { socket: Socket }) {
+  const dispatch = useAppDispatch();
+  const [readableGameStatus, setReadableGameStatus] = useState("Waiting for an opponent");
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const currentGameRoom = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom;
+  if (!currentGameRoom) return <p>Error - no game room found</p>;
+  const { players, playersReady, gameStatus, isRanked, countdown } = currentGameRoom;
+  const currentWaitingListPosition = lobbyUiState.gameCreationWaitingList.currentPosition;
+
+  const onLeaveGameClick = () => {
+    dispatch(setDropdownVisibility(DropdownMenus.WELCOME));
+    socket.emit(SocketEventsFromClient.LEAVES_GAME);
+  };
+
+  const handleReadyClick = () => {
+    socket.emit(SocketEventsFromClient.CLICKS_READY);
+  };
+
+  useEffect(() => {
+    let newReadableGameStatus = "";
+    if (!players.challenger) newReadableGameStatus = "Waiting for an opponent";
+    else if (players.challenger && (!playersReady.challenger || !playersReady.host)) newReadableGameStatus = "Waiting for all players to be ready";
+    else if (gameStatus === GameStatus.COUNTING_DOWN) newReadableGameStatus = "Game starting";
+    else if (gameStatus === GameStatus.IN_WAITING_LIST) newReadableGameStatus = "Position in waiting list";
+    setReadableGameStatus(newReadableGameStatus);
+  }, [players.challenger, playersReady, gameStatus]);
+
+  return (
+    <>
+      <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
+        <LobbyTopButton title="Leave Game" onClick={onLeaveGameClick} extraStyles="" />
+      </ul>
+      <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-room-dropdown"]}`}>
+        <div className={`${lobbyMenusStyles["lobby-menu__left"]} ${styles["game-room-dropdown__left"]}`}>
+          <h3 className={`${lobbyMenusStyles["lobby-menu__header"]} ${styles["game-room-dropdown__header"]}`}>Game room: {currentGameRoom.gameName}</h3>
+          <div className={styles["game-room-dropdown__players"]}>
+            <PlayerWithReadyStatus player={players.host} playerReady={playersReady.host} />
+            <span className={styles["game-room-dropdown__vs"]}>vs.</span>
+            <PlayerWithReadyStatus player={players.challenger} playerReady={playersReady.challenger} />
+          </div>
+          <button type="button" className={`button button--accent ${styles["game-room-dropdown__ready-button"]}`} onClick={handleReadyClick}>
+            Ready
+          </button>
+        </div>
+        <div className={`${lobbyMenusStyles["lobby-menu__right"]} ${styles["game-room-dropdown__right"]}`}>
+          <p aria-label="game status">{readableGameStatus}</p>
+          {gameStatus === GameStatus.COUNTING_DOWN && <span aria-label="game start countdown">{countdown?.current}</span>}
+          {gameStatus === GameStatus.IN_WAITING_LIST && <span>{currentWaitingListPosition}</span>}
+        </div>
+      </section>
+    </>
+  );
+}
+
+export default GameRoomMenu;

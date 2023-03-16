@@ -1,0 +1,92 @@
+@import "../../../styles/abstracts/variables";
+
+.game-list-buttons__refresh {
+  width: height(3);
+  padding: spacing(0);
+  margin-left: auto;
+}
+
+.game-list-buttons__refresh-icon {
+  height: 100%;
+  width: 100%;
+  fill: color(textPrimary);
+}
+
+.game-list-dropdown {
+  padding: spacing(2);
+  display: flex;
+  flex-direction: column;
+}
+
+.game-list-dropdown__headers {
+  display: flex;
+  margin-bottom: spacing(2);
+  display: flex;
+  vertical-align: bottom;
+  h3 {
+    font-size: fontSize(3);
+    font-weight: lighter;
+  }
+}
+
+.game-list-dropdown__game-name-header {
+  padding-left: 0px !important;
+}
+
+.game-list-dropdown__empty-header-spacer {
+  width: spacing(6);
+  cursor: default;
+  border: 0px;
+  height: 1px;
+}
+
+.game-list-dropdown__empty-header-spacer--scrollbar-present {
+  width: calc(spacing(6) + $scrollbarWidth + spacing(3));
+  // for firefox, their scrollbar seems to be 4px wide
+  @supports (scrollbar-color: color(textPrimary) color(backgroundColor)) {
+    width: calc(spacing(6) + $firefoxScrollbarWidth + $firefoxScrollbarWidth);
+  }
+}
+
+.game-list-dropdown__games {
+  width: 100%;
+  overflow-y: auto;
+}
+
+.game-list-dropdown__game-row {
+  display: flex;
+  border: 1px solid color(textPrimary);
+  justify-content: space-between;
+  margin-bottom: spacing(2);
+  align-items: center;
+}
+
+.game-list-dropdown__games--scrollbar-padding {
+  padding-right: spacing(2);
+  @supports (scrollbar-color: color(textPrimary) color(backgroundColor)) {
+    padding-right: $firefoxScrollbarWidth;
+  }
+}
+
+.game-list-dropdown__game-name {
+  width: 42%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-left: spacing(2);
+}
+
+.game-list-dropdown__number-of-players {
+  width: 48%;
+  text-align: center;
+}
+
+.game-list-dropdown__button {
+  width: spacing(6);
+  border: none;
+  border-left: 1px solid color(textPrimary);
+  &:disabled {
+    cursor: default;
+    opacity: 100%;
+  }
+}

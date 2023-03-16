@@ -20,7 +20,7 @@ function MatchmakingButtons({ socket }: Props) {
   };
 
   if (isRanked) return null; // don't want to show the button if a match was found
-  return <GameLobbyTopButton title="Cancel Search" onClick={onCancelMatchmakingSearch} displayClass="" />;
+  return <GameLobbyTopButton title="Cancel Search" onClick={onCancelMatchmakingSearch} extraStyles="" />;
 }
 
 export default MatchmakingButtons;
