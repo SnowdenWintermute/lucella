@@ -10,8 +10,10 @@ function ChatChannelSidebar() {
 
   const usersInChannelToDisplay: React.ReactElement[] = [];
   Object.entries(currentChatChannelUsers).forEach(([username, user], i) => {
-    usersInChannelToDisplay.push(<UserNameplate key={username} username={username} isGuest={user.isGuest} tabindex={i} contextMenuId={i + 1} />);
+    usersInChannelToDisplay.push(<UserNameplate key={username} username={username} isGuest={user.isGuest} contextMenuId={i + 1} />);
   });
+
+  for (let i = 40; i > 0; i -= 1) usersInChannelToDisplay.push(<UserNameplate key="test" username="test" isGuest contextMenuId={i + 1} />);
 
   return (
     <section className={styles["chat-channel-sidebar"]}>

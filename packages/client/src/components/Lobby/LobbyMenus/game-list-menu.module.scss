@@ -14,13 +14,22 @@
 
 .game-list-dropdown {
   padding: spacing(2);
+  padding-right: calc(
+    spacing(2) - $focusOutlineWidth
+  ); // otherwise the button focus highlight is hidden by the overflow:auto/scroll property of the "table" below
   display: flex;
   flex-direction: column;
 }
 
+.game-list-dropdown--scrollbar-present {
+  padding-right: spacing(2);
+}
+
 .game-list-dropdown__headers {
   display: flex;
-  margin-bottom: spacing(2);
+  margin-bottom: calc(
+    spacing(2) - $focusOutlineWidth
+  ); // otherwise the button focus highlight is hidden by the overflow:auto/scroll property of the "table" below
   display: flex;
   vertical-align: bottom;
   h3 {
@@ -34,22 +43,20 @@
 }
 
 .game-list-dropdown__empty-header-spacer {
-  width: spacing(6);
+  width: calc(spacing(6) + $focusOutlineWidth);
   cursor: default;
   border: 0px;
   height: 1px;
 }
 
 .game-list-dropdown__empty-header-spacer--scrollbar-present {
-  width: calc(spacing(6) + $scrollbarWidth + spacing(3));
-  // for firefox, their scrollbar seems to be 4px wide
-  @supports (scrollbar-color: color(textPrimary) color(backgroundColor)) {
-    width: calc(spacing(6) + $firefoxScrollbarWidth + $firefoxScrollbarWidth);
-  }
+  width: calc(spacing(6) + spacing(2) + $focusOutlineWidth);
 }
 
 .game-list-dropdown__games {
   width: 100%;
+  padding-top: $focusOutlineWidth;
+  padding-right: $focusOutlineWidth;
   overflow-y: auto;
 }
 
@@ -63,9 +70,6 @@
 
 .game-list-dropdown__games--scrollbar-padding {
   padding-right: spacing(2);
-  @supports (scrollbar-color: color(textPrimary) color(backgroundColor)) {
-    padding-right: $firefoxScrollbarWidth;
-  }
 }
 
 .game-list-dropdown__game-name {

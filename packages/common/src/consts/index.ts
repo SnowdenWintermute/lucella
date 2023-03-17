@@ -3,7 +3,7 @@ export const websiteName = "battleschool.io";
 export const SOCKET_ADDRESS_PRODUCTION = "https://battleschool.io";
 export const SERVER_HOSTNAME_DOCKER_PRODUCTION = "https://battleschool.io/api";
 export const REDIS_HOSTNAME_PRODUCTION = "redis";
-export const baseMaxConcurrentGames = 15;
+export const baseMaxConcurrentGames = 1;
 // times
 export const ONE_SECOND = 1000;
 export const ONE_MINUTE = ONE_SECOND * 60;

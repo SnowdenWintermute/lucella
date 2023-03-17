@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import RefreshSvg from "../../../img/menuIcons/refresh.svg";
 import lobbyMenusStyles from "./lobby-menus.module.scss";
 import styles from "./game-list-menu.module.scss";
+import useScrollbarSize from "../../../hooks/useScrollbarSize";
 
 function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom }) {
   const handleJoinGameClick = (gameName: string) => {
@@ -36,6 +37,9 @@ function GameListMenu({ socket }: { socket: Socket }) {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const gameListRef = useRef<HTMLDivElement>(null);
   const gameListIsOverflowing = useElementIsOverflowing(gameListRef.current);
+  const scrollbarSize = useScrollbarSize();
+
+  console.log("scrollbarSize: ", scrollbarSize);
 
   function handleRefreshGamesListClick() {
     dispatch(setGameListFetching(true));
@@ -59,7 +63,11 @@ function GameListMenu({ socket }: { socket: Socket }) {
           <RefreshSvg className={styles["game-list-buttons__refresh-icon"]} />
         </button>
       </ul>
-      <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-list-dropdown"]}`}>
+      <section
+        className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-list-dropdown"]} ${
+          gameListIsOverflowing && styles["game-list-dropdown--scrollbar-present"]
+        }`}
+      >
         <div className={`${styles["game-list-dropdown__headers"]}`}>
           <h3 className={`${styles["game-list-dropdown__game-name"]} ${styles["game-list-dropdown__game-name-header"]}`}>Current games</h3>
           {!noGames && (
@@ -68,21 +76,24 @@ function GameListMenu({ socket }: { socket: Socket }) {
           <span
             aria-hidden
             className={`button ${styles["game-list-dropdown__empty-header-spacer"]} ${
-              gameListIsOverflowing && styles["game-list-dropdown__empty-header-spacer--scrollbar-present"]
+              gameListIsOverflowing && scrollbarSize.width && styles["game-list-dropdown__empty-header-spacer--scrollbar-present"]
             }`}
+            style={{ marginLeft: gameListIsOverflowing && scrollbarSize.width ? scrollbarSize.width : 0 }}
           />
         </div>
         <div
-          className={`${styles["game-list-dropdown__games"]} ${gameListIsOverflowing && styles["game-list-dropdown__games--scrollbar-padding"]}`}
+          className={`${styles["game-list-dropdown__games"]} ${
+            gameListIsOverflowing && scrollbarSize.width && styles["game-list-dropdown__games--scrollbar-padding"]
+          }`}
           ref={gameListRef}
         >
           {noGames && <p>No games found</p>}
           {Object.values(lobbyUiState.gameList.games).map((gameRoom) => (
             <GameListGame socket={socket} gameRoom={gameRoom} />
           ))}
-          {/* {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(() => (
+          {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(() => (
             <GameListGame socket={socket} gameRoom={new GameRoom("ay", undefined)} />
-          ))} */}
+          ))}
         </div>
       </section>
     </>

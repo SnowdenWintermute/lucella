@@ -7,11 +7,10 @@ import styles from "./chat-channel-sidebar.module.scss";
 type Props = {
   username: string;
   isGuest: boolean;
-  tabindex: number;
   contextMenuId: number;
 };
 
-function UserNameplate({ username, isGuest, tabindex, contextMenuId }: Props) {
+function UserNameplate({ username, isGuest, contextMenuId }: Props) {
   const dispatch = useAppDispatch();
 
   const handleClick = (e: React.MouseEvent) => {
