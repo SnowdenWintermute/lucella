@@ -49,7 +49,7 @@ function MainMenuButtons({ socket }: Props) {
         ariaControls="Change Chat Channel modal"
         ariaExpanded={uiState.modals.changeChatChannel}
       />
-      <GameLobbyTopButton title="Ranked" onClick={handleRankedClick} disabled={lobbyUiState.matchmakingScreen.isLoading} extraStyles="" />
+      <GameLobbyTopButton title="Ranked" onClick={handleRankedClick} disabled={lobbyUiState.matchmakingMenu.isLoading} extraStyles="" />
       <GameLobbyTopButton title="Host" onClick={handleSetupNewGameClick} extraStyles="" />
       <GameLobbyTopButton title="Join" onClick={handleViewGamesListClick} extraStyles="" />
     </>

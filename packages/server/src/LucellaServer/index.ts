@@ -153,6 +153,7 @@ export class LucellaServer {
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
     lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName] = gameRoom;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+    gameRoom.countdown.current -= 1;
     gameRoom.countdownInterval = setInterval(() => {
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
       gameRoom.countdown.current -= 1;

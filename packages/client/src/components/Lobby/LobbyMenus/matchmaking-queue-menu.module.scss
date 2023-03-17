@@ -1,21 +1,22 @@
 @import "../../../styles/abstracts/variables";
 
 .matchmaking-queue-dropdown__left {
-  //   display: flex;
-  //   flex-direction: column;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0px;
 }
 .matchmaking-queue-dropdown__header {
   text-align: center;
 }
 
 .matchmaking-queue-dropdown__queue-status {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: calc(100% - spacing(2) * 2);
+  flex: 1;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .matchmaking-queue-dropdown__queue-status-text {
@@ -23,11 +24,35 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  width: 62%;
 }
 
-.matchmaking-queue-dropdown__circular-progress-container {
-  width: height(4);
-  height: height(4);
-  margin: 0 auto;
+.matchmaking-queue-dropdown__loading-spinner-container {
+  width: 38%;
   text-align: center;
+}
+
+.matchmaking-queue-dropdown__loading-spinner {
+  margin: 0 auto;
+  height: height(4);
+  width: height(4);
+  border-right: spacing(0) solid transparent;
+  border-top: spacing(0) solid color(textPrimary);
+  border-left: spacing(0) solid color(textPrimary);
+  border-bottom: spacing(0) solid color(textPrimary);
+}
+
+.matchmaking-queue-dropdown__right {
+  padding: spacing(2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+}
+.matchmaking-queue-dropdown__queue-rules {
+  flex: 1;
+  list-style-position: inside;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }

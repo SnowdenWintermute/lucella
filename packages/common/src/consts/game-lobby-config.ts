@@ -1,6 +1,6 @@
 import { ONE_SECOND } from ".";
 
-export const gameRoomCountdownDuration = 1;
+export const gameRoomCountdownDuration = 10;
 export const theVoid = "the void";
 export const gameChannelNamePrefix = "game-";
 export const rankedGameChannelNamePrefix = "ranked-";

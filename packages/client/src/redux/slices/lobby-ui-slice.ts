@@ -26,16 +26,14 @@ export interface ILobbyUIState {
     games: {
       [roomName: string]: GameRoom;
     };
-    isOpen: boolean;
     isFetching: boolean;
   };
   scoreScreenData: IGameScoreScreen | null;
   gameCreationWaitingList: {
     currentPosition: number | null;
   };
-  matchmakingScreen: {
+  matchmakingMenu: {
     isLoading: boolean;
-    isOpen: boolean;
     currentData: {
       currentEloDiffThreshold: number | null;
       queueSize: number | null;
@@ -50,16 +48,14 @@ const initialState: ILobbyUIState = {
   activeMenu: LobbyMenu.MAIN,
   gameList: {
     games: {},
-    isOpen: false,
     isFetching: true,
   },
   scoreScreenData: null,
   gameCreationWaitingList: {
     currentPosition: null,
   },
-  matchmakingScreen: {
+  matchmakingMenu: {
     isLoading: false,
-    isOpen: false,
     currentData: {
       queueSize: null,
       currentEloDiffThreshold: null,
@@ -81,7 +77,7 @@ const ladderSlice = createSlice({
     },
     setActiveMenu(state, action: PayloadAction<LobbyMenu>) {
       state.activeMenu = action.payload;
-      if (action.payload !== LobbyMenu.MATCHMAKING_QUEUE) state.matchmakingScreen = initialState.matchmakingScreen;
+      if (action.payload !== LobbyMenu.MATCHMAKING_QUEUE) state.matchmakingMenu = initialState.matchmakingMenu;
     },
     setCurrentGameRoom(state, action: PayloadAction<GameRoom | null>) {
       state.currentGameRoom = action.payload;
@@ -103,10 +99,10 @@ const ladderSlice = createSlice({
       if (state.currentGameRoom) state.currentGameRoom.winner = action.payload;
     },
     setMatchmakingLoading(state, action: PayloadAction<boolean>) {
-      state.matchmakingScreen.isLoading = action.payload;
+      state.matchmakingMenu.isLoading = action.payload;
     },
     setMatchmakingData(state, action: PayloadAction<{ queueSize: number; currentEloDiffThreshold: number }>) {
-      state.matchmakingScreen.currentData = action.payload;
+      state.matchmakingMenu.currentData = action.payload;
     },
     setGameCreationWaitingListPosition(state, action: PayloadAction<number>) {
       state.gameCreationWaitingList.currentPosition = action.payload;

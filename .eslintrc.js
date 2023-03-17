@@ -87,6 +87,7 @@ module.exports = {
     ],
     // "react-hooks/rules-of-hooks": `error`,
     // "react-hooks/exhaustive-deps": `warn`,
+    "react/require-default-props": `off`,
     // indent: [`error`, 2, { SwitchCase: 1 }],
     // "jsx-a11y/href-no-hash": `off`,
     // "jsx-a11y/anchor-is-valid": [

@@ -13,7 +13,6 @@ import {
   toKebabCase,
   gameChannelNamePrefix,
   GameStatus,
-  battleRoomDefaultChatChannel,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";

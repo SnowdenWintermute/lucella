@@ -57,9 +57,12 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
             <span className={styles["game-room-dropdown__vs"]}>vs.</span>
             <PlayerWithReadyStatus player={players.challenger} playerReady={playersReady.challenger} />
           </div>
-          <button type="button" className={`button button--accent ${styles["game-room-dropdown__ready-button"]}`} onClick={handleReadyClick}>
-            Ready
-          </button>
+          {!currentGameRoom?.isRanked && (
+            <button type="button" className={`button button--accent ${styles["game-room-dropdown__ready-button"]}`} onClick={handleReadyClick}>
+              Ready
+            </button>
+          )}
+          {currentGameRoom?.isRanked && <div className="button" style={{ opacity: "0%" }} aria-hidden />}
         </div>
         <div className={`${lobbyMenusStyles["lobby-menu__right"]} ${styles["game-room-dropdown__right"]}`}>
           <p className={styles["game-room-dropdown__right-main-text"]} aria-label="game status">

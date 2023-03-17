@@ -15,12 +15,11 @@ function LobbyMenus({ socket }: { socket: Socket }) {
 
   return (
     <section className={styles["lobby-menus"]}>
-      {/* {activeMenu === LobbyMenu.MATCHMAKING_QUEUE && <MatchmakingQueueMenu socket={socket} />} */}
-      <MatchmakingQueueMenu socket={socket} />
-      {/* {activeMenu === LobbyMenu.MAIN && <MainMenu socket={socket} />}
+      {activeMenu === LobbyMenu.MATCHMAKING_QUEUE && <MatchmakingQueueMenu socket={socket} />}
+      {activeMenu === LobbyMenu.MAIN && <MainMenu socket={socket} />}
       {activeMenu === LobbyMenu.GAME_SETUP && <GameSetupMenu socket={socket} />}
       {activeMenu === LobbyMenu.GAME_ROOM && <GameRoomMenu socket={socket} />}
-      {activeMenu === LobbyMenu.GAME_LIST && <GameListMenu socket={socket} />} */}
+      {activeMenu === LobbyMenu.GAME_LIST && <GameListMenu socket={socket} />}
     </section>
   );
 }
