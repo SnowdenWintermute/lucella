@@ -19,8 +19,20 @@
   margin-bottom: spacing(2);
 }
 
+.chat__input-form {
+  position: relative;
+}
+
 .chat__input {
   width: 100%;
+}
+
+.chat__input-delay-circular-progress {
+  position: absolute;
+  height: height(2);
+  width: height(2);
+  right: spacing(1);
+  top: calc(50% - height(2) / 2);
 }
 
 .chat__message {

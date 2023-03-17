@@ -3,7 +3,7 @@ import { Socket } from "socket.io-client";
 import { GameStatus, SocketEventsFromClient, SocketMetadata } from "../../../../../common";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import LobbyTopButton from "./LobbyTopButton";
-import { DropdownMenus, setDropdownVisibility } from "../../../redux/slices/lobby-ui-slice";
+import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
 import lobbyMenusStyles from "./lobby-menus.module.scss";
 import styles from "./game-room-menu.module.scss";
 
@@ -27,7 +27,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   const currentWaitingListPosition = lobbyUiState.gameCreationWaitingList.currentPosition;
 
   const onLeaveGameClick = () => {
-    dispatch(setDropdownVisibility(DropdownMenus.WELCOME));
+    dispatch(setActiveMenu(LobbyMenu.MAIN));
     socket.emit(SocketEventsFromClient.LEAVES_GAME);
   };
 
@@ -51,7 +51,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
       </ul>
       <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-room-dropdown"]}`}>
         <div className={`${lobbyMenusStyles["lobby-menu__left"]} ${styles["game-room-dropdown__left"]}`}>
-          <h3 className={`${lobbyMenusStyles["lobby-menu__header"]} ${styles["game-room-dropdown__header"]}`}>Game room: {currentGameRoom.gameName}</h3>
+          <h3 className={`${lobbyMenusStyles["lobby-menu__header"]}`}>Game room: {currentGameRoom.gameName}</h3>
           <div className={styles["game-room-dropdown__players"]}>
             <PlayerWithReadyStatus player={players.host} playerReady={playersReady.host} />
             <span className={styles["game-room-dropdown__vs"]}>vs.</span>
@@ -62,9 +62,16 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
           </button>
         </div>
         <div className={`${lobbyMenusStyles["lobby-menu__right"]} ${styles["game-room-dropdown__right"]}`}>
-          <p aria-label="game status">{readableGameStatus}</p>
-          {gameStatus === GameStatus.COUNTING_DOWN && <span aria-label="game start countdown">{countdown?.current}</span>}
-          {gameStatus === GameStatus.IN_WAITING_LIST && <span>{currentWaitingListPosition}</span>}
+          <p className={styles["game-room-dropdown__right-main-text"]} aria-label="game status">
+            {readableGameStatus}
+            {gameStatus === GameStatus.COUNTING_DOWN && <span aria-label="game start countdown">{countdown?.current}</span>}
+            {gameStatus === GameStatus.IN_WAITING_LIST && <span>{currentWaitingListPosition}</span>}
+          </p>
+          {gameStatus === GameStatus.IN_WAITING_LIST && (
+            <p className={styles["game-room-dropdown__right-info-text"]}>
+              The server is experiencing high load. Your game has been placed in the waiting list.
+            </p>
+          )}
         </div>
       </section>
     </>

@@ -1,13 +1,12 @@
 /* eslint-disable no-param-reassign */
-import { setAutoFreeze } from "immer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord } from "../../../../common";
 
 // setAutoFreeze(false);
 
-export enum DropdownMenus {
-  WELCOME = "welcome",
+export enum LobbyMenu {
+  MAIN = "main",
   GAME_SETUP = "gameSetup",
   GAME_ROOM = "gameRoom",
   GAME_LIST = "gameList",
@@ -22,13 +21,7 @@ export interface IGameScoreScreen {
 
 export interface ILobbyUIState {
   authenticating: boolean;
-  dropdownsVisibility: {
-    welcome: boolean;
-    gameSetup: boolean;
-    gameRoom: boolean;
-    gameList: boolean;
-    matchmakingQueue: boolean;
-  };
+  activeMenu: LobbyMenu | null;
   gameList: {
     games: {
       [roomName: string]: GameRoom;
@@ -54,13 +47,7 @@ export interface ILobbyUIState {
 
 const initialState: ILobbyUIState = {
   authenticating: true,
-  dropdownsVisibility: {
-    welcome: false,
-    gameSetup: false,
-    gameRoom: false,
-    gameList: false,
-    matchmakingQueue: false,
-  },
+  activeMenu: LobbyMenu.MAIN,
   gameList: {
     games: {},
     isOpen: false,
@@ -92,13 +79,9 @@ const ladderSlice = createSlice({
     setAuthenticating(state, action: PayloadAction<boolean>) {
       state.authenticating = action.payload;
     },
-    setDropdownVisibility(state, action: PayloadAction<DropdownMenus>) {
-      Object.keys(state.dropdownsVisibility).forEach((key) => {
-        // @ts-ignore
-        if (key !== action.payload) state.dropdownsVisibility[key] = false;
-        else state.dropdownsVisibility[key] = true;
-      });
-      if (action.payload !== DropdownMenus.MATCHMAKING_QUEUE) state.matchmakingScreen = initialState.matchmakingScreen;
+    setActiveMenu(state, action: PayloadAction<LobbyMenu>) {
+      state.activeMenu = action.payload;
+      if (action.payload !== LobbyMenu.MATCHMAKING_QUEUE) state.matchmakingScreen = initialState.matchmakingScreen;
     },
     setCurrentGameRoom(state, action: PayloadAction<GameRoom | null>) {
       state.currentGameRoom = action.payload;
@@ -158,7 +141,7 @@ const ladderSlice = createSlice({
 export const {
   clearLobbyUi,
   setAuthenticating,
-  setDropdownVisibility,
+  setActiveMenu,
   setCurrentGameRoom,
   updatePlayersReady,
   updateGameCountdown,

@@ -1,0 +1,33 @@
+@import "../../../styles/abstracts/variables";
+
+.matchmaking-queue-dropdown__left {
+  //   display: flex;
+  //   flex-direction: column;
+  position: relative;
+}
+.matchmaking-queue-dropdown__header {
+  text-align: center;
+}
+
+.matchmaking-queue-dropdown__queue-status {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(100% - spacing(2) * 2);
+  display: flex;
+  justify-content: space-between;
+}
+
+.matchmaking-queue-dropdown__queue-status-text {
+  font-size: fontSize(3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.matchmaking-queue-dropdown__circular-progress-container {
+  width: height(4);
+  height: height(4);
+  margin: 0 auto;
+  text-align: center;
+}

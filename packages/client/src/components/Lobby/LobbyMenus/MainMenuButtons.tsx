@@ -3,7 +3,7 @@ import React from "react";
 import { SocketEventsFromClient } from "../../../../../common";
 import GameLobbyTopButton from "./LobbyTopButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { setMatchmakingLoading, setDropdownVisibility, DropdownMenus } from "../../../redux/slices/lobby-ui-slice";
+import { setMatchmakingLoading, setActiveMenu, LobbyMenu } from "../../../redux/slices/lobby-ui-slice";
 import { setShowChangeChatChannelModal, setShowMobileLobbyMenuModal } from "../../../redux/slices/ui-slice";
 import CircularProgress from "../../common-components/CircularProgress";
 
@@ -24,12 +24,12 @@ function MainMenuButtons({ socket }: Props) {
   const handleViewGamesListClick = () => {
     if (!socket) return;
     socket.emit(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST);
-    dispatch(setDropdownVisibility(DropdownMenus.GAME_LIST));
+    dispatch(setActiveMenu(LobbyMenu.GAME_LIST));
     dispatch(setShowMobileLobbyMenuModal(false));
   };
 
   const handleSetupNewGameClick = () => {
-    dispatch(setDropdownVisibility(DropdownMenus.GAME_SETUP));
+    dispatch(setActiveMenu(LobbyMenu.GAME_SETUP));
     dispatch(setShowMobileLobbyMenuModal(false));
   };
 

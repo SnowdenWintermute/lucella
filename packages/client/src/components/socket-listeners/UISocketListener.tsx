@@ -21,8 +21,8 @@ import {
   updatePlayerRole,
   updatePlayersReady,
   setGameCreationWaitingListPosition,
-  setDropdownVisibility,
-  DropdownMenus,
+  setActiveMenu,
+  LobbyMenu,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -53,11 +53,11 @@ function UISocketListener({ socket }: Props) {
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
       dispatch(setCurrentGameRoom(data));
-      if (data) dispatch(setDropdownVisibility(DropdownMenus.GAME_ROOM));
-      else dispatch(setDropdownVisibility(DropdownMenus.WELCOME));
+      if (data) dispatch(setActiveMenu(LobbyMenu.GAME_ROOM));
+      else dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
-      dispatch(setDropdownVisibility(DropdownMenus.WELCOME));
+      dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
     socket.on(SocketEventsFromServer.PLAYER_READINESS_UPDATE, (playersReady) => {
       dispatch(updatePlayersReady(playersReady));
@@ -77,7 +77,7 @@ function UISocketListener({ socket }: Props) {
       dispatch(setShowScoreScreenModal(true));
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
-      dispatch(setDropdownVisibility(DropdownMenus.MATCHMAKING_QUEUE));
+      dispatch(setActiveMenu(LobbyMenu.MATCHMAKING_QUEUE));
       dispatch(setMatchmakingLoading(false));
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE, (data) => {

@@ -32,6 +32,7 @@ function Chat({ socket }: Props) {
   const [percentageChatDelayRemaining, setPercentageChatDelayRemaining] = useState<number>(0);
   const [waitingToSendMessage, setWaitingToSendMessage] = useState<boolean>(false);
   const sendMessageTimeout = useRef<NodeJS.Timeout | null>(null);
+  const chatInputRef = useRef<HTMLInputElement>(null);
 
   function setPercentage() {
     if (!lastChatSentAt.current || Date.now() >= lastChatSentAt.current + baseDelayMilliseconds.current) return setPercentageChatDelayRemaining(0);
@@ -82,6 +83,11 @@ function Chat({ socket }: Props) {
       }, positiveNumberOrZero(baseDelayMilliseconds.current - (Date.now() - lastChatSentAt.current)));
     }
   };
+
+  useEffect(() => {
+    if (!waitingToSendMessage) chatInputRef.current?.focus();
+  }, [waitingToSendMessage]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     sendNewMessageAfterAnyRemainingDelay(chatInput);
@@ -99,7 +105,6 @@ function Chat({ socket }: Props) {
       const textToDisplay = replaceUrlsWithAnchorTags(message.text, `${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`);
       messagesToDisplay.push(
         <li className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} key={`${message.timeStamp} ${message.text}`}>
-          {/* <li className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} key={i}> */}
           {message.author} : {/* eslint-disable-next-line react/no-danger */}
           <span className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
         </li>
@@ -112,8 +117,9 @@ function Chat({ socket }: Props) {
       <div className={styles["chat__message-stream"]}>
         <ul>{messagesToDisplay}</ul>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className={styles["chat__input-form"]}>
         <input
+          ref={chatInputRef}
           className={`input input--transparent ${styles["chat__input"]}`}
           aria-label="chat-input"
           type="text"
@@ -122,7 +128,9 @@ function Chat({ socket }: Props) {
           placeholder="Enter a message to chat..."
           disabled={waitingToSendMessage}
         />
-        <CircularProgress percentage={percentageChatDelayRemaining} />
+        <span className={styles["chat__input-delay-circular-progress"]}>
+          <CircularProgress percentage={percentageChatDelayRemaining} thickness={6} />
+        </span>
       </form>
     </section>
   );

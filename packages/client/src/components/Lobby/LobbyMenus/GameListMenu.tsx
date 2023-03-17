@@ -4,7 +4,7 @@ import { Socket } from "socket.io-client";
 import { GameRoom, SocketEventsFromClient } from "../../../../../common";
 import useElementIsOverflowing from "../../../hooks/useElementIsOverflowing";
 import LobbyTopButton from "./LobbyTopButton";
-import { DropdownMenus, setDropdownVisibility, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
+import { LobbyMenu, setActiveMenu, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import RefreshSvg from "../../../img/menuIcons/refresh.svg";
 import lobbyMenusStyles from "./lobby-menus.module.scss";
@@ -51,7 +51,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
-        <LobbyTopButton title="Cancel" onClick={() => dispatch(setDropdownVisibility(DropdownMenus.WELCOME))} extraStyles="" />
+        <LobbyTopButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
         <button
           type="button"
           className={`button ${styles["game-list-buttons__refresh"]}`}
@@ -91,9 +91,9 @@ function GameListMenu({ socket }: { socket: Socket }) {
           {Object.values(lobbyUiState.gameList.games).map((gameRoom) => (
             <GameListGame socket={socket} gameRoom={gameRoom} />
           ))}
-          {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(() => (
+          {/* {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(() => (
             <GameListGame socket={socket} gameRoom={new GameRoom("ay", undefined)} />
-          ))}
+          ))} */}
         </div>
       </section>
     </>

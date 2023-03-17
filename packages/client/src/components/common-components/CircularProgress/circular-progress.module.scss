@@ -1,26 +1,25 @@
 @import "../../../styles/abstracts/variables";
 
+$startingRotation: 270deg;
+
 .circle {
-  display: flex;
-  position: absolute;
-  //   border: 1px solid color(textBright);
   border-radius: 50%;
-  top: 50%;
-  transform: translateY(-50%) rotate(270deg);
-  right: 20px;
+  transform: rotate($startingRotation);
   fill: none;
   stroke: color(textPrimary);
+  // width: 100%;
+  height: 100%;
 }
 
-.circle-animate {
-  animation: rotate 3s ease-in-out forwards infinite;
+.circle--animate {
+  animation: rotate 3s linear forwards infinite;
 }
 
 @keyframes rotate {
-  50% {
-    transform: translateY(-50%) rotate(-360deg);
+  0% {
+    transform: rotate($startingRotation);
   }
   100% {
-    transform: translateY(-50%) rotate(-720deg);
+    transform: rotate(360deg + $startingRotation);
   }
 }

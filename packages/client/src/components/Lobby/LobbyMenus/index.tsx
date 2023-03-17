@@ -6,21 +6,21 @@ import GameSetupMenu from "./GameSetupMenu";
 import GameRoomMenu from "./GameRoomMenu";
 import GameListMenu from "./GameListMenu";
 import MainMenu from "./MainMenu";
+import MatchmakingQueueMenu from "./MatchmakingQueueMenu";
+import { LobbyMenu } from "../../../redux/slices/lobby-ui-slice";
 
 function LobbyMenus({ socket }: { socket: Socket }) {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { dropdownsVisibility } = lobbyUiState;
+  const { activeMenu } = lobbyUiState;
 
   return (
     <section className={styles["lobby-menus"]}>
-      {/* <ul className={styles["lobby-menus__top-buttons"]}>
-        {lobbyUiState.matchmakingScreen.isOpen && <MatchmakingButtons socket={socket} />}
-        {currentGameRoom?.isRanked && <span>{LOBBY_TEXT.MATCHMAKING_QUEUE.RANKED_GAME_STARTING}</span>}
-      </ul> */}
-      {dropdownsVisibility.welcome && <MainMenu socket={socket} />}
-      {dropdownsVisibility.gameSetup && <GameSetupMenu socket={socket} />}
-      {dropdownsVisibility.gameRoom && <GameRoomMenu socket={socket} />}
-      {dropdownsVisibility.gameList && <GameListMenu socket={socket} />}
+      {/* {activeMenu === LobbyMenu.MATCHMAKING_QUEUE && <MatchmakingQueueMenu socket={socket} />} */}
+      <MatchmakingQueueMenu socket={socket} />
+      {/* {activeMenu === LobbyMenu.MAIN && <MainMenu socket={socket} />}
+      {activeMenu === LobbyMenu.GAME_SETUP && <GameSetupMenu socket={socket} />}
+      {activeMenu === LobbyMenu.GAME_ROOM && <GameRoomMenu socket={socket} />}
+      {activeMenu === LobbyMenu.GAME_LIST && <GameListMenu socket={socket} />} */}
     </section>
   );
 }
