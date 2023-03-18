@@ -29,11 +29,11 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
       <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
         <LobbyTopButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
       </ul>
-      <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-setup-dropdown"]}`}>
+      <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-setup-menu"]}`}>
         <div className={`${lobbyMenusStyles["lobby-menu__left"]}`}>
-          <form onSubmit={makeGamePublic} className={styles["game-setup-dropdown__form"]}>
+          <form onSubmit={makeGamePublic} className={styles["game-setup-menu__form"]}>
             <h3 className={lobbyMenusStyles["lobby-menu__header"]}>Creating an unranked game</h3>
-            <label htmlFor="game-name-input" className={styles["game-setup-dropdown__input-label"]}>
+            <label htmlFor="game-name-input" className={styles["game-setup-menu__input-label"]}>
               Game name:
               <input
                 id="game-name-input"
@@ -48,12 +48,12 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
                 }}
               />
             </label>
-            <button type="submit" className={`button button--accent ${styles["game-setup-dropdown__button"]}`}>
+            <button type="submit" className={`button button--accent ${styles["game-setup-menu__button"]}`}>
               {BUTTON_NAMES.GAME_ROOM.CREATE_GAME}
             </button>
           </form>
         </div>
-        <div className={`${lobbyMenusStyles["lobby-menu__right"]} ${styles["game-setup-dropdown__right"]}`}>
+        <div className={`${lobbyMenusStyles["lobby-menu__right"]} ${styles["game-setup-menu__right"]}`}>
           <h3 className={lobbyMenusStyles["lobby-menu__header"]}>Battle Room rules</h3>
           <ul>
             <li>Send your orbs to the opponent's endzone to score points</li>

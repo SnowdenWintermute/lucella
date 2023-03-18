@@ -30,13 +30,11 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-106.59486,-166.02282)"><g
-       style="fill:none"
        id="g18"
        transform="matrix(0.26458333,0,0,0.26458333,106.59486,166.02283)"><path
          fill-rule="evenodd"
          clip-rule="evenodd"
          d="M 7.90631,0 0,13.6941 3.49637,19.75 H 18.3161 L 21.864,13.605 14.0091,0 Z M 9.84504,4.72888 H 12.0704 V 12.5176 H 9.84504 Z M 12.0704,14.7429 H 9.84504 v 2.2254 h 2.22536 z"
-         fill="#a52026"
          id="path9"
          inkscape:export-filename="path9.svg"
          inkscape:export-xdpi="96"

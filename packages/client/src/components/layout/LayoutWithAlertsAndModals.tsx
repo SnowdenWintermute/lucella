@@ -4,7 +4,6 @@ import AlertsHolder from "./alerts/AlertsHolder";
 import ContextMenuDismissalClickListener from "./context-menu/ContextMenuDismissalClickListener";
 import GlobalModals from "./global-modals/GlobalModals";
 import Navbar from "./navbar";
-import styles from "./layout.module.scss";
 
 interface Props {
   children: React.ReactNode;

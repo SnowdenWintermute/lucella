@@ -1,38 +1,38 @@
 @import "../../../styles/abstracts/variables";
 
-.game-room-dropdown__left {
+.game-room-menu__left {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
 }
 
-.game-room-dropdown__ready-button {
+.game-room-menu__ready-button {
   align-self: flex-end;
 }
 
-.game-room-dropdown__players {
+.game-room-menu__players {
   display: flex;
   justify-content: center;
   width: 100%;
 }
 
-.game-room-dropdown__player-with-ready-status {
+.game-room-menu__player-with-ready-status {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.game-room-dropdown__player {
+.game-room-menu__player {
   font-size: fontSize(3);
 }
 
-.game-room-dropdown__vs {
+.game-room-menu__vs {
   font-size: fontSize(3);
 }
 
-.game-room-dropdown__right {
+.game-room-menu__right {
   padding-top: spacing(5);
   font-size: fontSize(3);
   text-align: center;
@@ -41,7 +41,7 @@
   justify-content: space-between;
 }
 
-.game-room-dropdown__right-main-text {
+.game-room-menu__right-main-text {
   span {
     margin-top: spacing(2);
   }
@@ -49,7 +49,7 @@
   flex-direction: column;
 }
 
-.game-room-dropdown__right-info-text {
+.game-room-menu__right-info-text {
   font-size: fontSize(2);
   text-align: left;
 }

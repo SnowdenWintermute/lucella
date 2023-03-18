@@ -10,8 +10,10 @@ $colors: (
   textFaded: #656b72,
   textBright: #bcd2e8,
   menuPrimary: #3c5766,
-  buttonPrimary: #2f5f5c,
+  // buttonPrimary: #2f5f5c,
+  buttonPrimary: #028a7e,
   oldDanger: #972121,
+  middleRed: #a52026,
   danger: #ac1a21,
   dangerBright: #e42933,
   success: #2d6a2d,
@@ -89,6 +91,8 @@ $widths: (
 @function width($width-name) {
   @return map-get($widths, $width-name);
 }
+
+$onePixelInRem: 0.0625rem;
 
 // 1440px
 $baseAppWidth: 90rem;

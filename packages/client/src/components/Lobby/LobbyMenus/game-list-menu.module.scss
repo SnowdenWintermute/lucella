@@ -12,7 +12,7 @@
   fill: color(textPrimary);
 }
 
-.game-list-dropdown {
+.game-list-menu {
   padding: spacing(2);
   padding-right: calc(
     spacing(2) - $focusOutlineWidth
@@ -21,11 +21,11 @@
   flex-direction: column;
 }
 
-.game-list-dropdown--scrollbar-present {
+.game-list-menu--scrollbar-present {
   padding-right: spacing(2);
 }
 
-.game-list-dropdown__headers {
+.game-list-menu__headers {
   display: flex;
   margin-bottom: calc(
     spacing(2) - $focusOutlineWidth
@@ -38,29 +38,29 @@
   }
 }
 
-.game-list-dropdown__game-name-header {
+.game-list-menu__game-name-header {
   padding-left: 0px !important;
 }
 
-.game-list-dropdown__empty-header-spacer {
+.game-list-menu__empty-header-spacer {
   width: calc(spacing(6) + $focusOutlineWidth);
   cursor: default;
   border: 0px;
   height: 1px;
 }
 
-.game-list-dropdown__empty-header-spacer--scrollbar-present {
+.game-list-menu__empty-header-spacer--scrollbar-present {
   width: calc(spacing(6) + spacing(2) + $focusOutlineWidth);
 }
 
-.game-list-dropdown__games {
+.game-list-menu__games {
   width: 100%;
   padding-top: $focusOutlineWidth;
   padding-right: $focusOutlineWidth;
   overflow-y: auto;
 }
 
-.game-list-dropdown__game-row {
+.game-list-menu__game-row {
   display: flex;
   border: 1px solid color(textPrimary);
   justify-content: space-between;
@@ -68,11 +68,11 @@
   align-items: center;
 }
 
-.game-list-dropdown__games--scrollbar-padding {
+.game-list-menu__games--scrollbar-padding {
   padding-right: spacing(2);
 }
 
-.game-list-dropdown__game-name {
+.game-list-menu__game-name {
   width: 42%;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -80,12 +80,12 @@
   padding-left: spacing(2);
 }
 
-.game-list-dropdown__number-of-players {
+.game-list-menu__number-of-players {
   width: 48%;
   text-align: center;
 }
 
-.game-list-dropdown__button {
+.game-list-menu__button {
   width: spacing(6);
   border: none;
   border-left: 1px solid color(textPrimary);

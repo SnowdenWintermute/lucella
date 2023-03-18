@@ -2,29 +2,80 @@
 
 .alerts-holder {
   position: fixed;
-  top: 100px;
-  z-index: 20;
+  top: calc(height(4) * 2 + spacing(2) + 2px);
+  right: spacing(3);
+  z-index: 1;
+  list-style: none;
 }
-.alert {
-  width: fit-content;
-  min-height: 46px;
-  margin-left: 30px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  line-height: 36px;
-  padding: 5px 15px 5px 15px;
-  font-size: 22px;
-  color: color(textBright);
+
+$clippedCornerSize: calc(spacing(1) / 2);
+
+.alert__item {
+  // height: height(3);
+  padding: 1px;
+  position: relative;
+  background-color: color(textPrimary);
+  max-width: fit-content;
+  height: fit-content;
+  margin-bottom: spacing(1);
   opacity: 0;
   transition: 0.3s ease-out;
-  cursor: pointer;
   animation: alert-animation-appear 0.3s ease-in-out forwards;
+  -webkit-clip-path: polygon(
+    0% $clippedCornerSize,
+    $clippedCornerSize 0%,
+    calc(100% - $clippedCornerSize) 0%,
+    100% $clippedCornerSize,
+    100% calc(100% - $clippedCornerSize),
+    calc(100% - $clippedCornerSize) 100%,
+    $clippedCornerSize 100%,
+    0% calc(100% - $clippedCornerSize)
+  );
+  clip-path: polygon(
+    0% $clippedCornerSize,
+    $clippedCornerSize 0%,
+    calc(100% - $clippedCornerSize) 0%,
+    100% $clippedCornerSize,
+    100% calc(100% - $clippedCornerSize),
+    calc(100% - $clippedCornerSize) 100%,
+    $clippedCornerSize 100%,
+    0% calc(100% - $clippedCornerSize)
+  );
 }
-// .alert-animate {
-//   margin-left: 100px;
-//   opacity: 1;
-//   transition: 0.3s;
-// }
+
+.alert__button {
+  border: none;
+  height: calc(height(3) - 2px);
+  background-color: color(dark);
+  padding-left: spacing(2);
+  padding-right: spacing(2);
+  font-size: fontSize(2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: color(textPrimary);
+
+  -webkit-clip-path: polygon(
+    0% $clippedCornerSize,
+    $clippedCornerSize 0%,
+    calc(100% - $clippedCornerSize) 0%,
+    100% $clippedCornerSize,
+    100% calc(100% - $clippedCornerSize),
+    calc(100% - $clippedCornerSize) 100%,
+    $clippedCornerSize 100%,
+    0% calc(100% - $clippedCornerSize)
+  );
+  clip-path: polygon(
+    0% $clippedCornerSize,
+    $clippedCornerSize 0%,
+    calc(100% - $clippedCornerSize) 0%,
+    100% $clippedCornerSize,
+    100% calc(100% - $clippedCornerSize),
+    calc(100% - $clippedCornerSize) 100%,
+    $clippedCornerSize 100%,
+    0% calc(100% - $clippedCornerSize)
+  );
+}
 
 @keyframes alert-animation-appear {
   0% {
@@ -37,15 +88,14 @@
   }
 }
 
-.alert-danger {
-  background-color: color(danger);
+.alert__icon {
+  height: height(1);
+  margin-right: spacing(1);
 }
-.alert-success {
-  background-color: color(buttonPrimary);
+
+.alert__icon--danger {
+  fill: color(danger);
 }
-.alert-icon {
-  height: 16px;
-  width: 16px;
-  fill: color(textBright);
-  margin-right: 10px;
+.alert__icon--success {
+  fill: color(buttonPrimary);
 }

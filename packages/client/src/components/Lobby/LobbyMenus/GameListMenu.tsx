@@ -17,12 +17,12 @@ function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom
   };
   const gameIsFull = !!gameRoom.players.challenger;
   return (
-    <div className={styles["game-list-dropdown__game-row"]}>
-      <span className={styles["game-list-dropdown__game-name"]}>{gameRoom.gameName}</span>
-      <span className={styles["game-list-dropdown__number-of-players"]}>{gameRoom.players.challenger ? "2" : "1"}/2</span>
+    <div className={styles["game-list-menu__game-row"]}>
+      <span className={styles["game-list-menu__game-name"]}>{gameRoom.gameName}</span>
+      <span className={styles["game-list-menu__number-of-players"]}>{gameRoom.players.challenger ? "2" : "1"}/2</span>
       <button
         type="button"
-        className={`button ${!gameIsFull && "button--accent"} ${styles["game-list-dropdown__button"]}`}
+        className={`button ${!gameIsFull && "button--accent"} ${styles["game-list-menu__button"]}`}
         onClick={() => handleJoinGameClick(gameRoom.gameName)}
         disabled={gameIsFull}
       >
@@ -64,27 +64,21 @@ function GameListMenu({ socket }: { socket: Socket }) {
         </button>
       </ul>
       <section
-        className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-list-dropdown"]} ${
-          gameListIsOverflowing && styles["game-list-dropdown--scrollbar-present"]
-        }`}
+        className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-list-menu"]} ${gameListIsOverflowing && styles["game-list-menu--scrollbar-present"]}`}
       >
-        <div className={`${styles["game-list-dropdown__headers"]}`}>
-          <h3 className={`${styles["game-list-dropdown__game-name"]} ${styles["game-list-dropdown__game-name-header"]}`}>Current games</h3>
-          {!noGames && (
-            <h3 className={`${styles["game-list-dropdown__number-of-players"]} ${styles["game-list-dropdown__number-of-players-header"]}`}>Players</h3>
-          )}
+        <div className={`${styles["game-list-menu__headers"]}`}>
+          <h3 className={`${styles["game-list-menu__game-name"]} ${styles["game-list-menu__game-name-header"]}`}>Current games</h3>
+          {!noGames && <h3 className={`${styles["game-list-menu__number-of-players"]} ${styles["game-list-menu__number-of-players-header"]}`}>Players</h3>}
           <span
             aria-hidden
-            className={`button ${styles["game-list-dropdown__empty-header-spacer"]} ${
-              gameListIsOverflowing && scrollbarSize.width && styles["game-list-dropdown__empty-header-spacer--scrollbar-present"]
+            className={`button ${styles["game-list-menu__empty-header-spacer"]} ${
+              gameListIsOverflowing && scrollbarSize.width && styles["game-list-menu__empty-header-spacer--scrollbar-present"]
             }`}
             style={{ marginLeft: gameListIsOverflowing && scrollbarSize.width ? scrollbarSize.width : 0 }}
           />
         </div>
         <div
-          className={`${styles["game-list-dropdown__games"]} ${
-            gameListIsOverflowing && scrollbarSize.width && styles["game-list-dropdown__games--scrollbar-padding"]
-          }`}
+          className={`${styles["game-list-menu__games"]} ${gameListIsOverflowing && scrollbarSize.width && styles["game-list-menu__games--scrollbar-padding"]}`}
           ref={gameListRef}
         >
           {noGames && <p>No games found</p>}

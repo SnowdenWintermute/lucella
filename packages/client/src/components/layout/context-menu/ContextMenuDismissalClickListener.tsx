@@ -30,7 +30,7 @@ function ContextMenuDismissalClickListener() {
     };
   }, [uiState.lastElementContextId, windowDimensions]);
 
-  return <span />;
+  return <div aria-hidden id="context-menu-dismissal-click-listeners" />;
 }
 
 export default ContextMenuDismissalClickListener;

@@ -29,23 +29,23 @@ function MatchmakingQueueMenu({ socket }: { socket: Socket }) {
         {!lobbyUiState.currentGameRoom && <LobbyTopButton title="Cancel" onClick={handleCancelRankedMatchmaking} extraStyles="" />}
         {lobbyUiState.currentGameRoom?.isRanked && <span>{LOBBY_TEXT.MATCHMAKING_QUEUE.RANKED_GAME_STARTING}</span>}
       </ul>
-      <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["matchmaking-queue-dropdown"]}`}>
-        <div className={`${lobbyMenusStyles["lobby-menu__left"]} ${styles["matchmaking-queue-dropdown__left"]}`}>
-          <h3 className={`${lobbyMenusStyles["lobby-menu__header"]} ${styles["matchmaking-queue-dropdown__header"]}`}>Searching for ranked match...</h3>
-          <div className={styles["matchmaking-queue-dropdown__queue-status"]}>
-            <div className={styles["matchmaking-queue-dropdown__queue-status-text"]}>
+      <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["matchmaking-queue-menu"]}`}>
+        <div className={`${lobbyMenusStyles["lobby-menu__left"]} ${styles["matchmaking-queue-menu__left"]}`}>
+          <h3 className={`${lobbyMenusStyles["lobby-menu__header"]} ${styles["matchmaking-queue-menu__header"]}`}>Searching for ranked match...</h3>
+          <div className={styles["matchmaking-queue-menu__queue-status"]}>
+            <div className={styles["matchmaking-queue-menu__queue-status-text"]}>
               <p>Number of players in queue: {numPlayersToDisplay}</p>
               <p>Current Elo difference threshold: {eloDiffThresholdToDisplay}</p>
             </div>
-            <div className={styles["matchmaking-queue-dropdown__loading-spinner-container"]}>
+            <div className={styles["matchmaking-queue-menu__loading-spinner-container"]}>
               {/* <CircularProgress percentage={75} thickness={12} rotateAnimation /> */}
-              <LoadingSpinner extraStyles={styles["matchmaking-queue-dropdown__loading-spinner"]} />
+              <LoadingSpinner extraStyles={styles["matchmaking-queue-menu__loading-spinner"]} />
             </div>
           </div>
         </div>
-        <div className={`${lobbyMenusStyles["lobby-menu__right"]} ${styles["matchmaking-queue-dropdown__right"]}`}>
-          <h3 className={`${lobbyMenusStyles["lobby-menu__header"]} ${styles["matchmaking-queue-dropdown__header"]}`}>How the queue works</h3>
-          <ul className={styles["matchmaking-queue-dropdown__queue-rules"]}>
+        <div className={`${lobbyMenusStyles["lobby-menu__right"]} ${styles["matchmaking-queue-menu__right"]}`}>
+          <h3 className={`${lobbyMenusStyles["lobby-menu__header"]} ${styles["matchmaking-queue-menu__header"]}`}>How the queue works</h3>
+          <ul className={styles["matchmaking-queue-menu__queue-rules"]}>
             <li>The closest Elo players with a difference in score lower than the current threshold will be matched first</li>
             <li>The elo difference threshold will increase exponentially until a match is found</li>
           </ul>

@@ -1,6 +1,6 @@
 @import "../../../styles/abstracts/variables";
 
-.matchmaking-queue-dropdown__left {
+.matchmaking-queue-menu__left {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -8,18 +8,18 @@
   overflow-x: hidden;
   min-width: 0px;
 }
-.matchmaking-queue-dropdown__header {
+.matchmaking-queue-menu__header {
   text-align: center;
 }
 
-.matchmaking-queue-dropdown__queue-status {
+.matchmaking-queue-menu__queue-status {
   flex: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.matchmaking-queue-dropdown__queue-status-text {
+.matchmaking-queue-menu__queue-status-text {
   font-size: fontSize(3);
   display: flex;
   flex-direction: column;
@@ -27,12 +27,12 @@
   width: 62%;
 }
 
-.matchmaking-queue-dropdown__loading-spinner-container {
+.matchmaking-queue-menu__loading-spinner-container {
   width: 38%;
   text-align: center;
 }
 
-.matchmaking-queue-dropdown__loading-spinner {
+.matchmaking-queue-menu__loading-spinner {
   margin: 0 auto;
   height: height(4);
   width: height(4);
@@ -42,14 +42,14 @@
   border-bottom: spacing(0) solid color(textPrimary);
 }
 
-.matchmaking-queue-dropdown__right {
+.matchmaking-queue-menu__right {
   padding: spacing(2);
   position: relative;
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
 }
-.matchmaking-queue-dropdown__queue-rules {
+.matchmaking-queue-menu__queue-rules {
   flex: 1;
   list-style-position: inside;
   display: flex;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import DangerIcon from "../../../img/alertIcons/danger.svg";
 import SuccessIcon from "../../../img/alertIcons/success.svg";
 import { AlertType } from "../../../enums";
@@ -24,17 +24,23 @@ function AlertElement({ message, type, id }: Props) {
     };
   }, []);
 
-  const alertIcon = type === AlertType.DANGER ? <DangerIcon className={styles["alert-icon"]} /> : <SuccessIcon className={styles["alert-icon"]} />;
+  const alertIcon =
+    type === AlertType.DANGER ? (
+      <DangerIcon className={`${styles["alert__icon"]} ${styles["alert__icon--danger"]}`} />
+    ) : (
+      <SuccessIcon className={`${styles["alert__icon"]} ${styles["alert__icon--success"]}`} />
+    );
 
   const removeAlert = () => {
     dispatch(clearAlert(id));
   };
 
   return (
-    // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events
-    <li role="status" data-cy="alert-element" className={`${styles.alert} ${styles[`alert-${type.toLowerCase()}`]}`} onClick={removeAlert}>
-      {alertIcon}
-      {message}
+    <li role="status" data-cy="alert-element" className={styles["alert__item"]}>
+      <button type="button" className={`${styles["alert__button"]}`} onClick={removeAlert}>
+        {alertIcon}
+        {message}
+      </button>
     </li>
   );
 }
