@@ -2,12 +2,19 @@
 import React from "react";
 import styles from "./context-menu.module.scss";
 
-type Props = {
-  children: JSX.Element | JSX.Element[];
-};
-
-function ContextMenuItem({ children }: Props) {
-  return <li className={styles["context-menu-item"]}>{children}</li>;
+function ContextMenuItem({ title, onClick }: { title: string; onClick: () => void }) {
+  return (
+    <li className="context-menu-item">
+      <button type="button" className="button context-menu-item__button" onClick={onClick}>
+        {title}
+      </button>
+    </li>
+    // <li className={styles["context-menu-item"]}>
+    //   <button type="button" className={`button ${styles["context-menu-item__button"]}`} onClick={onClick}>
+    //     {title}
+    //   </button>
+    // </li>
+  );
 }
 
 export default ContextMenuItem;

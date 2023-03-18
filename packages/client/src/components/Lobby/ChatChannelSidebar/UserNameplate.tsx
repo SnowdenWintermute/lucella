@@ -1,7 +1,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import React from "react";
-import { useAppDispatch } from "../../../redux/hooks";
-import { openUserNameplateContextMenu } from "../../../redux/slices/ui-slice";
+import React, { useEffect, useRef, useState } from "react";
+import { Point } from "../../../../../common";
+import useWindowDimensions from "../../../hooks/useWindowDimensions";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { openUserNameplateContextMenu, setContextMenuPosition } from "../../../redux/slices/ui-slice";
+import UserNameplateContextMenu from "../../layout/context-menu/UserNameplateContextMenu";
 import styles from "./chat-channel-sidebar.module.scss";
 
 type Props = {
@@ -12,29 +15,59 @@ type Props = {
 
 function UserNameplate({ username, isGuest, contextMenuId }: Props) {
   const dispatch = useAppDispatch();
+  const uiState = useAppSelector((state) => state.UI);
+  const windowDimensions = useWindowDimensions();
+  const contextMenuRef = useRef<HTMLUListElement>(null);
+  const [positionClicked, setPositionClicked] = useState<Point>(new Point(0, 0));
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     if (e.button === 2) dispatch(openUserNameplateContextMenu({ username, isGuest, contextMenuId }));
+    console.log(
+      windowDimensions?.width,
+      windowDimensions?.height,
+      contextMenuRef?.current?.offsetWidth,
+      contextMenuRef?.current?.offsetHeight,
+      contextMenuRef?.current
+    );
+    setPositionClicked(new Point(e.clientX, e.clientY));
   };
 
-  const handleEnter = () => {
+  const handleEnter = (e: React.KeyboardEvent) => {
+    const eventTarget = e.target as HTMLButtonElement;
+    dispatch(setContextMenuPosition(new Point(eventTarget?.offsetLeft, eventTarget?.offsetTop)));
     dispatch(openUserNameplateContextMenu({ username, isGuest, contextMenuId }));
   };
 
+  useEffect(() => {
+    if (!windowDimensions?.width || !windowDimensions?.height || !contextMenuRef?.current?.offsetWidth || !contextMenuRef?.current?.offsetHeight) return;
+    if (positionClicked.x + contextMenuRef.current.offsetWidth > windowDimensions?.width)
+      dispatch(setContextMenuPosition(new Point(positionClicked.x - contextMenuRef.current.offsetWidth, positionClicked.y)));
+    else dispatch(setContextMenuPosition(new Point(positionClicked.x, positionClicked.y)));
+    if (positionClicked.y + contextMenuRef.current.offsetHeight > windowDimensions?.height)
+      dispatch(setContextMenuPosition(new Point(positionClicked.x, positionClicked.y - contextMenuRef.current.offsetHeight)));
+  }, [positionClicked, windowDimensions]);
+
   return (
-    <button
-      type="button"
-      onClick={(e) => handleClick(e)}
-      className={styles["chat-channel-sidebar__user-nameplate"]}
-      data-custom-context-menu-id={contextMenuId}
-      onContextMenu={(e) => handleClick(e)}
-      onKeyUp={(e) => {
-        if (e.key === "Enter") handleEnter();
-      }}
-    >
-      {username}
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={handleClick}
+        className={styles["chat-channel-sidebar__user-nameplate"]}
+        data-custom-context-menu-id={contextMenuId}
+        onContextMenu={handleClick}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") handleEnter(e);
+        }}
+      >
+        {username}
+      </button>
+      {uiState.showContextMenu && uiState.lastElementContextId === contextMenuId && (
+        <ul ref={contextMenuRef} className="context-menu" style={{ top: uiState.contextMenuPosition.y, left: uiState.contextMenuPosition.x }}>
+          <UserNameplateContextMenu />
+        </ul>
+      )}
+    </>
   );
 }
 

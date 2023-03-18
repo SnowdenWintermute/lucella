@@ -1,6 +1,5 @@
 import React from "react";
 import ContextMenuItem from "./ContextMenuItem";
-import styles from "./context-menu.module.scss";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setShowBanUserModal, setShowBanIpAddressModal } from "../../../redux/slices/ui-slice";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
@@ -19,30 +18,13 @@ function UserNameplateContextMenu() {
     dispatch(setShowBanIpAddressModal(true));
   };
 
-  const moderatorOptions = [];
-  if (!uiState.nameplateContextMenuData.isGuest)
-    moderatorOptions.push(
-      <ContextMenuItem key="BAN USER">
-        <button type="button" onClick={handleBanUserClick}>
-          BAN USER
-        </button>
-      </ContextMenuItem>
-    );
-
-  moderatorOptions.push(
-    <ContextMenuItem key="BAN IP ADDRESS">
-      <button type="button" onClick={handleBanIpAddressClick}>
-        BAN IP ADDRESS
-      </button>
-    </ContextMenuItem>
-  );
+  const moderatorOptions = [<ContextMenuItem key="BAN IP ADDRESS" title="BAN IP ADDRESS" onClick={handleBanIpAddressClick} />];
+  if (!uiState.nameplateContextMenuData.isGuest) moderatorOptions.push(<ContextMenuItem key="BAN USER" title="BAN USER" onClick={handleBanUserClick} />);
 
   return (
     <>
       {user && (user.role === UserRole.ADMIN || user.role === UserRole.MODERATOR) && moderatorOptions}
-      <ContextMenuItem>
-        <button type="button">PLACEHOLDER</button>
-      </ContextMenuItem>
+      <ContextMenuItem title="PLACEHOLDER" onClick={() => {}} />
     </>
   );
 }

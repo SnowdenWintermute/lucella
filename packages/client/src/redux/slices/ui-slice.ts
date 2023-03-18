@@ -4,7 +4,7 @@ import { Point } from "../../../../common";
 
 export interface IUISlice {
   showContextMenu: boolean;
-  position: Point;
+  contextMenuPosition: Point;
   nameplateContextMenuData: {
     username: string;
     isGuest: boolean;
@@ -21,7 +21,7 @@ export interface IUISlice {
 }
 const initialState: IUISlice = {
   showContextMenu: false,
-  position: new Point(0, 0),
+  contextMenuPosition: new Point(0, 0),
   nameplateContextMenuData: {
     username: "",
     isGuest: true,
@@ -58,7 +58,7 @@ const UISlice = createSlice({
       state.lastElementContextId = action.payload.contextMenuId;
     },
     setContextMenuPosition(state, action: PayloadAction<Point>) {
-      state.position = action.payload;
+      state.contextMenuPosition = action.payload;
     },
     setShowDeleteAccountModal(state, action: PayloadAction<boolean>) {
       state.modals.deleteAccount = action.payload;

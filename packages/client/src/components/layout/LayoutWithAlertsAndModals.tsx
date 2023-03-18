@@ -1,7 +1,7 @@
 import { GameStatus } from "../../../../common";
 import { useAppSelector } from "../../redux/hooks";
 import AlertsHolder from "./alerts/AlertsHolder";
-import ContextMenu from "./context-menu/ContextMenu";
+import ContextMenuDismissalClickListener from "./context-menu/ContextMenuDismissalClickListener";
 import GlobalModals from "./global-modals/GlobalModals";
 import Navbar from "./navbar";
 import styles from "./layout.module.scss";
@@ -18,7 +18,7 @@ export default function LayoutWithHeaderAndAlerts({ children }: Props) {
     <>
       {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && <Navbar />}
       <AlertsHolder />
-      <ContextMenu />
+      <ContextMenuDismissalClickListener />
       <GlobalModals />
       <main>{children}</main>
     </>
