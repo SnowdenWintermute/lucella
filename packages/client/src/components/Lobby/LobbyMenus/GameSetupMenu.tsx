@@ -10,7 +10,7 @@ import { BUTTON_NAMES } from "../../../consts/button-names";
 import lobbyMenusStyles from "./lobby-menus.module.scss";
 import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
 import styles from "./game-setup-menu.module.scss";
-import LobbyTopButton from "./LobbyTopButton";
+import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 
 function GameSetupMenu({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
@@ -27,7 +27,7 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
-        <LobbyTopButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
+        <LobbyTopListItemWithButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
       </ul>
       <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-setup-menu"]}`}>
         <div className={`${lobbyMenusStyles["lobby-menu__left"]}`}>

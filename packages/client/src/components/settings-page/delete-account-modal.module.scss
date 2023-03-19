@@ -1,0 +1,19 @@
+@import "../../styles/abstracts/variables";
+
+.delete-account-modal__description {
+  margin-bottom: spacing(2);
+  width: 100%;
+  max-width: width(5);
+}
+
+.delete-account-modal__input {
+  margin-bottom: spacing(3);
+  width: 100%;
+  max-width: width(3);
+}
+
+.delete-account-modal__button {
+  margin-left: auto;
+  background-color: color(middleRed);
+  color: color(textBright);
+}

@@ -6,7 +6,7 @@
   left: spacing(3);
   // border: 1px solid red;
   // width: 600px;
-  z-index: 1;
+  z-index: 100;
   list-style: none;
 }
 
@@ -14,6 +14,7 @@ $clippedCornerSize: calc(spacing(1) / 2);
 
 .alert__item {
   border: 1px solid color(textPrimary);
+  filter: $dropShadow;
   max-width: fit-content;
   height: fit-content;
   display: flex;
@@ -53,13 +54,13 @@ $clippedCornerSize: calc(spacing(1) / 2);
 
 .alert__icon-container {
   height: 100%;
-  // border: 1px solid cyan;
+  display: flex;
+  align-items: center;
 }
 
 .alert__icon {
   height: height(1);
   margin-right: spacing(2);
-  // border: 1px solid blue;
 }
 
 .alert__icon--danger {

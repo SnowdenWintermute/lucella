@@ -6,13 +6,14 @@ interface Props {
   title: string | JSX.Element;
   onClick: () => void;
   extraStyles: string;
+  children?: JSX.Element | JSX.Element[] | false;
   ariaControls?: string;
   ariaExpanded?: boolean;
   disabled?: boolean;
   dataCy?: string;
 }
 
-function LobbyTopButton({ title, onClick, extraStyles, ariaControls, ariaExpanded, disabled, dataCy }: Props) {
+function LobbyTopListItemWithButton({ title, onClick, extraStyles, children, ariaControls, ariaExpanded, disabled, dataCy }: Props) {
   return (
     <li>
       <button
@@ -26,8 +27,10 @@ function LobbyTopButton({ title, onClick, extraStyles, ariaControls, ariaExpande
       >
         {title}
       </button>
+      {/* modal should be nested here for tab index ordering, tab focus will be placed back on the button after dismissal with enter key */}
+      {children}
     </li>
   );
 }
 
-export default LobbyTopButton;
+export default LobbyTopListItemWithButton;

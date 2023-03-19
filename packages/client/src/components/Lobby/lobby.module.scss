@@ -2,7 +2,7 @@
 
 .lobby {
   height: $baseAppHeight;
-  max-height: $lobbyHeight;
+  max-height: $pageBodyHeight;
   border: 2px solid color(textPrimary);
   display: flex;
 }

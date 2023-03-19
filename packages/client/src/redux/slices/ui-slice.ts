@@ -13,9 +13,6 @@ export interface IUISlice {
   modals: {
     showBanUser: boolean;
     showBanIpAddress: boolean;
-    deleteAccount: boolean;
-    changeChatChannel: boolean;
-    mobileLobbyMenuModal: boolean;
     scoreScreen: boolean;
   };
 }
@@ -30,9 +27,6 @@ const initialState: IUISlice = {
   modals: {
     showBanUser: false,
     showBanIpAddress: false,
-    deleteAccount: false,
-    changeChatChannel: false,
-    mobileLobbyMenuModal: false,
     scoreScreen: false,
   },
 };
@@ -60,20 +54,11 @@ const UISlice = createSlice({
     setContextMenuPosition(state, action: PayloadAction<Point>) {
       state.contextMenuPosition = action.payload;
     },
-    setShowDeleteAccountModal(state, action: PayloadAction<boolean>) {
-      state.modals.deleteAccount = action.payload;
-    },
-    setShowChangeChatChannelModal(state, action: PayloadAction<boolean>) {
-      state.modals.changeChatChannel = action.payload;
-    },
     setShowBanUserModal(state, action: PayloadAction<boolean>) {
       state.modals.showBanUser = action.payload;
     },
     setShowBanIpAddressModal(state, action: PayloadAction<boolean>) {
       state.modals.showBanIpAddress = action.payload;
-    },
-    setShowMobileLobbyMenuModal(state, action: PayloadAction<boolean>) {
-      state.modals.mobileLobbyMenuModal = action.payload;
     },
     setShowScoreScreenModal(state, action: PayloadAction<boolean>) {
       state.modals.scoreScreen = action.payload;
@@ -88,9 +73,6 @@ export const {
   setShowBanUserModal,
   setShowBanIpAddressModal,
   hideAllModals,
-  setShowDeleteAccountModal,
-  setShowChangeChatChannelModal,
-  setShowMobileLobbyMenuModal,
   setShowScoreScreenModal,
 } = UISlice.actions;
 export default UISlice.reducer;

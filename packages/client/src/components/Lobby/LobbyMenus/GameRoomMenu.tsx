@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { GameStatus, SocketEventsFromClient, SocketMetadata } from "../../../../../common";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import LobbyTopButton from "./LobbyTopButton";
+import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
 import lobbyMenusStyles from "./lobby-menus.module.scss";
 import styles from "./game-room-menu.module.scss";
@@ -47,7 +47,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
-        <LobbyTopButton title="Leave Game" onClick={onLeaveGameClick} extraStyles="" />
+        <LobbyTopListItemWithButton title="Leave Game" onClick={onLeaveGameClick} extraStyles="" />
       </ul>
       <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-room-menu"]}`}>
         <div className={`${lobbyMenusStyles["lobby-menu__left"]} ${styles["game-room-menu__left"]}`}>

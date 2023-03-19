@@ -34,26 +34,12 @@ function GlobalModals() {
 
   return (
     <div>
-      <Modal
-        screenClass=""
-        frameClass="modal-frame-dark"
-        isOpen={uiState.modals.showBanUser}
-        setParentDisplay={setShowBanUserModal}
-        isReduxControlled
-        title="Ban User"
-      >
+      {/* <Modal screenClass="" isOpen={uiState.modals.showBanUser} setParentDisplay={setShowBanUserModal} isReduxControlled title="Ban User">
         <BanUserModalContents />
       </Modal>
-      <Modal
-        screenClass=""
-        frameClass="modal-frame-dark"
-        isOpen={uiState.modals.showBanIpAddress}
-        setParentDisplay={setShowBanIpAddressModal}
-        isReduxControlled
-        title="Ban IP Address"
-      >
+      <Modal screenClass="" isOpen={uiState.modals.showBanIpAddress} setParentDisplay={setShowBanIpAddressModal} isReduxControlled title="Ban IP Address">
         <BanIpAddressModalContents />
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

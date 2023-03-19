@@ -3,10 +3,10 @@ import React, { useRef } from "react";
 import { Socket } from "socket.io-client";
 import { GameRoom, SocketEventsFromClient } from "../../../../../common";
 import useElementIsOverflowing from "../../../hooks/useElementIsOverflowing";
-import LobbyTopButton from "./LobbyTopButton";
+import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import { LobbyMenu, setActiveMenu, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import RefreshSvg from "../../../img/menuIcons/refresh.svg";
+import RefreshSvg from "../../../img/menu-icons/refresh.svg";
 import lobbyMenusStyles from "./lobby-menus.module.scss";
 import styles from "./game-list-menu.module.scss";
 import useScrollbarSize from "../../../hooks/useScrollbarSize";
@@ -51,7 +51,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
-        <LobbyTopButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
+        <LobbyTopListItemWithButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
         <button
           type="button"
           className={`button ${styles["game-list-buttons__refresh"]}`}

@@ -1,20 +1,27 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
 import { HYDRATE } from "next-redux-wrapper";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Alert } from "../../classes/Alert";
 
-const initialState = { alerts: <Alert[]>[] };
+const initialState = { alerts: <Alert[]>[], nextAlertIdToAssign: 1 };
 
 const alertsSlice = createSlice({
   name: "alerts",
   initialState,
   reducers: {
     setAlert(state, action: PayloadAction<Alert>) {
+      // it is technically possible to count to an inifinite alert id but they would only crash their own client anyway and it would take their whole life to do it
+      if (state.alerts.length === 0) state.nextAlertIdToAssign = initialState.nextAlertIdToAssign;
+      action.payload.id = state.nextAlertIdToAssign;
       state.alerts.push(action.payload);
+      state.nextAlertIdToAssign += 1;
     },
-    clearAlert(state, action: PayloadAction<string>) {
+    clearAlert(state, action: PayloadAction<number>) {
       return {
         ...state,
         alerts: [...state.alerts].filter((alert) => {
+          if (!alert.id) return;
           return alert.id !== action.payload;
         }),
       };

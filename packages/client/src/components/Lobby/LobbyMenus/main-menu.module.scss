@@ -1,11 +1,11 @@
 @import "../../../styles/abstracts/variables";
 
-.welcome-dropdown {
+.welcome-menu {
   align-items: center;
   padding: spacing(2);
 }
 
-.welcome-dropdown__copy-with-links {
+.welcome-menu__copy-with-links {
   width: 62%;
   padding-right: spacing(5);
   height: 100%;
@@ -21,27 +21,27 @@
   }
 }
 
-.welcome-dropdown__links {
+.welcome-menu__links {
   display: flex;
   //   justify-content: flex-end;
   align-items: flex-end;
   flex: 1;
 }
 
-.welcome-dropdown__link {
+.welcome-menu__link {
   margin-right: spacing(2);
   &:last-child {
     margin-right: 0;
   }
 }
 
-.welcome-dropdown__logo {
+.welcome-menu__logo {
   fill: color(textPrimary);
   height: calc(100% - spacing(3));
   display: inline-block;
 }
 
-.welcome-dropdown__version {
+.welcome-menu__version {
   flex: 1;
   text-align: center;
   font-size: fontSize(3);

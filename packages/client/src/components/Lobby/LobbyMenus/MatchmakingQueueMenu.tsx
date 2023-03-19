@@ -7,7 +7,7 @@ import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
 import CircularProgress from "../../common-components/CircularProgress";
 import LoadingSpinner from "../../common-components/LoadingSpinner";
 import lobbyMenusStyles from "./lobby-menus.module.scss";
-import LobbyTopButton from "./LobbyTopButton";
+import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import styles from "./matchmaking-queue-menu.module.scss";
 
 function MatchmakingQueueMenu({ socket }: { socket: Socket }) {
@@ -26,7 +26,7 @@ function MatchmakingQueueMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
-        {!lobbyUiState.currentGameRoom && <LobbyTopButton title="Cancel" onClick={handleCancelRankedMatchmaking} extraStyles="" />}
+        {!lobbyUiState.currentGameRoom && <LobbyTopListItemWithButton title="Cancel" onClick={handleCancelRankedMatchmaking} extraStyles="" />}
         {lobbyUiState.currentGameRoom?.isRanked && <span>{LOBBY_TEXT.MATCHMAKING_QUEUE.RANKED_GAME_STARTING}</span>}
       </ul>
       <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["matchmaking-queue-menu"]}`}>

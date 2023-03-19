@@ -1,26 +1,20 @@
 /* eslint-disable no-nested-ternary */
 import { useRouter } from "next/router";
-import React, { useState, useEffect } from "react";
-import Modal from "../../components/common-components/modal/Modal";
-import { authApi, useLogoutUserMutation, useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
+import React, { useEffect, useState } from "react";
+import { useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useDeleteAccountMutation, useGetMeQuery } from "../../redux/api-slices/users-api-slice";
-import { CustomErrorDetails, ErrorMessages, InputFields, SuccessAlerts } from "../../../../common";
-import LabeledTextInputWithErrorDisplay from "../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
-import { LoginInput } from "../../redux/types";
-import { BUTTON_NAMES } from "../../consts/button-names";
-import { setShowDeleteAccountModal } from "../../redux/slices/ui-slice";
+import { ErrorMessages, SuccessAlerts } from "../../../../common";
+import DeleteAccountModal from "../../components/settings-page/DeleteAccountModal";
+import styles from "./settings-page.module.scss";
 
 function Settings() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const uiState = useAppSelector((state) => state.UI);
-  const [deleteAccount, { isLoading: deleteAccountIsLoading, isSuccess: deleteAccountIsSuccess, isError: deleteAccountIsError, error: deleteAccountError }] =
-    useDeleteAccountMutation();
-  const [logoutUser] = useLogoutUserMutation();
+  const [deleteAccount, { isLoading: deleteAccountIsLoading }] = useDeleteAccountMutation();
   const [
     requestPasswordResetEmail,
     { isLoading: passwordResetIsLoading, isSuccess: passwordResetIsSuccess, isError: passwordResetIsError, error: passwordResetError },
@@ -31,30 +25,12 @@ function Settings() {
     isSuccess: userQueryIsSuccess,
     isFetching: userQueryIsFetching,
   } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
-  const fields = { email: "", password: "" };
-  const [formData, setFormData] = useState<LoginInput>(fields);
-  const [fieldErrors, setFieldErrors] = useState(fields);
-  const { email, password } = formData;
   const accountEmail = user?.email ? user.email : "...";
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldErrors({ ...fieldErrors, [e.target.name]: "" });
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleRequestChangePasswordEmail = async () => {
     await requestPasswordResetEmail(accountEmail);
-  };
-
-  const handleSubmitDeleteAccount = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (email !== user?.email) {
-      const newFieldErrors = { ...fieldErrors };
-      newFieldErrors.email = ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH;
-      setFieldErrors(newFieldErrors);
-      dispatch(setAlert(new Alert(ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, AlertType.DANGER)));
-    } else await deleteAccount({ email, password });
   };
 
   useEffect(() => {
@@ -66,25 +42,6 @@ function Settings() {
   }, [passwordResetIsSuccess, passwordResetIsError]);
 
   useEffect(() => {
-    if (deleteAccountIsSuccess) {
-      dispatch(setAlert(new Alert(SuccessAlerts.USERS.ACCOUNT_DELETED, AlertType.SUCCESS)));
-      logoutUser();
-      dispatch(authApi.util.resetApiState());
-      router.push("/register");
-    }
-    if (deleteAccountIsError && deleteAccountError && "data" in deleteAccountError) {
-      const errors: CustomErrorDetails[] = deleteAccountError.data as CustomErrorDetails[];
-      const newFieldErrors = { ...fieldErrors };
-      errors.forEach((currError) => {
-        if (currError.field === InputFields.AUTH.EMAIL) newFieldErrors.email = currError.message;
-        if (currError.field === InputFields.AUTH.PASSWORD) newFieldErrors.password = currError.message;
-        dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
-      });
-      setFieldErrors(newFieldErrors);
-    }
-  }, [deleteAccountIsSuccess, deleteAccountIsError]);
-
-  useEffect(() => {
     if (user || userQueryIsLoading) return;
     router.push("/login");
   }, [user, userQueryIsSuccess, userQueryIsLoading, userQueryIsFetching]);
@@ -92,73 +49,36 @@ function Settings() {
   if (!user || userQueryIsLoading) return <p>...</p>;
 
   return (
-    <>
-      <Modal
-        screenClass="modal-screen-dim"
-        frameClass="modal-frame-dark"
-        isOpen={uiState.modals.deleteAccount}
-        setParentDisplay={setShowDeleteAccountModal}
-        title="Delete Account"
-      >
-        <p>
-          WARNING: This will delete your account, including all profile and ranking info. If you are certain of your decision, type your email address into the
-          input and click Confirm Delete.
-        </p>
-        <form onSubmit={(e) => handleSubmitDeleteAccount(e)}>
-          <LabeledTextInputWithErrorDisplay
-            name={InputFields.AUTH.EMAIL}
-            type="email"
-            label="Email Address"
-            placeholder="Email"
-            value={email}
-            onChange={onChange}
-            disabled={deleteAccountIsLoading}
-            error={fieldErrors.email}
-            autofocus
-          />
-          <LabeledTextInputWithErrorDisplay
-            name={InputFields.AUTH.PASSWORD}
-            type="password"
-            label="Password"
-            placeholder="Password"
-            value={password}
-            onChange={onChange}
-            disabled={deleteAccountIsLoading}
-            error={fieldErrors.password}
-            autofocus={false}
-          />
-          <button type="submit" className="button button-standard-size button-danger modal-submit-button" disabled={deleteAccountIsLoading}>
-            {deleteAccountIsLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.DELETE_ACCOUNT}
-          </button>
-        </form>
-      </Modal>
-      <div className="page-frame">
-        <ul className="page-basic">
-          <h1 className="header-basic">SETTINGS </h1>
-          <div className="page-divider-line" />
-          <li>
-            <span>{userQueryIsLoading ? "..." : userQueryIsSuccess ? `Logged in as ${accountEmail}` : `failed to fetch user data`}</span>
-          </li>
-          <li>
-            <button type="button" className="button button-basic" onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>
-              {passwordResetIsLoading ? "Senging email..." : "Change Password"}
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="button button-basic"
-              aria-controls="Delete Account modal"
-              aria-expanded={uiState.modals.deleteAccount}
-              onClick={() => dispatch(setShowDeleteAccountModal(true))}
-              disabled={deleteAccountIsLoading}
-            >
-              {deleteAccountIsLoading ? "..." : "Delete Account"}
-            </button>
-          </li>
-        </ul>
-      </div>
-    </>
+    <section className="page-body">
+      <main className={`${styles["settings-page"]}`}>
+        <div className={styles["settings-page__top-bar"]}>
+          <h3 className={styles["settings-page__header"]}>Settings</h3>
+        </div>
+        <div className={styles["settings-page__content"]}>
+          <span>{userQueryIsLoading ? "..." : userQueryIsSuccess ? `Logged in as ${accountEmail}` : `failed to fetch user data`}</span>
+          <ul className={styles["settings-page__options"]}>
+            <li>
+              <button type="button" className="button button--transparent" onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>
+                {passwordResetIsLoading ? "Senging email..." : "Change Password"}
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
+                className={`button button--transparent ${styles["settings-page__delete-account-button"]}`}
+                aria-controls="Delete Account modal"
+                aria-expanded={showDeleteAccountModal}
+                onClick={() => setShowDeleteAccountModal(true)}
+                disabled={deleteAccountIsLoading}
+              >
+                {deleteAccountIsLoading ? "..." : "Delete Account"}
+              </button>
+              {showDeleteAccountModal && <DeleteAccountModal user={user} setParentDisplay={setShowDeleteAccountModal} />}
+            </li>
+          </ul>
+        </div>
+      </main>
+    </section>
   );
 }
 

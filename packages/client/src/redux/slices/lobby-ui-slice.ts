@@ -77,7 +77,7 @@ const ladderSlice = createSlice({
     },
     setActiveMenu(state, action: PayloadAction<LobbyMenu>) {
       state.activeMenu = action.payload;
-      if (action.payload !== LobbyMenu.MATCHMAKING_QUEUE) state.matchmakingMenu = initialState.matchmakingMenu;
+      if (action.payload === LobbyMenu.MATCHMAKING_QUEUE) state.matchmakingMenu = initialState.matchmakingMenu;
     },
     setCurrentGameRoom(state, action: PayloadAction<GameRoom | null>) {
       state.currentGameRoom = action.payload;

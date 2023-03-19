@@ -12,10 +12,10 @@ function Alerts() {
     // <AlertElement
     //   message="Battle School is in alpha. All accounts are likely to be deleted upon the first beta release. Please report any issues here: https://github.com/SnowdenWintermute/lucella/issues  Server : Welcome to battle-room-chat."
     //   type={AlertType.SUCCESS}
-    //   id="0"
+    //   id={1}
     // />,
-    // <AlertElement message="alert" type={AlertType.SUCCESS} id="0" />,
-    // <AlertElement message="Battle School is in alpha. All accounts are likely to be deleted" type={AlertType.DANGER} id="0" />,
+    // <AlertElement message="alert" type={AlertType.SUCCESS} id={1} />,
+    // <AlertElement message="Battle School is in alpha. All accounts are likely to be deleted" type={AlertType.DANGER} id={1} />,
   ];
   if (alerts.length) {
     alerts.forEach((alert: Alert) => {

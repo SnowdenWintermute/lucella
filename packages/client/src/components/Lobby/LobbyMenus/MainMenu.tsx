@@ -8,21 +8,21 @@ import styles from "./main-menu.module.scss";
 
 function WelcomeDropdown() {
   return (
-    <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["welcome-dropdown"]}`}>
-      <div className={styles["welcome-dropdown__copy-with-links"]}>
+    <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["welcome-menu"]}`}>
+      <div className={styles["welcome-menu__copy-with-links"]}>
         <p>Welcome to Battle School, a space station orbiting Earth at the 5th Lagrange Point.</p>
         <p>Create an account to have your name listed on the ladder, or play a casual game to learn the rules before entering the competition.</p>
-        <div className={styles["welcome-dropdown__links"]}>
-          <Link href="/login" className={`button ${styles["welcome-dropdown__link"]}`}>
+        <div className={styles["welcome-menu__links"]}>
+          <Link href="/login" className={`button ${styles["welcome-menu__link"]}`}>
             Login
           </Link>
-          <Link href="/register" className={`button button--accent ${styles["welcome-dropdown__link"]}`}>
+          <Link href="/register" className={`button button--accent ${styles["welcome-menu__link"]}`}>
             Create Account
           </Link>
         </div>
       </div>
-      <Logo className={styles["welcome-dropdown__logo"]} />
-      <span className={styles["welcome-dropdown__version"]}>alpha 0.1.0</span>
+      <Logo className={styles["welcome-menu__logo"]} />
+      <span className={styles["welcome-menu__version"]}>alpha 0.2.0</span>
     </section>
   );
 }

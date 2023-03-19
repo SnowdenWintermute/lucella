@@ -49,7 +49,7 @@ function UserNameplate({ username, isGuest, contextMenuId }: Props) {
   }, [positionClicked, windowDimensions]);
 
   return (
-    <>
+    <li style={{ listStyle: "none" }}>
       <button
         type="button"
         onClick={handleClick}
@@ -59,15 +59,23 @@ function UserNameplate({ username, isGuest, contextMenuId }: Props) {
         onKeyUp={(e) => {
           if (e.key === "Enter") handleEnter(e);
         }}
+        aria-controls={`context-menu-${username}`}
+        aria-expanded={uiState.showContextMenu && uiState.lastElementContextId === contextMenuId}
       >
         {username}
       </button>
+      {/* nested in the ul for tab index ordering, tab focus will be placed back on the button after dismissal with enter key */}
       {uiState.showContextMenu && uiState.lastElementContextId === contextMenuId && (
-        <ul ref={contextMenuRef} className="context-menu" style={{ top: uiState.contextMenuPosition.y, left: uiState.contextMenuPosition.x }}>
+        <ul
+          ref={contextMenuRef}
+          id={`context-menu-${username}`}
+          className="context-menu"
+          style={{ top: uiState.contextMenuPosition.y, left: uiState.contextMenuPosition.x }}
+        >
           <UserNameplateContextMenu />
         </ul>
       )}
-    </>
+    </li>
   );
 }
 

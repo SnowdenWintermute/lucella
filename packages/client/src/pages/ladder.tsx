@@ -6,10 +6,9 @@ import { CustomErrorDetails } from "../../../common";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { Alert } from "../classes/Alert";
 import { AlertType } from "../enums";
-import LadderTableRow from "../components/ladder/LadderTableRow";
-import LadderNav from "../components/ladder/LadderNav";
-import { LadderTable } from "../components/ladder/LadderTable";
-import Logo from "../img/logo.svg";
+import LadderTableRow from "../components/ladder-page/LadderTableRow";
+import LadderNav from "../components/ladder-page/LadderNav";
+import { LadderTable } from "../components/ladder-page/LadderTable";
 
 function Ladder() {
   const dispatch = useAppDispatch();
