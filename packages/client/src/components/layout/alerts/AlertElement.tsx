@@ -38,8 +38,9 @@ function AlertElement({ message, type, id }: Props) {
   return (
     <li role="status" data-cy="alert-element" className={styles["alert__item"]}>
       <button type="button" className={`${styles["alert__button"]}`} onClick={removeAlert}>
+        {/* <div className={styles["alert__icon-container"]}>{alertIcon}</div> */}
         {alertIcon}
-        {message}
+        <span className={styles["alert__message-text"]}>{message}</span>
       </button>
     </li>
   );
