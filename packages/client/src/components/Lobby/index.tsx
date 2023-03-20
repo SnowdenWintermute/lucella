@@ -3,15 +3,14 @@ import React, { useRef } from "react";
 import Chat from "./Chat";
 import LobbyMenus from "./LobbyMenus";
 import ChatChannelSidebar from "./ChatChannelSidebar";
-import ScoreScreenModalContents from "./modals/ScoreScreenModalContents";
 import SocketManager from "../socket-listeners/SocketManager";
 import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
 import { GameStatus } from "../../../../common";
 import { useAppSelector } from "../../redux/hooks";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
-import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 import { INetworkPerformanceMetrics } from "../../types";
 import styles from "./lobby.module.scss";
+import ScoreScreenModal from "./modals/ScoreScreenModal";
 
 function Lobby({ defaultChatChannel }: { defaultChatChannel: string }) {
   const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
@@ -39,9 +38,7 @@ function Lobby({ defaultChatChannel }: { defaultChatChannel: string }) {
     mainContent = (
       <main className={styles["lobby"]}>
         <div className={styles["lobby__menus-and-chat"]}>
-          {/* <Modal screenClass="" isOpen={uiState.modals.scoreScreen} setParentDisplay={setShowScoreScreenModal} title="Score Screen">
-            <ScoreScreenModalContents />
-          </Modal> */}
+          {uiState.modals.scoreScreen && <ScoreScreenModal />}
           <LobbyMenus socket={socket.current} />
           <Chat socket={socket.current} />
         </div>

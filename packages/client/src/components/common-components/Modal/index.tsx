@@ -6,10 +6,12 @@ interface Props {
   children: ReactNode;
   setParentDisplay: (newValue: boolean) => void;
   title: string;
-  backdropStyle: string;
+  backdropStyle?: string;
+  extraStyles?: string;
+  noPadding?: boolean;
 }
 
-function Modal({ children, setParentDisplay, title, backdropStyle }: Props) {
+function Modal({ children, setParentDisplay, title, backdropStyle, extraStyles, noPadding }: Props) {
   function handleClickCloseModalButton() {
     setParentDisplay(false);
   }
@@ -35,11 +37,12 @@ function Modal({ children, setParentDisplay, title, backdropStyle }: Props) {
 
   return (
     <div className={`${styles["modal__fullscreen-backdrop"]} ${backdropStyle || ""}`} id="modal__fullscreen-backdrop">
-      <div className={styles["modal"]} id={`${title} modal`}>
+      <div className={`${styles["modal"]} ${extraStyles}`} id={`${title} modal`}>
         <div className={styles["modal__top-bar"]}>
           <span className={styles["modal__title"]}>{title}</span>
           <button
             type="button"
+            autoFocus
             className={styles["modal__x-button"]}
             onClick={handleClickCloseModalButton}
             aria-label={`close ${title} modal`}
@@ -49,7 +52,7 @@ function Modal({ children, setParentDisplay, title, backdropStyle }: Props) {
             <XShape className={styles["modal__x-button-svg"]} />
           </button>
         </div>
-        <div className={styles["modal__content"]}>{children}</div>
+        <div className={!noPadding ? styles["modal__content"] : ""}>{children}</div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@
 /* eslint-disable consistent-return */
 import cookie from "cookie";
 import { Socket } from "socket.io";
-import { SocketMetadata } from "../../../common";
+import { SocketEventsFromServer, SocketMetadata } from "../../../common";
 import { verifyJwtAsymmetric } from "../controllers/utils/jwt";
 import { LucellaServer } from ".";
 import UserRepo from "../database/repos/users";
@@ -30,7 +30,11 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
       }
     }
 
-    if (!userToReturn) userToReturn = { name: makeRandomAnonUsername(), isGuest: true };
+    if (!userToReturn) {
+      const name = makeRandomAnonUsername();
+      userToReturn = { name, isGuest: true };
+      socket.emit(SocketEventsFromServer.GUEST_USER_NAME, name);
+    }
     server.connectedSockets[socket.id] = new SocketMetadata(socket.id, ipAddress, { username: userToReturn.name!, isGuest });
 
     // used to find all a user's sockets so we can disconnect them if they delete their acconut or are banned

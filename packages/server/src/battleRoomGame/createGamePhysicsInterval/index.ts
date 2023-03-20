@@ -47,10 +47,10 @@ export default function createGamePhysicsInterval(io: Server, server: LucellaSer
       return clearInterval(game.intervals.physics);
     }
 
-    if (server.lobby.gameRooms[gameName].players.host && server.lobby.gameRooms[gameName].players.host!.socketId)
-      io.to(server.lobby.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
-    if (server.lobby.gameRooms[gameName].players.challenger && server.lobby.gameRooms[gameName].players.challenger!.socketId)
-      io.to(server.lobby.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
+    if (server.lobby.gameRooms[gameName]?.players.host && server.lobby.gameRooms[gameName].players.host!.socketId)
+      io.to(server.lobby.gameRooms[gameName]?.players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
+    if (server.lobby.gameRooms[gameName]?.players.challenger && server.lobby.gameRooms[gameName].players.challenger!.socketId)
+      io.to(server.lobby.gameRooms[gameName]?.players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
 
     game.netcode.prevGameState = new GameElementsOfConstantInterest(
       cloneDeep(game.orbs),

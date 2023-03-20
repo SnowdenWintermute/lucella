@@ -23,6 +23,7 @@ import {
   setGameCreationWaitingListPosition,
   setActiveMenu,
   LobbyMenu,
+  setGuestUsername,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -47,6 +48,9 @@ function UISocketListener({ socket }: Props) {
       dispatch(newChatMessage(new ChatMessage("Server disconnected", "Server", ChatMessageStyles.PRIVATE)));
       dispatch(setAuthenticating(false));
       dispatch(setNewChatChannelLoading(true));
+    });
+    socket.on(SocketEventsFromServer.GUEST_USER_NAME, (data) => {
+      dispatch(setGuestUsername(data));
     });
     socket.on(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, (data) => {
       dispatch(updateGameList(data));

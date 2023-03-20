@@ -41,6 +41,7 @@ export interface ILobbyUIState {
   };
   currentGameRoom: GameRoom | null;
   playerRole: PlayerRole | null;
+  guestUsername: string | null;
 }
 
 const initialState: ILobbyUIState = {
@@ -63,6 +64,7 @@ const initialState: ILobbyUIState = {
   },
   currentGameRoom: null,
   playerRole: null,
+  guestUsername: null,
 };
 
 const ladderSlice = createSlice({
@@ -74,6 +76,9 @@ const ladderSlice = createSlice({
     },
     setAuthenticating(state, action: PayloadAction<boolean>) {
       state.authenticating = action.payload;
+    },
+    setGuestUsername(state, action: PayloadAction<string>) {
+      state.guestUsername = action.payload;
     },
     setActiveMenu(state, action: PayloadAction<LobbyMenu>) {
       state.activeMenu = action.payload;
@@ -137,6 +142,7 @@ const ladderSlice = createSlice({
 export const {
   clearLobbyUi,
   setAuthenticating,
+  setGuestUsername,
   setActiveMenu,
   setCurrentGameRoom,
   updatePlayersReady,

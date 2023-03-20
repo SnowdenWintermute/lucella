@@ -36,6 +36,7 @@ export enum SocketEventsFromServer {
   NAME_OF_GAME_WINNER = "30",
   GAME_CREATION_WAITING_LIST_POSITION = "31",
   REMOVED_FROM_MATCHMAKING = "32",
+  GUEST_USER_NAME = "33", // used in the score screens so the user knows if they won or lost
 }
 
 export const GENERIC_SOCKET_EVENTS = {
