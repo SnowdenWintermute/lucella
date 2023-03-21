@@ -9,10 +9,9 @@ type Props = {
 
 export default function AuthPage({ children, submitHandler, title }: Props) {
   return (
-    <div className={styles["auth-frame"]}>
-      <h1 className={styles["auth-brand-header"]}>Lucella.org</h1>
-      <h3 className={styles["auth-header"]}>{title}</h3>
-      <form className={styles["auth-form"]} onSubmit={(e) => submitHandler(e)}>
+    <div className={styles["auth-page"]}>
+      <h3 className={styles["auth-page__page-title"]}>{title}</h3>
+      <form className={styles["auth-page__form"]} onSubmit={(e) => submitHandler(e)}>
         {children}
       </form>
     </div>

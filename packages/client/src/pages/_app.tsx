@@ -5,6 +5,7 @@ import "../styles/base/scrollbar.scss";
 import "../styles/common/buttons.scss";
 import "../styles/common/inputs.scss";
 import "../styles/common/pages.scss";
+import "../styles/common/auth-forms.scss";
 import "../styles/common/context-menus.scss";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";

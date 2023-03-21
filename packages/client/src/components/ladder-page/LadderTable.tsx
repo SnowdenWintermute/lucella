@@ -11,7 +11,7 @@ export function LadderTable({ ladderEntriesToShow }: Props) {
       <tbody className={styles["ladder__table-headers-body"]}>
         <tr className={styles["ladder__table-row"]}>
           <th className={styles["ladder__table-datum"]}>Rank</th>
-          <th className={`${styles["ladder__table-datum"]} ${styles["ladder__table-datum-username"]}`}>Name</th>
+          <th className={styles["ladder__table-datum"]}>Name</th>
           <th className={styles["ladder__table-datum"]}>Elo</th>
           <th className={styles["ladder__table-datum"]}>Wins</th>
           <th className={styles["ladder__table-datum"]}>Losses</th>

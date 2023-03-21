@@ -3,7 +3,7 @@ export const BUTTON_NAMES = {
     CREATE_ACCOUNT: "CREATE",
     LOGIN: "LOG IN",
     SEND: "SEND",
-    SET: "SET",
+    CHANGE: "CHANGE",
     DELETE_ACCOUNT: "CONFIRM DELETE",
   },
   GENERAL: {

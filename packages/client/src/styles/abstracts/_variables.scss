@@ -21,6 +21,27 @@ $colors: (
   warning: #ffbb00,
 );
 
+// $vt320Orange: #db9013;
+// $vt320Background: #160f02;
+
+// $colors: (
+//   backgroundColor: $vt320Background,
+//   dark: $vt320Background,
+//   textPrimary: $vt320Orange,
+//   textFaded: $vt320Orange,
+//   textBright: $vt320Orange,
+//   menuPrimary: $vt320Orange,
+//   // buttonPrimary: $vt320Orange,
+//   buttonPrimary: $vt320Orange,
+//   oldDanger: $vt320Orange,
+//   middleRed: $vt320Orange,
+//   danger: $vt320Orange,
+//   dangerBright: $vt320Orange,
+//   success: $vt320Orange,
+//   chatMessagePrivate: $vt320Orange,
+//   warning: $vt320Orange,
+// );
+
 @function color($color-name) {
   @return map-get($colors, $color-name);
 }

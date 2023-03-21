@@ -42,20 +42,27 @@ function RequestPasswordResetEmail() {
 
   return (
     <AuthPage title="Account Recovery" submitHandler={submitHandler}>
-      <LabeledTextInputWithErrorDisplay
-        label="Enter your email to request a password reset."
-        type="email"
-        placeholder="Email"
-        name={InputFields.AUTH.EMAIL}
-        value={email}
-        onChange={onChange}
-        disabled={isLoading || isSuccess}
-        error={fieldErrors.email}
-        autofocus
-      />
-      <div className="auth-bottom-links">
-        <Link href="/login">Back to login</Link>
-        <button type="submit" className="button button-standard-size button-primary">
+      <div className="auth-form__inputs">
+        <LabeledTextInputWithErrorDisplay
+          label="Enter your email to request a password reset."
+          type="email"
+          placeholder="Email"
+          name={InputFields.AUTH.EMAIL}
+          value={email}
+          onChange={onChange}
+          disabled={isLoading || isSuccess}
+          error={fieldErrors.email}
+          autofocus
+          extraStyles="auth-form__input"
+        />
+      </div>
+      <div className="auth-form__bottom">
+        <div className="auth-bottom-links">
+          <Link href="/login" className="auth-form__link">
+            Back to login
+          </Link>
+        </div>
+        <button type="submit" className="button button--accent auth-form__submit-button">
           {isLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.SEND}
         </button>
       </div>

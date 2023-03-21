@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common";
+import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common/dist";
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/layout/auth/AuthPage";
@@ -59,40 +59,45 @@ function Login() {
 
   return (
     <AuthPage title="Login" submitHandler={submitHandler}>
-      <LabeledTextInputWithErrorDisplay
-        label="Email Address"
-        type="email"
-        placeholder="Email"
-        name={InputFields.AUTH.EMAIL}
-        value={email}
-        onChange={onChange}
-        disabled={isLoading || isSuccess}
-        error={fieldErrors.email}
-        autofocus
-        dataCy="email-address-input"
-      />
-      <LabeledTextInputWithErrorDisplay
-        label="Password"
-        type="password"
-        placeholder="Password"
-        name={InputFields.AUTH.PASSWORD}
-        value={password}
-        onChange={onChange}
-        disabled={isLoading || isSuccess}
-        error={fieldErrors.password}
-        autofocus={false}
-      />
-      <div className="forgot-password">
-        <Link href="/request-password-reset">Reset password</Link>
-      </div>
-      <div className="auth-bottom-links">
-        <Link href="/register">Create account</Link>
-        <input
-          type="submit"
-          className="button button-standard-size button-primary"
-          value={isLoading || isSuccess ? "..." : BUTTON_NAMES.AUTH_FORMS.LOGIN}
+      <div className="auth-form__inputs">
+        <LabeledTextInputWithErrorDisplay
+          label="Email Address"
+          type="email"
+          placeholder="Email"
+          name={InputFields.AUTH.EMAIL}
+          value={email}
+          onChange={onChange}
           disabled={isLoading || isSuccess}
+          error={fieldErrors.email}
+          autofocus
+          dataCy="email-address-input"
+          extraStyles="auth-form__input"
         />
+        <LabeledTextInputWithErrorDisplay
+          label="Password"
+          type="password"
+          placeholder="Password"
+          name={InputFields.AUTH.PASSWORD}
+          value={password}
+          onChange={onChange}
+          disabled={isLoading || isSuccess}
+          error={fieldErrors.password}
+          autofocus={false}
+          extraStyles="auth-form__input"
+        />
+      </div>
+      <div className="auth-form__bottom">
+        <div className="auth-form__bottom-links">
+          <Link href="/request-password-reset" className="auth-form__link">
+            Reset password
+          </Link>
+          <Link href="/register" className="auth-form__link">
+            Create account
+          </Link>
+        </div>
+        <button type="submit" className="button button--accent auth-form__submit-button" disabled={isLoading || isSuccess}>
+          {isLoading || isSuccess ? "..." : BUTTON_NAMES.AUTH_FORMS.LOGIN}
+        </button>
       </div>
     </AuthPage>
   );

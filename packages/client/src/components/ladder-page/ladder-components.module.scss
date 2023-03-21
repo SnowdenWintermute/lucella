@@ -90,16 +90,9 @@ $numberOfColumns: 6;
 .ladder__table-datum {
   width: 100%;
   max-width: calc(100% / $numberOfColumns);
-  // display: table-cell;
   padding: spacing(1);
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
-  &:first-child {
-    // max-width: height(4);
-    // padding-left: spacing(1);
-    // justify-content: flex-start;
-    // align-items: center;
-  }
   height: height(3);
 }

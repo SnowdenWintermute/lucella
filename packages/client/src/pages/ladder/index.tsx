@@ -83,7 +83,6 @@ function Ladder() {
     //   ladderEntriesToShow.push(<LadderTableRow key={i} entry={{ name: "aoeuhtnsaoeuhtnsaoeuhtns", rank: 2391, elo: 4501, wins: 999999, losses: 99999999 }} />);
   }
 
-  // {viewingSearchedEntry && searchedEntryIsError && <div style={{ marginTop: "10px" }}>{searchedEntryError?.data[0].message} </div>}
   return (
     <section className="page-padded-container">
       <main className="page">
