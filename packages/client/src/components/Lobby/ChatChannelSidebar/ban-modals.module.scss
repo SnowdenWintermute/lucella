@@ -1,0 +1,37 @@
+@import "../../../styles/abstracts/variables";
+
+.ban-modal {
+  cursor: auto;
+}
+.ban-modal__contents {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: width(5);
+}
+
+.ban-modal__options-list {
+  width: 100%;
+  max-width: width(5);
+  min-width: 0px;
+  display: flex;
+  list-style: none;
+  margin-bottom: spacing(2);
+}
+
+.ban-modal__radio-button-li {
+  cursor: pointer;
+  margin-right: spacing(1);
+  &:last-child {
+    margin-right: 0px;
+  }
+}
+
+.ban-modal__radio-button-li--unchecked {
+  opacity: 50%;
+}
+
+.ban-modal__confirm-button {
+  max-width: fit-content;
+  align-self: flex-end;
+}

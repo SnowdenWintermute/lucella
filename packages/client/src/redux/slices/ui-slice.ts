@@ -11,8 +11,6 @@ export interface IUISlice {
   };
   lastElementContextId: number | null;
   modals: {
-    showBanUser: boolean;
-    showBanIpAddress: boolean;
     scoreScreen: boolean;
   };
 }
@@ -25,8 +23,6 @@ const initialState: IUISlice = {
   },
   lastElementContextId: null,
   modals: {
-    showBanUser: false,
-    showBanIpAddress: false,
     scoreScreen: false,
   },
 };
@@ -54,25 +50,11 @@ const UISlice = createSlice({
     setContextMenuPosition(state, action: PayloadAction<Point>) {
       state.contextMenuPosition = action.payload;
     },
-    setShowBanUserModal(state, action: PayloadAction<boolean>) {
-      state.modals.showBanUser = action.payload;
-    },
-    setShowBanIpAddressModal(state, action: PayloadAction<boolean>) {
-      state.modals.showBanIpAddress = action.payload;
-    },
     setShowScoreScreenModal(state, action: PayloadAction<boolean>) {
       state.modals.scoreScreen = action.payload;
     },
   },
 });
 
-export const {
-  clearContextMenu,
-  openUserNameplateContextMenu,
-  setContextMenuPosition,
-  setShowBanUserModal,
-  setShowBanIpAddressModal,
-  hideAllModals,
-  setShowScoreScreenModal,
-} = UISlice.actions;
+export const { clearContextMenu, openUserNameplateContextMenu, setContextMenuPosition, hideAllModals, setShowScoreScreenModal } = UISlice.actions;
 export default UISlice.reducer;

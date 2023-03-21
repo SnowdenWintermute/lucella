@@ -60,7 +60,7 @@ export default function DeleteAccountModal({ user, setParentDisplay }: { user: S
   }, [deleteAccountIsSuccess, deleteAccountIsError]);
 
   return (
-    <Modal title="Delete account" backdropStyle="" setParentDisplay={setParentDisplay}>
+    <Modal title="Delete account" setParentDisplay={setParentDisplay}>
       <p className={styles["delete-account-modal__description"]}>
         WARNING: This will delete your account, including all profile and ranking info. If you are certain of your decision, type your email address into the
         input and click Confirm Delete.
@@ -90,7 +90,7 @@ export default function DeleteAccountModal({ user, setParentDisplay }: { user: S
           autofocus={false}
           extraStyles={styles["delete-account-modal__input"]}
         />
-        <button type="submit" className={`button button--transparent ${styles["delete-account-modal__button"]}`} disabled={deleteAccountIsLoading}>
+        <button type="submit" className={`button button--danger ${styles["delete-account-modal__button"]}`} disabled={deleteAccountIsLoading}>
           {deleteAccountIsLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.DELETE_ACCOUNT}
         </button>
       </form>

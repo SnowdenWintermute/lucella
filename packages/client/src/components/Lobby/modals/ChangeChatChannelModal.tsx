@@ -40,7 +40,7 @@ export default function ChangeChatChannelModal({ socket, setParentDisplay }: { s
         </label>
         <div className={styles["change-chat-channel-modal__default-channel-buttons"]}>
           {Object.values(defaultChatChannelNames).map((name) => (
-            <button type="button" className="button button--transparent" key={name} onClick={() => joinRoom(name)}>
+            <button type="button" className="button " key={name} onClick={() => joinRoom(name)}>
               {name}
             </button>
           ))}

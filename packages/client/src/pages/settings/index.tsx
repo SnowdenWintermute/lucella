@@ -58,14 +58,14 @@ function Settings() {
           <span>{userQueryIsLoading ? "..." : userQueryIsSuccess ? `Logged in as ${accountEmail}` : `failed to fetch user data`}</span>
           <ul className={styles["settings-page__options"]}>
             <li>
-              <button type="button" className="button button--transparent" onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>
+              <button type="button" className="button " onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>
                 {passwordResetIsLoading ? "Senging email..." : "Change Password"}
               </button>
             </li>
             <li>
               <button
                 type="button"
-                className={`button button--transparent ${styles["settings-page__delete-account-button"]}`}
+                className="button button--danger"
                 aria-controls="Delete Account modal"
                 aria-expanded={showDeleteAccountModal}
                 onClick={() => setShowDeleteAccountModal(true)}
