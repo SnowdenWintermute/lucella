@@ -11,7 +11,7 @@ function BattleRoom() {
   const inGameShellClass = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING ? "game-shell-in-game" : "";
 
   return (
-    <section className={gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? "page-body" : ""}>
+    <section className={gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING ? "page-padded-container" : ""}>
       <Lobby defaultChatChannel={battleRoomDefaultChatChannel} />
     </section>
   );

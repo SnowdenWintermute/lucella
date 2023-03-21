@@ -7,19 +7,18 @@ type Props = {
 
 export function LadderTable({ ladderEntriesToShow }: Props) {
   return (
-    <table className={styles["ladder-table"]} data-cy="ladder-table">
-      <tbody className={styles["ladder-table-body"]}>
-        <tr className={styles["ladder-table-row"]}>
-          <td className={styles["ladder-table-datum"]}>Rank</td>
-          <td className={`${styles["ladder-table-datum"]} ${styles["ladder-table-datum-username"]}`}>Name</td>
-          <td className={styles["ladder-table-datum"]}>Elo</td>
-          <td className={styles["ladder-table-datum"]}>Wins</td>
-          <td className={styles["ladder-table-datum"]}>Losses</td>
-          <td className={styles["ladder-table-datum"]}>Win Rate</td>
+    <table className={styles["ladder__table"]} data-cy="ladder__table">
+      <tbody className={styles["ladder__table-headers-body"]}>
+        <tr className={styles["ladder__table-row"]}>
+          <th className={styles["ladder__table-datum"]}>Rank</th>
+          <th className={`${styles["ladder__table-datum"]} ${styles["ladder__table-datum-username"]}`}>Name</th>
+          <th className={styles["ladder__table-datum"]}>Elo</th>
+          <th className={styles["ladder__table-datum"]}>Wins</th>
+          <th className={styles["ladder__table-datum"]}>Losses</th>
+          <th className={styles["ladder__table-datum"]}>Win Rate</th>
         </tr>
-
-        {ladderEntriesToShow}
       </tbody>
+      <tbody className={styles["ladder__table-body"]}>{ladderEntriesToShow}</tbody>
     </table>
   );
 }

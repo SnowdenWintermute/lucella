@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert } from "../../../classes/Alert";
 import { AlertType } from "../../../enums";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { removeOldestAlert } from "../../../redux/slices/alerts-slice";
 import AlertElement from "./AlertElement";
 import styles from "./alerts.module.scss";
 
 function Alerts() {
   const { alerts } = useAppSelector((state) => state.alerts);
-
+  const dispatch = useAppDispatch();
   const alertsToDisplay: React.ReactElement[] = [
     // <AlertElement
     //   message="Battle School is in alpha. All accounts are likely to be deleted upon the first beta release. Please report any issues here: https://github.com/SnowdenWintermute/lucella/issues  Server : Welcome to battle-room-chat."
@@ -23,6 +24,18 @@ function Alerts() {
       alertsToDisplay.push(<AlertElement message={message} type={type} key={id} id={id} />);
     });
   }
+
+  function handleKeyPress(e: KeyboardEvent) {
+    const { key } = e;
+    if (key === "Escape" || key === "Esc") dispatch(removeOldestAlert());
+  }
+
+  useEffect(() => {
+    window.addEventListener("keyup", handleKeyPress);
+    return () => {
+      window.removeEventListener("keyup", handleKeyPress);
+    };
+  }, []);
 
   return <ul className={styles["alerts-holder"]}>{alertsToDisplay}</ul>;
 }

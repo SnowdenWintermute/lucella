@@ -1,27 +1,5 @@
 @import "../../styles/abstracts/variables";
 
-.settings-page {
-  height: $baseAppHeight;
-  max-height: $pageBodyHeight;
-  border: 2px solid color(textPrimary);
-  display: flex;
-  flex-direction: column;
-}
-
-.settings-page__top-bar {
-  border-bottom: 1px solid color(textPrimary);
-  padding: spacing(2);
-  height: height(4);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.settings-page__header {
-  font-size: fontSize(3);
-  font-weight: lighter;
-}
-
 .settings-page__content {
   padding: spacing(3);
   display: flex;

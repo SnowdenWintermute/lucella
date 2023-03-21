@@ -36,7 +36,7 @@ function Lobby({ defaultChatChannel }: { defaultChatChannel: string }) {
   if (!socket.current) mainContent = <p>Awaiting socket creation...</p>;
   else if (!gameInProgress)
     mainContent = (
-      <main className={styles["lobby"]}>
+      <main className={`page ${styles["lobby"]}`}>
         <div className={styles["lobby__menus-and-chat"]}>
           {uiState.modals.scoreScreen && <ScoreScreenModal />}
           <LobbyMenus socket={socket.current} />

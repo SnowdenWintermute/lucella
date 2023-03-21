@@ -1,96 +1,105 @@
 @import "../../styles/abstracts/variables";
 
-.ladder-nav {
+// outer container padding + height + margin-bottom
+$ladderSearchFormHeight: calc(spacing(2) + height(3) + spacing(2));
+$numberOfColumns: 6;
+
+.ladder__search-form {
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  max-width: 100%;
-  // height: 40px;
+  justify-content: center;
+  margin-bottom: spacing(2);
 }
-.ladder-search {
-  height: 100%;
-  width: 500px;
+
+.ladder__search-input-label {
+  width: 100%;
+  width: 100%;
+  max-width: width(3);
 }
-.ladder-search-input {
-  height: 40px;
-  width: 260px;
-  padding-left: 10px;
-  margin: 0px;
-  display: inline;
+
+.ladder__search-input {
+  border-right: 0px;
+  width: 100%;
 }
-.ladder-search-button {
-  height: 40px !important;
-  width: 90px;
-  display: inline;
+
+.ladder__search-button {
   border: 1px solid color(textPrimary);
-  border-left: none;
+  background-color: color(dark);
 }
-.ladder-page-buttons {
-  height: 40px;
+
+.ladder__pagination-buttons {
+  height: height(3);
+  margin: auto 0 0 0;
+  align-self: center;
   display: flex;
-  justify-content: space-between;
-  @media (max-width: 556px) {
-    margin-top: 10px;
+}
+
+.ladder__pagination-button {
+  padding: spacing(1);
+  width: height(3);
+  &:nth-child(3) {
+    transform: rotateY(180deg);
   }
 }
-.ladder-page-button {
-  max-height: 100%;
+
+.ladder__pagination-button-arrow-svg {
   height: 100%;
-  width: 60px !important;
-  max-width: 60px !important;
-  display: block;
-  &:active {
-    background: color(textBright);
-  }
+  fill: color(textPrimary);
 }
+
 .ladder-current-page-number-holder {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0px 10px 0px 10px;
+  margin: 0px spacing(3) 0px spacing(3);
 }
-.ladder-current-page-number {
-  border: 1px solid color(textPrimary);
+.ladder__current-page-number {
   height: 100%;
-  width: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: 0.1s;
-}
-.ladder-current-page-number-animate {
-  background: color(dark);
-}
-.ladder-table {
-  border: 0px;
-  border-collapse: collapse;
-  width: 100%;
-  overflow: scroll;
-}
-.ladder-table-body {
-  width: 100%;
-}
-.ladder-table-row {
-  width: 100%;
-  border-bottom: 1px solid color(textPrimary);
-}
-.ladder-table-datum {
-  height: 40px;
-  min-width: 80px;
-  margin: 0px;
-  padding-right: 10px;
-  @media (max-width: 556px) {
-    min-width: 60px;
-  }
-  @media (max-width: 556px) {
-    min-width: 60px;
-  }
-  @media (max-width: 380px) {
-    min-width: 50px;
-  }
+  font-size: fontSize(3);
+  font-weight: lighter;
 }
 
-.ladder-table-datum:last-child {
+.ladder__table {
+  display: block;
+  border: 0px;
+  border-collapse: collapse;
+  max-height: calc(100% - $ladderSearchFormHeight - 40px);
+  height: 100%;
+  margin-bottom: spacing(3);
+}
+.ladder__table-headers-body {
   width: 100%;
+  display: block;
+  height: height(3);
+}
+.ladder__table-body {
+  display: block;
+  min-height: 0px;
+  height: calc(100% - height(3));
+  overflow-y: auto;
+}
+.ladder__table-row {
+  font-size: fontSize(2);
+  width: 100%;
+  border-bottom: 1px solid color(textPrimary);
+  display: flex;
+}
+.ladder__table-datum {
+  width: 100%;
+  max-width: calc(100% / $numberOfColumns);
+  // display: table-cell;
+  padding: spacing(1);
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  &:first-child {
+    // max-width: height(4);
+    // padding-left: spacing(1);
+    // justify-content: flex-start;
+    // align-items: center;
+  }
+  height: height(3);
 }

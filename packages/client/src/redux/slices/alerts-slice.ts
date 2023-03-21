@@ -26,6 +26,9 @@ const alertsSlice = createSlice({
         }),
       };
     },
+    removeOldestAlert(state) {
+      state.alerts.shift();
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -38,5 +41,5 @@ const alertsSlice = createSlice({
   },
 });
 
-export const { setAlert, clearAlert } = alertsSlice.actions;
+export const { setAlert, clearAlert, removeOldestAlert } = alertsSlice.actions;
 export default alertsSlice.reducer;

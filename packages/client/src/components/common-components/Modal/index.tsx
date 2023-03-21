@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect } from "react";
 import XShape from "../../../img/basic-shapes/x-shape.svg";
+import { useAppSelector } from "../../../redux/hooks";
 import styles from "./modal.module.scss";
 
 interface Props {
@@ -12,13 +13,15 @@ interface Props {
 }
 
 function Modal({ children, setParentDisplay, title, backdropStyle, extraStyles, noPadding }: Props) {
+  const { alerts } = useAppSelector((state) => state.alerts);
+
   function handleClickCloseModalButton() {
     setParentDisplay(false);
   }
 
   function handleUserKeyPress(e: KeyboardEvent) {
     const { key } = e;
-    if (key === "Escape" || key === "Esc") setParentDisplay(false);
+    if ((key === "Escape" || key === "Esc") && !(alerts.length > 0)) setParentDisplay(false);
   }
 
   function handleClickOutOfModal(e: MouseEvent) {
@@ -33,7 +36,7 @@ function Modal({ children, setParentDisplay, title, backdropStyle, extraStyles, 
       window.removeEventListener("keyup", handleUserKeyPress);
       window.removeEventListener("click", handleClickOutOfModal);
     };
-  }, []);
+  }, [alerts]);
 
   return (
     <div className={`${styles["modal__fullscreen-backdrop"]} ${backdropStyle || ""}`} id="modal__fullscreen-backdrop">

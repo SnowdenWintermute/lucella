@@ -2,7 +2,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useRequestPasswordResetEmailMutation } from "../../redux/api-slices/auth-api-slice";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useAppDispatch } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
@@ -49,10 +49,10 @@ function Settings() {
   if (!user || userQueryIsLoading) return <p>...</p>;
 
   return (
-    <section className="page-body">
-      <main className={`${styles["settings-page"]}`}>
-        <div className={styles["settings-page__top-bar"]}>
-          <h3 className={styles["settings-page__header"]}>Settings</h3>
+    <section className="page-padded-container">
+      <main className="page">
+        <div className="page__top-bar">
+          <h3 className="page__header">Settings</h3>
         </div>
         <div className={styles["settings-page__content"]}>
           <span>{userQueryIsLoading ? "..." : userQueryIsSuccess ? `Logged in as ${accountEmail}` : `failed to fetch user data`}</span>

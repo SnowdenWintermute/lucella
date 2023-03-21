@@ -7,6 +7,7 @@ import { clearContextMenu, setContextMenuPosition } from "../../../redux/slices/
 function ContextMenu({ id, positionClicked, children }: { id: string; positionClicked: Point; children: JSX.Element | JSX.Element[] }) {
   const dispatch = useAppDispatch();
   const uiState = useAppSelector((state) => state.UI);
+  const { alerts } = useAppSelector((state) => state.alerts);
   const windowDimensions = useWindowDimensions();
   const contextMenuRef = useRef<HTMLUListElement>(null);
 
@@ -29,7 +30,7 @@ function ContextMenu({ id, positionClicked, children }: { id: string; positionCl
 
     const handleUserKeyPress = (e: KeyboardEvent) => {
       const { key } = e;
-      if (key === "Escape" || key === "Esc") dispatch(clearContextMenu());
+      if ((key === "Escape" || key === "Esc") && !(alerts.length > 0)) dispatch(clearContextMenu());
     };
 
     const handleContextMenu = (e: MouseEvent) => {
@@ -46,7 +47,7 @@ function ContextMenu({ id, positionClicked, children }: { id: string; positionCl
       window.removeEventListener("contextmenu", handleContextMenu);
       window.removeEventListener("click", handleClick);
     };
-  }, [uiState.lastElementContextId, windowDimensions]);
+  }, [uiState.lastElementContextId, windowDimensions, alerts]);
 
   return (
     <ul ref={contextMenuRef} id={id} className="context-menu" style={{ top: uiState.contextMenuPosition.y, left: uiState.contextMenuPosition.x }}>

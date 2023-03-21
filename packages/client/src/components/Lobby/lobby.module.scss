@@ -1,10 +1,7 @@
 @import "../../styles/abstracts/variables";
 
 .lobby {
-  height: $baseAppHeight;
-  max-height: $pageBodyHeight;
-  border: 2px solid color(textPrimary);
-  display: flex;
+  flex-direction: row;
 }
 
 .lobby__menus-and-chat {

@@ -1,8 +1,30 @@
 @import "../abstracts/variables";
 
-.page-body {
+.page-padded-container {
   max-width: $baseAppWidth;
   padding: spacing(4);
   padding-top: 0px;
   margin: 0 auto;
+}
+
+.page {
+  height: $baseAppHeight;
+  max-height: $pageBodyHeight;
+  border: 2px solid color(textPrimary);
+  display: flex;
+  flex-direction: column;
+}
+
+.page__top-bar {
+  border-bottom: 1px solid color(textPrimary);
+  padding: spacing(2);
+  height: height(4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page__header {
+  font-size: fontSize(4);
+  font-weight: lighter;
 }
