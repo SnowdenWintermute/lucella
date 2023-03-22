@@ -12,6 +12,7 @@ import touchEndHandler from "./user-input-handlers/touchEndHandler";
 import keyPressHandler from "./user-input-handlers/keyPressHandler";
 import throttle from "../../utils/throttle";
 import { useAppSelector } from "../../redux/hooks";
+import styles from "./battle-room-game.module.scss";
 
 interface Props {
   canvasSizeRef: React.RefObject<WidthAndHeight | null>;
@@ -41,7 +42,7 @@ function Canvas(props: Props) {
     <canvas
       height={canvasSizeRef.current.height}
       width={canvasSizeRef.current.width}
-      className="battle-room-canvas"
+      className={styles["battle-room-game__canvas"]}
       ref={canvasRef}
       onContextMenu={(e) => e.preventDefault()}
       onTouchStart={(e) => {

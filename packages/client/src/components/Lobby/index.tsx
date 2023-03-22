@@ -1,57 +1,26 @@
 import { Socket } from "socket.io-client";
-import React, { useRef } from "react";
+import React from "react";
 import Chat from "./Chat";
 import LobbyMenus from "./LobbyMenus";
 import ChatChannelSidebar from "./ChatChannelSidebar";
-import SocketManager from "../socket-listeners/SocketManager";
-import BattleRoomGameInstance from "../battle-room/BattleRoomGameInstance";
-import { GameStatus } from "../../../../common";
 import { useAppSelector } from "../../redux/hooks";
 import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
-import { INetworkPerformanceMetrics } from "../../types";
 import styles from "./lobby.module.scss";
 import ScoreScreenModal from "./modals/ScoreScreenModal";
 
-function Lobby({ defaultChatChannel }: { defaultChatChannel: string }) {
-  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
-  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+function Lobby({ socket }: { socket: Socket }) {
+  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true }); // not using the data but we are re calling the quuery to update cache for other components like navbar/usermenu
   const uiState = useAppSelector((state) => state.UI);
-  const { currentGameRoom } = lobbyUiState;
-  const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
-  const socket = useRef<Socket>();
-  const networkPerformanceMetricsRef = useRef<INetworkPerformanceMetrics>({
-    recentLatencies: [],
-    averageLatency: 0,
-    jitter: 0,
-    maxJitter: 0,
-    minJitter: 0,
-    lastPingSentAt: 0,
-    latency: 0,
-    maxLatency: 0,
-    minLatency: 0,
-  });
-
-  const gameInProgress = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING;
-  let mainContent = <span />;
-  if (!socket.current) mainContent = <p>Awaiting socket creation...</p>;
-  else if (!gameInProgress)
-    mainContent = (
-      <main className={`page ${styles["lobby"]}`}>
-        <div className={styles["lobby__menus-and-chat"]}>
-          {uiState.modals.scoreScreen && <ScoreScreenModal />}
-          <LobbyMenus socket={socket.current} />
-          <Chat socket={socket.current} />
-        </div>
-        <ChatChannelSidebar />
-      </main>
-    );
-  else mainContent = <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />;
 
   return (
-    <>
-      <SocketManager socket={socket} defaultChatChannel={defaultChatChannel} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
-      {mainContent}
-    </>
+    <main className={`page ${styles["lobby"]}`}>
+      <div className={styles["lobby__menus-and-chat"]}>
+        {uiState.modals.scoreScreen && <ScoreScreenModal />}
+        <LobbyMenus socket={socket} />
+        <Chat socket={socket} />
+      </div>
+      <ChatChannelSidebar />
+    </main>
   );
 }
 

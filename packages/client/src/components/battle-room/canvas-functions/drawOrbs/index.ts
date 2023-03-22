@@ -17,7 +17,7 @@ export function drawOrbs(context: CanvasRenderingContext2D, playerRole: PlayerRo
     Object.values(orbSet).forEach((orb) => {
       drawOrb(context, orb, canvasDrawFractions, game.debug.mode, showAsRing);
       drawOrbNumber(context, orb, playerRole, canvasDrawFractions);
-      drawSelectionRing(context, orb);
+      drawSelectionRing(context, canvasDrawFractions, orb);
     });
   });
 }

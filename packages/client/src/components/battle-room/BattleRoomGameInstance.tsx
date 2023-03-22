@@ -1,11 +1,12 @@
 import { Socket } from "socket.io-client";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
-import GameListener from "../socket-listeners/GameListener";
+import GameListener from "../SocketManager/GameListener";
 import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../../common";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { INetworkPerformanceMetrics } from "../../types";
+import styles from "./battle-room-game.module.scss";
 
 interface Props {
   socket: Socket;
@@ -41,8 +42,16 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
     };
   }, [setCanvasSize, windowDimensions]);
 
+  // useEffect(() => {
+  //   const f = new FontFace("DM_Sans", "url('../../fonts/DM_Sans/DMSans-Regular.ttf')");
+
+  //   f.load().then(() => {
+  //     console.log("loaded dm sans");
+  //   });
+  // }, []);
+
   return (
-    <div className="battle-room-canvas-holder" onContextMenu={(e) => e.preventDefault()}>
+    <div className={styles["battle-room-game__canvas-container"]} onContextMenu={(e) => e.preventDefault()}>
       {currentGame.current && (
         <GameListener
           socket={socket}

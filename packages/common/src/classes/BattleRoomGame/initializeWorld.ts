@@ -32,7 +32,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
       density: orbDensity,
       label: `host-orb-${i}`,
     });
-    game.orbs.host[`host-orb-${i}`] = new Orb(hostOrbBody, PlayerRole.HOST, i, colors.hostOrbs);
+    game.orbs.host[`host-orb-${i}`] = new Orb(hostOrbBody, PlayerRole.HOST, i, colors.hostOrbs, colors.hostOrbsStroke);
     Matter.Composite.add(game.physicsEngine.world, hostOrbBody);
     const challengerOrbBody = Matter.Bodies.circle(startingX, BattleRoomGame.baseWindowDimensions.height - 100, BattleRoomGame.baseOrbRadius, {
       collisionFilter: { category: challengerOrbCollisionCategory, mask: hostOrbCollisionCategory },
@@ -40,7 +40,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
       density: orbDensity,
       label: `challenger-orb-${i}`,
     });
-    game.orbs.challenger[`challenger-orb-${i}`] = new Orb(challengerOrbBody, PlayerRole.CHALLENGER, i, colors.challengerOrbs);
+    game.orbs.challenger[`challenger-orb-${i}`] = new Orb(challengerOrbBody, PlayerRole.CHALLENGER, i, colors.challengerOrbs, colors.challengerOrbsStroke);
     Matter.Composite.add(game.physicsEngine.world, challengerOrbBody);
   }
 

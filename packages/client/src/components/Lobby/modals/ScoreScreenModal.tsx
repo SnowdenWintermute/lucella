@@ -38,7 +38,7 @@ export default function ScoreScreenModal() {
   else if (!playerPreGameRank && guestUsername === gameRoom.winner) wasVictory = true;
 
   // eslint-disable-next-line no-nested-ternary
-  const eloDiffSign = eloDiff ? (wasVictory ? "+" : "-") : null;
+  const eloDiffSign = eloDiff ? (wasVictory ? "+" : "") : null;
   const eloTextAnimation = wasVictory ? styles["score-screen-modal__elo--animate-gain"] : styles["score-screen-modal__elo--animate-loss"];
 
   return (

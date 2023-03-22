@@ -5,6 +5,7 @@ export class Orb {
   body: Matter.Body;
   destination: Point | null = null;
   color: string;
+  strokeColor: string;
   owner: string;
   id: number;
   isGhost = false;
@@ -15,9 +16,10 @@ export class Orb {
     numInputsAppliedBeforeComingToRest: 0,
     highestNumberInputApplied: 0,
   };
-  constructor(body: Matter.Body, owner: string, id: number, color: string) {
+  constructor(body: Matter.Body, owner: string, id: number, color: string, strokeColor: string) {
     this.body = body;
     this.color = color;
+    this.strokeColor = strokeColor;
     this.owner = owner;
     this.id = id;
   }

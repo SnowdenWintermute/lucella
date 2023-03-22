@@ -7,7 +7,7 @@ import assignDebugValues from "./assignDebugValues";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
 import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, WidthAndHeight } from "../../../../../common";
-import draw from "../canvas-functions/canvasMain";
+import draw from "../canvas-functions";
 import serializeInput from "../../../protobuf-utils/serialize-input";
 import { INetworkPerformanceMetrics } from "../../../types";
 

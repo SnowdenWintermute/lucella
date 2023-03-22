@@ -1,0 +1,12 @@
+@import "../../styles/abstracts/variables";
+.battle-room-game__canvas-container {
+  width: fit-content;
+  height: 100vh;
+  margin: 0 auto;
+  border: 1px solid color(textPrimary);
+}
+.battle-room-game__canvas {
+  height: 100%;
+  background-color: color(backgroundColor);
+  display: block;
+}

@@ -25,7 +25,7 @@ export default function draw(
 
     context.clearRect(0, 0, canvasSize.width, canvasSize.height);
     drawEndzones(context, game, canvasSize);
-    drawScore(context, game, canvasSize);
+    drawScore(context, canvasDrawFractions, game, canvasSize);
     drawOrbs(context, playerRole, game, canvasDrawFractions);
     if (game.debug.mode) drawDebug(context, game, networkPerformanceMetrics, canvasDrawFractions);
     if (game.winner) gameOverText(context, game, canvasDrawFractions);
@@ -34,11 +34,11 @@ export default function draw(
 
     if (!game.netcode.lastUpdateFromServer) {
       const fontSize = 25;
-      context.beginPath();
       context.fillStyle = "rgb(255,255,255)";
       context.textAlign = "center";
       context.textBaseline = "middle";
       context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px Arial`;
+      context.beginPath();
       context.fillText(
         `Loading...`,
         (BattleRoomGame.baseWindowDimensions.width * canvasDrawFractions.x) / 2,
