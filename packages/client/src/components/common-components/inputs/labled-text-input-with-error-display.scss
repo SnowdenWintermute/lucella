@@ -1,13 +1,13 @@
 @import "../../../styles/abstracts/variables";
 
-.input-label {
-  margin-bottom: spacing(1);
+.labeled-input__label {
+  padding-bottom: spacing(1);
 }
 
-.input-label--red-text {
+.labeled-input__label--red-text {
   color: color(dangerBright);
 }
 
-.input--red-border {
+.labeled-input--red-border {
   border: 1px solid color(dangerBright);
 }

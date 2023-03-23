@@ -3,12 +3,11 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { UserMenu } from "./UserMenu";
 import Logo from "../../../img/logo.svg";
-import styles from "./nav.module.scss";
 
 function NavigationLink({ title, href }: { title: string; href: string }) {
   const router = useRouter();
   return (
-    <Link href={href} className={`${styles["main-navigation__page-link"]} ${router.pathname === href && styles["main-navigation__page-link--active"]}`}>
+    <Link href={href} className={`main-navigation__page-link ${router.pathname === href && "main-navigation__page-link--active"}`}>
       <span>{title}</span>
     </Link>
   );
@@ -17,11 +16,11 @@ function NavigationLink({ title, href }: { title: string; href: string }) {
 export default function Navbar() {
   // eslint-disable-next-line consistent-return
   return (
-    <nav className={styles["main-navigation"]}>
-      <div className={styles["main-navigation__left-side"]}>
-        <Logo className={styles["main-navigation__site-logo"]} />
+    <nav className="main-navigation" data-theme="vt">
+      <div className="main-navigation__left-side">
+        <Logo className="main-navigation__site-logo" />
         <div>
-          <Link href="/" className={styles["main-navigation__logo-text"]}>
+          <Link href="/" className="main-navigation__logo-text">
             Battle School
           </Link>
           <NavigationLink title="Game" href="/battle-room" />

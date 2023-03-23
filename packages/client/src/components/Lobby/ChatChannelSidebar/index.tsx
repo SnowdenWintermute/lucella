@@ -1,6 +1,5 @@
 import React from "react";
 import { useAppSelector } from "../../../redux/hooks";
-import styles from "./chat-channel-sidebar.module.scss";
 import UserNameplate from "./UserNameplate";
 
 function ChatChannelSidebar() {
@@ -16,14 +15,14 @@ function ChatChannelSidebar() {
   // for (let i = 40; i > 0; i -= 1) usersInChannelToDisplay.push(<UserNameplate key="test" username="test" isGuest contextMenuId={i + 1} />);
 
   return (
-    <section className={styles["chat-channel-sidebar"]}>
-      <div className={styles["chat-channel-sidebar__header-box"]} aria-label="chat channel name and number of users">
+    <section className="chat-channel-sidebar">
+      <div className="chat-channel-sidebar__header-box" aria-label="chat channel name and number of users">
         <span>
           {currentChatChannelName} ({newChatChannelLoading ? "..." : numUsers})
         </span>
       </div>
-      <div className={styles["chat-channel-sidebar__users-list-container"]} aria-label="users in this channel">
-        <ul className={styles["chat-channel-sidebar__users-list"]}>{newChatChannelLoading ? "..." : usersInChannelToDisplay}</ul>
+      <div className="chat-channel-sidebar__users-list-container" aria-label="users in this channel">
+        <ul className="chat-channel-sidebar__users-list">{newChatChannelLoading ? "..." : usersInChannelToDisplay}</ul>
       </div>
     </section>
   );

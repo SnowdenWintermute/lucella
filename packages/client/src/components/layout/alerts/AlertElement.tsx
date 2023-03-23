@@ -5,7 +5,6 @@ import { AlertType } from "../../../enums";
 import { useAppDispatch } from "../../../redux/hooks";
 import { clearAlert } from "../../../redux/slices/alerts-slice";
 import { defaultAlertTimeout } from "../../../consts";
-import styles from "./alerts.module.scss";
 
 interface Props {
   message: string;
@@ -27,21 +26,17 @@ function AlertElement({ message, type, id }: Props) {
   }, []);
 
   const alertIcon =
-    type === AlertType.DANGER ? (
-      <DangerIcon className={`${styles["alert__icon"]} ${styles["alert__icon--danger"]}`} />
-    ) : (
-      <SuccessIcon className={`${styles["alert__icon"]} ${styles["alert__icon--success"]}`} />
-    );
+    type === AlertType.DANGER ? <DangerIcon className="alert__icon alert__icon--danger" /> : <SuccessIcon className="alert__icon alert__icon--success" />;
 
   const removeAlert = () => {
     dispatch(clearAlert(id));
   };
 
   return (
-    <li role="status" data-cy="alert-element" className={styles["alert__item"]}>
-      <button type="button" className={`${styles["alert__button"]}`} onClick={removeAlert}>
-        <div className={styles["alert__icon-container"]}>{alertIcon}</div>
-        <span className={styles["alert__message-text"]}>{message}</span>
+    <li role="status" data-cy="alert-element" className="alert__item">
+      <button type="button" className="alert__button" onClick={removeAlert}>
+        <div className="alert__icon-container">{alertIcon}</div>
+        <span className="alert__message-text">{message}</span>
       </button>
     </li>
   );

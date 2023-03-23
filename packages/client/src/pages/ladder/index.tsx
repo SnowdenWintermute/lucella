@@ -10,8 +10,6 @@ import LadderTableRow from "../../components/ladder-page/LadderTableRow";
 import LadderSearch from "../../components/ladder-page/LadderSearch";
 import { LadderTable } from "../../components/ladder-page/LadderTable";
 import { LadderPaginationButtons } from "../../components/ladder-page/LadderPaginationButtons";
-import styles from "./ladder-page.module.scss";
-import ladderComponentStyles from "../../components/ladder-page/ladder-components.module.scss";
 
 function Ladder() {
   const dispatch = useAppDispatch();
@@ -62,7 +60,7 @@ function Ladder() {
   };
 
   let ladderEntriesToShow: JSX.Element | JSX.Element[] = (
-    <tr className={ladderComponentStyles["ladder__table-row"]} data-cy="loading-data">
+    <tr className="ladder__table-row" data-cy="loading-data">
       <td>...</td>
     </tr>
   );
@@ -70,9 +68,9 @@ function Ladder() {
   if (viewingSearchedEntry) {
     if (searchedEntryError)
       ladderEntriesToShow = (
-        <tr className={ladderComponentStyles["ladder__table-row"]}>
+        <tr className="ladder__table-row">
           {/* @ts-ignore */}
-          <td className={styles["ladder__error-td"]}>{searchedEntryError?.data[0].message}</td>
+          <td className="ladder__error-td">{searchedEntryError?.data[0].message}</td>
         </tr>
       );
     if (searchedEntryData && !searchedEntryIsLoading && !searchedEntryIsFetching && !searchedEntryError)
@@ -89,7 +87,7 @@ function Ladder() {
         <div className="page__top-bar">
           <h3 className="page__header">Ladder</h3>
         </div>
-        <div className={styles["ladder-page__content"]}>
+        <div className="ladder-page__content">
           <LadderSearch searchText={searchText} setSearchText={setSearchText} handleSubmit={handleSubmitSearch} />
           <LadderTable ladderEntriesToShow={ladderEntriesToShow} />
           <LadderPaginationButtons onTurnPage={onTurnPage} currentPageViewing={currentPageViewing} />

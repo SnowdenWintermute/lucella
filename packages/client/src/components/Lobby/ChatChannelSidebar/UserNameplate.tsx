@@ -4,7 +4,6 @@ import { Point } from "../../../../../common";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { clearContextMenu, openUserNameplateContextMenu } from "../../../redux/slices/ui-slice";
 import UserNameplateContextMenu from "./UserNameplateContextMenu";
-import styles from "./chat-channel-sidebar.module.scss";
 import BanModal, { BanMode } from "./BanModal";
 
 type Props = {
@@ -41,7 +40,7 @@ function UserNameplate({ username, isGuest, contextMenuId }: Props) {
       <button
         type="button"
         onClick={handleClick}
-        className={styles["chat-channel-sidebar__user-nameplate"]}
+        className="chat-channel-sidebar__user-nameplate"
         data-custom-context-menu-id={contextMenuId}
         onContextMenu={handleClick}
         onKeyDown={(e) => {

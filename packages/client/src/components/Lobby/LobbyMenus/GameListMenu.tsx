@@ -7,8 +7,6 @@ import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import { LobbyMenu, setActiveMenu, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import RefreshSvg from "../../../img/menu-icons/refresh.svg";
-import lobbyMenusStyles from "./lobby-menus.module.scss";
-import styles from "./game-list-menu.module.scss";
 import useScrollbarSize from "../../../hooks/useScrollbarSize";
 
 function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom }) {
@@ -17,12 +15,12 @@ function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom
   };
   const gameIsFull = !!gameRoom.players.challenger;
   return (
-    <div className={styles["game-list-menu__game-row"]}>
-      <span className={styles["game-list-menu__game-name"]}>{gameRoom.gameName}</span>
-      <span className={styles["game-list-menu__number-of-players"]}>{gameRoom.players.challenger ? "2" : "1"}/2</span>
+    <div className="game-list-menu__game-row">
+      <span className="game-list-menu__game-name">{gameRoom.gameName}</span>
+      <span className="game-list-menu__number-of-players">{gameRoom.players.challenger ? "2" : "1"}/2</span>
       <button
         type="button"
-        className={`button ${!gameIsFull && "button--accent"} ${styles["game-list-menu__button"]}`}
+        className={`button ${!gameIsFull && "button--accent"} game-list-menu__button`}
         onClick={() => handleJoinGameClick(gameRoom.gameName)}
         disabled={gameIsFull}
       >
@@ -50,35 +48,33 @@ function GameListMenu({ socket }: { socket: Socket }) {
 
   return (
     <>
-      <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
+      <ul className="lobby-menus__top-buttons">
         <LobbyTopListItemWithButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
         <button
           type="button"
-          className={`button ${styles["game-list-buttons__refresh"]}`}
+          className="button game-list-buttons__refresh"
           onClick={handleRefreshGamesListClick}
           disabled={lobbyUiState.gameList.isFetching}
           data-cy="refresh-button"
           aria-label="refresh game list"
         >
-          <RefreshSvg className={styles["game-list-buttons__refresh-icon"]} />
+          <RefreshSvg className="game-list-buttons__refresh-icon" />
         </button>
       </ul>
-      <section
-        className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-list-menu"]} ${gameListIsOverflowing && styles["game-list-menu--scrollbar-present"]}`}
-      >
-        <div className={`${styles["game-list-menu__headers"]}`}>
-          <h3 className={`${styles["game-list-menu__game-name"]} ${styles["game-list-menu__game-name-header"]}`}>Current games</h3>
-          {/* {!noGames && <h3 className={`${styles["game-list-menu__number-of-players"]} ${styles["game-list-menu__number-of-players-header"]}`}>Players</h3>} */}
+      <section className={`lobby-menu game-list-menu ${gameListIsOverflowing && "game-list-menu--scrollbar-present"}`}>
+        <div className={`${"game-list-menu__headers"}`}>
+          <h3 className={`${"game-list-menu__game-name"} ${"game-list-menu__game-name-header"}`}>Current games</h3>
+          {/* {!noGames && <h3 className={`${"game-list-menu__number-of-players"} ${"game-list-menu__number-of-players-header"}`}>Players</h3>} */}
           <span
             aria-hidden
-            className={`button ${styles["game-list-menu__empty-header-spacer"]} ${
-              gameListIsOverflowing && scrollbarSize.width && styles["game-list-menu__empty-header-spacer--scrollbar-present"]
+            className={`button ${"game-list-menu__empty-header-spacer"} ${
+              gameListIsOverflowing && scrollbarSize.width && "game-list-menu__empty-header-spacer--scrollbar-present"
             }`}
             style={{ marginLeft: gameListIsOverflowing && scrollbarSize.width ? scrollbarSize.width : 0 }}
           />
         </div>
         <div
-          className={`${styles["game-list-menu__games"]} ${gameListIsOverflowing && scrollbarSize.width && styles["game-list-menu__games--scrollbar-padding"]}`}
+          className={`${"game-list-menu__games"} ${gameListIsOverflowing && scrollbarSize.width && "game-list-menu__games--scrollbar-padding"}`}
           ref={gameListRef}
         >
           {noGames && <p>No games found</p>}

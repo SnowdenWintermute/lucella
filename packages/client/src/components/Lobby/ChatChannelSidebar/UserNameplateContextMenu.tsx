@@ -1,11 +1,11 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import ContextMenuItem from "../../layout/context-menu/ContextMenuItem";
+import ContextMenuItem from "../../layout/ContextMenu/ContextMenuItem";
 import { useAppSelector } from "../../../redux/hooks";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import { Point, UserRole } from "../../../../../common";
 import { clearContextMenu } from "../../../redux/slices/ui-slice";
-import ContextMenu from "../../layout/context-menu/ContextMenu";
+import ContextMenu from "../../layout/ContextMenu";
 
 type Props = {
   id: string;

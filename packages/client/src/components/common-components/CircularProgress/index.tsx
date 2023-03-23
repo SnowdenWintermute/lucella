@@ -1,6 +1,5 @@
 /* eslint-disable react/require-default-props */
 import React, { useEffect, useRef, useState } from "react";
-import styles from "./circular-progress.module.scss";
 
 // type Enumerate<N extends number, Acc extends number[] = []> = Acc["length"] extends N ? Acc[number] : Enumerate<N, [...Acc, Acc["length"]]>;
 
@@ -34,7 +33,7 @@ export default function CircularProgress({ thickness = 20, percentage, rotateAni
       strokeDasharray={dashArray}
       strokeDashoffset={strokeDashoffset}
       strokeWidth={thickness}
-      className={`${styles.circle} ${rotateAnimation && styles["circle--animate"]}`}
+      className={`circular-progress ${rotateAnimation && "circular-progress--animate"}`}
     >
       <circle cx={radius} cy={radius} r={radius} />
     </svg>

@@ -6,7 +6,6 @@ import Lobby from "../../components/Lobby";
 import SocketManager from "../../components/SocketManager";
 import { useAppSelector } from "../../redux/hooks";
 import { INetworkPerformanceMetrics } from "../../types";
-import styles from "./battle-room-app.module.scss";
 
 function BattleRoom() {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
@@ -33,7 +32,7 @@ function BattleRoom() {
   }, [socket.current]);
 
   return (
-    <section className={!inGame ? "page-padded-container" : styles["battle-room-game-instance"]}>
+    <section className={!inGame ? "page-padded-container" : "battle-room-game-instance"}>
       <SocketManager socket={socket} defaultChatChannel={battleRoomDefaultChatChannel} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
       {!socketCreated && (
         <main>

@@ -14,7 +14,6 @@ import {
 import CircularProgress from "../../common-components/CircularProgress";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import replaceUrlsWithAnchorTags from "../../../utils/replaceUrlsWithAnchorTags";
-import styles from "./chat.module.scss";
 import ClientGeneratedChatNotice from "./ClientGeneratedChatNotice";
 
 interface Props {
@@ -102,25 +101,25 @@ function Chat({ socket }: Props) {
   ];
   if (messages) {
     messages.forEach((message, i) => {
-      const textToDisplay = replaceUrlsWithAnchorTags(message.text, `${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`);
+      const textToDisplay = replaceUrlsWithAnchorTags(message.text, `chat__message chat__message--${message.style}`);
       messagesToDisplay.push(
-        <li className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} key={`${message.timeStamp} ${message.text}`}>
+        <li className={`chat__message chat__message--${message.style}`} key={`${message.timeStamp} ${message.text}`}>
           {message.author} : {/* eslint-disable-next-line react/no-danger */}
-          <span className={`${styles["chat__message"]} ${styles[`chat__message--${message.style}`]}`} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
+          <span className={`chat__message chat__message--${message.style}`} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
         </li>
       );
     });
   }
 
   return (
-    <section className={styles["chat"]}>
-      <div className={styles["chat__message-stream"]}>
+    <section className="chat">
+      <div className="chat__message-stream">
         <ul>{messagesToDisplay}</ul>
       </div>
-      <form onSubmit={handleSubmit} className={styles["chat__input-form"]}>
+      <form onSubmit={handleSubmit} className="chat__input-form">
         <input
           ref={chatInputRef}
-          className={`input input--transparent ${styles["chat__input"]}`}
+          className={`input input--transparent ${"chat__input"}`}
           aria-label="chat-input"
           type="text"
           onChange={(e) => onChange(e)}
@@ -128,7 +127,7 @@ function Chat({ socket }: Props) {
           placeholder="Enter a message to chat..."
           disabled={waitingToSendMessage}
         />
-        <span className={styles["chat__input-delay-circular-progress"]}>
+        <span className="chat__input-delay-circular-progress">
           <CircularProgress percentage={percentageChatDelayRemaining} thickness={6} />
         </span>
       </form>

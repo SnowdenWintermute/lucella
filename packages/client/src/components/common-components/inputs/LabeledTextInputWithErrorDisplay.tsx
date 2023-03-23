@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./inputs.module.scss";
 
 type Props = {
   name: string;
@@ -30,16 +29,16 @@ function LabeledTextInputWithErrorDisplay({
 }: Props) {
   return (
     <label htmlFor={name} className={extraStyles}>
-      <p className={`${styles["input-label"]} ${error && styles["input-label--red-text"]}`}>
+      <p className={`labeled-input__label ${error && "labeled-input__label--red-text"}`}>
         {label}
         {error && (
-          <span id="error" role="alert" data-cy={`error-${name}`} className={styles["input-label--red-text"]}>
+          <span id="error" role="alert" data-cy={`error-${name}`} className="labeled-input__label--red-text">
             {` - ${error}`}
           </span>
         )}
       </p>
       <input
-        className={`input input--transparent ${error && styles["input--red-border"]} ${extraStyles}`}
+        className={`input input--transparent ${error && "labeled-input--red-border"} ${extraStyles}`}
         aria-label={name}
         type={type}
         placeholder={placeholder}

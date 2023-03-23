@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Socket } from "socket.io-client";
 import Modal from "../../common-components/Modal";
 import { defaultChatChannelNames, SocketEventsFromClient } from "../../../../../common";
-import styles from "./change-chat-channel-modal.module.scss";
 
 export default function ChangeChatChannelModal({ socket, setParentDisplay }: { socket: Socket; setParentDisplay: (modalDisplayed: boolean) => void }) {
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
@@ -22,12 +21,12 @@ export default function ChangeChatChannelModal({ socket, setParentDisplay }: { s
   return (
     <Modal title="Change chat channel" backdropStyle="" setParentDisplay={setParentDisplay}>
       <form onSubmit={(e) => onJoinRoomSubmit(e)}>
-        <p className={styles["change-chat-channel-modal__description"]}>Type any channel name, or choose from a list of suggested channels:</p>
+        <p className="change-chat-channel-modal__description">Type any channel name, or choose from a list of suggested channels:</p>
         <label htmlFor="change-chat-channel-input">
           Channel name:
           <input
             autoFocus
-            className={`input input--transparent ${styles["change-chat-channel-modal__input"]}`}
+            className="input input--transparent change-chat-channel-modal__input"
             onChange={(e) => {
               setJoinNewRoomInput(e.target.value);
             }}
@@ -38,7 +37,7 @@ export default function ChangeChatChannelModal({ socket, setParentDisplay }: { s
             placeholder="Channel to join..."
           />
         </label>
-        <div className={styles["change-chat-channel-modal__default-channel-buttons"]}>
+        <div className="change-chat-channel-modal__default-channel-buttons">
           {Object.values(defaultChatChannelNames).map((name) => (
             <button type="button" className="button " key={name} onClick={() => joinRoom(name)}>
               {name}

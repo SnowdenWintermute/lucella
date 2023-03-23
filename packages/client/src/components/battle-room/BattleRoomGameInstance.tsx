@@ -6,7 +6,6 @@ import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../../common";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { INetworkPerformanceMetrics } from "../../types";
-import styles from "./battle-room-game.module.scss";
 
 interface Props {
   socket: Socket;
@@ -51,7 +50,7 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
   // }, []);
 
   return (
-    <div className={styles["battle-room-game__canvas-container"]} onContextMenu={(e) => e.preventDefault()}>
+    <div className="battle-room-game__canvas-container" onContextMenu={(e) => e.preventDefault()}>
       {currentGame.current && (
         <GameListener
           socket={socket}

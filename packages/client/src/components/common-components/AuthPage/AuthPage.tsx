@@ -1,5 +1,5 @@
 import React, { FormEvent } from "react";
-import styles from "./auth.module.scss";
+// import styles from "./auth.module.scss";
 
 type Props = {
   title: string;
@@ -9,9 +9,9 @@ type Props = {
 
 export default function AuthPage({ children, submitHandler, title }: Props) {
   return (
-    <div className={styles["auth-page"]}>
-      <h3 className={styles["auth-page__page-title"]}>{title}</h3>
-      <form className={styles["auth-page__form"]} onSubmit={(e) => submitHandler(e)}>
+    <div className="auth-page">
+      <h3 className="auth-page__page-title">{title}</h3>
+      <form className="auth-page__form" onSubmit={(e) => submitHandler(e)}>
         {children}
       </form>
     </div>

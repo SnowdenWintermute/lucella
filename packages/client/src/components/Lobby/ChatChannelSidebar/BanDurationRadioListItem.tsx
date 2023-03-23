@@ -1,5 +1,4 @@
 import React from "react";
-import styles from "./ban-modals.module.scss";
 
 export function BanDurationRadioListItem({
   title,
@@ -13,7 +12,7 @@ export function BanDurationRadioListItem({
   checked: boolean;
 }) {
   return (
-    <li className={`${styles["ban-modal__radio-button-li"]} ${!checked && styles["ban-modal__radio-button-li--unchecked"]}`}>
+    <li className={`ban-modal__radio-button-li ${!checked && "ban-modal__radio-button-li--unchecked"}`}>
       <button type="button" className="button" onClick={() => setBanDuration(duration)}>
         {title}
       </button>

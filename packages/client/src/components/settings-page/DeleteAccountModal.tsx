@@ -11,7 +11,6 @@ import { setAlert } from "../../redux/slices/alerts-slice";
 import { LoginInput } from "../../redux/types";
 import LabeledTextInputWithErrorDisplay from "../common-components/inputs/LabeledTextInputWithErrorDisplay";
 import Modal from "../common-components/Modal";
-import styles from "./delete-account-modal.module.scss";
 
 export default function DeleteAccountModal({ user, setParentDisplay }: { user: SanitizedUser; setParentDisplay: (modalDisplayed: boolean) => void }) {
   const router = useRouter();
@@ -61,7 +60,7 @@ export default function DeleteAccountModal({ user, setParentDisplay }: { user: S
 
   return (
     <Modal title="Delete account" setParentDisplay={setParentDisplay}>
-      <p className={styles["delete-account-modal__description"]}>
+      <p className="delete-account-modal__description">
         WARNING: This will delete your account, including all profile and ranking info. If you are certain of your decision, type your email address into the
         input and click Confirm Delete.
       </p>
@@ -76,7 +75,7 @@ export default function DeleteAccountModal({ user, setParentDisplay }: { user: S
           disabled={deleteAccountIsLoading}
           error={fieldErrors.email}
           autofocus={false}
-          extraStyles={styles["delete-account-modal__input"]}
+          extraStyles="delete-account-modal__input"
         />
         <LabeledTextInputWithErrorDisplay
           name={InputFields.AUTH.PASSWORD}
@@ -88,9 +87,9 @@ export default function DeleteAccountModal({ user, setParentDisplay }: { user: S
           disabled={deleteAccountIsLoading}
           error={fieldErrors.password}
           autofocus={false}
-          extraStyles={styles["delete-account-modal__input"]}
+          extraStyles="delete-account-modal__input"
         />
-        <button type="submit" className={`button button--danger ${styles["delete-account-modal__button"]}`} disabled={deleteAccountIsLoading}>
+        <button type="submit" className={`button button--danger ${"delete-account-modal__button"}`} disabled={deleteAccountIsLoading}>
           {deleteAccountIsLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.DELETE_ACCOUNT}
         </button>
       </form>

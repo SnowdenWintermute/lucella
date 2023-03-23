@@ -20,6 +20,7 @@
 }
 
 .main-navigation__logo-text {
+  color: color(textPrimary);
   font-size: fontSize(4);
   font-weight: bold;
   text-decoration: none;
@@ -34,6 +35,7 @@
 }
 
 .main-navigation__page-link {
+  color: color(textPrimary);
   text-decoration: none;
   font-size: fontSize(3);
   margin-right: spacing(3);

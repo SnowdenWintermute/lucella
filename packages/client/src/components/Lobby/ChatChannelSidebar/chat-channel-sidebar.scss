@@ -45,6 +45,7 @@
   font-size: fontSize(2);
   margin-bottom: spacing(1);
   border: 1px solid color(textPrimary);
+  color: color(textPrimary);
   cursor: context-menu;
   &:hover {
     background-color: color(dark);

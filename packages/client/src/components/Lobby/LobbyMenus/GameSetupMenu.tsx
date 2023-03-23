@@ -7,9 +7,7 @@ import { AlertType } from "../../../enums";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import { BUTTON_NAMES } from "../../../consts/button-names";
-import lobbyMenusStyles from "./lobby-menus.module.scss";
 import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
-import styles from "./game-setup-menu.module.scss";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 
 function GameSetupMenu({ socket }: { socket: Socket }) {
@@ -26,14 +24,14 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
 
   return (
     <>
-      <ul className={lobbyMenusStyles["lobby-menus__top-buttons"]}>
+      <ul className="lobby-menus__top-buttons">
         <LobbyTopListItemWithButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
       </ul>
-      <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-setup-menu"]}`}>
-        <div className={`${lobbyMenusStyles["lobby-menu__left"]} ${styles["game-setup-menu__left"]}`}>
-          <form onSubmit={makeGamePublic} className={styles["game-setup-menu__form"]}>
-            <h3 className={lobbyMenusStyles["lobby-menu__header"]}>Creating an unranked game</h3>
-            <label htmlFor="game-name-input" className={styles["game-setup-menu__input-label"]}>
+      <section className="lobby-menu game-setup-menu">
+        <div className="lobby-menu__left game-setup-menu__left">
+          <form onSubmit={makeGamePublic} className="game-setup-menu__form">
+            <h3 className="lobby-menu__header">Creating an unranked game</h3>
+            <label htmlFor="game-name-input" className="game-setup-menu__input-label">
               Game name:
               <input
                 id="game-name-input"
@@ -48,13 +46,13 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
                 }}
               />
             </label>
-            <button type="submit" className={`button button--accent ${styles["game-setup-menu__button"]}`}>
+            <button type="submit" className="button button--accent game-setup-menu__button">
               {BUTTON_NAMES.GAME_ROOM.CREATE_GAME}
             </button>
           </form>
         </div>
-        <div className={`${lobbyMenusStyles["lobby-menu__right"]} ${styles["game-setup-menu__right"]}`}>
-          <h3 className={lobbyMenusStyles["lobby-menu__header"]}>Battle Room rules</h3>
+        <div className="lobby-menu__right game-setup-menu__right">
+          <h3 className="lobby-menu__header">Battle Room rules</h3>
           <ul>
             <li>Send your orbs to the opponent's endzone to score points</li>
             <li>Select and move orbs toward your mouse cursor with number keys 1 - 5</li>

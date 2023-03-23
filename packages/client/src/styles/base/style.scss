@@ -16,11 +16,18 @@
   font-family: "DM Sans";
   // font-family: "VT323";
   // letter-spacing: 0.05ch;
-  color: color(textPrimary);
+  // color: color(textPrimary);
+  // background-color: var(--color-bg);
+  // color: var(--color-primary);
+  // border-color: var(--color-primary) !important;
 }
 
 body {
   background-color: color(backgroundColor);
+}
+
+a {
+  color: color(textPrimary);
 }
 
 .screenreader-only {

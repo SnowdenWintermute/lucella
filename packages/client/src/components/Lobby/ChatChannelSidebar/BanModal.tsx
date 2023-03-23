@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import Modal from "../../common-components/Modal";
 import { BanDurationRadioListItem } from "./BanDurationRadioListItem";
-import styles from "./ban-modals.module.scss";
 import { useBanAccountMutation } from "../../../redux/api-slices/users-api-slice";
 
 export enum BanMode {
@@ -56,17 +55,17 @@ export default function BanModal({ banMode, setParentDisplay }: { banMode: BanMo
     <Modal
       title={`Ban ${banMode === BanMode.IP_ADDRESS ? "Ip Address" : "User Account"} (${username})`}
       setParentDisplay={setParentDisplay}
-      backdropStyle={styles["ban-modal"]}
-      extraStyles={styles["ban-modal"]}
+      backdropStyle="ban-modal"
+      extraStyles="ban-modal"
     >
-      <form className={styles["ban-modal__contents"]}>
-        <ul className={styles["ban-modal__options-list"]}>
+      <form className="ban-modal__contents">
+        <ul className="ban-modal__options-list">
           <BanDurationRadioListItem title="Two Days" duration={ONE_DAY * 2} setBanDuration={setBanDuration} checked={banDuration === ONE_DAY * 2} />
           <BanDurationRadioListItem title="One Week" duration={ONE_DAY * 7} setBanDuration={setBanDuration} checked={banDuration === ONE_DAY * 7} />
           <BanDurationRadioListItem title="Eternity" duration={null} setBanDuration={setBanDuration} checked={banDuration === null} />
         </ul>
         <button
-          className={`button button--danger ${styles["ban-modal__confirm-button"]}`}
+          className="button button--danger ban-modal__confirm-button"
           type="submit"
           onClick={handleSubmit}
           disabled={banIpIsLoading || banUserIsLoading || banDuration === 0}

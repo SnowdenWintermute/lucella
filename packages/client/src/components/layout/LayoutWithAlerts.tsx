@@ -15,7 +15,8 @@ export default function LayoutWithAlerts({ children }: Props) {
     <>
       {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && <Navbar />}
       <AlertsHolder />
-      <main>{children}</main>
+      <main data-theme="vt">{children}</main>
+      {/* <main data-theme="vt">{children}</main> */}
     </>
   );
 }

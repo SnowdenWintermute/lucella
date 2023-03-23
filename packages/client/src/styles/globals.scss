@@ -1,3 +1,37 @@
+@import "./common/buttons.scss";
+@import "./common/inputs.scss";
+@import "./common/pages.scss";
+@import "./base/style.scss";
+@import "./base/scrollbar.scss";
+@import "./common/auth-forms.scss";
+@import "../components/battle-room/battle-room-game.scss";
+@import "../components/common-components/AuthPage/auth-page.scss";
+@import "../components/common-components/CircularProgress/circular-progress.scss";
+@import "../components/common-components/inputs/labled-text-input-with-error-display.scss";
+@import "../components/common-components/LoadingSpinner/loading-spinner.scss";
+@import "../components/common-components/Modal/modal.scss";
+@import "../components/ladder-page/ladder-components.scss";
+@import "../components/layout/alerts/alerts.scss";
+@import "../components/layout/ContextMenu/context-menu.scss";
+@import "../components/layout/navbar/navbar.scss";
+@import "../components/layout/navbar/user-menu.scss";
+@import "../components/Lobby/Chat/chat.scss";
+@import "../components/Lobby/ChatChannelSidebar/ban-modals.scss";
+@import "../components/Lobby/ChatChannelSidebar/chat-channel-sidebar.scss";
+@import "../components/Lobby/LobbyMenus/game-list-menu.scss";
+@import "../components/Lobby/LobbyMenus/game-room-menu.scss";
+@import "../components/Lobby/LobbyMenus/game-setup-menu.scss";
+@import "../components/Lobby/LobbyMenus/lobby-menus.scss";
+@import "../components/Lobby/LobbyMenus/main-menu.scss";
+@import "../components/Lobby/LobbyMenus/matchmaking-queue-menu.scss";
+@import "../components/Lobby/modals/change-chat-channel-modal.scss";
+@import "../components/Lobby/modals/score-screen-modal.scss";
+@import "../components/Lobby/lobby.scss";
+@import "../components/settings-page/delete-account-modal.scss";
+@import "../pages/battle-room/battle-room-app.scss";
+@import "../pages/ladder/ladder-page.scss";
+@import "../pages/settings/settings-page.scss";
+
 @font-face {
   font-family: "DM Sans";
   src: url("../fonts/DM_Sans/DMSans-Regular.ttf");
@@ -24,4 +58,20 @@
   src: local("VT323"), url("../fonts/VT323/VT323-Regular.ttf");
   font-weight: normal;
   font-style: normal;
+}
+
+:root,
+[data-theme="default"] {
+  --color-primary: #9ba8b8;
+  --color-bg: #162229;
+}
+
+[data-theme] {
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+}
+
+[data-theme="vt"] {
+  --color-primary: #db9013;
+  --color-bg: hsl(39, 83%, 3%);
 }

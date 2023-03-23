@@ -9,7 +9,6 @@ import { AlertType } from "../../enums";
 import { useDeleteAccountMutation, useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { ErrorMessages, SuccessAlerts } from "../../../../common";
 import DeleteAccountModal from "../../components/settings-page/DeleteAccountModal";
-import styles from "./settings-page.module.scss";
 
 function Settings() {
   const router = useRouter();
@@ -54,11 +53,11 @@ function Settings() {
         <div className="page__top-bar">
           <h3 className="page__header">Settings</h3>
         </div>
-        <div className={styles["settings-page__content"]}>
-          <span className={styles["settings-page__logged-in-as-email"]}>
+        <div className="settings-page__content">
+          <span className="settings-page__logged-in-as-email">
             {userQueryIsLoading ? "..." : userQueryIsSuccess ? `Logged in as ${accountEmail}` : `failed to fetch user data`}
           </span>
-          <ul className={styles["settings-page__options"]}>
+          <ul className="settings-page__options">
             <li>
               <button type="button" className="button " onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>
                 {passwordResetIsLoading ? "Senging email..." : "Change Password"}

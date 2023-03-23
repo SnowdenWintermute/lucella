@@ -2,7 +2,7 @@
 
 $startingRotation: 270deg;
 
-.circle {
+.circular-progress {
   border-radius: 50%;
   transform: rotate($startingRotation);
   fill: none;
@@ -11,7 +11,7 @@ $startingRotation: 270deg;
   height: 100%;
 }
 
-.circle--animate {
+.circular-progress--animate {
   animation: rotate 3s linear forwards infinite;
 }
 

@@ -4,7 +4,6 @@ import { AlertType } from "../../../enums";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { removeOldestAlert } from "../../../redux/slices/alerts-slice";
 import AlertElement from "./AlertElement";
-import styles from "./alerts.module.scss";
 
 function Alerts() {
   const { alerts } = useAppSelector((state) => state.alerts);
@@ -37,7 +36,7 @@ function Alerts() {
     };
   }, []);
 
-  return <ul className={styles["alerts-holder"]}>{alertsToDisplay}</ul>;
+  return <ul className="alerts-holder">{alertsToDisplay}</ul>;
 }
 
 export default Alerts;

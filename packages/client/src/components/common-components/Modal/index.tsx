@@ -1,7 +1,6 @@
 import React, { ReactNode, useEffect } from "react";
 import XShape from "../../../img/basic-shapes/x-shape.svg";
 import { useAppSelector } from "../../../redux/hooks";
-import styles from "./modal.module.scss";
 
 interface Props {
   children: ReactNode;
@@ -39,23 +38,23 @@ function Modal({ children, setParentDisplay, title, backdropStyle, extraStyles, 
   }, [alerts]);
 
   return (
-    <div className={`${styles["modal__fullscreen-backdrop"]} ${backdropStyle || ""}`} id="modal__fullscreen-backdrop">
-      <div className={`${styles["modal"]} ${extraStyles}`} id={`${title} modal`}>
-        <div className={styles["modal__top-bar"]}>
-          <span className={styles["modal__title"]}>{title}</span>
+    <div className={`modal__fullscreen-backdrop ${backdropStyle || ""}`} id="modal__fullscreen-backdrop">
+      <div className={`modal ${extraStyles}`} id={`${title} modal`}>
+        <div className="modal__top-bar">
+          <span className="modal__title">{title}</span>
           <button
             type="button"
             autoFocus
-            className={styles["modal__x-button"]}
+            className="modal__x-button"
             onClick={handleClickCloseModalButton}
             aria-label={`close ${title} modal`}
             aria-controls={`${title} modal`}
             aria-expanded
           >
-            <XShape className={styles["modal__x-button-svg"]} />
+            <XShape className="modal__x-button-svg" />
           </button>
         </div>
-        <div className={!noPadding ? styles["modal__content"] : ""}>{children}</div>
+        <div className={!noPadding ? "modal__content" : ""}>{children}</div>
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import React from "react";
 import { Socket } from "socket.io-client";
 import { useAppSelector } from "../../../redux/hooks";
-import styles from "./lobby-menus.module.scss";
 import GameSetupMenu from "./GameSetupMenu";
 import GameRoomMenu from "./GameRoomMenu";
 import GameListMenu from "./GameListMenu";
@@ -14,7 +13,7 @@ function LobbyMenus({ socket }: { socket: Socket }) {
   const { activeMenu } = lobbyUiState;
 
   return (
-    <section className={styles["lobby-menus"]}>
+    <section className="lobby-menus">
       {activeMenu === LobbyMenu.MATCHMAKING_QUEUE && <MatchmakingQueueMenu socket={socket} />}
       {activeMenu === LobbyMenu.MAIN && <MainMenu socket={socket} />}
       {activeMenu === LobbyMenu.GAME_SETUP && <GameSetupMenu socket={socket} />}

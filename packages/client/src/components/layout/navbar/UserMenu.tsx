@@ -2,7 +2,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
-import styles from "./user-menu.module.scss";
 
 export function UserMenu() {
   const [showUserDropdown, toggleUserDropdown] = useState(false);
@@ -33,11 +32,11 @@ export function UserMenu() {
   const menuLoading = <span>...</span>;
 
   const loggedInUserMenu = (
-    <div className={styles["user-menu"]}>
+    <div className="user-menu">
       <button
         id="user-menu-button"
         type="button"
-        className={styles["user-menu__button"]}
+        className="user-menu__button"
         aria-controls="user-menu-items"
         aria-expanded={showUserDropdown}
         data-cy="user-menu-button"
@@ -50,11 +49,11 @@ export function UserMenu() {
       </button>
 
       {showUserDropdown && (
-        <ul id="user-menu-items" className={styles["user-menu__items"]}>
-          <Link href="/settings" className={styles["user-menu__menu-item"]}>
+        <ul id="user-menu-items" className="user-menu__items">
+          <Link href="/settings" className="user-menu__menu-item">
             Settings
           </Link>
-          <Link href="/login" className={styles["user-menu__menu-item"]} onClick={handleLogout}>
+          <Link href="/login" className="user-menu__menu-item" onClick={handleLogout}>
             Logout
           </Link>
         </ul>

@@ -1,6 +1,4 @@
-/* eslint-disable react/require-default-props */
 import React from "react";
-import styles from "./lobby-menus.module.scss";
 
 interface Props {
   title: string | JSX.Element;
@@ -19,7 +17,7 @@ function LobbyTopListItemWithButton({ title, onClick, extraStyles, children, ari
       <button
         type="button"
         disabled={disabled}
-        className={`button ${styles["lobby-menus__top-button"]} ${extraStyles}`}
+        className={`button lobby-menus__top-button ${extraStyles}`}
         onClick={onClick}
         data-cy={dataCy}
         aria-controls={ariaControls}
