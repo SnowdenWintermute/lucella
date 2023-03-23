@@ -37,7 +37,7 @@ export default function draw(
       context.fillStyle = "rgb(255,255,255)";
       context.textAlign = "center";
       context.textBaseline = "middle";
-      context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px Arial`;
+      context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px 'DM Sans'`;
       context.beginPath();
       context.fillText(
         `Loading...`,

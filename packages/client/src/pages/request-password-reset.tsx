@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../common";
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
-import AuthPage from "../components/layout/auth/AuthPage";
+import AuthPage from "../components/common-components/AuthPage/AuthPage";
 import { BUTTON_NAMES } from "../consts/button-names";
 import { AlertType } from "../enums";
 import { useRequestPasswordResetEmailMutation } from "../redux/api-slices/auth-api-slice";

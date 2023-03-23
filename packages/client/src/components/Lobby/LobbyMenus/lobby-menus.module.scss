@@ -6,6 +6,8 @@
   list-style: none;
   padding: spacing(2);
   height: height(4);
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .lobby-menus__top-button {
@@ -32,6 +34,7 @@
 .lobby-menu__right {
   flex: 1;
   padding: spacing(2);
+  overflow: hidden;
 }
 
 .lobby-menu__header {

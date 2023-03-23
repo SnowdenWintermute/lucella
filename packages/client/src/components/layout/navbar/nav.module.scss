@@ -24,6 +24,13 @@
   font-weight: bold;
   text-decoration: none;
   margin-right: spacing(5);
+  @media only screen and (max-width: breakpoint(verySmall)) {
+    font-size: fontSize(3);
+    margin-right: spacing(3);
+  }
+  @media only screen and (max-width: breakpoint(tiny)) {
+    display: none;
+  }
 }
 
 .main-navigation__page-link {
@@ -34,5 +41,8 @@
   &--active {
     margin-bottom: -1px;
     border-bottom: 1px solid color(textPrimary);
+  }
+  @media only screen and (max-width: breakpoint(verySmall)) {
+    font-size: fontSize(2);
   }
 }

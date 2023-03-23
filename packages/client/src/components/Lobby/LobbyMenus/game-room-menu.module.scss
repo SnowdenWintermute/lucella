@@ -5,6 +5,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  @media only screen and (max-width: breakpoint(tiny)) {
+    width: 100%;
+    border-right: 0px;
+  }
 }
 
 .game-room-menu__ready-button {
@@ -15,6 +19,10 @@
   display: flex;
   justify-content: center;
   width: 100%;
+  @media only screen and (max-width: breakpoint(medium)) {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .game-room-menu__player-with-ready-status {
@@ -39,6 +47,9 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @media only screen and (max-width: breakpoint(tiny)) {
+    display: none;
+  }
 }
 
 .game-room-menu__right-main-text {

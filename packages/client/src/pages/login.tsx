@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common/dist";
+import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common";
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
-import AuthPage from "../components/layout/auth/AuthPage";
+import AuthPage from "../components/common-components/AuthPage/AuthPage";
 import { BUTTON_NAMES } from "../consts/button-names";
 import { AlertType } from "../enums";
 import { useLoginUserMutation } from "../redux/api-slices/auth-api-slice";

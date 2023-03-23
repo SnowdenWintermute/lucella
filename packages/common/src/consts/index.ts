@@ -49,9 +49,10 @@ export const colors = {
   hostOrbsStroke: "8, 11, 17",
   challengerOrbs: "8, 11, 17",
   challengerOrbsStroke: "154, 167, 183",
-  selectionColor: "rgb(103,191,104)",
+  selectionColor: "rgb(255, 192, 203)",
 };
 // other nice colors old:
+// selectionColor: "rgb(103,191,104)",
 // challengerOrbs: "0, 75, 79",
 // selectionRingColor: "rgb(30,200,30)",
 // hostOrbs: "13, 28, 46",

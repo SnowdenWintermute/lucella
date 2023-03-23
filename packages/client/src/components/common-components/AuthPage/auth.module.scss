@@ -9,6 +9,10 @@
   border: 1px solid color(textPrimary);
   padding: spacing(5);
   padding-bottom: spacing(6);
+  @media only screen and (max-width: breakpoint(small)) {
+    margin-top: 0px;
+    padding-bottom: spacing(5);
+  }
 }
 .auth-page__website-name,
 .auth-page__page-title {
@@ -27,13 +31,4 @@
 }
 .auth-page__form {
   width: 100%;
-}
-
-.forgot-password {
-  margin-bottom: 35px;
-}
-.auth-bottom-links {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }

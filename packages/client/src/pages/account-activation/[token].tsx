@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { CustomErrorDetails, ErrorMessages, SuccessAlerts } from "../../../../common";
 import { Alert } from "../../classes/Alert";
-import AuthPage from "../../components/layout/auth/AuthPage";
+import AuthPage from "../../components/common-components/AuthPage/AuthPage";
 import { AlertType } from "../../enums";
 import { useActivateAccountMutation } from "../../redux/api-slices/users-api-slice";
 import { useAppDispatch } from "../../redux/hooks";

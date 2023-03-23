@@ -7,7 +7,7 @@ import { setAlert } from "../../../redux/slices/alerts-slice";
 import { useAppDispatch } from "../../../redux/hooks";
 import { useChangePasswordMutation } from "../../../redux/api-slices/users-api-slice";
 import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../../../common";
-import AuthPage from "../../../components/layout/auth/AuthPage";
+import AuthPage from "../../../components/common-components/AuthPage/AuthPage";
 import LabeledTextInputWithErrorDisplay from "../../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import { BUTTON_NAMES } from "../../../consts/button-names";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";

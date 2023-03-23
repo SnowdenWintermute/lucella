@@ -55,7 +55,9 @@ function Settings() {
           <h3 className="page__header">Settings</h3>
         </div>
         <div className={styles["settings-page__content"]}>
-          <span>{userQueryIsLoading ? "..." : userQueryIsSuccess ? `Logged in as ${accountEmail}` : `failed to fetch user data`}</span>
+          <span className={styles["settings-page__logged-in-as-email"]}>
+            {userQueryIsLoading ? "..." : userQueryIsSuccess ? `Logged in as ${accountEmail}` : `failed to fetch user data`}
+          </span>
           <ul className={styles["settings-page__options"]}>
             <li>
               <button type="button" className="button " onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>

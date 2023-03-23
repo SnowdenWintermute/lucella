@@ -10,6 +10,7 @@ export default function drawDebug(
   const { mouseData } = game;
 
   if (mouseData.position && mouseData.position.x && mouseData.position.y) {
+    context.fillStyle = "green";
     context.beginPath();
     context.fillRect(mouseData.position.x * canvasDrawFractions.x - 3, mouseData.position.y * canvasDrawFractions.y - 3, 5, 5);
   }
@@ -54,7 +55,7 @@ export default function drawDebug(
 
   context.fillStyle = "white";
   context.textAlign = "left";
-  context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px Arial`;
+  context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px 'DM Sans'`;
 
   itemsToShow.forEach((item, i) => {
     context.beginPath();

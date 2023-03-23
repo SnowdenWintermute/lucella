@@ -22,7 +22,7 @@ $colors: (
 );
 
 // $vt320Orange: #db9013;
-// $vt320Background: #160f02;
+// $vt320Background: hsl(39, 83%, 3%);
 
 // $colors: (
 //   backgroundColor: $vt320Background,
@@ -92,7 +92,9 @@ $heights: (
   // 70px
   4: 4.375rem,
   // 260
-  6: 16.25rem
+  6: 16.25rem,
+  // 444px
+  7: 27.75rem
 );
 
 @function height($height-name) {
@@ -113,6 +115,21 @@ $widths: (
 
 @function width($width-name) {
   @return map-get($widths, $width-name);
+}
+
+$breakpoints: (
+  // 497
+  tiny: 31.0625rem,
+  // 591
+  verySmall: 36.9375rem,
+  // 770
+  small: 48.125rem,
+  // 1087
+  medium: 67.9375rem
+);
+
+@function breakpoint($breakpoint-name) {
+  @return map-get($breakpoints, $breakpoint-name);
 }
 
 $onePixelInRem: 0.0625rem;

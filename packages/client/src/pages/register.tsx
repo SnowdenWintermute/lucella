@@ -9,7 +9,7 @@ import { RegisterInput } from "../redux/types";
 import { useGetMeQuery, useRegisterUserMutation } from "../redux/api-slices/users-api-slice";
 import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
-import AuthPage from "../components/layout/auth/AuthPage";
+import AuthPage from "../components/common-components/AuthPage/AuthPage";
 import { BUTTON_NAMES } from "../consts/button-names";
 
 function Register() {

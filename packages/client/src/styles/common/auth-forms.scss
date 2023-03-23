@@ -14,6 +14,10 @@
 .auth-form__bottom {
   display: flex;
   justify-content: space-between;
+  @media only screen and (max-width: breakpoint(small)) {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+  }
 }
 
 .auth-form__bottom-links {
@@ -28,4 +32,8 @@
 
 .auth-form__submit-button {
   margin: auto 0;
+  @media only screen and (max-width: breakpoint(small)) {
+    margin-bottom: spacing(4);
+    max-width: fit-content;
+  }
 }

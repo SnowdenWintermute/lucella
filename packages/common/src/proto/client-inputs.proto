@@ -3,8 +3,8 @@ syntax = "proto3";
 package lucella;
 
 message SmallVectorProto{
-  uint32 x = 1;
-  uint32 y = 2;
+  int32 x = 1;
+  int32 y = 2;
 }
 message InputProto{
   int32 type = 1;

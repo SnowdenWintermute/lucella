@@ -22,11 +22,11 @@ export default function drawOrb(context: CanvasRenderingContext2D, orb: Orb, can
 
   if (debugMode > 0) {
     drawVectors(context, orb, canvasDrawFractions);
-    context.fillStyle = "red";
-    orb.destination &&
-      orb.destination.x &&
-      orb.destination.y &&
+    if (orb.destination && orb.destination.x && orb.destination.y) {
+      context.fillStyle = "red";
+      context.beginPath();
       context.fillRect(orb.destination.x * canvasDrawFractions.x - 2, orb.destination.y * canvasDrawFractions.y - 2, 5, 5);
+    }
   }
   if (debugMode > 1) drawOrbDebugText(context, orb, canvasDrawFractions);
 }

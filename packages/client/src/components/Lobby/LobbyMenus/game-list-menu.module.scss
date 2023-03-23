@@ -26,12 +26,10 @@
 }
 
 .game-list-menu__headers {
-  display: flex;
+  width: 100%;
   margin-bottom: calc(
     spacing(2) - $focusOutlineWidth
   ); // otherwise the button focus highlight is hidden by the overflow:auto/scroll property of the "table" below
-  display: flex;
-  vertical-align: bottom;
   h3 {
     font-size: fontSize(3);
     font-weight: lighter;
@@ -40,6 +38,8 @@
 
 .game-list-menu__game-name-header {
   padding-left: 0px !important;
+  // flex: 1;
+  width: 100% !important;
 }
 
 .game-list-menu__empty-header-spacer {

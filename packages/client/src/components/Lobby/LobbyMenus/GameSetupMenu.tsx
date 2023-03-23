@@ -30,7 +30,7 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
         <LobbyTopListItemWithButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
       </ul>
       <section className={`${lobbyMenusStyles["lobby-menu"]} ${styles["game-setup-menu"]}`}>
-        <div className={`${lobbyMenusStyles["lobby-menu__left"]}`}>
+        <div className={`${lobbyMenusStyles["lobby-menu__left"]} ${styles["game-setup-menu__left"]}`}>
           <form onSubmit={makeGamePublic} className={styles["game-setup-menu__form"]}>
             <h3 className={lobbyMenusStyles["lobby-menu__header"]}>Creating an unranked game</h3>
             <label htmlFor="game-name-input" className={styles["game-setup-menu__input-label"]}>

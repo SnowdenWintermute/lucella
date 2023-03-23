@@ -68,7 +68,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
       >
         <div className={`${styles["game-list-menu__headers"]}`}>
           <h3 className={`${styles["game-list-menu__game-name"]} ${styles["game-list-menu__game-name-header"]}`}>Current games</h3>
-          {!noGames && <h3 className={`${styles["game-list-menu__number-of-players"]} ${styles["game-list-menu__number-of-players-header"]}`}>Players</h3>}
+          {/* {!noGames && <h3 className={`${styles["game-list-menu__number-of-players"]} ${styles["game-list-menu__number-of-players-header"]}`}>Players</h3>} */}
           <span
             aria-hidden
             className={`button ${styles["game-list-menu__empty-header-spacer"]} ${
