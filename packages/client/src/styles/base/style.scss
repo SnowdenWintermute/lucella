@@ -13,21 +13,36 @@
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
-  font-family: "DM Sans";
+  // font-family: "DM Sans";
+  font-family: var(--font-family);
   // font-family: "VT323";
   // letter-spacing: 0.05ch;
-  // color: color(textPrimary);
+  // color: var(--color-primary);
   // background-color: var(--color-bg);
   // color: var(--color-primary);
   // border-color: var(--color-primary) !important;
 }
 
 body {
-  background-color: color(backgroundColor);
+  background-color: var(--color-bg);
 }
 
 a {
-  color: color(textPrimary);
+  color: var(--color-primary);
+}
+
+p,
+span,
+li {
+  color: var(--color-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: var(--color-primary);
 }
 
 .screenreader-only {
@@ -49,8 +64,8 @@ textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
 select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
-  -webkit-text-fill-color: color(textPrimary);
-  -webkit-box-shadow: 0 0 0px 1000px color(dark) inset;
+  -webkit-text-fill-color: var(--color-primary);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-accent) inset;
   transition: background-color 5000s ease-in-out 0s;
   font-size: fontSize(2);
 }

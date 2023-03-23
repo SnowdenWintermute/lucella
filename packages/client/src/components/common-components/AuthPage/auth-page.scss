@@ -2,11 +2,11 @@
 
 .auth-page {
   width: 100%;
-  background-color: color(dark);
+  background-color: var(--color-accent);
   max-width: calc(width(4) - height(4));
   margin: 0 auto;
   margin-top: spacing(5);
-  // border: 1px solid color(textPrimary);
+  // border: 1px solid var(--color-primary);
   border: 1px solid var(--color-primary);
   color: var(--color-primary) !important;
   padding: spacing(5);
@@ -21,7 +21,7 @@
   text-align: center;
 }
 .auth-page__website-name {
-  // color: color(textPrimary);
+  // color: var(--color-primary);
   color: var(--color-primary) !important;
   font-size: fontSize(4);
   margin-bottom: spacing(2);

@@ -6,7 +6,7 @@ $startingRotation: 270deg;
   border-radius: 50%;
   transform: rotate($startingRotation);
   fill: none;
-  stroke: color(textPrimary);
+  stroke: var(--color-primary);
   // width: 100%;
   height: 100%;
 }

@@ -22,8 +22,8 @@ $numberOfColumns: 6;
 }
 
 .ladder__search-button {
-  border: 1px solid color(textPrimary);
-  background-color: color(dark);
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-accent);
 }
 
 .ladder__pagination-buttons {
@@ -43,7 +43,7 @@ $numberOfColumns: 6;
 
 .ladder__pagination-button-arrow-svg {
   height: 100%;
-  fill: color(textPrimary);
+  fill: var(--color-primary);
 }
 
 .ladder-current-page-number-holder {
@@ -84,7 +84,7 @@ $numberOfColumns: 6;
 .ladder__table-row {
   font-size: fontSize(2);
   width: 100%;
-  border-bottom: 1px solid color(textPrimary);
+  border-bottom: 1px solid var(--color-primary);
   display: flex;
 }
 .ladder__table-datum {

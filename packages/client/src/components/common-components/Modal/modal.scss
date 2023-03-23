@@ -14,14 +14,14 @@
   margin: 0 auto;
   width: fit-content;
   min-width: 0px;
-  background-color: color(dark);
-  border: 1px solid color(textPrimary);
+  background-color: var(--color-accent);
+  border: 1px solid var(--color-primary);
   filter: $dropShadow;
 }
 
 .modal__top-bar {
   height: height(3);
-  border-bottom: 1px solid color(textPrimary);
+  border-bottom: 1px solid var(--color-primary);
   padding-left: spacing(2);
   display: flex;
   align-items: center;
@@ -36,7 +36,7 @@
   height: height(3);
   width: height(3);
   border: none;
-  border-left: 1px solid color(textPrimary);
+  border-left: 1px solid var(--color-primary);
   background-color: transparent;
   padding: spacing(1);
   cursor: pointer;
@@ -45,7 +45,7 @@
 .modal__x-button-svg {
   height: 100%;
   width: 100%;
-  fill: color(textPrimary);
+  fill: var(--color-primary);
 }
 
 .modal__content {

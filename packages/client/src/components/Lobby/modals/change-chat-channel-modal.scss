@@ -9,7 +9,7 @@
   margin-bottom: spacing(2);
   width: 100%;
   &::placeholder {
-    color: color(textBright);
+    color: var(--color-highlight);
   }
 }
 

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { UserMenu } from "./UserMenu";
 import Logo from "../../../img/logo.svg";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setTheme, Theme } from "../../../redux/slices/ui-slice";
 
 function NavigationLink({ title, href }: { title: string; href: string }) {
   const router = useRouter();
@@ -14,11 +16,18 @@ function NavigationLink({ title, href }: { title: string; href: string }) {
 }
 
 export default function Navbar() {
-  // eslint-disable-next-line consistent-return
+  const dispatch = useAppDispatch();
+  const currentTheme = useAppSelector((state) => state.UI.theme);
+
+  function handleChangeThemeClick() {
+    if (currentTheme === Theme.DEFAULT) dispatch(setTheme(Theme.VT320));
+    else dispatch(setTheme(Theme.DEFAULT));
+  }
   return (
-    <nav className="main-navigation" data-theme="vt">
+    <nav className="main-navigation">
       <div className="main-navigation__left-side">
-        <Logo className="main-navigation__site-logo" />
+        {/* eslint-disable-next-line react/jsx-no-bind */}
+        <Logo onClick={handleChangeThemeClick} className="main-navigation__site-logo" />
         <div>
           <Link href="/" className="main-navigation__logo-text">
             Battle School

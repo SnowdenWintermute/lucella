@@ -57,7 +57,7 @@
 }
 
 .welcome-menu__logo {
-  fill: color(textPrimary);
+  fill: var(--color-primary);
   height: calc(100% - spacing(3));
   display: inline-block;
   @media only screen and (max-width: breakpoint(small)) {

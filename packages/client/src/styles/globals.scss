@@ -2,7 +2,6 @@
 @import "./common/inputs.scss";
 @import "./common/pages.scss";
 @import "./base/style.scss";
-@import "./base/scrollbar.scss";
 @import "./common/auth-forms.scss";
 @import "../components/battle-room/battle-room-game.scss";
 @import "../components/common-components/AuthPage/auth-page.scss";
@@ -15,6 +14,7 @@
 @import "../components/layout/ContextMenu/context-menu.scss";
 @import "../components/layout/navbar/navbar.scss";
 @import "../components/layout/navbar/user-menu.scss";
+@import "../components/layout/navbar/change-theme-button.scss";
 @import "../components/Lobby/Chat/chat.scss";
 @import "../components/Lobby/ChatChannelSidebar/ban-modals.scss";
 @import "../components/Lobby/ChatChannelSidebar/chat-channel-sidebar.scss";
@@ -31,6 +31,7 @@
 @import "../pages/battle-room/battle-room-app.scss";
 @import "../pages/ladder/ladder-page.scss";
 @import "../pages/settings/settings-page.scss";
+@import "./base/scrollbar.scss";
 
 @font-face {
   font-family: "DM Sans";
@@ -62,8 +63,17 @@
 
 :root,
 [data-theme="default"] {
-  --color-primary: #9ba8b8;
   --color-bg: #162229;
+  --color-primary: #9ba8b8;
+  --color-accent: #080b11;
+  --color-faded: #656b72;
+  --color-highlight: #bcd2e8;
+  --color-danger: #a52026;
+  --color-danger-highlight: #e42933;
+  --color-success: #028a7e;
+  --color-chat-message-private: #ffc0cb;
+  --color-warning: #ffbb00;
+  --font-family: "DM Sans";
 }
 
 [data-theme] {
@@ -71,7 +81,16 @@
   color: var(--color-primary);
 }
 
-[data-theme="vt"] {
+[data-theme="VT320"] {
   --color-primary: #db9013;
   --color-bg: hsl(39, 83%, 3%);
+  --color-accent: hsl(39, 83%, 3%);
+  --color-faded: #db9013;
+  --color-highlight: #db9013;
+  --color-danger: #db9013;
+  --color-danger-highlight: #db9013;
+  --color-success: #db9013;
+  --color-chat-message-private: #db9013;
+  --color-warning: #db9013;
+  --font-family: "VT323";
 }

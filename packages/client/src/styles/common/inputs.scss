@@ -3,12 +3,12 @@
 .input {
   height: height(3);
   font-size: fontSize(2);
-  border: 1px solid color(textPrimary);
-  color: color(textPrimary);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
   padding-left: spacing(2);
   max-width: 100%;
   &::placeholder {
-    color: color(textFaded);
+    color: var(--color-faded);
   }
 }
 

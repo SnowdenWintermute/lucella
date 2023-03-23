@@ -15,12 +15,12 @@
 
 .main-navigation__site-logo {
   height: height(3);
-  fill: color(textPrimary);
+  fill: var(--color-primary);
   margin-right: spacing(4);
 }
 
 .main-navigation__logo-text {
-  color: color(textPrimary);
+  color: var(--color-primary);
   font-size: fontSize(4);
   font-weight: bold;
   text-decoration: none;
@@ -35,14 +35,14 @@
 }
 
 .main-navigation__page-link {
-  color: color(textPrimary);
+  color: var(--color-primary);
   text-decoration: none;
   font-size: fontSize(3);
   margin-right: spacing(3);
   box-sizing: border-box;
   &--active {
     margin-bottom: -1px;
-    border-bottom: 1px solid color(textPrimary);
+    border-bottom: 1px solid var(--color-primary);
   }
   @media only screen and (max-width: breakpoint(verySmall)) {
     font-size: fontSize(2);

@@ -5,9 +5,9 @@
   height: height(3);
   width: height(3);
   border-right: 2px solid transparent;
-  border-top: 2px solid color(textPrimary);
-  border-left: 2px solid color(textPrimary);
-  border-bottom: 2px solid color(textPrimary);
+  border-top: 2px solid var(--color-primary);
+  border-left: 2px solid var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
   animation: rotate 3s linear forwards infinite;
 }
 

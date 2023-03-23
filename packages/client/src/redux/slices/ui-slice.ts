@@ -2,6 +2,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Point } from "../../../../common";
 
+export enum Theme {
+  DEFAULT = "",
+  VT320 = "VT320",
+}
+
 export interface IUISlice {
   showContextMenu: boolean;
   contextMenuPosition: Point;
@@ -13,6 +18,7 @@ export interface IUISlice {
   modals: {
     scoreScreen: boolean;
   };
+  theme: Theme | string;
 }
 const initialState: IUISlice = {
   showContextMenu: false,
@@ -25,6 +31,7 @@ const initialState: IUISlice = {
   modals: {
     scoreScreen: false,
   },
+  theme: Theme.DEFAULT,
 };
 
 const UISlice = createSlice({
@@ -53,8 +60,12 @@ const UISlice = createSlice({
     setShowScoreScreenModal(state, action: PayloadAction<boolean>) {
       state.modals.scoreScreen = action.payload;
     },
+    setTheme(state, action: PayloadAction<Theme | string>) {
+      state.theme = action.payload;
+      localStorage.setItem("theme", action.payload);
+    },
   },
 });
 
-export const { clearContextMenu, openUserNameplateContextMenu, setContextMenuPosition, hideAllModals, setShowScoreScreenModal } = UISlice.actions;
+export const { clearContextMenu, openUserNameplateContextMenu, setContextMenuPosition, hideAllModals, setShowScoreScreenModal, setTheme } = UISlice.actions;
 export default UISlice.reducer;

@@ -45,9 +45,9 @@
   height: height(4);
   width: height(4);
   border-right: spacing(0) solid transparent;
-  border-top: spacing(0) solid color(textPrimary);
-  border-left: spacing(0) solid color(textPrimary);
-  border-bottom: spacing(0) solid color(textPrimary);
+  border-top: spacing(0) solid var(--color-primary);
+  border-left: spacing(0) solid var(--color-primary);
+  border-bottom: spacing(0) solid var(--color-primary);
   @media only screen and (max-width: breakpoint(small)) {
     display: none;
   }

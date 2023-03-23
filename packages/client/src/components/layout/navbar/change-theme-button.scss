@@ -1,0 +1,23 @@
+@import "../../../styles/abstracts/variables";
+
+.change-theme-button {
+  height: height(2);
+  position: relative;
+  align-self: center;
+  margin: 0 auto 0 0;
+  border: none;
+  cursor: pointer;
+}
+.change-theme-button__bottom-icon {
+  height: calc(100% - spacing(0));
+  stroke: var(--color-primary);
+  position: absolute;
+}
+.change-theme-button__top-icon {
+  height: calc(100% - spacing(0));
+  fill: var(--color-primary);
+  stroke: var(--color-bg);
+  position: absolute;
+  top: spacing(0);
+  left: spacing(0);
+}

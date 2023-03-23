@@ -9,7 +9,7 @@
 .game-list-buttons__refresh-icon {
   height: 100%;
   width: 100%;
-  fill: color(textPrimary);
+  fill: var(--color-primary);
 }
 
 .game-list-menu {
@@ -62,7 +62,7 @@
 
 .game-list-menu__game-row {
   display: flex;
-  border: 1px solid color(textPrimary);
+  border: 1px solid var(--color-primary);
   justify-content: space-between;
   margin-bottom: spacing(2);
   align-items: center;
@@ -88,7 +88,7 @@
 .game-list-menu__button {
   width: spacing(6);
   border: none;
-  border-left: 1px solid color(textPrimary);
+  border-left: 1px solid var(--color-primary);
   &:disabled {
     cursor: default;
     opacity: 100%;

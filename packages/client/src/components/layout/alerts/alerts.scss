@@ -13,7 +13,7 @@
 $clippedCornerSize: calc(spacing(1) / 2);
 
 .alert__item {
-  border: 1px solid color(textPrimary);
+  border: 1px solid var(--color-primary);
   filter: $dropShadow;
   max-width: fit-content;
   height: fit-content;
@@ -26,7 +26,7 @@ $clippedCornerSize: calc(spacing(1) / 2);
 
 .alert__button {
   border: none;
-  background-color: color(dark);
+  background-color: var(--color-accent);
   padding: spacing(1);
   padding-right: spacing(2);
   padding-left: spacing(2);
@@ -34,7 +34,7 @@ $clippedCornerSize: calc(spacing(1) / 2);
   cursor: pointer;
   display: flex;
   align-items: center;
-  color: color(textPrimary);
+  color: var(--color-primary);
 }
 
 @keyframes alert-animation-appear {
@@ -64,8 +64,8 @@ $clippedCornerSize: calc(spacing(1) / 2);
 }
 
 .alert__icon--danger {
-  fill: color(danger);
+  fill: var(--color-danger);
 }
 .alert__icon--success {
-  fill: color(buttonPrimary);
+  fill: var(--color-success);
 }

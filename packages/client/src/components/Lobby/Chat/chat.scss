@@ -37,16 +37,17 @@
 
 .chat__message {
   font-size: fontSize(2);
+  color: var(--color-primary);
 }
 
 .chat__message--private {
-  color: color(chatMessagePrivate);
+  color: var(--color-chat-message-private);
 }
 
 .chat__message--error {
-  color: color(dangerBright);
+  color: var(--color-danger-highlight);
 }
 
 .chat__message--warning {
-  color: color(warning);
+  color: var(--color-warning);
 }
