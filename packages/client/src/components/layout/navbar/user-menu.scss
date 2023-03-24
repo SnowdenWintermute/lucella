@@ -19,6 +19,13 @@
   font-weight: bold;
 }
 
+.user-menu__button--loading {
+  cursor: auto;
+  user-select: none;
+  text-align: center;
+  vertical-align: middle;
+}
+
 .user-menu__items {
   position: absolute;
   z-index: 1;

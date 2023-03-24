@@ -5,6 +5,7 @@ import { Point } from "../../../../common";
 export enum Theme {
   DEFAULT = "",
   VT320 = "VT320",
+  HTML = "HTML",
 }
 
 export interface IUISlice {

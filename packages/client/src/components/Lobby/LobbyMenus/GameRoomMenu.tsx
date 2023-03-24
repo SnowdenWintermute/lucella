@@ -3,7 +3,8 @@ import { Socket } from "socket.io-client";
 import { GameStatus, SocketEventsFromClient, SocketMetadata } from "../../../../../common";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
-import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
+import { LobbyMenu, setActiveMenu, setPlayerReadyLoading } from "../../../redux/slices/lobby-ui-slice";
+import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 
 function PlayerWithReadyStatus({ player, playerReady }: { player: SocketMetadata | null; playerReady: boolean }) {
   return (
@@ -24,13 +25,16 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   const { players, playersReady, gameStatus, countdown } = currentGameRoom;
   const currentWaitingListPosition = lobbyUiState.gameCreationWaitingList.currentPosition;
 
-  const onLeaveGameClick = () => {
+  const handleLeaveGameClick = () => {
     dispatch(setActiveMenu(LobbyMenu.MAIN));
     socket.emit(SocketEventsFromClient.LEAVES_GAME);
   };
 
+  useNonAlertCollidingEscapePressExecutor(handleLeaveGameClick);
+
   const handleReadyClick = () => {
     socket.emit(SocketEventsFromClient.CLICKS_READY);
+    dispatch(setPlayerReadyLoading(true));
   };
 
   useEffect(() => {
@@ -45,7 +49,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className="lobby-menus__top-buttons">
-        <LobbyTopListItemWithButton title="Leave Game" onClick={onLeaveGameClick} extraStyles="" />
+        <LobbyTopListItemWithButton title="Leave Game" onClick={handleLeaveGameClick} extraStyles="" />
       </ul>
       <section className="lobby-menu game-room-menu">
         <div className="lobby-menu__left game-room-menu__left">
@@ -56,7 +60,12 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
             <PlayerWithReadyStatus player={players.challenger} playerReady={playersReady.challenger} />
           </div>
           {!currentGameRoom?.isRanked && (
-            <button type="button" className="button button--accent game-room-menu__ready-button" onClick={handleReadyClick}>
+            <button
+              type="button"
+              className="button button--accent game-room-menu__ready-button"
+              onClick={handleReadyClick}
+              disabled={lobbyUiState.playerReadyLoading}
+            >
               Ready
             </button>
           )}

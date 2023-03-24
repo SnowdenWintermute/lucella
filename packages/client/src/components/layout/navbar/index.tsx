@@ -21,6 +21,7 @@ export default function Navbar() {
 
   function handleChangeThemeClick() {
     if (currentTheme === Theme.DEFAULT) dispatch(setTheme(Theme.VT320));
+    else if (currentTheme === Theme.VT320) dispatch(setTheme(Theme.HTML));
     else dispatch(setTheme(Theme.DEFAULT));
   }
   return (

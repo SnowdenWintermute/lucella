@@ -12,7 +12,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl:
     process.env.NODE_ENV === "production"
       ? `${SERVER_HOSTNAME_DOCKER_PRODUCTION}${LadderRoutePaths.ROOT + LadderRoutePaths.BATTLE_ROOM}`
-      : `http://localhost:8080/api${LadderRoutePaths.ROOT + LadderRoutePaths.BATTLE_ROOM}`,
+      : `${process.env.NEXT_PUBLIC_API}/api${LadderRoutePaths.ROOT + LadderRoutePaths.BATTLE_ROOM}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

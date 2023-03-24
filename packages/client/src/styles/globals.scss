@@ -95,3 +95,17 @@
   --color-warning: #db9013;
   --font-family: "VT323";
 }
+
+[data-theme="HTML"] {
+  --color-primary: black;
+  --color-bg: white;
+  --color-accent: white;
+  --color-faded: black;
+  --color-highlight: black;
+  --color-danger: black;
+  --color-danger-highlight: black;
+  --color-success: black;
+  --color-chat-message-private: black;
+  --color-warning: black;
+  --font-family: "Times New Roman";
+}

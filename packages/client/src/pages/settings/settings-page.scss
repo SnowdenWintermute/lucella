@@ -27,7 +27,8 @@
   }
 }
 
-[data-theme="VT320"] {
+[data-theme="VT320"],
+[data-theme="HTML"] {
   .settings-page__delete-account-button {
     background-color: var(--color-bg);
   }

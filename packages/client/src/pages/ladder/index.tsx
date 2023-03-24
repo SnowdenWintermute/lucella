@@ -10,6 +10,7 @@ import LadderTableRow from "../../components/ladder-page/LadderTableRow";
 import LadderSearch from "../../components/ladder-page/LadderSearch";
 import { LadderTable } from "../../components/ladder-page/LadderTable";
 import { LadderPaginationButtons } from "../../components/ladder-page/LadderPaginationButtons";
+import LoadingSpinner from "../../components/common-components/LoadingSpinner";
 
 function Ladder() {
   const dispatch = useAppDispatch();
@@ -61,7 +62,9 @@ function Ladder() {
 
   let ladderEntriesToShow: JSX.Element | JSX.Element[] = (
     <tr className="ladder__table-row" data-cy="loading-data">
-      <td>...</td>
+      <td className="ladder__loading-spinner-td">
+        <LoadingSpinner extraStyles="ladder__loading-spinner" />
+      </td>
     </tr>
   );
 

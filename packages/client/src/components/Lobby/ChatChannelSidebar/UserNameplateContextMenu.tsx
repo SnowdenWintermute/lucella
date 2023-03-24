@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import ContextMenuItem from "../../layout/ContextMenu/ContextMenuItem";
 import { useAppSelector } from "../../../redux/hooks";
@@ -16,8 +16,13 @@ type Props = {
 
 function UserNameplateContextMenu({ id, positionClicked, setShowBanUserIpAddressModal, setShowBanUserModal }: Props) {
   const dispatch = useDispatch();
+  const [getMeQuerySkipToken, setGetMeQuerySkipToken] = useState(true);
   const uiState = useAppSelector((state) => state.UI);
-  const { data: user } = useGetMeQuery(null);
+  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: false, skip: getMeQuerySkipToken });
+
+  useEffect(() => {
+    setGetMeQuerySkipToken(false);
+  }, []);
 
   const handleBanIpAddressClick = () => {
     dispatch(clearContextMenu());
@@ -29,7 +34,7 @@ function UserNameplateContextMenu({ id, positionClicked, setShowBanUserIpAddress
     setShowBanUserModal(true);
   };
 
-  const userOptions = [<ContextMenuItem title="PLACEHOLDER" onClick={() => {}} />];
+  const userOptions = [<ContextMenuItem key="PLACEHOLDER" title="PLACEHOLDER" onClick={() => {}} />];
   const moderatorOptions = [<ContextMenuItem key="BAN IP ADDRESS" title="BAN IP ADDRESS" onClick={handleBanIpAddressClick} />];
   if (!uiState.nameplateContextMenuData.isGuest) moderatorOptions.push(<ContextMenuItem key="BAN USER" title="BAN USER" onClick={handleBanUserClick} />);
   moderatorOptions.push(...userOptions);

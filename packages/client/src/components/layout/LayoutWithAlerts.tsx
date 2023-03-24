@@ -17,13 +17,13 @@ export default function LayoutWithAlerts({ children }: Props) {
 
   useEffect(() => {
     const theme = localStorage.getItem("theme");
-    if (theme === Theme.DEFAULT || theme === Theme.VT320) {
+    if (theme === Theme.DEFAULT || theme === Theme.VT320 || theme === Theme.HTML) {
       dispatch(setTheme(theme));
     }
   }, []);
 
   return (
-    <div data-theme={currentTheme} className="app-layout">
+    <div data-theme={currentTheme} data-theme-type="light" className="app-layout">
       {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && <Navbar />}
       <AlertsHolder />
       <main className="app-layout__main-content">{children}</main>

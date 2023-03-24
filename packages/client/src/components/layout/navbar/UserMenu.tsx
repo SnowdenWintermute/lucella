@@ -29,7 +29,11 @@ export function UserMenu() {
     else setMenuToShow(MENU.LOGIN);
   }, [user, isLoading, isError, logoutIsUninitialized]);
 
-  const menuLoading = <span>...</span>;
+  const menuLoading = (
+    <div className="user-menu">
+      <div className="user-menu__button user-menu__button--loading" />
+    </div>
+  );
 
   const loggedInUserMenu = (
     <div className="user-menu">

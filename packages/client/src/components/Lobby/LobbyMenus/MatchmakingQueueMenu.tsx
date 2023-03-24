@@ -2,6 +2,7 @@ import React from "react";
 import { Socket } from "socket.io-client";
 import { SocketEventsFromClient } from "../../../../../common";
 import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
 import LoadingSpinner from "../../common-components/LoadingSpinner";
@@ -16,6 +17,8 @@ function MatchmakingQueueMenu({ socket }: { socket: Socket }) {
     socket.emit(SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE);
     dispatch(setActiveMenu(LobbyMenu.MAIN));
   };
+
+  useNonAlertCollidingEscapePressExecutor(handleCancelRankedMatchmaking);
 
   const numPlayersToDisplay = matchmakingQueueScreen.currentData.queueSize ? matchmakingQueueScreen.currentData.queueSize : "...";
   const eloDiffThresholdToDisplay = matchmakingQueueScreen.currentData.queueSize ? matchmakingQueueScreen.currentData.currentEloDiffThreshold : "...";

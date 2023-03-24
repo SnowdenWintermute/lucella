@@ -38,19 +38,13 @@
 
 .game-list-menu__game-name-header {
   padding-left: 0px !important;
-  // flex: 1;
   width: 100% !important;
 }
 
-.game-list-menu__empty-header-spacer {
-  width: calc(spacing(6) + $focusOutlineWidth);
-  cursor: default;
-  border: 0px;
-  height: 1px;
-}
-
-.game-list-menu__empty-header-spacer--scrollbar-present {
-  width: calc(spacing(6) + spacing(2) + $focusOutlineWidth);
+.game-list-menu__loading-spinner {
+  height: height(2);
+  width: height(2);
+  margin: 0 auto;
 }
 
 .game-list-menu__games {
@@ -64,8 +58,8 @@
   display: flex;
   border: 1px solid var(--color-primary);
   justify-content: space-between;
-  margin-bottom: spacing(2);
   align-items: center;
+  margin-bottom: spacing(2);
 }
 
 .game-list-menu__games--scrollbar-padding {
@@ -81,14 +75,21 @@
 }
 
 .game-list-menu__number-of-players {
+  height: height(3);
   width: 48%;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--color-primary);
 }
 
 .game-list-menu__button {
   width: spacing(6);
   border: none;
-  border-left: 1px solid var(--color-primary);
+}
+
+.game-list-menu__button--disabled-no-opacity {
   &:disabled {
     cursor: default;
     opacity: 100%;

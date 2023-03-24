@@ -34,11 +34,6 @@ function BattleRoom() {
   return (
     <section className={!inGame ? "page-padded-container" : "battle-room-game-instance"}>
       <SocketManager socket={socket} defaultChatChannel={battleRoomDefaultChatChannel} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
-      {!socketCreated && (
-        <main>
-          <p>Awaiting socket creation...</p>
-        </main>
-      )}
       {!inGame && socket.current && <Lobby socket={socket.current} />}
       {inGame && socket.current && <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />}
     </section>

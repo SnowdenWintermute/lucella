@@ -5,6 +5,11 @@
   padding: spacing(2);
 }
 
+.main-menu__top-buttons-loading-message {
+  display: flex;
+  align-items: center;
+}
+
 .welcome-menu__copy-with-links {
   width: 62%;
   padding-right: spacing(5);

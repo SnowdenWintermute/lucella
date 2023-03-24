@@ -1,26 +1,32 @@
+/* eslint-disable consistent-return */
 /* eslint-disable react/no-unescaped-entities */
 import { Socket } from "socket.io-client";
 import { useState } from "react";
 import { Alert } from "../../../classes/Alert";
 import { ErrorMessages, SocketEventsFromClient } from "../../../../../common";
 import { AlertType } from "../../../enums";
-import { useAppDispatch } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import { BUTTON_NAMES } from "../../../consts/button-names";
-import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
+import { LobbyMenu, setActiveMenu, setCurrentGameRoomLoading } from "../../../redux/slices/lobby-ui-slice";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
+import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 
 function GameSetupMenu({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
+  const { currentGameRoomLoading } = useAppSelector((state) => state.lobbyUi);
   const [gameNameInput, setGameNameInput] = useState("");
 
   const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const gameNameToCreate = gameNameInput;
     // todo - run client side validation (reuse server function)
-    if (gameNameToCreate && socket) socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameNameToCreate);
-    else dispatch(setAlert(new Alert(ErrorMessages.LOBBY.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
+    if (!gameNameToCreate || !socket) return dispatch(setAlert(new Alert(ErrorMessages.LOBBY.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
+    socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameNameToCreate);
+    dispatch(setCurrentGameRoomLoading(true));
   };
+
+  useNonAlertCollidingEscapePressExecutor(() => dispatch(setActiveMenu(LobbyMenu.MAIN)));
 
   return (
     <>
@@ -46,7 +52,7 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
                 }}
               />
             </label>
-            <button type="submit" className="button button--accent game-setup-menu__button">
+            <button type="submit" className="button button--accent game-setup-menu__button" disabled={!!currentGameRoomLoading}>
               {BUTTON_NAMES.GAME_ROOM.CREATE_GAME}
             </button>
           </form>

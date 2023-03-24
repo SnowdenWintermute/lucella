@@ -37,6 +37,8 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
     dispatch(setMatchmakingLoading(true));
   };
 
+  if (!socket.connected) return <div className="main-menu__top-buttons-loading-message">Connecting to server...</div>;
+
   return (
     <>
       <LobbyTopListItemWithButton

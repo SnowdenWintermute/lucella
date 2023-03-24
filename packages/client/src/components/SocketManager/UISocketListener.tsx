@@ -24,6 +24,7 @@ import {
   setActiveMenu,
   LobbyMenu,
   setGuestUsername,
+  setCurrentGameRoomLoading,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -49,6 +50,11 @@ function UISocketListener({ socket }: Props) {
       dispatch(setAuthenticating(false));
       dispatch(setNewChatChannelLoading(true));
     });
+    socket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => {
+      console.log(`error from server: ${data}`);
+      dispatch(setAlert(new Alert(data, AlertType.DANGER)));
+      dispatch(setCurrentGameRoomLoading(false));
+    });
     socket.on(SocketEventsFromServer.GUEST_USER_NAME, (data) => {
       dispatch(setGuestUsername(data));
     });
@@ -58,7 +64,7 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
       dispatch(setCurrentGameRoom(data));
       if (data) dispatch(setActiveMenu(LobbyMenu.GAME_ROOM));
-      else dispatch(setActiveMenu(LobbyMenu.MAIN));
+      // else dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
       dispatch(setActiveMenu(LobbyMenu.MAIN));
@@ -97,6 +103,7 @@ function UISocketListener({ socket }: Props) {
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT);
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT_ERROR);
       socket.off(GENERIC_SOCKET_EVENTS.DISCONNECT);
+      socket.off(SocketEventsFromServer.ERROR_MESSAGE);
       socket.off(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE);
       socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
       socket.off(SocketEventsFromServer.GAME_CLOSED_BY_HOST);
@@ -112,18 +119,6 @@ function UISocketListener({ socket }: Props) {
     };
   }, [socket, dispatch, gameName]);
 
-  // errors
-  useEffect(() => {
-    if (!socket) return;
-    socket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => {
-      console.log(`error from server: ${data}`);
-      dispatch(setAlert(new Alert(data, AlertType.DANGER)));
-    });
-    return () => {
-      socket.off(SocketEventsFromServer.ERROR_MESSAGE);
-    };
-  }, [socket, dispatch]);
-  //
   return <div id="socket-listener-for-ui" />;
 }
 

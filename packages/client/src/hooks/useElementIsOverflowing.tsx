@@ -6,7 +6,6 @@ export default function useElementIsOverflowing(element: HTMLElement | null) {
     if (!element) setOverflowing(false);
     else if (element.clientHeight < element.scrollHeight) setOverflowing(true);
     else setOverflowing(false);
-    if (element) console.log(element.clientHeight, element.scrollHeight);
   }, [element]);
   return overflowing;
 }

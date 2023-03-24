@@ -2,14 +2,18 @@ import React, { useState } from "react";
 import { Socket } from "socket.io-client";
 import Modal from "../../common-components/Modal";
 import { defaultChatChannelNames, SocketEventsFromClient } from "../../../../../common";
+import { setNewChatChannelLoading } from "../../../redux/slices/chat-slice";
+import { useAppDispatch } from "../../../redux/hooks";
 
 export default function ChangeChatChannelModal({ socket, setParentDisplay }: { socket: Socket; setParentDisplay: (modalDisplayed: boolean) => void }) {
+  const dispatch = useAppDispatch();
   const [joinNewRoomInput, setJoinNewRoomInput] = useState("");
 
   // this is a separate function because it is also called by the buttons, not only the form
   const joinRoom = (chatChannelToJoin: string) => {
     setParentDisplay(false);
     setJoinNewRoomInput("");
+    dispatch(setNewChatChannelLoading(true));
     if (socket) socket.emit(SocketEventsFromClient.REQUESTS_TO_JOIN_CHAT_CHANNEL, chatChannelToJoin);
   };
 

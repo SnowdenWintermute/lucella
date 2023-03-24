@@ -35,6 +35,12 @@
   padding-right: spacing(2);
 }
 
+.chat-channel-sidebar__loading-spinner {
+  margin: 0 auto;
+  height: spacing(2);
+  width: spacing(2);
+}
+
 .chat-channel-sidebar__user-nameplate {
   height: height(3);
   width: 100%;

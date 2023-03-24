@@ -17,10 +17,10 @@ export const battleRoomDefaultChatChannel = "battle-room-chat";
 
 // for frontend chat selection buttons
 export const defaultChatChannelNames = {
+  BATTLE_ROOM_CHAT: "Battle Room Chat",
   LINDBLUM: "Lindblum",
   ALEXANDRIA: "Alexandria",
   BURMECIA: "Burmecia",
-  BATTLE_ROOM_CHAT: "Battle Room Chat",
   TRENO: "Treno",
   LURKER_LOUNGE: "Lurker Lounge",
 };
