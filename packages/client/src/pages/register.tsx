@@ -16,7 +16,7 @@ function Register() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [registerUser, { isLoading, isSuccess, error, isError }] = useRegisterUserMutation();
-  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const { data: user } = useGetMeQuery(null);
   const fields = { email: "", name: "", password: "", passwordConfirm: "" };
   const [formData, setFormData] = useState<RegisterInput>(fields);
   const [fieldErrors, setFieldErrors] = useState(fields);

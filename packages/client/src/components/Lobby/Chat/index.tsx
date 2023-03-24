@@ -22,7 +22,7 @@ interface Props {
 
 function Chat({ socket }: Props) {
   const [chatInput, setChatInput] = useState("");
-  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const { data: user } = useGetMeQuery(null);
   const chatState = useAppSelector((state) => state.chat);
   const { messages } = chatState;
   const baseDelayMilliseconds = useRef<number>(3000);

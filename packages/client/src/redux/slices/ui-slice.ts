@@ -49,7 +49,6 @@ const UISlice = createSlice({
       state.showContextMenu = false;
     },
     openUserNameplateContextMenu(state, action: PayloadAction<{ username: string; isGuest: boolean; contextMenuId: number }>) {
-      console.log(action.payload);
       state.showContextMenu = true;
       state.nameplateContextMenuData.username = action.payload.username;
       state.nameplateContextMenuData.isGuest = action.payload.isGuest;

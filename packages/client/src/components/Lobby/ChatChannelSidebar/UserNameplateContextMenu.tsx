@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import ContextMenuItem from "../../layout/ContextMenu/ContextMenuItem";
 import { useAppSelector } from "../../../redux/hooks";
@@ -16,13 +16,8 @@ type Props = {
 
 function UserNameplateContextMenu({ id, positionClicked, setShowBanUserIpAddressModal, setShowBanUserModal }: Props) {
   const dispatch = useDispatch();
-  const [getMeQuerySkipToken, setGetMeQuerySkipToken] = useState(true);
   const uiState = useAppSelector((state) => state.UI);
-  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: false, skip: getMeQuerySkipToken });
-
-  useEffect(() => {
-    setGetMeQuerySkipToken(false);
-  }, []);
+  const { data: user } = useGetMeQuery(null);
 
   const handleBanIpAddressClick = () => {
     dispatch(clearContextMenu());

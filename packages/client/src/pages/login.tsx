@@ -17,7 +17,7 @@ function Login() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
-  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const { data: user } = useGetMeQuery(null);
 
   const fields = { email: "", password: "" };
   const [formData, setFormData] = useState<LoginInput>(fields);

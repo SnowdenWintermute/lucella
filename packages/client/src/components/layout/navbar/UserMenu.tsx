@@ -2,11 +2,13 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
+import { useAppSelector } from "../../../redux/hooks";
 
 export function UserMenu() {
+  const uiState = useAppSelector((state) => state.UI);
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const [logoutUser, { isUninitialized: logoutIsUninitialized }] = useLogoutUserMutation();
-  const { data: user, isLoading, isFetching, isError } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const { data: user, isLoading, isFetching, isError } = useGetMeQuery(null);
   const MENU = { LOADING: "LOADING", USER: "USER", LOGIN: "LOGIN" };
   const [menuToShow, setMenuToShow] = useState(MENU.LOADING);
 
@@ -25,7 +27,7 @@ export function UserMenu() {
 
   useEffect(() => {
     if (user) setMenuToShow(MENU.USER);
-    else if (isFetching && isLoading && logoutIsUninitialized && !isError) setMenuToShow(MENU.LOADING);
+    else if (isFetching && isLoading && logoutIsUninitialized && !isError && !uiState.showContextMenu) setMenuToShow(MENU.LOADING);
     else setMenuToShow(MENU.LOGIN);
   }, [user, isLoading, isError, logoutIsUninitialized]);
 

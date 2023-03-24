@@ -14,7 +14,7 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const uiState = useAppSelector((state) => state.UI);
-  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const { data: user } = useGetMeQuery(null);
   const [showChangeChatChannelModal, setShowChangeChatChannelModal] = useState(false);
 
   const handleViewGamesListClick = () => {

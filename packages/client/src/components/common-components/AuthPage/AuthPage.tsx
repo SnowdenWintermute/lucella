@@ -1,4 +1,5 @@
 import React, { FormEvent } from "react";
+import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 // import styles from "./auth.module.scss";
 
 type Props = {
@@ -8,6 +9,8 @@ type Props = {
 };
 
 export default function AuthPage({ children, submitHandler, title }: Props) {
+  useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+
   return (
     <div className="auth-page">
       <h3 className="auth-page__page-title">{title}</h3>

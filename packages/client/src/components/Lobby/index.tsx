@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import React from "react";
+import React, { useEffect } from "react";
 import Chat from "./Chat";
 import LobbyMenus from "./LobbyMenus";
 import ChatChannelSidebar from "./ChatChannelSidebar";
@@ -8,8 +8,12 @@ import { useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import ScoreScreenModal from "./modals/ScoreScreenModal";
 
 function Lobby({ socket }: { socket: Socket }) {
-  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true }); // not using the data but we are re calling the quuery to update cache for other components like navbar/usermenu
+  const { data: user, refetch: userRefetch } = useGetMeQuery(null, { refetchOnMountOrArgChange: true }); // not using the data but we are re calling the quuery to update cache for other components like navbar/usermenu
   const uiState = useAppSelector((state) => state.UI);
+
+  // useEffect(() => {
+  //   userRefetch();
+  // }, [userRefetch]);
 
   return (
     <main className="page lobby">
