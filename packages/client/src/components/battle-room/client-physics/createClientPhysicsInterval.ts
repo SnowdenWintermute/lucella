@@ -10,6 +10,7 @@ import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsF
 import draw from "../canvas-functions";
 import serializeInput from "../../../protobuf-utils/serialize-input";
 import { INetworkPerformanceMetrics } from "../../../types";
+import { Theme } from "../../../redux/slices/ui-slice";
 
 export default function createClientPhysicsInterval(
   socket: Socket,
@@ -17,7 +18,8 @@ export default function createClientPhysicsInterval(
   playerRole: PlayerRole | null,
   canvasRef: React.RefObject<HTMLCanvasElement | null>,
   canvasSizeRef: React.RefObject<WidthAndHeight | null>,
-  networkPerformanceMetrics: INetworkPerformanceMetrics
+  networkPerformanceMetrics: INetworkPerformanceMetrics,
+  theme?: Theme
 ) {
   let frameTime = renderRate;
   BattleRoomGame.initializeWorld(game);
@@ -47,7 +49,7 @@ export default function createClientPhysicsInterval(
     frameTime = +Date.now() - timeAtStartOfFrameSimulation;
 
     if (canvasRef && canvasRef.current && canvasSizeRef.current)
-      draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game, networkPerformanceMetrics);
+      draw(canvasRef.current.getContext("2d")!, canvasSizeRef.current, playerRole, game, networkPerformanceMetrics, theme);
 
     socket.emit(SocketEventsFromClient.NEW_INPUT, serialized);
     game.intervals.physics = setTimeout(clientPhysics, renderRate);

@@ -40,24 +40,6 @@ export const CookieNames = {
 // battle-room game
 export const ghostTransparency = 0.3;
 export const inGameFontSizes = { medium: 12, large: 25 };
-export const colors = {
-  endZone: "8, 11, 17",
-  inGameTextLight: "rgb(200,200,200)",
-  light: "rgb(154, 167, 183)",
-  dark: "rgb(8, 11, 17)",
-  hostOrbs: "154, 167, 183",
-  hostOrbsStroke: "8, 11, 17",
-  challengerOrbs: "8, 11, 17",
-  challengerOrbsStroke: "154, 167, 183",
-  selectionColor: "rgb(255, 192, 203)",
-};
-// other nice colors old:
-// selectionColor: "rgb(103,191,104)",
-// challengerOrbs: "0, 75, 79",
-// selectionRingColor: "rgb(30,200,30)",
-// hostOrbs: "13, 28, 46",
-// hostEndZone: "rgb(50,50,70)",
-// challengerEndZone: "rgb(50,70,50)",
 export const renderRate = 33;
 export const physicsTickRate = 50;
 export const eventLimiterRate = renderRate;

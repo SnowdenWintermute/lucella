@@ -13,10 +13,15 @@
   align-items: center;
 }
 
+.main-navigation__site-logo-button {
+  background-color: transparent;
+  border: none;
+  margin-right: spacing(4);
+}
+
 .main-navigation__site-logo {
   height: height(3);
   fill: var(--color-primary);
-  margin-right: spacing(4);
 }
 
 .main-navigation__logo-text {

@@ -26,8 +26,9 @@ export default function Navbar() {
   return (
     <nav className="main-navigation">
       <div className="main-navigation__left-side">
-        {/* eslint-disable-next-line react/jsx-no-bind */}
-        <Logo onClick={handleChangeThemeClick} className="main-navigation__site-logo" />
+        <button type="button" onClick={handleChangeThemeClick} className="main-navigation__site-logo-button">
+          <Logo className="main-navigation__site-logo" />
+        </button>
         <div>
           <Link href="/" className="main-navigation__logo-text">
             Battle School

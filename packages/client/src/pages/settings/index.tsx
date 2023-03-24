@@ -66,7 +66,7 @@ function Settings() {
             <li>
               <button
                 type="button"
-                className="button button--danger"
+                className="button button--danger settings-page__delete-account-button"
                 aria-controls="Delete Account modal"
                 aria-expanded={showDeleteAccountModal}
                 onClick={() => setShowDeleteAccountModal(true)}

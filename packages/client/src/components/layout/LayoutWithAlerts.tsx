@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { GameStatus } from "../../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setTheme } from "../../redux/slices/ui-slice";
+import { setTheme, Theme } from "../../redux/slices/ui-slice";
 import AlertsHolder from "./alerts/AlertsHolder";
 import Navbar from "./navbar";
 
@@ -17,15 +17,16 @@ export default function LayoutWithAlerts({ children }: Props) {
 
   useEffect(() => {
     const theme = localStorage.getItem("theme");
-    if (theme) dispatch(setTheme(theme));
+    if (theme === Theme.DEFAULT || theme === Theme.VT320) {
+      dispatch(setTheme(theme));
+    }
   }, []);
 
   return (
-    <div data-theme={currentTheme} style={{ height: "100vh" }}>
+    <div data-theme={currentTheme} className="app-layout">
       {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && <Navbar />}
       <AlertsHolder />
-      <main>{children}</main>
-      {/* <main data-theme="vt">{children}</main> */}
+      <main className="app-layout__main-content">{children}</main>
     </div>
   );
 }

@@ -1,12 +1,18 @@
-import { BattleRoomGame, WidthAndHeight, inGameFontSizes, baseSpeedModifier, Point, colors } from "../../../../../common";
+import { BattleRoomGame, WidthAndHeight, inGameFontSizes, baseSpeedModifier, Point, colors, ThemeColors } from "../../../../../common";
 
-const drawScore = (context: CanvasRenderingContext2D, canvasDrawFractions: Point, currentGame: BattleRoomGame, canvasSize: WidthAndHeight) => {
+const drawScore = (
+  context: CanvasRenderingContext2D,
+  canvasDrawFractions: Point,
+  currentGame: BattleRoomGame,
+  canvasSize: WidthAndHeight,
+  themeColors: ThemeColors
+) => {
   const fontSize = inGameFontSizes.large * canvasDrawFractions.y;
   const margin = (currentGame.endzones.challenger.height / 2) * canvasDrawFractions.y;
   const { score, speedModifier } = currentGame;
   const speedModifierAsPercentage = Math.round((+speedModifier.toFixed(2) / baseSpeedModifier) * 100);
 
-  context.fillStyle = colors.light;
+  context.fillStyle = `rgb(${themeColors.LIGHT})`;
   context.textAlign = "left";
   context.textBaseline = "middle";
   context.font = `bold ${canvasSize.width / fontSize}px 'DM Sans'`;

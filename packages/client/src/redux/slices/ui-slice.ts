@@ -18,7 +18,7 @@ export interface IUISlice {
   modals: {
     scoreScreen: boolean;
   };
-  theme: Theme | string;
+  theme: Theme;
 }
 const initialState: IUISlice = {
   showContextMenu: false,
@@ -60,7 +60,7 @@ const UISlice = createSlice({
     setShowScoreScreenModal(state, action: PayloadAction<boolean>) {
       state.modals.scoreScreen = action.payload;
     },
-    setTheme(state, action: PayloadAction<Theme | string>) {
+    setTheme(state, action: PayloadAction<Theme>) {
       state.theme = action.payload;
       localStorage.setItem("theme", action.payload);
     },

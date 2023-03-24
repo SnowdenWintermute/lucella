@@ -26,3 +26,9 @@
     margin-bottom: spacing(3);
   }
 }
+
+[data-theme="VT320"] {
+  .settings-page__delete-account-button {
+    background-color: var(--color-bg);
+  }
+}

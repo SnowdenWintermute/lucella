@@ -1,8 +1,8 @@
-import { BattleRoomGame, colors, Point } from "../../../../../common";
+import { BattleRoomGame, Point, ThemeColors } from "../../../../../common";
 
-const gameOverText = (context: CanvasRenderingContext2D, game: BattleRoomGame, canvasDrawFractions: Point) => {
+const gameOverText = (context: CanvasRenderingContext2D, game: BattleRoomGame, canvasDrawFractions: Point, themeColors: ThemeColors) => {
   const fontSize = 25;
-  context.fillStyle = colors.light;
+  context.fillStyle = `rgb(${themeColors.LIGHT})`;
   context.textAlign = "center";
   context.textBaseline = "middle";
   context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px 'DM Sans'`;

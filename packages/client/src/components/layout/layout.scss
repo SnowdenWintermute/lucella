@@ -1,0 +1,10 @@
+@import "../../styles/abstracts/variables";
+
+.app-layout {
+  height: 100vh;
+  overflow: auto;
+}
+
+.app-layout__main-content {
+  height: $pageBodyHeight;
+}

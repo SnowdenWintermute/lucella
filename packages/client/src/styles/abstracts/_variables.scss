@@ -139,7 +139,7 @@ $baseAppWidth: 90rem;
 //1024px
 $baseAppHeight: calc(64rem - height(3));
 
-$pageBodyHeight: calc(100vh - spacing(4) - height(4));
+$pageBodyHeight: calc(100vh - spacing(4) - height(4) - 0.3rem);
 
 $scrollbarWidth: 10px;
 $firefoxScrollbarWidth: 4px;

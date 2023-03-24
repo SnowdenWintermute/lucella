@@ -9,7 +9,7 @@
   width: 62%;
   padding-right: spacing(5);
   height: 100%;
-  font-size: fontSize(3);
+  font-size: fontSize(2);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -68,7 +68,7 @@
 .welcome-menu__version {
   flex: 1;
   text-align: center;
-  font-size: fontSize(3);
+  font-size: fontSize(2);
   padding: spacing(1);
   @media only screen and (max-width: breakpoint(mainMenuCopy)) {
     font-size: fontSize(2);

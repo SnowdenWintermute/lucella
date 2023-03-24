@@ -69,3 +69,16 @@ select:-webkit-autofill:focus {
   transition: background-color 5000s ease-in-out 0s;
   font-size: fontSize(2);
 }
+
+[data-theme="VT320"] {
+  ::-moz-selection {
+    /* Code for Firefox */
+    color: var(--color-bg);
+    background: var(--color-primary);
+  }
+
+  ::selection {
+    color: var(--color-bg);
+    background: var(--color-primary);
+  }
+}
