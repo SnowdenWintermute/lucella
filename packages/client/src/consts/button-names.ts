@@ -10,7 +10,7 @@ export const BUTTON_NAMES = {
     SEARCH: "SEARCH",
   },
   GAME_ROOM: {
-    READY: "READY",
+    READY: "Ready",
     LEAVE_WAITING_LIST: "LEAVE",
     CREATE_GAME: "Create Game",
   },

@@ -1,4 +1,6 @@
-import { AuthRoutePaths, FrontendRoutes, gameRoomCountdownDuration, ONE_SECOND, SocketEventsFromClient } from "../../../../common";
+import { AuthRoutePaths, FrontendRoutes, gameRoomCountdownDuration, ONE_SECOND, PlayerRole, SocketEventsFromClient } from "../../../../common";
+import { BUTTON_NAMES } from "../../../src/consts/button-names";
+import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
 import { shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -17,9 +19,9 @@ export default function startGameAndDisconnect() {
       expect(response.status).to.equal(201);
     });
   });
-  it("lets disconnecting from a game yeilds the win to the opponent", () => {
+  it("disconnecting from a game yeilds the win to the opponent", () => {
     const username = Cypress.env("CYPRESS_TEST_USER_NAME");
-    const anonUsernameForCypressSocketList = "Anon1234";
+    const arbitraryNameForAnonUserInCypressSocketList = "Anon1234";
     // log in and host a game
     cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
@@ -29,24 +31,30 @@ export default function startGameAndDisconnect() {
     cy.findByText(new RegExp(username, "i")).should("exist");
     cy.findByRole("button", { name: /Host/i }).click();
     cy.get('[data-cy="game-name-input"]').clear().click().type(`${shortTestText}{enter}`);
-    cy.findByText(new RegExp(`You are the host of game: ${shortTestText}`, "i")).should("exist");
-    cy.findByText(/Awaiting challenger.../i).should("exist");
-    cy.findByLabelText("challenger status").find("svg").should("not.exist");
+    cy.findByText(new RegExp(`${LOBBY_TEXT.GAME_ROOM.GAME_NAME_HEADER}${shortTestText}`, "i")).should("be.visible");
+    cy.findByText(new RegExp(LOBBY_TEXT.GAME_ROOM.GAME_STATUS_WAITING_FOR_OPPONENT, "i")).should("be.visible");
+    cy.get(`[data-cy="${PlayerRole.CHALLENGER}-ready-status"]`).should("not.exist");
     // challenger joins game and both players ready up
-    cy.task(TaskNames.connectSocket, { username: anonUsernameForCypressSocketList });
-    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
-    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.CLICKS_READY });
-    cy.findByRole("button", { name: /Ready/i }).click();
-    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("exist");
+    cy.task(TaskNames.connectSocket, { username: arbitraryNameForAnonUserInCypressSocketList });
+    cy.task(TaskNames.socketEmit, {
+      username: arbitraryNameForAnonUserInCypressSocketList,
+      event: SocketEventsFromClient.JOINS_GAME,
+      data: shortTestText.toLowerCase(),
+    });
+    cy.get(`[data-cy="${PlayerRole.CHALLENGER}-ready-status"]`).should("be.visible").should("contain.text", LOBBY_TEXT.GAME_ROOM.PLAYER_READY_STATUS.NOT_READY);
+    cy.task(TaskNames.socketEmit, { username: arbitraryNameForAnonUserInCypressSocketList, event: SocketEventsFromClient.CLICKS_READY });
+    cy.get(`[data-cy="${PlayerRole.CHALLENGER}-ready-status"]`).should("be.visible").should("contain.text", LOBBY_TEXT.GAME_ROOM.PLAYER_READY_STATUS.READY);
+    cy.findByRole("button", { name: new RegExp(BUTTON_NAMES.GAME_ROOM.READY, "i") }).click();
+    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("be.visible");
     // challenger leaves game
-    cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.LEAVES_GAME });
+    cy.task(TaskNames.socketEmit, { username: arbitraryNameForAnonUserInCypressSocketList, event: SocketEventsFromClient.LEAVES_GAME });
     cy.get('[data-cy="score-screen-modal"]')
-      .findByText(new RegExp(`Game ${shortTestText} final score:`, "i"))
-      .should("exist");
+      .findByText(new RegExp(LOBBY_TEXT.SCORE_SCREEN.TITLE(shortTestText.toLowerCase()), "i"))
+      .should("be.visible");
     cy.get('[data-cy="score-screen-modal"]')
-      .findByText(new RegExp(`${username}:`, "i"))
-      .should("exist");
-    cy.get('[data-cy="score-screen-modal"]').findByText(/Anon/i).should("exist");
-    cy.findByText(/No changes to ladder rating/i).should("exist");
+      .findByText(new RegExp(`${username}`, "i"))
+      .should("be.visible");
+    cy.get('[data-cy="score-screen-modal"]').findByText(/Anon/i).should("be.visible");
+    cy.findByText(new RegExp(LOBBY_TEXT.SCORE_SCREEN.CASUAL_GAME_NO_RANK_CHANGE)).should("be.visible");
   });
 }

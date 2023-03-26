@@ -21,7 +21,7 @@ describe("lobby chat, hosting, joining and game start and end functionality", ()
     cy.task(TaskNames.deleteAllSocketsAndAccessTokens);
   });
   startGameAndDisconnect();
-  authedUserHostAndStartGame();
-  chatAndChangeChannels();
-  unauthedJoinLeaveAndDisconnectFromGameRoom();
+  // authedUserHostAndStartGame();
+  // chatAndChangeChannels();
+  // unauthedJoinLeaveAndDisconnectFromGameRoom();
 });

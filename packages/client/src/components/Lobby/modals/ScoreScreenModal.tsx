@@ -1,4 +1,5 @@
 import React from "react";
+import { LOBBY_TEXT } from "../../../consts/lobby-text";
 import { usersApi } from "../../../redux/api-slices/users-api-slice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setShowScoreScreenModal } from "../../../redux/slices/ui-slice";
@@ -41,8 +42,14 @@ export default function ScoreScreenModal() {
   const eloTextAnimation = wasVictory ? "score-screen-modal__elo--animate-gain" : "score-screen-modal__elo--animate-loss";
 
   return (
-    <Modal title={`Game ${gameRoom.gameName} result`} setParentDisplay={setParentDisplay} extraStyles="score-screen-modal" noPadding>
-      <div className="score-screen-modal__contents" data-cy="score-screen-modal">
+    <Modal
+      title={LOBBY_TEXT.SCORE_SCREEN.TITLE(gameRoom.gameName)}
+      setParentDisplay={setParentDisplay}
+      extraStyles="score-screen-modal"
+      noPadding
+      dataCy="score-screen-modal"
+    >
+      <div className="score-screen-modal__contents">
         <div className="score-screen-modal__left">
           <div className="score-screen-modal__player-name-and-score">
             <div>{gameRoom.players.host?.associatedUser.username}</div>
@@ -65,7 +72,7 @@ export default function ScoreScreenModal() {
             )}
           </div>
           <div className="score-screen-modal__elo-and-rank-changes">
-            {!wasRanked && <div className="score-screen-modal__elo-and-rank-changes-block">No changes to ladder rating</div>}
+            {!wasRanked && <div className="score-screen-modal__elo-and-rank-changes-block">{LOBBY_TEXT.SCORE_SCREEN.CASUAL_GAME_NO_RANK_CHANGE}</div>}
             {wasRanked && (
               <>
                 <div className="score-screen-modal__elo-and-rank-changes-block">

@@ -9,9 +9,10 @@ interface Props {
   backdropStyle?: string;
   extraStyles?: string;
   noPadding?: boolean;
+  dataCy?: string;
 }
 
-function Modal({ children, setParentDisplay, title, backdropStyle, extraStyles, noPadding }: Props) {
+function Modal({ children, setParentDisplay, title, backdropStyle, extraStyles, noPadding, dataCy }: Props) {
   const { alerts } = useAppSelector((state) => state.alerts);
 
   function handleClickCloseModalButton() {
@@ -38,7 +39,7 @@ function Modal({ children, setParentDisplay, title, backdropStyle, extraStyles, 
   }, [alerts]);
 
   return (
-    <div className={`modal__fullscreen-backdrop ${backdropStyle || ""}`} id="modal__fullscreen-backdrop">
+    <div className={`modal__fullscreen-backdrop ${backdropStyle || ""}`} id="modal__fullscreen-backdrop" data-cy={dataCy}>
       <div className={`modal ${extraStyles}`} id={`${title} modal`}>
         <div className="modal__top-bar">
           <span className="modal__title">{title}</span>

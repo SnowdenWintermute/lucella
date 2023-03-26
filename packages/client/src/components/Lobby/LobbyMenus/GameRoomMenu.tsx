@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import { GameStatus, SocketEventsFromClient, SocketMetadata } from "../../../../../common";
+import { GameStatus, PlayerRole, SocketEventsFromClient, SocketMetadata } from "../../../../../common";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import { LobbyMenu, setActiveMenu, setPlayerReadyLoading } from "../../../redux/slices/lobby-ui-slice";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
+import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { BUTTON_NAMES } from "../../../consts/button-names";
 
-function PlayerWithReadyStatus({ player, playerReady }: { player: SocketMetadata | null; playerReady: boolean }) {
+function PlayerWithReadyStatus({ player, playerReady, playerRole }: { player: SocketMetadata | null; playerReady: boolean; playerRole: PlayerRole }) {
   return (
     <div className="game-room-menu__player-with-ready-status">
       <span className="game-room-menu__player">{player ? player.associatedUser.username : "..."}</span>
-      {player && <span>{playerReady ? "ready" : "not ready"}</span>}
+      {player && (
+        <span data-cy={`${playerRole}-ready-status`}>
+          {playerReady ? LOBBY_TEXT.GAME_ROOM.PLAYER_READY_STATUS.READY : LOBBY_TEXT.GAME_ROOM.PLAYER_READY_STATUS.NOT_READY}
+        </span>
+      )}
       {!player && <span />}
     </div>
   );
@@ -39,7 +45,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
 
   useEffect(() => {
     let newReadableGameStatus = "";
-    if (!players.challenger) newReadableGameStatus = "Waiting for an opponent";
+    if (!players.challenger) newReadableGameStatus = LOBBY_TEXT.GAME_ROOM.GAME_STATUS_WAITING_FOR_OPPONENT;
     else if (players.challenger && (!playersReady.challenger || !playersReady.host)) newReadableGameStatus = "Waiting for all players to be ready";
     else if (gameStatus === GameStatus.COUNTING_DOWN) newReadableGameStatus = "Game starting";
     else if (gameStatus === GameStatus.IN_WAITING_LIST) newReadableGameStatus = "Position in waiting list";
@@ -53,11 +59,14 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
       </ul>
       <section className="lobby-menu game-room-menu">
         <div className="lobby-menu__left game-room-menu__left">
-          <h3 className="lobby-menu__header">Game room: {currentGameRoom.gameName}</h3>
+          <h3 className="lobby-menu__header">
+            {LOBBY_TEXT.GAME_ROOM.GAME_NAME_HEADER}
+            {currentGameRoom.gameName}
+          </h3>
           <div className="game-room-menu__players">
-            <PlayerWithReadyStatus player={players.host} playerReady={playersReady.host} />
+            <PlayerWithReadyStatus player={players.host} playerReady={playersReady.host} playerRole={PlayerRole.HOST} />
             <span className="game-room-menu__vs">vs.</span>
-            <PlayerWithReadyStatus player={players.challenger} playerReady={playersReady.challenger} />
+            <PlayerWithReadyStatus player={players.challenger} playerReady={playersReady.challenger} playerRole={PlayerRole.CHALLENGER} />
           </div>
           {!currentGameRoom?.isRanked && (
             <button
@@ -66,7 +75,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
               onClick={handleReadyClick}
               disabled={lobbyUiState.playerReadyLoading}
             >
-              Ready
+              {BUTTON_NAMES.GAME_ROOM.READY}
             </button>
           )}
           {currentGameRoom?.isRanked && <div className="button" style={{ opacity: "0%" }} aria-hidden />}
