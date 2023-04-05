@@ -10,6 +10,8 @@ import RefreshSvg from "../../../img/menu-icons/refresh.svg";
 import useScrollbarSize from "../../../hooks/useScrollbarSize";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 import LoadingSpinner from "../../common-components/LoadingSpinner";
+import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
 
 function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom }) {
   const dispatch = useAppDispatch();
@@ -30,6 +32,7 @@ function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom
       <span className="game-list-menu__number-of-players">{gameRoom.players.challenger ? "2" : "1"}/2</span>
       <button
         type="button"
+        aria-label={ARIA_LABELS.GAME_LIST.JOIN_GAME_BY_NAME_OF(gameRoom.gameName)}
         className={`button game-list-menu__button ${buttonStyle}`}
         onClick={() => handleJoinGameClick(gameRoom.gameName)}
         disabled={gameIsFull || !!lobbyUiState.currentGameRoomLoading}
@@ -59,7 +62,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
   const gameListLoadingSpinner = <LoadingSpinner key="loading spinner" extraStyles="game-list-menu__loading-spinner" />;
   let gamesToDisplay = [gameListLoadingSpinner];
   if (lobbyUiState.gameList.isFetching) gamesToDisplay = [gameListLoadingSpinner];
-  else if (noGames) gamesToDisplay = [<p key="no games found">No games found</p>];
+  else if (noGames) gamesToDisplay = [<p key="no games found">{LOBBY_TEXT.GAME_LIST.NO_GAMES_FOUND}</p>];
   else
     gamesToDisplay = Object.values(lobbyUiState.gameList.games).map((gameRoom) => <GameListGame key={gameRoom.gameName} socket={socket} gameRoom={gameRoom} />);
 
@@ -73,14 +76,14 @@ function GameListMenu({ socket }: { socket: Socket }) {
           onClick={handleRefreshGamesListClick}
           disabled={lobbyUiState.gameList.isFetching}
           data-cy="refresh-button"
-          aria-label="refresh game list"
+          aria-label={ARIA_LABELS.GAME_LIST.REFRESH_GAME_LIST}
         >
           <RefreshSvg className="game-list-buttons__refresh-icon" />
         </button>
       </ul>
       <section className={`lobby-menu game-list-menu ${gameListIsOverflowing && "game-list-menu--scrollbar-present"}`}>
         <div className={`${"game-list-menu__headers"}`}>
-          <h3 className={`${"game-list-menu__game-name"} ${"game-list-menu__game-name-header"}`}>Current games</h3>
+          <h3 className={`${"game-list-menu__game-name"} ${"game-list-menu__game-name-header"}`}>{LOBBY_TEXT.GAME_LIST.TITLE}</h3>
         </div>
         <div
           className={`${"game-list-menu__games"} ${gameListIsOverflowing && scrollbarSize.width && "game-list-menu__games--scrollbar-padding"}`}

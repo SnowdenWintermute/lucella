@@ -1,6 +1,7 @@
 import React from "react";
 import { useAppSelector } from "../../../redux/hooks";
 import LoadingSpinner from "../../common-components/LoadingSpinner";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
 import UserNameplate from "./UserNameplate";
 
 function ChatChannelSidebar() {
@@ -17,7 +18,7 @@ function ChatChannelSidebar() {
 
   return (
     <section className="chat-channel-sidebar">
-      <div className="chat-channel-sidebar__header-box" aria-label="chat channel name and number of users">
+      <div className="chat-channel-sidebar__header-box" aria-label={ARIA_LABELS.CHAT.CHANNEL_NAME_WITH_NUM_USERS}>
         <span>{newChatChannelLoading ? "" : `${currentChatChannelName} (${numUsers})`}</span>
       </div>
       <div className="chat-channel-sidebar__users-list-container" aria-label="users in this channel">

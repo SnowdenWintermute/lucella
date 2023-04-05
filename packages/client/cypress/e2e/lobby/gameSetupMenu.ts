@@ -1,4 +1,4 @@
-import { AuthRoutePaths, ErrorMessages, FrontendRoutes, gameRoomCountdownDuration, ONE_SECOND, PlayerRole, SocketEventsFromClient } from "../../../../common";
+import { ErrorMessages, FrontendRoutes, SocketEventsFromClient } from "../../../../common";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
 import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
 import { longTestText, shortTestText } from "../../support/consts";
@@ -7,27 +7,13 @@ import { TaskNames } from "../../support/TaskNames";
 export default function gameSetupMenu() {
   // eslint-disable-next-line no-undef
   before(() => {
-    const args = {
-      CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
-      CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
-    };
-    // delete all test users (test users are defined in the UsersRepo deleteTestUsers method)
-    cy.task(TaskNames.deleteAllTestUsers, args).then((response: Response) => {
-      expect(response.status).to.equal(200);
-    });
-    cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
-      expect(response.status).to.equal(201);
-    });
+    cy.deleteAllTestUsersAndCreateOneTestUser();
   });
 
   it("correctly displays and provides functionality in the game setup menu", () => {
     const arbitraryNameForAnonUserInCypressSocketList = "Anon1234";
     cy.task(TaskNames.connectSocket, { username: arbitraryNameForAnonUserInCypressSocketList });
-    // log in and host a game
-    cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
-      email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
-      password: Cypress.env("CYPRESS_TEST_USER_PASSWORD"),
-    });
+
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
     cy.verifyVeiwingMainMenu();
     //  - pressing host button opens menu

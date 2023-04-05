@@ -9,10 +9,19 @@ export const LOBBY_TEXT = {
   },
   GAME_ROOM: {
     GAME_NAME_HEADER: "Game: ",
-    GAME_STATUS_WAITING_FOR_OPPONENT: "Waiting for an opponent",
+    GAME_STATUS: {
+      WAITING_FOR_OPPONENT: "Waiting for an opponent",
+      WAITING_FOR_PLAYERS_TO_BE_READY: "Waiting for all players to be ready",
+      GAME_STARTING: "Game starting",
+      IN_WAITING_LIST: "Position in waiting list",
+    },
     PLAYER_READY_STATUS: { READY: "ready", NOT_READY: "not ready" },
     SERVER_EXPERIENCING_HIGH_LOAD: "Server is experiencing high load, waiting for an open game slot.",
     POSITION_IN_WAITING_LIST: "Position in line: ",
+  },
+  GAME_LIST: {
+    TITLE: "Current games",
+    NO_GAMES_FOUND: "No games found",
   },
   SCORE_SCREEN: {
     TITLE: (gameName: string) => `Game ${gameName} result`,

@@ -15,7 +15,7 @@ export const BUTTON_NAMES = {
   },
   GAME_ROOM: {
     READY: "Ready",
-    LEAVE_WAITING_LIST: "LEAVE",
+    LEAVE_GAME: "Leave Game",
   },
   MAIN_MENU: {
     CHANNEL: "Channel",

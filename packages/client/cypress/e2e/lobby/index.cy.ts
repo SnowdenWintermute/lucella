@@ -1,8 +1,9 @@
+import { FrontendRoutes } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
 import authedUserHostAndStartGame from "./authedUserHostAndStartGame";
 import chatAndChangeChannels from "./chatAndChangeChannels";
+import gameRoomMenu from "./gameRoomMenu";
 import gameSetupMenu from "./gameSetupMenu";
-import startGameAndDisconnect from "./startGameAndDisconnect";
 import unauthedJoinLeaveAndDisconnectFromGameRoom from "./unauthedJoinLeaveAndDisconnectFromGameRoom";
 
 describe("lobby chat, hosting, joining and game start and end functionality", () => {
@@ -21,7 +22,8 @@ describe("lobby chat, hosting, joining and game start and end functionality", ()
     cy.task(TaskNames.disconnectAllSockets);
     cy.task(TaskNames.deleteAllSocketsAndAccessTokens);
   });
-  gameSetupMenu();
+  // gameSetupMenu();
+  gameRoomMenu();
   // startGameAndDisconnect();
   // authedUserHostAndStartGame();
   // chatAndChangeChannels();
