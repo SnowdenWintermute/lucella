@@ -3,6 +3,10 @@ export const LOBBY_TEXT = {
     SEEKING_RANKED_MATCH: "Seeking ranked match...",
     RANKED_GAME_STARTING: "Ranked game starting...",
   },
+  GAME_SETUP: {
+    TITLE: "Creating an unranked game",
+    GAME_CREATION_INPUT_LABEL: "Game name:",
+  },
   GAME_ROOM: {
     GAME_NAME_HEADER: "Game: ",
     GAME_STATUS_WAITING_FOR_OPPONENT: "Waiting for an opponent",

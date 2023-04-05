@@ -16,7 +16,8 @@ interface Props {
   defaultChatChannel: string;
 }
 
-const socketAddress = process.env.NODE_ENV === "production" ? SOCKET_ADDRESS_PRODUCTION : process.env.NEXT_PUBLIC_SOCKET_API;
+// const socketAddress = process.env.NODE_ENV === "production" ? SOCKET_ADDRESS_PRODUCTION : process.env.NEXT_PUBLIC_SOCKET_API;
+const socketAddress = "http://localhost:8080";
 
 function SocketManager({ socket, defaultChatChannel, networkPerformanceMetricsRef }: Props) {
   const dispatch = useAppDispatch();

@@ -85,6 +85,7 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.SHOW_SCORE_SCREEN, (data) => {
       dispatch(setScoreScreenData(data));
       dispatch(setShowScoreScreenModal(true));
+      dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
     socket.on(SocketEventsFromServer.MATCHMAKING_QUEUE_ENTERED, () => {
       dispatch(setActiveMenu(LobbyMenu.MATCHMAKING_QUEUE));

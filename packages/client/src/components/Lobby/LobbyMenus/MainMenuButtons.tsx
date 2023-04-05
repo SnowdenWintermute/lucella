@@ -9,6 +9,7 @@ import { setAlert } from "../../../redux/slices/alerts-slice";
 import { Alert } from "../../../classes/Alert";
 import { AlertType } from "../../../enums";
 import ChangeChatChannelModal from "../modals/ChangeChatChannelModal";
+import { BUTTON_NAMES } from "../../../consts/button-names";
 
 function MainMenuButtons({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
@@ -42,7 +43,7 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
   return (
     <>
       <LobbyTopListItemWithButton
-        title="Channel"
+        title={BUTTON_NAMES.MAIN_MENU.CHANNEL}
         onClick={() => setShowChangeChatChannelModal(true)}
         extraStyles=""
         ariaControls="Change Chat Channel modal"
@@ -50,9 +51,14 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
       >
         {showChangeChatChannelModal && <ChangeChatChannelModal socket={socket} setParentDisplay={setShowChangeChatChannelModal} />}
       </LobbyTopListItemWithButton>
-      <LobbyTopListItemWithButton title="Ranked" onClick={handleRankedClick} disabled={lobbyUiState.matchmakingMenu.isLoading} extraStyles="" />
-      <LobbyTopListItemWithButton title="Host" onClick={handleSetupNewGameClick} extraStyles="" />
-      <LobbyTopListItemWithButton title="Join" onClick={handleViewGamesListClick} extraStyles="" />
+      <LobbyTopListItemWithButton
+        title={BUTTON_NAMES.MAIN_MENU.RANKED}
+        onClick={handleRankedClick}
+        disabled={lobbyUiState.matchmakingMenu.isLoading}
+        extraStyles=""
+      />
+      <LobbyTopListItemWithButton title={BUTTON_NAMES.MAIN_MENU.HOST} onClick={handleSetupNewGameClick} extraStyles="" />
+      <LobbyTopListItemWithButton title={BUTTON_NAMES.MAIN_MENU.JOIN} onClick={handleViewGamesListClick} extraStyles="" />
     </>
   );
 }

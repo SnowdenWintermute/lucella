@@ -27,8 +27,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   const [readableGameStatus, setReadableGameStatus] = useState("Waiting for an opponent");
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const currentGameRoom = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom;
-  if (!currentGameRoom) return <p>Error - no game room found</p>;
-  const { players, playersReady, gameStatus, countdown } = currentGameRoom;
+
   const currentWaitingListPosition = lobbyUiState.gameCreationWaitingList.currentPosition;
 
   const handleLeaveGameClick = () => {
@@ -43,15 +42,23 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
     dispatch(setPlayerReadyLoading(true));
   };
 
+  // useEffect(() => {
+  //   if (!currentGameRoom) dispatch(setActiveMenu(LobbyMenu.MAIN));
+  // }, [currentGameRoom]);
+
   useEffect(() => {
     let newReadableGameStatus = "";
+    if (!currentGameRoom) return;
+    const { players, playersReady, gameStatus, countdown } = currentGameRoom;
     if (!players.challenger) newReadableGameStatus = LOBBY_TEXT.GAME_ROOM.GAME_STATUS_WAITING_FOR_OPPONENT;
     else if (players.challenger && (!playersReady.challenger || !playersReady.host)) newReadableGameStatus = "Waiting for all players to be ready";
     else if (gameStatus === GameStatus.COUNTING_DOWN) newReadableGameStatus = "Game starting";
     else if (gameStatus === GameStatus.IN_WAITING_LIST) newReadableGameStatus = "Position in waiting list";
     setReadableGameStatus(newReadableGameStatus);
-  }, [players.challenger, playersReady, gameStatus]);
+  }, [currentGameRoom]);
 
+  if (!currentGameRoom) return <p>Error - no game room found</p>;
+  const { players, playersReady, gameStatus, countdown } = currentGameRoom;
   return (
     <>
       <ul className="lobby-menus__top-buttons">

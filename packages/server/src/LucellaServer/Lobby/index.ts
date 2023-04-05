@@ -94,7 +94,10 @@ export class Lobby {
     // console.log("client requesting to join game ", gameName, "current game rooms: ", this.gameRooms);
     const gameRoom = this.gameRooms[gameName];
     if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
-    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_IS_FULL);
+    if (gameRoom.players.host && gameRoom.players.challenger) {
+      socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.getSanitizedGameRooms());
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_IS_FULL);
+    }
     if (gameRoom.isRanked && !assignedToGameByMatchmaking)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
@@ -145,7 +148,7 @@ export class Lobby {
     }
   }
   createGameRoom(gameName: string, isRanked?: boolean) {
-    if (this.gameRooms[gameName]) return ErrorMessages.LOBBY.GAME_EXISTS;
+    if (this.gameRooms[gameName]) return ErrorMessages.LOBBY.GAME_NAME.GAME_EXISTS;
     const gameNameValidationError = validateGameName(gameName, isRanked);
     if (gameNameValidationError) return gameNameValidationError;
     this.gameRooms[gameName] = new GameRoom(gameName, isRanked);
