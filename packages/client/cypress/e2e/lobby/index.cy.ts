@@ -1,11 +1,10 @@
 import { FrontendRoutes } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
-import authedUserHostAndStartGame from "./authedUserHostAndStartGame";
 import chatAndChangeChannels from "./chatAndChangeChannels";
 import gameListMenu from "./gameListMenu";
 import gameRoomMenu from "./gameRoomMenu";
 import gameSetupMenu from "./gameSetupMenu";
-import unauthedJoinLeaveAndDisconnectFromGameRoom from "./unauthedJoinLeaveAndDisconnectFromGameRoom";
+import matchmakingQueueMenu from "./matchmakingQueueMenu";
 
 describe("lobby chat, hosting, joining and game start and end functionality", () => {
   // eslint-disable-next-line no-undef
@@ -25,7 +24,8 @@ describe("lobby chat, hosting, joining and game start and end functionality", ()
   });
   // gameSetupMenu();
   // gameRoomMenu();
-  gameListMenu();
+  // gameListMenu();
+  matchmakingQueueMenu();
   // startGameAndDisconnect();
   // authedUserHostAndStartGame();
   // chatAndChangeChannels();

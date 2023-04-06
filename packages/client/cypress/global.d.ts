@@ -7,5 +7,6 @@ declare namespace Cypress {
     verifyVeiwingMainMenu();
     openAndVerifyMenu(button: string, textToVerify: string);
     hostCasualGame(gameName: string);
+    createAndLogInSequentialEloTestUsers(numberToCreate: number, eloOfFirst: number, eloBetweenEach: number, testUsers: Object);
   }
 }

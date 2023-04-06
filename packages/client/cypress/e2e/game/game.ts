@@ -3,7 +3,7 @@ import {
   battleRoomDefaultChatChannel,
   BattleRoomGame,
   FrontendRoutes,
-  gameRoomCountdownDuration,
+  baseGameStartCountdownDuration,
   ONE_SECOND,
   rankedGameChannelNamePrefix,
   SocketEventsFromClient,
@@ -68,7 +68,7 @@ describe("play game", () => {
     cy.task(TaskNames.socketEmit, { username: alternateUsername, event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
     cy.findByRole("button", { name: /ranked/i }).click();
     cy.findByText(new RegExp(LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
-    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("be.visible");
+    cy.get('[data-cy="battle-room-canvas"]', { timeout: baseGameStartCountdownDuration * ONE_SECOND + ONE_SECOND }).should("be.visible");
     // select all orbs and send them to opponent end zone
     cy.get("body").click("topLeft");
     cy.get('[data-cy="battle-room-canvas"]').then((canvas) => {

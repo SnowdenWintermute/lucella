@@ -27,15 +27,20 @@ function MatchmakingQueueMenu({ socket }: { socket: Socket }) {
     <>
       <ul className="lobby-menus__top-buttons">
         {!lobbyUiState.currentGameRoom && <LobbyTopListItemWithButton title="Cancel" onClick={handleCancelRankedMatchmaking} extraStyles="" />}
-        {lobbyUiState.currentGameRoom?.isRanked && <span>{LOBBY_TEXT.MATCHMAKING_QUEUE.RANKED_GAME_STARTING}</span>}
       </ul>
       <section className="lobby-menu matchmaking-queue-menu">
         <div className="lobby-menu__left matchmaking-queue-menu__left">
-          <h3 className="lobby-menu__header matchmaking-queue-menu__header">Searching for ranked match...</h3>
+          <h3 className="lobby-menu__header matchmaking-queue-menu__header">{LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH}</h3>
           <div className="matchmaking-queue-menu__queue-status">
             <div className="matchmaking-queue-menu__queue-status-text">
-              <p>Number of players in queue: {numPlayersToDisplay}</p>
-              <p>Current Elo difference threshold: {eloDiffThresholdToDisplay}</p>
+              <p>
+                {LOBBY_TEXT.MATCHMAKING_QUEUE.NUM_PLAYERS_IN_QUEUE}
+                {numPlayersToDisplay}
+              </p>
+              <p>
+                {LOBBY_TEXT.MATCHMAKING_QUEUE.ELO_DIFF_THRESHOLD}
+                {eloDiffThresholdToDisplay}
+              </p>
             </div>
             <div className="matchmaking-queue-menu__loading-spinner-container">
               {/* <CircularProgress percentage={75} thickness={12} rotateAnimation /> */}

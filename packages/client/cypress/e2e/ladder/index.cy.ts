@@ -3,7 +3,7 @@ import {
   battleRoomDefaultChatChannel,
   ErrorMessages,
   FrontendRoutes,
-  gameRoomCountdownDuration,
+  baseGameStartCountdownDuration,
   ONE_SECOND,
   rankedGameChannelNamePrefix,
   SocketEventsFromClient,

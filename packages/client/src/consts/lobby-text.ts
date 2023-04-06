@@ -1,7 +1,8 @@
 export const LOBBY_TEXT = {
   MATCHMAKING_QUEUE: {
-    SEEKING_RANKED_MATCH: "Seeking ranked match...",
-    RANKED_GAME_STARTING: "Ranked game starting...",
+    SEEKING_RANKED_MATCH: "Searching for ranked match...",
+    NUM_PLAYERS_IN_QUEUE: "Number of players in queue: ",
+    ELO_DIFF_THRESHOLD: "Current Elo difference threshold: ",
   },
   GAME_SETUP: {
     TITLE: "Creating an unranked game",

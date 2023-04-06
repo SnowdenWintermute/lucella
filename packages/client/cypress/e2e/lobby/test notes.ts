@@ -24,7 +24,7 @@
 //  - if a user leaves the matchmaking queue after being matched (during game start countdown), the player they were matched with is placed back in the queue and their previous chat channel
 //  - if a user leaves the matchmaking queue after being matched (during waiting list), the player they were matched with is placed back in the queue and their previous chat channel
 
-// waiting list - review and revise current test
+// waiting list - review and revise current test (check other menu notes for waiting list references that weren't included in their tests)
 
 // chat
 //  - users can enter a chat message
@@ -40,4 +40,8 @@
 //  - user can type in a valid custom channel name and join that channel
 //  - list of users in chat channel sidebar updates when a player leaves or joins the chat channel
 
-// bans
+// bans / context menu
+
+// auth revamp
+
+// ladder revamp

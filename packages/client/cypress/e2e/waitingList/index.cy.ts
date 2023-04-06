@@ -6,7 +6,7 @@ import {
   battleRoomDefaultChatChannel,
   FrontendRoutes,
   gameOverCountdownDuration,
-  gameRoomCountdownDuration,
+  baseGameStartCountdownDuration,
   GameStatus,
   ONE_SECOND,
   SocketEventsFromClient,
@@ -104,7 +104,7 @@ describe("waiting list", () => {
     cy.findByText(GameStatus.COUNTING_DOWN, {
       timeout: baseGameCreationWaitingListLoopIntervalLength + gameOverCountdownDuration * ONE_SECOND + ONE_SECOND * 2,
     }).should("exist");
-    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("be.visible");
+    cy.get('[data-cy="battle-room-canvas"]', { timeout: baseGameStartCountdownDuration * ONE_SECOND + ONE_SECOND }).should("be.visible");
   });
 
   it("when placed in waiting list from the matchmaking queue, shows waiting list position, updates the position", () => {

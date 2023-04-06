@@ -3,7 +3,7 @@ import {
   FrontendRoutes,
   gameChannelNamePrefix,
   gameOverCountdownDuration,
-  gameRoomCountdownDuration,
+  baseGameStartCountdownDuration,
   ONE_SECOND,
   PlayerRole,
   SocketEventsFromClient,
@@ -82,7 +82,7 @@ export default function gameRoomMenu() {
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_PLAYERS_TO_BE_READY);
     //  - game is started after a spot opens up
     cy.clickButton(BUTTON_NAMES.GAME_ROOM.READY);
-    cy.wait(gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND);
+    cy.wait(baseGameStartCountdownDuration * ONE_SECOND + ONE_SECOND);
     cy.get(`[data-cy="battle-room-canvas"]`).should("be.visible");
     //  - upon host leaving game room menu, challenger is sent back to their previous chat channel
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);

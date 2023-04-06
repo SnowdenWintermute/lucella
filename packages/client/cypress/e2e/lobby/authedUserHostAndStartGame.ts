@@ -1,4 +1,12 @@
-import { AuthRoutePaths, ErrorMessages, FrontendRoutes, gameRoomCountdownDuration, GameStatus, ONE_SECOND, SocketEventsFromClient } from "../../../../common";
+import {
+  AuthRoutePaths,
+  ErrorMessages,
+  FrontendRoutes,
+  baseGameStartCountdownDuration,
+  GameStatus,
+  ONE_SECOND,
+  SocketEventsFromClient,
+} from "../../../../common";
 import { mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -80,7 +88,7 @@ export default function authedUserHostAndStartGame() {
     cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
     cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.CLICKS_READY });
     cy.findByRole("button", { name: /Ready/i }).click();
-    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("exist");
+    cy.get('[data-cy="battle-room-canvas"]', { timeout: baseGameStartCountdownDuration * ONE_SECOND + ONE_SECOND }).should("exist");
     // challenger leaves game
     cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.LEAVES_GAME });
     cy.get('[data-cy="score-screen-modal"]')

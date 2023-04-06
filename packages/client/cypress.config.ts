@@ -61,6 +61,19 @@ export default defineConfig({
             return error;
           }
         },
+        [TaskNames.setGameStartCountdown]: async (args) => {
+          try {
+            const response = await axios({
+              method: "put",
+              url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${ConfigRoutePaths.GAME_START_COUNTDOWN}`,
+              data: { testerKey: args.CYPRESS_TESTER_KEY, gameStartCountdownDuration: args.gameStartCountdown },
+            });
+            return { status: response.status };
+          } catch (error: any) {
+            console.log("setGameStartCountdown: ", error);
+            return error;
+          }
+        },
         [TaskNames.deleteAllTestUsers]: async (args) => {
           try {
             const response = await axios({
