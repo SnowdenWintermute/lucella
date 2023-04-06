@@ -12,6 +12,7 @@ import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertC
 import LoadingSpinner from "../../common-components/LoadingSpinner";
 import { LOBBY_TEXT } from "../../../consts/lobby-text";
 import { ARIA_LABELS } from "../../../consts/aria-labels";
+import { BUTTON_NAMES } from "../../../consts/button-names";
 
 function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom }) {
   const dispatch = useAppDispatch();
@@ -69,7 +70,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className="lobby-menus__top-buttons">
-        <LobbyTopListItemWithButton title="Cancel" onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
+        <LobbyTopListItemWithButton title={BUTTON_NAMES.GAME_LIST.BACK} onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
         <button
           type="button"
           className="button game-list-buttons__refresh"

@@ -13,6 +13,9 @@ export const BUTTON_NAMES = {
     CANCEL: "Cancel",
     CREATE_GAME: "Create Game",
   },
+  GAME_LIST: {
+    BACK: "Back",
+  },
   GAME_ROOM: {
     READY: "Ready",
     LEAVE_GAME: "Leave Game",

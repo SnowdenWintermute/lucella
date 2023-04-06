@@ -80,7 +80,7 @@ export class Lobby {
   }
   handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
     if (!gameName) return console.error(ErrorMessages.LOBBY.GAME_NAME.MAX_LENGTH);
-    gameName = gameName.toLowerCase();
+    gameName = gameName.replace(/\s+/g, "-").toLowerCase();
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_HOST_IF_ALREADY_IN_GAME);
@@ -157,7 +157,7 @@ export class Lobby {
     const { io, connectedSockets } = this.server;
     const { username } = connectedSockets[socket.id].associatedUser;
     const gameRoom = this.gameRooms[gameName];
-    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE);
+    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, "Tried to put player in game room but it didn't exist");
     if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
     if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_IS_FULL);
     if (gameRoom.players.host && gameRoom.players.host.associatedUser.username === username)

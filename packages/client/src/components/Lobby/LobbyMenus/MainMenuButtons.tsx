@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ErrorMessages, SocketEventsFromClient } from "../../../../../common";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { setMatchmakingLoading, setActiveMenu, LobbyMenu } from "../../../redux/slices/lobby-ui-slice";
+import { setMatchmakingLoading, setActiveMenu, LobbyMenu, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import { Alert } from "../../../classes/Alert";
@@ -21,6 +21,7 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
   const handleViewGamesListClick = () => {
     if (!socket) return;
     socket.emit(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST);
+    dispatch(setGameListFetching(true));
     dispatch(setActiveMenu(LobbyMenu.GAME_LIST));
   };
 

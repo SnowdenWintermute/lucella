@@ -171,10 +171,29 @@ export default defineConfig({
           users = {};
           return null;
         },
-        [TaskNames.socketEmit]: (taskData: { username: string; event: SocketEventsFromClient; data: any }) => {
+        [TaskNames.socketEmit]: async (taskData: { username: string; event: SocketEventsFromClient; data: any }) => {
           const { username, event, data } = taskData;
-          if (!users[username].socket) console.error(`tried to emit event ${event} but no socket was found`);
-          users[username].socket?.emit(event, data);
+          const thisTask = new Promise((resolve, reject) => {
+            if (!users[username].socket) console.error(`tried to emit event ${event} but no socket was found`);
+            if (event === SocketEventsFromClient.HOSTS_NEW_GAME || event === SocketEventsFromClient.JOINS_GAME) {
+              console.log(`${username}: ${event}`);
+              users[username].socket?.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, () => {
+                console.log("got current room update");
+                users[username].socket?.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
+                resolve(null);
+              });
+              users[username].socket?.on(SocketEventsFromServer.ERROR_MESSAGE, (error: string) => {
+                console.log("tried to host or join a game but got error: ", error);
+                users[username].socket?.off(SocketEventsFromServer.ERROR_MESSAGE);
+                resolve(null);
+              });
+              users[username].socket?.emit(event, data);
+            } else {
+              users[username].socket?.emit(event, data);
+              resolve(null);
+            }
+          });
+          await thisTask;
           return null;
         },
         [TaskNames.putTwoSocketsInGameAndStartIt]: async ({ username1, username2, gameName }: { username1: string; username2: string; gameName: string }) => {
