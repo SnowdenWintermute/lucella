@@ -1,9 +1,10 @@
 // LOBBY TESTS
 
-// battle room game (casual)
+// battle room game and score screen
 //  - when a user disconnects from the game, they cede the game to their opponent
 //  - a score screen is shown in the lobby with player names and scores
-//  - score sceen should indicate the game had no effect on ladder ratings or rank
+//  - for a casual game, score sceen should indicate the game had no effect on ladder ratings or rank
+//  - for a ranked game, rank and elo changes should be shown
 //  - pressing escape closes the score screen
 // game list menu
 //  - pressing escape closes the game list menu and puts the user back in the main menu
@@ -23,6 +24,16 @@
 //  - if too many games are being played, a waiting list status is shown
 //  - if a user leaves the matchmaking queue after being matched (during game start countdown), the player they were matched with is placed back in the queue and their previous chat channel
 //  - if a user leaves the matchmaking queue after being matched (during waiting list), the player they were matched with is placed back in the queue and their previous chat channel
+
+// score screen:
+// cy.findByLabelText(ARIA_LABELS.SCORE_SCREEN_MODAL).should("contain", new RegExp(`${username}`, "i"));
+// cy.findByLabelText(ARIA_LABELS.SCORE_SCREEN_MODAL).should("contain", new RegExp(`${alternateUsername}`, "i"));
+// cy.findByText(/elo:/i).next().should("contain.text", "1517");
+// cy.findByText(/rank:/i).next().should("contain.text", "25 -> 24");
+// cy.findByText("24").next().should("contain.text", username).next().should("contain.text", "1517");
+// cy.findByLabelText("ladder search").clear().type("alternate_test_user{enter}");
+// cy.findByText("26").next().should("contain.text", alternateUsername).next().should("contain.text", "1484");
+// cy.task(TaskNames.disconnectSocket, { username: Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE") });
 
 // waiting list - review and revise current test (check other menu notes for waiting list references that weren't included in their tests)
 

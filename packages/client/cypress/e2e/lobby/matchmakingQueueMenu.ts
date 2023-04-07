@@ -18,8 +18,7 @@ export default function matchmakingQueueMenu() {
     CYPRESS_BACKEND_URL: Cypress.env("CYPRESS_BACKEND_URL"),
     CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
   };
-  // eslint-disable-next-line prefer-const
-  let testUsers = {};
+  const testUsers = {};
   const modifiedGameStartCountdown = 3; // give a consistant time for this test, one that is long enough for cypress to read countdown text
   // eslint-disable-next-line no-undef
   before(() => {

@@ -28,7 +28,7 @@ export const ErrorMessages = {
   LADDER: {
     USER_NOT_FOUND: "No record found for that user",
     NO_ENTRIES_FOUND: "No ladder entries found",
-    NO_RANK_FOUND: "User has a score card but no rank (please issue a bug report for this)",
+    NO_RANK_FOUND: "User has a score card but no rank (this is a bug which may result if ladder entries are deleted without deleting associated accounts)",
   },
   RATE_LIMITER: {
     REQUESTING_TOO_QUICKLY: "You are sending requests too quickly, please wait a while before trying again",

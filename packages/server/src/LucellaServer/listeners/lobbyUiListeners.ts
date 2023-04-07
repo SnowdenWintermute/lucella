@@ -30,6 +30,7 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
     server.lobby.handleReadyStateToggleRequest(socket);
   });
   socket.on(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE, () => {
+    console.log(`${server.connectedSockets[socket.id].associatedUser.username} requested to join matchmaking queue`);
     server.matchmakingQueue.addUser(socket);
   });
   socket.on(SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE, () => {

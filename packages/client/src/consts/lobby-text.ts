@@ -18,7 +18,6 @@ export const LOBBY_TEXT = {
     },
     PLAYER_READY_STATUS: { READY: "ready", NOT_READY: "not ready" },
     SERVER_EXPERIENCING_HIGH_LOAD: "Server is experiencing high load, waiting for an open game slot.",
-    POSITION_IN_WAITING_LIST: "Position in line: ",
   },
   GAME_LIST: {
     TITLE: "Current games",
@@ -27,5 +26,8 @@ export const LOBBY_TEXT = {
   SCORE_SCREEN: {
     TITLE: (gameName: string) => `Game ${gameName} result`,
     CASUAL_GAME_NO_RANK_CHANGE: "No changes to ladder rating",
+  },
+  LADDER: {
+    PAGE_NUMBER_PREFIX: "Page ",
   },
 };

@@ -92,7 +92,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
           <p className="game-room-menu__right-main-text" aria-label={ARIA_LABELS.GAME_ROOM.GAME_STATUS}>
             {readableGameStatus}
             {gameStatus === GameStatus.COUNTING_DOWN && <span aria-label={ARIA_LABELS.GAME_ROOM.GAME_START_COUNTDOWN}>{countdown?.current}</span>}
-            {gameStatus === GameStatus.IN_WAITING_LIST && <span>{currentWaitingListPosition}</span>}
+            {gameStatus === GameStatus.IN_WAITING_LIST && <span aria-label={ARIA_LABELS.GAME_ROOM.WAITING_LIST_POSITION}>{currentWaitingListPosition}</span>}
           </p>
           {gameStatus === GameStatus.IN_WAITING_LIST && (
             <p className="game-room-menu__right-info-text">The server is experiencing high load. Your game has been placed in the waiting list.</p>

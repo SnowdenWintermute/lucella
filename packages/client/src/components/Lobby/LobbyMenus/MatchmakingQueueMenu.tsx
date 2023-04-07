@@ -1,6 +1,7 @@
 import React from "react";
 import { Socket } from "socket.io-client";
 import { SocketEventsFromClient } from "../../../../../common";
+import { BUTTON_NAMES } from "../../../consts/button-names";
 import { LOBBY_TEXT } from "../../../consts/lobby-text";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -26,7 +27,9 @@ function MatchmakingQueueMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className="lobby-menus__top-buttons">
-        {!lobbyUiState.currentGameRoom && <LobbyTopListItemWithButton title="Cancel" onClick={handleCancelRankedMatchmaking} extraStyles="" />}
+        {!lobbyUiState.currentGameRoom && (
+          <LobbyTopListItemWithButton title={BUTTON_NAMES.MATCHMAKING_QUEUE.CANCEL} onClick={handleCancelRankedMatchmaking} extraStyles="" />
+        )}
       </ul>
       <section className="lobby-menu matchmaking-queue-menu">
         <div className="lobby-menu__left matchmaking-queue-menu__left">

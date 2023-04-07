@@ -1,4 +1,5 @@
 import React from "react";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
 import { LOBBY_TEXT } from "../../../consts/lobby-text";
 import { usersApi } from "../../../redux/api-slices/users-api-slice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -47,7 +48,7 @@ export default function ScoreScreenModal() {
       setParentDisplay={setParentDisplay}
       extraStyles="score-screen-modal"
       noPadding
-      dataCy="score-screen-modal"
+      ariaLabel={ARIA_LABELS.SCORE_SCREEN_MODAL}
     >
       <div className="score-screen-modal__contents">
         <div className="score-screen-modal__left">

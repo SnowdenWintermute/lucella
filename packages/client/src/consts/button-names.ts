@@ -9,6 +9,12 @@ export const BUTTON_NAMES = {
   GENERAL: {
     SEARCH: "SEARCH",
   },
+  MAIN_MENU: {
+    CHANNEL: "Channel",
+    RANKED: "Ranked",
+    HOST: "Host",
+    JOIN: "Join",
+  },
   GAME_SETUP: {
     CANCEL: "Cancel",
     CREATE_GAME: "Create Game",
@@ -20,10 +26,7 @@ export const BUTTON_NAMES = {
     READY: "Ready",
     LEAVE_GAME: "Leave Game",
   },
-  MAIN_MENU: {
-    CHANNEL: "Channel",
-    RANKED: "Ranked",
-    HOST: "Host",
-    JOIN: "Join",
+  MATCHMAKING_QUEUE: {
+    CANCEL: "Cancel",
   },
 };

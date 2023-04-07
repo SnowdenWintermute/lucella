@@ -1,4 +1,6 @@
 import React from "react";
+import { ARIA_LABELS } from "../../consts/aria-labels";
+import { LOBBY_TEXT } from "../../consts/lobby-text";
 import ArrowButtonIcon from "../../img/menu-icons/arrow-button-icon.svg";
 
 type Props = {
@@ -12,8 +14,7 @@ export function LadderPaginationButtons({ onTurnPage, currentPageViewing }: Prop
       <button
         type="button"
         className="button button-basic ladder__pagination-button"
-        data-cy="ladder-page-back"
-        aria-label="page back"
+        aria-label={ARIA_LABELS.LADDER.PREVIOUS_PAGE}
         onClick={(e) => {
           onTurnPage(e, "back");
         }}
@@ -21,15 +22,15 @@ export function LadderPaginationButtons({ onTurnPage, currentPageViewing }: Prop
         <ArrowButtonIcon className="ladder__pagination-button-arrow-svg" />
       </button>
       <div className="ladder-current-page-number-holder">
-        <span className="ladder__current-page-number" data-cy="ladder-current-page" aria-label="current page">
-          Page {currentPageViewing + 1}
+        <span className="ladder__current-page-number" aria-label={ARIA_LABELS.LADDER.CURRENT_PAGE}>
+          {LOBBY_TEXT.LADDER.PAGE_NUMBER_PREFIX}
+          {currentPageViewing + 1}
         </span>
       </div>
       <button
         type="button"
         className="button button-basic ladder__pagination-button"
-        data-cy="ladder-page-forward"
-        aria-label="page forward"
+        aria-label={ARIA_LABELS.LADDER.NEXT_PAGE}
         onClick={(e) => {
           onTurnPage(e, "foreward");
         }}

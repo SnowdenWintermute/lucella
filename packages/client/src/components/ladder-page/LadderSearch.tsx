@@ -1,4 +1,5 @@
 import React from "react";
+import { ARIA_LABELS } from "../../consts/aria-labels";
 import { BUTTON_NAMES } from "../../consts/button-names";
 
 type Props = {
@@ -15,7 +16,7 @@ function LadderSearch({ searchText, setSearchText, handleSubmit }: Props) {
           className="input input--transparent ladder__search-input"
           id="ladder-search-input"
           name="Search"
-          aria-label="ladder search"
+          aria-label={ARIA_LABELS.LADDER.SEARCH}
           value={searchText}
           onChange={(e) => {
             setSearchText(e.target.value);

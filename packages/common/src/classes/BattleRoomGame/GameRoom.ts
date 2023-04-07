@@ -1,7 +1,7 @@
 import { BattleRoomGame } from "../BattleRoomGame";
 import { SocketMetadata } from "../SocketMetadata";
 import { GameStatus } from "../../enums";
-import { gameChannelNamePrefix, gameRoomCountdownDuration } from "../../consts/game-lobby-config";
+import { gameChannelNamePrefix, baseGameStartCountdownDuration } from "../../consts/game-lobby-config";
 
 export class GameRoom {
   gameName: string;
@@ -11,7 +11,7 @@ export class GameRoom {
   } = { host: null, challenger: null };
   spectators: [];
   gameStatus: GameStatus = GameStatus.IN_LOBBY;
-  countdown = { duration: gameRoomCountdownDuration, current: gameRoomCountdownDuration };
+  countdown = { current: baseGameStartCountdownDuration };
   countdownInterval: NodeJS.Timeout | null = null;
   playersReady: { host: boolean; challenger: boolean } = { host: false, challenger: false };
   score = { host: 0, challenger: 0, neededToWin: BattleRoomGame.initialScoreNeededToWin };
@@ -26,7 +26,6 @@ export class GameRoom {
   }
   cancelCountdownInterval() {
     if (this.countdownInterval) clearInterval(this.countdownInterval);
-    this.countdown.current = this.countdown.duration;
     this.gameStatus = GameStatus.IN_LOBBY;
   }
 }

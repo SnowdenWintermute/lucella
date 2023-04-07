@@ -11,6 +11,7 @@ import LadderSearch from "../../components/ladder-page/LadderSearch";
 import { LadderTable } from "../../components/ladder-page/LadderTable";
 import { LadderPaginationButtons } from "../../components/ladder-page/LadderPaginationButtons";
 import LoadingSpinner from "../../components/common-components/LoadingSpinner";
+import { ARIA_LABELS } from "../../consts/aria-labels";
 
 function Ladder() {
   const dispatch = useAppDispatch();
@@ -29,7 +30,6 @@ function Ladder() {
     isLoading: searchedEntryIsLoading,
     isFetching: searchedEntryIsFetching,
     data: searchedEntryData,
-    isError: searchedEntryIsError,
     error: searchedEntryError,
     refetch: searchedEntryRefetch,
   } = useGetLadderEntryQuery(submittedSearchText, { refetchOnMountOrArgChange: true, skip: !submittedSearchText });
@@ -61,7 +61,7 @@ function Ladder() {
   };
 
   let ladderEntriesToShow: JSX.Element | JSX.Element[] = (
-    <tr className="ladder__table-row" data-cy="loading-data">
+    <tr className="ladder__table-row" aria-label={ARIA_LABELS.LADDER.FETCHING_LADDER_ENTRIES}>
       <td className="ladder__loading-spinner-td">
         <LoadingSpinner extraStyles="ladder__loading-spinner" />
       </td>

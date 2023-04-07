@@ -202,6 +202,7 @@ export default defineConfig({
               });
               users[username].socket?.emit(event, data);
             } else {
+              console.log(`${username} emitted event ${event}`, users[username].socket);
               users[username].socket?.emit(event, data);
               resolve(null);
             }

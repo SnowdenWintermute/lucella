@@ -150,22 +150,25 @@ export class LucellaServer {
   initiateGameStartCountdown(gameRoom: GameRoom) {
     const { io, lobby, games } = this;
     const gameChatChannelName = gameChannelNamePrefix + gameRoom.gameName;
+    gameRoom.countdown.current = this.config.gameStartCountdownDuration;
+    io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
     lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName] = gameRoom;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-    gameRoom.countdown.current -= 1;
     gameRoom.countdownInterval = setInterval(() => {
-      io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
-      gameRoom.countdown.current -= 1;
-      if (gameRoom.countdown.current > 0) return;
-      if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
-      gameRoom.gameStatus = GameStatus.IN_PROGRESS;
-      delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
-      io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-      games[gameRoom.gameName] = new BattleRoomGame(gameRoom.gameName, gameRoom.isRanked);
-      const game = games[gameRoom.gameName];
-      io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
-      game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);
+      if (gameRoom.countdown.current > 0) {
+        gameRoom.countdown.current -= 1;
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
+      } else {
+        if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
+        gameRoom.gameStatus = GameStatus.IN_PROGRESS;
+        delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+        games[gameRoom.gameName] = new BattleRoomGame(gameRoom.gameName, gameRoom.isRanked);
+        const game = games[gameRoom.gameName];
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
+        game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);
+      }
     }, ONE_SECOND);
   }
   static async fetchOrCreateBattleRoomScoreCard(user: User) {
