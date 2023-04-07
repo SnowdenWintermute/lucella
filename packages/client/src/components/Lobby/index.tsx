@@ -1,5 +1,5 @@
 import { Socket } from "socket.io-client";
-import React, { useEffect } from "react";
+import React from "react";
 import Chat from "./Chat";
 import LobbyMenus from "./LobbyMenus";
 import ChatChannelSidebar from "./ChatChannelSidebar";
@@ -10,10 +10,6 @@ import ScoreScreenModal from "./modals/ScoreScreenModal";
 function Lobby({ socket }: { socket: Socket }) {
   const { data: user, refetch: userRefetch } = useGetMeQuery(null, { refetchOnMountOrArgChange: true }); // not using the data but we are re calling the quuery to update cache for other components like navbar/usermenu
   const uiState = useAppSelector((state) => state.UI);
-
-  // useEffect(() => {
-  //   userRefetch();
-  // }, [userRefetch]);
 
   return (
     <main className="page lobby">

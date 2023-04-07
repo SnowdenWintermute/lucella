@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
 import bcrypt from "bcryptjs";
-import { ErrorMessages, UsersRoutePaths } from "../../../../common";
+import { ERROR_MESSAGES, UsersRoutePaths } from "../../../../common";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL_ALTERNATE, TEST_USER_NAME_ALTERNATE, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -59,13 +59,13 @@ describe("accountActivationHandler", () => {
     expect(finishCount - startingCount).toEqual(1);
     const responseForSecondCreation = await request(app).post(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_ACTIVATION}`).send({ token });
     expect(responseForSecondCreation.status).toBe(401);
-    expect(responseBodyIncludesCustomErrorMessage(responseForSecondCreation, ErrorMessages.AUTH.USED_OR_EXPIRED_ACCOUNT_CREATION_SESSION)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(responseForSecondCreation, ERROR_MESSAGES.AUTH.USED_OR_EXPIRED_ACCOUNT_CREATION_SESSION)).toBeTruthy();
   });
 
   it("doesn't allow creation of an account without a valid token", async () => {
     const token = "invalid token";
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_ACTIVATION}`).send({ token });
     expect(response.status).toBe(401);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
   });
 });

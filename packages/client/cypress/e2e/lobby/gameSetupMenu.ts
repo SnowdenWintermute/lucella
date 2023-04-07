@@ -1,4 +1,4 @@
-import { ErrorMessages, FrontendRoutes, SocketEventsFromClient } from "../../../../common";
+import { ERROR_MESSAGES, FrontendRoutes, SocketEventsFromClient } from "../../../../common";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
 import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
 import { longTestText, shortTestText } from "../../support/consts";
@@ -28,10 +28,10 @@ export default function gameSetupMenu() {
     //  - too short name (only empty is considered too short)
     cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.HOST, LOBBY_TEXT.GAME_SETUP.TITLE);
     cy.findByLabelText(LOBBY_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL).focus().clear().type(`{enter}`);
-    cy.findByText(ErrorMessages.LOBBY.GAME_NAME.NOT_ENTERED).should("exist");
+    cy.findByText(ERROR_MESSAGES.LOBBY.GAME_NAME.NOT_ENTERED).should("exist");
     //  - too long name
     cy.findByLabelText(LOBBY_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL).focus().clear().type(`${longTestText}{enter}`);
-    cy.findByText(ErrorMessages.LOBBY.GAME_NAME.MAX_LENGTH).should("exist");
+    cy.findByText(ERROR_MESSAGES.LOBBY.GAME_NAME.MAX_LENGTH).should("exist");
     //  - duplicate name (other game by same name exists)
     cy.task(TaskNames.socketEmit, {
       username: arbitraryNameForAnonUserInCypressSocketList,
@@ -39,7 +39,7 @@ export default function gameSetupMenu() {
       data: shortTestText,
     });
     cy.findByLabelText(LOBBY_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL).focus().clear().type(`${shortTestText}{enter}`);
-    cy.findByText(ErrorMessages.LOBBY.GAME_NAME.GAME_EXISTS).should("exist");
+    cy.findByText(ERROR_MESSAGES.LOBBY.GAME_NAME.GAME_EXISTS).should("exist");
     cy.task(TaskNames.socketEmit, {
       username: arbitraryNameForAnonUserInCypressSocketList,
       event: SocketEventsFromClient.LEAVES_GAME,

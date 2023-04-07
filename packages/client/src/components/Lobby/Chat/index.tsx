@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
-import { useAppSelector } from "../../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   ChatMessage,
   SocketEventsFromClient,
@@ -10,17 +10,25 @@ import {
   chatDelayUnregisteredUser,
   percentNumberIsOfAnotherNumber,
   positiveNumberOrZero,
+  chatMessageMaxLength,
+  ERROR_MESSAGES,
 } from "../../../../../common";
 import CircularProgress from "../../common-components/CircularProgress";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import replaceUrlsWithAnchorTags from "../../../utils/replaceUrlsWithAnchorTags";
 import ClientGeneratedChatNotice from "./ClientGeneratedChatNotice";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
+import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { setAlert } from "../../../redux/slices/alerts-slice";
+import { Alert } from "../../../classes/Alert";
+import { AlertType } from "../../../enums";
 
 interface Props {
   socket: Socket;
 }
 
 function Chat({ socket }: Props) {
+  const dispatch = useAppDispatch();
   const [chatInput, setChatInput] = useState("");
   const { data: user } = useGetMeQuery(null);
   const chatState = useAppSelector((state) => state.chat);
@@ -60,6 +68,7 @@ function Chat({ socket }: Props) {
   }, []);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > chatMessageMaxLength) return dispatch(setAlert(new Alert(ERROR_MESSAGES.LOBBY.CHAT.MESSAGE_TOO_LONG, AlertType.DANGER)));
     setChatInput(e.target.value);
   };
 
@@ -104,7 +113,9 @@ function Chat({ socket }: Props) {
       const textToDisplay = replaceUrlsWithAnchorTags(message.text, `chat__message chat__message--${message.style}`);
       messagesToDisplay.push(
         <li className={`chat__message chat__message--${message.style}`} key={`${message.timeStamp} ${message.text}`}>
-          {message.author} : {/* eslint-disable-next-line react/no-danger */}
+          {message.author}
+          {LOBBY_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}
+          {/* eslint-disable-next-line react/no-danger */}
           <span className={`chat__message chat__message--${message.style}`} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
         </li>
       );
@@ -113,23 +124,25 @@ function Chat({ socket }: Props) {
 
   return (
     <section className="chat">
-      <div className="chat__message-stream">
+      <div className="chat__message-stream" aria-label={ARIA_LABELS.CHAT.MESSAGE_STREAM}>
         <ul>{messagesToDisplay}</ul>
       </div>
       <form onSubmit={handleSubmit} className="chat__input-form">
         <input
           ref={chatInputRef}
           className={`input input--transparent ${"chat__input"}`}
-          aria-label="chat-input"
+          aria-label={ARIA_LABELS.CHAT.INPUT}
           type="text"
           onChange={(e) => onChange(e)}
           value={chatInput}
-          placeholder="Enter a message to chat..."
+          placeholder={LOBBY_TEXT.CHAT.INPUT_PLACEHOLDER}
           disabled={waitingToSendMessage}
         />
-        <span className="chat__input-delay-circular-progress">
-          <CircularProgress percentage={percentageChatDelayRemaining} thickness={6} />
-        </span>
+        {percentageChatDelayRemaining > 0 && (
+          <span className="chat__input-delay-circular-progress" aria-label={ARIA_LABELS.CHAT.INPUT_DELAY_INDICATOR}>
+            <CircularProgress percentage={percentageChatDelayRemaining} thickness={6} />
+          </span>
+        )}
       </form>
     </section>
   );

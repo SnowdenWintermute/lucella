@@ -2,7 +2,7 @@ import {
   AuthRoutePaths,
   baseGameStartCountdownDuration,
   battleRoomDefaultChatChannel,
-  ErrorMessages,
+  ERROR_MESSAGES,
   FrontendRoutes,
   ONE_SECOND,
   SocketEventsFromClient,
@@ -111,7 +111,7 @@ describe("ladder", () => {
     cy.findByLabelText(ARIA_LABELS.LADDER.TABLE).find("tr").should("have.length", 21); // 20 entries per page plus the row headers
     // searching for non existant records gives appropriate response
     cy.findByLabelText(ARIA_LABELS.LADDER.SEARCH).clear().type("non existant name{enter}");
-    cy.findByText(ErrorMessages.LADDER.USER_NOT_FOUND).should("exist");
+    cy.findByText(ERROR_MESSAGES.LADDER.USER_NOT_FOUND).should("exist");
     // play a game in which one user surrenders so we can quickly get the ranks and elo changed
     cy.findByRole("link", { name: "Game" }).click();
     cy.task(TaskNames.socketEmit, { username: alternateUsername, event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });

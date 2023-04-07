@@ -16,8 +16,8 @@ Cypress.Commands.add("deleteAllTestUsersAndCreateOneTestUser", () => {
     expect(response.status).to.equal(201);
   });
 });
-Cypress.Commands.add("clickButton", (buttonName: string) => {
-  cy.findByRole("button", { name: buttonName }).click();
+Cypress.Commands.add("clickButton", (buttonName: string, force?: boolean) => {
+  cy.findByRole("button", { name: buttonName }).click({ force: force || false });
 });
 Cypress.Commands.add("visitPageAndVerifyHeading", (url: string, heading: string) => {
   cy.visit(url);
@@ -50,6 +50,7 @@ Cypress.Commands.add("createAndLogInSequentialEloTestUsers", (numberToCreate: nu
   cy.task(TaskNames.createSequentialEloTestUsers, { ...args, numberToCreate, eloOfFirst, eloBetweenEach }).then((response: { data: any; status: number }) => {
     expect(response.status).to.equal(201);
     Object.entries(response.data).forEach(([key, value]) => {
+      console.log("KEY: ", key, "VALUE: ", value);
       // eslint-disable-next-line no-param-reassign
       testUsers[key] = value;
     });

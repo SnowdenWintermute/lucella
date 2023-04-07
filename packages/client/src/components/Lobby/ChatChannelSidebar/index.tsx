@@ -21,9 +21,13 @@ function ChatChannelSidebar() {
       <div className="chat-channel-sidebar__header-box" aria-label={ARIA_LABELS.CHAT.CHANNEL_NAME_WITH_NUM_USERS}>
         <span>{newChatChannelLoading ? "" : `${currentChatChannelName} (${numUsers})`}</span>
       </div>
-      <div className="chat-channel-sidebar__users-list-container" aria-label="users in this channel">
+      <div className="chat-channel-sidebar__users-list-container" aria-label={ARIA_LABELS.CHAT.LIST_OF_USERS_IN_CHANNEL}>
         <ul className="chat-channel-sidebar__users-list">
-          {newChatChannelLoading ? <LoadingSpinner extraStyles="chat-channel-sidebar__loading-spinner" /> : usersInChannelToDisplay}
+          {newChatChannelLoading ? (
+            <LoadingSpinner extraStyles="chat-channel-sidebar__loading-spinner" aria-label={ARIA_LABELS.CHAT.CHAT_CHANNEL_LOADING_INDICATOR} />
+          ) : (
+            usersInChannelToDisplay
+          )}
         </ul>
       </div>
     </section>

@@ -10,7 +10,7 @@ export * from "./consts/battle-room-ladder-config";
 export * from "./consts/game-lobby-config";
 export * from "./consts/auth-validation-config";
 export * from "./consts/colors";
-export { ErrorMessages } from "./consts/ErrorMessages";
+export { ERROR_MESSAGES } from "./consts/ErrorMessages";
 export { SuccessAlerts } from "./consts/SuccessAlerts";
 export { InputFields } from "./consts/InputFields";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";

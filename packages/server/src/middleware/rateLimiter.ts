@@ -3,7 +3,7 @@
 /* eslint-disable no-param-reassign */
 import { NextFunction, Request, Response } from "express";
 import {
-  ErrorMessages,
+  ERROR_MESSAGES,
   ONE_MINUTE,
   ONE_SECOND,
   passwordResetEmailFixedWindowCounterLimit,
@@ -35,8 +35,8 @@ export default function createRateLimiterMiddleware(
   windowLimit = 100,
   counterFixedWindowMs = ONE_MINUTE,
   counterLimit = 15,
-  onCounterLimitReached = (next: NextFunction) => next([new CustomError(ErrorMessages.RATE_LIMITER.REQUESTING_TOO_QUICKLY, 429)]),
-  onSlidingWindowLimitReached = (next: NextFunction) => next([new CustomError(ErrorMessages.RATE_LIMITER.TOO_MANY_REQUESTS, 429)])
+  onCounterLimitReached = (next: NextFunction) => next([new CustomError(ERROR_MESSAGES.RATE_LIMITER.REQUESTING_TOO_QUICKLY, 429)]),
+  onSlidingWindowLimitReached = (next: NextFunction) => next([new CustomError(ERROR_MESSAGES.RATE_LIMITER.TOO_MANY_REQUESTS, 429)])
 ) {
   // a sliding window of fixed window request counters
   return async function rateLimiter(req: Request, res: Response, next: NextFunction) {

@@ -1,4 +1,4 @@
-import { ErrorMessages, FrontendRoutes, gameChannelNamePrefix, SocketEventsFromClient } from "../../../../common";
+import { ERROR_MESSAGES, FrontendRoutes, gameChannelNamePrefix, SocketEventsFromClient } from "../../../../common";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
 import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
 import { ARIA_LABELS } from "../../../src/consts/aria-labels";
@@ -55,7 +55,7 @@ export default function gameListMenu() {
       data: "a",
     });
     cy.findByLabelText(ARIA_LABELS.GAME_LIST.JOIN_GAME_BY_NAME_OF("a")).click();
-    cy.findByText(ErrorMessages.LOBBY.GAME_IS_FULL).should("be.visible");
+    cy.findByText(ERROR_MESSAGES.LOBBY.GAME_IS_FULL).should("be.visible");
     cy.findByLabelText(ARIA_LABELS.GAME_LIST.JOIN_GAME_BY_NAME_OF("a")).should("be.disabled");
     //  - clicking join on a game with an open spot places user in game room menu
     cy.task(TaskNames.socketEmit, {

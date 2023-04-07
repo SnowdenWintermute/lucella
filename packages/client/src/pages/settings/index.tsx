@@ -7,7 +7,7 @@ import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useDeleteAccountMutation, useGetMeQuery } from "../../redux/api-slices/users-api-slice";
-import { ErrorMessages, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, SuccessAlerts } from "../../../../common";
 import DeleteAccountModal from "../../components/settings-page/DeleteAccountModal";
 
 function Settings() {
@@ -36,7 +36,7 @@ function Settings() {
     if (passwordResetIsSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
     if (passwordResetIsError) {
       console.log(passwordResetError);
-      dispatch(setAlert(new Alert(ErrorMessages.AUTH.CHANGE_PASSWORD_EMAIL, AlertType.DANGER)));
+      dispatch(setAlert(new Alert(ERROR_MESSAGES.AUTH.CHANGE_PASSWORD_EMAIL, AlertType.DANGER)));
     }
   }, [passwordResetIsSuccess, passwordResetIsError]);
 

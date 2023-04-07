@@ -1,5 +1,5 @@
 import { recurse } from "cypress-recurse";
-import { ErrorMessages, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, FrontendRoutes, SuccessAlerts } from "../../../../common";
 import { getLastEmailTimeout } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -52,7 +52,7 @@ export default function passwordResetTest() {
       cy.findByRole("heading", { name: /change password/i }).should("exist");
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
       cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN, "i")).should("exist");
     });
   });
 }

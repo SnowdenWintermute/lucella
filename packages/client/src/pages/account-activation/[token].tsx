@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, ErrorMessages, SuccessAlerts } from "../../../../common";
+import { CustomErrorDetails, ERROR_MESSAGES, SuccessAlerts } from "../../../../common";
 import { Alert } from "../../classes/Alert";
 import AuthPage from "../../components/common-components/AuthPage/AuthPage";
 import { AlertType } from "../../enums";

@@ -1,11 +1,6 @@
 /* eslint-disable consistent-return */
-import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../../redux/hooks";
+import React, { useState } from "react";
 import { useGetLadderEntryQuery, useGetLadderPageQuery } from "../../redux/api-slices/ladder-api-slice";
-import { CustomErrorDetails } from "../../../../common";
-import { setAlert } from "../../redux/slices/alerts-slice";
-import { Alert } from "../../classes/Alert";
-import { AlertType } from "../../enums";
 import LadderTableRow from "../../components/ladder-page/LadderTableRow";
 import LadderSearch from "../../components/ladder-page/LadderSearch";
 import { LadderTable } from "../../components/ladder-page/LadderTable";
@@ -14,7 +9,6 @@ import LoadingSpinner from "../../components/common-components/LoadingSpinner";
 import { ARIA_LABELS } from "../../consts/aria-labels";
 
 function Ladder() {
-  const dispatch = useAppDispatch();
   const [searchText, setSearchText] = useState("");
   const [submittedSearchText, setSubmittedSearchText] = useState("");
   const [viewingSearchedEntry, setViewingSearchedEntry] = useState(false);
@@ -33,15 +27,6 @@ function Ladder() {
     error: searchedEntryError,
     refetch: searchedEntryRefetch,
   } = useGetLadderEntryQuery(submittedSearchText, { refetchOnMountOrArgChange: true, skip: !submittedSearchText });
-
-  useEffect(() => {
-    if (ladderPageIsError && ladderPageError && "data" in ladderPageError) {
-      const errors: CustomErrorDetails[] = ladderPageError.data as CustomErrorDetails[];
-      errors.forEach((currError) => {
-        dispatch(setAlert(new Alert(currError.message, AlertType.DANGER)));
-      });
-    }
-  }, [ladderPageIsLoading, ladderPageError]);
 
   const handleSubmitSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -82,6 +67,13 @@ function Ladder() {
     ladderEntriesToShow = ladderPageData.pageData.map((entry) => <LadderTableRow key={entry.name} entry={entry} />);
     // for (let i = 30; i > 0; i -= 1)
     //   ladderEntriesToShow.push(<LadderTableRow key={i} entry={{ name: "aoeuhtnsaoeuhtnsaoeuhtns", rank: 2391, elo: 4501, wins: 999999, losses: 99999999 }} />);
+  } else if (ladderPageIsError) {
+    ladderEntriesToShow = (
+      <tr className="ladder__table-row">
+        {/* @ts-ignore */}
+        <td className="ladder__error-td">{ladderPageError?.data[0]?.message || "Error fetching ladder entries"} </td>
+      </tr>
+    );
   }
 
   return (

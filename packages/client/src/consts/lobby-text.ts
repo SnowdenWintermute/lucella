@@ -4,6 +4,9 @@ export const LOBBY_TEXT = {
     NUM_PLAYERS_IN_QUEUE: "Number of players in queue: ",
     ELO_DIFF_THRESHOLD: "Current Elo difference threshold: ",
   },
+  MAIN_MENU: {
+    CHANNEL_MODAL_INPUT_LABEL: "Channel name:",
+  },
   GAME_SETUP: {
     TITLE: "Creating an unranked game",
     GAME_CREATION_INPUT_LABEL: "Game name:",
@@ -29,5 +32,9 @@ export const LOBBY_TEXT = {
   },
   LADDER: {
     PAGE_NUMBER_PREFIX: "Page ",
+  },
+  CHAT: {
+    INPUT_PLACEHOLDER: "Enter a message to chat...",
+    AUTHOR_MESSAGE_DELIMITER: " : ",
   },
 };

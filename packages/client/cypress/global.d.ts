@@ -1,7 +1,7 @@
 declare namespace Cypress {
   interface Chainable {
     deleteAllTestUsersAndCreateOneTestUser();
-    clickButton(buttonName: string);
+    clickButton(buttonName: string, force?: boolean);
     visitPageAndVerifyHeading(url: string, heading: string): Chainable<any>;
     clickLinkAndVerifyHeading(linkName: string, heading: string): Chainable<any>;
     verifyVeiwingMainMenu();

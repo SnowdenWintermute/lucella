@@ -5,6 +5,7 @@ import { AlertType } from "../../../enums";
 import { useAppDispatch } from "../../../redux/hooks";
 import { clearAlert } from "../../../redux/slices/alerts-slice";
 import { defaultAlertTimeout } from "../../../consts";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
 
 interface Props {
   message: string;
@@ -33,7 +34,7 @@ function AlertElement({ message, type, id }: Props) {
   };
 
   return (
-    <li role="status" data-cy="alert-element" className="alert__item">
+    <li role="status" aria-label={ARIA_LABELS.ALERT} className="alert__item">
       <button type="button" className="alert__button" onClick={removeAlert}>
         <div className="alert__icon-container">{alertIcon}</div>
         <span className="alert__message-text">{message}</span>

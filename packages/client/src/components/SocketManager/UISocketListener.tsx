@@ -2,7 +2,7 @@
 /* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { ErrorMessages, SocketEventsFromServer, GENERIC_SOCKET_EVENTS, ChatMessage, ChatMessageStyles } from "../../../../common";
+import { ERROR_MESSAGES, SocketEventsFromServer, GENERIC_SOCKET_EVENTS, ChatMessage, ChatMessageStyles } from "../../../../common";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -43,7 +43,7 @@ function UISocketListener({ socket }: Props) {
       dispatch(clearLobbyUi());
     });
     socket.on(GENERIC_SOCKET_EVENTS.CONNECT_ERROR, () => {
-      dispatch(newChatMessage(new ChatMessage(ErrorMessages.LOBBY.ERROR_CONNECTING, "Error", ChatMessageStyles.ERROR)));
+      dispatch(newChatMessage(new ChatMessage(ERROR_MESSAGES.LOBBY.ERROR_CONNECTING, "Error", ChatMessageStyles.ERROR)));
     });
     socket.on(GENERIC_SOCKET_EVENTS.DISCONNECT, () => {
       dispatch(newChatMessage(new ChatMessage("Server disconnected", "Server", ChatMessageStyles.PRIVATE)));

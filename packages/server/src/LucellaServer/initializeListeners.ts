@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import { ErrorMessages, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "../../../common";
+import { ERROR_MESSAGES, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "../../../common";
 import handleNewSocketConnection from "./handleNewSocketConnection";
 import lobbyUiListeners from "./listeners/lobbyUiListeners";
 import battleRoomGameListeners from "./listeners/battleRoomGameListeners";
@@ -12,7 +12,7 @@ export default function initializeListeners(server: LucellaServer) {
     socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, server.lobby.getSanitizedGameRooms());
     socket.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
     socket.onAny(() => {
-      if (!server.connectedSockets[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.SOCKET_NOT_REGISTERED);
+      if (!server.connectedSockets[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.SOCKET_NOT_REGISTERED);
     });
     lobbyUiListeners(server, socket);
     battleRoomGameListeners(server, socket);

@@ -7,7 +7,7 @@ import {
   Ban,
   CookieNames,
   defaultChatChannelNames,
-  ErrorMessages,
+  ERROR_MESSAGES,
   ONE_MINUTE,
   randBetween,
   SocketEventsFromClient,
@@ -62,7 +62,7 @@ describe("banUserAccountHandler", () => {
     const response = await request(app)
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_BAN}`)
       .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.ROLE_RESTRICTED)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.ROLE_RESTRICTED)).toBeTruthy();
     expect(response.status).toBe(403);
   });
 
@@ -111,7 +111,7 @@ describe("banUserAccountHandler", () => {
 
           expect(loginResponse.status).toBe(401);
           expect(loginResponse.headers["set-cookie"]).toBeUndefined();
-          expect(responseBodyIncludesCustomErrorMessage(loginResponse, ErrorMessages.AUTH.ACCOUNT_BANNED)).toBeTruthy();
+          expect(responseBodyIncludesCustomErrorMessage(loginResponse, ERROR_MESSAGES.AUTH.ACCOUNT_BANNED)).toBeTruthy();
 
           // after waiting the duration of their ban, they can log in again
           const currentTime = Date.now();

@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import React, { useState } from "react";
-import { ErrorMessages, SocketEventsFromClient } from "../../../../../common";
+import { ERROR_MESSAGES, SocketEventsFromClient } from "../../../../../common";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
 import { setMatchmakingLoading, setActiveMenu, LobbyMenu, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
@@ -32,7 +32,7 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
   const handleRankedClick = () => {
     if (!socket) return;
     if (!user) {
-      dispatch(setAlert(new Alert(ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED, AlertType.DANGER)));
+      dispatch(setAlert(new Alert(ERROR_MESSAGES.LOBBY.LOG_IN_TO_PLAY_RANKED, AlertType.DANGER)));
       return;
     }
     socket.emit(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE);

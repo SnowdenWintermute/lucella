@@ -1,5 +1,5 @@
 import { recurse } from "cypress-recurse";
-import { ErrorMessages, FrontendRoutes, nameMaxLength, passwordMaxLength, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, FrontendRoutes, nameMaxLength, passwordMaxLength, SuccessAlerts } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
 
@@ -37,11 +37,11 @@ export default function fullUserAuthFlow() {
       cy.findByRole("link", { name: /settings/i }).click();
       cy.findByRole("button", { name: /delete account/i }).click();
       cy.findByLabelText(/email address/i).type("wrong_email@gmail.com{enter}");
-      cy.findByText(new RegExp(ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, "i")).should("exist");
       cy.findByLabelText(/email address/i)
         .clear()
         .type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_CREDENTIALS, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS, "i")).should("exist");
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
       cy.findByText(new RegExp(SuccessAlerts.USERS.ACCOUNT_DELETED, "i")).should("exist");
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
@@ -50,7 +50,7 @@ export default function fullUserAuthFlow() {
       cy.findByRole("heading", { name: /login/i }).should("exist");
       cy.get('[data-cy="email-address-input"]').type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}`);
       cy.findByLabelText(/password/).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.EMAIL_DOES_NOT_EXIST, "i")).should("exist");
       cy.findByRole("link", { name: /create account/i }).click();
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
       cy.findByRole("heading", { name: /create account/i }).should("exist");
@@ -58,7 +58,7 @@ export default function fullUserAuthFlow() {
       cy.findByLabelText(/username/i).type(`${Cypress.env("CYPRESS_TEST_USER_NAME")}`);
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
       cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE, "i")).should("exist");
       // at this point we should be logged out
       // can't visit protected route if not logged in
       cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.SETTINGS}`, { failOnStatusCode: false });
@@ -73,21 +73,21 @@ export default function fullUserAuthFlow() {
       cy.findByRole("heading", { name: new RegExp(BUTTON_NAMES.AUTH_FORMS.CREATE_ACCOUNT, "i") }).should("exist");
       // test registration form errors
       cy.findByRole("button", { name: new RegExp(BUTTON_NAMES.AUTH_FORMS.CREATE_ACCOUNT, "i") }).click();
-      cy.get(`[data-cy="error-email"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.INVALID_EMAIL, "i"));
-      cy.get(`[data-cy="error-name"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.NAME_MIN_LENGTH, "i"));
-      cy.get(`[data-cy="error-password"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH, "i"));
+      cy.get(`[data-cy="error-email"]`).contains(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.INVALID_EMAIL, "i"));
+      cy.get(`[data-cy="error-name"]`).contains(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.NAME_MIN_LENGTH, "i"));
+      cy.get(`[data-cy="error-password"]`).contains(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MIN_LENGTH, "i"));
       cy.findByLabelText(/Email Address/i, {}).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
       let tooLongPassword = "";
       for (let i = passwordMaxLength + 1; i > 0; i -= 1) tooLongPassword += "1";
-      cy.findByLabelText(new RegExp(`Password - ${ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH}`, "i")).type(`${tooLongPassword}{enter}`);
-      cy.get(`[data-cy="error-password"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.PASSWORD_MAX_LENGTH, "i"));
-      cy.get(`[data-cy="error-passwordConfirm"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH, "i"));
+      cy.findByLabelText(new RegExp(`Password - ${ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MIN_LENGTH}`, "i")).type(`${tooLongPassword}{enter}`);
+      cy.get(`[data-cy="error-password"]`).contains(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MAX_LENGTH, "i"));
+      cy.get(`[data-cy="error-passwordConfirm"]`).contains(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.PASSWORDS_DONT_MATCH, "i"));
       let tooLongName = "";
       for (let i = nameMaxLength + 1; i > 0; i -= 1) tooLongName += "1";
       cy.findByLabelText(/Username/i).type(`${tooLongName}{enter}`);
-      cy.get(`[data-cy="error-name"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.NAME_MAX_LENGTH, "i"));
+      cy.get(`[data-cy="error-name"]`).contains(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.NAME_MAX_LENGTH, "i"));
       // valid passoword and email but duplicate name
-      cy.findByLabelText(new RegExp(`Password - ${ErrorMessages.VALIDATION.AUTH.PASSWORD_MAX_LENGTH}`, "i"))
+      cy.findByLabelText(new RegExp(`Password - ${ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MAX_LENGTH}`, "i"))
         .clear()
         .type(Cypress.env("CYPRESS_TEST_USER_PASSWORD"));
       cy.findByLabelText(/confirm password/i)
@@ -99,7 +99,7 @@ export default function fullUserAuthFlow() {
       cy.findByLabelText(/username/i)
         .clear()
         .type(`${Cypress.env("CYPRESS_TEST_USER_NAME")}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.NAME_IN_USE_OR_UNAVAILABLE)).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.NAME_IN_USE_OR_UNAVAILABLE)).should("exist");
       // duplicate email
       cy.findByLabelText(/username/i)
         .clear()
@@ -107,7 +107,7 @@ export default function fullUserAuthFlow() {
       cy.findByLabelText(/email address/i)
         .clear()
         .type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE)).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE)).should("exist");
       // all fields valid
       cy.findByLabelText(/email address/i)
         .clear()
@@ -129,8 +129,8 @@ export default function fullUserAuthFlow() {
       cy.findByRole("heading", { name: /login/i }).should("exist");
       // test possible login form errors
       cy.findByRole("button", { name: new RegExp(BUTTON_NAMES.AUTH_FORMS.LOGIN, "i") }).click();
-      cy.get(`[data-cy="error-email"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL, "i"));
-      cy.get(`[data-cy="error-password"]`).contains(new RegExp(ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD, "i"));
+      cy.get(`[data-cy="error-email"]`).contains(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL, "i"));
+      cy.get(`[data-cy="error-password"]`).contains(new RegExp(ERROR_MESSAGES.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD, "i"));
       cy.findByLabelText(/email/).type("unregistered@gmail.com");
       cy.get(`[data-cy="error-email"]`).should("not.exist");
       cy.get(`[data-cy="error-password"]`).should("exist");
@@ -138,10 +138,10 @@ export default function fullUserAuthFlow() {
       cy.get(`[data-cy="error-password"]`).should("not.exist");
       cy.findByLabelText(/password/).type(`{enter}`);
       // enter valid login form data
-      cy.findByText(new RegExp(ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.EMAIL_DOES_NOT_EXIST, "i")).should("exist");
       cy.get(`[data-cy="error-password"]`).should("not.exist");
       cy.findByLabelText(/email/).clear().type(`${userEmail}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_CREDENTIALS, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS, "i")).should("exist");
       cy.findByLabelText(/password/)
         .clear()
         .type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
@@ -182,7 +182,7 @@ export default function fullUserAuthFlow() {
       cy.findByRole("heading", { name: /change password/i }).should("exist");
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}`);
       cy.findByLabelText(/confirm password/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD_ALTERNATE")}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN, "i")).should("exist");
       // able to log in with new password
       cy.findByRole("link", { name: /login/i }).click();
       cy.findByRole("heading", { name: /login/i }).should("exist");

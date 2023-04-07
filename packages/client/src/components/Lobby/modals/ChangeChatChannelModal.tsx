@@ -4,6 +4,8 @@ import Modal from "../../common-components/Modal";
 import { defaultChatChannelNames, SocketEventsFromClient } from "../../../../../common";
 import { setNewChatChannelLoading } from "../../../redux/slices/chat-slice";
 import { useAppDispatch } from "../../../redux/hooks";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
+import { LOBBY_TEXT } from "../../../consts/lobby-text";
 
 export default function ChangeChatChannelModal({ socket, setParentDisplay }: { socket: Socket; setParentDisplay: (modalDisplayed: boolean) => void }) {
   const dispatch = useAppDispatch();
@@ -23,21 +25,21 @@ export default function ChangeChatChannelModal({ socket, setParentDisplay }: { s
   };
 
   return (
-    <Modal title="Change chat channel" backdropStyle="" setParentDisplay={setParentDisplay}>
+    <Modal title="Change chat channel" backdropStyle="" setParentDisplay={setParentDisplay} ariaLabel={ARIA_LABELS.MAIN_MENU.CHANGE_CHANNEL_MODAL}>
       <form onSubmit={(e) => onJoinRoomSubmit(e)}>
         <p className="change-chat-channel-modal__description">Type any channel name, or choose from a list of suggested channels:</p>
         <label htmlFor="change-chat-channel-input">
-          Channel name:
+          {LOBBY_TEXT.MAIN_MENU.CHANNEL_MODAL_INPUT_LABEL}
           <input
             autoFocus
             className="input input--transparent change-chat-channel-modal__input"
             onChange={(e) => {
               setJoinNewRoomInput(e.target.value);
             }}
+            aria-label={ARIA_LABELS.MAIN_MENU.CHANGE_CHANNEL_MODAL_INPUT}
             value={joinNewRoomInput}
             type="text"
             id="change-chat-channel-input"
-            aria-label="channel to join"
             placeholder="Channel to join..."
           />
         </label>

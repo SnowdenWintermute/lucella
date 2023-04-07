@@ -1,8 +1,17 @@
 import { PlayerRole } from "../../../common";
 
 export const ARIA_LABELS = {
+  MAIN_MENU: {
+    CHANGE_CHANNEL_MODAL: "change chat channel",
+    CHANGE_CHANNEL_MODAL_INPUT: "channel name to join",
+  },
   CHAT: {
+    INPUT: "chat input",
     CHANNEL_NAME_WITH_NUM_USERS: "chat channel name and number of users",
+    LIST_OF_USERS_IN_CHANNEL: "users in this channel",
+    MESSAGE_STREAM: "chat messages",
+    INPUT_DELAY_INDICATOR: "waiting before sending message",
+    CHAT_CHANNEL_LOADING_INDICATOR: "loading chat channel",
   },
   GAME_ROOM: {
     PLAYER_NAME: (playerRole: PlayerRole) => `${playerRole} name`,
@@ -24,4 +33,5 @@ export const ARIA_LABELS = {
     SEARCH: "search for a ladder entry",
   },
   SCORE_SCREEN_MODAL: "game result",
+  ALERT: "alert",
 };

@@ -7,7 +7,7 @@ import {
   AuthRoutePaths,
   CookieNames,
   defaultChatChannelNames,
-  ErrorMessages,
+  ERROR_MESSAGES,
   IPBanReason,
   ModerationRoutePaths,
   ONE_MINUTE,
@@ -63,7 +63,7 @@ describe("banIpHandler.test", () => {
     const response = await request(app)
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_BAN}`)
       .set("Cookie", [`access_token=${accessToken}`]);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.ROLE_RESTRICTED)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.ROLE_RESTRICTED)).toBeTruthy();
     expect(response.status).toBe(403);
   });
 

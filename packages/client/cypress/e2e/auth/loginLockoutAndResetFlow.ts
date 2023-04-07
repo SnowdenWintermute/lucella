@@ -1,5 +1,5 @@
 import { recurse } from "cypress-recurse";
-import { ErrorMessages, failedLoginCountTolerance, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, failedLoginCountTolerance, FrontendRoutes, SuccessAlerts } from "../../../../common";
 import { getLastEmailTimeout } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -32,7 +32,7 @@ export default function loginLockoutAndResetFlow() {
           .clear()
           .type(`wrongPassword{enter}`);
         failedAttempts += 1;
-        cy.findByText(new RegExp(ErrorMessages.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - failedAttempts), "i")).should(
+        cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - failedAttempts), "i")).should(
           "exist"
         );
       });
@@ -43,7 +43,7 @@ export default function loginLockoutAndResetFlow() {
       cy.findByLabelText(/^password$/i)
         .clear()
         .type(`wrongPassword{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.RATE_LIMITER.TOO_MANY_FAILED_LOGINS, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.RATE_LIMITER.TOO_MANY_FAILED_LOGINS, "i")).should("exist");
       // use should not be able to log in now, even with correct password
       cy.findByLabelText(/email address/i)
         .clear()
@@ -51,7 +51,7 @@ export default function loginLockoutAndResetFlow() {
       cy.findByLabelText(/^password$/i)
         .clear()
         .type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-      cy.findByText(new RegExp(ErrorMessages.AUTH.ACCOUNT_LOCKED, "i")).should("exist");
+      cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.ACCOUNT_LOCKED, "i")).should("exist");
       // request a password reset to unlock the account
       cy.findByRole("link", { name: /reset password/i }).click();
       cy.findByLabelText(/Enter your email to request a password reset./i)

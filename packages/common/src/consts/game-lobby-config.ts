@@ -15,6 +15,8 @@ export const maxGameNameLength = 20;
 
 export const battleRoomDefaultChatChannel = "battle-room-chat";
 
+export const chatChannelWelcomeMessage = (channelName: string) => `Welcome to ${channelName}.`;
+
 // for frontend chat selection buttons
 export const defaultChatChannelNames = {
   BATTLE_ROOM_CHAT: "Battle Room Chat",
@@ -24,3 +26,6 @@ export const defaultChatChannelNames = {
   TRENO: "Treno",
   LURKER_LOUNGE: "Lurker Lounge",
 };
+
+export const chatMessageMaxLength = 512;
+export const chatChannelNameMaxLength = 64;

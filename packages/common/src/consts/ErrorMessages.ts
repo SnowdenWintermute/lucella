@@ -1,7 +1,7 @@
 import { nameMaxLength, nameMinLength, passwordMaxLength, passwordMinLength } from "./auth-validation-config";
-import { gameChannelNamePrefix, maxGameNameLength, rankedGameChannelNamePrefix } from "./game-lobby-config";
+import { chatChannelNameMaxLength, chatMessageMaxLength, gameChannelNamePrefix, maxGameNameLength, rankedGameChannelNamePrefix } from "./game-lobby-config";
 
-export const ErrorMessages = {
+export const ERROR_MESSAGES = {
   SERVER_GENERIC: "Internal server error",
   LOBBY: {
     ERROR_CONNECTING: "Failed to connect to lobby server, retrying...",
@@ -23,6 +23,10 @@ export const ErrorMessages = {
       GAME_EXISTS: "A game by that name already exists",
       UNAUTHORIZED_RANKED: `Game name can only start with "${rankedGameChannelNamePrefix}" if it is a ranked game`,
       UNAUTHORIZED_CHANNEL_NAME: `Channels prefixed with "${gameChannelNamePrefix}" or "${rankedGameChannelNamePrefix}" are reserved for that game's players`,
+    },
+    CHAT: {
+      MESSAGE_TOO_LONG: `Messages can be a maximum of ${chatMessageMaxLength} characters`,
+      CHANNEL_NAME_TOO_LONG: `Chat channel names can be a maximum of ${chatChannelNameMaxLength} characters`,
     },
   },
   LADDER: {

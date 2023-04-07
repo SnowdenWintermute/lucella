@@ -3,7 +3,7 @@
 import { Socket } from "socket.io-client";
 import { useState } from "react";
 import { Alert } from "../../../classes/Alert";
-import { ErrorMessages, SocketEventsFromClient } from "../../../../../common";
+import { ERROR_MESSAGES, SocketEventsFromClient } from "../../../../../common";
 import { AlertType } from "../../../enums";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setAlert } from "../../../redux/slices/alerts-slice";
@@ -22,7 +22,7 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
     e.preventDefault();
     const gameNameToCreate = gameNameInput;
     // todo - run client side validation (reuse server function)
-    if (!gameNameToCreate || !socket) return dispatch(setAlert(new Alert(ErrorMessages.LOBBY.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
+    if (!gameNameToCreate || !socket) return dispatch(setAlert(new Alert(ERROR_MESSAGES.LOBBY.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
     socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameNameToCreate);
     dispatch(setCurrentGameRoomLoading(true));
   };

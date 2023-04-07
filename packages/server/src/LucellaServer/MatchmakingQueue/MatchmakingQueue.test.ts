@@ -5,7 +5,7 @@ import { IncomingMessage, Server, ServerResponse } from "http";
 import { io, Socket } from "socket.io-client";
 import {
   battleRoomDefaultChatChannel,
-  ErrorMessages,
+  ERROR_MESSAGES,
   gameOverCountdownDuration,
   GENERIC_SOCKET_EVENTS,
   ONE_SECOND,
@@ -127,8 +127,8 @@ describe("MatchmakingQueue", () => {
         }
       });
       guestSocket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => {
-        expect(data).toBe(ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED);
-        if (data === ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED) eventsOccurred.guestSocketRejectedFromMatchmaking = true;
+        expect(data).toBe(ERROR_MESSAGES.LOBBY.LOG_IN_TO_PLAY_RANKED);
+        if (data === ERROR_MESSAGES.LOBBY.LOG_IN_TO_PLAY_RANKED) eventsOccurred.guestSocketRejectedFromMatchmaking = true;
         if (eventsOccurred.authedSocketJoinedMatchmaking) {
           resolve(true);
         }

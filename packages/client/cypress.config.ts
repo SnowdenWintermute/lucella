@@ -142,7 +142,6 @@ export default defineConfig({
           if (!users[username]) users[username] = { socket: undefined, accessToken: undefined };
           const getConnectedSocket = new Promise((resolve, reject) => {
             if (withHeaders) {
-              console.log(`connecting user ${username}'s socket, has accessToken: ${!!users[username].accessToken}`);
               users[username].socket = io("http://localhost:8080" || "", {
                 transports: ["websocket"],
                 withCredentials: true,
@@ -191,7 +190,6 @@ export default defineConfig({
             if (event === SocketEventsFromClient.HOSTS_NEW_GAME || event === SocketEventsFromClient.JOINS_GAME) {
               console.log(`${username}: ${event}`);
               users[username].socket?.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, () => {
-                console.log("got current room update");
                 users[username].socket?.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
                 resolve(null);
               });
@@ -202,7 +200,6 @@ export default defineConfig({
               });
               users[username].socket?.emit(event, data);
             } else {
-              console.log(`${username} emitted event ${event}`, users[username].socket);
               users[username].socket?.emit(event, data);
               resolve(null);
             }

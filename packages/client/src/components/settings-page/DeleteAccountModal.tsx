@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, ErrorMessages, InputFields, SanitizedUser, SuccessAlerts } from "../../../../common";
+import { CustomErrorDetails, ERROR_MESSAGES, InputFields, SanitizedUser, SuccessAlerts } from "../../../../common";
 import { Alert } from "../../classes/Alert";
 import { BUTTON_NAMES } from "../../consts/button-names";
 import { AlertType } from "../../enums";
@@ -33,9 +33,9 @@ export default function DeleteAccountModal({ user, setParentDisplay }: { user: S
     e.preventDefault();
     if (email !== user?.email) {
       const newFieldErrors = { ...fieldErrors };
-      newFieldErrors.email = ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH;
+      newFieldErrors.email = ERROR_MESSAGES.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH;
       setFieldErrors(newFieldErrors);
-      dispatch(setAlert(new Alert(ErrorMessages.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, AlertType.DANGER)));
+      dispatch(setAlert(new Alert(ERROR_MESSAGES.VALIDATION.AUTH.CONFIRM_DELETE_ACCOUNT_EMAIL_MATCH, AlertType.DANGER)));
     } else await deleteAccount({ email, password });
   };
 

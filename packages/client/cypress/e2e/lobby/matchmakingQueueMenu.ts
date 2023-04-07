@@ -1,7 +1,7 @@
 import {
   AuthRoutePaths,
   baseGameStartCountdownDuration,
-  ErrorMessages,
+  ERROR_MESSAGES,
   FrontendRoutes,
   gameChannelNamePrefix,
   ONE_SECOND,
@@ -35,11 +35,11 @@ export default function matchmakingQueueMenu() {
   it("correctly displays and provides functionality in the matchmaking queue menu", () => {
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
     cy.verifyVeiwingMainMenu();
-
+    console.log("Test Users: ", testUsers);
     // matchmaking queue menu
     //  - clicking ranked when not logged in displays "create an account to play ranked" alert
     cy.clickButton(BUTTON_NAMES.MAIN_MENU.RANKED);
-    cy.findByText(ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED).should("be.visible");
+    cy.findByText(ERROR_MESSAGES.LOBBY.LOG_IN_TO_PLAY_RANKED).should("be.visible");
     //  - clicking ranked while logged in places user in matchmaking queue menu
     cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),

@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-import { ErrorMessages, gameChannelNamePrefix, rankedGameChannelNamePrefix } from "../../../../common";
+import { chatChannelNameMaxLength, ERROR_MESSAGES, gameChannelNamePrefix, rankedGameChannelNamePrefix } from "../../../../common";
 
 export default function validateChannelName(name: string, authorizedForGameChannel?: boolean) {
   if (
@@ -7,5 +7,6 @@ export default function validateChannelName(name: string, authorizedForGameChann
       name.slice(0, rankedGameChannelNamePrefix.length) === rankedGameChannelNamePrefix) &&
     !authorizedForGameChannel
   )
-    return ErrorMessages.LOBBY.GAME_NAME.UNAUTHORIZED_CHANNEL_NAME;
+    return ERROR_MESSAGES.LOBBY.GAME_NAME.UNAUTHORIZED_CHANNEL_NAME;
+  if (name.length > chatChannelNameMaxLength) return ERROR_MESSAGES.LOBBY.CHAT.CHANNEL_NAME_TOO_LONG;
 }

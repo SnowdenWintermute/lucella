@@ -1,19 +1,19 @@
 import { object, string, TypeOf, z } from "zod";
-import { ErrorMessages, nameMaxLength, nameMinLength, passwordMaxLength, passwordMinLength } from "../../../common";
+import { ERROR_MESSAGES, nameMaxLength, nameMinLength, passwordMaxLength, passwordMinLength } from "../../../common";
 
 export const registerUserSchema = object({
   body: object({
-    name: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.NAME })
-      .min(nameMinLength, ErrorMessages.VALIDATION.AUTH.NAME_MIN_LENGTH)
-      .max(nameMaxLength, ErrorMessages.VALIDATION.AUTH.NAME_MAX_LENGTH),
-    email: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL }).email(ErrorMessages.VALIDATION.AUTH.INVALID_EMAIL),
-    password: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD })
-      .min(passwordMinLength, ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)
-      .max(passwordMaxLength, ErrorMessages.VALIDATION.AUTH.PASSWORD_MAX_LENGTH),
-    passwordConfirm: string({ required_error: ErrorMessages.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD_CONFIRMATION }),
+    name: string({ required_error: ERROR_MESSAGES.VALIDATION.AUTH.REQUIRED_FIELD.NAME })
+      .min(nameMinLength, ERROR_MESSAGES.VALIDATION.AUTH.NAME_MIN_LENGTH)
+      .max(nameMaxLength, ERROR_MESSAGES.VALIDATION.AUTH.NAME_MAX_LENGTH),
+    email: string({ required_error: ERROR_MESSAGES.VALIDATION.AUTH.REQUIRED_FIELD.EMAIL }).email(ERROR_MESSAGES.VALIDATION.AUTH.INVALID_EMAIL),
+    password: string({ required_error: ERROR_MESSAGES.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD })
+      .min(passwordMinLength, ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)
+      .max(passwordMaxLength, ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MAX_LENGTH),
+    passwordConfirm: string({ required_error: ERROR_MESSAGES.VALIDATION.AUTH.REQUIRED_FIELD.PASSWORD_CONFIRMATION }),
   }).refine((data) => data.password === data.passwordConfirm, {
     path: ["passwordConfirm"],
-    message: ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH,
+    message: ERROR_MESSAGES.VALIDATION.AUTH.PASSWORDS_DONT_MATCH,
   }),
 });
 

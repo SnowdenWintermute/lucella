@@ -3,7 +3,7 @@
 import SocketIO, { Socket } from "socket.io";
 import {
   BattleRoomGame,
-  ErrorMessages,
+  ERROR_MESSAGES,
   gameChannelNamePrefix,
   GameRoom,
   GameStatus,
@@ -51,9 +51,9 @@ export class LucellaServer {
     const { currentGameName } = this.connectedSockets[socket.id];
     const usernameOfPlayerLeaving = this.connectedSockets[socket.id].associatedUser.username;
     // console.log(`${usernameOfPlayerLeaving} leaving game ${currentGameName}`);
-    if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
+    if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
     const gameRoom = this.lobby.gameRooms[currentGameName];
-    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
+    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
 
     const { players } = gameRoom;
     const playerToKick = players.challenger && players.host?.associatedUser.username === usernameOfPlayerLeaving ? players.challenger : undefined;

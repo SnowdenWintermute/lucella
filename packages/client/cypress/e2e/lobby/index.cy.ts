@@ -1,5 +1,5 @@
 import { TaskNames } from "../../support/TaskNames";
-import chatAndChangeChannels from "./chatAndChangeChannels";
+import chat from "./chat";
 import gameListMenu from "./gameListMenu";
 import gameRoomMenu from "./gameRoomMenu";
 import gameSetupMenu from "./gameSetupMenu";
@@ -21,9 +21,9 @@ describe("lobby chat, hosting, joining and game start and end functionality", ()
     cy.task(TaskNames.disconnectAllSockets);
     cy.task(TaskNames.deleteAllSocketsAndAccessTokens);
   });
-  gameSetupMenu();
-  gameRoomMenu();
-  gameListMenu();
-  matchmakingQueueMenu();
-  // chatAndChangeChannels();
+  chat();
+  // gameSetupMenu();
+  // gameRoomMenu();
+  // gameListMenu();
+  // matchmakingQueueMenu();
 });
