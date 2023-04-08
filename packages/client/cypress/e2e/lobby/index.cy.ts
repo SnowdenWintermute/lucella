@@ -22,8 +22,8 @@ describe("lobby chat, hosting, joining and game start and end functionality", ()
     cy.task(TaskNames.deleteAllSocketsAndAccessTokens);
   });
   chat();
-  // gameSetupMenu();
-  // gameRoomMenu();
-  // gameListMenu();
-  // matchmakingQueueMenu();
+  gameSetupMenu();
+  gameRoomMenu();
+  gameListMenu();
+  matchmakingQueueMenu();
 });

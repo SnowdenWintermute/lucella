@@ -1,6 +1,6 @@
 import React from "react";
 import { ARIA_LABELS } from "../../consts/aria-labels";
-import { LOBBY_TEXT } from "../../consts/lobby-text";
+import { APP_TEXT } from "../../consts/app-text";
 import ArrowButtonIcon from "../../img/menu-icons/arrow-button-icon.svg";
 
 type Props = {
@@ -23,7 +23,7 @@ export function LadderPaginationButtons({ onTurnPage, currentPageViewing }: Prop
       </button>
       <div className="ladder-current-page-number-holder">
         <span className="ladder__current-page-number" aria-label={ARIA_LABELS.LADDER.CURRENT_PAGE}>
-          {LOBBY_TEXT.LADDER.PAGE_NUMBER_PREFIX}
+          {APP_TEXT.LADDER.PAGE_NUMBER_PREFIX}
           {currentPageViewing + 1}
         </span>
       </div>

@@ -11,7 +11,7 @@ import { BUTTON_NAMES } from "../../../consts/button-names";
 import { LobbyMenu, setActiveMenu, setCurrentGameRoomLoading } from "../../../redux/slices/lobby-ui-slice";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
-import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { APP_TEXT } from "../../../consts/app-text";
 
 function GameSetupMenu({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
@@ -37,9 +37,9 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
       <section className="lobby-menu game-setup-menu">
         <div className="lobby-menu__left game-setup-menu__left">
           <form onSubmit={makeGamePublic} className="game-setup-menu__form">
-            <h3 className="lobby-menu__header">{LOBBY_TEXT.GAME_SETUP.TITLE}</h3>
+            <h3 className="lobby-menu__header">{APP_TEXT.GAME_SETUP.TITLE}</h3>
             <label htmlFor="game-name-input" className="game-setup-menu__input-label">
-              {LOBBY_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL}
+              {APP_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL}
               <input
                 id="game-name-input"
                 className="input input--transparent"

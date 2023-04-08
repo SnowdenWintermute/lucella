@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import { LobbyMenu, setActiveMenu, setPlayerReadyLoading } from "../../../redux/slices/lobby-ui-slice";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
-import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { APP_TEXT } from "../../../consts/app-text";
 import { BUTTON_NAMES } from "../../../consts/button-names";
 import { ARIA_LABELS } from "../../../consts/aria-labels";
 
@@ -17,7 +17,7 @@ function PlayerWithReadyStatus({ player, playerReady, playerRole }: { player: So
       </span>
       {player && (
         <span aria-label={ARIA_LABELS.GAME_ROOM.PLAYER_READY_STATUS(playerRole)}>
-          {playerReady ? LOBBY_TEXT.GAME_ROOM.PLAYER_READY_STATUS.READY : LOBBY_TEXT.GAME_ROOM.PLAYER_READY_STATUS.NOT_READY}
+          {playerReady ? APP_TEXT.GAME_ROOM.PLAYER_READY_STATUS.READY : APP_TEXT.GAME_ROOM.PLAYER_READY_STATUS.NOT_READY}
         </span>
       )}
       {!player && <span aria-label={ARIA_LABELS.GAME_ROOM.PLAYER_READY_STATUS(playerRole)} />}
@@ -27,7 +27,7 @@ function PlayerWithReadyStatus({ player, playerReady, playerRole }: { player: So
 
 function GameRoomMenu({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
-  const [readableGameStatus, setReadableGameStatus] = useState(LOBBY_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_OPPONENT);
+  const [readableGameStatus, setReadableGameStatus] = useState(APP_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_OPPONENT);
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const currentGameRoom = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom;
 
@@ -50,11 +50,11 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
     if (!currentGameRoom) dispatch(setActiveMenu(LobbyMenu.MAIN));
     if (!currentGameRoom) return;
     const { players, playersReady, gameStatus } = currentGameRoom;
-    if (!players.challenger) newReadableGameStatus = LOBBY_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_OPPONENT;
+    if (!players.challenger) newReadableGameStatus = APP_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_OPPONENT;
     else if (players.challenger && (!playersReady.challenger || !playersReady.host))
-      newReadableGameStatus = LOBBY_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_PLAYERS_TO_BE_READY;
-    else if (gameStatus === GameStatus.COUNTING_DOWN) newReadableGameStatus = LOBBY_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING;
-    else if (gameStatus === GameStatus.IN_WAITING_LIST) newReadableGameStatus = LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST;
+      newReadableGameStatus = APP_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_PLAYERS_TO_BE_READY;
+    else if (gameStatus === GameStatus.COUNTING_DOWN) newReadableGameStatus = APP_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING;
+    else if (gameStatus === GameStatus.IN_WAITING_LIST) newReadableGameStatus = APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST;
     setReadableGameStatus(newReadableGameStatus);
   }, [currentGameRoom]);
 
@@ -68,7 +68,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
       <section className="lobby-menu game-room-menu">
         <div className="lobby-menu__left game-room-menu__left">
           <h3 className="lobby-menu__header">
-            {LOBBY_TEXT.GAME_ROOM.GAME_NAME_HEADER}
+            {APP_TEXT.GAME_ROOM.GAME_NAME_HEADER}
             {currentGameRoom.gameName}
           </h3>
           <div className="game-room-menu__players">

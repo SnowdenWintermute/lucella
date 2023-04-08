@@ -9,7 +9,7 @@ import {
 } from "../../../../common";
 import { ARIA_LABELS } from "../../../src/consts/aria-labels";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
-import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
+import { APP_TEXT } from "../../../src/consts/app-text";
 import { TaskNames } from "../../support/TaskNames";
 
 describe("ladder", () => {
@@ -73,16 +73,16 @@ describe("ladder", () => {
 
     // check ladder pages loop around correctly
     cy.clickLinkAndVerifyHeading("ladder", "ladder");
-    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${LOBBY_TEXT.LADDER.PAGE_NUMBER_PREFIX}1`);
+    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${APP_TEXT.LADDER.PAGE_NUMBER_PREFIX}1`);
     cy.findByLabelText(ARIA_LABELS.LADDER.FETCHING_LADDER_ENTRIES).should("not.exist");
     cy.findByLabelText(ARIA_LABELS.LADDER.NEXT_PAGE).click();
-    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${LOBBY_TEXT.LADDER.PAGE_NUMBER_PREFIX}2`);
+    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${APP_TEXT.LADDER.PAGE_NUMBER_PREFIX}2`);
     cy.findByLabelText(ARIA_LABELS.LADDER.FETCHING_LADDER_ENTRIES).should("not.exist");
     cy.findByLabelText(ARIA_LABELS.LADDER.NEXT_PAGE).click();
-    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${LOBBY_TEXT.LADDER.PAGE_NUMBER_PREFIX}1`);
+    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${APP_TEXT.LADDER.PAGE_NUMBER_PREFIX}1`);
     cy.findByLabelText(ARIA_LABELS.LADDER.FETCHING_LADDER_ENTRIES).should("not.exist");
     cy.findByLabelText(ARIA_LABELS.LADDER.PREVIOUS_PAGE).click();
-    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${LOBBY_TEXT.LADDER.PAGE_NUMBER_PREFIX}2`);
+    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${APP_TEXT.LADDER.PAGE_NUMBER_PREFIX}2`);
     // both users should join and leave matchmaking so their score cards are created
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
     cy.verifyVeiwingMainMenu();
@@ -94,10 +94,10 @@ describe("ladder", () => {
     cy.clickLinkAndVerifyHeading("ladder", "ladder");
     cy.findByLabelText(ARIA_LABELS.LADDER.FETCHING_LADDER_ENTRIES).should("not.exist");
     cy.findByLabelText(ARIA_LABELS.LADDER.PREVIOUS_PAGE).click();
-    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${LOBBY_TEXT.LADDER.PAGE_NUMBER_PREFIX}3`);
+    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${APP_TEXT.LADDER.PAGE_NUMBER_PREFIX}3`);
     cy.findByLabelText(ARIA_LABELS.LADDER.FETCHING_LADDER_ENTRIES).should("not.exist");
     cy.findByLabelText(ARIA_LABELS.LADDER.PREVIOUS_PAGE).click();
-    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${LOBBY_TEXT.LADDER.PAGE_NUMBER_PREFIX}2`);
+    cy.findByLabelText(ARIA_LABELS.LADDER.CURRENT_PAGE).should("contain.text", `${APP_TEXT.LADDER.PAGE_NUMBER_PREFIX}2`);
     cy.findByText("25").next().should("contain.text", username).next().should("contain.text", "1501");
     cy.findByText("26").next().should("contain.text", alternateUsername).next().should("contain.text", "1500");
     // by searching

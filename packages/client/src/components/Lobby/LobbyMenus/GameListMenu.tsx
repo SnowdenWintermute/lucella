@@ -10,7 +10,7 @@ import RefreshSvg from "../../../img/menu-icons/refresh.svg";
 import useScrollbarSize from "../../../hooks/useScrollbarSize";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 import LoadingSpinner from "../../common-components/LoadingSpinner";
-import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { APP_TEXT } from "../../../consts/app-text";
 import { ARIA_LABELS } from "../../../consts/aria-labels";
 import { BUTTON_NAMES } from "../../../consts/button-names";
 
@@ -63,7 +63,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
   const gameListLoadingSpinner = <LoadingSpinner key="loading spinner" extraStyles="game-list-menu__loading-spinner" />;
   let gamesToDisplay = [gameListLoadingSpinner];
   if (lobbyUiState.gameList.isFetching) gamesToDisplay = [gameListLoadingSpinner];
-  else if (noGames) gamesToDisplay = [<p key="no games found">{LOBBY_TEXT.GAME_LIST.NO_GAMES_FOUND}</p>];
+  else if (noGames) gamesToDisplay = [<p key="no games found">{APP_TEXT.GAME_LIST.NO_GAMES_FOUND}</p>];
   else
     gamesToDisplay = Object.values(lobbyUiState.gameList.games).map((gameRoom) => <GameListGame key={gameRoom.gameName} socket={socket} gameRoom={gameRoom} />);
 
@@ -84,7 +84,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
       </ul>
       <section className={`lobby-menu game-list-menu ${gameListIsOverflowing && "game-list-menu--scrollbar-present"}`}>
         <div className={`${"game-list-menu__headers"}`}>
-          <h3 className={`${"game-list-menu__game-name"} ${"game-list-menu__game-name-header"}`}>{LOBBY_TEXT.GAME_LIST.TITLE}</h3>
+          <h3 className={`${"game-list-menu__game-name"} ${"game-list-menu__game-name-header"}`}>{APP_TEXT.GAME_LIST.TITLE}</h3>
         </div>
         <div
           className={`${"game-list-menu__games"} ${gameListIsOverflowing && scrollbarSize.width && "game-list-menu__games--scrollbar-padding"}`}

@@ -13,7 +13,7 @@ import {
 } from "../../../../common";
 import { ARIA_LABELS } from "../../../src/consts/aria-labels";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
-import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
+import { APP_TEXT } from "../../../src/consts/app-text";
 import { mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -70,7 +70,7 @@ export default function chat() {
       event: SocketEventsFromClient.NEW_CHAT_MESSAGE,
       data: new ChatMessage(mediumTestText),
     });
-    cy.findByLabelText(ARIA_LABELS.CHAT.MESSAGE_STREAM).should("contain.text", username + LOBBY_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER + mediumTestText);
+    cy.findByLabelText(ARIA_LABELS.CHAT.MESSAGE_STREAM).should("contain.text", username + APP_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER + mediumTestText);
     //  - chat message max length error alert
     const oneMoreThanMaximumLengthMessage = [];
     for (let i = chatMessageMaxLength + 1; i > 0; i -= 1) oneMoreThanMaximumLengthMessage.push("a");
@@ -79,17 +79,17 @@ export default function chat() {
     cy.findByText(ERROR_MESSAGES.LOBBY.CHAT.MESSAGE_TOO_LONG).should("be.visible");
     //  - chat input delay
     cy.findByLabelText(ARIA_LABELS.CHAT.INPUT).focus().clear().type("a{enter}");
-    cy.findByLabelText(ARIA_LABELS.CHAT.MESSAGE_STREAM).should("contain.text", `${LOBBY_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}a`);
+    cy.findByLabelText(ARIA_LABELS.CHAT.MESSAGE_STREAM).should("contain.text", `${APP_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}a`);
     cy.findByLabelText(ARIA_LABELS.CHAT.INPUT).focus().clear().type("b{enter}");
     cy.findByLabelText(ARIA_LABELS.CHAT.INPUT_DELAY_INDICATOR).should("be.visible");
-    cy.findByLabelText(ARIA_LABELS.CHAT.MESSAGE_STREAM).should("contain.text", `${LOBBY_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}a`);
+    cy.findByLabelText(ARIA_LABELS.CHAT.MESSAGE_STREAM).should("contain.text", `${APP_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}a`);
     cy.findByLabelText(ARIA_LABELS.CHAT.INPUT_DELAY_INDICATOR).should("not.exist");
-    cy.findByLabelText(ARIA_LABELS.CHAT.MESSAGE_STREAM).should("contain.text", `${LOBBY_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}b`);
+    cy.findByLabelText(ARIA_LABELS.CHAT.MESSAGE_STREAM).should("contain.text", `${APP_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}b`);
     //  - clicking channel button shows change channel modal
     cy.clickButton(BUTTON_NAMES.MAIN_MENU.CHANNEL);
     cy.findByLabelText(ARIA_LABELS.MAIN_MENU.CHANGE_CHANNEL_MODAL).should("be.visible");
     //  - attempting to join a chat channel prefixed with "game- or ranked-" shows error
-    cy.findByLabelText(LOBBY_TEXT.MAIN_MENU.CHANNEL_MODAL_INPUT_LABEL)
+    cy.findByLabelText(APP_TEXT.MAIN_MENU.CHANNEL_MODAL_INPUT_LABEL)
       .click({ force: true })
       .clear({ force: true })
       .type(`${rankedGameChannelNamePrefix}{enter}`, { force: true });

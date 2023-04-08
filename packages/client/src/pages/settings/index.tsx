@@ -9,6 +9,7 @@ import { AlertType } from "../../enums";
 import { useDeleteAccountMutation, useGetMeQuery } from "../../redux/api-slices/users-api-slice";
 import { ERROR_MESSAGES, SuccessAlerts } from "../../../../common";
 import DeleteAccountModal from "../../components/settings-page/DeleteAccountModal";
+import { APP_TEXT } from "../../consts/app-text";
 
 function Settings() {
   const router = useRouter();
@@ -51,7 +52,7 @@ function Settings() {
     <section className="page-padded-container">
       <main className="page">
         <div className="page__top-bar">
-          <h3 className="page__header">Settings</h3>
+          <h3 className="page__header">{APP_TEXT.SETTINGS.TITLE}</h3>
         </div>
         <div className="settings-page__content">
           <span className="settings-page__logged-in-as-email">
@@ -60,7 +61,7 @@ function Settings() {
           <ul className="settings-page__options">
             <li>
               <button type="button" className="button " onClick={handleRequestChangePasswordEmail} disabled={passwordResetIsLoading}>
-                {passwordResetIsLoading ? "Senging email..." : "Change Password"}
+                {passwordResetIsLoading ? "Senging email..." : APP_TEXT.SETTINGS.CHANGE_PASSWORD}
               </button>
             </li>
             <li>
@@ -72,7 +73,7 @@ function Settings() {
                 onClick={() => setShowDeleteAccountModal(true)}
                 disabled={deleteAccountIsLoading}
               >
-                {deleteAccountIsLoading ? "..." : "Delete Account"}
+                {deleteAccountIsLoading ? "..." : APP_TEXT.SETTINGS.DELETE_ACCOUNT}
               </button>
               {showDeleteAccountModal && <DeleteAccountModal user={user} setParentDisplay={setShowDeleteAccountModal} />}
             </li>

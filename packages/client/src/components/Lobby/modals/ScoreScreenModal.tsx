@@ -1,6 +1,6 @@
 import React from "react";
 import { ARIA_LABELS } from "../../../consts/aria-labels";
-import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { APP_TEXT } from "../../../consts/app-text";
 import { usersApi } from "../../../redux/api-slices/users-api-slice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setShowScoreScreenModal } from "../../../redux/slices/ui-slice";
@@ -44,7 +44,7 @@ export default function ScoreScreenModal() {
 
   return (
     <Modal
-      title={LOBBY_TEXT.SCORE_SCREEN.TITLE(gameRoom.gameName)}
+      title={APP_TEXT.SCORE_SCREEN.TITLE(gameRoom.gameName)}
       setParentDisplay={setParentDisplay}
       extraStyles="score-screen-modal"
       noPadding
@@ -73,7 +73,7 @@ export default function ScoreScreenModal() {
             )}
           </div>
           <div className="score-screen-modal__elo-and-rank-changes">
-            {!wasRanked && <div className="score-screen-modal__elo-and-rank-changes-block">{LOBBY_TEXT.SCORE_SCREEN.CASUAL_GAME_NO_RANK_CHANGE}</div>}
+            {!wasRanked && <div className="score-screen-modal__elo-and-rank-changes-block">{APP_TEXT.SCORE_SCREEN.CASUAL_GAME_NO_RANK_CHANGE}</div>}
             {wasRanked && (
               <>
                 <div className="score-screen-modal__elo-and-rank-changes-block">

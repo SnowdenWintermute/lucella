@@ -34,4 +34,7 @@ export const ARIA_LABELS = {
   },
   SCORE_SCREEN_MODAL: "game result",
   ALERT: "alert",
+  USER_MENU: {
+    OPEN: "open user menu",
+  },
 };

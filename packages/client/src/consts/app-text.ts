@@ -1,4 +1,4 @@
-export const LOBBY_TEXT = {
+export const APP_TEXT = {
   MATCHMAKING_QUEUE: {
     SEEKING_RANKED_MATCH: "Searching for ranked match...",
     NUM_PLAYERS_IN_QUEUE: "Number of players in queue: ",
@@ -30,11 +30,43 @@ export const LOBBY_TEXT = {
     TITLE: (gameName: string) => `Game ${gameName} result`,
     CASUAL_GAME_NO_RANK_CHANGE: "No changes to ladder rating",
   },
-  LADDER: {
-    PAGE_NUMBER_PREFIX: "Page ",
-  },
   CHAT: {
     INPUT_PLACEHOLDER: "Enter a message to chat...",
     AUTHOR_MESSAGE_DELIMITER: " : ",
+  },
+  USER_MENU: {
+    LOGIN: "LOGIN",
+    ITEMS: {
+      SETTINGS: "Settings",
+      LOGOUT: "Logout",
+    },
+  },
+  LADDER: {
+    PAGE_NUMBER_PREFIX: "Page ",
+  },
+  SETTINGS: {
+    TITLE: "Settings",
+    CHANGE_PASSWORD: "Change Password",
+    DELETE_ACCOUNT: "Delete Account",
+  },
+  AUTH: {
+    PAGE_TITLES: {
+      REGISTER: "Create Account",
+      LOGIN: "Login",
+      CHANGE_PASSWORD: "Change Password",
+      ACCOUNT_ACTIVATION: "Account Activation",
+    },
+    INPUTS: {
+      EMAIL_ADDRESS: "Email Address",
+      USERNAME: "Username",
+      PASSWORD: "Password",
+      CONFIRM_PASSWORD: "Confirm Password",
+      PASSWORD_RESET_REQUEST_EMAIL: "Enter your email to request a password reset.",
+    },
+    LINKS: {
+      RESET_PASSWORD: "Reset password",
+      CREATE_ACCOUNT: "Create account",
+      LOG_IN: "Log in to existing account",
+    },
   },
 };

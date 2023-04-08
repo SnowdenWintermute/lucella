@@ -1,6 +1,10 @@
 @import "../../../styles/abstracts/variables";
 
 .auth-page {
+  border: 1px solid transparent;
+}
+
+.auth-page__frame {
   width: 100%;
   background-color: var(--color-accent);
   max-width: calc(width(4) - height(4));

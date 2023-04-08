@@ -12,11 +12,13 @@ export default function AuthPage({ children, submitHandler, title }: Props) {
   useGetMeQuery(null, { refetchOnMountOrArgChange: true });
 
   return (
-    <div className="auth-page">
-      <h3 className="auth-page__page-title">{title}</h3>
-      <form className="auth-page__form" onSubmit={(e) => submitHandler(e)}>
-        {children}
-      </form>
-    </div>
+    <section className="auth-page">
+      <div className="auth-page__frame">
+        <h3 className="auth-page__page-title">{title}</h3>
+        <form className="auth-page__form" onSubmit={(e) => submitHandler(e)}>
+          {children}
+        </form>
+      </div>
+    </section>
   );
 }

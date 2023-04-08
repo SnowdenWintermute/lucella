@@ -11,6 +11,7 @@ import AuthPage from "../../../components/common-components/AuthPage/AuthPage";
 import LabeledTextInputWithErrorDisplay from "../../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import { BUTTON_NAMES } from "../../../consts/button-names";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
+import { APP_TEXT } from "../../../consts/app-text";
 
 function ChangePassword() {
   const dispatch = useAppDispatch();
@@ -54,10 +55,10 @@ function ChangePassword() {
   }, [isError, isSuccess]);
 
   return (
-    <AuthPage title="Change Password" submitHandler={submitHandler}>
+    <AuthPage title={APP_TEXT.AUTH.PAGE_TITLES.CHANGE_PASSWORD} submitHandler={submitHandler}>
       <div className="auth-form__inputs">
         <LabeledTextInputWithErrorDisplay
-          label="Password"
+          label={APP_TEXT.AUTH.INPUTS.PASSWORD}
           type="password"
           placeholder="Password"
           name={InputFields.AUTH.PASSWORD}
@@ -69,7 +70,7 @@ function ChangePassword() {
           extraStyles="auth-form__input"
         />
         <LabeledTextInputWithErrorDisplay
-          label="Confirm Password"
+          label={APP_TEXT.AUTH.INPUTS.CONFIRM_PASSWORD}
           type="password"
           placeholder="Confirm Password"
           name={InputFields.AUTH.PASSWORD_CONFIRM}

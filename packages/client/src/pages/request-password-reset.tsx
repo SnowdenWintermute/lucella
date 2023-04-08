@@ -9,6 +9,7 @@ import { AlertType } from "../enums";
 import { useRequestPasswordResetEmailMutation } from "../redux/api-slices/auth-api-slice";
 import { useAppDispatch } from "../redux/hooks";
 import { setAlert } from "../redux/slices/alerts-slice";
+import { APP_TEXT } from "../consts/app-text";
 
 function RequestPasswordResetEmail() {
   const dispatch = useAppDispatch();
@@ -44,7 +45,7 @@ function RequestPasswordResetEmail() {
     <AuthPage title="Account Recovery" submitHandler={submitHandler}>
       <div className="auth-form__inputs">
         <LabeledTextInputWithErrorDisplay
-          label="Enter your email to request a password reset."
+          label={APP_TEXT.AUTH.INPUTS.PASSWORD_RESET_REQUEST_EMAIL}
           type="email"
           placeholder="Email"
           name={InputFields.AUTH.EMAIL}

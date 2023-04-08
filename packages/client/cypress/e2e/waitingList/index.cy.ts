@@ -12,7 +12,7 @@ import {
 } from "../../../../common";
 import { ARIA_LABELS } from "../../../src/consts/aria-labels";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
-import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
+import { APP_TEXT } from "../../../src/consts/app-text";
 import { shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -60,24 +60,24 @@ describe("waiting list", () => {
     });
     // cypress user attempt to start a game and be placed in the list behind the 2nd game started above
     cy.clickButton(BUTTON_NAMES.MAIN_MENU.HOST);
-    cy.findByLabelText(LOBBY_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL).focus().clear().type(`${shortTestText}{enter}`);
+    cy.findByLabelText(APP_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL).focus().clear().type(`${shortTestText}{enter}`);
     cy.task(TaskNames.socketEmit, { username: Object.keys(testUsers)[4], event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
     cy.task(TaskNames.socketEmit, { username: Object.keys(testUsers)[4], event: SocketEventsFromClient.CLICKS_READY });
     cy.clickButton(BUTTON_NAMES.GAME_ROOM.READY);
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("not.contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING);
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
-    cy.findByText(LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST).should("be.visible");
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("not.contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING);
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
+    cy.findByText(APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST).should("be.visible");
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.WAITING_LIST_POSITION, {
       timeout: baseGameCreationWaitingListLoopIntervalLength + gameOverCountdownDuration * ONE_SECOND + ONE_SECOND * 2,
     }).should("contain.text", "2");
     // a player unreadying should take this game out of the waiting list
     cy.task(TaskNames.socketEmit, { username: Object.keys(testUsers)[4], event: SocketEventsFromClient.CLICKS_READY });
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_PLAYERS_TO_BE_READY);
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("not.contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
-    cy.findByText(new RegExp(LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST)).should("not.exist");
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_PLAYERS_TO_BE_READY);
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("not.contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
+    cy.findByText(new RegExp(APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST)).should("not.exist");
     // readying up again should place this game back in the list
     cy.task(TaskNames.socketEmit, { username: Object.keys(testUsers)[4], event: SocketEventsFromClient.CLICKS_READY });
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.WAITING_LIST_POSITION, {
       timeout: baseGameCreationWaitingListLoopIntervalLength + gameOverCountdownDuration * ONE_SECOND + ONE_SECOND * 2,
     }).should("contain.text", "2");
@@ -88,7 +88,7 @@ describe("waiting list", () => {
     }).should("contain.text", "1");
     // ending the only game now in progress should open up the slot for cypress user's game to start
     cy.task(TaskNames.disconnectSocket, { username: Object.keys(testUsers)[2] });
-    cy.findByText(LOBBY_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING, {
+    cy.findByText(APP_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING, {
       timeout: baseGameCreationWaitingListLoopIntervalLength + gameOverCountdownDuration * ONE_SECOND + ONE_SECOND * 2,
     }).should("exist");
     cy.get('[data-cy="battle-room-canvas"]').should("be.visible");
@@ -121,7 +121,7 @@ describe("waiting list", () => {
     // have our user and a test user join the matchmaking queue and be matched, this game should be 1st in line
     cy.task(TaskNames.socketEmit, { username: Object.keys(testUsers)[2], event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
     cy.clickButton(BUTTON_NAMES.MAIN_MENU.RANKED);
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.WAITING_LIST_POSITION).should("contain.text", "1");
     // have another pair be matched, they should be 2nd in line
     cy.task(TaskNames.socketEmit, { username: Object.keys(testUsers)[3], event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
@@ -129,21 +129,21 @@ describe("waiting list", () => {
     cy.wait(baseMatchmakingQueueIntervalLength + baseGameStartCountdownDuration * ONE_SECOND);
     // have the test user paired with our user unready, it should place us back in the queue and not show the waiting list text
     cy.task(TaskNames.socketEmit, { username: Object.keys(testUsers)[2], event: SocketEventsFromClient.CLICKS_READY });
-    cy.findByText(LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH).should("be.visible");
+    cy.findByText(APP_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH).should("be.visible");
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("not.exist");
     // have the test user rejoin the queue, it should place us in a game room and show us now 2nd in line
     cy.task(TaskNames.socketEmit, { username: Object.keys(testUsers)[2], event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.WAITING_LIST_POSITION).should("contain.text", "2");
     // have us unready, it should put us in battle-room-chat and remove us from the queue (sent back to main menu)
     cy.clickButton(BUTTON_NAMES.GAME_ROOM.LEAVE_GAME);
     cy.verifyVeiwingMainMenu();
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("not.exist");
-    cy.findByText(LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH).should("not.exist");
+    cy.findByText(APP_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH).should("not.exist");
     cy.findByLabelText(ARIA_LABELS.CHAT.CHANNEL_NAME_WITH_NUM_USERS).findByText(new RegExp(battleRoomDefaultChatChannel, "i")).should("exist");
     // rejoin the queue, it should match us and still be 2nd in line
     cy.clickButton(BUTTON_NAMES.MAIN_MENU.RANKED);
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST);
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.WAITING_LIST_POSITION).should("contain.text", "2");
     // end the 1st game, we should now be 1st in line,
     cy.task(TaskNames.disconnectSocket, { username: Object.keys(testUsers)[0] });
@@ -152,6 +152,6 @@ describe("waiting list", () => {
     }).should("contain.text", "1");
     // end the 2nd game, our game should start
     cy.task(TaskNames.disconnectSocket, { username: Object.keys(testUsers)[3] });
-    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", LOBBY_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING);
+    cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_STATUS).should("contain.text", APP_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING);
   });
 });

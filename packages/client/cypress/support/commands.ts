@@ -1,7 +1,8 @@
 import "@testing-library/cypress/add-commands";
+import { recurse } from "cypress-recurse";
 import { battleRoomDefaultChatChannel, SocketEventsFromClient } from "../../../common/dist";
 import { BUTTON_NAMES } from "../../src/consts/button-names";
-import { LOBBY_TEXT } from "../../src/consts/lobby-text";
+import { APP_TEXT } from "../../src/consts/app-text";
 import { TaskNames } from "./TaskNames";
 Cypress.Commands.add("deleteAllTestUsersAndCreateOneTestUser", () => {
   const args = {
@@ -15,6 +16,13 @@ Cypress.Commands.add("deleteAllTestUsersAndCreateOneTestUser", () => {
   cy.task(TaskNames.createCypressTestUser, args).then((response: Response) => {
     expect(response.status).to.equal(201);
   });
+});
+Cypress.Commands.add("openLastEmail", () => {
+  recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: 90000, delay: 5000 })
+    .its("html")
+    .then((html) => {
+      cy.document({ log: false }).invoke({ log: false }, "write", html);
+    });
 });
 Cypress.Commands.add("clickButton", (buttonName: string, force?: boolean) => {
   cy.findByRole("button", { name: buttonName }).click({ force: force || false });
@@ -38,9 +46,9 @@ Cypress.Commands.add("openAndVerifyMenu", (menuButton: string, textToVerify: str
   cy.findByText(textToVerify).should("be.visible");
 });
 Cypress.Commands.add("hostCasualGame", (gameName: string) => {
-  cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.HOST, LOBBY_TEXT.GAME_SETUP.TITLE);
-  cy.findByLabelText(LOBBY_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL).focus().clear().type(`${gameName}{enter}`);
-  cy.findByText(LOBBY_TEXT.GAME_ROOM.GAME_NAME_HEADER + gameName.toLowerCase()).should("be.visible");
+  cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.HOST, APP_TEXT.GAME_SETUP.TITLE);
+  cy.findByLabelText(APP_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL).focus().clear().type(`${gameName}{enter}`);
+  cy.findByText(APP_TEXT.GAME_ROOM.GAME_NAME_HEADER + gameName.toLowerCase()).should("be.visible");
 });
 Cypress.Commands.add("createAndLogInSequentialEloTestUsers", (numberToCreate: number, eloOfFirst: number, eloBetweenEach: number, testUsers: Object) => {
   const args = {

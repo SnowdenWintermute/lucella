@@ -18,7 +18,7 @@ import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import replaceUrlsWithAnchorTags from "../../../utils/replaceUrlsWithAnchorTags";
 import ClientGeneratedChatNotice from "./ClientGeneratedChatNotice";
 import { ARIA_LABELS } from "../../../consts/aria-labels";
-import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { APP_TEXT } from "../../../consts/app-text";
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import { Alert } from "../../../classes/Alert";
 import { AlertType } from "../../../enums";
@@ -114,7 +114,7 @@ function Chat({ socket }: Props) {
       messagesToDisplay.push(
         <li className={`chat__message chat__message--${message.style}`} key={`${message.timeStamp} ${message.text}`}>
           {message.author}
-          {LOBBY_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}
+          {APP_TEXT.CHAT.AUTHOR_MESSAGE_DELIMITER}
           {/* eslint-disable-next-line react/no-danger */}
           <span className={`chat__message chat__message--${message.style}`} dangerouslySetInnerHTML={{ __html: textToDisplay }} />
         </li>
@@ -135,7 +135,7 @@ function Chat({ socket }: Props) {
           type="text"
           onChange={(e) => onChange(e)}
           value={chatInput}
-          placeholder={LOBBY_TEXT.CHAT.INPUT_PLACEHOLDER}
+          placeholder={APP_TEXT.CHAT.INPUT_PLACEHOLDER}
           disabled={waitingToSendMessage}
         />
         {percentageChatDelayRemaining > 0 && (

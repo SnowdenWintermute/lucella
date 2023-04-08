@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { APP_TEXT } from "../../../consts/app-text";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import { useAppSelector } from "../../../redux/hooks";
@@ -45,7 +47,7 @@ export function UserMenu() {
         className="user-menu__button"
         aria-controls="user-menu-items"
         aria-expanded={showUserDropdown}
-        data-cy="user-menu-button"
+        aria-label={ARIA_LABELS.USER_MENU.OPEN}
         onClick={(e) => {
           toggleUserDropdown(!showUserDropdown);
         }}
@@ -57,10 +59,10 @@ export function UserMenu() {
       {showUserDropdown && (
         <ul id="user-menu-items" className="user-menu__items">
           <Link href="/settings" className="user-menu__menu-item">
-            Settings
+            {APP_TEXT.USER_MENU.ITEMS.SETTINGS}
           </Link>
           <Link href="/login" className="user-menu__menu-item" onClick={handleLogout}>
-            Logout
+            {APP_TEXT.USER_MENU.ITEMS.LOGOUT}
           </Link>
         </ul>
       )}
@@ -69,7 +71,7 @@ export function UserMenu() {
 
   const guestMenu = (
     <Link href="/login" className="button">
-      LOGIN
+      {APP_TEXT.USER_MENU.LOGIN}
     </Link>
   );
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Socket } from "socket.io-client";
 import { SocketEventsFromClient } from "../../../../../common";
 import { BUTTON_NAMES } from "../../../consts/button-names";
-import { LOBBY_TEXT } from "../../../consts/lobby-text";
+import { APP_TEXT } from "../../../consts/app-text";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { LobbyMenu, setActiveMenu } from "../../../redux/slices/lobby-ui-slice";
@@ -33,15 +33,15 @@ function MatchmakingQueueMenu({ socket }: { socket: Socket }) {
       </ul>
       <section className="lobby-menu matchmaking-queue-menu">
         <div className="lobby-menu__left matchmaking-queue-menu__left">
-          <h3 className="lobby-menu__header matchmaking-queue-menu__header">{LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH}</h3>
+          <h3 className="lobby-menu__header matchmaking-queue-menu__header">{APP_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH}</h3>
           <div className="matchmaking-queue-menu__queue-status">
             <div className="matchmaking-queue-menu__queue-status-text">
               <p>
-                {LOBBY_TEXT.MATCHMAKING_QUEUE.NUM_PLAYERS_IN_QUEUE}
+                {APP_TEXT.MATCHMAKING_QUEUE.NUM_PLAYERS_IN_QUEUE}
                 {numPlayersToDisplay}
               </p>
               <p>
-                {LOBBY_TEXT.MATCHMAKING_QUEUE.ELO_DIFF_THRESHOLD}
+                {APP_TEXT.MATCHMAKING_QUEUE.ELO_DIFF_THRESHOLD}
                 {eloDiffThresholdToDisplay}
               </p>
             </div>

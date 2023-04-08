@@ -11,6 +11,7 @@ import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/common-components/AuthPage/AuthPage";
 import { BUTTON_NAMES } from "../consts/button-names";
+import { APP_TEXT } from "../consts/app-text";
 
 function Register() {
   const router = useRouter();
@@ -59,15 +60,15 @@ function Register() {
   }, [isError, isSuccess]);
 
   return isSuccess ? (
-    <AuthPage title="Create Account" submitHandler={() => {}}>
+    <AuthPage title={APP_TEXT.AUTH.PAGE_TITLES.REGISTER} submitHandler={() => {}}>
       <p>{SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT}</p>
       <p>Please follow the link in your email to complete registration</p>
     </AuthPage>
   ) : (
-    <AuthPage title="Create Account" submitHandler={submitHandler}>
+    <AuthPage title={APP_TEXT.AUTH.PAGE_TITLES.REGISTER} submitHandler={submitHandler}>
       <div className="auth-form__inputs">
         <LabeledTextInputWithErrorDisplay
-          label="Email Address"
+          label={APP_TEXT.AUTH.INPUTS.EMAIL_ADDRESS}
           type="email"
           placeholder="Email"
           name={InputFields.AUTH.EMAIL}
@@ -80,7 +81,7 @@ function Register() {
           dataCy="email-address-input"
         />
         <LabeledTextInputWithErrorDisplay
-          label="Username"
+          label={APP_TEXT.AUTH.INPUTS.USERNAME}
           type="text"
           placeholder="Username"
           name={InputFields.AUTH.NAME}
@@ -92,7 +93,7 @@ function Register() {
           extraStyles="auth-form__input"
         />
         <LabeledTextInputWithErrorDisplay
-          label="Password"
+          label={APP_TEXT.AUTH.INPUTS.PASSWORD}
           type="password"
           placeholder="Password"
           name={InputFields.AUTH.PASSWORD}
@@ -104,7 +105,7 @@ function Register() {
           extraStyles="auth-form__input"
         />
         <LabeledTextInputWithErrorDisplay
-          label="Confirm Password"
+          label={APP_TEXT.AUTH.INPUTS.CONFIRM_PASSWORD}
           type="password"
           placeholder="Confirm Password"
           name={InputFields.AUTH.PASSWORD_CONFIRM}
@@ -119,7 +120,7 @@ function Register() {
       <div className="auth-form__bottom">
         <div className="auth-form__bottom-links">
           <Link href="/login" className="auth-form__link">
-            Log in to existing account
+            {APP_TEXT.AUTH.LINKS.LOG_IN}
           </Link>
         </div>
         <button type="submit" className="button button--accent auth-form__submit-button" disabled={isLoading}>

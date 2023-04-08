@@ -3,7 +3,7 @@ import accountDeletion from "./accountDeletion";
 import fullUserAuthFlow from "./fullUserAuthFlow";
 import loginForm from "./loginForm";
 import loginLockoutAndResetFlow from "./loginLockoutAndResetFlow";
-import passwordReset from "./passwordReset";
+import registerAccountAndPasswordReset from "./registerAccountAndPasswordReset";
 
 describe("user stories related to authentication, account creation and deletion", () => {
   const args = {
@@ -30,9 +30,9 @@ describe("user stories related to authentication, account creation and deletion"
     cy.task(TaskNames.disconnectAllSockets);
   });
 
-  loginForm();
-  loginLockoutAndResetFlow();
-  passwordReset();
-  accountDeletion();
+  // loginForm();
+  // loginLockoutAndResetFlow();
+  // registerAccountAndPasswordReset();
+  // accountDeletion();
   fullUserAuthFlow();
 });

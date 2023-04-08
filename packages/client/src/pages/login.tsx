@@ -12,6 +12,7 @@ import { useGetMeQuery, usersApi } from "../redux/api-slices/users-api-slice";
 import { useAppDispatch } from "../redux/hooks";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { LoginInput } from "../redux/types";
+import { APP_TEXT } from "../consts/app-text";
 
 function Login() {
   const dispatch = useAppDispatch();
@@ -58,10 +59,10 @@ function Login() {
   }, [isError, isSuccess]);
 
   return (
-    <AuthPage title="Login" submitHandler={submitHandler}>
+    <AuthPage title={APP_TEXT.AUTH.PAGE_TITLES.LOGIN} submitHandler={submitHandler}>
       <div className="auth-form__inputs">
         <LabeledTextInputWithErrorDisplay
-          label="Email Address"
+          label={APP_TEXT.AUTH.INPUTS.EMAIL_ADDRESS}
           type="email"
           placeholder="Email"
           name={InputFields.AUTH.EMAIL}
@@ -74,7 +75,7 @@ function Login() {
           extraStyles="auth-form__input"
         />
         <LabeledTextInputWithErrorDisplay
-          label="Password"
+          label={APP_TEXT.AUTH.INPUTS.PASSWORD}
           type="password"
           placeholder="Password"
           name={InputFields.AUTH.PASSWORD}
@@ -89,10 +90,10 @@ function Login() {
       <div className="auth-form__bottom">
         <div className="auth-form__bottom-links">
           <Link href="/request-password-reset" className="auth-form__link">
-            Reset password
+            {APP_TEXT.AUTH.LINKS.RESET_PASSWORD}
           </Link>
           <Link href="/register" className="auth-form__link">
-            Create account
+            {APP_TEXT.AUTH.LINKS.CREATE_ACCOUNT}
           </Link>
         </div>
         <button type="submit" className="button button--accent auth-form__submit-button" disabled={isLoading || isSuccess}>
