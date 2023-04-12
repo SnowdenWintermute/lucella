@@ -14,7 +14,7 @@ export default async function getBattleRoomLadderEntryByUsername(req: Request, r
     return next([new CustomError(ERROR_MESSAGES.LADDER.USER_NOT_FOUND, 404)]);
   }
   const rank = await wrappedRedis.context?.zRevRank(REDIS_KEYS.BATTLE_ROOM_LADDER, ladderEntry.userId.toString());
-  if (!rank) {
+  if (typeof rank !== "number") {
     console.log("no rank found");
     return next([new CustomError(ERROR_MESSAGES.LADDER.NO_RANK_FOUND, 404)]);
   }

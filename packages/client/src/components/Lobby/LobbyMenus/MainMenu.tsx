@@ -6,6 +6,7 @@ import Logo from "../../../img/logo.svg";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import { useGetLadderEntryQuery } from "../../../redux/api-slices/ladder-api-slice";
 import LoadingSpinner from "../../common-components/LoadingSpinner";
+import { ERROR_MESSAGES } from "../../../../../common";
 
 function WelcomeDropdown() {
   const { data: user, isLoading: userIsLoading } = useGetMeQuery(null);
@@ -38,18 +39,28 @@ function WelcomeDropdown() {
     );
   else if (!viewingPatchNotes && user)
     mainMenuLeftContent = (
-      <div>
-        <h4>Logged in as: {user.name}</h4>
+      <div className="logged-in-user-display">
+        <h4>Logged in as {user.name}</h4>
         {userScorecardData && (
-          <ul>
-            <li>Rank: {userScorecardData.ladderEntry.rank}</li>
-            <li>Elo: {userScorecardData.ladderEntry.elo}</li>
-            <li>Wins: {userScorecardData.ladderEntry.wins}</li>
-            <li>Losses: {userScorecardData.ladderEntry.losses}</li>
+          <ul className="logged-in-user-display__scorecard">
+            <div className="logged-in-user-display__scorecard-row">
+              <li>Rank: {userScorecardData.ladderEntry.rank}</li>
+              <li>Elo: {userScorecardData.ladderEntry.elo}</li>
+            </div>
+            <div className="logged-in-user-display__scorecard-row">
+              <li>Wins: {userScorecardData.ladderEntry.wins}</li>
+              <li>Losses: {userScorecardData.ladderEntry.losses}</li>
+            </div>
           </ul>
         )}
         {/* @ts-ignore */}
-        {userScorecardError && <p>{userScorecardError.data[0].message}</p>}
+        {userScorecardError && userScorecardError.data[0].message === ERROR_MESSAGES.LADDER.USER_NOT_FOUND && (
+          <p>
+            Welcome to Battle School. Once you have participated in ranked play in the Battle Room your stats will be shown here. Good luck and do your best!
+          </p>
+        )}
+        {/* @ts-ignore */}
+        {userScorecardError && userScorecardError.data[0].message !== ERROR_MESSAGES.LADDER.USER_NOT_FOUND && <p>{userScorecardError.data[0].message}</p>}
       </div>
     );
   else if (viewingPatchNotes)
