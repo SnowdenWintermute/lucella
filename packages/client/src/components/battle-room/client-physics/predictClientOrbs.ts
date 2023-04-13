@@ -7,8 +7,6 @@ export default function predictClientOrbs(game: BattleRoomGame, newGameState: Ba
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
   const inputsToKeep: UserInput[] = [];
 
-  // lerp the client's orbs if the update is a very drastic one
-
   applyValuesFromOneOrbSetToAnother(lastUpdateFromServerCopy.orbs[playerRole], newGameState.orbs[playerRole], {
     applyPhysicsProperties: true,
     applyNonPhysicsProperties: true,

@@ -82,7 +82,7 @@ function WelcomeDropdown() {
           <li>Optimized modals and context menus</li>
           <li>Added support for screenreaders</li>
           <li>Fixed tab indexing of UI elements for better keyboard navigation</li>
-          <li>Added loading spinners and indicatiors for several menus</li>
+          <li>Added loading spinners and indicators for several menus</li>
           <li>Changed to a new logo</li>
           <li>Updated the Battle Room colors to match the website themes (VT320 and default themes only)</li>
           <li>Added ability to close lobby menus with the Escape key</li>

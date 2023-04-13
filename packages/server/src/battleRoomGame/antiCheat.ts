@@ -13,6 +13,7 @@ import {
 
 export default function antiCheat(game: BattleRoomGame, inputToQueue: UserInput, playerRole: PlayerRole) {
   let clientTryingToMoveTooFast = false;
+  if (!inputToQueue) return;
   if (inputToQueue.type !== UserInputs.CLIENT_TICK_NUMBER) return;
 
   const timeSinceGameStarted = Date.now() - game.antiCheat.gameStartedAt;

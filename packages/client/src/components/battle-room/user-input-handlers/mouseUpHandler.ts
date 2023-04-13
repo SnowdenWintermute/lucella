@@ -21,12 +21,15 @@ export default function mouseUpHandler(
 
   let input;
   if (e.button === 2) {
-    mouseData.rightReleasedAt = new Point(mouseData.position.y, mouseData.position.x);
-    input = new AssignOrbDestinations(
-      { mousePosition: new Point(mouseData.position.x, mouseData.position.y) },
-      (currentGame.netcode.lastClientInputNumber += 1),
-      playerRole
-    );
+    if (currentGame.waypointKeyIsPressed) {
+      // handle it
+    } else {
+      input = new AssignOrbDestinations(
+        { mousePosition: new Point(mouseData.position.x, mouseData.position.y) },
+        (currentGame.netcode.lastClientInputNumber += 1),
+        playerRole
+      );
+    }
   }
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = false;

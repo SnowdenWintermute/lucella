@@ -12,6 +12,7 @@ import touchEndHandler from "./user-input-handlers/touchEndHandler";
 import keyPressHandler from "./user-input-handlers/keyPressHandler";
 import throttle from "../../utils/throttle";
 import { useAppSelector } from "../../redux/hooks";
+import keyUpHandler from "./user-input-handlers/keyUpHandler";
 
 interface Props {
   canvasSizeRef: React.RefObject<WidthAndHeight | null>;
@@ -28,10 +29,16 @@ function Canvas(props: Props) {
     throttle(eventLimiterRate, keyPressHandler(e, currentGame, socket, playerRole));
   }, []);
 
+  const onKeyUp = useCallback((e: KeyboardEvent) => {
+    throttle(eventLimiterRate, keyUpHandler(e, currentGame));
+  }, []);
+
   useEffect(() => {
     window.addEventListener("keydown", onKeyPress);
+    window.addEventListener("keyup", onKeyUp);
     return () => {
       window.removeEventListener("keydown", onKeyPress);
+      window.removeEventListener("keyup", onKeyUp);
     };
   }, [onKeyPress]);
 

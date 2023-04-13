@@ -19,18 +19,18 @@ export class SelectOrbs extends UserInput {
   }
 }
 
-export interface AssignOrbDestiationData {
+export interface DestinationOrWaypointData {
   mousePosition: Point | null;
 }
 
 export class AssignOrbDestinations extends UserInput {
-  constructor(data: AssignOrbDestiationData, number: number, playerRole?: PlayerRole) {
+  constructor(data: DestinationOrWaypointData, number: number, playerRole?: PlayerRole) {
     super(UserInputs.ASSIGN_ORB_DESTINATIONS, data, number, playerRole);
   }
 }
 
 export class SelectOrbAndAssignDestination extends UserInput {
-  constructor(data: SelectOrbsData & AssignOrbDestiationData, number: number, playerRole?: PlayerRole) {
+  constructor(data: SelectOrbsData & DestinationOrWaypointData, number: number, playerRole?: PlayerRole) {
     super(UserInputs.SELECT_ORB_AND_ASSIGN_DESTINATION, data, number, playerRole);
   }
 }
