@@ -21,6 +21,7 @@ export default function ChangeChatChannelModal({ socket, setParentDisplay }: { s
 
   const onJoinRoomSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!joinNewRoomInput) return;
     joinRoom(joinNewRoomInput);
   };
 

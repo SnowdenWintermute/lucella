@@ -53,14 +53,20 @@ function WelcomeDropdown() {
             </div>
           </ul>
         )}
-        {/* @ts-ignore */}
-        {userScorecardError && userScorecardError.data[0].message === ERROR_MESSAGES.LADDER.USER_NOT_FOUND && (
-          <p>
-            Welcome to Battle School. Once you have participated in ranked play in the Battle Room your stats will be shown here. Good luck and do your best!
-          </p>
-        )}
-        {/* @ts-ignore */}
-        {userScorecardError && userScorecardError.data[0].message !== ERROR_MESSAGES.LADDER.USER_NOT_FOUND && <p>{userScorecardError.data[0].message}</p>}
+
+        {userScorecardError &&
+          "data" in userScorecardError &&
+          userScorecardError.data instanceof Array &&
+          userScorecardError.data[0].message === ERROR_MESSAGES.LADDER.USER_NOT_FOUND && (
+            <p>
+              Welcome to Battle School. Once you have participated in ranked play in the Battle Room your stats will be shown here. Good luck and do your best!
+            </p>
+          )}
+        {userScorecardError &&
+          "data" in userScorecardError &&
+          userScorecardError.data instanceof Array &&
+          userScorecardError.data[0].message !== ERROR_MESSAGES.LADDER.USER_NOT_FOUND && <p>{userScorecardError.data[0].message}</p>}
+        {userScorecardError && !("data" in userScorecardError) && <p>Failed to fetch Battle Room scorecard</p>}
       </div>
     );
   else if (viewingPatchNotes)

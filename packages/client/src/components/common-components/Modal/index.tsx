@@ -21,6 +21,7 @@ function Modal({ children, setParentDisplay, title, backdropStyle, extraStyles, 
 
   function handleUserKeyPress(e: KeyboardEvent) {
     const { key } = e;
+    console.log("modal detected keypress");
     if ((key === "Escape" || key === "Esc") && !(alerts.length > 0)) setParentDisplay(false);
   }
 

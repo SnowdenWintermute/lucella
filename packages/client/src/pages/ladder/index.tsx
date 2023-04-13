@@ -57,8 +57,9 @@ function Ladder() {
     if (searchedEntryError)
       ladderEntriesToShow = (
         <tr className="ladder__table-row">
-          {/* @ts-ignore */}
-          <td className="ladder__error-td">{searchedEntryError?.data[0].message}</td>
+          <td className="ladder__error-td">
+            {"data" in searchedEntryError && searchedEntryError.data instanceof Array && searchedEntryError?.data[0].message}
+          </td>
         </tr>
       );
     if (searchedEntryData && !searchedEntryIsLoading && !searchedEntryIsFetching && !searchedEntryError)
@@ -70,8 +71,9 @@ function Ladder() {
   } else if (ladderPageIsError) {
     ladderEntriesToShow = (
       <tr className="ladder__table-row">
-        {/* @ts-ignore */}
-        <td className="ladder__error-td">{ladderPageError?.data[0]?.message || "Error fetching ladder entries"} </td>
+        <td className="ladder__error-td">
+          {("data" in ladderPageError && ladderPageError.data instanceof Array && ladderPageError?.data[0]?.message) || "Error fetching ladder entries"}{" "}
+        </td>
       </tr>
     );
   }

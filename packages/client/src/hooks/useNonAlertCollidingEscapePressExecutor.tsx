@@ -6,8 +6,8 @@ export default function useNonAlertCollidingEscapePressExecutor(handleEscapeClic
 
   function handleKeyPress(e: KeyboardEvent) {
     const { key } = e;
-    if ((key === "Escape" || key === "Esc") && !(alerts.length > 0)) {
-      console.log("useNonAlertCollidingEscapePressExecutor");
+    if ((key === "Escape" || key === "Esc") && alerts.length < 1) {
+      console.log("useNonAlertCollidingEscapePressExecutor alerts.length: ", alerts.length);
       handleEscapeClick();
     }
   }

@@ -26,6 +26,7 @@ function Alerts() {
 
   function handleKeyPress(e: KeyboardEvent) {
     const { key } = e;
+    console.log("alerts holder detected keypress");
     if (key === "Escape" || key === "Esc") dispatch(removeOldestAlert());
   }
 

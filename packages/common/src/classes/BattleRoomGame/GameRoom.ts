@@ -24,8 +24,4 @@ export class GameRoom {
     this.spectators = [];
     this.isRanked = isRanked || false;
   }
-  cancelCountdownInterval() {
-    if (this.countdownInterval) clearInterval(this.countdownInterval);
-    this.gameStatus = GameStatus.IN_LOBBY;
-  }
 }

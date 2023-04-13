@@ -171,6 +171,13 @@ export class LucellaServer {
       }
     }, ONE_SECOND);
   }
+  clearGameStartCountdownInterval(gameRoom: GameRoom) {
+    if (gameRoom.countdownInterval) {
+      delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
+      clearInterval(gameRoom.countdownInterval);
+    }
+    gameRoom.gameStatus = GameStatus.IN_LOBBY;
+  }
   static async fetchOrCreateBattleRoomScoreCard(user: User) {
     let scoreCard = await BattleRoomScoreCardRepo.findByUserId(user.id);
     if (!scoreCard) scoreCard = await BattleRoomScoreCardRepo.insert(user.id);
