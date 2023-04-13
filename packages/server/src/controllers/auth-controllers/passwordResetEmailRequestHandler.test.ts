@@ -2,7 +2,7 @@ import request from "supertest";
 import { Application } from "express";
 import nodemailer from "nodemailer";
 import { sendEmail } from "../utils/sendEmail";
-import { AuthRoutePaths, ErrorMessages } from "../../../../common";
+import { AuthRoutePaths, ERROR_MESSAGES } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL } from "../../utils/test-utils/consts";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -43,6 +43,6 @@ describe("passwordResetEmailRequestHandler", () => {
   it("sends appropriate error when no email provided", async () => {
     const response = await request(app).post(`/api${AuthRoutePaths.ROOT + AuthRoutePaths.REQUEST_PASSWORD_RESET_EMAIL}`);
     expect(response.status).toBe(404);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.EMAIL_DOES_NOT_EXIST)).toBeTruthy();
   });
 });

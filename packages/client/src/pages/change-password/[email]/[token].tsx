@@ -7,10 +7,11 @@ import { setAlert } from "../../../redux/slices/alerts-slice";
 import { useAppDispatch } from "../../../redux/hooks";
 import { useChangePasswordMutation } from "../../../redux/api-slices/users-api-slice";
 import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../../../common";
-import AuthPage from "../../../components/layout/auth/AuthPage";
+import AuthPage from "../../../components/common-components/AuthPage/AuthPage";
 import LabeledTextInputWithErrorDisplay from "../../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import { BUTTON_NAMES } from "../../../consts/button-names";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
+import { APP_TEXT } from "../../../consts/app-text";
 
 function ChangePassword() {
   const dispatch = useAppDispatch();
@@ -54,32 +55,42 @@ function ChangePassword() {
   }, [isError, isSuccess]);
 
   return (
-    <AuthPage title="Change Password" submitHandler={submitHandler}>
-      <LabeledTextInputWithErrorDisplay
-        label="Password"
-        type="password"
-        placeholder="Password"
-        name={InputFields.AUTH.PASSWORD}
-        value={password}
-        onChange={onChange}
-        disabled={isLoading || isSuccess}
-        error={fieldErrors.password}
-        autofocus
-      />
-      <LabeledTextInputWithErrorDisplay
-        label="Confirm Password"
-        type="password"
-        placeholder="Confirm Password"
-        name={InputFields.AUTH.PASSWORD_CONFIRM}
-        value={passwordConfirm}
-        onChange={onChange}
-        disabled={isLoading || isSuccess}
-        error={fieldErrors.passwordConfirm}
-        autofocus={false}
-      />
-      <div className="auth-bottom-links">
-        <Link href="/login">Log in to existing account</Link>
-        <input type="submit" className="button button-standard-size button-primary" value={isLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.SET} />
+    <AuthPage title={APP_TEXT.AUTH.PAGE_TITLES.CHANGE_PASSWORD} submitHandler={submitHandler}>
+      <div className="auth-form__inputs">
+        <LabeledTextInputWithErrorDisplay
+          label={APP_TEXT.AUTH.INPUTS.PASSWORD}
+          type="password"
+          placeholder="Password"
+          name={InputFields.AUTH.PASSWORD}
+          value={password}
+          onChange={onChange}
+          disabled={isLoading || isSuccess}
+          error={fieldErrors.password}
+          autofocus
+          extraStyles="auth-form__input"
+        />
+        <LabeledTextInputWithErrorDisplay
+          label={APP_TEXT.AUTH.INPUTS.CONFIRM_PASSWORD}
+          type="password"
+          placeholder="Confirm Password"
+          name={InputFields.AUTH.PASSWORD_CONFIRM}
+          value={passwordConfirm}
+          onChange={onChange}
+          disabled={isLoading || isSuccess}
+          error={fieldErrors.passwordConfirm}
+          autofocus={false}
+          extraStyles="auth-form__input"
+        />
+      </div>
+      <div className="auth-form__bottom">
+        <div className="auth-bottom-links">
+          <Link href="/login" className="auth-form__link">
+            Log in to existing account
+          </Link>
+        </div>
+        <button type="submit" className="button button--accent auth-form__submit-button">
+          {isLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.CHANGE}
+        </button>
       </div>
     </AuthPage>
   );

@@ -2,7 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
-import { AuthRoutePaths, CookieNames, ErrorMessages, failedLoginCountTolerance, InputFields, UsersRoutePaths, UserStatuses } from "../../../../common";
+import { AuthRoutePaths, CookieNames, ERROR_MESSAGES, failedLoginCountTolerance, InputFields, UsersRoutePaths, UserStatuses } from "../../../../common";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { TEST_USER_ALTERNATE_PASSWORD, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -59,7 +59,7 @@ describe("changePasswordHandler", () => {
     const deleteAccountResponse = await request(app)
       .delete(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
-    expect(responseBodyIncludesCustomErrorMessage(deleteAccountResponse, ErrorMessages.AUTH.NOT_LOGGED_IN));
+    expect(responseBodyIncludesCustomErrorMessage(deleteAccountResponse, ERROR_MESSAGES.AUTH.NOT_LOGGED_IN));
 
     const loginWithOldPasswordResponse = await request(app).post(`/api${AuthRoutePaths.ROOT}`).send({
       email: TEST_USER_EMAIL,
@@ -70,7 +70,7 @@ describe("changePasswordHandler", () => {
     expect(
       responseBodyIncludesCustomErrorMessage(
         loginWithOldPasswordResponse,
-        ErrorMessages.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - 1)
+        ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - 1)
       )
     ).toBeTruthy();
     // should be able to log in with new password
@@ -87,7 +87,7 @@ describe("changePasswordHandler", () => {
       token: passwordResetToken,
     });
 
-    expect(responseBodyIncludesCustomErrorMessage(secondAttempWithSameToken, ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN));
+    expect(responseBodyIncludesCustomErrorMessage(secondAttempWithSameToken, ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN));
   });
 
   it("sends error for non-matching passwords and password too short", async () => {
@@ -98,9 +98,9 @@ describe("changePasswordHandler", () => {
     });
 
     expect(response.status).toBe(400);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD)).toBeTruthy();
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.VALIDATION.AUTH.PASSWORDS_DONT_MATCH)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD_CONFIRM)).toBeTruthy();
   });
 
@@ -112,7 +112,7 @@ describe("changePasswordHandler", () => {
     });
 
     expect(response.status).toBe(401);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
   });
 
   it("sends error for non-existent email/user", async () => {
@@ -131,6 +131,6 @@ describe("changePasswordHandler", () => {
     });
 
     expect(response.status).toBe(401);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.PASSWORD_RESET_EMAIL_DOES_NOT_MATCH_TOKEN)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.PASSWORD_RESET_EMAIL_DOES_NOT_MATCH_TOKEN)).toBeTruthy();
   });
 });

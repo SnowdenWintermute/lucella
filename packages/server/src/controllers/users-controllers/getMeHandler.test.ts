@@ -1,6 +1,6 @@
 import { Application } from "express";
 import request from "supertest";
-import { ErrorMessages, UsersRoutePaths, UserStatuses, User, CookieNames } from "../../../../common";
+import { ERROR_MESSAGES, UsersRoutePaths, UserStatuses, User, CookieNames } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
@@ -45,7 +45,7 @@ describe("getMeHandler", () => {
   it("should return error if no token provided in cookies", async () => {
     const response = await request(app).get(`/api${UsersRoutePaths.ROOT}`);
 
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NOT_LOGGED_IN)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.NOT_LOGGED_IN)).toBeTruthy();
     expect(response.status).toBe(401);
   });
 
@@ -54,7 +54,7 @@ describe("getMeHandler", () => {
       .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=some invalid token`]);
     expect(response.status).toBe(401);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN)).toBeTruthy();
   });
 
   it("should tell a user if their session has expired", async () => {
@@ -66,7 +66,7 @@ describe("getMeHandler", () => {
       .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(response.status).toBe(401);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.EXPIRED_SESSION)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.EXPIRED_SESSION)).toBeTruthy();
   });
 
   it("should tell a user if they don't exist (valid token but no user by that id returned in deserialize user)", async () => {
@@ -77,6 +77,6 @@ describe("getMeHandler", () => {
       .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(response.status).toBe(401);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NO_USER_EXISTS)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.NO_USER_EXISTS)).toBeTruthy();
   });
 });

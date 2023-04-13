@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BattleRoomLadderEntry, ErrorMessages } from "../../../../common";
+import { BattleRoomLadderEntry, ERROR_MESSAGES } from "../../../../common";
 import CustomError from "../../classes/CustomError";
 import { REDIS_KEYS } from "../../consts";
 import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
@@ -11,12 +11,12 @@ export default async function getBattleRoomLadderEntryByUsername(req: Request, r
   const ladderEntry = await BattleRoomScoreCardRepo.getLadderEntryUsername(username.toLowerCase());
   if (!ladderEntry) {
     console.log("no ladder entry found");
-    return next([new CustomError(ErrorMessages.LADDER.USER_NOT_FOUND, 404)]);
+    return next([new CustomError(ERROR_MESSAGES.LADDER.USER_NOT_FOUND, 404)]);
   }
   const rank = await wrappedRedis.context?.zRevRank(REDIS_KEYS.BATTLE_ROOM_LADDER, ladderEntry.userId.toString());
-  if (!rank) {
+  if (typeof rank !== "number") {
     console.log("no rank found");
-    return next([new CustomError(ErrorMessages.LADDER.NO_RANK_FOUND, 404)]);
+    return next([new CustomError(ERROR_MESSAGES.LADDER.NO_RANK_FOUND, 404)]);
   }
   const { name, elo, wins, losses } = ladderEntry;
   const ladderEntryForClient: BattleRoomLadderEntry = { name, rank: rank + 1, elo, wins, losses };

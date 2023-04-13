@@ -1,12 +1,11 @@
 import { nameMaxLength, nameMinLength, passwordMaxLength, passwordMinLength } from "./auth-validation-config";
-import { gameChannelNamePrefix, maxGameNameLength, rankedGameChannelNamePrefix } from "./game-lobby-config";
+import { chatChannelNameMaxLength, chatMessageMaxLength, gameChannelNamePrefix, maxGameNameLength, rankedGameChannelNamePrefix } from "./game-lobby-config";
 
-export const ErrorMessages = {
+export const ERROR_MESSAGES = {
   SERVER_GENERIC: "Internal server error",
   LOBBY: {
     ERROR_CONNECTING: "Failed to connect to lobby server, retrying...",
     SOCKET_NOT_REGISTERED: "Socket not registered. Server likely restarted, please refresh",
-    GAME_EXISTS: "A game by that name already exists",
     GAME_DOES_NOT_EXIST: "No game by that name exists",
     CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST: "Trying to leave a game that doesn't exist",
     CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE: "You can't leave a game if you are not in one",
@@ -21,14 +20,19 @@ export const ErrorMessages = {
       NOT_ENTERED: "Please enter a game name",
       MIN_LENGTH: "Game name must be at least one character long",
       MAX_LENGTH: `Game name must be fewer than ${maxGameNameLength} characters`,
+      GAME_EXISTS: "A game by that name already exists",
       UNAUTHORIZED_RANKED: `Game name can only start with "${rankedGameChannelNamePrefix}" if it is a ranked game`,
       UNAUTHORIZED_CHANNEL_NAME: `Channels prefixed with "${gameChannelNamePrefix}" or "${rankedGameChannelNamePrefix}" are reserved for that game's players`,
+    },
+    CHAT: {
+      MESSAGE_TOO_LONG: `Messages can be a maximum of ${chatMessageMaxLength} characters`,
+      CHANNEL_NAME_TOO_LONG: `Chat channel names can be a maximum of ${chatChannelNameMaxLength} characters`,
     },
   },
   LADDER: {
     USER_NOT_FOUND: "No record found for that user",
     NO_ENTRIES_FOUND: "No ladder entries found",
-    NO_RANK_FOUND: "User has a score card but no rank (please issue a bug report for this)",
+    NO_RANK_FOUND: "User has a score card but no rank (this is a bug which may result if ladder entries are deleted without deleting associated accounts)",
   },
   RATE_LIMITER: {
     REQUESTING_TOO_QUICKLY: "You are sending requests too quickly, please wait a while before trying again",

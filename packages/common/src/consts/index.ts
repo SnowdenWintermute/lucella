@@ -3,7 +3,6 @@ export const websiteName = "battleschool.io";
 export const SOCKET_ADDRESS_PRODUCTION = "https://battleschool.io";
 export const SERVER_HOSTNAME_DOCKER_PRODUCTION = "https://battleschool.io/api";
 export const REDIS_HOSTNAME_PRODUCTION = "redis";
-export const baseMaxConcurrentGames = 15;
 // times
 export const ONE_SECOND = 1000;
 export const ONE_MINUTE = ONE_SECOND * 60;
@@ -40,14 +39,6 @@ export const CookieNames = {
 // battle-room game
 export const ghostTransparency = 0.3;
 export const inGameFontSizes = { medium: 12, large: 25 };
-export const colors = {
-  hostEndZone: "rgb(50,50,70)",
-  challengerEndZone: "rgb(50,70,50)",
-  inGameTextLight: "rgb(200,200,200)",
-  hostOrbs: "13, 28, 46",
-  challengerOrbs: "0, 75, 79",
-  selectionRingColor: "rgb(30,200,30)",
-};
 export const renderRate = 33;
 export const physicsTickRate = 50;
 export const eventLimiterRate = renderRate;

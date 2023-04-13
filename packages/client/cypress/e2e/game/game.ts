@@ -3,14 +3,14 @@ import {
   battleRoomDefaultChatChannel,
   BattleRoomGame,
   FrontendRoutes,
-  gameRoomCountdownDuration,
+  baseGameStartCountdownDuration,
   ONE_SECOND,
   rankedGameChannelNamePrefix,
   SocketEventsFromClient,
   createAdjustedCoordinateCalculator,
 } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
-import { LOBBY_TEXT } from "../../../src/consts/lobby-text";
+import { APP_TEXT } from "../../../src/consts/app-text";
 
 describe("play game", () => {
   // eslint-disable-next-line no-undef
@@ -67,8 +67,8 @@ describe("play game", () => {
     cy.findByText(alternateUsername).should("be.visible");
     cy.task(TaskNames.socketEmit, { username: alternateUsername, event: SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE });
     cy.findByRole("button", { name: /ranked/i }).click();
-    cy.findByText(new RegExp(LOBBY_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
-    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("be.visible");
+    cy.findByText(new RegExp(APP_TEXT.MATCHMAKING_QUEUE.SEEKING_RANKED_MATCH, "i")).should("be.visible");
+    cy.get('[data-cy="battle-room-canvas"]', { timeout: baseGameStartCountdownDuration * ONE_SECOND + ONE_SECOND }).should("be.visible");
     // select all orbs and send them to opponent end zone
     cy.get("body").click("topLeft");
     cy.get('[data-cy="battle-room-canvas"]').then((canvas) => {

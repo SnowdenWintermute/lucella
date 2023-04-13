@@ -1,27 +1,23 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { APP_TEXT } from "../../../consts/app-text";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
 import { useLogoutUserMutation } from "../../../redux/api-slices/auth-api-slice";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
-import styles from "./user-menu.module.scss";
+import { useAppSelector } from "../../../redux/hooks";
 
 export function UserMenu() {
+  const uiState = useAppSelector((state) => state.UI);
   const [showUserDropdown, toggleUserDropdown] = useState(false);
   const [logoutUser, { isUninitialized: logoutIsUninitialized }] = useLogoutUserMutation();
-  const { data: user, isLoading, isFetching, isError } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
-
-  const MENU = {
-    LOADING: "LOADING",
-    USER: "USER",
-    LOGIN: "LOGIN",
-  };
-
+  const { data: user, isLoading, isFetching, isError } = useGetMeQuery(null);
+  const MENU = { LOADING: "LOADING", USER: "USER", LOGIN: "LOGIN" };
   const [menuToShow, setMenuToShow] = useState(MENU.LOADING);
 
-  // show/hide menu
   useEffect(() => {
     const clearUserDropdown = (e: MouseEvent) => {
       const node = e.target as HTMLElement;
-      if (node.getAttribute("data-name") !== "profile-icon") toggleUserDropdown(false);
+      if (node.id !== "user-menu-button") toggleUserDropdown(false);
     };
     window.addEventListener("click", clearUserDropdown);
     return () => window.removeEventListener("click", clearUserDropdown);
@@ -31,50 +27,53 @@ export function UserMenu() {
     await logoutUser();
   };
 
-  const menuLoading = <span>...</span>;
+  useEffect(() => {
+    if (user) setMenuToShow(MENU.USER);
+    else if (isFetching && isLoading && logoutIsUninitialized && !isError && !uiState.showContextMenu) setMenuToShow(MENU.LOADING);
+    else setMenuToShow(MENU.LOGIN);
+  }, [user, isLoading, isError, logoutIsUninitialized]);
+
+  const menuLoading = (
+    <div className="user-menu">
+      <div className="user-menu__button user-menu__button--loading" />
+    </div>
+  );
 
   const loggedInUserMenu = (
-    <>
+    <div className="user-menu">
       <button
+        id="user-menu-button"
         type="button"
-        className={styles["user-icon-circle"]}
-        data-name="profile-icon"
-        data-cy="profile-icon"
+        className="user-menu__button"
+        aria-controls="user-menu-items"
+        aria-expanded={showUserDropdown}
+        aria-label={ARIA_LABELS.USER_MENU.OPEN}
         onClick={(e) => {
           toggleUserDropdown(!showUserDropdown);
         }}
       >
-        <div className={styles["user-icon-letter"]} data-name="profile-icon">
-          {user?.name && user.name.slice(0, 1).toUpperCase()}
-        </div>
+        <span className="screenreader-only">User Menu</span>
+        {user?.name && user.name.slice(0, 1).toUpperCase()}
       </button>
+
       {showUserDropdown && (
-        <ul className={styles["user-menu"]}>
-          <Link href="/settings" className={styles["user-menu-item"]}>
-            {/* <SettingsIcon className="menu-icon-svg" height="100" width="100" color="red" stroke="red" fill="red" /> */}
-            Settings
+        <ul id="user-menu-items" className="user-menu__items">
+          <Link href="/settings" className="user-menu__menu-item">
+            {APP_TEXT.USER_MENU.ITEMS.SETTINGS}
           </Link>
-          <Link href="/login" onClick={handleLogout} className={styles["user-menu-item"]}>
-            {/* <Image alt="logout icon" src={logoutIcon} /> */}
-            Logout
+          <Link href="/login" className="user-menu__menu-item" onClick={handleLogout}>
+            {APP_TEXT.USER_MENU.ITEMS.LOGOUT}
           </Link>
         </ul>
       )}
-    </>
+    </div>
   );
 
   const guestMenu = (
-    <Link href="/login" className="button button-standard-size button-basic">
-      LOGIN
+    <Link href="/login" className="button">
+      {APP_TEXT.USER_MENU.LOGIN}
     </Link>
   );
-
-  useEffect(() => {
-    // console.log("user: ", user, "isLoading: ", isLoading, "isError: ", isError, "logoutIsUninitialized: ", logoutIsUninitialized, "isFetching: ", isFetching);
-    if (user) setMenuToShow(MENU.USER);
-    else if (isFetching && isLoading && logoutIsUninitialized && !isError) setMenuToShow(MENU.LOADING);
-    else setMenuToShow(MENU.LOGIN);
-  }, [user, isLoading, isError, logoutIsUninitialized]);
 
   if (menuToShow === MENU.LOADING) return menuLoading;
   if (menuToShow === MENU.USER) return loggedInUserMenu;

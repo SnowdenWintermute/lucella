@@ -1,0 +1,66 @@
+@import "../../../styles/abstracts/variables";
+
+.game-room-menu__left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  @media only screen and (max-width: breakpoint(tiny)) {
+    width: 100%;
+    border-right: 0px;
+  }
+}
+
+.game-room-menu__ready-button {
+  align-self: flex-end;
+}
+
+.game-room-menu__players {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  @media only screen and (max-width: breakpoint(medium)) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.game-room-menu__player-with-ready-status {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-room-menu__player {
+  font-size: fontSize(3);
+}
+
+.game-room-menu__vs {
+  font-size: fontSize(3);
+}
+
+.game-room-menu__right {
+  padding-top: spacing(5);
+  font-size: fontSize(3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  @media only screen and (max-width: breakpoint(tiny)) {
+    display: none;
+  }
+}
+
+.game-room-menu__right-main-text {
+  span {
+    margin-top: spacing(2);
+  }
+  display: flex;
+  flex-direction: column;
+}
+
+.game-room-menu__right-info-text {
+  font-size: fontSize(2);
+  text-align: left;
+}

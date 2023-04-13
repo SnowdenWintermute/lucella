@@ -1,0 +1,71 @@
+@import "../../../styles/abstracts/variables";
+
+.alerts-holder {
+  position: fixed;
+  top: calc(height(4) * 2 + spacing(2) + 2px);
+  left: spacing(3);
+  // border: 1px solid red;
+  // width: 600px;
+  z-index: 100;
+  list-style: none;
+}
+
+$clippedCornerSize: calc(spacing(1) / 2);
+
+.alert__item {
+  border: 1px solid var(--color-primary);
+  filter: $dropShadow;
+  max-width: fit-content;
+  height: fit-content;
+  display: flex;
+  margin-bottom: spacing(1);
+  opacity: 0;
+  transition: 0.6s ease-out;
+  animation: alert-animation-appear 0.3s ease-in-out forwards;
+}
+
+.alert__button {
+  border: none;
+  background-color: var(--color-accent);
+  padding: spacing(1);
+  padding-right: spacing(2);
+  padding-left: spacing(2);
+  font-size: fontSize(2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--color-primary);
+}
+
+@keyframes alert-animation-appear {
+  0% {
+    margin-left: 0px;
+    opacity: 0;
+  }
+  100% {
+    margin-left: spacing(4);
+    opacity: 1;
+  }
+}
+
+.alert__message-text {
+  text-align: left;
+}
+
+.alert__icon-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.alert__icon {
+  height: height(1);
+  margin-right: spacing(2);
+}
+
+.alert__icon--danger {
+  fill: var(--color-danger);
+}
+.alert__icon--success {
+  fill: var(--color-success);
+}

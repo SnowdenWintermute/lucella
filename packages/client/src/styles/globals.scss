@@ -1,16 +1,38 @@
-// /* Change Autocomplete styles in Chrome*/
-// input:-webkit-autofill,
-// input:-webkit-autofill:hover,
-// input:-webkit-autofill:focus input:-webkit-autofill,
-// textarea:-webkit-autofill,
-// textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
-// select:-webkit-autofill,
-// select:-webkit-autofill:hover,
-// select:-webkit-autofill:focus {
-//   -webkit-text-fill-color: color(textPrimary);
-//   -webkit-box-shadow: 0 0 0px 1000px color(dark) inset;
-//   transition: background-color 5000s ease-in-out 0s;
-// }
+@import "./common/buttons.scss";
+@import "./common/inputs.scss";
+@import "./common/pages.scss";
+@import "./base/style.scss";
+@import "./common/auth-forms.scss";
+@import "../components/battle-room/battle-room-game.scss";
+@import "../components/common-components/AuthPage/auth-page.scss";
+@import "../components/common-components/CircularProgress/circular-progress.scss";
+@import "../components/common-components/inputs/labled-text-input-with-error-display.scss";
+@import "../components/common-components/LoadingSpinner/loading-spinner.scss";
+@import "../components/common-components/Modal/modal.scss";
+@import "../components/ladder-page/ladder-components.scss";
+@import "../components/layout/alerts/alerts.scss";
+@import "../components/layout/ContextMenu/context-menu.scss";
+@import "../components/layout/navbar/navbar.scss";
+@import "../components/layout/navbar/user-menu.scss";
+@import "../components/layout/navbar/change-theme-button.scss";
+@import "../components/Lobby/Chat/chat.scss";
+@import "../components/Lobby/ChatChannelSidebar/ban-modals.scss";
+@import "../components/Lobby/ChatChannelSidebar/chat-channel-sidebar.scss";
+@import "../components/Lobby/LobbyMenus/game-list-menu.scss";
+@import "../components/Lobby/LobbyMenus/game-room-menu.scss";
+@import "../components/Lobby/LobbyMenus/game-setup-menu.scss";
+@import "../components/Lobby/LobbyMenus/lobby-menus.scss";
+@import "../components/Lobby/LobbyMenus/main-menu.scss";
+@import "../components/Lobby/LobbyMenus/matchmaking-queue-menu.scss";
+@import "../components/Lobby/modals/change-chat-channel-modal.scss";
+@import "../components/Lobby/modals/score-screen-modal.scss";
+@import "../components/Lobby/lobby.scss";
+@import "../components/settings-page/delete-account-modal.scss";
+@import "../pages/battle-room/battle-room-app.scss";
+@import "../pages/ladder/ladder-page.scss";
+@import "../pages/settings/settings-page.scss";
+@import "./base/scrollbar.scss";
+@import "../components//layout/layout.scss";
 
 @font-face {
   font-family: "DM Sans";
@@ -31,4 +53,59 @@
   src: url("../fonts/DM_Sans/DMSans-Italic.ttf");
   font-weight: normal;
   font-style: italic;
+}
+
+@font-face {
+  font-family: "VT323";
+  src: local("VT323"), url("../fonts/VT323/VT323-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root,
+[data-theme="default"] {
+  --color-bg: #162229;
+  --color-primary: #9ba8b8;
+  --color-accent: #080b11;
+  --color-faded: #656b72;
+  --color-highlight: #bcd2e8;
+  --color-danger: #a52026;
+  --color-danger-highlight: #e42933;
+  --color-success: #028a7e;
+  --color-chat-message-private: #ffc0cb;
+  --color-warning: #ffbb00;
+  --font-family: "DM Sans";
+}
+
+[data-theme] {
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+}
+
+[data-theme="VT320"] {
+  --color-primary: #db9013;
+  --color-bg: hsl(39, 83%, 3%);
+  --color-accent: hsl(39, 83%, 3%);
+  --color-faded: #db9013;
+  --color-highlight: #db9013;
+  --color-danger: #db9013;
+  --color-danger-highlight: #db9013;
+  --color-success: #db9013;
+  --color-chat-message-private: #db9013;
+  --color-warning: #db9013;
+  --font-family: "VT323";
+}
+
+[data-theme="HTML"] {
+  --color-primary: black;
+  --color-bg: white;
+  --color-accent: white;
+  --color-faded: black;
+  --color-highlight: black;
+  --color-danger: black;
+  --color-danger-highlight: black;
+  --color-success: black;
+  --color-chat-message-private: black;
+  --color-warning: black;
+  --font-family: "Times New Roman";
 }

@@ -6,7 +6,9 @@ import { Ban, SERVER_HOSTNAME_DOCKER_PRODUCTION, SanitizedUser, UsersRoutePaths 
 
 const baseQuery = fetchBaseQuery({
   baseUrl:
-    process.env.NODE_ENV === "production" ? `${SERVER_HOSTNAME_DOCKER_PRODUCTION}${UsersRoutePaths.ROOT}` : `http://localhost:8080/api${UsersRoutePaths.ROOT}`,
+    process.env.NODE_ENV === "production"
+      ? `${SERVER_HOSTNAME_DOCKER_PRODUCTION}${UsersRoutePaths.ROOT}`
+      : `${process.env.NEXT_PUBLIC_API}/api${UsersRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

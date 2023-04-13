@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
 import bcrypt from "bcryptjs";
-import { ErrorMessages, InputFields, UsersRoutePaths } from "../../../../common";
+import { ERROR_MESSAGES, InputFields, UsersRoutePaths } from "../../../../common";
 import UserRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL_ALTERNATE, TEST_USER_NAME_ALTERNATE, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
@@ -63,9 +63,9 @@ describe("registerNewAccountHandler", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.error);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.INVALID_EMAIL)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.VALIDATION.AUTH.INVALID_EMAIL)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.EMAIL)).toBeTruthy();
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD)).toBeTruthy();
 
     const finishCount = await UserRepo.count();
@@ -84,10 +84,10 @@ describe("registerNewAccountHandler", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.error);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.NAME_MIN_LENGTH)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.VALIDATION.AUTH.NAME_MIN_LENGTH)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.NAME)).toBeTruthy();
 
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.VALIDATION.AUTH.PASSWORDS_DONT_MATCH)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.VALIDATION.AUTH.PASSWORDS_DONT_MATCH)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD_CONFIRM)).toBeTruthy();
 
     const finishCount = await UserRepo.count();

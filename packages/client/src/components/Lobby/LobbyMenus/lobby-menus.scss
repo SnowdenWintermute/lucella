@@ -1,0 +1,43 @@
+@import "../../../styles/abstracts/variables";
+
+.lobby-menus__top-buttons {
+  border-bottom: 1px solid var(--color-primary);
+  display: flex;
+  list-style: none;
+  padding: spacing(2);
+  height: height(4);
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.lobby-menus__top-button {
+  min-width: spacing(6);
+  margin-right: spacing(1);
+}
+.lobby-menus__top-button--align-right {
+  min-width: spacing(6);
+  margin-right: spacing(1);
+}
+
+.lobby-menu {
+  height: height(6);
+  height: calc(324);
+  border-bottom: 1px solid var(--color-primary);
+  display: flex;
+}
+
+.lobby-menu__left {
+  width: 62%;
+  border-right: 1px solid var(--color-primary);
+  padding: spacing(2);
+}
+.lobby-menu__right {
+  flex: 1;
+  padding: spacing(2);
+  overflow: hidden;
+}
+
+.lobby-menu__header {
+  font-size: fontSize(3);
+  font-weight: lighter;
+}

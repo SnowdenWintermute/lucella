@@ -1,0 +1,32 @@
+@import "../../../styles/abstracts/_variables";
+
+.context-menu {
+  position: absolute;
+  z-index: 1;
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-bg);
+}
+
+.context-menu-item {
+  border-bottom: 1px solid var(--color-primary);
+  &:last-child {
+    border-bottom: none;
+  }
+  display: block;
+}
+
+.context-menu-item__button {
+  padding: 10px;
+  background-color: var(--color-bg);
+  width: 100%;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-primary);
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background-color: var(--color-accent);
+  }
+}

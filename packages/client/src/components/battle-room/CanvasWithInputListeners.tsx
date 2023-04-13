@@ -41,7 +41,7 @@ function Canvas(props: Props) {
     <canvas
       height={canvasSizeRef.current.height}
       width={canvasSizeRef.current.width}
-      className="battle-room-canvas"
+      className="battle-room-game__canvas"
       ref={canvasRef}
       onContextMenu={(e) => e.preventDefault()}
       onTouchStart={(e) => {

@@ -7,7 +7,9 @@ import { usersApi } from "./users-api-slice";
 
 const baseQuery = fetchBaseQuery({
   baseUrl:
-    process.env.NODE_ENV === "production" ? `${SERVER_HOSTNAME_DOCKER_PRODUCTION}${AuthRoutePaths.ROOT}` : `http://localhost:8080/api${AuthRoutePaths.ROOT}`,
+    process.env.NODE_ENV === "production"
+      ? `${SERVER_HOSTNAME_DOCKER_PRODUCTION}${AuthRoutePaths.ROOT}`
+      : `${process.env.NEXT_PUBLIC_API}/api${AuthRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },

@@ -3,15 +3,30 @@ export const BUTTON_NAMES = {
     CREATE_ACCOUNT: "CREATE",
     LOGIN: "LOG IN",
     SEND: "SEND",
-    SET: "SET",
+    CHANGE: "CHANGE",
     DELETE_ACCOUNT: "CONFIRM DELETE",
   },
   GENERAL: {
     SEARCH: "SEARCH",
   },
+  MAIN_MENU: {
+    CHANNEL: "Channel",
+    RANKED: "Ranked",
+    HOST: "Host",
+    JOIN: "Join",
+  },
+  GAME_SETUP: {
+    CANCEL: "Cancel",
+    CREATE_GAME: "Create Game",
+  },
+  GAME_LIST: {
+    BACK: "Back",
+  },
   GAME_ROOM: {
-    READY: "READY",
-    LEAVE_WAITING_LIST: "LEAVE",
-    MAKE_PUBLIC: "Make Public",
+    READY: "Ready",
+    LEAVE_GAME: "Leave Game",
+  },
+  MATCHMAKING_QUEUE: {
+    CANCEL: "Cancel",
   },
 };

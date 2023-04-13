@@ -1,0 +1,30 @@
+@import "../abstracts/variables";
+
+.button {
+  height: height(3);
+  padding-left: spacing(3);
+  padding-right: spacing(3);
+  // border: 1px solid var(--color-primary);
+  border: 1px solid var(--color-primary);
+  font-size: fontSize(2);
+  color: var(--color-primary);
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  cursor: pointer;
+  &:disabled {
+    opacity: 50%;
+    cursor: progress;
+  }
+}
+
+.button--accent {
+  background-color: var(--color-accent);
+}
+
+.button--danger {
+  background-color: var(--color-danger);
+  color: var(--color-highlight);
+}

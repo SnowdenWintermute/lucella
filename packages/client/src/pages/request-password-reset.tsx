@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../common";
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
-import AuthPage from "../components/layout/auth/AuthPage";
+import AuthPage from "../components/common-components/AuthPage/AuthPage";
 import { BUTTON_NAMES } from "../consts/button-names";
 import { AlertType } from "../enums";
 import { useRequestPasswordResetEmailMutation } from "../redux/api-slices/auth-api-slice";
 import { useAppDispatch } from "../redux/hooks";
 import { setAlert } from "../redux/slices/alerts-slice";
+import { APP_TEXT } from "../consts/app-text";
 
 function RequestPasswordResetEmail() {
   const dispatch = useAppDispatch();
@@ -42,20 +43,27 @@ function RequestPasswordResetEmail() {
 
   return (
     <AuthPage title="Account Recovery" submitHandler={submitHandler}>
-      <LabeledTextInputWithErrorDisplay
-        label="Enter your email to request a password reset."
-        type="email"
-        placeholder="Email"
-        name={InputFields.AUTH.EMAIL}
-        value={email}
-        onChange={onChange}
-        disabled={isLoading || isSuccess}
-        error={fieldErrors.email}
-        autofocus
-      />
-      <div className="auth-bottom-links">
-        <Link href="/login">Back to login</Link>
-        <button type="submit" className="button button-standard-size button-primary">
+      <div className="auth-form__inputs">
+        <LabeledTextInputWithErrorDisplay
+          label={APP_TEXT.AUTH.INPUTS.PASSWORD_RESET_REQUEST_EMAIL}
+          type="email"
+          placeholder="Email"
+          name={InputFields.AUTH.EMAIL}
+          value={email}
+          onChange={onChange}
+          disabled={isLoading || isSuccess}
+          error={fieldErrors.email}
+          autofocus
+          extraStyles="auth-form__input"
+        />
+      </div>
+      <div className="auth-form__bottom">
+        <div className="auth-bottom-links">
+          <Link href="/login" className="auth-form__link">
+            Back to login
+          </Link>
+        </div>
+        <button type="submit" className="button button--accent auth-form__submit-button">
           {isLoading ? "..." : BUTTON_NAMES.AUTH_FORMS.SEND}
         </button>
       </div>

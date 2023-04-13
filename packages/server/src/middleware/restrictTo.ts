@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from "express";
-import { ErrorMessages } from "../../../common";
+import { ERROR_MESSAGES } from "../../../common";
 import CustomError from "../classes/CustomError";
 
 export const restrictTo =
@@ -8,7 +8,7 @@ export const restrictTo =
   (req: Request, res: Response, next: NextFunction) => {
     try {
       const { user } = res.locals;
-      if (!allowedRoles.includes(user.role)) return next([new CustomError(ErrorMessages.AUTH.ROLE_RESTRICTED, 403)]);
+      if (!allowedRoles.includes(user.role)) return next([new CustomError(ERROR_MESSAGES.AUTH.ROLE_RESTRICTED, 403)]);
       next();
     } catch (error) {
       console.log(error);

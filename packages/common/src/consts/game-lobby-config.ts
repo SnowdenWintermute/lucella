@@ -1,6 +1,7 @@
 import { ONE_SECOND } from ".";
 
-export const gameRoomCountdownDuration = 1;
+export const baseGameStartCountdownDuration = 3;
+export const baseMaxConcurrentGames = 1;
 export const theVoid = "the void";
 export const gameChannelNamePrefix = "game-";
 export const rankedGameChannelNamePrefix = "ranked-";
@@ -15,12 +16,17 @@ export const maxGameNameLength = 20;
 
 export const battleRoomDefaultChatChannel = "battle-room-chat";
 
+export const chatChannelWelcomeMessage = (channelName: string) => `Welcome to ${channelName}.`;
+
 // for frontend chat selection buttons
 export const defaultChatChannelNames = {
+  BATTLE_ROOM_CHAT: "Battle Room Chat",
   LINDBLUM: "Lindblum",
   ALEXANDRIA: "Alexandria",
   BURMECIA: "Burmecia",
-  BATTLE_ROOM_CHAT: "Battle Room Chat",
   TRENO: "Treno",
   LURKER_LOUNGE: "Lurker Lounge",
 };
+
+export const chatMessageMaxLength = 512;
+export const chatChannelNameMaxLength = 64;

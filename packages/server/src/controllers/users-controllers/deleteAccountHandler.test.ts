@@ -2,7 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import io from "socket.io-client";
 import { IncomingMessage, Server, ServerResponse } from "node:http";
-import { AuthRoutePaths, ErrorMessages, randBetween, UsersRoutePaths, GENERIC_SOCKET_EVENTS, CookieNames } from "../../../../common";
+import { AuthRoutePaths, ERROR_MESSAGES, randBetween, UsersRoutePaths, GENERIC_SOCKET_EVENTS, CookieNames } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -41,7 +41,7 @@ describe("deleteAccountHandler", () => {
 
   it("doesn't let a user delete an account they are not logged into", async () => {
     const response = await request(app).put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.NOT_LOGGED_IN));
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.NOT_LOGGED_IN));
     expect(response.status).toBe(401);
   });
 
@@ -50,7 +50,7 @@ describe("deleteAccountHandler", () => {
     const response = await request(app)
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`)
       .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.AUTH.INVALID_CREDENTIALS)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS)).toBeTruthy();
     expect(response.status).toBe(401);
   });
 
@@ -86,7 +86,7 @@ describe("deleteAccountHandler", () => {
 
         expect(loginResponse.status).toBe(401);
         expect(loginResponse.headers["set-cookie"]).toBeUndefined();
-        expect(responseBodyIncludesCustomErrorMessage(loginResponse, ErrorMessages.AUTH.EMAIL_DOES_NOT_EXIST)).toBeTruthy();
+        expect(responseBodyIncludesCustomErrorMessage(loginResponse, ERROR_MESSAGES.AUTH.EMAIL_DOES_NOT_EXIST)).toBeTruthy();
 
         done();
       });

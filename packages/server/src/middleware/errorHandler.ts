@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextFunction, Request, Response } from "express";
-import { CustomErrorDetails, ErrorMessages } from "../../../common";
+import { CustomErrorDetails, ERROR_MESSAGES } from "../../../common";
 import CustomError from "../classes/CustomError";
 
 export default function errorHandler(error: any, req: Request, res: Response, next: NextFunction) {
@@ -17,7 +17,7 @@ export default function errorHandler(error: any, req: Request, res: Response, ne
   //
   let jsonToSend;
   if (errors) jsonToSend = errors;
-  else jsonToSend = [{ message: ErrorMessages.SERVER_GENERIC, error }];
+  else jsonToSend = [{ message: ERROR_MESSAGES.SERVER_GENERIC, error }];
 
   res.status(status || error.status || 500).json(jsonToSend);
 }

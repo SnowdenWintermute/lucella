@@ -1,0 +1,55 @@
+@import "../../../styles/abstracts/variables";
+
+.main-navigation {
+  // max-width: $baseAppWidth;
+  padding: spacing(2) spacing(4) spacing(2) spacing(4);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.main-navigation__left-side {
+  display: flex;
+  align-items: center;
+}
+
+.main-navigation__site-logo-button {
+  background-color: transparent;
+  border: none;
+  margin-right: spacing(4);
+}
+
+.main-navigation__site-logo {
+  height: height(3);
+  fill: var(--color-primary);
+}
+
+.main-navigation__logo-text {
+  color: var(--color-primary);
+  font-size: fontSize(4);
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: spacing(5);
+  @media only screen and (max-width: breakpoint(verySmall)) {
+    font-size: fontSize(3);
+    margin-right: spacing(3);
+  }
+  @media only screen and (max-width: breakpoint(tiny)) {
+    display: none;
+  }
+}
+
+.main-navigation__page-link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: fontSize(3);
+  margin-right: spacing(3);
+  box-sizing: border-box;
+  &--active {
+    margin-bottom: -1px;
+    border-bottom: 1px solid var(--color-primary);
+  }
+  @media only screen and (max-width: breakpoint(verySmall)) {
+    font-size: fontSize(2);
+  }
+}

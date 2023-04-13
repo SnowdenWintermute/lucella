@@ -1,0 +1,44 @@
+@import "../../../styles/abstracts/variables";
+
+.auth-page {
+  border: 1px solid transparent;
+}
+
+.auth-page__frame {
+  width: 100%;
+  background-color: var(--color-accent);
+  max-width: calc(width(4) - height(4));
+  margin: 0 auto;
+  margin-top: spacing(5);
+  // border: 1px solid var(--color-primary);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary) !important;
+  padding: spacing(5);
+  padding-bottom: spacing(6);
+  @media only screen and (max-width: breakpoint(small)) {
+    margin-top: 0px;
+    padding-bottom: spacing(5);
+  }
+}
+.auth-page__website-name,
+.auth-page__page-title {
+  text-align: center;
+}
+.auth-page__website-name {
+  // color: var(--color-primary);
+  color: var(--color-primary) !important;
+  font-size: fontSize(4);
+  margin-bottom: spacing(2);
+}
+.auth-page__page-title {
+  font-size: fontSize(4);
+  font-weight: lighter;
+  margin-bottom: spacing(2);
+  margin-bottom: 34px;
+}
+.auth-page__form {
+  width: 100%;
+}
+
+.auth-page__input {
+}

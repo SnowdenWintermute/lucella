@@ -1,0 +1,21 @@
+@import "../../../styles/abstracts/variables";
+
+.change-chat-channel-modal__description {
+  margin-bottom: spacing(2);
+}
+
+.change-chat-channel-modal__input {
+  margin-top: spacing(1);
+  margin-bottom: spacing(2);
+  width: 100%;
+  &::placeholder {
+    color: var(--color-highlight);
+  }
+}
+
+.change-chat-channel-modal__default-channel-buttons {
+  display: grid;
+  max-width: 100%;
+  gap: spacing(1);
+  grid-template-columns: calc(50% - spacing(1) / 2) calc(50% - spacing(1) / 2);
+}

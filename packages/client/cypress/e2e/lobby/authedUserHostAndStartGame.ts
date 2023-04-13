@@ -1,4 +1,12 @@
-import { AuthRoutePaths, ErrorMessages, FrontendRoutes, gameRoomCountdownDuration, GameStatus, ONE_SECOND, SocketEventsFromClient } from "../../../../common";
+import {
+  AuthRoutePaths,
+  ERROR_MESSAGES,
+  FrontendRoutes,
+  baseGameStartCountdownDuration,
+  GameStatus,
+  ONE_SECOND,
+  SocketEventsFromClient,
+} from "../../../../common";
 import { mediumTestText, shortTestText } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
@@ -30,9 +38,9 @@ export default function authedUserHostAndStartGame() {
     cy.findByRole("button", { name: /Host/i }).click();
     cy.get('[data-cy="game-name-input"]').click().type("{enter}");
     cy.findByText(/You are the host of game:/i).should("not.exist");
-    cy.findByText(ErrorMessages.LOBBY.GAME_NAME.NOT_ENTERED).should("exist");
+    cy.findByText(ERROR_MESSAGES.LOBBY.GAME_NAME.NOT_ENTERED).should("exist");
     cy.get('[data-cy="game-name-input"]').click().type(`${mediumTestText}{enter}`);
-    cy.findByText(ErrorMessages.LOBBY.GAME_NAME.MAX_LENGTH).should("exist");
+    cy.findByText(ERROR_MESSAGES.LOBBY.GAME_NAME.MAX_LENGTH).should("exist");
     cy.get('[data-cy="game-name-input"]').clear().click().type(`${shortTestText}{enter}`);
     cy.findByText(new RegExp(`You are the host of game: ${shortTestText}`, "i")).should("exist");
     cy.findByText(/Awaiting challenger.../i).should("exist");
@@ -80,7 +88,7 @@ export default function authedUserHostAndStartGame() {
     cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.JOINS_GAME, data: shortTestText.toLowerCase() });
     cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.CLICKS_READY });
     cy.findByRole("button", { name: /Ready/i }).click();
-    cy.get('[data-cy="battle-room-canvas"]', { timeout: gameRoomCountdownDuration * ONE_SECOND + ONE_SECOND }).should("exist");
+    cy.get('[data-cy="battle-room-canvas"]', { timeout: baseGameStartCountdownDuration * ONE_SECOND + ONE_SECOND }).should("exist");
     // challenger leaves game
     cy.task(TaskNames.socketEmit, { username: anonUsernameForCypressSocketList, event: SocketEventsFromClient.LEAVES_GAME });
     cy.get('[data-cy="score-screen-modal"]')

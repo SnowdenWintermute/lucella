@@ -1,9 +1,10 @@
 /* eslint-disable no-nested-ternary */
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, ErrorMessages, SuccessAlerts } from "../../../../common";
+import { CustomErrorDetails, ERROR_MESSAGES, SuccessAlerts } from "../../../../common";
 import { Alert } from "../../classes/Alert";
-import AuthPage from "../../components/layout/auth/AuthPage";
+import AuthPage from "../../components/common-components/AuthPage/AuthPage";
+import { APP_TEXT } from "../../consts/app-text";
 import { AlertType } from "../../enums";
 import { useActivateAccountMutation } from "../../redux/api-slices/users-api-slice";
 import { useAppDispatch } from "../../redux/hooks";
@@ -37,7 +38,7 @@ export default function AccountActivation() {
   }, [isLoading, isSuccess, error, isError]);
 
   return (
-    <AuthPage title="Account Activation" submitHandler={() => {}}>
+    <AuthPage title={APP_TEXT.AUTH.PAGE_TITLES.ACCOUNT_ACTIVATION} submitHandler={() => {}}>
       {isLoading ? <p>Activating...</p> : isSuccess ? <p>Success!</p> : <p>{errorMessage}</p>}
     </AuthPage>
   );

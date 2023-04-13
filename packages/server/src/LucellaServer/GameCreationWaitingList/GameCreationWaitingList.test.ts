@@ -21,6 +21,9 @@ import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
 import createLoggedInUsersWithConnectedSockets from "../../utils/test-utils/createTestUsersAndReturnSockets";
 
+// UNTESTED:
+// - the fact that games counting down are included in the number of concurrent games (manually tested april 13 2023)
+
 describe("GameCreationWaitingList", () => {
   let context: PGContext | undefined;
   let app: Application | undefined;

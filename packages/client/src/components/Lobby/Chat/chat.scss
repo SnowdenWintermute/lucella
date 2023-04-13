@@ -1,0 +1,53 @@
+@import "../../../styles/abstracts/variables";
+
+.chat {
+  padding: spacing(2);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.chat__message-stream {
+  display: flex;
+  flex-direction: column-reverse;
+  flex: 1;
+  overflow-y: scroll;
+  word-wrap: break-word;
+  list-style: none;
+  padding-right: spacing(1); // space for the scrollbar
+  margin-bottom: spacing(2);
+}
+
+.chat__input-form {
+  position: relative;
+}
+
+.chat__input {
+  width: 100%;
+}
+
+.chat__input-delay-circular-progress {
+  position: absolute;
+  height: height(2);
+  width: height(2);
+  right: spacing(1);
+  top: calc(50% - height(2) / 2);
+}
+
+.chat__message {
+  font-size: fontSize(2);
+  color: var(--color-primary);
+}
+
+.chat__message--private {
+  color: var(--color-chat-message-private);
+}
+
+.chat__message--error {
+  color: var(--color-danger-highlight);
+}
+
+.chat__message--warning {
+  color: var(--color-warning);
+}

@@ -1,20 +1,21 @@
-import { MouseData, Point } from "../../../../../common";
+import { MouseData, Point, ThemeColors } from "../../../../../common";
 
 export default function first(
   context: CanvasRenderingContext2D,
   mouseData: MouseData,
   canvasDrawFractions: Point,
-  selectionBoxSize: { width: number; height: number }
+  selectionBoxSize: { width: number; height: number },
+  themeColors: ThemeColors
 ) {
   if (!mouseData.leftPressedAt) return;
+  context.strokeStyle = `rgb(${themeColors.SELECTION})`;
+  context.lineWidth = 3;
   context.beginPath();
-  context.strokeStyle = "rgb(103,191,104)";
   context.rect(
     mouseData.leftPressedAt.x * canvasDrawFractions.x,
     mouseData.leftPressedAt.y * canvasDrawFractions.y,
     selectionBoxSize.width,
     selectionBoxSize.height
   );
-  context.lineWidth = 3;
   context.stroke();
 }

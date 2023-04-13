@@ -3,6 +3,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord } from "../../../../common";
 
+export enum LobbyMenu {
+  MAIN = "main",
+  GAME_SETUP = "gameSetup",
+  GAME_ROOM = "gameRoom",
+  GAME_LIST = "gameList",
+  MATCHMAKING_QUEUE = "matchmakingQueue",
+}
+
 export interface IGameScoreScreen {
   gameRoom: GameRoom;
   game: BattleRoomGame;
@@ -11,56 +19,54 @@ export interface IGameScoreScreen {
 
 export interface ILobbyUIState {
   authenticating: boolean;
+  activeMenu: LobbyMenu | null;
   gameList: {
     games: {
       [roomName: string]: GameRoom;
     };
-    isOpen: boolean;
     isFetching: boolean;
   };
   scoreScreenData: IGameScoreScreen | null;
-  gameRoomDisplay: {
-    isOpen: boolean;
-  };
   gameCreationWaitingList: {
     currentPosition: number | null;
   };
-  matchmakingScreen: {
+  matchmakingMenu: {
     isLoading: boolean;
-    isOpen: boolean;
     currentData: {
       currentEloDiffThreshold: number | null;
       queueSize: number | null;
     };
   };
   currentGameRoom: GameRoom | null;
+  currentGameRoomLoading: boolean | string;
+  playerReadyLoading: boolean;
   playerRole: PlayerRole | null;
+  guestUsername: string | null;
 }
 
 const initialState: ILobbyUIState = {
   authenticating: true,
+  activeMenu: LobbyMenu.MAIN,
   gameList: {
     games: {},
-    isOpen: false,
     isFetching: true,
   },
   scoreScreenData: null,
-  gameRoomDisplay: {
-    isOpen: false,
-  },
   gameCreationWaitingList: {
     currentPosition: null,
   },
-  matchmakingScreen: {
+  matchmakingMenu: {
     isLoading: false,
-    isOpen: false,
     currentData: {
       queueSize: null,
       currentEloDiffThreshold: null,
     },
   },
   currentGameRoom: null,
+  currentGameRoomLoading: false,
+  playerReadyLoading: false,
   playerRole: null,
+  guestUsername: null,
 };
 
 const ladderSlice = createSlice({
@@ -73,14 +79,30 @@ const ladderSlice = createSlice({
     setAuthenticating(state, action: PayloadAction<boolean>) {
       state.authenticating = action.payload;
     },
-    setGameRoomDisplayVisible(state, action: PayloadAction<boolean>) {
-      state.gameRoomDisplay.isOpen = action.payload;
+    setGuestUsername(state, action: PayloadAction<string>) {
+      state.guestUsername = action.payload;
+    },
+    setActiveMenu(state, action: PayloadAction<LobbyMenu>) {
+      state.activeMenu = action.payload;
+      if (action.payload === LobbyMenu.MATCHMAKING_QUEUE) state.matchmakingMenu = initialState.matchmakingMenu;
+    },
+    setCurrentGameRoomLoading(state, action: PayloadAction<boolean | string>) {
+      state.currentGameRoomLoading = action.payload;
     },
     setCurrentGameRoom(state, action: PayloadAction<GameRoom | null>) {
       state.currentGameRoom = action.payload;
+      state.currentGameRoomLoading = false;
+    },
+    setPlayerReadyLoading(state, action: PayloadAction<boolean>) {
+      state.playerReadyLoading = action.payload;
     },
     updatePlayersReady(state, action: PayloadAction<{ host: boolean; challenger: boolean }>) {
-      if (state.currentGameRoom) state.currentGameRoom.playersReady = action.payload;
+      if (state.currentGameRoom) {
+        if (state.playerRole === PlayerRole.HOST && action.payload.host !== state.currentGameRoom.playersReady.host) state.playerReadyLoading = false;
+        if (state.playerRole === PlayerRole.CHALLENGER && action.payload.challenger !== state.currentGameRoom.playersReady.challenger)
+          state.playerReadyLoading = false;
+        state.currentGameRoom.playersReady = action.payload;
+      }
     },
     updateGameCountdown(state, action: PayloadAction<number>) {
       if (state.currentGameRoom) state.currentGameRoom.countdown.current = action.payload;
@@ -96,19 +118,13 @@ const ladderSlice = createSlice({
       if (state.currentGameRoom) state.currentGameRoom.winner = action.payload;
     },
     setMatchmakingLoading(state, action: PayloadAction<boolean>) {
-      state.matchmakingScreen.isLoading = action.payload;
-    },
-    setMatchmakingWindowVisible(state, action: PayloadAction<boolean>) {
-      state.matchmakingScreen.isOpen = action.payload;
+      state.matchmakingMenu.isLoading = action.payload;
     },
     setMatchmakingData(state, action: PayloadAction<{ queueSize: number; currentEloDiffThreshold: number }>) {
-      state.matchmakingScreen.currentData = action.payload;
+      state.matchmakingMenu.currentData = action.payload;
     },
     setGameCreationWaitingListPosition(state, action: PayloadAction<number>) {
       state.gameCreationWaitingList.currentPosition = action.payload;
-    },
-    setViewingGamesList(state, action: PayloadAction<boolean>) {
-      state.gameList.isOpen = action.payload;
     },
     setGameListFetching(state, action: PayloadAction<boolean>) {
       state.gameList.isFetching = action.payload;
@@ -140,18 +156,19 @@ const ladderSlice = createSlice({
 export const {
   clearLobbyUi,
   setAuthenticating,
-  setGameRoomDisplayVisible,
+  setGuestUsername,
+  setActiveMenu,
+  setCurrentGameRoomLoading,
   setCurrentGameRoom,
+  setPlayerReadyLoading,
   updatePlayersReady,
   updateGameCountdown,
   updateGameStatus,
   updatePlayerRole,
   setGameWinner,
   setMatchmakingLoading,
-  setMatchmakingWindowVisible,
   setMatchmakingData,
   setGameCreationWaitingListPosition,
-  setViewingGamesList,
   setGameListFetching,
   updateGameList,
   setScoreScreenData,

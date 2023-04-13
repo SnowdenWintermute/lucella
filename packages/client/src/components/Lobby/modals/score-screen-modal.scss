@@ -1,0 +1,99 @@
+@import "../../../styles/abstracts/variables";
+
+$modalContentsHeight: calc(width(3) - spacing(5));
+
+.score-screen-modal {
+  width: 100%;
+  max-width: width(4);
+}
+.score-screen-modal__contents {
+  display: flex;
+  height: $modalContentsHeight;
+}
+
+.score-screen-modal__left {
+  width: 100%;
+  max-width: width(3);
+  border-right: 1px solid var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.score-screen-modal__player-name-and-score {
+  font-size: fontSize(3);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.score-screen-modal__right {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: width(2);
+}
+
+.score-screen-modal__game-result {
+  font-size: fontSize(4);
+  border-bottom: 1px solid var(--color-primary);
+  width: 100%;
+  height: calc($modalContentsHeight / 1.62 / 1.62);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.score-screen-modal__elo-diff {
+  font-size: fontSize(2);
+}
+
+.score-screen-modal__elo-and-rank-changes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.score-screen-modal__elo-and-rank-changes-block {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.score-screen-modal__elo--animate-gain {
+  animation: elo-gain-animation 3s ease-in-out forwards;
+}
+
+.score-screen-modal__elo--animate-loss {
+  animation: elo-loss-animation 3s ease-in-out forwards;
+}
+
+@keyframes elo-gain-animation {
+  0% {
+    color: var(--color-primary);
+  }
+  50% {
+    color: var(--color-success);
+  }
+  100% {
+    color: var(--color-primary);
+  }
+}
+
+@keyframes elo-loss-animation {
+  0% {
+    color: var(--color-primary);
+  }
+  50% {
+    color: var(--color-danger);
+  }
+  100% {
+    color: var(--color-primary);
+  }
+}

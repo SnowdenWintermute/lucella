@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { Socket } from "socket.io";
-import { GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
+import { chatMessageMaxLength, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from "..";
 
 export default function gameUiListeners(server: LucellaServer, socket: Socket) {
@@ -9,6 +9,7 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
     socket.emit(GENERIC_SOCKET_EVENTS.PONG);
   });
   socket.on(SocketEventsFromClient.NEW_CHAT_MESSAGE, (data) => {
+    if (data.text > chatMessageMaxLength) return console.log(`${socket.id} attempted to send a message longer than the allowable length`);
     server.lobby.handleNewChatMessage(socket, data);
   });
   socket.on(SocketEventsFromClient.REQUESTS_GAME_ROOM_LIST, () => {
@@ -30,6 +31,7 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
     server.lobby.handleReadyStateToggleRequest(socket);
   });
   socket.on(SocketEventsFromClient.ENTERS_MATCHMAKING_QUEUE, () => {
+    console.log(`${server.connectedSockets[socket.id].associatedUser.username} requested to join matchmaking queue`);
     server.matchmakingQueue.addUser(socket);
   });
   socket.on(SocketEventsFromClient.LEAVES_MATCHMAKING_QUEUE, () => {

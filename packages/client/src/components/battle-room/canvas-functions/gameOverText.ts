@@ -1,12 +1,12 @@
-import { BattleRoomGame, Point } from "../../../../../common";
+import { BattleRoomGame, Point, ThemeColors } from "../../../../../common";
 
-const gameOverText = (context: CanvasRenderingContext2D, game: BattleRoomGame, canvasDrawFractions: Point) => {
+const gameOverText = (context: CanvasRenderingContext2D, game: BattleRoomGame, canvasDrawFractions: Point, themeColors: ThemeColors) => {
   const fontSize = 25;
-  context.beginPath();
-  context.fillStyle = "rgb(255,255,255)";
+  context.fillStyle = `rgb(${themeColors.LIGHT})`;
   context.textAlign = "center";
   context.textBaseline = "middle";
-  context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px Arial`;
+  context.font = `bold ${BattleRoomGame.baseWindowDimensions.width / fontSize}px 'DM Sans'`;
+  context.beginPath();
   context.fillText(
     `Winner: ${game.winner ? game.winner : "Game Over"}`,
     (BattleRoomGame.baseWindowDimensions.width * canvasDrawFractions.x) / 2,

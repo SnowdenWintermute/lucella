@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { Socket } from "socket.io";
 import {
-  ErrorMessages,
+  ERROR_MESSAGES,
   maxEloDiffThreshold,
   eloDiffThresholdAdditive,
   rankedGameChannelNamePrefix,
@@ -39,8 +39,8 @@ export class MatchmakingQueue {
 
   async addUser(socket: Socket) {
     const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id]?.associatedUser.username);
-    if (!user || user.status === UserStatuses.DELETED) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.LOG_IN_TO_PLAY_RANKED);
-    if (this.users[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.ALREADY_IN_MATCHMAKING_QUEUE);
+    if (!user || user.status === UserStatuses.DELETED) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.LOG_IN_TO_PLAY_RANKED);
+    if (this.users[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.ALREADY_IN_MATCHMAKING_QUEUE);
     const userBattleRoomRecord = await LucellaServer.fetchOrCreateBattleRoomScoreCard(user);
     this.users[socket.id] = {
       userId: user.id.toString(), // todo- investigate why this needs to be a string and not anumber
@@ -98,7 +98,6 @@ export class MatchmakingQueue {
       Object.values(players).forEach((player) => {
         this.removeUser(player.socketId);
         if (!io.sockets.sockets.get(player.socketId)) return;
-        io.sockets.sockets.get(player.socketId)!.emit(SocketEventsFromServer.MATCH_FOUND);
         io.sockets.sockets.get(player.socketId)!.leave(OfficialChannels.matchmakingQueue);
       });
 

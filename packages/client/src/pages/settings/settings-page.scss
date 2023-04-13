@@ -1,0 +1,35 @@
+@import "../../styles/abstracts/variables";
+
+.settings-page__content {
+  padding: spacing(3);
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  overflow: auto;
+  height: 100%;
+  @media only screen and (max-width: breakpoint(small)) {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+}
+
+.settings-page__options {
+  list-style: none;
+  li {
+    margin-bottom: spacing(3);
+  }
+}
+
+.settings-page__logged-in-as-email {
+  @media only screen and (max-width: breakpoint(small)) {
+    margin-bottom: spacing(3);
+  }
+}
+
+[data-theme="VT320"],
+[data-theme="HTML"] {
+  .settings-page__delete-account-button {
+    background-color: var(--color-bg);
+  }
+}

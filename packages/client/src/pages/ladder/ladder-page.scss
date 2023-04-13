@@ -1,0 +1,21 @@
+@import "../../styles/abstracts/variables";
+
+.ladder-page__content {
+  padding: spacing(3);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - height(4));
+  height: 100%;
+}
+.ladder__loading-spinner-td {
+  width: 100%;
+  padding: spacing(2);
+}
+.ladder__loading-spinner {
+  margin: 0 auto;
+  // border-width: spacing(0);
+}
+
+.ladder__error-td {
+  padding: spacing(1);
+}

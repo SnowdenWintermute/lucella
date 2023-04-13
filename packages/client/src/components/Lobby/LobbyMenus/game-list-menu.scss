@@ -1,0 +1,97 @@
+@import "../../../styles/abstracts/variables";
+
+.game-list-buttons__refresh {
+  width: height(3);
+  padding: spacing(0);
+  margin-left: auto;
+}
+
+.game-list-buttons__refresh-icon {
+  height: 100%;
+  width: 100%;
+  fill: var(--color-primary);
+}
+
+.game-list-menu {
+  padding: spacing(2);
+  padding-right: calc(
+    spacing(2) - $focusOutlineWidth
+  ); // otherwise the button focus highlight is hidden by the overflow:auto/scroll property of the "table" below
+  display: flex;
+  flex-direction: column;
+}
+
+.game-list-menu--scrollbar-present {
+  padding-right: spacing(2);
+}
+
+.game-list-menu__headers {
+  width: 100%;
+  margin-bottom: calc(
+    spacing(2) - $focusOutlineWidth
+  ); // otherwise the button focus highlight is hidden by the overflow:auto/scroll property of the "table" below
+  h3 {
+    font-size: fontSize(3);
+    font-weight: lighter;
+  }
+}
+
+.game-list-menu__game-name-header {
+  padding-left: 0px !important;
+  width: 100% !important;
+}
+
+.game-list-menu__loading-spinner {
+  height: height(2);
+  width: height(2);
+  margin: 0 auto;
+}
+
+.game-list-menu__games {
+  width: 100%;
+  padding-top: $focusOutlineWidth;
+  padding-right: $focusOutlineWidth;
+  overflow-y: auto;
+}
+
+.game-list-menu__game-row {
+  display: flex;
+  border: 1px solid var(--color-primary);
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: spacing(2);
+}
+
+.game-list-menu__games--scrollbar-padding {
+  padding-right: spacing(2);
+}
+
+.game-list-menu__game-name {
+  width: 42%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  padding-left: spacing(2);
+}
+
+.game-list-menu__number-of-players {
+  height: height(3);
+  width: 48%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--color-primary);
+}
+
+.game-list-menu__button {
+  width: spacing(6);
+  border: none;
+}
+
+.game-list-menu__button--disabled-no-opacity {
+  &:disabled {
+    cursor: default;
+    opacity: 100%;
+  }
+}

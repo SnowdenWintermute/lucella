@@ -20,6 +20,7 @@ export enum ModerationRoutePaths {
 export enum ConfigRoutePaths {
   ROOT = "/config",
   MAX_CONCURRENT_GAMES = "/max-concurrent-games",
+  GAME_START_COUNTDOWN = "/game-start-countdown",
 }
 
 export enum CypressTestRoutePaths {

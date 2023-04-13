@@ -42,10 +42,15 @@ export default function createGamePhysicsInterval(io: Server, server: LucellaSer
     const updateForChallenger = createDeltaPacket(game, PlayerRole.CHALLENGER);
     if (game.winner) server.endGameAndEmitUpdates(game);
 
-    if (server.lobby.gameRooms[gameName].players.host!.socketId)
-      io.to(server.lobby.gameRooms[gameName].players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
-    if (server.lobby.gameRooms[gameName].players.challenger!.socketId)
-      io.to(server.lobby.gameRooms[gameName].players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
+    if (!server.lobby.gameRooms[gameName]) {
+      console.error("game physics ending because game room wasn't found");
+      return clearInterval(game.intervals.physics);
+    }
+
+    if (server.lobby.gameRooms[gameName]?.players.host && server.lobby.gameRooms[gameName].players.host!.socketId)
+      io.to(server.lobby.gameRooms[gameName]?.players.host!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForHost);
+    if (server.lobby.gameRooms[gameName]?.players.challenger && server.lobby.gameRooms[gameName].players.challenger!.socketId)
+      io.to(server.lobby.gameRooms[gameName]?.players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
 
     game.netcode.prevGameState = new GameElementsOfConstantInterest(
       cloneDeep(game.orbs),

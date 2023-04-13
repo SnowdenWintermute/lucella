@@ -61,6 +61,19 @@ export default defineConfig({
             return error;
           }
         },
+        [TaskNames.setGameStartCountdown]: async (args) => {
+          try {
+            const response = await axios({
+              method: "put",
+              url: `${args.CYPRESS_BACKEND_URL}/api${CypressTestRoutePaths.ROOT}${ConfigRoutePaths.GAME_START_COUNTDOWN}`,
+              data: { testerKey: args.CYPRESS_TESTER_KEY, gameStartCountdownDuration: args.gameStartCountdown },
+            });
+            return { status: response.status };
+          } catch (error: any) {
+            console.log("setGameStartCountdown: ", error);
+            return error;
+          }
+        },
         [TaskNames.deleteAllTestUsers]: async (args) => {
           try {
             const response = await axios({
@@ -129,7 +142,6 @@ export default defineConfig({
           if (!users[username]) users[username] = { socket: undefined, accessToken: undefined };
           const getConnectedSocket = new Promise((resolve, reject) => {
             if (withHeaders) {
-              console.log(`connecting user ${username}'s socket, has accessToken: ${!!users[username].accessToken}`);
               users[username].socket = io("http://localhost:8080" || "", {
                 transports: ["websocket"],
                 withCredentials: true,
@@ -171,10 +183,28 @@ export default defineConfig({
           users = {};
           return null;
         },
-        [TaskNames.socketEmit]: (taskData: { username: string; event: SocketEventsFromClient; data: any }) => {
+        [TaskNames.socketEmit]: async (taskData: { username: string; event: SocketEventsFromClient; data: any }) => {
           const { username, event, data } = taskData;
-          if (!users[username].socket) console.error(`tried to emit event ${event} but no socket was found`);
-          users[username].socket?.emit(event, data);
+          const thisTask = new Promise((resolve, reject) => {
+            if (!users[username].socket) console.error(`tried to emit event ${event} but no socket was found`);
+            if (event === SocketEventsFromClient.HOSTS_NEW_GAME || event === SocketEventsFromClient.JOINS_GAME) {
+              console.log(`${username}: ${event}`);
+              users[username].socket?.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, () => {
+                users[username].socket?.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
+                resolve(null);
+              });
+              users[username].socket?.on(SocketEventsFromServer.ERROR_MESSAGE, (error: string) => {
+                console.log("tried to host or join a game but got error: ", error);
+                users[username].socket?.off(SocketEventsFromServer.ERROR_MESSAGE);
+                resolve(null);
+              });
+              users[username].socket?.emit(event, data);
+            } else {
+              users[username].socket?.emit(event, data);
+              resolve(null);
+            }
+          });
+          await thisTask;
           return null;
         },
         [TaskNames.putTwoSocketsInGameAndStartIt]: async ({ username1, username2, gameName }: { username1: string; username2: string; gameName: string }) => {

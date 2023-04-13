@@ -3,7 +3,7 @@
 import SocketIO, { Socket } from "socket.io";
 import {
   BattleRoomGame,
-  ErrorMessages,
+  ERROR_MESSAGES,
   gameChannelNamePrefix,
   GameRoom,
   GameStatus,
@@ -51,9 +51,9 @@ export class LucellaServer {
     const { currentGameName } = this.connectedSockets[socket.id];
     const usernameOfPlayerLeaving = this.connectedSockets[socket.id].associatedUser.username;
     // console.log(`${usernameOfPlayerLeaving} leaving game ${currentGameName}`);
-    if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
+    if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
     const gameRoom = this.lobby.gameRooms[currentGameName];
-    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
+    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
 
     const { players } = gameRoom;
     const playerToKick = players.challenger && players.host?.associatedUser.username === usernameOfPlayerLeaving ? players.challenger : undefined;
@@ -150,22 +150,33 @@ export class LucellaServer {
   initiateGameStartCountdown(gameRoom: GameRoom) {
     const { io, lobby, games } = this;
     const gameChatChannelName = gameChannelNamePrefix + gameRoom.gameName;
+    gameRoom.countdown.current = this.config.gameStartCountdownDuration;
+    io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
     lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName] = gameRoom;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     gameRoom.countdownInterval = setInterval(() => {
-      io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
-      gameRoom.countdown.current -= 1;
-      if (gameRoom.countdown.current > 0) return;
-      if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
-      gameRoom.gameStatus = GameStatus.IN_PROGRESS;
-      delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
-      io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-      games[gameRoom.gameName] = new BattleRoomGame(gameRoom.gameName, gameRoom.isRanked);
-      const game = games[gameRoom.gameName];
-      io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
-      game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);
+      if (gameRoom.countdown.current > 0) {
+        gameRoom.countdown.current -= 1;
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
+      } else {
+        if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
+        gameRoom.gameStatus = GameStatus.IN_PROGRESS;
+        delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+        games[gameRoom.gameName] = new BattleRoomGame(gameRoom.gameName, gameRoom.isRanked);
+        const game = games[gameRoom.gameName];
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
+        game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);
+      }
     }, ONE_SECOND);
+  }
+  clearGameStartCountdownInterval(gameRoom: GameRoom) {
+    if (gameRoom.countdownInterval) {
+      delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
+      clearInterval(gameRoom.countdownInterval);
+    }
+    gameRoom.gameStatus = GameStatus.IN_LOBBY;
   }
   static async fetchOrCreateBattleRoomScoreCard(user: User) {
     let scoreCard = await BattleRoomScoreCardRepo.findByUserId(user.id);

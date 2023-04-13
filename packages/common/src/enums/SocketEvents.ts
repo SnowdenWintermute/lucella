@@ -28,7 +28,7 @@ export enum SocketEventsFromServer {
   SHOW_SCORE_SCREEN = "22",
   MATCHMAKING_QUEUE_ENTERED = "23",
   MATCHMAKING_QUEUE_UPDATE = "24",
-  MATCH_FOUND = "25",
+  // MATCH_FOUND = "25",
   GAME_INITIALIZATION = "26",
   GAME_PACKET = "27",
   COMPRESSED_GAME_PACKET = "28",
@@ -36,6 +36,7 @@ export enum SocketEventsFromServer {
   NAME_OF_GAME_WINNER = "30",
   GAME_CREATION_WAITING_LIST_POSITION = "31",
   REMOVED_FROM_MATCHMAKING = "32",
+  GUEST_USER_NAME = "33", // used in the score screens so the user knows if they won or lost
 }
 
 export const GENERIC_SOCKET_EVENTS = {

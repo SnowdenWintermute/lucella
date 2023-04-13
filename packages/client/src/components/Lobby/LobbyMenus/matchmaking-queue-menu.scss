@@ -1,0 +1,72 @@
+@import "../../../styles/abstracts/variables";
+
+.matchmaking-queue-menu__left {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 0px;
+  @media only screen and (max-width: breakpoint(tiny)) {
+    width: 100%;
+    border-right: 0px;
+  }
+}
+.matchmaking-queue-menu__header {
+  text-align: center;
+}
+
+.matchmaking-queue-menu__queue-status {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.matchmaking-queue-menu__queue-status-text {
+  font-size: fontSize(3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 62%;
+  @media only screen and (max-width: breakpoint(medium)) {
+    font-size: fontSize(2);
+    width: 100%;
+  }
+}
+
+.matchmaking-queue-menu__loading-spinner-container {
+  width: 38%;
+  text-align: center;
+}
+
+.matchmaking-queue-menu__loading-spinner {
+  margin: 0 auto;
+  height: height(4);
+  width: height(4);
+  border-right: spacing(0) solid transparent;
+  border-top: spacing(0) solid var(--color-primary);
+  border-left: spacing(0) solid var(--color-primary);
+  border-bottom: spacing(0) solid var(--color-primary);
+  @media only screen and (max-width: breakpoint(small)) {
+    display: none;
+  }
+}
+
+.matchmaking-queue-menu__right {
+  padding: spacing(2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  @media only screen and (max-width: breakpoint(tiny)) {
+    display: none;
+  }
+}
+.matchmaking-queue-menu__queue-rules {
+  flex: 1;
+  list-style-position: inside;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

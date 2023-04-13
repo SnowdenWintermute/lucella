@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
 import UserRepo from "../../database/repos/users";
-import { AuthRoutePaths, CookieNames, ErrorMessages, UsersRoutePaths, UserStatuses } from "../../../../common";
+import { AuthRoutePaths, CookieNames, ERROR_MESSAGES, UsersRoutePaths, UserStatuses } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
@@ -48,7 +48,7 @@ describe("loginHandler", () => {
       .get(`/api${UsersRoutePaths.ROOT}`)
       .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(getMeAfterLogoutResponse.body).not.toHaveProperty("user");
-    expect(responseBodyIncludesCustomErrorMessage(getMeAfterLogoutResponse, ErrorMessages.AUTH.EXPIRED_SESSION)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(getMeAfterLogoutResponse, ERROR_MESSAGES.AUTH.EXPIRED_SESSION)).toBeTruthy();
   });
 
   it("still works if user token is already expired", async () => {

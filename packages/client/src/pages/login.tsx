@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common";
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
-import AuthPage from "../components/layout/auth/AuthPage";
+import AuthPage from "../components/common-components/AuthPage/AuthPage";
 import { BUTTON_NAMES } from "../consts/button-names";
 import { AlertType } from "../enums";
 import { useLoginUserMutation } from "../redux/api-slices/auth-api-slice";
@@ -12,12 +12,13 @@ import { useGetMeQuery, usersApi } from "../redux/api-slices/users-api-slice";
 import { useAppDispatch } from "../redux/hooks";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { LoginInput } from "../redux/types";
+import { APP_TEXT } from "../consts/app-text";
 
 function Login() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [loginUser, { isLoading, isSuccess, error, isError }] = useLoginUserMutation();
-  const { data: user } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+  const { data: user } = useGetMeQuery(null);
 
   const fields = { email: "", password: "" };
   const [formData, setFormData] = useState<LoginInput>(fields);
@@ -58,41 +59,46 @@ function Login() {
   }, [isError, isSuccess]);
 
   return (
-    <AuthPage title="Login" submitHandler={submitHandler}>
-      <LabeledTextInputWithErrorDisplay
-        label="Email Address"
-        type="email"
-        placeholder="Email"
-        name={InputFields.AUTH.EMAIL}
-        value={email}
-        onChange={onChange}
-        disabled={isLoading || isSuccess}
-        error={fieldErrors.email}
-        autofocus
-        dataCy="email-address-input"
-      />
-      <LabeledTextInputWithErrorDisplay
-        label="Password"
-        type="password"
-        placeholder="Password"
-        name={InputFields.AUTH.PASSWORD}
-        value={password}
-        onChange={onChange}
-        disabled={isLoading || isSuccess}
-        error={fieldErrors.password}
-        autofocus={false}
-      />
-      <div className="forgot-password">
-        <Link href="/request-password-reset">Reset password</Link>
-      </div>
-      <div className="auth-bottom-links">
-        <Link href="/register">Create account</Link>
-        <input
-          type="submit"
-          className="button button-standard-size button-primary"
-          value={isLoading || isSuccess ? "..." : BUTTON_NAMES.AUTH_FORMS.LOGIN}
+    <AuthPage title={APP_TEXT.AUTH.PAGE_TITLES.LOGIN} submitHandler={submitHandler}>
+      <div className="auth-form__inputs">
+        <LabeledTextInputWithErrorDisplay
+          label={APP_TEXT.AUTH.INPUTS.EMAIL_ADDRESS}
+          type="email"
+          placeholder="Email"
+          name={InputFields.AUTH.EMAIL}
+          value={email}
+          onChange={onChange}
           disabled={isLoading || isSuccess}
+          error={fieldErrors.email}
+          autofocus
+          dataCy="email-address-input"
+          extraStyles="auth-form__input"
         />
+        <LabeledTextInputWithErrorDisplay
+          label={APP_TEXT.AUTH.INPUTS.PASSWORD}
+          type="password"
+          placeholder="Password"
+          name={InputFields.AUTH.PASSWORD}
+          value={password}
+          onChange={onChange}
+          disabled={isLoading || isSuccess}
+          error={fieldErrors.password}
+          autofocus={false}
+          extraStyles="auth-form__input"
+        />
+      </div>
+      <div className="auth-form__bottom">
+        <div className="auth-form__bottom-links">
+          <Link href="/request-password-reset" className="auth-form__link">
+            {APP_TEXT.AUTH.LINKS.RESET_PASSWORD}
+          </Link>
+          <Link href="/register" className="auth-form__link">
+            {APP_TEXT.AUTH.LINKS.CREATE_ACCOUNT}
+          </Link>
+        </div>
+        <button type="submit" className="button button--accent auth-form__submit-button" disabled={isLoading || isSuccess}>
+          {isLoading || isSuccess ? "..." : BUTTON_NAMES.AUTH_FORMS.LOGIN}
+        </button>
       </div>
     </AuthPage>
   );

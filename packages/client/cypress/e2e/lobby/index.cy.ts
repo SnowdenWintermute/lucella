@@ -1,8 +1,9 @@
 import { TaskNames } from "../../support/TaskNames";
-import authedUserHostAndStartGame from "./authedUserHostAndStartGame";
-import chatAndChangeChannels from "./chatAndChangeChannels";
-import startGameAndDisconnect from "./startGameAndDisconnect";
-import unauthedJoinLeaveAndDisconnectFromGameRoom from "./unauthedJoinLeaveAndDisconnectFromGameRoom";
+import chat from "./chat";
+import gameListMenu from "./gameListMenu";
+import gameRoomMenu from "./gameRoomMenu";
+import gameSetupMenu from "./gameSetupMenu";
+import matchmakingQueueMenu from "./matchmakingQueueMenu";
 
 describe("lobby chat, hosting, joining and game start and end functionality", () => {
   // eslint-disable-next-line no-undef
@@ -14,14 +15,15 @@ describe("lobby chat, hosting, joining and game start and end functionality", ()
       CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
     });
   });
-  afterEach(() => cy.task(TaskNames.disconnectAllSockets));
+  // afterEach(() => cy.task(TaskNames.disconnectAllSockets));
   // eslint-disable-next-line no-undef
   after(() => {
     cy.task(TaskNames.disconnectAllSockets);
     cy.task(TaskNames.deleteAllSocketsAndAccessTokens);
   });
-  startGameAndDisconnect();
-  authedUserHostAndStartGame();
-  chatAndChangeChannels();
-  unauthedJoinLeaveAndDisconnectFromGameRoom();
+  chat();
+  gameSetupMenu();
+  gameRoomMenu();
+  gameListMenu();
+  matchmakingQueueMenu();
 });

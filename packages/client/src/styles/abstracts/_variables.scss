@@ -1,30 +1,149 @@
-@font-face {
-  font-family: "DM Sans";
-  src: local("DM Sans"), url("../../fonts/DM_Sans/DMSans-Regular.ttf") format("ttf");
-}
+// @font-face {
+//   font-family: "DM Sans";
+//   src: local("DM Sans"), url("../../fonts/DM_Sans/DMSans-Regular.ttf") format("ttf");
+// }
 
 $colors: (
-  primary: #162229,
+  backgroundColor: #162229,
   dark: #080b11,
   textPrimary: #9ba8b8,
-  textLight: #bcd2e8,
-  textDark: #656b72,
+  textFaded: #656b72,
+  textBright: #bcd2e8,
   menuPrimary: #3c5766,
-  buttonPrimary: #2f5f5c,
+  // buttonPrimary: #2f5f5c,
+  buttonPrimary: #028a7e,
   oldDanger: #972121,
+  middleRed: #a52026,
   danger: #ac1a21,
   dangerBright: #e42933,
   success: #2d6a2d,
-  chatMessagePrivate: pink,
-  warning: rgb(255, 187, 0),
+  chatMessagePrivate: #ffc0cb,
+  warning: #ffbb00,
 );
+
+// $vt320Orange: #db9013;
+// $vt320Background: hsl(39, 83%, 3%);
+
+// $colors: (
+//   backgroundColor: $vt320Background,
+//   dark: $vt320Background,
+//   textPrimary: $vt320Orange,
+//   textFaded: $vt320Orange,
+//   textBright: $vt320Orange,
+//   menuPrimary: $vt320Orange,
+//   // buttonPrimary: $vt320Orange,
+//   buttonPrimary: $vt320Orange,
+//   oldDanger: $vt320Orange,
+//   middleRed: $vt320Orange,
+//   danger: $vt320Orange,
+//   dangerBright: $vt320Orange,
+//   success: $vt320Orange,
+//   chatMessagePrivate: $vt320Orange,
+//   warning: $vt320Orange,
+// );
 
 @function color($color-name) {
   @return map-get($colors, $color-name);
 }
 
-$navHeight: 56px;
-$minAppWidth: 370px;
-$navThinBarHeight: 6px;
-$mobileNavWidth: 786px;
-$navTinyWidth: 450px;
+$spacings: (
+  // 6px
+  0: 0.375rem,
+  // 10px
+  1: 0.625rem,
+  // 15px
+  2: 0.938rem,
+  // 20px
+  3: 1.25rem,
+  // 25px
+  4: 1.563rem,
+  // 65px
+  5: 4.0625rem,
+  // 105
+  6: 6.5625rem
+);
+
+@function spacing($spacing-name) {
+  @return map-get($spacings, $spacing-name);
+}
+
+$fontSizes: (
+  0: 0.8rem,
+  // 14px
+  1: 0.875rem,
+  // 16px
+  2: 1rem,
+  // 20px
+  3: 1.25rem,
+  // 25px
+  4: 1.5625rem,
+);
+
+@function fontSize($fontSize-name) {
+  @return map-get($fontSizes, $fontSize-name);
+}
+$heights: (
+  // 20px
+  1: 1.25rem,
+  // 25px
+  2: 1.5625rem,
+  // 40px
+  3: 2.5rem,
+  // 70px
+  4: 4.375rem,
+  // 260
+  6: 16.25rem,
+  // 444px
+  7: 27.75rem
+);
+
+@function height($height-name) {
+  @return map-get($heights, $height-name);
+}
+$widths: (
+  // 125px
+  1: 7.834375rem,
+  // 203px
+  2: 12.6875rem,
+  // 328px
+  3: 20.5rem,
+  // 531px
+  4: 33.1875rem,
+  // 859
+  5: 53.6875rem
+);
+
+@function width($width-name) {
+  @return map-get($widths, $width-name);
+}
+
+$breakpoints: (
+  // 497
+  tiny: 31.0625rem,
+  // 591
+  verySmall: 36.9375rem,
+  // 770
+  small: 48.125rem,
+  // 1087
+  medium: 67.9375rem
+);
+
+@function breakpoint($breakpoint-name) {
+  @return map-get($breakpoints, $breakpoint-name);
+}
+
+$onePixelInRem: 0.0625rem;
+
+// 1440px
+$baseAppWidth: 90rem;
+//1024px
+$baseAppHeight: calc(64rem - height(3));
+
+$pageBodyHeight: calc(100vh - spacing(4) - height(4) - 0.3rem);
+
+$scrollbarWidth: 10px;
+$firefoxScrollbarWidth: 4px;
+
+$focusOutlineWidth: 2px;
+
+$dropShadow: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));

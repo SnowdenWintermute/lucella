@@ -1,0 +1,38 @@
+@import "../abstracts/variables";
+
+.auth-form__inputs {
+  margin-bottom: spacing(3);
+}
+
+.auth-form__input {
+  margin-bottom: spacing(2);
+  width: 100%;
+  height: calc(height(3) + spacing(1));
+}
+
+.auth-form__bottom {
+  display: flex;
+  justify-content: space-between;
+  @media only screen and (max-width: breakpoint(small)) {
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+  }
+}
+
+.auth-form__bottom-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form__link {
+  text-decoration: none;
+  margin-bottom: spacing(4);
+}
+
+.auth-form__submit-button {
+  margin: auto 0;
+  @media only screen and (max-width: breakpoint(small)) {
+    margin-bottom: spacing(4);
+    max-width: fit-content;
+  }
+}

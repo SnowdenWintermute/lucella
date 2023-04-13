@@ -6,14 +6,14 @@ import {
   GameRoom,
   SocketEventsFromServer,
   SocketMetadata,
-  ErrorMessages,
+  ERROR_MESSAGES,
   PlayerRole,
   ChatMessage,
   ChatMessageStyles,
   toKebabCase,
   gameChannelNamePrefix,
   GameStatus,
-  battleRoomDefaultChatChannel,
+  chatChannelWelcomeMessage,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
@@ -76,15 +76,15 @@ export class Lobby {
       io.in(channelNameJoining).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, this.getSanitizedChatChannel(channelNameJoining));
       connectedSockets[socket.id].previousChatChannelName = channelNameLeaving; // used for placing user back in their last chat channel after a game ends
       connectedSockets[socket.id].currentChatChannel = channelNameJoining;
-      socket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(`Welcome to ${channelNameJoining}.`, "Server", ChatMessageStyles.PRIVATE));
+      socket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(chatChannelWelcomeMessage(channelNameJoining), "Server", ChatMessageStyles.PRIVATE));
     }
   }
   handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
-    if (!gameName) return console.error(ErrorMessages.LOBBY.GAME_NAME.MAX_LENGTH);
-    gameName = gameName.toLowerCase();
+    if (!gameName) return console.error(ERROR_MESSAGES.LOBBY.GAME_NAME.MAX_LENGTH);
+    gameName = gameName.replace(/\s+/g, "-").toLowerCase();
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_HOST_IF_ALREADY_IN_GAME);
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_HOST_IF_ALREADY_IN_GAME);
     const gameCreationError = this.createGameRoom(gameName, isRanked);
     if (gameCreationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, gameCreationError);
     console.log(`game room created: ${gameName}`);
@@ -94,13 +94,16 @@ export class Lobby {
   handleJoinGameRoomRequest(socket: Socket, gameName: string, assignedToGameByMatchmaking?: boolean) {
     // console.log("client requesting to join game ", gameName, "current game rooms: ", this.gameRooms);
     const gameRoom = this.gameRooms[gameName];
-    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
-    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_IS_FULL);
+    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.GAME_DOES_NOT_EXIST);
+    if (gameRoom.players.host && gameRoom.players.challenger) {
+      socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.getSanitizedGameRooms());
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.GAME_IS_FULL);
+    }
     if (gameRoom.isRanked && !assignedToGameByMatchmaking)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED);
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
     this.changeSocketChatChannelAndEmitUpdates(socket, gameRoom.chatChannel, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
@@ -110,6 +113,8 @@ export class Lobby {
     if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} clicked ready but wasn't in a game`);
     const gameRoom = this.gameRooms[currentGameName];
     if (!gameRoom) return console.error("No such game exists");
+    if (gameRoom.gameStatus === GameStatus.IN_PROGRESS || gameRoom.gameStatus === GameStatus.ENDING)
+      return console.log("client tried to unready from a game but it had already started");
     if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.error("Can't unready from ranked game that is starting");
     const { players, playersReady } = gameRoom;
     const gameChatChannelName = gameChannelNamePrefix + currentGameName;
@@ -121,7 +126,7 @@ export class Lobby {
     io.to(gameChatChannelName).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
 
     if (playersReady.host && playersReady.challenger) {
-      if (Object.keys(this.server.games).length >= this.server.config.maxConcurrentGames) {
+      if (Object.keys(this.server.games).length + Object.keys(this.gameRoomsExecutingGameStartCountdown).length >= this.server.config.maxConcurrentGames) {
         console.log(`putting game ${gameRoom.gameName} in waiting list`);
         gameRoom.gameStatus = GameStatus.IN_WAITING_LIST;
         this.server.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
@@ -135,7 +140,7 @@ export class Lobby {
       // was started. they can only unready if their game was started anyway, which starting the game would have had those effects already so we don't need to do it here.
       if (previousHostReadyState && previousChallengerReadyState) {
         this.server.gameCreationWaitingList.removeGameRoom(gameRoom.gameName);
-        this.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
+        this.server.clearGameStartCountdownInterval(gameRoom);
         if (gameRoom.isRanked) {
           this.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
           socket.emit(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
@@ -146,7 +151,7 @@ export class Lobby {
     }
   }
   createGameRoom(gameName: string, isRanked?: boolean) {
-    if (this.gameRooms[gameName]) return ErrorMessages.LOBBY.GAME_EXISTS;
+    if (this.gameRooms[gameName]) return ERROR_MESSAGES.LOBBY.GAME_NAME.GAME_EXISTS;
     const gameNameValidationError = validateGameName(gameName, isRanked);
     if (gameNameValidationError) return gameNameValidationError;
     this.gameRooms[gameName] = new GameRoom(gameName, isRanked);
@@ -155,11 +160,11 @@ export class Lobby {
     const { io, connectedSockets } = this.server;
     const { username } = connectedSockets[socket.id].associatedUser;
     const gameRoom = this.gameRooms[gameName];
-    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE);
-    if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_DOES_NOT_EXIST);
-    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.GAME_IS_FULL);
+    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, "Tried to put player in game room but it didn't exist");
+    if (connectedSockets[socket.id].currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.GAME_DOES_NOT_EXIST);
+    if (gameRoom.players.host && gameRoom.players.challenger) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.GAME_IS_FULL);
     if (gameRoom.players.host && gameRoom.players.host.associatedUser.username === username)
-      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ErrorMessages.LOBBY.CANT_PLAY_AGAINST_SELF); // to prevent a logged in player from playing against themselves by opening another browser window
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_PLAY_AGAINST_SELF); // to prevent a logged in player from playing against themselves by opening another browser window
 
     connectedSockets[socket.id].currentGameName = gameName;
     let playerRole;
@@ -186,7 +191,7 @@ export class Lobby {
     this.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, gameRoom.players[playerRoleLeaving]!);
 
     gameRoom.playersReady = { host: false, challenger: false };
-    this.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
+    this.server.clearGameStartCountdownInterval(gameRoom);
     io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, Lobby.getSanitizedGameRoom(gameRoom));
     io.in(gameChatChannelName).emit(SocketEventsFromServer.CHAT_CHANNEL_UPDATE, this.getSanitizedChatChannel(gameChatChannelName));
 
@@ -220,7 +225,7 @@ export class Lobby {
       `${otherPlayer?.associatedUser.username} was the other player in the ranked game room, sending them back to chat channel `,
       otherPlayer?.previousChatChannelName
     );
-    this.cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom);
+    this.server.clearGameStartCountdownInterval(gameRoom);
     delete this.server.lobby.gameRooms[gameRoom.gameName];
     if (!otherPlayer) return;
     otherPlayer!.currentGameName = null;
@@ -230,10 +235,6 @@ export class Lobby {
     this.server.connectedSockets[otherPlayer.socketId!].currentGameName = null;
     this.server.matchmakingQueue.removeUser(otherPlayer!.socketId!);
     this.server.matchmakingQueue.addUser(otherPlayerSocket!);
-  }
-  cancelGameRoomCountdownAndRemoveFromListOfGamesCountingDown(gameRoom: GameRoom) {
-    gameRoom.cancelCountdownInterval();
-    delete this.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
   }
   removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom: GameRoom, socketMeta: SocketMetadata) {
     if (!socketMeta) return console.log("Tried to remove a player from game room but player did not exist in that room");

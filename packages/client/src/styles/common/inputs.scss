@@ -1,0 +1,17 @@
+@import "../abstracts/variables";
+
+.input {
+  height: height(3);
+  font-size: fontSize(2);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  padding-left: spacing(2);
+  max-width: 100%;
+  &::placeholder {
+    color: var(--color-faded);
+  }
+}
+
+.input--transparent {
+  background-color: transparent;
+}

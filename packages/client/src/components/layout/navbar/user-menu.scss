@@ -1,0 +1,55 @@
+@import "../../../styles/abstracts/variables";
+
+.user-menu {
+  position: relative;
+}
+
+.user-menu__button {
+  cursor: pointer;
+  width: height(3);
+  height: height(3);
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  font-size: fontSize(3);
+  font-weight: bold;
+}
+
+.user-menu__button--loading {
+  cursor: auto;
+  user-select: none;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.user-menu__items {
+  position: absolute;
+  z-index: 1;
+  right: 0px;
+  top: calc(height(3) + spacing(1));
+  width: width(2);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-primary);
+}
+
+.user-menu__menu-item {
+  display: block;
+  height: height(3);
+  line-height: height(3);
+  padding-left: spacing(2);
+  font-size: fontSize(3);
+  border-bottom: 1px solid var(--color-primary);
+  cursor: pointer;
+  text-decoration: none;
+  // background-clip: border-box;
+  &:hover {
+    background-color: var(--color-accent);
+  }
+  &:last-child {
+    border-bottom: 0px;
+  }
+}

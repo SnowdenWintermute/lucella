@@ -1,80 +1,84 @@
 @import "../abstracts/variables";
-// @import url("https://fonts.googleapis.com/css?family=DM+Sans|IBM+Plex+Sans+Condensed|Nunito+Sans|Public+Sans&display=swap");
 @font-face {
   font-family: "DM Sans";
   src: local("DM Sans"), url("../../fonts/DM_Sans/DMSans-Regular.ttf") format("ttf");
 }
-// IBM Plex Sans Condensed
-// Public Sans
-// DM Sans
-// Nunito Sans
+@font-face {
+  font-family: "VT323";
+  src: local("VT323"), url("../../fonts/VT323/VT323-Regular.ttf") format("ttf");
+  font-style: normal;
+}
+
 * {
   padding: 0px;
   margin: 0px;
   box-sizing: border-box;
-  font-family: "DM Sans";
-  color: color(textPrimary);
+  // font-family: "DM Sans";
+  font-family: var(--font-family);
+  // font-family: "VT323";
+  // letter-spacing: 0.05ch;
+  // color: var(--color-primary);
+  // background-color: var(--color-bg);
+  // color: var(--color-primary);
+  // border-color: var(--color-primary) !important;
 }
-.height-0-hidden {
-  height: 0px !important;
-  overflow: hidden;
-  padding: 0px !important;
+
+body {
+  background-color: var(--color-bg);
 }
+
 a {
-  text-decoration: none;
-  color: color(textPrimary);
-}
-p {
-  margin-bottom: 10px;
-}
-h3 {
-  font-weight: 100;
-  font-size: 18px;
-}
-ul {
-  list-style: none;
+  color: var(--color-primary);
 }
 
-.link-simple {
-  cursor: pointer;
-  width: fit-content;
-  &:hover {
-    color: color(textLight);
-  }
-}
-.link-simple-unblinked {
-  cursor: pointer;
-  width: fit-content;
-}
-.link-simple-blink {
-  cursor: pointer;
-  width: fit-content;
-  color: color(textLight);
+p,
+span,
+li {
+  color: var(--color-primary);
 }
 
-.logo-background {
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: var(--color-primary);
+}
+
+.screenreader-only {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
   position: absolute;
+  white-space: nowrap;
+  width: 1px;
 }
 
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: color(primary);
-  border-left: 1px solid color(textPrimary);
-  border-bottom: 1px solid color(textPrimary);
-}
-::-webkit-scrollbar-thumb {
-  border: 1px solid color(textPrimary);
-  background: color(menuPrimary);
-}
-::-webkit-scrollbar-thumb:hover {
-  background: color(textPrimary);
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus input:-webkit-autofill,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-primary);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-accent) inset;
+  transition: background-color 5000s ease-in-out 0s;
+  font-size: fontSize(2);
 }
 
-@supports (scrollbar-color: color(menuPrimary) color(primary)) {
-  * {
-    scrollbar-color: color(menuPrimary) color(primary);
-    scrollbar-width: auto;
+[data-theme="VT320"] {
+  ::-moz-selection {
+    /* Code for Firefox */
+    color: var(--color-bg);
+    background: var(--color-primary);
+  }
+
+  ::selection {
+    color: var(--color-bg);
+    background: var(--color-primary);
   }
 }

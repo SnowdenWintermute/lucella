@@ -10,6 +10,7 @@ export enum TaskNames {
   getLastEmail = "getLastEmail",
   setRateLimiterDisabled = "setRateLimiterDisabled",
   setMaxConcurrentGames = "setMaxConcurrentGames",
+  setGameStartCountdown = "setGameStartCountdown",
   logUserIn = "logUserIn",
   logUserOut = "logUserOut",
   createSequentialEloTestUsers = "createSequentialEloTestUsers",

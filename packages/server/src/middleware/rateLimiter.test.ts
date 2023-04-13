@@ -1,7 +1,7 @@
 import { Application } from "express";
 import request from "supertest";
 import {
-  ErrorMessages,
+  ERROR_MESSAGES,
   perIpSlidingWindowTime,
   perIpFixedWindowCounterLimit,
   perIpFixedWindowCounterTime,
@@ -73,7 +73,7 @@ describe("rate limiter", () => {
       .put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_DELETION}`)
       .set("Cookie", [`${CookieNames.ACCESS_TOKEN}=${accessToken}`]);
     expect(response.status).toBe(429);
-    expect(responseBodyIncludesCustomErrorMessage(response, ErrorMessages.RATE_LIMITER.REQUESTING_TOO_QUICKLY)).toBeTruthy();
+    expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.RATE_LIMITER.REQUESTING_TOO_QUICKLY)).toBeTruthy();
 
     // jump forward in time until fixed window counter time is over and the req should now work again
     currentTime = setDateNowReturnValue(currentTime + perIpFixedWindowCounterTime);
@@ -128,8 +128,8 @@ describe("rate limiter", () => {
 
     expect(slidingWindowLimitedResponse.status).toBe(429);
     expect(
-      responseBodyIncludesCustomErrorMessage(slidingWindowLimitedResponse, ErrorMessages.RATE_LIMITER.TOO_MANY_REQUESTS) ||
-        responseBodyIncludesCustomErrorMessage(slidingWindowLimitedResponse, ErrorMessages.RATE_LIMITER.REQUESTING_TOO_QUICKLY)
+      responseBodyIncludesCustomErrorMessage(slidingWindowLimitedResponse, ERROR_MESSAGES.RATE_LIMITER.TOO_MANY_REQUESTS) ||
+        responseBodyIncludesCustomErrorMessage(slidingWindowLimitedResponse, ERROR_MESSAGES.RATE_LIMITER.REQUESTING_TOO_QUICKLY)
     ).toBeTruthy();
 
     // wait for the sliding window's enforcement window plus one fixed window length becasue we enforce

@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import Matter from "matter-js";
 import { BattleRoomGame } from ".";
-import { challengerOrbCollisionCategory, colors, hostOrbCollisionCategory } from "../../consts";
+import { challengerOrbCollisionCategory, hostOrbCollisionCategory } from "../../consts";
 import { orbDensity, frictionAir } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
 import { setOrbSetNonPhysicsPropertiesFromAnotherSet, setOrbSetPhysicsPropertiesFromAnotherSet, setOrbSetPositionBuffersFromAnotherSet } from "../../utils";
@@ -32,7 +32,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
       density: orbDensity,
       label: `host-orb-${i}`,
     });
-    game.orbs.host[`host-orb-${i}`] = new Orb(hostOrbBody, PlayerRole.HOST, i, colors.hostOrbs);
+    game.orbs.host[`host-orb-${i}`] = new Orb(hostOrbBody, PlayerRole.HOST, i);
     Matter.Composite.add(game.physicsEngine.world, hostOrbBody);
     const challengerOrbBody = Matter.Bodies.circle(startingX, BattleRoomGame.baseWindowDimensions.height - 100, BattleRoomGame.baseOrbRadius, {
       collisionFilter: { category: challengerOrbCollisionCategory, mask: hostOrbCollisionCategory },
@@ -40,7 +40,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
       density: orbDensity,
       label: `challenger-orb-${i}`,
     });
-    game.orbs.challenger[`challenger-orb-${i}`] = new Orb(challengerOrbBody, PlayerRole.CHALLENGER, i, colors.challengerOrbs);
+    game.orbs.challenger[`challenger-orb-${i}`] = new Orb(challengerOrbBody, PlayerRole.CHALLENGER, i);
     Matter.Composite.add(game.physicsEngine.world, challengerOrbBody);
   }
 

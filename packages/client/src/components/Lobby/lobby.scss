@@ -1,0 +1,13 @@
+@import "../../styles/abstracts/variables";
+
+.lobby {
+  flex-direction: row;
+  min-height: height(7);
+}
+
+.lobby__menus-and-chat {
+  display: flex;
+  flex-direction: column;
+  width: calc($baseAppWidth - spacing(3) * 2 - width(3));
+  min-width: 0px;
+}

@@ -9,8 +9,11 @@ export default function drawDebug(
 ) {
   const { mouseData } = game;
 
-  if (mouseData.position && mouseData.position.x && mouseData.position.y)
+  if (mouseData.position && mouseData.position.x && mouseData.position.y) {
+    context.fillStyle = "green";
+    context.beginPath();
     context.fillRect(mouseData.position.x * canvasDrawFractions.x - 3, mouseData.position.y * canvasDrawFractions.y - 3, 5, 5);
+  }
 
   const itemsToShow = [
     // {
@@ -47,13 +50,15 @@ export default function drawDebug(
   const marginLeft = 10;
   const spaceFromTop = 15;
   context.fillStyle = "rgba(0,0,0,.3)";
+  context.beginPath();
   context.fillRect(0, 0, 480, itemsToShow.length * spaceFromTop + spaceFromTop);
 
   context.fillStyle = "white";
   context.textAlign = "left";
-  context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px Arial`;
+  context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px 'DM Sans'`;
 
   itemsToShow.forEach((item, i) => {
+    context.beginPath();
     context.fillText(`${item.name}: ${item.value}`, marginLeft, i * spaceFromTop + spaceFromTop);
   });
 }

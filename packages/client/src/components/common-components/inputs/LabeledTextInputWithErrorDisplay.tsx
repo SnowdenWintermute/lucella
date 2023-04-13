@@ -1,5 +1,4 @@
 import React from "react";
-import inputStyles from "./inputs.module.scss";
 
 type Props = {
   name: string;
@@ -11,23 +10,35 @@ type Props = {
   disabled: boolean;
   error: string;
   autofocus: boolean;
-  // eslint-disable-next-line react/require-default-props
+  extraStyles?: string;
   dataCy?: string;
 };
 
-function LabeledTextInputWithErrorDisplay({ name, type, label, placeholder, value, onChange, disabled, error, autofocus, dataCy = "" }: Props) {
+function LabeledTextInputWithErrorDisplay({
+  name,
+  type,
+  label,
+  placeholder,
+  value,
+  onChange,
+  disabled,
+  error,
+  autofocus,
+  extraStyles = "",
+  dataCy = "",
+}: Props) {
   return (
-    <label htmlFor={name}>
-      <p className={error && inputStyles["red-text"]}>
+    <label htmlFor={name} className={extraStyles}>
+      <p className={`labeled-input__label ${error && "labeled-input__label--red-text"}`}>
         {label}
         {error && (
-          <span id="error" role="alert" data-cy={`error-${name}`} className={inputStyles["red-text"]}>
+          <span id="error" role="alert" data-cy={`error-${name}`} className="labeled-input__label--red-text">
             {` - ${error}`}
           </span>
         )}
       </p>
       <input
-        className={`${inputStyles["simple-text-input"]} ${error && inputStyles["red-border"]}`}
+        className={`input input--transparent ${error && "labeled-input--red-border"} ${extraStyles}`}
         aria-label={name}
         type={type}
         placeholder={placeholder}

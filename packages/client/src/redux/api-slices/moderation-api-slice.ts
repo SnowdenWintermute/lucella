@@ -7,7 +7,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl:
     process.env.NODE_ENV === "production"
       ? `${SERVER_HOSTNAME_DOCKER_PRODUCTION}${ModerationRoutePaths.ROOT}`
-      : `http://localhost:8080/api${ModerationRoutePaths.ROOT}`,
+      : `${process.env.NEXT_PUBLIC_API}/api${ModerationRoutePaths.ROOT}`,
   prepareHeaders(headers, { getState }) {
     return headers;
   },
