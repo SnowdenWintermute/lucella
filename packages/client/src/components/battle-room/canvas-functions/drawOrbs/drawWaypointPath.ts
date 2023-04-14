@@ -1,4 +1,5 @@
 import { Orb, Point, ThemeColors } from "../../../../../../common";
+import drawLine from "../drawLine";
 
 export default function drawWaypointPath(context: CanvasRenderingContext2D, orb: Orb, canvasDrawFractions: Point, themeColors: ThemeColors) {
   const { x, y } = orb.body.position;
@@ -13,11 +14,7 @@ export default function drawWaypointPath(context: CanvasRenderingContext2D, orb:
     ry = y * canvasDrawFractions.y;
     rxPrev = orb.destination.x * canvasDrawFractions.x;
     ryPrev = orb.destination.y * canvasDrawFractions.y;
-    context.strokeStyle = themeColors.SELECTION;
-    context.beginPath();
-    context.moveTo(rx, ry);
-    context.lineTo(rxPrev, ryPrev);
-    context.stroke();
+    drawLine(context, rx, ry, rxPrev, ryPrev, themeColors.SELECTION, 1);
   }
 
   orb.waypoints.forEach((waypoint, i) => {
@@ -27,10 +24,6 @@ export default function drawWaypointPath(context: CanvasRenderingContext2D, orb:
     ry = waypoint.y * canvasDrawFractions.y;
     rxPrev = prevWaypoint.x * canvasDrawFractions.x;
     ryPrev = prevWaypoint.y * canvasDrawFractions.y;
-    context.strokeStyle = themeColors.SELECTION;
-    context.beginPath();
-    context.moveTo(rx, ry);
-    context.lineTo(rxPrev, ryPrev);
-    context.stroke();
+    drawLine(context, rx, ry, rxPrev, ryPrev, themeColors.SELECTION, 1);
   });
 }

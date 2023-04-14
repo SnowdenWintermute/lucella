@@ -47,7 +47,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
   if (prevGameState) {
     Object.entries(game.orbs).forEach(([playerRole, orbSet]) => {
       setOrbSetPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
-      setOrbSetNonPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
+      setOrbSetNonPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole], { applyWaypoints: true });
       setOrbSetPositionBuffersFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
     });
   }

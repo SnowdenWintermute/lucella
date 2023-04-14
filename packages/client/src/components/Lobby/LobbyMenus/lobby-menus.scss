@@ -8,6 +8,13 @@
   height: height(4);
   overflow-x: auto;
   overflow-y: hidden;
+  &::-webkit-scrollbar-track {
+    background: var(--color-bg);
+    border: 1px solid var(--color-primary);
+    border-right: 0px;
+    border-left: 0px;
+    border-bottom: 0px;
+  }
 }
 
 .lobby-menus__top-button {
@@ -35,6 +42,13 @@
   flex: 1;
   padding: spacing(2);
   overflow: hidden;
+  &::-webkit-scrollbar-track {
+    background: var(--color-bg);
+    border: 1px solid var(--color-primary);
+    border-right: 0px;
+    border-top: 0px;
+    border-bottom: 0px;
+  }
 }
 
 .lobby-menu__header {

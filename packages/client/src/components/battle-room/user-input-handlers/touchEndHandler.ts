@@ -16,7 +16,8 @@ export default function touchEndHandler(e: React.TouchEvent<HTMLCanvasElement>, 
   mouseData.leftReleasedAt = new Point(adjustedOffsetX, adjustedOffsetY);
 
   const touchLength = Date.now() - touchStartTime;
-  let type, props;
+  let type;
+  let props;
   if (
     touchLength > touchHoldSelectionBoxStartThreshold ||
     Math.abs(adjustedOffsetX - touchStart.x) > minimumQuickTouchSelectionBoxSize ||

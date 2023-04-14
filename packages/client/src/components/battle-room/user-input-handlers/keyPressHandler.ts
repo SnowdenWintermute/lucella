@@ -29,7 +29,7 @@ export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRo
     const selectedOrb = game.orbs[playerRole][`${playerRole}-orb-${numberKeyPressed}`];
     if (game.waypointKeyIsPressed && selectedOrb.waypoints.length < orbWaypointListSizeLimit) {
       selectedOrb.waypoints.push(new Point(mouseData.position.x, mouseData.position.y));
-    } else {
+    } else if (!game.waypointKeyIsPressed) {
       selectedOrb.waypoints = [];
       input = new SelectOrbAndAssignDestination(
         {

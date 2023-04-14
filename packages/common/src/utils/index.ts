@@ -65,13 +65,22 @@ function setOrbPhysicsPropertiesFromAnother(a: Orb, b: Orb) {
   setBodyProperties(a.body, newProperties);
 }
 
-function setOrbNonPhysicsPropertiesFromAnother(a: Orb, b: Orb) {
-  const { isSelected, isGhost, destination } = b;
+function setOrbNonPhysicsPropertiesFromAnother(a: Orb, b: Orb, options: { applyWaypoints?: boolean }) {
+  const { isSelected, isGhost, destination, waypoints } = b;
   a.isSelected = isSelected;
   a.isGhost = isGhost;
   if (destination) a.destination = new Point(destination.x, destination.y);
   else a.destination = null;
+  if (options.applyWaypoints) a.waypoints = [...waypoints];
 }
+
+/**
+ * Sets the matterjs body properties and non-physics properties from one
+ * set of orbs to another
+ *
+ * @param orbSetNewValues - The orb set from which properties will be copied
+ * @param orbSetToUpdate - The orb set to update
+ */
 
 export function applyValuesFromOneOrbSetToAnother(
   newValues: OrbSet,
@@ -80,31 +89,20 @@ export function applyValuesFromOneOrbSetToAnother(
     applyPhysicsProperties?: boolean;
     applyNonPhysicsProperties?: boolean;
     applyPositionBuffers?: boolean;
-    applyPhysicsWithLerp?: boolean;
+    applyWaypoints?: boolean;
   }
 ) {
   Object.entries(orbsToUpdate).forEach(([orbLabel, orb]) => {
-    const { applyPhysicsProperties, applyNonPhysicsProperties, applyPositionBuffers, applyPhysicsWithLerp } = options;
+    const { applyPhysicsProperties, applyNonPhysicsProperties, applyPositionBuffers } = options;
     if (applyPhysicsProperties) setOrbPhysicsPropertiesFromAnother(orb, newValues[orbLabel]);
-    else if (applyPhysicsWithLerp) {
-      const movementSkipThreshold = 12;
-
-      console.log(Math.abs(orb.body.position.x - newValues[orbLabel].body.position.x), Math.abs(orb.body.position.y - newValues[orbLabel].body.position.y));
-      if (
-        Math.abs(orb.body.position.x - newValues[orbLabel].body.position.x) > movementSkipThreshold ||
-        Math.abs(orb.body.position.y - newValues[orbLabel].body.position.y) > movementSkipThreshold
-      ) {
-        console.log("first");
-      }
-    }
-    if (applyNonPhysicsProperties) setOrbNonPhysicsPropertiesFromAnother(orb, newValues[orbLabel]);
+    if (applyNonPhysicsProperties) setOrbNonPhysicsPropertiesFromAnother(orb, newValues[orbLabel], { applyWaypoints: options.applyWaypoints });
     if (applyPositionBuffers) orb.positionBuffer = cloneDeep(newValues[orbLabel].positionBuffer);
   });
 }
 
-export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet) {
+export function setOrbSetNonPhysicsPropertiesFromAnotherSet(a: OrbSet, b: OrbSet, options: { applyWaypoints: boolean }) {
   Object.entries(a).forEach(([orbLabel, orb]) => {
-    setOrbNonPhysicsPropertiesFromAnother(orb, b[orbLabel]);
+    setOrbNonPhysicsPropertiesFromAnother(orb, b[orbLabel], { applyWaypoints: options.applyWaypoints });
   });
 }
 

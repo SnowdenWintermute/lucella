@@ -11,7 +11,7 @@ export default function predictClientOrbs(game: BattleRoomGame, newGameState: Ba
     applyPhysicsProperties: true,
     applyNonPhysicsProperties: true,
     applyPositionBuffers: false,
-    applyPhysicsWithLerp: true,
+    applyWaypoints: false,
   });
   setNonOrbGameState(newGameState, lastUpdateFromServerCopy);
 
@@ -33,6 +33,7 @@ export default function predictClientOrbs(game: BattleRoomGame, newGameState: Ba
     applyPhysicsProperties: true,
     applyNonPhysicsProperties: true,
     applyPositionBuffers: false,
+    applyWaypoints: true,
   });
 
   setNonOrbGameState(game, newGameState);
