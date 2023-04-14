@@ -6,7 +6,7 @@ import { Detector } from "matter-js";
 import assignDebugValues from "./assignDebugValues";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
-import { BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, WidthAndHeight } from "../../../../../common";
+import { AssignOrbDestinations, BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, WidthAndHeight } from "../../../../../common";
 import draw from "../canvas-functions";
 import serializeInput from "../../../protobuf-utils/serialize-input";
 import { INetworkPerformanceMetrics } from "../../../types";
@@ -39,6 +39,20 @@ export default function createClientPhysicsInterval(
     const input = new ClientTickNumber(null, (game.netcode.lastClientInputNumber += 1), playerRole);
     const serialized = serializeInput(input);
     newGameState.queues.client.localInputs.push(input);
+
+    // handle waypoints
+    Object.values(game.orbs[playerRole]).forEach((orb) => {
+      if (!orb.destination && orb.waypoints.length > 0) {
+        const newDestination = orb.waypoints.shift();
+        if (newDestination) {
+          const destinationInput = new AssignOrbDestinations({ mousePosition: newDestination }, (game.netcode.lastClientInputNumber += 1), playerRole);
+          game.queues.client.localInputs.push(input);
+          const serializedDestinationInput = serializeInput(destinationInput);
+          socket.emit(SocketEventsFromClient.NEW_INPUT, serializedDestinationInput);
+          orb.destination = newDestination;
+        }
+      }
+    });
 
     interpolateOpponentOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole, networkPerformanceMetrics);
     predictClientOrbs(game, newGameState, lastUpdateFromServerCopy, playerRole);

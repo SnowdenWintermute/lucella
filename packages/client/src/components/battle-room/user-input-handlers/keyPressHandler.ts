@@ -3,6 +3,7 @@ import { Socket } from "socket.io-client";
 import {
   BattleRoomGame,
   LineUpOrbsHorizontallyAtMouseY,
+  orbWaypointListSizeLimit,
   PlayerRole,
   Point,
   SelectOrbAndAssignDestination,
@@ -25,9 +26,11 @@ export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRo
   let input;
   if (numberKeyPressed === 0) game.debug.mode = game.debug.mode < 2 ? game.debug.mode + 1 : 0;
   else if (numberKeyPressed >= 1 && numberKeyPressed <= 5) {
-    if (game.waypointKeyIsPressed) {
-      // handle it
+    const selectedOrb = game.orbs[playerRole][`${playerRole}-orb-${numberKeyPressed}`];
+    if (game.waypointKeyIsPressed && selectedOrb.waypoints.length < orbWaypointListSizeLimit) {
+      selectedOrb.waypoints.push(new Point(mouseData.position.x, mouseData.position.y));
     } else {
+      selectedOrb.waypoints = [];
       input = new SelectOrbAndAssignDestination(
         {
           orbIds: [numberKeyPressed],

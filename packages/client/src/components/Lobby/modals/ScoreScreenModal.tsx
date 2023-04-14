@@ -85,7 +85,8 @@ export default function ScoreScreenModal() {
                 <div className="score-screen-modal__elo-and-rank-changes-block">
                   <div>Rank</div>
                   <div>
-                    {playerPreGameRank} → {playerPostGameRank}
+                    {playerPreGameRank === playerPostGameRank && playerPostGameRank + 1}
+                    {playerPreGameRank !== playerPostGameRank && `${playerPreGameRank + 1} → ${playerPostGameRank + 1}`}
                   </div>
                 </div>
               </>

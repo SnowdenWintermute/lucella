@@ -1,8 +1,8 @@
 import { PlayerRole, Point, BattleRoomGame, ThemeColors } from "../../../../../../common";
-import { Theme } from "../../../../redux/slices/ui-slice";
 import drawOrb from "./drawOrb";
 import drawOrbNumber from "./drawOrbNumber";
 import drawSelectionRing from "./drawSelectionRing";
+import drawWaypointPath from "./drawWaypointPath";
 
 export function drawOrbs(
   context: CanvasRenderingContext2D,
@@ -25,6 +25,7 @@ export function drawOrbs(
       drawOrb(context, orb, canvasDrawFractions, game.debug.mode, owner as PlayerRole, themeColors, false);
       drawOrbNumber(context, orb, playerRole, canvasDrawFractions, themeColors);
       drawSelectionRing(context, canvasDrawFractions, orb, themeColors);
+      drawWaypointPath(context, orb, canvasDrawFractions, themeColors);
     });
   });
 }

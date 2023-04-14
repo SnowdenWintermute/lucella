@@ -1,4 +1,4 @@
-import { BattleRoomGame, WidthAndHeight, inGameFontSizes, baseSpeedModifier, Point, colors, ThemeColors } from "../../../../../common";
+import { BattleRoomGame, WidthAndHeight, inGameFontSizes, baseSpeedModifier, Point, ThemeColors } from "../../../../../common";
 
 const drawScore = (
   context: CanvasRenderingContext2D,
