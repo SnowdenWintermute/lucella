@@ -6,6 +6,7 @@ import {
   gameOverCountdownDuration,
   initialEndZoneHeight,
   initialScoreNeededToWin,
+  newRoundStartingCountdownDuration,
 } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
 import { HostAndChallengerOrbSets } from "../../types";
@@ -27,10 +28,12 @@ export class BattleRoomGame {
   intervals: {
     physics: NodeJS.Timeout | undefined;
     endingCountdown: NodeJS.Timeout | undefined;
-  } = { physics: undefined, endingCountdown: undefined };
+    newRoundCountdown: NodeJS.Timeout | undefined;
+  } = { physics: undefined, endingCountdown: undefined, newRoundCountdown: undefined };
   queues = new BattleRoomQueues();
   mouseData = new MouseData();
   waypointKeyIsPressed: boolean = false;
+  newRoundCountdown: { duration: number; current: number | null } = { duration: newRoundStartingCountdownDuration, current: null };
   gameOverCountdown: { duration: number; current: number | null } = { duration: gameOverCountdownDuration, current: null };
   winner: PlayerRole | null | undefined = null;
   currentCollisionPairs: Matter.Pair[] = [];
@@ -69,5 +72,8 @@ export class BattleRoomGame {
   }
   clearGameEndingCountdownInterval() {
     clearInterval(this.intervals.endingCountdown);
+  }
+  clearNewRoundCountdownInterval() {
+    clearInterval(this.intervals.newRoundCountdown);
   }
 }

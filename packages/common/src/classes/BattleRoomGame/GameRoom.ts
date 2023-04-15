@@ -1,7 +1,7 @@
 import { BattleRoomGame } from "../BattleRoomGame";
 import { SocketMetadata } from "../SocketMetadata";
 import { GameStatus } from "../../enums";
-import { gameChannelNamePrefix, baseGameStartCountdownDuration } from "../../consts/game-lobby-config";
+import { gameChannelNamePrefix, baseGameStartCountdownDuration, baseNumberOfRoundsRequiredToWin } from "../../consts/game-lobby-config";
 
 export class GameRoom {
   gameName: string;
@@ -16,6 +16,8 @@ export class GameRoom {
   playersReady: { host: boolean; challenger: boolean } = { host: false, challenger: false };
   score = { host: 0, challenger: 0, neededToWin: BattleRoomGame.initialScoreNeededToWin };
   winner: string | null = null;
+  numberOfRoundsRequiredToWin = baseNumberOfRoundsRequiredToWin;
+  roundsWon = { host: 0, challenger: 0 };
   isRanked: boolean;
   chatChannel: string;
   constructor(gameName: string, isRanked: boolean | undefined) {
