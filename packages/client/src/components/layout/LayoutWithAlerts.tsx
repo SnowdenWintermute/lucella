@@ -17,7 +17,7 @@ export default function LayoutWithAlerts({ children }: Props) {
 
   useEffect(() => {
     const theme = localStorage.getItem("theme");
-    if (theme === Theme.DEFAULT || theme === Theme.VT320 || theme === Theme.HTML) {
+    if (theme === Theme.DEFAULT || theme === Theme.VT320 || theme === Theme.HTML || theme === Theme.VIRGINIA_BLUEBELL) {
       dispatch(setTheme(theme));
     }
   }, []);

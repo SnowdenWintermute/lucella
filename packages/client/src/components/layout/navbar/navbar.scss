@@ -38,6 +38,11 @@
     display: none;
   }
 }
+[data-theme="Virginia Bluebell"] {
+  .main-navigation__logo-text {
+    font-family: "Spring";
+  }
+}
 
 .main-navigation__page-link {
   color: var(--color-primary);

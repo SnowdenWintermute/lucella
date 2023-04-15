@@ -62,6 +62,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Spring";
+  src: local("Spring"), url("../fonts/spring/Spring.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root,
 [data-theme="default"] {
   --color-bg: #162229;
@@ -108,4 +115,19 @@
   --color-chat-message-private: black;
   --color-warning: black;
   --font-family: "Times New Roman";
+}
+
+[data-theme="Virginia Bluebell"] {
+  --color-primary: #b1cf81;
+  --color-bg: #29511d;
+  // --color-accent: #5e7dcf;
+  --color-accent: #3d5293;
+  --color-faded: #87ab4d;
+  --color-highlight: #9fcf5c;
+  --color-danger: #eb96e9;
+  --color-danger-highlight: #eb96e9;
+  --color-success: #eb96e9;
+  --color-chat-message-private: #d6a05e;
+  --color-warning: black;
+  --font-family: "DM Sans";
 }
