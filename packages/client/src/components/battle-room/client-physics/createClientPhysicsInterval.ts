@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-/* eslint-disable no-param-reassign */
+
 import cloneDeep from "lodash.clonedeep";
 import { Socket } from "socket.io-client";
 import { Detector } from "matter-js";
@@ -7,6 +7,7 @@ import assignDebugValues from "./assignDebugValues";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
 import {
+  AssignDestinationsToSelectedOrbs,
   AssignOrbDestinations,
   BattleRoomGame,
   ClientTickNumber,
@@ -55,7 +56,7 @@ export default function createClientPhysicsInterval(
         const newDestination = orb.waypoints.shift();
         if (i === 0 && playerRole === PlayerRole.HOST) console.log("adding new destination from waypoints: ", newDestination);
         if (newDestination) {
-          const destinationInput = new SelectOrbAndAssignDestination(
+          const destinationInput = new AssignOrbDestinations(
             { orbIds: [i + 1], mousePosition: newDestination },
             (game.netcode.lastClientInputNumber += 1),
             playerRole

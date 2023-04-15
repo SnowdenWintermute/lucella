@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Body, Vector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";

@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable no-param-reassign */
+
 import { NextFunction, Request, Response } from "express";
 import {
   ERROR_MESSAGES,

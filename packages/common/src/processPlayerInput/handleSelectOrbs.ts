@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { SelectOrbs } from "../classes/inputs";
 

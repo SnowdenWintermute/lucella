@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Detector, Pair } from "matter-js";
 import { BattleRoomGame, PlayerRole, processPlayerInput, renderRate, UserInput, ServerPacket, applyValuesFromOneOrbSetToAnother } from "../../../../../common";
 import setNonOrbGameState from "./setNonOrbGameState";

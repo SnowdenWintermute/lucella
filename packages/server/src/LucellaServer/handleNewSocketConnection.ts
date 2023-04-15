@@ -1,5 +1,5 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable no-param-reassign */
+
 /* eslint-disable no-use-before-define */
 /* eslint-disable consistent-return */
 import cookie from "cookie";

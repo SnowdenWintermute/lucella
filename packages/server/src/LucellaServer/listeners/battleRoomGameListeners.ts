@@ -18,7 +18,7 @@ export default function battleRoomGameListeners(server: LucellaServer, socket: S
     else if (gameRoom.players.challenger?.socketId === socket.id) playerRole = PlayerRole.CHALLENGER;
     if (!playerRole) return console.log("error: received an input from a user not in this game");
     const inputToQueue: UserInput | undefined = unpackUserInput(data, playerRole);
-    if (inputToQueue?.type === UserInputs.ASSIGN_ORB_DESTINATIONS) console.log("got new destinations: ", data);
+    if (inputToQueue?.type === UserInputs.ASSIGN_DESTINATIONS_TO_SELECTED_ORBS) console.log("got new destinations: ", data);
     // console.log("received input: ", inputToQueue);
     // if (inputToQueue?.type === UserInputs.SELECT_ORB_AND_ASSIGN_DESTINATION)
     //   if (!inputToQueue) return console.log("invalid BR game input received from client");

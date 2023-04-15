@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-/* eslint-disable no-param-reassign */
+
 import { Socket } from "socket.io";
 import {
   ChatChannel,

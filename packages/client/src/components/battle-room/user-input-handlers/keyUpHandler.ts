@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { BattleRoomGame } from "../../../../../common";
 
 export default function keyUpHandler(e: KeyboardEvent, game: BattleRoomGame) {

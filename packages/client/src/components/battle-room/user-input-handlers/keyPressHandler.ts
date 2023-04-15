@@ -1,8 +1,9 @@
-/* eslint-disable no-param-reassign */
 import { Socket } from "socket.io-client";
 import {
   BattleRoomGame,
   LineUpOrbsHorizontallyAtMouseY,
+  orbsSpawnLocatioRightOffset,
+  orbsSpawnSpacing,
   orbWaypointListSizeLimit,
   PlayerRole,
   Point,
@@ -40,8 +41,18 @@ export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRo
         playerRole
       );
     }
-  } else if (numberKeyPressed === 7) input = new LineUpOrbsHorizontallyAtMouseY(mouseData.position.y, (game.netcode.lastClientInputNumber += 1), playerRole);
-  else if (numberKeyPressed === 6)
+  } else if (numberKeyPressed === 7) {
+    if (game.waypointKeyIsPressed) {
+      Object.values(game.orbs[playerRole]).forEach((orb) => {
+        orb.waypoints.push(new Point(orb.id * orbsSpawnSpacing + orbsSpawnLocatioRightOffset, mouseData.position!.y));
+      });
+    } else {
+      Object.values(game.orbs[playerRole]).forEach((orb) => {
+        orb.waypoints = [];
+      });
+      input = new LineUpOrbsHorizontallyAtMouseY(mouseData.position.y, (game.netcode.lastClientInputNumber += 1), playerRole);
+    }
+  } else if (numberKeyPressed === 6)
     input = new SelectOrbs({ orbIds: Object.values(game.orbs[playerRole]).map((orb) => orb.id) }, (game.netcode.lastClientInputNumber += 1), playerRole);
   if (!input) return;
   game.queues.client.localInputs.push(input);

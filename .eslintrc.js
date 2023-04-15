@@ -40,12 +40,12 @@ module.exports = {
     "consistent-return": `warn`,
     "no-underscore-dangle": `off`,
     // "arrow-body-style": [2, `as-needed`],
-    // "no-param-reassign": [
-    //   2,
-    //   {
-    //     props: false,
-    //   },
-    // ],
+    "no-param-reassign": [
+      2,
+      {
+        props: false,
+      },
+    ],
     // "no-unused-expressions": [
     //   1,
     //   {

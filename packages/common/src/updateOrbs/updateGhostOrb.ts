@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
 import { Point } from "../classes/Point";

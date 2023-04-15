@@ -156,6 +156,15 @@
   cursor: pointer;
 }
 
+.patch-notes__version-name {
+  font-style: italic;
+  margin-bottom: spacing(1);
+}
+
+.patch-notes__keyboard-key-name {
+  font-weight: bold;
+}
+
 .patch-notes__close-button-icon {
   fill: var(--color-primary);
 }

@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { toKebabCase, ChatChannel, SocketMetadata } from "../../../../common";
 
 export default function updateChatChannelUsernameListsAndDeleteEmptyChannels(

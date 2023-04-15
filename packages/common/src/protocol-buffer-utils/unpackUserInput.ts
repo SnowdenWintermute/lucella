@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 import {
+  AssignDestinationsToSelectedOrbs,
   AssignOrbDestinations,
   ClientTickNumber,
   InputProto,
@@ -14,7 +15,7 @@ import {
 export function unpackUserInput(
   serializedMessage: Uint8Array,
   playerRole: PlayerRole
-): SelectOrbAndAssignDestination | ClientTickNumber | SelectOrbs | AssignOrbDestinations | undefined {
+): SelectOrbAndAssignDestination | ClientTickNumber | SelectOrbs | AssignDestinationsToSelectedOrbs | undefined {
   const deserialized = InputProto.deserializeBinary(serializedMessage);
   const type = deserialized.getType();
   const inputNumber = deserialized.getNumber();
@@ -32,8 +33,10 @@ export function unpackUserInput(
 
   if (typeof y === "number" && type === UserInputs.LINE_UP_ORBS_HORIZONTALLY_AT_Y) return new LineUpOrbsHorizontallyAtMouseY(y, inputNumber, playerRole);
   if (typeof x === "number" && typeof y === "number") {
+    if (type === UserInputs.ASSIGN_DESTINATIONS_TO_ORBS) return new AssignOrbDestinations({ orbIds, mousePosition: new Point(x, y) }, inputNumber, playerRole);
     if (type === UserInputs.SELECT_ORB_AND_ASSIGN_DESTINATION)
       return new SelectOrbAndAssignDestination({ orbIds, mousePosition: new Point(x, y) }, inputNumber, playerRole);
-    if (type === UserInputs.ASSIGN_ORB_DESTINATIONS) return new AssignOrbDestinations({ mousePosition: new Point(x, y) }, inputNumber, playerRole);
+    if (type === UserInputs.ASSIGN_DESTINATIONS_TO_SELECTED_ORBS)
+      return new AssignDestinationsToSelectedOrbs({ mousePosition: new Point(x, y) }, inputNumber, playerRole);
   }
 }

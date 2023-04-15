@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";

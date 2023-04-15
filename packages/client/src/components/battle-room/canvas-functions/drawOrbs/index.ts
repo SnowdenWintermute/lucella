@@ -22,10 +22,10 @@ export function drawOrbs(
 
   Object.entries(game.orbs).forEach(([owner, orbSet]) => {
     Object.values(orbSet).forEach((orb) => {
+      drawWaypointPath(context, orb, canvasDrawFractions, themeColors);
       drawOrb(context, orb, canvasDrawFractions, game.debug.mode, owner as PlayerRole, themeColors, false);
       drawOrbNumber(context, orb, playerRole, canvasDrawFractions, themeColors);
       drawSelectionRing(context, canvasDrawFractions, orb, themeColors);
-      drawWaypointPath(context, orb, canvasDrawFractions, themeColors);
     });
   });
 }

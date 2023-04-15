@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-/* eslint-disable no-param-reassign */
+
 import { MouseData, Point } from "../../../../../common";
 
 const getSelectionBoxSize = (mouseData: MouseData, canvasDrawFractions: Point) => {

@@ -1,8 +1,7 @@
-/* eslint-disable no-param-reassign */
 import { Socket } from "socket.io-client";
 import {
   BattleRoomGame,
-  AssignOrbDestinations,
+  AssignDestinationsToSelectedOrbs,
   PlayerRole,
   Point,
   SelectOrbs,
@@ -40,7 +39,7 @@ export default function mouseUpHandler(
         if (!orb.isSelected) return;
         orb.waypoints = [];
       });
-      input = new AssignOrbDestinations(
+      input = new AssignDestinationsToSelectedOrbs(
         { mousePosition: new Point(mouseData.position.x, mouseData.position.y) },
         (currentGame.netcode.lastClientInputNumber += 1),
         playerRole

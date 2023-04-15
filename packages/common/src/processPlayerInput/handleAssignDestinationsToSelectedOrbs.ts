@@ -1,11 +1,9 @@
-/* eslint-disable no-param-reassign */
 import { BattleRoomGame } from "../classes/BattleRoomGame";
-import { AssignOrbDestinations } from "../classes/inputs";
+import { AssignDestinationsToSelectedOrbs } from "../classes/inputs";
 import { Point } from "../classes/Point";
 
-export default function handleAssignOrbDestinations(input: AssignOrbDestinations, game: BattleRoomGame) {
+export default function handleAssignDestinationsToSelectedOrbs(input: AssignDestinationsToSelectedOrbs, game: BattleRoomGame) {
   if (!input.data.mousePosition) return;
-  game.debug.clientPrediction.clientOrbNumInputsApplied = 0;
   const mouseX = input.data.mousePosition.x;
   const mouseY = input.data.mousePosition.y;
   const newDestination = new Point(mouseX, mouseY); // otherwise it keeps the reference to mousedata and continuously changes

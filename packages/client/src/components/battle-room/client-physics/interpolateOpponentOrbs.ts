@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import cloneDeep from "lodash.clonedeep";
 import Matter from "matter-js";
 import {

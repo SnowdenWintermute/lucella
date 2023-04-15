@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from "express";
 import { ERROR_MESSAGES, pageSize } from "../../../../common";
