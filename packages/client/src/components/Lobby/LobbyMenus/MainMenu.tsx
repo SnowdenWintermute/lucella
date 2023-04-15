@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable react/jsx-curly-brace-presence */
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import Link from "next/link";
@@ -73,8 +75,17 @@ function WelcomeDropdown() {
     mainMenuLeftContent = (
       <div className="patch-notes">
         <div>
-          <h4>alpha 0.2.0 patch notes</h4>
+          <h4>Version History</h4>
         </div>
+        <span className="patch-notes__version-name">alpha 0.3.0</span>
+        <ul>
+          <li>
+            Players can now issue waypoint commands to their orbs by holding <span className="patch-notes__keyboard-key-name">{"[Spacebar]"}</span> when
+            assigning orb destinations
+          </li>
+          <li>Orb destinations and waypoint paths are now displayed for a player's own orbs</li>
+        </ul>
+        <span className="patch-notes__version-name">alpha 0.2.0</span>
         <ul>
           <li>Major overhaul of frontend styles</li>
           {/* eslint-disable-next-line react/jsx-curly-brace-presence */}
@@ -82,7 +93,7 @@ function WelcomeDropdown() {
           <li>Optimized modals and context menus</li>
           <li>Added support for screenreaders</li>
           <li>Fixed tab indexing of UI elements for better keyboard navigation</li>
-          <li>Added loading spinners and indicatiors for several menus</li>
+          <li>Added loading spinners and indicators for several menus</li>
           <li>Changed to a new logo</li>
           <li>Updated the Battle Room colors to match the website themes (VT320 and default themes only)</li>
           <li>Added ability to close lobby menus with the Escape key</li>
@@ -100,7 +111,7 @@ function WelcomeDropdown() {
       <div className="lobby-menu__right welcome-menu__right">
         <Logo className="welcome-menu__logo" />
         <button type="button" className="welcome-menu__version" onClick={() => setViewingPatchNotes(!viewingPatchNotes)}>
-          alpha 0.2.0
+          alpha 0.3.0
         </button>
       </div>
     </section>

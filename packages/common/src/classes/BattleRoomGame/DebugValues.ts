@@ -16,7 +16,6 @@ export interface DebugValues {
     frameTime?: number;
     timeLastPacketSent?: number;
     roundTripTime?: number;
-    clientOrbNumInputsApplied?: number;
     // entityPositionBuffer?: { position: Point; timestamp: number }[];
     // lerpFrameTime?: number;
   };

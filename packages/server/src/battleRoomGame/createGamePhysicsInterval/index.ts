@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import cloneDeep from "lodash.clonedeep";
 import Matter, { Detector } from "matter-js";
 import { Server, Socket } from "socket.io";
@@ -28,6 +29,7 @@ export default function createGamePhysicsInterval(io: Server, server: LucellaSer
     let numInputsToProcess = game.queues.server.receivedInputs.length;
     while (numInputsToProcess > 0) {
       const input: UserInput = game.queues.server.receivedInputs.shift();
+      if (!input) return;
       processPlayerInput(input, game, renderRate, input.playerRole);
       game.netcode.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
       numInputsToProcess -= 1;

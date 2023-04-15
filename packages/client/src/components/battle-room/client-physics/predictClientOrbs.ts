@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Detector, Pair } from "matter-js";
 import { BattleRoomGame, PlayerRole, processPlayerInput, renderRate, UserInput, ServerPacket, applyValuesFromOneOrbSetToAnother } from "../../../../../common";
 import setNonOrbGameState from "./setNonOrbGameState";
@@ -7,13 +6,11 @@ export default function predictClientOrbs(game: BattleRoomGame, newGameState: Ba
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
   const inputsToKeep: UserInput[] = [];
 
-  // lerp the client's orbs if the update is a very drastic one
-
   applyValuesFromOneOrbSetToAnother(lastUpdateFromServerCopy.orbs[playerRole], newGameState.orbs[playerRole], {
     applyPhysicsProperties: true,
     applyNonPhysicsProperties: true,
     applyPositionBuffers: false,
-    applyPhysicsWithLerp: true,
+    applyWaypoints: false,
   });
   setNonOrbGameState(newGameState, lastUpdateFromServerCopy);
 
@@ -35,6 +32,7 @@ export default function predictClientOrbs(game: BattleRoomGame, newGameState: Ba
     applyPhysicsProperties: true,
     applyNonPhysicsProperties: true,
     applyPositionBuffers: false,
+    applyWaypoints: true,
   });
 
   setNonOrbGameState(game, newGameState);

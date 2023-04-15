@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import cloneDeep from "lodash.clonedeep";
 import Matter from "matter-js";
 import {
@@ -57,5 +56,5 @@ export default function interpolateOpponentOrbs(
     applyNonPhysicsProperties: false,
     applyPositionBuffers: true,
   });
-  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate);
+  setOrbSetNonPhysicsPropertiesFromAnotherSet(game.orbs[opponentRole], mostRecentOpponentOrbUpdate, { applyWaypoints: false });
 }

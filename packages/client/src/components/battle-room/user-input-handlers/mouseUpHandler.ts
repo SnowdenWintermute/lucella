@@ -1,6 +1,14 @@
-/* eslint-disable no-param-reassign */
 import { Socket } from "socket.io-client";
-import { BattleRoomGame, AssignOrbDestinations, PlayerRole, Point, SelectOrbs, SocketEventsFromClient, WidthAndHeight } from "../../../../../common";
+import {
+  BattleRoomGame,
+  AssignDestinationsToSelectedOrbs,
+  PlayerRole,
+  Point,
+  SelectOrbs,
+  SocketEventsFromClient,
+  WidthAndHeight,
+  orbWaypointListSizeLimit,
+} from "../../../../../common";
 import newOrbSelections from "../game-functions/commandHandlers/newOrbSelections";
 import serializeInput from "../../../protobuf-utils/serialize-input";
 
@@ -21,12 +29,22 @@ export default function mouseUpHandler(
 
   let input;
   if (e.button === 2) {
-    mouseData.rightReleasedAt = new Point(mouseData.position.y, mouseData.position.x);
-    input = new AssignOrbDestinations(
-      { mousePosition: new Point(mouseData.position.x, mouseData.position.y) },
-      (currentGame.netcode.lastClientInputNumber += 1),
-      playerRole
-    );
+    if (currentGame.waypointKeyIsPressed) {
+      Object.values(currentGame.orbs[playerRole]).forEach((orb) => {
+        if (!orb.isSelected || !mouseData.position) return;
+        if (orb.waypoints.length < orbWaypointListSizeLimit) orb.waypoints.push(new Point(mouseData.position.x, mouseData.position.y));
+      });
+    } else {
+      Object.values(currentGame.orbs[playerRole]).forEach((orb) => {
+        if (!orb.isSelected) return;
+        orb.waypoints = [];
+      });
+      input = new AssignDestinationsToSelectedOrbs(
+        { mousePosition: new Point(mouseData.position.x, mouseData.position.y) },
+        (currentGame.netcode.lastClientInputNumber += 1),
+        playerRole
+      );
+    }
   }
   if (e.button === 0) {
     mouseData.leftCurrentlyPressed = false;

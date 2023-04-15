@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import Matter, { Vector } from "matter-js";
 import { Orb } from "../classes/Orb";
 

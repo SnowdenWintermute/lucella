@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { BattleRoomGame, PlayerRole } from "../../../../../common";
 import { LucellaServer } from "../../../LucellaServer";
 

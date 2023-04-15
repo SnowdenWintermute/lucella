@@ -31,6 +31,13 @@
     width: 100%;
     font-size: fontSize(2);
   }
+  &::-webkit-scrollbar-track {
+    background: var(--color-bg);
+    border: 1px solid var(--color-primary);
+    border-right: 0px;
+    border-top: 0px;
+    border-bottom: 0px;
+  }
 }
 
 .welcome-menu__links {
@@ -64,7 +71,7 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  overflow: scroll;
+  overflow-y: auto;
   @media only screen and (max-width: breakpoint(small)) {
     display: none;
   }
@@ -147,6 +154,15 @@
   border: 1px solid var(--color-primary);
   padding: 4px;
   cursor: pointer;
+}
+
+.patch-notes__version-name {
+  font-style: italic;
+  margin-bottom: spacing(1);
+}
+
+.patch-notes__keyboard-key-name {
+  font-weight: bold;
 }
 
 .patch-notes__close-button-icon {

@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Socket } from "socket.io";
 import { chatMessageMaxLength, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from "..";

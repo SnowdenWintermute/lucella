@@ -30,6 +30,7 @@ export class BattleRoomGame {
   } = { physics: undefined, endingCountdown: undefined };
   queues = new BattleRoomQueues();
   mouseData = new MouseData();
+  waypointKeyIsPressed: boolean = false;
   gameOverCountdown: { duration: number; current: number | null } = { duration: gameOverCountdownDuration, current: null };
   winner: PlayerRole | null | undefined = null;
   currentCollisionPairs: Matter.Pair[] = [];

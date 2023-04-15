@@ -1,8 +1,7 @@
-/* eslint-disable no-param-reassign */
 import Matter from "matter-js";
 import { BattleRoomGame } from ".";
 import { challengerOrbCollisionCategory, hostOrbCollisionCategory } from "../../consts";
-import { orbDensity, frictionAir } from "../../consts/battle-room-game-config";
+import { orbDensity, frictionAir, orbsSpawnLocatioRightOffset, orbsSpawnSpacing } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
 import { setOrbSetNonPhysicsPropertiesFromAnotherSet, setOrbSetPhysicsPropertiesFromAnotherSet, setOrbSetPositionBuffersFromAnotherSet } from "../../utils";
 import { Orb } from "../Orb";
@@ -21,10 +20,8 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
   game.physicsEngine.gravity.x = 0;
   game.physicsEngine.gravity.scale = 0;
 
-  game.debug.clientPrediction.clientOrbNumInputsApplied = 0;
-
   for (let i = 1; i <= 5; i += 1) {
-    const startingX = i * 50 + 75;
+    const startingX = i * orbsSpawnSpacing + orbsSpawnLocatioRightOffset;
 
     const hostOrbBody = Matter.Bodies.circle(startingX, 100, BattleRoomGame.baseOrbRadius, {
       collisionFilter: { category: hostOrbCollisionCategory, mask: challengerOrbCollisionCategory },
@@ -47,7 +44,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
   if (prevGameState) {
     Object.entries(game.orbs).forEach(([playerRole, orbSet]) => {
       setOrbSetPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
-      setOrbSetNonPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
+      setOrbSetNonPhysicsPropertiesFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole], { applyWaypoints: true });
       setOrbSetPositionBuffersFromAnotherSet(orbSet, prevGameState.orbs[playerRole as PlayerRole]);
     });
   }

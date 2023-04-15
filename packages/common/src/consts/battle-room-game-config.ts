@@ -9,3 +9,6 @@ export const orbDensity = 10;
 export const frictionAir = 20.9;
 export const initialEndZoneHeight = 60;
 export const baseWindowDimensions = { width: 450, height: 750 };
+export const orbWaypointListSizeLimit = 100;
+export const orbsSpawnLocatioRightOffset = 75;
+export const orbsSpawnSpacing = 50;

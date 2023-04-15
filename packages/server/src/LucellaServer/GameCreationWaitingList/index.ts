@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-/* eslint-disable no-param-reassign */
+
 import { LucellaServer } from "..";
 import { SocketEventsFromServer } from "../../../../common";
 import { FastRemovalQueue } from "../../data-structures/FastRemovalQueue";

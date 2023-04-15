@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Ban, User, UserStatuses } from "../../../../common";
 import UserRepo from "../../database/repos/users";
 import { lucella } from "../../lucella";

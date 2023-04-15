@@ -4,6 +4,7 @@ import { Point } from "./Point";
 export class Orb {
   body: Matter.Body;
   destination: Point | null = null;
+  waypoints: Point[] = [];
   color: string | undefined;
   strokeColor: string | undefined;
   owner: string;

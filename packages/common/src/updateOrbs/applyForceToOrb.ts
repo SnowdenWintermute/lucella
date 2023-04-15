@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { Body, Vector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
@@ -38,8 +37,12 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   const angle = findAngle(deltaVectorSlope, forceSlope);
   const multiplier = numberInRangeToBetweenZeroAndOne(angle, 360);
   Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, multiplier)));
-  if (distanceBetweenTwoPoints(position, destination) > decelerationDistance - game.speedModifier && orb.body.speed < orbMaxSpeed + game.speedModifier)
-    Body.applyForce(orb.body, orb.body.position, forceVector);
-  else Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.1)));
+  const shouldBeBraking =
+    distanceBetweenTwoPoints(position, destination) < decelerationDistance - game.speedModifier || orb.body.speed > orbMaxSpeed + game.speedModifier;
+  if (!shouldBeBraking) Body.applyForce(orb.body, orb.body.position, forceVector);
+  else {
+    Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.1)));
+    if (!entityReachedDestination) Body.applyForce(orb.body, orb.body.position, Vector.mult(normalizedDelta, 0.3));
+  }
   Body.update(orb.body, renderRate, 1, 0);
 }

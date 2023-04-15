@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
 import {

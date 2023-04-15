@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-/* eslint-disable no-param-reassign */
+
 import { ChatChannel, GameRoom, SanitizedSocketMetadata } from "../../../../common";
 const cloneDeep = require("lodash.clonedeep");
 

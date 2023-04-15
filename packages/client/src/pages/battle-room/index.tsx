@@ -32,7 +32,7 @@ function BattleRoom() {
   }, [socket.current]);
 
   return (
-    <section className={!inGame ? "page-padded-container" : "battle-room-game-instance"}>
+    <section className={!inGame ? "page-padded-container" : "battle-room-game-instance"} onContextMenu={(e) => e.preventDefault()}>
       <SocketManager socket={socket} defaultChatChannel={battleRoomDefaultChatChannel} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
       {!inGame && socket.current && <Lobby socket={socket.current} />}
       {inGame && socket.current && <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />}
