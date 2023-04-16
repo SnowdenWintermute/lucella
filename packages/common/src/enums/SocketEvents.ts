@@ -11,6 +11,7 @@ export enum SocketEventsFromClient {
   LEAVES_MATCHMAKING_QUEUE = "8",
   NEW_INPUT = "9",
   CURRENT_TICK_NUMBER = "10",
+  GAME_ROOM_NUMBER_OF_ROUNDS_EDIT_REQUEST = "36",
 }
 
 export enum SocketEventsFromServer {
@@ -39,6 +40,7 @@ export enum SocketEventsFromServer {
   GUEST_USER_NAME = "33", // used in the score screens so the user knows if they won or lost
   NEW_ROUND_STARTING_COUNTDOWN_UPDATE = "34",
   CURRENT_GAME_NUMBER_OF_ROUNDS_WON = "35",
+  CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED = "37",
 }
 
 export const GENERIC_SOCKET_EVENTS = {

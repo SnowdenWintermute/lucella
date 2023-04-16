@@ -7,7 +7,7 @@ const drawScore = (
   canvasSize: WidthAndHeight,
   themeColors: ThemeColors
 ) => {
-  const fontSize = inGameFontSizes.large * canvasDrawFractions.x;
+  const fontSize = inGameFontSizes.medium * canvasDrawFractions.x;
   const margin = (currentGame.endzones.challenger.height / 2) * canvasDrawFractions.y;
   const { score, speedModifier, roundsWon, numberOfRoundsNeededToWin } = currentGame;
   const speedModifierAsPercentage = Math.round((+speedModifier.toFixed(2) / baseSpeedModifier) * 100);

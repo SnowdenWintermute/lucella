@@ -1,8 +1,8 @@
 @import "../../../styles/abstracts/variables";
 .game-setup-menu__left {
   @media only screen and (max-width: breakpoint(tiny)) {
-    width: 100%;
-    border-right: 0px;
+    width: 100% !important;
+    border-right: 0px !important;
   }
 }
 .game-setup-menu__form {
@@ -23,8 +23,13 @@
   }
 }
 
+.game-setup-menu__game-name-input {
+  margin-bottom: spacing(2);
+}
+
 .game-setup-menu__button {
   align-self: flex-end;
+  min-height: height(3);
 }
 
 .game-setup-menu__right {

@@ -38,7 +38,7 @@ export const CookieNames = {
 };
 // battle-room game
 export const ghostTransparency = 0.3;
-export const inGameFontSizes = { medium: 12, large: 25 };
+export const inGameFontSizes = { small: 12, medium: 20, large: 25 };
 export const renderRate = 33;
 export const physicsTickRate = 50;
 export const eventLimiterRate = renderRate;

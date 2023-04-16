@@ -11,7 +11,7 @@ export default function drawOrbDebugText(context: CanvasRenderingContext2D, orb:
 
   context.fillStyle = "white";
   context.textAlign = "center";
-  context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px Arial`;
+  context.font = `bold ${inGameFontSizes.small * canvasDrawFractions.x}px Arial`;
   orb.destination?.x && orb.destination?.y ? (context.fillStyle = "white") : (context.fillStyle = "black");
   orb.destination
     ? context.fillText(`${orb.destination.x.toString()}, ${orb.destination.y.toString()}`, rx, ry - circleRadius! - 40)
