@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 /* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 
@@ -114,12 +115,19 @@ export class Lobby {
     if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} tried to edit rounds but wasn't in a game`);
     const gameRoom = this.gameRooms[currentGameName];
     if (!gameRoom) return console.error("No such game exists");
+    if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN || gameRoom.gameStatus === GameStatus.IN_WAITING_LIST)
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_EDIT_ROUNDS_IF_BOTH_PLAYERS_READY);
     if (gameRoom.gameStatus === GameStatus.IN_PROGRESS || gameRoom.gameStatus === GameStatus.ENDING || gameRoom.gameStatus === GameStatus.STARTING_NEXT_ROUND)
       return console.log("client tried to edit rounds from a game but it had already started");
     if (gameRoom.isRanked) return console.error("Can't edit rounds from ranked game");
     gameRoom.numberOfRoundsRequiredToWin = newNumberOfRounds;
     const gameChatChannelName = gameChannelNamePrefix + currentGameName;
     io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED, gameRoom.numberOfRoundsRequiredToWin);
+    // unready users
+    const { playersReady } = gameRoom;
+    // @ts-ignore
+    Object.keys(playersReady).forEach((key) => (playersReady[key] = false));
+    io.to(gameChatChannelName).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
   }
   handleReadyStateToggleRequest(socket: Socket) {
     const { connectedSockets, io } = this.server;

@@ -5,12 +5,14 @@ function index({
   value,
   setValue,
   options,
+  disabled,
   extraStyles,
 }: {
   title: string;
   value: any;
   setValue: (value: any) => void;
   options: { title: string; value: any }[];
+  disabled: boolean | undefined;
   extraStyles?: string;
 }) {
   const selectInputRef = useRef<HTMLDivElement>(null);
@@ -76,13 +78,20 @@ function index({
   const selectedOptionAsOpenButton = options.map(
     (option) =>
       option.value === value && (
-        <button type="button" key={option.value} id={`select-${title}-selected-option`} className="select-dropdown__option-button">
+        <button
+          disabled={disabled}
+          type="button"
+          key={option.value}
+          id={`select-${title}-selected-option`}
+          className="select-dropdown__open-button select-dropdown__option-button"
+        >
           {option.title}
         </button>
       )
   );
   const optionButtons = options.map((option, i) => (
     <button
+      disabled={disabled}
       type="button"
       key={option.value}
       onClick={() => {

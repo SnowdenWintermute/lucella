@@ -101,6 +101,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
                   ]}
                   value={numberOfRoundsRequiredToWin}
                   setValue={handleSetNumberOfRoundsRequiredToWin}
+                  disabled={lobbyUiState.currentGameRoom?.playersReady.host && lobbyUiState.currentGameRoom?.playersReady.challenger}
                   extraStyles="game-room-menu__select-input"
                 />
               )}
