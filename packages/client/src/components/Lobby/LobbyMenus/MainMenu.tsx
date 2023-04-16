@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable react/jsx-curly-brace-presence */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Socket } from "socket.io-client";
 import Link from "next/link";
 import MainMenuButtons from "./MainMenuButtons";

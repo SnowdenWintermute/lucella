@@ -45,7 +45,7 @@ describe("updateScoreCardsAndSaveGameRecord (ladder and elo change behavior)", (
     expect(ladderPage0BeforeGame.body.pageData[7].name).toBe("test-220");
 
     const gameRoom = new GameRoom("game-test", true);
-    const game = new BattleRoomGame("game-test", true);
+    const game = new BattleRoomGame("game-test", gameRoom.numberOfRoundsRequiredToWin, { host: "test", challenger: "test2" }, true);
     const user210SocketMeta = new SocketMetadata("someSocketId", "someip", { username: "test-210", isGuest: false }, "someChannel", "game-test");
     const user220SocketMeta = new SocketMetadata("someSocketId", "someip", { username: "test-220", isGuest: false }, "someChannel", "game-test");
     gameRoom.players.host = user210SocketMeta;

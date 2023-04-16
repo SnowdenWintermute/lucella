@@ -1,5 +1,6 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-nested-ternary */
-import { baseSpeedModifier, BattleRoomGame, gameChannelNamePrefix, GameStatus, PlayerRole, SocketEventsFromServer } from "../../../../../common";
+import { baseSpeedModifier, BattleRoomGame, gameChannelNamePrefix, GameStatus, ONE_SECOND, PlayerRole, SocketEventsFromServer } from "../../../../../common";
 import { LucellaServer } from "../../../LucellaServer";
 
 export default function assignWinner(server: LucellaServer, game: BattleRoomGame) {
@@ -9,7 +10,15 @@ export default function assignWinner(server: LucellaServer, game: BattleRoomGame
   const challengerWon = game.score.challenger >= game.score.neededToWin;
   const hostWon = game.score.host >= game.score.neededToWin;
   const winnerPlayerRole = hostWon ? PlayerRole.HOST : challengerWon ? PlayerRole.CHALLENGER : undefined;
-  if (winnerPlayerRole) gameRoom.roundsWon[winnerPlayerRole] += 1;
+  const gameChatChannelName = gameChannelNamePrefix + game.gameName;
+
+  if (winnerPlayerRole) {
+    // gameRoom needs to know about roundsWon to display in the score screen
+    // game needs to know about roundsWon to display in canvas
+    gameRoom.roundsWon[winnerPlayerRole] += 1;
+    game.roundsWon[winnerPlayerRole] += 1;
+    server.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_NUMBER_OF_ROUNDS_WON, gameRoom.roundsWon);
+  }
 
   if (winnerPlayerRole && gameRoom.roundsWon[winnerPlayerRole] >= gameRoom.numberOfRoundsRequiredToWin) {
     game.winner = winnerPlayerRole;
@@ -22,17 +31,21 @@ export default function assignWinner(server: LucellaServer, game: BattleRoomGame
     game.speedModifier = baseSpeedModifier;
     game.score.neededToWin = BattleRoomGame.initialScoreNeededToWin;
     //
-    const gameChatChannelName = gameChannelNamePrefix + game.gameName;
     gameRoom.gameStatus = GameStatus.STARTING_NEXT_ROUND;
     server.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-    server.io.in(gameChatChannelName).emit(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE, game.newRoundCountdown.current);
     game.newRoundCountdown.current = game.newRoundCountdown.duration;
-    game.intervals.newRoundCountdown = setInterval(() => {
-      game.newRoundCountdown.current! -= 1;
-      server.io.to(gameChatChannelName).emit(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE, game.newRoundCountdown.current);
-      if (game.newRoundCountdown.current! > 0) return;
-      game.clearNewRoundCountdownInterval();
-    });
+    server.io.in(gameChatChannelName).emit(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE, game.newRoundCountdown.current);
+    const decrementCountdownAndUpdate = () => {
+      game.intervals.newRoundCountdown = setTimeout(() => {
+        game.newRoundCountdown.current! -= 1;
+        server.io.in(gameChatChannelName).emit(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE, game.newRoundCountdown.current);
+        if (game.newRoundCountdown.current! > 0) return decrementCountdownAndUpdate();
+        game.clearNewRoundCountdownInterval();
+        gameRoom.gameStatus = GameStatus.IN_PROGRESS;
+        server.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+      }, ONE_SECOND);
+    };
+    decrementCountdownAndUpdate();
   }
 
   // if (game.score.host >= game.score.neededToWin) {

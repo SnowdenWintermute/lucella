@@ -166,7 +166,14 @@ export class LucellaServer {
         gameRoom.gameStatus = GameStatus.IN_PROGRESS;
         delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
         io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-        games[gameRoom.gameName] = new BattleRoomGame(gameRoom.gameName, gameRoom.isRanked);
+        const { players } = gameRoom;
+        if (!players.host || !players.challenger) return console.error("tried to start a a game but one of the players was not found");
+        games[gameRoom.gameName] = new BattleRoomGame(
+          gameRoom.gameName,
+          gameRoom.numberOfRoundsRequiredToWin,
+          { host: players.host.associatedUser.username, challenger: players.challenger.associatedUser.username },
+          gameRoom.isRanked
+        );
         const game = games[gameRoom.gameName];
         io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
         game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);

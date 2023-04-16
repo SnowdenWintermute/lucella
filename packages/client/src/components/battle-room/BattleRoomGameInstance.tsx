@@ -21,7 +21,16 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
     width: BattleRoomGame.baseWindowDimensions.width,
     height: BattleRoomGame.baseWindowDimensions.height,
   });
-  const currentGame = useRef(lobbyUiState.currentGameRoom && new BattleRoomGame(lobbyUiState.currentGameRoom.gameName));
+  if (!currentGameRoom) return <p>Loading game room...</p>;
+  const { gameName, numberOfRoundsRequiredToWin, players } = currentGameRoom;
+  if (!players.host || !players.challenger) return <p>Error - tried to start a game but one of the players was not found</p>;
+  const currentGame = useRef(
+    lobbyUiState.currentGameRoom &&
+      new BattleRoomGame(gameName, numberOfRoundsRequiredToWin, {
+        host: players.host.associatedUser.username,
+        challenger: players.challenger.associatedUser.username,
+      })
+  );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasSizeRef = useRef<WidthAndHeight | null>(null);
   const gameWidthRatio = useRef(window.innerHeight * 0.6);

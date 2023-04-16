@@ -38,6 +38,7 @@ export enum SocketEventsFromServer {
   REMOVED_FROM_MATCHMAKING = "32",
   GUEST_USER_NAME = "33", // used in the score screens so the user knows if they won or lost
   NEW_ROUND_STARTING_COUNTDOWN_UPDATE = "34",
+  CURRENT_GAME_NUMBER_OF_ROUNDS_WON = "35",
 }
 
 export const GENERIC_SOCKET_EVENTS = {

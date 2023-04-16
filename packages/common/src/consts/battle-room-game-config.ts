@@ -1,4 +1,4 @@
-export const newRoundStartingCountdownDuration = 2;
+export const newRoundStartingCountdownDuration = 5;
 export const gameOverCountdownDuration = 2;
 export const initialScoreNeededToWin = 5;
 // export const baseSpeedModifier = 0.2;

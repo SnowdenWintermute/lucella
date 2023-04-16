@@ -8,6 +8,7 @@ import {
   initialScoreNeededToWin,
   newRoundStartingCountdownDuration,
 } from "../../consts/battle-room-game-config";
+import { baseNumberOfRoundsRequiredToWin } from "../../consts/game-lobby-config";
 import { PlayerRole } from "../../enums";
 import { HostAndChallengerOrbSets } from "../../types";
 import { MouseData } from "../MouseData";
@@ -34,7 +35,9 @@ export class BattleRoomGame {
   mouseData = new MouseData();
   waypointKeyIsPressed: boolean = false;
   newRoundCountdown: { duration: number; current: number | null } = { duration: newRoundStartingCountdownDuration, current: null };
+  newRoundStarting = false;
   gameOverCountdown: { duration: number; current: number | null } = { duration: gameOverCountdownDuration, current: null };
+  playerNames: { host: string; challenger: string };
   winner: PlayerRole | null | undefined = null;
   currentCollisionPairs: Matter.Pair[] = [];
   orbs: HostAndChallengerOrbSets = { [PlayerRole.HOST]: {}, [PlayerRole.CHALLENGER]: {} };
@@ -43,6 +46,12 @@ export class BattleRoomGame {
     challenger: 0,
     neededToWin: BattleRoomGame.initialScoreNeededToWin,
   };
+  // used for displaying this information in canvas, gameRoom object keeps track of the canonical values
+  roundsWon = {
+    host: 0,
+    challenger: 0,
+  };
+  numberOfRoundsNeededToWin = baseNumberOfRoundsRequiredToWin;
   speedModifier = BattleRoomGame.baseSpeedModifier;
   endzones = {
     host: new Rectangle(new Point(0, 0), BattleRoomGame.baseWindowDimensions.width, BattleRoomGame.baseEndzoneHeight),
@@ -63,9 +72,11 @@ export class BattleRoomGame {
   static baseSpeedModifier = baseSpeedModifier;
   static initialScoreNeededToWin = initialScoreNeededToWin;
   static initializeWorld = initializeWorld;
-  constructor(gameName: string, isRanked?: boolean) {
+  constructor(gameName: string, roundsNeededToWin: number, playerNames: { host: string; challenger: string }, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
+    this.numberOfRoundsNeededToWin = roundsNeededToWin;
+    this.playerNames = playerNames;
   }
   clearPhysicsInterval() {
     clearInterval(this.intervals.physics);
@@ -75,5 +86,6 @@ export class BattleRoomGame {
   }
   clearNewRoundCountdownInterval() {
     clearInterval(this.intervals.newRoundCountdown);
+    this.newRoundCountdown.current = null;
   }
 }

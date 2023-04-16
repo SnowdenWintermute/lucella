@@ -9,6 +9,7 @@ import handleLineUpOrbsAtY from "./handleLineUpOrbsAtY";
 import handleSelectOrbs from "./handleSelectOrbs";
 
 export function processPlayerInput(input: UserInput, game: BattleRoomGame, deltaT: number, playerRole?: PlayerRole) {
+  if (game.newRoundCountdown.current) return;
   switch (input.type) {
     case UserInputs.CLIENT_TICK_NUMBER:
       updateOrbs(game, playerRole);

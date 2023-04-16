@@ -8,6 +8,7 @@ import drawEndzones from "./drawEndzones";
 import drawDebug from "./drawDebug";
 import { INetworkPerformanceMetrics } from "../../../types";
 import { Theme } from "../../../redux/slices/ui-slice";
+import drawNewRoundStartingText from "./drawNewRoundStartingText";
 
 export default function draw(
   context: CanvasRenderingContext2D,
@@ -36,6 +37,7 @@ export default function draw(
     drawOrbs(context, playerRole, game, canvasDrawFractions, THEME_COLORS);
     if (game.debug.mode) drawDebug(context, game, networkPerformanceMetrics, canvasDrawFractions);
     if (game.winner) gameOverText(context, game, canvasDrawFractions, THEME_COLORS);
+    if (game.newRoundStarting) drawNewRoundStartingText(context, game, canvasDrawFractions, THEME_COLORS);
     const selectionBoxSize = getSelectionBoxSize(game.mouseData, canvasDrawFractions);
     if (selectionBoxSize) drawSelectionBox(context, mouseData, canvasDrawFractions, selectionBoxSize, THEME_COLORS);
 
