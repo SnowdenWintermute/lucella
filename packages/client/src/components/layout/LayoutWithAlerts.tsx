@@ -24,7 +24,7 @@ export default function LayoutWithAlerts({ children }: Props) {
 
   return (
     <div data-theme={currentTheme} data-theme-type="light" className="app-layout">
-      {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && <Navbar />}
+      {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && gameStatus !== GameStatus.STARTING_NEXT_ROUND && <Navbar />}
       <AlertsHolder />
       <main className="app-layout__main-content">{children}</main>
     </div>

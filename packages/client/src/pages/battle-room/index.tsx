@@ -25,7 +25,7 @@ function BattleRoom() {
   });
 
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
-  const inGame = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING;
+  const inGame = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.STARTING_NEXT_ROUND || gameStatus === GameStatus.ENDING;
 
   useEffect(() => {
     if (socket.current) setSocketCreated(true);

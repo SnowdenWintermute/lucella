@@ -49,6 +49,9 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
   //   });
   // }, []);
 
+  const gameStatus = currentGameRoom?.gameStatus;
+  const canvasShouldBeDisplayed = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING || gameStatus === GameStatus.STARTING_NEXT_ROUND;
+
   return (
     <div className="battle-room-game__canvas-container" onContextMenu={(e) => e.preventDefault()}>
       {currentGame.current && (
@@ -60,7 +63,7 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
           networkPerformanceMetrics={networkPerformanceMetricsRef.current}
         />
       )}
-      {(currentGame.current && currentGameRoom?.gameStatus === GameStatus.IN_PROGRESS) || currentGameRoom?.gameStatus === GameStatus.ENDING ? (
+      {currentGame.current && canvasShouldBeDisplayed ? (
         <CanvasWithInputListeners canvasSizeRef={canvasSizeRef} canvasRef={canvasRef} currentGame={currentGame.current!} socket={socket} />
       ) : (
         "Loading..."
