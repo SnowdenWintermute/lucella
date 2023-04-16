@@ -15,23 +15,24 @@ export default function assignWinner(server: LucellaServer, game: BattleRoomGame
     game.winner = winnerPlayerRole;
     gameRoom.winner = gameRoom.players[winnerPlayerRole]!.associatedUser.username;
   } else if (winnerPlayerRole) {
+    BattleRoomGame.initializeWorld(game);
+    //
+    game.score.host = 0;
+    game.score.challenger = 0;
+    game.speedModifier = baseSpeedModifier;
+    game.score.neededToWin = BattleRoomGame.initialScoreNeededToWin;
+    //
     gameRoom.roundsWon[winnerPlayerRole] += 1;
     const gameChatChannelName = gameChannelNamePrefix + game.gameName;
     gameRoom.gameStatus = GameStatus.STARTING_NEXT_ROUND;
     server.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     server.io.in(gameChatChannelName).emit(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE, game.newRoundCountdown.current);
-    game.clearPhysicsInterval();
     game.newRoundCountdown.current = game.newRoundCountdown.duration;
-    game.intervals.endingCountdown = setInterval(() => {
+    game.intervals.newRoundCountdown = setInterval(() => {
       game.newRoundCountdown.current! -= 1;
       server.io.to(gameChatChannelName).emit(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE, game.newRoundCountdown.current);
-      if (game.newRoundCountdown.current! >= 1) return;
+      if (game.newRoundCountdown.current! > 0) return;
       game.clearNewRoundCountdownInterval();
-      BattleRoomGame.initializeWorld(game);
-      game.score.host = 0;
-      game.score.challenger = 0;
-      game.speedModifier = baseSpeedModifier;
-      createGamePhysicsInterval(server.io, server, game.gameName);
     });
   }
 

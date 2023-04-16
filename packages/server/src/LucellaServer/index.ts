@@ -100,13 +100,16 @@ export class LucellaServer {
     console.log(`forcibly disconnected user ${username} and their socket(s) ${socketIdsDisconnected.join(", ")}`);
   }
   async endGameAndEmitUpdates(game: BattleRoomGame) {
+    console.log("endGameAndEmitUpdates called");
     const gameRoom = this.lobby.gameRooms[game.gameName];
+    if (!gameRoom) return console.error("tried to call endGameAndEmitUpdates but no game room was found");
     const gameChatChannelName = gameChannelNamePrefix + game.gameName;
     const { players } = gameRoom;
 
     gameRoom.gameStatus = GameStatus.ENDING;
     this.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     this.io.in(gameChatChannelName).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
+    game.clearNewRoundCountdownInterval();
     game.clearPhysicsInterval();
 
     const loser =
