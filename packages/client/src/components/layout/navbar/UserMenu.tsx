@@ -29,7 +29,7 @@ export function UserMenu() {
 
   useEffect(() => {
     if (user) setMenuToShow(MENU.USER);
-    else if (isFetching && isLoading && logoutIsUninitialized && !isError && !uiState.showContextMenu) setMenuToShow(MENU.LOADING);
+    else if (isFetching && isLoading && logoutIsUninitialized && !isError) setMenuToShow(MENU.LOADING);
     else setMenuToShow(MENU.LOGIN);
   }, [user, isLoading, isError, logoutIsUninitialized]);
 

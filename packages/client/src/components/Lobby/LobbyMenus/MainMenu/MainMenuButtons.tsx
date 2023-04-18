@@ -1,15 +1,15 @@
 import { Socket } from "socket.io-client";
 import React, { useState } from "react";
-import { ERROR_MESSAGES, SocketEventsFromClient } from "../../../../../common";
-import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
-import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
-import { setMatchmakingLoading, setActiveMenu, LobbyMenu, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
-import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
-import { setAlert } from "../../../redux/slices/alerts-slice";
-import { Alert } from "../../../classes/Alert";
-import { AlertType } from "../../../enums";
-import ChangeChatChannelModal from "../modals/ChangeChatChannelModal";
-import { BUTTON_NAMES } from "../../../consts/button-names";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useGetMeQuery } from "../../../../redux/api-slices/users-api-slice";
+import { ERROR_MESSAGES, SocketEventsFromClient } from "../../../../../../common";
+import { LobbyMenu, setActiveMenu, setGameListFetching, setMatchmakingLoading } from "../../../../redux/slices/lobby-ui-slice";
+import { setAlert } from "../../../../redux/slices/alerts-slice";
+import { Alert } from "../../../../classes/Alert";
+import { AlertType } from "../../../../enums";
+import LobbyTopListItemWithButton from "../LobbyTopListItemWithButton";
+import { BUTTON_NAMES } from "../../../../consts/button-names";
+import ChangeChatChannelModal from "../../modals/ChangeChatChannelModal";
 
 function MainMenuButtons({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();

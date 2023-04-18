@@ -15,6 +15,16 @@ export const COLORS = {
     DARK: "14, 10, 1",
     SELECTION: "219, 144, 19",
   },
+  HTML: {
+    LIGHT: "255, 255, 255",
+    DARK: "0, 0, 0",
+    SELECTION: "0, 0, 0",
+  },
+  VIRGINIA_BLUEBELL: {
+    LIGHT: "177, 207, 129",
+    DARK: "61, 82, 147",
+    SELECTION: "235, 150, 233",
+  },
 };
 
 // other nice colors old:

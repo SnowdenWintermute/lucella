@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import ArrowShape from "../../../img/menu-icons/arrow-button-icon.svg";
 
 function index({
   title,
@@ -85,7 +86,7 @@ function index({
           id={`select-${title}-selected-option`}
           className="select-dropdown__open-button select-dropdown__option-button"
         >
-          {option.title}
+          {option.title} <ArrowShape className={`select-dropdown__open-button-arrow ${isOpen && "select-dropdown__open-button-arrow--open"}`} />
         </button>
       )
   );

@@ -19,6 +19,8 @@
 .select-dropdown__option-button {
   height: calc(height(3) - 1px);
   min-height: calc(height(3) - 1px);
+  text-align: left;
+  padding-left: spacing(1);
   width: width(1);
   cursor: pointer;
   background-color: var(--color-bg);
@@ -36,6 +38,21 @@
 
 .select-dropdown__open-button {
   border-top: 1px solid var(--color-primary);
+}
+
+.select-dropdown__open-button-arrow {
+  height: spacing(2);
+  width: spacing(2);
+  fill: var(--color-primary);
+  position: absolute;
+  top: 50%;
+  right: spacing(1);
+  transform: translateY(-50%) rotate(270deg);
+  // transition: 0.6s;
+  pointer-events: none;
+}
+.select-dropdown__open-button-arrow--open {
+  transform: translateY(-50%) rotate(90deg);
 }
 
 .select-dropdown__option-button--selected {

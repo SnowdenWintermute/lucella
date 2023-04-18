@@ -23,7 +23,7 @@
 @import "../components/Lobby/LobbyMenus/game-room-menu.scss";
 @import "../components/Lobby/LobbyMenus/game-setup-menu.scss";
 @import "../components/Lobby/LobbyMenus/lobby-menus.scss";
-@import "../components/Lobby/LobbyMenus/main-menu.scss";
+@import "../components/Lobby/LobbyMenus/MainMenu/main-menu.scss";
 @import "../components/Lobby/LobbyMenus/matchmaking-queue-menu.scss";
 @import "../components/Lobby/modals/change-chat-channel-modal.scss";
 @import "../components/Lobby/modals/score-screen-modal.scss";
@@ -119,13 +119,13 @@
 }
 
 [data-theme="Virginia Bluebell"] {
-  --color-primary: #b1cf81;
+  --color-primary: rgb(177, 207, 129);
   --color-bg: #29511d;
   // --color-accent: #5e7dcf;
-  --color-accent: #3d5293;
+  --color-accent: rgb(61, 82, 147);
   --color-faded: #87ab4d;
   --color-highlight: #9fcf5c;
-  --color-danger: #eb96e9;
+  --color-danger: rgb(235, 150, 233);
   --color-danger-highlight: #eb96e9;
   --color-success: #eb96e9;
   --color-chat-message-private: #d6a05e;

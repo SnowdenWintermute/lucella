@@ -26,6 +26,7 @@ import { GameCreationWaitingList } from "./GameCreationWaitingList";
 import createGamePhysicsInterval from "../battleRoomGame/createGamePhysicsInterval";
 import LucellaServerConfig from "./LucellaServerConfig";
 import updateScoreCardsAndSaveGameRecord from "../battleRoomGame/endGameCleanup/updateScoreCardsAndSaveGameRecord";
+// import broadcastLatencyUpdates from "./broadcastLatencyUpdates";
 
 export class LucellaServer {
   io: SocketIO.Server;
@@ -36,6 +37,7 @@ export class LucellaServer {
   matchmakingQueue: MatchmakingQueue;
   gameCreationWaitingList: GameCreationWaitingList;
   config = new LucellaServerConfig();
+  // latencyUpdatesBroadcastInterval: number | null = null;
   constructor(expressServer: any) {
     this.io = new SocketIO.Server(expressServer);
     this.io.use(socketCheckForBannedIpAddress);
@@ -44,6 +46,7 @@ export class LucellaServer {
     this.matchmakingQueue = new MatchmakingQueue(this);
     this.gameCreationWaitingList = new GameCreationWaitingList(this);
     initializeListeners(this);
+    // this.latencyUpdatesBroadcastInterval = setTimeout(broadcastLatencyUpdates, ONE_SECOND * 5);
   }
 
   handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {

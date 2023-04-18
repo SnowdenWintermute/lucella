@@ -17,7 +17,8 @@ type Props = {
 function UserNameplateContextMenu({ id, positionClicked, setShowBanUserIpAddressModal, setShowBanUserModal }: Props) {
   const dispatch = useDispatch();
   const uiState = useAppSelector((state) => state.UI);
-  const { data: user } = useGetMeQuery(null);
+  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+  const { data: user } = useGetMeQuery(null, { skip: !!lobbyUiState.guestUsername }); // the skip is to prevent constant refetching (activating loading spinners) every time the context menu appears due to a logged out user having no user data
 
   const handleBanIpAddressClick = () => {
     dispatch(clearContextMenu());

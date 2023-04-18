@@ -5,7 +5,8 @@ export default function drawNewRoundStartingText(
   context: CanvasRenderingContext2D,
   game: BattleRoomGame,
   canvasDrawFractions: Point,
-  themeColors: ThemeColors
+  themeColors: ThemeColors,
+  isLightTheme: boolean | undefined
 ) {
   const fontSize = inGameFontSizes.medium * canvasDrawFractions.x;
   const marginBottom = 10 * canvasDrawFractions.y;
@@ -14,7 +15,7 @@ export default function drawNewRoundStartingText(
   const roundsRequiredToWinText = `${game.numberOfRoundsNeededToWin} rounds required to win the match`;
   const isFinalRound = game.roundsWon.host + 1 >= game.numberOfRoundsNeededToWin && game.roundsWon.challenger + 1 >= game.numberOfRoundsNeededToWin;
   const nextRoundStartingText = `${isFinalRound ? "Final round" : "Next round"} starts in ${game.newRoundCountdown.current.toString()}`;
-  drawTextCenterScreen(context, canvasDrawFractions, themeColors.LIGHT, marginBottom, fontSize, [
+  drawTextCenterScreen(context, canvasDrawFractions, isLightTheme ? themeColors.DARK : themeColors.LIGHT, marginBottom, fontSize, [
     playerNamesAndRoundsWonText,
     roundsRequiredToWinText,
     nextRoundStartingText,
