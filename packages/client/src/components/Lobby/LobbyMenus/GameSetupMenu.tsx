@@ -42,7 +42,7 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
               {APP_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL}
               <input
                 id="game-name-input"
-                className="input input--transparent"
+                className="input input--transparent game-setup-menu__game-name-input"
                 aria-label="Enter a game name"
                 placeholder="Enter a game name"
                 data-cy="game-name-input"

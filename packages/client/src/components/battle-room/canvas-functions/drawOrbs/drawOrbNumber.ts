@@ -13,7 +13,7 @@ export default function drawOrbNumber(
   else if (orb.owner === PlayerRole.HOST) context.fillStyle = `rgb(${themeColors.DARK})`;
   context.textAlign = "center";
   context.textBaseline = "middle";
-  context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.y}px 'DM Sans'`;
+  context.font = `bold ${inGameFontSizes.small * canvasDrawFractions.y}px 'DM Sans'`;
   context.beginPath();
   context.fillText(orb.id.toString(), orb.body.position.x * canvasDrawFractions.x, orb.body.position.y * canvasDrawFractions.y);
 }

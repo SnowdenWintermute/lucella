@@ -24,6 +24,7 @@ import {
   LobbyMenu,
   setGuestUsername,
   setCurrentGameRoomLoading,
+  updateCurrentGameRoomNumberOfRoundsRequiredToWin,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -64,6 +65,9 @@ function UISocketListener({ socket }: Props) {
       dispatch(setCurrentGameRoom(data));
       if (data) dispatch(setActiveMenu(LobbyMenu.GAME_ROOM));
       // else dispatch(setActiveMenu(LobbyMenu.MAIN));
+    });
+    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED, (data) => {
+      dispatch(updateCurrentGameRoomNumberOfRoundsRequiredToWin(data));
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
       dispatch(setActiveMenu(LobbyMenu.MAIN));
@@ -106,6 +110,7 @@ function UISocketListener({ socket }: Props) {
       socket.off(SocketEventsFromServer.ERROR_MESSAGE);
       socket.off(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE);
       socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
+      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED);
       socket.off(SocketEventsFromServer.GAME_CLOSED_BY_HOST);
       socket.off(SocketEventsFromServer.PLAYER_READINESS_UPDATE);
       socket.off(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT);

@@ -25,14 +25,14 @@ function BattleRoom() {
   });
 
   const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
-  const inGame = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING;
+  const inGame = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.STARTING_NEXT_ROUND || gameStatus === GameStatus.ENDING;
 
   useEffect(() => {
     if (socket.current) setSocketCreated(true);
   }, [socket.current]);
 
   return (
-    <section className={!inGame ? "page-padded-container" : "battle-room-game-instance"} onContextMenu={(e) => e.preventDefault()}>
+    <section className={!inGame ? "page-padded-container" : "battle-room-game-instance"}>
       <SocketManager socket={socket} defaultChatChannel={battleRoomDefaultChatChannel} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
       {!inGame && socket.current && <Lobby socket={socket.current} />}
       {inGame && socket.current && <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />}

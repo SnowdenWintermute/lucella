@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { BattleRoomGame, endScreenCountdownDelay, SocketEventsFromServer, WidthAndHeight } from "../../../../common";
+import { BattleRoomGame, endScreenCountdownDelay, GameStatus, SocketEventsFromServer, WidthAndHeight } from "../../../../common";
 import { setGameWinner } from "../../redux/slices/lobby-ui-slice";
 import createClientPhysicsInterval from "../battle-room/client-physics/createClientPhysicsInterval";
 import unpackDeltaPacket from "../../protobuf-utils/unpackDeltaPacket";
@@ -35,9 +35,21 @@ function GameListener(props: Props) {
       game.netcode.lastUpdateFromServer = prevGameStateWithDeltas;
       game.netcode.timeLastUpdateReceived = +Date.now();
     });
+    socket.on(SocketEventsFromServer.CURRENT_GAME_NUMBER_OF_ROUNDS_WON, (data: { host: number; challenger: number }) => {
+      game.roundsWon = data;
+    });
     socket.on(SocketEventsFromServer.NAME_OF_GAME_WINNER, (data) => {
       dispatch(setGameWinner(data));
       game.winner = data;
+    });
+    socket.on(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, (data) => {
+      if (!game) return;
+      if (data === GameStatus.STARTING_NEXT_ROUND) game.newRoundStarting = true;
+      else game.newRoundStarting = false;
+    });
+    socket.on(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE, (countdown) => {
+      game.newRoundCountdown.current = countdown;
+      console.log("got NEW_ROUND_STARTING_COUNTDOWN_UPDATE", countdown);
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
       game.gameOverCountdown.current = data;
@@ -47,6 +59,9 @@ function GameListener(props: Props) {
       clearInterval(game.intervals.physics);
       socket.off(SocketEventsFromServer.GAME_INITIALIZATION);
       socket.off(SocketEventsFromServer.COMPRESSED_GAME_PACKET);
+      socket.off(SocketEventsFromServer.CURRENT_GAME_NUMBER_OF_ROUNDS_WON);
+      socket.off(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE);
+      socket.off(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE);
       socket.off(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE);
       socket.off(SocketEventsFromServer.NAME_OF_GAME_WINNER);
     };

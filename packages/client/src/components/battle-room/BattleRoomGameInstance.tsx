@@ -21,7 +21,16 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
     width: BattleRoomGame.baseWindowDimensions.width,
     height: BattleRoomGame.baseWindowDimensions.height,
   });
-  const currentGame = useRef(lobbyUiState.currentGameRoom && new BattleRoomGame(lobbyUiState.currentGameRoom.gameName));
+  if (!currentGameRoom) return <p>Loading game room...</p>;
+  const { gameName, numberOfRoundsRequiredToWin, players } = currentGameRoom;
+  if (!players.host || !players.challenger) return <p>Error - tried to start a game but one of the players was not found</p>;
+  const currentGame = useRef(
+    lobbyUiState.currentGameRoom &&
+      new BattleRoomGame(gameName, numberOfRoundsRequiredToWin, {
+        host: players.host.associatedUser.username,
+        challenger: players.challenger.associatedUser.username,
+      })
+  );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasSizeRef = useRef<WidthAndHeight | null>(null);
   const gameWidthRatio = useRef(window.innerHeight * 0.6);
@@ -41,30 +50,27 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
     };
   }, [setCanvasSize, windowDimensions]);
 
-  // useEffect(() => {
-  //   const f = new FontFace("DM_Sans", "url('../../fonts/DM_Sans/DMSans-Regular.ttf')");
-
-  //   f.load().then(() => {
-  //     console.log("loaded dm sans");
-  //   });
-  // }, []);
+  const gameStatus = currentGameRoom?.gameStatus;
+  const canvasShouldBeDisplayed = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING || gameStatus === GameStatus.STARTING_NEXT_ROUND;
 
   return (
-    <div className="battle-room-game__canvas-container" onContextMenu={(e) => e.preventDefault()}>
-      {currentGame.current && (
-        <GameListener
-          socket={socket}
-          game={currentGame.current}
-          canvasRef={canvasRef}
-          canvasSizeRef={canvasSizeRef}
-          networkPerformanceMetrics={networkPerformanceMetricsRef.current}
-        />
-      )}
-      {(currentGame.current && currentGameRoom?.gameStatus === GameStatus.IN_PROGRESS) || currentGameRoom?.gameStatus === GameStatus.ENDING ? (
-        <CanvasWithInputListeners canvasSizeRef={canvasSizeRef} canvasRef={canvasRef} currentGame={currentGame.current!} socket={socket} />
-      ) : (
-        "Loading..."
-      )}
+    <div className="battle-room-game__backdrop" onContextMenu={(e) => e.preventDefault()}>
+      <div className="battle-room-game__canvas-container" onContextMenu={(e) => e.preventDefault()}>
+        {currentGame.current && (
+          <GameListener
+            socket={socket}
+            game={currentGame.current}
+            canvasRef={canvasRef}
+            canvasSizeRef={canvasSizeRef}
+            networkPerformanceMetrics={networkPerformanceMetricsRef.current}
+          />
+        )}
+        {currentGame.current && canvasShouldBeDisplayed ? (
+          <CanvasWithInputListeners canvasSizeRef={canvasSizeRef} canvasRef={canvasRef} currentGame={currentGame.current!} socket={socket} />
+        ) : (
+          "Loading..."
+        )}
+      </div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ export enum Theme {
   DEFAULT = "",
   VT320 = "VT320",
   HTML = "HTML",
+  VIRGINIA_BLUEBELL = "Virginia Bluebell",
 }
 
 export interface IUISlice {

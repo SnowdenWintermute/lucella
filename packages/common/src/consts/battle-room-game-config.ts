@@ -1,7 +1,9 @@
-export const gameOverCountdownDuration = 2;
+export const newRoundStartingCountdownDuration = 5; // 5
+export const gameOverCountdownDuration = 3; // 3
 export const initialScoreNeededToWin = 5;
-export const baseSpeedModifier = 0.2;
-export const gameSpeedIncrementRate = 0.1;
+// export const baseSpeedModifier = 0.2;
+export const baseSpeedModifier = 0.2; // 0.2
+export const gameSpeedIncrementRate = 0.1; // 0.1
 export const baseOrbRadius = 15;
 export const orbMaxSpeed = 5;
 export const decelerationDistance = 30;

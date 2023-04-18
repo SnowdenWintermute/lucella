@@ -6,17 +6,7 @@ import { Detector } from "matter-js";
 import assignDebugValues from "./assignDebugValues";
 import interpolateOpponentOrbs from "./interpolateOpponentOrbs";
 import predictClientOrbs from "./predictClientOrbs";
-import {
-  AssignDestinationsToSelectedOrbs,
-  AssignOrbDestinations,
-  BattleRoomGame,
-  ClientTickNumber,
-  PlayerRole,
-  renderRate,
-  SelectOrbAndAssignDestination,
-  SocketEventsFromClient,
-  WidthAndHeight,
-} from "../../../../../common";
+import { AssignOrbDestinations, BattleRoomGame, ClientTickNumber, PlayerRole, renderRate, SocketEventsFromClient, WidthAndHeight } from "../../../../../common";
 import draw from "../canvas-functions";
 import serializeInput from "../../../protobuf-utils/serialize-input";
 import { INetworkPerformanceMetrics } from "../../../types";

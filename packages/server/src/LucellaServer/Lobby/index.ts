@@ -1,3 +1,5 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable no-param-reassign */
 /* eslint-disable consistent-return */
 
 import { Socket } from "socket.io";
@@ -107,13 +109,33 @@ export class Lobby {
     this.changeSocketChatChannelAndEmitUpdates(socket, gameRoom.chatChannel, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
+  handleEditNumberOfRoundsRequiredToWinRequest(socket: Socket, newNumberOfRounds: number) {
+    const { connectedSockets, io } = this.server;
+    const { currentGameName } = connectedSockets[socket.id];
+    if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} tried to edit rounds but wasn't in a game`);
+    const gameRoom = this.gameRooms[currentGameName];
+    if (!gameRoom) return console.error("No such game exists");
+    if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN || gameRoom.gameStatus === GameStatus.IN_WAITING_LIST)
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_EDIT_ROUNDS_IF_BOTH_PLAYERS_READY);
+    if (gameRoom.gameStatus === GameStatus.IN_PROGRESS || gameRoom.gameStatus === GameStatus.ENDING || gameRoom.gameStatus === GameStatus.STARTING_NEXT_ROUND)
+      return console.log("client tried to edit rounds from a game but it had already started");
+    if (gameRoom.isRanked) return console.error("Can't edit rounds from ranked game");
+    gameRoom.numberOfRoundsRequiredToWin = newNumberOfRounds;
+    const gameChatChannelName = gameChannelNamePrefix + currentGameName;
+    io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED, gameRoom.numberOfRoundsRequiredToWin);
+    // unready users
+    const { playersReady } = gameRoom;
+    // @ts-ignore
+    Object.keys(playersReady).forEach((key) => (playersReady[key] = false));
+    io.to(gameChatChannelName).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
+  }
   handleReadyStateToggleRequest(socket: Socket) {
     const { connectedSockets, io } = this.server;
     const { currentGameName } = connectedSockets[socket.id];
     if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} clicked ready but wasn't in a game`);
     const gameRoom = this.gameRooms[currentGameName];
     if (!gameRoom) return console.error("No such game exists");
-    if (gameRoom.gameStatus === GameStatus.IN_PROGRESS || gameRoom.gameStatus === GameStatus.ENDING)
+    if (gameRoom.gameStatus === GameStatus.IN_PROGRESS || gameRoom.gameStatus === GameStatus.ENDING || gameRoom.gameStatus === GameStatus.STARTING_NEXT_ROUND)
       return console.log("client tried to unready from a game but it had already started");
     if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.error("Can't unready from ranked game that is starting");
     const { players, playersReady } = gameRoom;
@@ -129,7 +151,7 @@ export class Lobby {
       if (Object.keys(this.server.games).length + Object.keys(this.gameRoomsExecutingGameStartCountdown).length >= this.server.config.maxConcurrentGames) {
         console.log(`putting game ${gameRoom.gameName} in waiting list`);
         gameRoom.gameStatus = GameStatus.IN_WAITING_LIST;
-        this.server.io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
         this.server.gameCreationWaitingList.addGameRoom(gameRoom.gameName);
       } else {
         console.log("starting game countdown for game: ", gameRoom.gameName);

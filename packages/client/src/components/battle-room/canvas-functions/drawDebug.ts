@@ -55,7 +55,7 @@ export default function drawDebug(
 
   context.fillStyle = "white";
   context.textAlign = "left";
-  context.font = `bold ${inGameFontSizes.medium * canvasDrawFractions.x}px 'DM Sans'`;
+  context.font = `bold ${inGameFontSizes.small * canvasDrawFractions.x}px 'DM Sans'`;
 
   itemsToShow.forEach((item, i) => {
     context.beginPath();
