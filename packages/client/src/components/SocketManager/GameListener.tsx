@@ -49,7 +49,6 @@ function GameListener(props: Props) {
     });
     socket.on(SocketEventsFromServer.NEW_ROUND_STARTING_COUNTDOWN_UPDATE, (countdown) => {
       game.newRoundCountdown.current = countdown;
-      console.log("got NEW_ROUND_STARTING_COUNTDOWN_UPDATE", countdown);
     });
     socket.on(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, (data) => {
       game.gameOverCountdown.current = data;

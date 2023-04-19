@@ -55,3 +55,15 @@
   font-size: fontSize(3);
   font-weight: lighter;
 }
+
+.battle-room-rules {
+  text-align: left;
+  overflow: auto;
+  ul {
+    list-style-position: inside;
+  }
+  h3 {
+    text-align: center;
+    margin-bottom: spacing(1);
+  }
+}

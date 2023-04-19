@@ -2,12 +2,18 @@
 /* eslint-disable react/no-unescaped-entities */
 import React from "react";
 
-function PatchNotes({ setViewingPatchNotes }: { setViewingPatchNotes: (value: boolean) => void }) {
+function PatchNotes({ setViewingPatchNotes, versionNumber }: { setViewingPatchNotes: (value: boolean) => void; versionNumber: string }) {
   return (
     <div className="patch-notes">
       <div>
         <h4>Version History</h4>
       </div>
+      <span className="patch-notes__version-name">{versionNumber} "four orbs"</span>
+      <ul>
+        <li>Reduced the number of orbs each player controls from 5 to 4</li>
+        <li>Fixed a bug in which orbs would not cause each other to ghost when colliding after the first round</li>
+        <li>Edited the gameplay instructions to include information about waypoints and instructions are now shown in the game room menu</li>
+      </ul>
       <span className="patch-notes__version-name">alpha 0.4.0 "multi-round battles"</span>
       <ul>
         <li>Ranked game winners are now decided by a best of 5 rounds match</li>

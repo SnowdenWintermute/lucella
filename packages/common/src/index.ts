@@ -16,6 +16,7 @@ export { InputFields } from "./consts/InputFields";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
 export { GameElementsOfConstantInterest } from "./classes/BattleRoomGame/GameElementsOfConstantInterest";
+export { setOrbsAtStartPositions } from "./classes/BattleRoomGame/setOrbsAtStartPositions";
 export * from "./classes/ChatChannel";
 export { User, SanitizedUser } from "./classes/User";
 export { ChatMessage, ChatMessageStyles } from "./classes/ChatMessage";

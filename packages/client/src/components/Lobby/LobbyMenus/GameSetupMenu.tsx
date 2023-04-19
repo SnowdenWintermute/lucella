@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-curly-brace-presence */
 /* eslint-disable consistent-return */
 /* eslint-disable react/no-unescaped-entities */
 import { Socket } from "socket.io-client";
@@ -12,6 +13,7 @@ import { LobbyMenu, setActiveMenu, setCurrentGameRoomLoading } from "../../../re
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 import { APP_TEXT } from "../../../consts/app-text";
+import BattleRoomRules from "./BattleRoomRules";
 
 function GameSetupMenu({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
@@ -59,13 +61,7 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
           </form>
         </div>
         <div className="lobby-menu__right game-setup-menu__right">
-          <h3 className="lobby-menu__header">Battle Room rules</h3>
-          <ul>
-            <li>Send your orbs to the opponent's endzone to score points</li>
-            <li>Select and move orbs toward your mouse cursor with number keys 1 - 5</li>
-            <li>Orbs that touch each other are sent back to their respective endzones</li>
-            <li>Game speed increases with each point scored</li>
-          </ul>
+          <BattleRoomRules />
         </div>
       </section>
     </>
