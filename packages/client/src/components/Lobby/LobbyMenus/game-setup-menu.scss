@@ -33,16 +33,7 @@
 }
 
 .game-setup-menu__right {
-  h3 {
-    text-align: center;
-    margin-bottom: spacing(2);
-  }
-  ul {
-    margin-left: spacing(2);
-    list-style-position: inside;
-    overflow-y: auto;
-    max-height: calc(100% - spacing(2) * 2 - fontSize(3));
-  }
+  display: flex;
   @media only screen and (max-width: breakpoint(tiny)) {
     display: none;
   }

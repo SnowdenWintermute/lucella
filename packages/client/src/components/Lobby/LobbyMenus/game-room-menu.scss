@@ -66,7 +66,6 @@
 
 .game-room-menu__right {
   padding-top: spacing(5);
-  font-size: fontSize(3);
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -77,6 +76,8 @@
 }
 
 .game-room-menu__right-main-text {
+  font-size: fontSize(3);
+  margin-bottom: spacing(1);
   span {
     margin-top: spacing(2);
   }

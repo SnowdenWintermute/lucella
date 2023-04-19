@@ -33,7 +33,7 @@ export default function createGamePhysicsInterval(io: Server, server: LucellaSer
       processPlayerInput(input, game, renderRate, input.playerRole);
       game.netcode.serverLastProcessedInputNumbers[input.playerRole!] = input.number;
       numInputsToProcess -= 1;
-      const collisions = Detector.collisions(game.physicsEngine!.detector);
+      const collisions = Detector.collisions(game.physicsEngine.detector);
       collisions.forEach((collision) => {
         game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
       });

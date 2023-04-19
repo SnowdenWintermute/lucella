@@ -10,6 +10,7 @@ import { BUTTON_NAMES } from "../../../consts/button-names";
 import { ARIA_LABELS } from "../../../consts/aria-labels";
 import { useGetMeQuery } from "../../../redux/api-slices/users-api-slice";
 import SelectDropdown from "../../common-components/SelectDropdown";
+import BattleRoomRules from "./BattleRoomRules";
 
 function PlayerWithReadyStatus({ player, playerReady, playerRole }: { player: SocketMetadata | null; playerReady: boolean; playerRole: PlayerRole }) {
   return (
@@ -127,6 +128,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
           {gameStatus === GameStatus.IN_WAITING_LIST && (
             <p className="game-room-menu__right-info-text">The server is experiencing high load. Your game has been placed in the waiting list.</p>
           )}
+          {gameStatus !== GameStatus.IN_WAITING_LIST && <BattleRoomRules />}
         </div>
       </section>
     </>

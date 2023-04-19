@@ -8,9 +8,9 @@ export default function drawNewRoundStartingText(
   themeColors: ThemeColors,
   isLightTheme: boolean | undefined
 ) {
+  if (!game.newRoundCountdown.current) return;
   const fontSize = inGameFontSizes.medium * canvasDrawFractions.x;
   const marginBottom = 10 * canvasDrawFractions.y;
-  if (!game.newRoundCountdown.current) return;
   const playerNamesAndRoundsWonText = `${game.playerNames.host}: ${game.roundsWon.host} ${game.playerNames.challenger}: ${game.roundsWon.challenger}`;
   const roundsRequiredToWinText = `${game.numberOfRoundsNeededToWin} rounds required to win the match`;
   const isFinalRound = game.roundsWon.host + 1 >= game.numberOfRoundsNeededToWin && game.roundsWon.challenger + 1 >= game.numberOfRoundsNeededToWin;

@@ -15,6 +15,7 @@ function WelcomeDropdown() {
   const [viewingPatchNotes, setViewingPatchNotes] = useState(false);
 
   let mainMenuLeftContent = <div />;
+  const versionNumber = "alpha 0.5.0";
 
   // if (userIsLoading && !uiState.showContextMenu) mainMenuLeftContent = <LoadingSpinner />;
   if (userIsLoading) mainMenuLeftContent = <LoadingSpinner />;
@@ -34,7 +35,7 @@ function WelcomeDropdown() {
       </>
     );
   else if (!viewingPatchNotes && user) mainMenuLeftContent = <LoggedInUserDisplay user={user} />;
-  else if (viewingPatchNotes) mainMenuLeftContent = <PatchNotes setViewingPatchNotes={setViewingPatchNotes} />;
+  else if (viewingPatchNotes) mainMenuLeftContent = <PatchNotes setViewingPatchNotes={setViewingPatchNotes} versionNumber={versionNumber} />;
 
   return (
     <section className="lobby-menu welcome-menu">
@@ -42,7 +43,7 @@ function WelcomeDropdown() {
       <div className="lobby-menu__right welcome-menu__right">
         <Logo className="welcome-menu__logo" />
         <button type="button" className="welcome-menu__version" onClick={() => setViewingPatchNotes(!viewingPatchNotes)}>
-          alpha 0.3.0
+          {versionNumber}
         </button>
       </div>
     </section>

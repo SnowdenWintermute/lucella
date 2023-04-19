@@ -2,7 +2,6 @@ import { Socket } from "socket.io-client";
 import {
   BattleRoomGame,
   LineUpOrbsHorizontallyAtMouseY,
-  orbsSpawnLocatioRightOffset,
   orbsSpawnSpacing,
   orbWaypointListSizeLimit,
   PlayerRole,
@@ -28,6 +27,7 @@ export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRo
   if (numberKeyPressed === 0) game.debug.mode = game.debug.mode < 2 ? game.debug.mode + 1 : 0;
   else if (numberKeyPressed >= 1 && numberKeyPressed <= 5) {
     const selectedOrb = game.orbs[playerRole][`${playerRole}-orb-${numberKeyPressed}`];
+    if (!selectedOrb) return;
     if (game.waypointKeyIsPressed && selectedOrb.waypoints.length < orbWaypointListSizeLimit) {
       selectedOrb.waypoints.push(new Point(mouseData.position.x, mouseData.position.y));
     } else if (!game.waypointKeyIsPressed) {
@@ -44,7 +44,7 @@ export default (e: KeyboardEvent, game: BattleRoomGame, socket: Socket, playerRo
   } else if (numberKeyPressed === 7) {
     if (game.waypointKeyIsPressed) {
       Object.values(game.orbs[playerRole]).forEach((orb) => {
-        orb.waypoints.push(new Point(orb.id * orbsSpawnSpacing + orbsSpawnLocatioRightOffset, mouseData.position!.y));
+        orb.waypoints.push(new Point(orb.id * orbsSpawnSpacing, mouseData.position!.y));
       });
     } else {
       Object.values(game.orbs[playerRole]).forEach((orb) => {
