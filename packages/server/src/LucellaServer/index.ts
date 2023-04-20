@@ -173,8 +173,8 @@ export class LucellaServer {
         if (!players.host || !players.challenger) return console.error("tried to start a a game but one of the players was not found");
         games[gameRoom.gameName] = new BattleRoomGame(
           gameRoom.gameName,
-          gameRoom.numberOfRoundsRequiredToWin,
           { host: players.host.associatedUser.username, challenger: players.challenger.associatedUser.username },
+          !gameRoom.isRanked ? gameRoom.battleRoomGameConfig : undefined,
           gameRoom.isRanked
         );
         const game = games[gameRoom.gameName];

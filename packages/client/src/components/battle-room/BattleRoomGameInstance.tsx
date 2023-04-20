@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import GameListener from "../SocketManager/GameListener";
-import { BattleRoomGame, WidthAndHeight, GameStatus } from "../../../../common";
+import { BattleRoomGame, WidthAndHeight, GameStatus, GameRoom } from "../../../../common";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { INetworkPerformanceMetrics } from "../../types";
@@ -22,14 +22,18 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
     height: BattleRoomGame.baseWindowDimensions.height,
   });
   if (!currentGameRoom) return <p>Loading game room...</p>;
-  const { gameName, numberOfRoundsRequiredToWin, players } = currentGameRoom;
+  const { gameName, battleRoomGameConfig, players } = currentGameRoom;
   if (!players.host || !players.challenger) return <p>Error - tried to start a game but one of the players was not found</p>;
   const currentGame = useRef(
     lobbyUiState.currentGameRoom &&
-      new BattleRoomGame(gameName, numberOfRoundsRequiredToWin, {
-        host: players.host.associatedUser.username,
-        challenger: players.challenger.associatedUser.username,
-      })
+      new BattleRoomGame(
+        gameName,
+        {
+          host: players.host.associatedUser.username,
+          challenger: players.challenger.associatedUser.username,
+        },
+        battleRoomGameConfig
+      )
   );
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const canvasSizeRef = useRef<WidthAndHeight | null>(null);
@@ -50,9 +54,6 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
     };
   }, [setCanvasSize, windowDimensions]);
 
-  const gameStatus = currentGameRoom?.gameStatus;
-  const canvasShouldBeDisplayed = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.ENDING || gameStatus === GameStatus.STARTING_NEXT_ROUND;
-
   return (
     <div className="battle-room-game__backdrop" onContextMenu={(e) => e.preventDefault()}>
       <div className="battle-room-game__canvas-container" onContextMenu={(e) => e.preventDefault()}>
@@ -65,7 +66,7 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
             networkPerformanceMetrics={networkPerformanceMetricsRef.current}
           />
         )}
-        {currentGame.current && canvasShouldBeDisplayed ? (
+        {currentGame.current && currentGameRoom && GameRoom.gameScreenActive(currentGameRoom) ? (
           <CanvasWithInputListeners canvasSizeRef={canvasSizeRef} canvasRef={canvasRef} currentGame={currentGame.current!} socket={socket} />
         ) : (
           "Loading..."

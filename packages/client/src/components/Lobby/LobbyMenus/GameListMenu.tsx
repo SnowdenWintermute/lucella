@@ -49,7 +49,6 @@ function GameListMenu({ socket }: { socket: Socket }) {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const gameListRef = useRef<HTMLDivElement>(null);
   const gameListIsOverflowing = useElementIsOverflowing(gameListRef.current);
-  const scrollbarSize = useScrollbarSize();
 
   function handleRefreshGamesListClick() {
     dispatch(setGameListFetching(true));
@@ -86,10 +85,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
         <div className={`${"game-list-menu__headers"}`}>
           <h3 className={`${"game-list-menu__game-name"} ${"game-list-menu__game-name-header"}`}>{APP_TEXT.GAME_LIST.TITLE}</h3>
         </div>
-        <div
-          className={`${"game-list-menu__games"} ${gameListIsOverflowing && scrollbarSize.width && "game-list-menu__games--scrollbar-padding"}`}
-          ref={gameListRef}
-        >
+        <div className={`${"game-list-menu__games"} ${gameListIsOverflowing && "game-list-menu__games--scrollbar-padding"}`} ref={gameListRef}>
           {gamesToDisplay}
           {/* {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map((item, i) => (
             <GameListGame key={i + 99} socket={socket} gameRoom={new GameRoom("ay", undefined)} />

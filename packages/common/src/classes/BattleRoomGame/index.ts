@@ -15,6 +15,7 @@ import { MouseData } from "../MouseData";
 import { Point } from "../Point";
 import { Rectangle } from "../Rectangles";
 import { AntiCheatValues } from "./AntiCheatValues";
+import { BattleRoomGameConfig } from "./BattleRoomGameConfig";
 import { BattleRoomQueues } from "./BattleRoomQueues";
 import { DebugValues } from "./DebugValues";
 import initializeWorld from "./initializeWorld";
@@ -51,8 +52,8 @@ export class BattleRoomGame {
     host: 0,
     challenger: 0,
   };
-  numberOfRoundsNeededToWin = baseNumberOfRoundsRequiredToWin;
-  speedModifier = BattleRoomGame.baseSpeedModifier;
+  config = new BattleRoomGameConfig();
+  speedModifier = baseSpeedModifier;
   endzones = {
     host: new Rectangle(new Point(0, 0), BattleRoomGame.baseWindowDimensions.width, BattleRoomGame.baseEndzoneHeight),
     challenger: new Rectangle(
@@ -69,14 +70,14 @@ export class BattleRoomGame {
   static baseWindowDimensions = baseWindowDimensions;
   static baseEndzoneHeight = initialEndZoneHeight;
   static baseOrbRadius = baseOrbRadius;
-  static baseSpeedModifier = baseSpeedModifier;
   static initialScoreNeededToWin = initialScoreNeededToWin;
   static initializeWorld = initializeWorld;
-  constructor(gameName: string, roundsNeededToWin: number, playerNames: { host: string; challenger: string }, isRanked?: boolean) {
+  constructor(gameName: string, playerNames: { host: string; challenger: string }, config?: BattleRoomGameConfig, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
-    this.numberOfRoundsNeededToWin = roundsNeededToWin;
     this.playerNames = playerNames;
+    if (config) this.config = config;
+    this.speedModifier = this.config.speedModifier;
   }
   clearPhysicsInterval() {
     clearInterval(this.intervals.physics);

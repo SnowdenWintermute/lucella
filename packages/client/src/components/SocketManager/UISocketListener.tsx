@@ -24,7 +24,7 @@ import {
   LobbyMenu,
   setGuestUsername,
   setCurrentGameRoomLoading,
-  updateCurrentGameRoomNumberOfRoundsRequiredToWin,
+  updateCurrentGameRoomConfig,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -61,13 +61,14 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, (data) => {
       dispatch(updateGameList(data));
     });
-    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
       dispatch(setCurrentGameRoom(data));
       if (data) dispatch(setActiveMenu(LobbyMenu.GAME_ROOM));
       // else dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
-    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED, (data) => {
-      dispatch(updateCurrentGameRoomNumberOfRoundsRequiredToWin(data));
+    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, (data) => {
+      console.log("SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG: ", data);
+      dispatch(updateCurrentGameRoomConfig(data));
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
       dispatch(setActiveMenu(LobbyMenu.MAIN));
@@ -109,8 +110,8 @@ function UISocketListener({ socket }: Props) {
       socket.off(GENERIC_SOCKET_EVENTS.DISCONNECT);
       socket.off(SocketEventsFromServer.ERROR_MESSAGE);
       socket.off(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE);
-      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
-      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED);
+      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM);
+      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG);
       socket.off(SocketEventsFromServer.GAME_CLOSED_BY_HOST);
       socket.off(SocketEventsFromServer.PLAYER_READINESS_UPDATE);
       socket.off(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT);

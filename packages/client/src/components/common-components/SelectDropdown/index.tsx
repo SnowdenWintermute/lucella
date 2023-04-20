@@ -22,8 +22,9 @@ function index({
   const [indexSelected, setIndexSelected] = useState<number>(options.reduce((accumulator, option, i) => (option.value === value ? i : accumulator), 0));
 
   useEffect(() => {
+    if (options[indexSelected].value === value) return;
     setValue(options[indexSelected].value);
-  }, [indexSelected]);
+  }, [indexSelected, value]);
 
   useEffect(() => {
     function handleFocus() {
@@ -45,20 +46,12 @@ function index({
     if (!isFocused) return;
     // if (key === "Enter" && isOpen) setIsOpen(false);
     if (key === " ") setIsOpen(!isOpen);
-    if (key === "ArrowUp") {
-      if (indexSelected === 0) {
-        setIndexSelected(options.length - 1);
-      } else {
-        setIndexSelected(indexSelected - 1);
-      }
-    }
-    if (key === "ArrowDown") {
-      if (indexSelected === options.length - 1) {
-        setIndexSelected(0);
-      } else {
-        setIndexSelected(indexSelected + 1);
-      }
-    }
+    if (key === "ArrowUp")
+      if (indexSelected === 0) setIndexSelected(options.length - 1);
+      else setIndexSelected(indexSelected - 1);
+    if (key === "ArrowDown")
+      if (indexSelected === options.length - 1) setIndexSelected(0);
+      else setIndexSelected(indexSelected + 1);
   }
 
   function handleClick(e: MouseEvent) {
@@ -97,7 +90,6 @@ function index({
       key={option.value}
       onClick={() => {
         setIsOpen(false);
-        setValue(option.value);
         setIndexSelected(i);
       }}
       className={`select-dropdown__option-button ${value === option.value && "select-dropdown__option-button--selected"}`}

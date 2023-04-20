@@ -10,7 +10,7 @@ export default function initializeListeners(server: LucellaServer) {
     await handleNewSocketConnection(server, socket);
     socket.emit(SocketEventsFromServer.AUTHENTICATION_COMPLETE, null);
     socket.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, server.lobby.getSanitizedGameRooms());
-    socket.emit(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, null);
+    socket.emit(SocketEventsFromServer.CURRENT_GAME_ROOM, null);
     socket.onAny(() => {
       if (!server.connectedSockets[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.SOCKET_NOT_REGISTERED);
     });
