@@ -1,4 +1,4 @@
-import { BattleRoomGame, WidthAndHeight, inGameFontSizes, baseSpeedModifier, Point, ThemeColors } from "../../../../../common";
+import { BattleRoomGame, WidthAndHeight, inGameFontSizes, Point, ThemeColors } from "../../../../../common";
 
 const drawScore = (
   context: CanvasRenderingContext2D,
@@ -11,7 +11,7 @@ const drawScore = (
   const margin = (currentGame.endzones.challenger.height / 2) * canvasDrawFractions.y;
   const { score, speedModifier, roundsWon, config } = currentGame;
   const { numberOfRoundsRequiredToWin } = config;
-  const speedModifierAsPercentage = Math.round((+speedModifier.toFixed(2) / baseSpeedModifier) * 100);
+  const speedModifierAsPercentage = Math.round(+speedModifier.toFixed(2) * 100);
 
   context.fillStyle = `rgb(${themeColors.LIGHT})`;
   context.textAlign = "left";

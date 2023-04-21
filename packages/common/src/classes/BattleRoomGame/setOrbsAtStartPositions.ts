@@ -18,6 +18,7 @@ export function setOrbsAtStartPositions(orbs: HostAndChallengerOrbSets) {
       // @ts-ignore
       setOrbAtStartPosition(orb, i, playerRole);
       orb.isGhost = false;
+      orb.destination = null;
     }
   });
 }

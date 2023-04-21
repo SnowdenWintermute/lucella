@@ -1,6 +1,5 @@
 import {
   baseAcceleration,
-  baseApproachingDestinationBrakingSpeed,
   baseGameSpeedIncrementRate,
   baseHardBrakingSpeed,
   baseSpeedModifier,
@@ -12,7 +11,6 @@ import { baseNumberOfRoundsRequiredToWin } from "../../consts/game-lobby-config"
 export class BattleRoomGameConfig {
   acceleration = baseAcceleration;
   speedModifier = baseSpeedModifier;
-  approachingDestinationBrakingSpeed = baseApproachingDestinationBrakingSpeed;
   hardBrakingSpeed = baseHardBrakingSpeed;
   turningSpeedModifier = baseTurningSpeedModifier;
   gameSpeedIncrementRate = baseGameSpeedIncrementRate;

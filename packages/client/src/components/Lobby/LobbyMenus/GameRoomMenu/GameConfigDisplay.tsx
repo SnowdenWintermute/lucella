@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import React, { useRef } from "react";
 import RadioBar from "../../../common-components/RadioBar";
 import { useAppSelector } from "../../../../redux/hooks";
-import { SocketEventsFromClient } from "../../../../../../common";
+import { PhysicsOptions, SocketEventsFromClient } from "../../../../../../common";
 import useElementIsOverflowing from "../../../../hooks/useElementIsOverflowing";
 import useScrollbarSize from "../../../../hooks/useScrollbarSize";
 
@@ -28,13 +28,7 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
         <div className="game-config-display__option-column">
           <RadioBar
             title="Acceleration"
-            options={[
-              { title: "Very slow", value: 0.05 },
-              { title: "Slow", value: 0.1 },
-              { title: "Moderate", value: 0.2 },
-              { title: "Fast", value: 0.5 },
-              { title: "Very fast", value: 1 },
-            ]}
+            options={PhysicsOptions.acceleration.options}
             value={acceleration}
             setValue={(value) => sendEditConfigRequest("acceleration", value)}
             disabled={bothPlayersReady || !isHost}
@@ -42,13 +36,7 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
           />
           <RadioBar
             title="Top speed"
-            options={[
-              { title: "Very slow", value: 1 },
-              { title: "Slow", value: 2 },
-              { title: "Moderate", value: 4 },
-              { title: "Fast", value: 6 },
-              { title: "Very fast", value: 8 },
-            ]}
+            options={PhysicsOptions.topSpeed.options}
             value={topSpeed}
             setValue={(value) => sendEditConfigRequest("topSpeed", value)}
             disabled={bothPlayersReady || !isHost}
@@ -58,12 +46,7 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
         <div className="game-config-display__option-column">
           <RadioBar
             title="Turning modifier"
-            options={[
-              { title: "Low assist", value: 0.1 },
-              { title: "Medium assist", value: 0.2 },
-              { title: "High assist", value: 0.5 },
-              { title: "Instant", value: 1 },
-            ]}
+            options={PhysicsOptions.turningSpeedModifier.options}
             value={turningSpeedModifier}
             setValue={(value) => sendEditConfigRequest("turningSpeedModifier", value)}
             disabled={bothPlayersReady || !isHost}
@@ -71,13 +54,7 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
           />
           <RadioBar
             title="Braking"
-            options={[
-              { title: "Very soft", value: 0.05 },
-              { title: "Soft", value: 0.1 },
-              { title: "Moderate", value: 0.2 },
-              { title: "Hard", value: 0.3 },
-              { title: "Instant", value: 1 },
-            ]}
+            options={PhysicsOptions.hardBrakingSpeed.options}
             value={hardBrakingSpeed}
             setValue={(value) => sendEditConfigRequest("hardBrakingSpeed", value)}
             disabled={bothPlayersReady || !isHost}
@@ -87,13 +64,7 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
         <div className="game-config-display__option-column">
           <RadioBar
             title="Speed increment"
-            options={[
-              { title: "None", value: 0 },
-              { title: "Low", value: 0.05 },
-              { title: "Moderate", value: 0.1 },
-              { title: "High", value: 0.2 },
-              { title: "Very high", value: 0.3 },
-            ]}
+            options={PhysicsOptions.speedIncrementRate.options}
             value={gameSpeedIncrementRate}
             setValue={(value) => sendEditConfigRequest("gameSpeedIncrementRate", value)}
             disabled={bothPlayersReady || !isHost}

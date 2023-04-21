@@ -5,7 +5,7 @@ import { renderRate } from "../consts";
 import { angleBetweenVectors, numberInRangeToBetweenZeroAndOne } from "../utils";
 
 export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
-  const { hardBrakingSpeed, approachingDestinationBrakingSpeed, turningSpeedModifier, topSpeed } = game.config;
+  const { hardBrakingSpeed, turningSpeedModifier, topSpeed } = game.config;
 
   const minimumMovementSpeed = 0.05;
 
@@ -32,8 +32,8 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   }
 
   // // get the force vector to apply to this orb
-  const travellingAboveSpeedLimit = orb.body.speed > topSpeed + game.speedModifier;
-  const acceleration = travellingAboveSpeedLimit ? 0 : game.config.acceleration + game.speedModifier;
+  const travellingAboveSpeedLimit = orb.body.speed > topSpeed * game.speedModifier;
+  const acceleration = travellingAboveSpeedLimit ? 0 : game.config.acceleration * game.speedModifier;
   const destinationVector = Vector.sub(orb.destination, orb.body.position); // vector of the difference between orb position and destination with direction and magnitude
   const normalizedDestinationVector = Vector.normalise(destinationVector); // direction only (magnitude of 1)
   const impulseVector = Vector.mult(normalizedDestinationVector, acceleration); // vector in the direction of the orb's destination with the magnitude of the game's acceleration
@@ -46,12 +46,7 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   // deccelerate the orb against any current (previous) force that isn't lined up with it's current destination to simulate turning
   Body.applyForce(orb.body, orb.body.position, turningForce);
 
-  if (travellingAboveSpeedLimit) {
-    Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, approachingDestinationBrakingSpeed)));
-    // taxi orbs that are moving too slowly to reach their destinations after approach braking
-    if (orb.body.speed < minimumMovementSpeed) Body.applyForce(orb.body, orb.body.position, impulseVector);
-  } else Body.applyForce(orb.body, orb.body.position, impulseVector);
-  // else orb.body.force = Vector.add(Vector.mult(orb.body.force, 1 - damping), Vector.mult(desiredForce, damping));
+  if (!travellingAboveSpeedLimit) Body.applyForce(orb.body, orb.body.position, impulseVector);
 
   Body.update(orb.body, renderRate, 1, 0);
 }

@@ -28,3 +28,15 @@ export interface IBattleRoomGameRecord {
 
 export type BattleRoomLadderEntry = { name: string; rank?: number; elo: number; wins: number; losses: number };
 export type BattleRoomLadderEntryWithUserId = { name: string; rank?: number; elo: number; wins: number; losses: number; userId: number };
+
+export interface IBattleRoomConfigSettings {
+  id: number;
+  userId: number;
+  createdAt: number | Date;
+  updatedAt: number | Date;
+  acceleration: number;
+  topSpeed: number;
+  turningSpeedModifier: number;
+  hardBrakingSpeed: number;
+  speedIncrementRate: number;
+}
