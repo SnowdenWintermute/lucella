@@ -1,0 +1,55 @@
+@import "../../../styles/abstracts/variables";
+
+[data-disabled="true"] {
+  .radio-bar__options {
+    opacity: 50%;
+  }
+}
+
+.radio-bar__title {
+  font-size: fontSize(2);
+  margin-bottom: spacing(0);
+  padding: 0px;
+  max-width: 100%;
+}
+
+.radio-bar__options {
+  height: height(3);
+  border: 1px solid var(--color-primary);
+  margin-bottom: spacing(0);
+  width: fit-content;
+}
+
+.radio-bar__button {
+  cursor: pointer;
+  background-color: transparent;
+  height: 100%;
+  width: spacing(3);
+  border: none;
+  border-right: 1px solid var(--color-primary);
+  &:last-child {
+    border-right: none;
+  }
+  &:hover {
+    background-color: var(--color-primary);
+  }
+  &:disabled {
+    cursor: default;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+.radio-bar__button--selected {
+  background-color: var(--color-primary);
+  &:disabled {
+    &:hover {
+      background-color: var(--color-primary);
+    }
+  }
+}
+
+.radio-bar__value {
+  font-size: fontSize(1);
+}

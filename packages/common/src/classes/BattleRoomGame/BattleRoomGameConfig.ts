@@ -4,7 +4,7 @@ import {
   baseHardBrakingSpeed,
   baseSpeedModifier,
   baseTopSpeed,
-  baseTurningSpeed,
+  baseTurningDelay,
 } from "../../consts/battle-room-game-config";
 import { baseNumberOfRoundsRequiredToWin } from "../../consts/game-lobby-config";
 
@@ -13,7 +13,7 @@ export class BattleRoomGameConfig {
   speedModifier = baseSpeedModifier;
   approachingDestinationBrakingSpeed = baseApproachingDestinationBrakingSpeed;
   hardBrakingSpeed = baseHardBrakingSpeed;
-  turningSpeed = baseTurningSpeed;
+  turningDelay = baseTurningDelay;
   gameSpeedIncrementRate = baseGameSpeedIncrementRate;
   numberOfRoundsRequiredToWin = baseNumberOfRoundsRequiredToWin;
   topSpeed = baseTopSpeed;

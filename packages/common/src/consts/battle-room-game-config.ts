@@ -12,7 +12,7 @@ export const baseSpeedModifier = 0.2; // 0.2
 export const baseApproachingDestinationBrakingSpeed = 0.1; // 0.1
 export const baseHardBrakingSpeed = 0.2; // 0.2;
 export const baseTopSpeed = 5; // 5
-export const baseTurningSpeed = 1; // 1
+export const baseTurningDelay = 1; // 1
 export const baseGameSpeedIncrementRate = 0.1; // 0.1
 // orbs
 export const baseOrbRadius = 15;

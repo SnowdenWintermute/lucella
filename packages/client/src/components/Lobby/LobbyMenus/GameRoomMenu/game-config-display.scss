@@ -21,12 +21,15 @@
   margin-bottom: spacing(1);
 }
 
-.game-config-display__option {
-  margin-bottom: spacing(1);
+.game-config-display__option-column {
+  margin-right: spacing(1);
+  &:last-child {
+    margin-right: spacing(1);
+  }
 }
 
-.game-config-display__option-title {
-  margin-bottom: spacing(0);
+.game-config-display__radio-input {
+  margin-bottom: spacing(2);
 }
 
 .game-config-display-button {

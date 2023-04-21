@@ -7,13 +7,11 @@
 }
 
 .select-dropdown__options-container {
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   border-top: none;
   position: absolute;
   z-index: 2;
-  height: height(3);
-  max-height: height(3);
 }
 
 .select-dropdown__option-button {

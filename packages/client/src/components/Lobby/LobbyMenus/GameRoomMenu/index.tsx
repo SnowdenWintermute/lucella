@@ -21,7 +21,10 @@ function PlayerWithReadyStatus({ player, playerReady, playerRole }: { player: So
         {player ? player.associatedUser.username : "..."}
       </span>
       {player && (
-        <span aria-label={ARIA_LABELS.GAME_ROOM.PLAYER_READY_STATUS(playerRole)}>
+        <span
+          aria-label={ARIA_LABELS.GAME_ROOM.PLAYER_READY_STATUS(playerRole)}
+          className={`game-room-menu__player-ready-badge ${playerReady ? "game-room-menu__player-ready-badge--ready" : ""}`}
+        >
           {playerReady ? APP_TEXT.GAME_ROOM.PLAYER_READY_STATUS.READY : APP_TEXT.GAME_ROOM.PLAYER_READY_STATUS.NOT_READY}
         </span>
       )}
@@ -77,6 +80,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   if (!currentGameRoom) return <p>Error - no game room found</p>;
   const { players, playersReady, gameStatus, countdown } = currentGameRoom;
   const isHost = user?.name === players.host?.associatedUser.username || lobbyUiState.guestUsername === players.host?.associatedUser.username;
+  const playerRole = isHost ? PlayerRole.HOST : PlayerRole.CHALLENGER;
   const readableRoundsRequired = `Best of ${currentGameRoom.battleRoomGameConfig.numberOfRoundsRequiredToWin * 2 - 1}`;
 
   let leftDisplay = (
@@ -110,7 +114,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
           {!isHost && <div className="button button--transparent game-room-menu__rounds-required-to-win-display">{readableRoundsRequired}</div>}
           <button
             type="button"
-            className="button button--accent game-room-menu__ready-button"
+            className="button game-room-menu__ready-button button--accent"
             onClick={handleReadyClick}
             disabled={lobbyUiState.playerReadyLoading}
           >
@@ -121,7 +125,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
     </>
   );
 
-  if (viewingGameConfigDisplay) leftDisplay = <GameConfigDisplay socket={socket} setParentDisplay={setViewingGameConfigDisplay} isHost={isHost} />;
+  if (viewingGameConfigDisplay) leftDisplay = <GameConfigDisplay socket={socket} isHost={isHost} />;
 
   return (
     <>
@@ -129,8 +133,8 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
         <LobbyTopListItemWithButton title={BUTTON_NAMES.GAME_ROOM.LEAVE_GAME} onClick={handleLeaveGameClick} extraStyles="" />
         <button
           type="button"
-          title="game config"
-          className="button game-room-menu__settings-button"
+          title={!viewingGameConfigDisplay ? "game config" : "close config"}
+          className={`button game-room-menu__settings-button ${viewingGameConfigDisplay && "button--accent"}`}
           onClick={() => setViewingGameConfigDisplay(!viewingGameConfigDisplay)}
         >
           <SettingsIcon className="game-room-menu__settings-icon" />
