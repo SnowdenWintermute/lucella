@@ -1,4 +1,6 @@
+/* eslint-disable no-param-reassign */
 import cloneDeep from "lodash.clonedeep";
+import { Vector } from "matter-js";
 import { Orb } from "../classes/Orb";
 import { Point } from "../classes/Point";
 import { OrbSet } from "../types";
@@ -35,16 +37,13 @@ export function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max);
 }
 
-export function findAngle(M1: number, M2: number) {
-  // Store the tan value of the angle
-  const angle = Math.abs((M2 - M1) / (1 + M1 * M2));
-  // Calculate tan inverse of the angle
-  const ret = Math.atan(angle);
-  // Convert the angle from
-  // radian to degree
-  const val = (ret * 180) / Math.PI;
-  // Print the result
-  return val;
+export function angleBetweenVectors(v1: Vector, v2: Vector): number {
+  const dotProduct = Vector.dot(v1, v2);
+  const magnitude1 = Vector.magnitude(v1);
+  const magnitude2 = Vector.magnitude(v2);
+  const cosTheta = dotProduct / (magnitude1 * magnitude2);
+  const theta = Math.acos(cosTheta);
+  return (theta * 180) / Math.PI; // convert to degrees
 }
 
 export function numberInRangeToBetweenZeroAndOne(value: number, max: number) {

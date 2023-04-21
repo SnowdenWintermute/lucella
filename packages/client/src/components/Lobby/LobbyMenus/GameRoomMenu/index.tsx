@@ -130,7 +130,10 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className="lobby-menus__top-buttons">
-        <LobbyTopListItemWithButton title={BUTTON_NAMES.GAME_ROOM.LEAVE_GAME} onClick={handleLeaveGameClick} extraStyles="" />
+        {!viewingGameConfigDisplay && <LobbyTopListItemWithButton title={BUTTON_NAMES.GAME_ROOM.LEAVE_GAME} onClick={handleLeaveGameClick} extraStyles="" />}
+        {viewingGameConfigDisplay && (
+          <LobbyTopListItemWithButton title={BUTTON_NAMES.GAME_LIST.BACK} onClick={() => setViewingGameConfigDisplay(false)} extraStyles="" />
+        )}
         <button
           type="button"
           title={!viewingGameConfigDisplay ? "game config" : "close config"}

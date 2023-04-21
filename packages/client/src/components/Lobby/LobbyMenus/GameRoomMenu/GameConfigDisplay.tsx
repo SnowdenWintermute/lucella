@@ -19,7 +19,7 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
     socket.emit(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, { [key]: value });
   }
 
-  const { acceleration, topSpeed, approachingDestinationBrakingSpeed, hardBrakingSpeed, turningDelay, gameSpeedIncrementRate, speedModifier } =
+  const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, gameSpeedIncrementRate, speedModifier } =
     lobbyUiState.currentGameRoom.battleRoomGameConfig;
 
   return (
@@ -43,9 +43,9 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
           <RadioBar
             title="Top speed"
             options={[
-              { title: "Very slow", value: 2 },
-              { title: "Slow", value: 3 },
-              { title: "Moderate", value: 5 },
+              { title: "Very slow", value: 1 },
+              { title: "Slow", value: 2 },
+              { title: "Moderate", value: 4 },
               { title: "Fast", value: 6 },
               { title: "Very fast", value: 8 },
             ]}
@@ -57,21 +57,20 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
         </div>
         <div className="game-config-display__option-column">
           <RadioBar
-            title="Approach braking"
+            title="Turning modifier"
             options={[
-              { title: "Very soft", value: 0.02 },
-              { title: "Soft", value: 0.05 },
-              { title: "Moderate", value: 0.1 },
-              { title: "Hard", value: 0.2 },
-              { title: "Very hard", value: 0.4 },
+              { title: "Low assist", value: 0.1 },
+              { title: "Medium assist", value: 0.2 },
+              { title: "High assist", value: 0.5 },
+              { title: "Instant", value: 1 },
             ]}
-            value={approachingDestinationBrakingSpeed}
-            setValue={(value) => sendEditConfigRequest("approachingDestinationBrakingSpeed", value)}
+            value={turningSpeedModifier}
+            setValue={(value) => sendEditConfigRequest("turningSpeedModifier", value)}
             disabled={bothPlayersReady || !isHost}
             extraStyles="game-config-display__radio-input"
           />
           <RadioBar
-            title="Destination braking"
+            title="Braking"
             options={[
               { title: "Very soft", value: 0.05 },
               { title: "Soft", value: 0.1 },
@@ -87,20 +86,7 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
         </div>
         <div className="game-config-display__option-column">
           <RadioBar
-            title="Turning"
-            options={[
-              { title: "Very slow", value: 2 },
-              { title: "Slow", value: 1.5 },
-              { title: "Moderate", value: 1 },
-              { title: "Instant", value: 0 },
-            ]}
-            value={turningDelay}
-            setValue={(value) => sendEditConfigRequest("turningDelay", value)}
-            disabled={bothPlayersReady || !isHost}
-            extraStyles="game-config-display__radio-input"
-          />
-          <RadioBar
-            title="Speed increment rate"
+            title="Speed increment"
             options={[
               { title: "None", value: 0 },
               { title: "Low", value: 0.05 },
@@ -112,6 +98,7 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
             setValue={(value) => sendEditConfigRequest("gameSpeedIncrementRate", value)}
             disabled={bothPlayersReady || !isHost}
             extraStyles="game-config-display__radio-input"
+            tooltip="How much the game speed increases after each point is scored"
           />
         </div>
       </div>

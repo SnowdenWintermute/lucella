@@ -8,11 +8,12 @@ export const newRoundStartingCountdownDuration = 5; // 5
 export const gameOverCountdownDuration = 3; // 3
 export const initialScoreNeededToWin = 5; // 5
 // speeds
-export const baseSpeedModifier = 0.2; // 0.2
+export const baseAcceleration = 1; // 0.2
+export const baseSpeedModifier = 0; // 0.2
 export const baseApproachingDestinationBrakingSpeed = 0.1; // 0.1
-export const baseHardBrakingSpeed = 0.2; // 0.2;
-export const baseTopSpeed = 5; // 5
-export const baseTurningDelay = 1; // 1
+export const baseHardBrakingSpeed = 1; // 0.2;
+export const baseTopSpeed = 1; // 5
+export const baseTurningSpeedModifier = 1; // 0 (between 0 and 1)
 export const baseGameSpeedIncrementRate = 0.1; // 0.1
 // orbs
 export const baseOrbRadius = 15;

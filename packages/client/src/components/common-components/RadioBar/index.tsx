@@ -35,6 +35,7 @@ function RadioBar({
   setValue,
   disabled,
   extraStyles,
+  tooltip,
 }: {
   title: string;
   options: { title: string; value: any }[];
@@ -42,6 +43,7 @@ function RadioBar({
   setValue: (newValue: any) => void;
   disabled: boolean;
   extraStyles?: string;
+  tooltip?: string;
 }) {
   const [selectedIndex, setSelectedIndex] = useState(options.reduce((accumulator, option, i) => (option.value === value ? i : accumulator), 0));
 
@@ -65,7 +67,7 @@ function RadioBar({
   });
 
   return (
-    <menu className={`radio-bar ${extraStyles}`} data-disabled={disabled ? "true" : "false"}>
+    <menu className={`radio-bar ${extraStyles}`} data-disabled={disabled ? "true" : "false"} title={tooltip}>
       <p className="radio-bar__title">{title}</p>
       <div className="radio-bar__options">{displayedOptions}</div>
       <p className="radio-bar__value">{options.reduce((acc, option) => (option.value === value ? option.title : acc), "")}</p>
