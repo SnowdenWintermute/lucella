@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import { baseNumberOfRoundsRequiredToWin, GameStatus, PlayerRole, SocketEventsFromClient, SocketMetadata } from "../../../../../../common";
+import { BattleRoomGameOptions, GameStatus, PlayerRole, SocketEventsFromClient, SocketMetadata } from "../../../../../../common";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import LobbyTopListItemWithButton from "../LobbyTopListItemWithButton";
 import { LobbyMenu, setActiveMenu, setPlayerReadyLoading } from "../../../../redux/slices/lobby-ui-slice";
@@ -39,7 +39,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   const [viewingGameConfigDisplay, setViewingGameConfigDisplay] = useState(false);
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const { data: user } = useGetMeQuery(null);
-  const currentGameRoom = lobbyUiState.currentGameRoom && lobbyUiState.currentGameRoom;
+  const gameRoom = lobbyUiState.gameRoom && lobbyUiState.gameRoom;
 
   const currentWaitingListPosition = lobbyUiState.gameCreationWaitingList.currentPosition;
 
@@ -55,59 +55,52 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
     dispatch(setPlayerReadyLoading(true));
   };
 
-  const handleSetNumberOfRoundsRequiredToWin = (value: number) => {
-    if (!currentGameRoom) return;
-    if (value !== lobbyUiState.currentGameRoom?.battleRoomGameConfig.numberOfRoundsRequiredToWin)
-      socket.emit(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, {
-        ...currentGameRoom.battleRoomGameConfig,
-        numberOfRoundsRequiredToWin: value,
-      });
-  };
+  function sendEditConfigRequest(key: string, value: any) {
+    socket.emit(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, { [key]: value });
+  }
 
   useEffect(() => {
     let newReadableGameStatus = "";
-    if (!currentGameRoom) dispatch(setActiveMenu(LobbyMenu.MAIN));
-    if (!currentGameRoom) return;
-    const { players, playersReady, gameStatus } = currentGameRoom;
+    if (!gameRoom) dispatch(setActiveMenu(LobbyMenu.MAIN));
+    if (!gameRoom) return;
+    const { players, playersReady, gameStatus } = gameRoom;
     if (!players.challenger) newReadableGameStatus = APP_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_OPPONENT;
     else if (players.challenger && (!playersReady.challenger || !playersReady.host))
       newReadableGameStatus = APP_TEXT.GAME_ROOM.GAME_STATUS.WAITING_FOR_PLAYERS_TO_BE_READY;
     else if (gameStatus === GameStatus.COUNTING_DOWN) newReadableGameStatus = APP_TEXT.GAME_ROOM.GAME_STATUS.GAME_STARTING;
     else if (gameStatus === GameStatus.IN_WAITING_LIST) newReadableGameStatus = APP_TEXT.GAME_ROOM.GAME_STATUS.IN_WAITING_LIST;
     setReadableGameStatus(newReadableGameStatus);
-  }, [currentGameRoom]);
+  }, [gameRoom]);
 
-  if (!currentGameRoom) return <p>Error - no game room found</p>;
-  const { players, playersReady, gameStatus, countdown } = currentGameRoom;
+  if (!gameRoom) return <p>Error - no game room found</p>;
+  const { players, playersReady, gameStatus, countdown } = gameRoom;
   const isHost = user?.name === players.host?.associatedUser.username || lobbyUiState.guestUsername === players.host?.associatedUser.username;
-  const playerRole = isHost ? PlayerRole.HOST : PlayerRole.CHALLENGER;
-  const readableRoundsRequired = `Best of ${currentGameRoom.battleRoomGameConfig.numberOfRoundsRequiredToWin * 2 - 1}`;
+  const numberOfRoundsRequiredToWin =
+    BattleRoomGameOptions.numberOfRoundsRequiredToWin.options[gameRoom.battleRoomGameConfigOptionIndices.numberOfRoundsRequiredToWin].value;
+  const readableRoundsRequired = `Best of ${numberOfRoundsRequiredToWin * 2 - 1}`;
 
   let leftDisplay = (
     <>
       <h3 className="lobby-menu__header">
         {APP_TEXT.GAME_ROOM.GAME_NAME_HEADER}
-        {currentGameRoom.gameName}
+        {gameRoom.gameName}
       </h3>
       <div className="game-room-menu__players">
         <PlayerWithReadyStatus player={players.host} playerReady={playersReady.host} playerRole={PlayerRole.HOST} />
         <span className="game-room-menu__vs">vs.</span>
         <PlayerWithReadyStatus player={players.challenger} playerReady={playersReady.challenger} playerRole={PlayerRole.CHALLENGER} />
       </div>
-      {!currentGameRoom?.isRanked && (
+      {!gameRoom?.isRanked && (
         <div className="game-room-menu__buttons">
           {isHost && (
             <SelectDropdown
               title="number of rounds required to win"
-              options={[
-                { title: "Best of 1", value: 1 },
-                { title: "Best of 3", value: 2 },
-                { title: "Best of 5", value: 3 },
-                { title: "Best of 7", value: 4 },
-              ]}
-              value={lobbyUiState.currentGameRoom?.battleRoomGameConfig.numberOfRoundsRequiredToWin}
-              setValue={handleSetNumberOfRoundsRequiredToWin}
-              disabled={lobbyUiState.currentGameRoom?.playersReady.host && lobbyUiState.currentGameRoom?.playersReady.challenger}
+              options={BattleRoomGameOptions.numberOfRoundsRequiredToWin.options.map((option, i) => {
+                return { title: option.title, value: i };
+              })}
+              value={lobbyUiState.gameRoom?.battleRoomGameConfigOptionIndices.numberOfRoundsRequiredToWin}
+              setValue={(value) => sendEditConfigRequest("numberOfRoundsRequiredToWin", value)}
+              disabled={lobbyUiState.gameRoom?.playersReady.host && lobbyUiState.gameRoom?.playersReady.challenger}
               extraStyles="game-room-menu__select-input"
             />
           )}
@@ -147,7 +140,7 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
         <div className="lobby-menu__left game-room-menu__left">
           {leftDisplay}
 
-          {currentGameRoom?.isRanked && <div className="button" style={{ opacity: "0%" }} aria-hidden />}
+          {gameRoom?.isRanked && <div className="button" style={{ opacity: "0%" }} aria-hidden />}
         </div>
         <div className="lobby-menu__right game-room-menu__right">
           <p className="game-room-menu__right-main-text" aria-label={ARIA_LABELS.GAME_ROOM.GAME_STATUS}>

@@ -9,7 +9,7 @@ import { INetworkPerformanceMetrics } from "../../types";
 
 function BattleRoom() {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { currentGameRoom } = lobbyUiState;
+  const { gameRoom } = lobbyUiState;
   const socket = useRef<Socket>();
   const [socketCreated, setSocketCreated] = useState(false);
   const networkPerformanceMetricsRef = useRef<INetworkPerformanceMetrics>({
@@ -24,7 +24,7 @@ function BattleRoom() {
     minLatency: 0,
   });
 
-  const inGame = currentGameRoom && GameRoom.gameScreenActive(currentGameRoom);
+  const inGame = gameRoom && GameRoom.gameScreenActive(gameRoom);
 
   useEffect(() => {
     if (socket.current) setSocketCreated(true);

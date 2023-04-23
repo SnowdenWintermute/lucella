@@ -2,7 +2,7 @@ import { BattleRoomGame } from "../BattleRoomGame";
 import { SocketMetadata } from "../SocketMetadata";
 import { GameStatus } from "../../enums";
 import { gameChannelNamePrefix, baseGameStartCountdownDuration } from "../../consts/game-lobby-config";
-import { BattleRoomGameConfig } from "./BattleRoomGameConfig";
+import { BattleRoomGameConfigOptionIndices } from "./BattleRoomGameConfigOptionIndices";
 
 export class GameRoom {
   gameName: string;
@@ -20,7 +20,7 @@ export class GameRoom {
   roundsWon = { host: 0, challenger: 0 };
   isRanked: boolean;
   chatChannel: string;
-  battleRoomGameConfig = new BattleRoomGameConfig();
+  battleRoomGameConfigOptionIndices = new BattleRoomGameConfigOptionIndices({});
   static gameScreenActive(gameRoom: GameRoom) {
     return (
       gameRoom.gameStatus === GameStatus.IN_PROGRESS || gameRoom.gameStatus === GameStatus.ENDING || gameRoom.gameStatus === GameStatus.STARTING_NEXT_ROUND
@@ -31,9 +31,5 @@ export class GameRoom {
     this.chatChannel = gameChannelNamePrefix + this.gameName;
     this.spectators = [];
     this.isRanked = isRanked || false;
-  }
-  someOtherFunction() {
-    console.log("ayy lmao");
-    return this.battleRoomGameConfig;
   }
 }

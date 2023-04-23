@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import React, { useRef } from "react";
 import RadioBar from "../../../common-components/RadioBar";
 import { useAppSelector } from "../../../../redux/hooks";
-import { PhysicsOptions, SocketEventsFromClient } from "../../../../../../common";
+import { BattleRoomGameOptions, SocketEventsFromClient } from "../../../../../../common";
 import useElementIsOverflowing from "../../../../hooks/useElementIsOverflowing";
 import useScrollbarSize from "../../../../hooks/useScrollbarSize";
 
@@ -12,15 +12,14 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
   const isOverflowing = useElementIsOverflowing(gameConfigDisplayRef.current);
   const scrollbarSize = useScrollbarSize();
 
-  if (!lobbyUiState.currentGameRoom) return <p>...</p>;
-  const bothPlayersReady = lobbyUiState.currentGameRoom.playersReady.host && lobbyUiState.currentGameRoom?.playersReady.challenger;
+  if (!lobbyUiState.gameRoom) return <p>...</p>;
+  const bothPlayersReady = lobbyUiState.gameRoom.playersReady.host && lobbyUiState.gameRoom?.playersReady.challenger;
 
   function sendEditConfigRequest(key: string, value: any) {
     socket.emit(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, { [key]: value });
   }
 
-  const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, gameSpeedIncrementRate, speedModifier } =
-    lobbyUiState.currentGameRoom.battleRoomGameConfig;
+  const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate } = lobbyUiState.gameRoom.battleRoomGameConfigOptionIndices;
 
   return (
     <div className="game-config-display" ref={gameConfigDisplayRef}>
@@ -28,7 +27,9 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
         <div className="game-config-display__option-column">
           <RadioBar
             title="Acceleration"
-            options={PhysicsOptions.acceleration.options}
+            options={BattleRoomGameOptions.acceleration.options.map((option, i) => {
+              return { title: option.title, value: i };
+            })}
             value={acceleration}
             setValue={(value) => sendEditConfigRequest("acceleration", value)}
             disabled={bothPlayersReady || !isHost}
@@ -36,7 +37,9 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
           />
           <RadioBar
             title="Top speed"
-            options={PhysicsOptions.topSpeed.options}
+            options={BattleRoomGameOptions.topSpeed.options.map((option, i) => {
+              return { title: option.title, value: i };
+            })}
             value={topSpeed}
             setValue={(value) => sendEditConfigRequest("topSpeed", value)}
             disabled={bothPlayersReady || !isHost}
@@ -46,7 +49,9 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
         <div className="game-config-display__option-column">
           <RadioBar
             title="Turning modifier"
-            options={PhysicsOptions.turningSpeedModifier.options}
+            options={BattleRoomGameOptions.turningSpeedModifier.options.map((option, i) => {
+              return { title: option.title, value: i };
+            })}
             value={turningSpeedModifier}
             setValue={(value) => sendEditConfigRequest("turningSpeedModifier", value)}
             disabled={bothPlayersReady || !isHost}
@@ -54,7 +59,9 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
           />
           <RadioBar
             title="Braking"
-            options={PhysicsOptions.hardBrakingSpeed.options}
+            options={BattleRoomGameOptions.hardBrakingSpeed.options.map((option, i) => {
+              return { title: option.title, value: i };
+            })}
             value={hardBrakingSpeed}
             setValue={(value) => sendEditConfigRequest("hardBrakingSpeed", value)}
             disabled={bothPlayersReady || !isHost}
@@ -64,9 +71,11 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
         <div className="game-config-display__option-column">
           <RadioBar
             title="Speed increment"
-            options={PhysicsOptions.speedIncrementRate.options}
-            value={gameSpeedIncrementRate}
-            setValue={(value) => sendEditConfigRequest("gameSpeedIncrementRate", value)}
+            options={BattleRoomGameOptions.speedIncrementRate.options.map((option, i) => {
+              return { title: option.title, value: i };
+            })}
+            value={speedIncrementRate}
+            setValue={(value) => sendEditConfigRequest("speedIncrementRate", value)}
             disabled={bothPlayersReady || !isHost}
             extraStyles="game-config-display__radio-input"
             tooltip="How much the game speed increases after each point is scored"

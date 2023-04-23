@@ -1,19 +1,38 @@
 import {
   baseAcceleration,
-  baseGameSpeedIncrementRate,
+  baseSpeedIncrementRate,
   baseHardBrakingSpeed,
-  baseSpeedModifier,
   baseTopSpeed,
   baseTurningSpeedModifier,
+  baseNumberOfRoundsRequiredToWin,
+  BattleRoomGameOptions,
 } from "../../consts/battle-room-game-config";
-import { baseNumberOfRoundsRequiredToWin } from "../../consts/game-lobby-config";
 
 export class BattleRoomGameConfig {
   acceleration = baseAcceleration;
-  speedModifier = baseSpeedModifier;
+  topSpeed = baseTopSpeed;
   hardBrakingSpeed = baseHardBrakingSpeed;
   turningSpeedModifier = baseTurningSpeedModifier;
-  gameSpeedIncrementRate = baseGameSpeedIncrementRate;
+  speedIncrementRate = baseSpeedIncrementRate;
   numberOfRoundsRequiredToWin = baseNumberOfRoundsRequiredToWin;
-  topSpeed = baseTopSpeed;
+  constructor(modifiedValues: {
+    acceleration?: number;
+    topSpeed?: number;
+    hardBrakingSpeed?: number;
+    turningSpeedModifier?: number;
+    speedIncrementRate?: number;
+    numberOfRoundsRequiredToWin?: number;
+  }) {
+    const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin } = modifiedValues;
+    if (typeof acceleration === "number") this.acceleration = acceleration;
+    if (typeof topSpeed === "number") this.topSpeed = topSpeed;
+    if (typeof hardBrakingSpeed === "number") this.hardBrakingSpeed = hardBrakingSpeed;
+    if (typeof turningSpeedModifier === "number") this.turningSpeedModifier = turningSpeedModifier;
+    if (typeof speedIncrementRate === "number") this.speedIncrementRate = speedIncrementRate;
+    if (typeof numberOfRoundsRequiredToWin === "number") this.numberOfRoundsRequiredToWin = numberOfRoundsRequiredToWin;
+  }
+  updateConfigValueFromOptionIndex(key: keyof typeof BattleRoomGameOptions, selectedIndex: number) {
+    if (!Object.prototype.hasOwnProperty.call(this, key)) return;
+    this[key] = BattleRoomGameOptions[key].options[selectedIndex].value;
+  }
 }

@@ -174,12 +174,13 @@ export class LucellaServer {
         games[gameRoom.gameName] = new BattleRoomGame(
           gameRoom.gameName,
           { host: players.host.associatedUser.username, challenger: players.challenger.associatedUser.username },
-          !gameRoom.isRanked ? gameRoom.battleRoomGameConfig : undefined,
+          !gameRoom.isRanked ? gameRoom.battleRoomGameConfigOptionIndices : undefined,
           gameRoom.isRanked
         );
         const game = games[gameRoom.gameName];
         io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
         game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);
+        // const updated = await saveBattleRoomGameConfig(user.id, {...gameRoom});
       }
     }, ONE_SECOND);
   }

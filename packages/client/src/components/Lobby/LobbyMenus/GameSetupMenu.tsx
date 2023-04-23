@@ -9,7 +9,7 @@ import { AlertType } from "../../../enums";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import { BUTTON_NAMES } from "../../../consts/button-names";
-import { LobbyMenu, setActiveMenu, setCurrentGameRoomLoading } from "../../../redux/slices/lobby-ui-slice";
+import { LobbyMenu, setActiveMenu, setGameRoomLoading } from "../../../redux/slices/lobby-ui-slice";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
 import useNonAlertCollidingEscapePressExecutor from "../../../hooks/useNonAlertCollidingEscapePressExecutor";
 import { APP_TEXT } from "../../../consts/app-text";
@@ -17,7 +17,7 @@ import BattleRoomRules from "./BattleRoomRules";
 
 function GameSetupMenu({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
-  const { currentGameRoomLoading } = useAppSelector((state) => state.lobbyUi);
+  const { gameRoomLoading } = useAppSelector((state) => state.lobbyUi);
   const [gameNameInput, setGameNameInput] = useState("");
 
   const makeGamePublic = (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +26,7 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
     // todo - run client side validation (reuse server function)
     if (!gameNameToCreate || !socket) return dispatch(setAlert(new Alert(ERROR_MESSAGES.LOBBY.GAME_NAME.NOT_ENTERED, AlertType.DANGER)));
     socket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, gameNameToCreate);
-    dispatch(setCurrentGameRoomLoading(true));
+    dispatch(setGameRoomLoading(true));
   };
 
   useNonAlertCollidingEscapePressExecutor(() => dispatch(setActiveMenu(LobbyMenu.MAIN)));
@@ -55,7 +55,7 @@ function GameSetupMenu({ socket }: { socket: Socket }) {
                 }}
               />
             </label>
-            <button type="submit" className="button button--accent game-setup-menu__button" disabled={!!currentGameRoomLoading}>
+            <button type="submit" className="button button--accent game-setup-menu__button" disabled={!!gameRoomLoading}>
               {BUTTON_NAMES.GAME_SETUP.CREATE_GAME}
             </button>
           </form>

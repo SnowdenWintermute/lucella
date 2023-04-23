@@ -4,7 +4,7 @@ import { Socket } from "socket.io-client";
 import { GameRoom, SocketEventsFromClient } from "../../../../../common";
 import useElementIsOverflowing from "../../../hooks/useElementIsOverflowing";
 import LobbyTopListItemWithButton from "./LobbyTopListItemWithButton";
-import { LobbyMenu, setActiveMenu, setCurrentGameRoomLoading, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
+import { LobbyMenu, setActiveMenu, setGameRoomLoading, setGameListFetching } from "../../../redux/slices/lobby-ui-slice";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import RefreshSvg from "../../../img/menu-icons/refresh.svg";
 import useScrollbarSize from "../../../hooks/useScrollbarSize";
@@ -19,13 +19,13 @@ function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const handleJoinGameClick = (gameName: string) => {
     if (gameName) socket.emit(SocketEventsFromClient.JOINS_GAME, gameName);
-    dispatch(setCurrentGameRoomLoading(gameName));
+    dispatch(setGameRoomLoading(gameName));
   };
 
   const gameIsFull = !!gameRoom.players.challenger;
   let buttonStyle = gameIsFull ? "game-list-menu__button--disabled-no-opacity" : "button--accent";
-  if (!gameIsFull && lobbyUiState.currentGameRoomLoading === gameRoom.gameName) buttonStyle = "button--accent";
-  else if (!gameIsFull && !!lobbyUiState.currentGameRoomLoading) buttonStyle = "button--accent game-list-menu__button--disabled-no-opacity";
+  if (!gameIsFull && lobbyUiState.gameRoomLoading === gameRoom.gameName) buttonStyle = "button--accent";
+  else if (!gameIsFull && !!lobbyUiState.gameRoomLoading) buttonStyle = "button--accent game-list-menu__button--disabled-no-opacity";
 
   return (
     <div className="game-list-menu__game-row">
@@ -36,7 +36,7 @@ function GameListGame({ socket, gameRoom }: { socket: Socket; gameRoom: GameRoom
         aria-label={ARIA_LABELS.GAME_LIST.JOIN_GAME_BY_NAME_OF(gameRoom.gameName)}
         className={`button game-list-menu__button ${buttonStyle}`}
         onClick={() => handleJoinGameClick(gameRoom.gameName)}
-        disabled={gameIsFull || !!lobbyUiState.currentGameRoomLoading}
+        disabled={gameIsFull || !!lobbyUiState.gameRoomLoading}
       >
         {gameIsFull ? "Full" : "Join"}
       </button>

@@ -16,13 +16,13 @@ import {
   gameChannelNamePrefix,
   GameStatus,
   chatChannelWelcomeMessage,
+  BattleRoomGameConfigOptionIndicesUpdate,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
 import validateGameName from "./validateGameName";
 import { LucellaServer } from "../../LucellaServer";
 import validateChannelName from "./validateChannelName";
-import { BattleRoomGameConfig } from "../../../../common/src/classes/BattleRoomGame/BattleRoomGameConfig";
 
 export class Lobby {
   chatChannels: { [name: string]: ChatChannel };
@@ -110,7 +110,7 @@ export class Lobby {
     this.changeSocketChatChannelAndEmitUpdates(socket, gameRoom.chatChannel, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
-  handleEditGameRoomConfigRequest(socket: Socket, newConfig: BattleRoomGameConfig) {
+  handleEditGameRoomConfigRequest(socket: Socket, newConfig: BattleRoomGameConfigOptionIndicesUpdate) {
     const { connectedSockets, io } = this.server;
     const { currentGameName } = connectedSockets[socket.id];
     if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} tried to edit game room config but wasn't in a game`);
@@ -121,11 +121,12 @@ export class Lobby {
     if (GameRoom.gameScreenActive(gameRoom)) return console.log("client tried to edit game room config from a game but it had already started");
     if (gameRoom.isRanked) return console.error("Can't edit game room config from ranked game");
     Object.entries(newConfig).forEach(([key, value]) => {
+      console.log("newConfig: ", newConfig);
       // @ts-ignore
-      gameRoom.battleRoomGameConfig[key] = value;
+      gameRoom.battleRoomGameConfigOptionIndices[key] = value;
     });
     const gameChatChannelName = gameChannelNamePrefix + currentGameName;
-    io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, gameRoom.battleRoomGameConfig);
+    io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, gameRoom.battleRoomGameConfigOptionIndices);
     // unready users
     const { playersReady } = gameRoom;
     // @ts-ignore

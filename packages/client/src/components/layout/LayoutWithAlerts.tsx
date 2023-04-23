@@ -12,7 +12,7 @@ interface Props {
 export default function LayoutWithAlerts({ children }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUIState = useAppSelector((state) => state.lobbyUi);
-  const { gameStatus } = lobbyUIState.currentGameRoom || { gameStatus: null }; // used to hide navbar in game
+  const { gameStatus } = lobbyUIState.gameRoom || { gameStatus: null }; // used to hide navbar in game
   const currentTheme = useAppSelector((state) => state.UI.theme);
 
   useEffect(() => {

@@ -24,6 +24,8 @@ export { BattleRoomGame } from "./classes/BattleRoomGame";
 export { GameElementsOfConstantInterest } from "./classes/BattleRoomGame/GameElementsOfConstantInterest";
 export { setOrbsAtStartPositions } from "./classes/BattleRoomGame/setOrbsAtStartPositions";
 export * from "./classes/ChatChannel";
+export { BattleRoomGameConfigOptionIndicesUpdate } from "./classes/BattleRoomGame/BattleRoomGameConfigOptionIndicesUpdate";
+export { BattleRoomGameConfigOptionIndices } from "./classes/BattleRoomGame/BattleRoomGameConfigOptionIndices";
 export { User, SanitizedUser } from "./classes/User";
 export { ChatMessage, ChatMessageStyles } from "./classes/ChatMessage";
 export { MouseData } from "./classes/MouseData";

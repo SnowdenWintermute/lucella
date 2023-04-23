@@ -10,7 +10,7 @@ import { newChatMessage, setNewChatChannelLoading } from "../../redux/slices/cha
 import {
   clearLobbyUi,
   setAuthenticating,
-  setCurrentGameRoom,
+  setGameRoom,
   setMatchmakingData,
   setMatchmakingLoading,
   setScoreScreenData,
@@ -23,8 +23,8 @@ import {
   setActiveMenu,
   LobbyMenu,
   setGuestUsername,
-  setCurrentGameRoomLoading,
-  updateCurrentGameRoomConfig,
+  setGameRoomLoading,
+  updategameRoomConfig,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -34,8 +34,8 @@ interface Props {
 
 function UISocketListener({ socket }: Props) {
   const dispatch = useAppDispatch();
-  const { currentGameRoom } = useAppSelector((state) => state.lobbyUi);
-  const gameName = currentGameRoom && currentGameRoom.gameName ? currentGameRoom.gameName : null;
+  const { gameRoom } = useAppSelector((state) => state.lobbyUi);
+  const gameName = gameRoom && gameRoom.gameName ? gameRoom.gameName : null;
 
   useEffect(() => {
     if (!socket) return;
@@ -53,7 +53,7 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => {
       console.log(`error from server: ${data}`);
       dispatch(setAlert(new Alert(data, AlertType.DANGER)));
-      dispatch(setCurrentGameRoomLoading(false));
+      dispatch(setGameRoomLoading(false));
     });
     socket.on(SocketEventsFromServer.GUEST_USER_NAME, (data) => {
       dispatch(setGuestUsername(data));
@@ -62,13 +62,13 @@ function UISocketListener({ socket }: Props) {
       dispatch(updateGameList(data));
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
-      dispatch(setCurrentGameRoom(data));
+      dispatch(setGameRoom(data));
       if (data) dispatch(setActiveMenu(LobbyMenu.GAME_ROOM));
       // else dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, (data) => {
       console.log("SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG: ", data);
-      dispatch(updateCurrentGameRoomConfig(data));
+      dispatch(updategameRoomConfig(data));
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
       dispatch(setActiveMenu(LobbyMenu.MAIN));

@@ -18,11 +18,9 @@ export default function handleScoringPoints(server: LucellaServer, game: BattleR
     gameRoom.roundsWon[winnerPlayerRole] += 1;
     game.roundsWon[winnerPlayerRole] += 1;
     server.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_NUMBER_OF_ROUNDS_WON, gameRoom.roundsWon);
-    if (gameRoom.roundsWon[winnerPlayerRole] >= gameRoom.battleRoomGameConfig.numberOfRoundsRequiredToWin) {
+    if (gameRoom.roundsWon[winnerPlayerRole] >= game.config.numberOfRoundsRequiredToWin) {
       game.winner = winnerPlayerRole;
       gameRoom.winner = gameRoom.players[winnerPlayerRole]!.associatedUser.username;
-    } else {
-      startNextRound(server, game);
-    }
+    } else startNextRound(server, game);
   }
 }

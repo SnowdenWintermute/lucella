@@ -15,24 +15,24 @@ interface Props {
 function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props) {
   const windowDimensions = useWindowDimensions();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { currentGameRoom } = lobbyUiState;
+  const { gameRoom } = lobbyUiState;
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [canvasSize, setCanvasSize] = useState<WidthAndHeight>({
     width: BattleRoomGame.baseWindowDimensions.width,
     height: BattleRoomGame.baseWindowDimensions.height,
   });
-  if (!currentGameRoom) return <p>Loading game room...</p>;
-  const { gameName, battleRoomGameConfig, players } = currentGameRoom;
+  if (!gameRoom) return <p>Loading game room...</p>;
+  const { gameName, players } = gameRoom;
   if (!players.host || !players.challenger) return <p>Error - tried to start a game but one of the players was not found</p>;
   const currentGame = useRef(
-    lobbyUiState.currentGameRoom &&
+    lobbyUiState.gameRoom &&
       new BattleRoomGame(
         gameName,
         {
           host: players.host.associatedUser.username,
           challenger: players.challenger.associatedUser.username,
         },
-        battleRoomGameConfig
+        gameRoom.battleRoomGameConfigOptionIndices
       )
   );
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -66,7 +66,7 @@ function BattleRoomGameInstance({ socket, networkPerformanceMetricsRef }: Props)
             networkPerformanceMetrics={networkPerformanceMetricsRef.current}
           />
         )}
-        {currentGame.current && currentGameRoom && GameRoom.gameScreenActive(currentGameRoom) ? (
+        {currentGame.current && gameRoom && GameRoom.gameScreenActive(gameRoom) ? (
           <CanvasWithInputListeners canvasSizeRef={canvasSizeRef} canvasRef={canvasRef} currentGame={currentGame.current!} socket={socket} />
         ) : (
           "Loading..."

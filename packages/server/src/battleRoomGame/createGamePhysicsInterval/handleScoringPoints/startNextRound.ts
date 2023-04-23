@@ -1,5 +1,13 @@
 /* eslint-disable consistent-return */
-import { BattleRoomGame, gameChannelNamePrefix, GameStatus, ONE_SECOND, setOrbsAtStartPositions, SocketEventsFromServer } from "../../../../../common";
+import {
+  baseSpeedModifier,
+  BattleRoomGame,
+  gameChannelNamePrefix,
+  GameStatus,
+  ONE_SECOND,
+  setOrbsAtStartPositions,
+  SocketEventsFromServer,
+} from "../../../../../common";
 import { LucellaServer } from "../../../LucellaServer";
 export default function startNextRound(server: LucellaServer, game: BattleRoomGame) {
   const gameRoom = server.lobby.gameRooms[game.gameName];
@@ -7,7 +15,7 @@ export default function startNextRound(server: LucellaServer, game: BattleRoomGa
   //
   game.score.host = 0;
   game.score.challenger = 0;
-  game.speedModifier = game.config.speedModifier;
+  game.speedModifier = baseSpeedModifier;
   game.score.neededToWin = BattleRoomGame.initialScoreNeededToWin;
   //
   gameRoom.gameStatus = GameStatus.STARTING_NEXT_ROUND;

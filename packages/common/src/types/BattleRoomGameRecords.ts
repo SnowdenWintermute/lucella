@@ -39,4 +39,5 @@ export interface IBattleRoomConfigSettings {
   turningSpeedModifier: number;
   hardBrakingSpeed: number;
   speedIncrementRate: number;
+  numberOfRoundsRequiredToWin: number;
 }

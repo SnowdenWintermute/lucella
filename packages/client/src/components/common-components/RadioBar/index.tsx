@@ -49,6 +49,7 @@ function RadioBar({
 
   useEffect(() => {
     if (options[selectedIndex].value === value) return;
+    console.log("selectedIndex: ", selectedIndex, options[selectedIndex].value, value);
     setValue(options[selectedIndex].value);
   }, [selectedIndex]);
 

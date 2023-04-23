@@ -14,8 +14,17 @@ export const orbDensity = 10;
 export const frictionAir = 20.9;
 export const initialEndZoneHeight = 60;
 export const orbWaypointListSizeLimit = 100;
-// physics options
-export const PhysicsOptions = {
+// game options
+export const BattleRoomGameOptions = {
+  numberOfRoundsRequiredToWin: {
+    defaultIndex: 2,
+    options: [
+      { title: "Best of 1", value: 1 },
+      { title: "Best of 3", value: 2 },
+      { title: "Best of 5", value: 3 },
+      { title: "Best of 7", value: 4 },
+    ],
+  },
   acceleration: {
     defaultIndex: 4,
     options: [
@@ -68,10 +77,12 @@ export const PhysicsOptions = {
 };
 
 // speeds
-const { acceleration, hardBrakingSpeed, topSpeed, turningSpeedModifier, speedIncrementRate } = PhysicsOptions;
+const { acceleration, hardBrakingSpeed, topSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin } = BattleRoomGameOptions;
 export const baseAcceleration = acceleration.options[acceleration.defaultIndex].value;
-export const baseSpeedModifier = 1;
-export const baseHardBrakingSpeed = hardBrakingSpeed.options[hardBrakingSpeed.defaultIndex].value;
 export const baseTopSpeed = topSpeed.options[topSpeed.defaultIndex].value;
 export const baseTurningSpeedModifier = turningSpeedModifier.options[turningSpeedModifier.defaultIndex].value;
-export const baseGameSpeedIncrementRate = speedIncrementRate.options[speedIncrementRate.defaultIndex].value;
+export const baseHardBrakingSpeed = hardBrakingSpeed.options[hardBrakingSpeed.defaultIndex].value;
+export const baseSpeedIncrementRate = speedIncrementRate.options[speedIncrementRate.defaultIndex].value;
+
+export const baseSpeedModifier = 1;
+export const baseNumberOfRoundsRequiredToWin = numberOfRoundsRequiredToWin.options[numberOfRoundsRequiredToWin.defaultIndex].value;

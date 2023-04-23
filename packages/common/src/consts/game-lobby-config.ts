@@ -9,7 +9,6 @@ export const maxEloDiffThreshold = 3000;
 export const eloDiffThresholdAdditive = 1000;
 export const baseGameCreationWaitingListLoopIntervalLength = 3 * ONE_SECOND;
 export const baseMatchmakingQueueIntervalLength = ONE_SECOND;
-export const baseNumberOfRoundsRequiredToWin = 3; // 3
 
 export enum OfficialChannels {
   matchmakingQueue = "matchmaking-queue",

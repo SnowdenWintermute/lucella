@@ -3,12 +3,12 @@ import {
   baseOrbRadius,
   baseSpeedModifier,
   baseWindowDimensions,
+  BattleRoomGameOptions,
   gameOverCountdownDuration,
   initialEndZoneHeight,
   initialScoreNeededToWin,
   newRoundStartingCountdownDuration,
 } from "../../consts/battle-room-game-config";
-import { baseNumberOfRoundsRequiredToWin } from "../../consts/game-lobby-config";
 import { PlayerRole } from "../../enums";
 import { HostAndChallengerOrbSets } from "../../types";
 import { MouseData } from "../MouseData";
@@ -16,6 +16,8 @@ import { Point } from "../Point";
 import { Rectangle } from "../Rectangles";
 import { AntiCheatValues } from "./AntiCheatValues";
 import { BattleRoomGameConfig } from "./BattleRoomGameConfig";
+import { BattleRoomGameConfigOptionIndices } from "./BattleRoomGameConfigOptionIndices";
+import { BattleRoomGameConfigOptionIndicesUpdate } from "./BattleRoomGameConfigOptionIndicesUpdate";
 import { BattleRoomQueues } from "./BattleRoomQueues";
 import { DebugValues } from "./DebugValues";
 import initializeWorld from "./initializeWorld";
@@ -52,7 +54,7 @@ export class BattleRoomGame {
     host: 0,
     challenger: 0,
   };
-  config = new BattleRoomGameConfig();
+  config = new BattleRoomGameConfig({});
   speedModifier = baseSpeedModifier;
   endzones = {
     host: new Rectangle(new Point(0, 0), BattleRoomGame.baseWindowDimensions.width, BattleRoomGame.baseEndzoneHeight),
@@ -72,12 +74,15 @@ export class BattleRoomGame {
   static baseOrbRadius = baseOrbRadius;
   static initialScoreNeededToWin = initialScoreNeededToWin;
   static initializeWorld = initializeWorld;
-  constructor(gameName: string, playerNames: { host: string; challenger: string }, config?: BattleRoomGameConfig, isRanked?: boolean) {
+  constructor(gameName: string, playerNames: { host: string; challenger: string }, options?: BattleRoomGameConfigOptionIndicesUpdate, isRanked?: boolean) {
     this.gameName = gameName;
     this.isRanked = isRanked || false;
     this.playerNames = playerNames;
-    if (config) this.config = config;
-    this.speedModifier = this.config.speedModifier;
+    if (!options) return;
+    Object.entries(options).forEach(([option, value]) => {
+      // @ts-ignore
+      this.config.updateConfigValueFromOptionIndex(option, value);
+    });
   }
   clearPhysicsInterval() {
     clearInterval(this.intervals.physics);

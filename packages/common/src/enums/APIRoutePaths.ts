@@ -23,6 +23,10 @@ export enum ConfigRoutePaths {
   GAME_START_COUNTDOWN = "/game-start-countdown",
 }
 
+export enum BattleRoomConfigRoutePaths {
+  ROOT = "/battle-room-config",
+}
+
 export enum CypressTestRoutePaths {
   ROOT = "/cypress-tests",
   DROP_ALL_TEST_USERS = "/drop-all-test-users",

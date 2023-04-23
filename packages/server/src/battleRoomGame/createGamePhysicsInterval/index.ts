@@ -12,6 +12,7 @@ import {
   SocketEventsFromServer,
   UserInput,
   createDeltaPacket,
+  baseSpeedModifier,
 } from "../../../../common";
 import { LucellaServer } from "../../LucellaServer";
 import handleScoringPoints from "./handleScoringPoints";
@@ -19,7 +20,7 @@ import handleScoringPoints from "./handleScoringPoints";
 export default function createGamePhysicsInterval(io: Server, server: LucellaServer, gameName: string) {
   const game = server.games[gameName];
   BattleRoomGame.initializeWorld(game);
-  game.speedModifier = game.config.speedModifier;
+  game.speedModifier = baseSpeedModifier;
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
   console.log(`game physics started for ${gameName}`);
   // eslint-disable-next-line consistent-return

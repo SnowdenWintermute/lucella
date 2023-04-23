@@ -74,10 +74,11 @@
 
 .game-room-menu__player {
   font-size: fontSize(3);
+  // margin-bottom: spacing(0);
 }
 
 .game-room-menu__vs {
-  font-size: fontSize(3);
+  font-size: fontSize(2);
 }
 
 .game-room-menu__player-ready-badge {
