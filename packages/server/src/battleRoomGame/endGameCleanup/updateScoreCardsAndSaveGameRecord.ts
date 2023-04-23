@@ -2,7 +2,7 @@
 import { PlayerRole, GameRoom, BattleRoomGame, IBattleRoomGameRecord } from "../../../../common";
 
 import updateElos from "./updateElos";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import BattleRoomScoreCardRepo from "../../database/repos/battle-room-game/score-cards";
 import BattleRoomGameRecordRepo from "../../database/repos/battle-room-game/game-records";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -16,8 +16,8 @@ export default async function updateScoreCardsAndSaveGameRecord(gameRoom: GameRo
   const winnerRole = game.winner!;
 
   // determine if both players have accounts in the database
-  const hostUser = await UserRepo.findOne("name", gameRoom.players.host?.associatedUser.username);
-  const challengerUser = await UserRepo.findOne("name", gameRoom.players.challenger?.associatedUser.username);
+  const hostUser = await UsersRepo.findOne("name", gameRoom.players.host?.associatedUser.username);
+  const challengerUser = await UsersRepo.findOne("name", gameRoom.players.challenger?.associatedUser.username);
   if (!challengerUser || !hostUser) {
     console.error("tried to update ranked game record in a game in which at least one user wasn't registered");
     return null;

@@ -7,7 +7,7 @@ import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/
 import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import { TEST_USER_ALTERNATE_PASSWORD, TEST_USER_EMAIL, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { signJwtSymmetric } from "../utils/jwt";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 
 describe("changePasswordHandler", () => {
@@ -35,11 +35,11 @@ describe("changePasswordHandler", () => {
   and user can't log in with old password but can with new password
   and user cannot reuse the same token to change password again`, async () => {
     const payload = { user: { email: TEST_USER_EMAIL } };
-    const user = await UserRepo.findById(1);
+    const user = await UsersRepo.findById(1);
     if (!user) return;
     // lock user out (if they failed password attempts they would need to reset password to unlock)
     user.status = UserStatuses.LOCKED_OUT;
-    await UserRepo.update(user);
+    await UsersRepo.update(user);
     // bypass login and give the token to authorize the user to update their password, just for this test
     const { accessToken } = await signTokenAndCreateSession(user);
     const passwordResetToken = signJwtSymmetric(payload, user.password, {
@@ -117,7 +117,7 @@ describe("changePasswordHandler", () => {
 
   it("sends error for non-existent email/user", async () => {
     const payload = { user: { email: "something invalid" } };
-    const user = await UserRepo.findById(1);
+    const user = await UsersRepo.findById(1);
     if (!user) return;
     const passwordResetToken = signJwtSymmetric(payload, user.password, {
       expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!, 10) / 1000 / 60}m`,

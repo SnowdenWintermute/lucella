@@ -13,7 +13,8 @@ exports.up = (pgm) => {
     top_speed INTEGER,
     turning_speed_modifier INTEGER,
     hard_braking_speed INTEGER,
-    speed_increment_rate INTEGER
+    speed_increment_rate INTEGER,
+    number_of_rounds_required_to_win INTEGER
 );
     `);
 };

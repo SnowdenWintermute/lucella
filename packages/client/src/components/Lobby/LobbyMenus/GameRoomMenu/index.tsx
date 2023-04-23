@@ -1,37 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
-import { BattleRoomGameOptions, GameStatus, PlayerRole, SocketEventsFromClient, SocketMetadata } from "../../../../../../common";
+import { BattleRoomGameConfigOptionIndices, GameStatus, SocketEventsFromClient } from "../../../../../../common";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import LobbyTopListItemWithButton from "../LobbyTopListItemWithButton";
-import { LobbyMenu, setActiveMenu, setPlayerReadyLoading } from "../../../../redux/slices/lobby-ui-slice";
+import { LobbyMenu, setActiveMenu } from "../../../../redux/slices/lobby-ui-slice";
 import useNonAlertCollidingEscapePressExecutor from "../../../../hooks/useNonAlertCollidingEscapePressExecutor";
 import { APP_TEXT } from "../../../../consts/app-text";
 import { BUTTON_NAMES } from "../../../../consts/button-names";
 import { ARIA_LABELS } from "../../../../consts/aria-labels";
 import { useGetMeQuery } from "../../../../redux/api-slices/users-api-slice";
-import SelectDropdown from "../../../common-components/SelectDropdown";
 import BattleRoomRules from "../BattleRoomRules";
 import SettingsIcon from "../../../../img/menu-icons/settings-icon.svg";
 import GameConfigDisplay from "./GameConfigDisplay";
-
-function PlayerWithReadyStatus({ player, playerReady, playerRole }: { player: SocketMetadata | null; playerReady: boolean; playerRole: PlayerRole }) {
-  return (
-    <div className="game-room-menu__player-with-ready-status">
-      <span className="game-room-menu__player" aria-label={ARIA_LABELS.GAME_ROOM.PLAYER_NAME(playerRole)}>
-        {player ? player.associatedUser.username : "..."}
-      </span>
-      {player && (
-        <span
-          aria-label={ARIA_LABELS.GAME_ROOM.PLAYER_READY_STATUS(playerRole)}
-          className={`game-room-menu__player-ready-badge ${playerReady ? "game-room-menu__player-ready-badge--ready" : ""}`}
-        >
-          {playerReady ? APP_TEXT.GAME_ROOM.PLAYER_READY_STATUS.READY : APP_TEXT.GAME_ROOM.PLAYER_READY_STATUS.NOT_READY}
-        </span>
-      )}
-      {!player && <span aria-label={ARIA_LABELS.GAME_ROOM.PLAYER_READY_STATUS(playerRole)} />}
-    </div>
-  );
-}
+import GameRoomMenuMainDisplay from "./GameRoomMenuMainDisplay";
 
 function GameRoomMenu({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
@@ -50,14 +31,13 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
 
   useNonAlertCollidingEscapePressExecutor(handleLeaveGameClick);
 
-  const handleReadyClick = () => {
-    socket.emit(SocketEventsFromClient.CLICKS_READY);
-    dispatch(setPlayerReadyLoading(true));
+  const sendEditConfigRequest = (key: string, value: any) => {
+    socket.emit(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, { [key]: value });
   };
 
-  function sendEditConfigRequest(key: string, value: any) {
-    socket.emit(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, { [key]: value });
-  }
+  const sendResetToDefaultsRequest = () => {
+    socket.emit(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, new BattleRoomGameConfigOptionIndices({}));
+  };
 
   useEffect(() => {
     let newReadableGameStatus = "";
@@ -73,52 +53,23 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
   }, [gameRoom]);
 
   if (!gameRoom) return <p>Error - no game room found</p>;
-  const { players, playersReady, gameStatus, countdown } = gameRoom;
+  const { players, gameStatus, countdown } = gameRoom;
+  const bothPlayersReady = gameRoom.playersReady.host && lobbyUiState.gameRoom?.playersReady.challenger;
   const isHost = user?.name === players.host?.associatedUser.username || lobbyUiState.guestUsername === players.host?.associatedUser.username;
-  const numberOfRoundsRequiredToWin =
-    BattleRoomGameOptions.numberOfRoundsRequiredToWin.options[gameRoom.battleRoomGameConfigOptionIndices.numberOfRoundsRequiredToWin].value;
-  const readableRoundsRequired = `Best of ${numberOfRoundsRequiredToWin * 2 - 1}`;
 
-  let leftDisplay = (
-    <>
-      <h3 className="lobby-menu__header">
-        {APP_TEXT.GAME_ROOM.GAME_NAME_HEADER}
-        {gameRoom.gameName}
-      </h3>
-      <div className="game-room-menu__players">
-        <PlayerWithReadyStatus player={players.host} playerReady={playersReady.host} playerRole={PlayerRole.HOST} />
-        <span className="game-room-menu__vs">vs.</span>
-        <PlayerWithReadyStatus player={players.challenger} playerReady={playersReady.challenger} playerRole={PlayerRole.CHALLENGER} />
-      </div>
-      {!gameRoom?.isRanked && (
-        <div className="game-room-menu__buttons">
-          {isHost && (
-            <SelectDropdown
-              title="number of rounds required to win"
-              options={BattleRoomGameOptions.numberOfRoundsRequiredToWin.options.map((option, i) => {
-                return { title: option.title, value: i };
-              })}
-              value={lobbyUiState.gameRoom?.battleRoomGameConfigOptionIndices.numberOfRoundsRequiredToWin}
-              setValue={(value) => sendEditConfigRequest("numberOfRoundsRequiredToWin", value)}
-              disabled={lobbyUiState.gameRoom?.playersReady.host && lobbyUiState.gameRoom?.playersReady.challenger}
-              extraStyles="game-room-menu__select-input"
-            />
-          )}
-          {!isHost && <div className="button button--transparent game-room-menu__rounds-required-to-win-display">{readableRoundsRequired}</div>}
-          <button
-            type="button"
-            className="button game-room-menu__ready-button button--accent"
-            onClick={handleReadyClick}
-            disabled={lobbyUiState.playerReadyLoading}
-          >
-            {BUTTON_NAMES.GAME_ROOM.READY}
-          </button>
-        </div>
-      )}
-    </>
-  );
+  let leftDisplay = <GameRoomMenuMainDisplay socket={socket} gameRoom={gameRoom} isHost={isHost} />;
 
-  if (viewingGameConfigDisplay) leftDisplay = <GameConfigDisplay socket={socket} isHost={isHost} />;
+  if (viewingGameConfigDisplay)
+    leftDisplay = lobbyUiState.gameRoom ? (
+      <GameConfigDisplay
+        disabled={bothPlayersReady || !isHost}
+        handleEditOption={sendEditConfigRequest}
+        handleResetToDefaults={sendResetToDefaultsRequest}
+        currentValues={lobbyUiState.gameRoom.battleRoomGameConfigOptionIndices}
+      />
+    ) : (
+      <p>...</p>
+    );
 
   return (
     <>

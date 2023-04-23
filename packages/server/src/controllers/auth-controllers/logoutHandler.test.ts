@@ -1,6 +1,6 @@
 import { Application } from "express";
 import request from "supertest";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import { AuthRoutePaths, CookieNames, ERROR_MESSAGES, UsersRoutePaths, UserStatuses } from "../../../../common";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL, TEST_USER_NAME } from "../../utils/test-utils/consts";
@@ -28,7 +28,7 @@ describe("loginHandler", () => {
   });
 
   it("doesn't send user info in /auth/me after logout", async () => {
-    const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
+    const user = await UsersRepo.findOne("email", TEST_USER_EMAIL);
     const { accessToken } = await signTokenAndCreateSession(user);
 
     const getMeResponse = await request(app)
@@ -52,7 +52,7 @@ describe("loginHandler", () => {
   });
 
   it("still works if user token is already expired", async () => {
-    const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
+    const user = await UsersRepo.findOne("email", TEST_USER_EMAIL);
     const { accessToken } = await signTokenAndCreateSession(user);
     wrappedRedis.context!.removeAllKeys();
     const logoutResponse = await request(app)

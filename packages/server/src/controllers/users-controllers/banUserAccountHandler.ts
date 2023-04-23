@@ -1,12 +1,12 @@
 /* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from "express";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import banUser from "../utils/banUser";
 
 export default async function banUserAccountHandler(req: Request, res: Response, next: NextFunction) {
   try {
     const { name, ban } = req.body;
-    const user = await UserRepo.findOne("name", name);
+    const user = await UsersRepo.findOne("name", name);
     await banUser(user, ban);
     res.sendStatus(204);
   } catch (error) {

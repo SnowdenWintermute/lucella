@@ -67,7 +67,6 @@ function UISocketListener({ socket }: Props) {
       // else dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, (data) => {
-      console.log("SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG: ", data);
       dispatch(updategameRoomConfig(data));
     });
     socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {

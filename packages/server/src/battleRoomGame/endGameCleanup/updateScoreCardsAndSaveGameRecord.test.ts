@@ -1,6 +1,6 @@
 import request from "supertest";
 import { Application } from "express";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
 import createSequentialEloTestUsers from "../../utils/test-utils/createSequentialEloTestUsers";
@@ -32,7 +32,7 @@ describe("updateScoreCardsAndSaveGameRecord (ladder and elo change behavior)", (
   ladder pages and individual ladder entries`, async () => {
     await createSequentialEloTestUsers(10, 200, 10);
     await loadLadderIntoRedis();
-    const users = await UserRepo.find();
+    const users = await UsersRepo.find();
     expect(users).toHaveLength(11);
 
     const userWith210Elo = await request(app).get(`/api${LadderRoutePaths.ROOT}${LadderRoutePaths.BATTLE_ROOM}${LadderRoutePaths.ENTRIES}/test-210`);

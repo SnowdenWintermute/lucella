@@ -10,7 +10,7 @@ import {
   CookieNames,
 } from "../../../common";
 import signTokenAndCreateSession from "../controllers/utils/signTokenAndCreateSession";
-import UserRepo from "../database/repos/users";
+import UsersRepo from "../database/repos/users";
 import PGContext from "../utils/PGContext";
 import { wrappedRedis } from "../utils/RedisContext";
 import { responseBodyIncludesCustomErrorMessage } from "../utils/test-utils";
@@ -49,7 +49,7 @@ describe("rate limiter", () => {
 
   jest.setTimeout(20000);
   it("limits the number of combined requests on all routes in a small fixed window", async () => {
-    const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
+    const user = await UsersRepo.findOne("email", TEST_USER_EMAIL);
     const { accessToken } = await signTokenAndCreateSession(user);
 
     let currentTime = realDateNow();
@@ -85,7 +85,7 @@ describe("rate limiter", () => {
   });
 
   it("limits the number of combined requests on all routes in a large sliding window", async () => {
-    const user = await UserRepo.findOne("email", TEST_USER_EMAIL);
+    const user = await UsersRepo.findOne("email", TEST_USER_EMAIL);
     const { accessToken } = await signTokenAndCreateSession(user);
 
     let numReqsInThisSlidingWindow = 0;

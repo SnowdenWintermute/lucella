@@ -3,6 +3,7 @@ import { SocketMetadata } from "../SocketMetadata";
 import { GameStatus } from "../../enums";
 import { gameChannelNamePrefix, baseGameStartCountdownDuration } from "../../consts/game-lobby-config";
 import { BattleRoomGameConfigOptionIndices } from "./BattleRoomGameConfigOptionIndices";
+import { IBattleRoomConfigSettings } from "../../types/BattleRoomGameRecords";
 
 export class GameRoom {
   gameName: string;
@@ -26,10 +27,16 @@ export class GameRoom {
       gameRoom.gameStatus === GameStatus.IN_PROGRESS || gameRoom.gameStatus === GameStatus.ENDING || gameRoom.gameStatus === GameStatus.STARTING_NEXT_ROUND
     );
   }
-  constructor(gameName: string, isRanked: boolean | undefined) {
+  constructor(gameName: string, isRanked: boolean | undefined, options?: BattleRoomGameConfigOptionIndices | IBattleRoomConfigSettings) {
     this.gameName = gameName;
     this.chatChannel = gameChannelNamePrefix + this.gameName;
     this.spectators = [];
     this.isRanked = isRanked || false;
+    if (options) {
+      Object.keys(this.battleRoomGameConfigOptionIndices).forEach((key) => {
+        // @ts-ignore
+        if (typeof options[key] === "number") this.battleRoomGameConfigOptionIndices[key] = options[key];
+      });
+    }
   }
 }

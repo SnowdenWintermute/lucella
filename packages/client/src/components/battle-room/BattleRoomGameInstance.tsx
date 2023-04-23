@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import GameListener from "../SocketManager/GameListener";
-import { BattleRoomGame, WidthAndHeight, GameStatus, GameRoom } from "../../../../common";
+import { BattleRoomGame, WidthAndHeight, GameRoom } from "../../../../common";
 import CanvasWithInputListeners from "./CanvasWithInputListeners";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { INetworkPerformanceMetrics } from "../../types";

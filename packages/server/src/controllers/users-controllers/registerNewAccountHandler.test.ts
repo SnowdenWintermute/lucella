@@ -2,7 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import bcrypt from "bcryptjs";
 import { ERROR_MESSAGES, InputFields, UsersRoutePaths } from "../../../../common";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL_ALTERNATE, TEST_USER_NAME_ALTERNATE, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { responseBodyIncludesCustomErrorField, responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
@@ -32,7 +32,7 @@ describe("registerNewAccountHandler", () => {
   });
 
   it("upon receiving valid input sends an account creation verification email and creates an account creation attempt session", async () => {
-    // const startingCount = await UserRepo.count();
+    // const startingCount = await UsersRepo.count();
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
       name: TEST_USER_NAME_ALTERNATE,
       email: TEST_USER_EMAIL_ALTERNATE,
@@ -52,7 +52,7 @@ describe("registerNewAccountHandler", () => {
   });
 
   it("gets errors for missing email or password", async () => {
-    const startingCount = await UserRepo.count();
+    const startingCount = await UsersRepo.count();
 
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
       name: "",
@@ -68,12 +68,12 @@ describe("registerNewAccountHandler", () => {
     expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.VALIDATION.AUTH.PASSWORD_MIN_LENGTH)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD)).toBeTruthy();
 
-    const finishCount = await UserRepo.count();
+    const finishCount = await UsersRepo.count();
     expect(finishCount - startingCount).toEqual(0);
   });
 
   it("gets errors for name length and non matching", async () => {
-    const startingCount = await UserRepo.count();
+    const startingCount = await UsersRepo.count();
 
     const response = await request(app).post(`/api${UsersRoutePaths.ROOT}`).send({
       name: "",
@@ -90,7 +90,7 @@ describe("registerNewAccountHandler", () => {
     expect(responseBodyIncludesCustomErrorMessage(response, ERROR_MESSAGES.VALIDATION.AUTH.PASSWORDS_DONT_MATCH)).toBeTruthy();
     expect(responseBodyIncludesCustomErrorField(response, InputFields.AUTH.PASSWORD_CONFIRM)).toBeTruthy();
 
-    const finishCount = await UserRepo.count();
+    const finishCount = await UsersRepo.count();
     expect(finishCount - startingCount).toEqual(0);
   });
 });

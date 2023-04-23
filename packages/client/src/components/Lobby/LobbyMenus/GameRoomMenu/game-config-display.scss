@@ -32,13 +32,7 @@
   margin-bottom: spacing(2);
 }
 
-.game-config-display-button {
-  width: height(3);
-  padding: spacing(0);
-}
-
-.game-config-display-button-icon {
-  width: 100%;
-  height: 100%;
-  fill: var(--color-primary);
+.game-config-display__reset-to-defaults-button {
+  max-width: fit-content;
+  min-height: height(3);
 }

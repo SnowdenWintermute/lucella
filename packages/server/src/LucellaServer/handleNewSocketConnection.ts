@@ -7,7 +7,7 @@ import { Socket } from "socket.io";
 import { SocketEventsFromServer, SocketMetadata } from "../../../common";
 import { verifyJwtAsymmetric } from "../controllers/utils/jwt";
 import { LucellaServer } from ".";
-import UserRepo from "../database/repos/users";
+import UsersRepo from "../database/repos/users";
 import { wrappedRedis } from "../utils/RedisContext";
 import getIpFromSocketHandshake from "./utils/getIpFromSocketHandshake";
 
@@ -25,7 +25,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
         console.log(`User session has expired`);
         isGuest = true;
       } else {
-        userToReturn = await UserRepo.findById(JSON.parse(session).id);
+        userToReturn = await UsersRepo.findById(JSON.parse(session).id);
         isGuest = false;
       }
     }

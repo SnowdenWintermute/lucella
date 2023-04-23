@@ -17,12 +17,16 @@ import {
   GameStatus,
   chatChannelWelcomeMessage,
   BattleRoomGameConfigOptionIndicesUpdate,
+  BattleRoomGameConfigOptionIndices,
+  IBattleRoomConfigSettings,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
 import validateGameName from "./validateGameName";
 import { LucellaServer } from "../../LucellaServer";
 import validateChannelName from "./validateChannelName";
+import UsersRepo from "../../database/repos/users";
+import BattleRoomGameSettingsRepo from "../../database/repos/battle-room-game/settings";
 
 export class Lobby {
   chatChannels: { [name: string]: ChatChannel };
@@ -82,13 +86,22 @@ export class Lobby {
       socket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(chatChannelWelcomeMessage(channelNameJoining), "Server", ChatMessageStyles.PRIVATE));
     }
   }
-  handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
+  async handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
     if (!gameName) return console.error(ERROR_MESSAGES.LOBBY.GAME_NAME.MAX_LENGTH);
     gameName = gameName.replace(/\s+/g, "-").toLowerCase();
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_HOST_IF_ALREADY_IN_GAME);
-    const gameCreationError = this.createGameRoom(gameName, isRanked);
+    // load their config if not guest and not ranked
+    let options;
+    if (!isRanked) {
+      const player = this.server.connectedSockets[socket.id].associatedUser;
+      if (!player.isGuest) {
+        const user = await UsersRepo.findOne("name", player.username);
+        options = await BattleRoomGameSettingsRepo.findByUserId(user.id);
+      }
+    }
+    const gameCreationError = this.createGameRoom(gameName, isRanked, options);
     if (gameCreationError) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, gameCreationError);
     console.log(`game room created: ${gameName}`);
     this.changeSocketChatChannelAndEmitUpdates(socket, this.gameRooms[gameName].chatChannel, true);
@@ -121,7 +134,6 @@ export class Lobby {
     if (GameRoom.gameScreenActive(gameRoom)) return console.log("client tried to edit game room config from a game but it had already started");
     if (gameRoom.isRanked) return console.error("Can't edit game room config from ranked game");
     Object.entries(newConfig).forEach(([key, value]) => {
-      console.log("newConfig: ", newConfig);
       // @ts-ignore
       gameRoom.battleRoomGameConfigOptionIndices[key] = value;
     });
@@ -175,11 +187,11 @@ export class Lobby {
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     }
   }
-  createGameRoom(gameName: string, isRanked?: boolean) {
+  createGameRoom(gameName: string, isRanked?: boolean, options?: IBattleRoomConfigSettings | undefined) {
     if (this.gameRooms[gameName]) return ERROR_MESSAGES.LOBBY.GAME_NAME.GAME_EXISTS;
     const gameNameValidationError = validateGameName(gameName, isRanked);
     if (gameNameValidationError) return gameNameValidationError;
-    this.gameRooms[gameName] = new GameRoom(gameName, isRanked);
+    this.gameRooms[gameName] = new GameRoom(gameName, isRanked, options);
   }
   putSocketInGameRoomAndEmitUpdates(socket: Socket, gameName: string) {
     const { io, connectedSockets } = this.server;

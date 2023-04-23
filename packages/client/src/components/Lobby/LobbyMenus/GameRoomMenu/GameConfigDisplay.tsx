@@ -1,29 +1,38 @@
-import { Socket } from "socket.io-client";
 import React, { useRef } from "react";
 import RadioBar from "../../../common-components/RadioBar";
-import { useAppSelector } from "../../../../redux/hooks";
-import { BattleRoomGameOptions, SocketEventsFromClient } from "../../../../../../common";
+import { BattleRoomGameConfigOptionIndices, BattleRoomGameOptions } from "../../../../../../common";
 import useElementIsOverflowing from "../../../../hooks/useElementIsOverflowing";
 import useScrollbarSize from "../../../../hooks/useScrollbarSize";
 
-function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean }) {
-  const lobbyUiState = useAppSelector((state) => state.lobbyUi);
+function GameConfigDisplay({
+  disabled,
+  handleEditOption,
+  handleResetToDefaults,
+  currentValues,
+  extraStyles,
+}: {
+  disabled: boolean;
+  handleEditOption: (optionName: string, newValue: number) => void;
+  handleResetToDefaults: () => void;
+  currentValues: BattleRoomGameConfigOptionIndices;
+  extraStyles?: {
+    main?: string;
+    columnsContainer?: string;
+  };
+}) {
   const gameConfigDisplayRef = useRef<HTMLDivElement>(null);
   const isOverflowing = useElementIsOverflowing(gameConfigDisplayRef.current);
   const scrollbarSize = useScrollbarSize();
 
-  if (!lobbyUiState.gameRoom) return <p>...</p>;
-  const bothPlayersReady = lobbyUiState.gameRoom.playersReady.host && lobbyUiState.gameRoom?.playersReady.challenger;
-
-  function sendEditConfigRequest(key: string, value: any) {
-    socket.emit(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, { [key]: value });
-  }
-
-  const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate } = lobbyUiState.gameRoom.battleRoomGameConfigOptionIndices;
+  const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate } = currentValues;
 
   return (
-    <div className="game-config-display" ref={gameConfigDisplayRef}>
-      <div className={`game-config-display__options ${isOverflowing && scrollbarSize.width && "game-config-display__options--overflow-padding"}`}>
+    <div className={`game-config-display ${extraStyles?.main ? extraStyles?.main : ""}`} ref={gameConfigDisplayRef}>
+      <div
+        className={`game-config-display__options ${isOverflowing && scrollbarSize.width && "game-config-display__options--overflow-padding"} ${
+          extraStyles?.columnsContainer ? extraStyles?.columnsContainer : ""
+        }`}
+      >
         <div className="game-config-display__option-column">
           <RadioBar
             title="Acceleration"
@@ -31,8 +40,8 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
               return { title: option.title, value: i };
             })}
             value={acceleration}
-            setValue={(value) => sendEditConfigRequest("acceleration", value)}
-            disabled={bothPlayersReady || !isHost}
+            setValue={(value) => handleEditOption("acceleration", value)}
+            disabled={disabled}
             extraStyles="game-config-display__radio-input"
           />
           <RadioBar
@@ -41,8 +50,8 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
               return { title: option.title, value: i };
             })}
             value={topSpeed}
-            setValue={(value) => sendEditConfigRequest("topSpeed", value)}
-            disabled={bothPlayersReady || !isHost}
+            setValue={(value) => handleEditOption("topSpeed", value)}
+            disabled={disabled}
             extraStyles="game-config-display__radio-input"
           />
         </div>
@@ -53,8 +62,8 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
               return { title: option.title, value: i };
             })}
             value={turningSpeedModifier}
-            setValue={(value) => sendEditConfigRequest("turningSpeedModifier", value)}
-            disabled={bothPlayersReady || !isHost}
+            setValue={(value) => handleEditOption("turningSpeedModifier", value)}
+            disabled={disabled}
             extraStyles="game-config-display__radio-input"
           />
           <RadioBar
@@ -63,8 +72,8 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
               return { title: option.title, value: i };
             })}
             value={hardBrakingSpeed}
-            setValue={(value) => sendEditConfigRequest("hardBrakingSpeed", value)}
-            disabled={bothPlayersReady || !isHost}
+            setValue={(value) => handleEditOption("hardBrakingSpeed", value)}
+            disabled={disabled}
             extraStyles="game-config-display__radio-input"
           />
         </div>
@@ -75,13 +84,16 @@ function GameConfigDisplay({ socket, isHost }: { socket: Socket; isHost: boolean
               return { title: option.title, value: i };
             })}
             value={speedIncrementRate}
-            setValue={(value) => sendEditConfigRequest("speedIncrementRate", value)}
-            disabled={bothPlayersReady || !isHost}
+            setValue={(value) => handleEditOption("speedIncrementRate", value)}
+            disabled={disabled}
             extraStyles="game-config-display__radio-input"
             tooltip="How much the game speed increases after each point is scored"
           />
         </div>
       </div>
+      <button type="button" className="button game-config-display__reset-to-defaults-button" onClick={handleResetToDefaults}>
+        RESET TO DEFAULTS
+      </button>
     </div>
   );
 }

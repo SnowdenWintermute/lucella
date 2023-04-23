@@ -16,31 +16,25 @@ export default class BattleRoomGameSettingsRepo {
     const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin } = options;
 
     const { rows } = await wrappedPool.query(
-      format(
-        `INSERT INTO ${PSQL_TABLES.BATTLE_ROOM_GAME_CONFIGS}
-        (user_id, acceleration_option_index, top_speed_option_index, turning_speed_modifier_option_index, 
-        hard_braking_speed_option_index, speed_increment_rate_option_index, number_of_rounds_required_to_win_option_index) 
-        VALUES (%L, %L, %L, %L, %L, %L,) RETURNING *;`,
-        userId,
-        acceleration,
-        topSpeed,
-        hardBrakingSpeed,
-        turningSpeedModifier,
-        speedIncrementRate,
-        numberOfRoundsRequiredToWin
-      )
+      `INSERT INTO ${PSQL_TABLES.BATTLE_ROOM_GAME_CONFIGS}
+        (user_id, acceleration, top_speed, turning_speed_modifier, 
+        hard_braking_speed, speed_increment_rate, number_of_rounds_required_to_win) 
+        VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`,
+      [userId, acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin]
     );
     return toCamelCase(rows)[0] as unknown as IBattleRoomConfigSettings;
   }
 
-  static async update(userId: number, options: BattleRoomGameConfigOptionIndicesUpdate) {
-    if (!(options instanceof BattleRoomGameConfigOptionIndices)) return undefined;
-    const fieldNames = Object.keys(options)
-      .map((fieldName) => format("%I", fieldName))
-      .join(", ");
-    const fieldValues = Object.values(options).map((fieldValue) => format("%L", fieldValue));
-    const queryText = format(`UPDATE %I SET (${fieldNames}) = (%L) WHERE user_id = %L`, PSQL_TABLES.BATTLE_ROOM_GAME_CONFIGS, fieldValues, userId);
-    const { rows } = await wrappedPool.query(format(queryText));
+  static async update(userId: number, options: BattleRoomGameConfigOptionIndices) {
+    console.log("update config got options: ", options);
+    const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin } = options;
+    const { rows } = await wrappedPool.query(
+      `UPDATE ${PSQL_TABLES.BATTLE_ROOM_GAME_CONFIGS}
+    SET user_id = $1, acceleration = $2, top_speed = $3, turning_speed_modifier = $4, 
+    hard_braking_speed = $5, speed_increment_rate = $6, number_of_rounds_required_to_win = $7
+    RETURNING *;`,
+      [userId, acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin]
+    );
     return toCamelCase(rows)![0] as unknown as IBattleRoomConfigSettings;
   }
 }

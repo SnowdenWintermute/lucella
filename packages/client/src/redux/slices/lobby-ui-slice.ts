@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord } from "../../../../common";
-import { BattleRoomGameConfig } from "../../../../common/src/classes/BattleRoomGame/BattleRoomGameConfig";
+import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord, BattleRoomGameConfigOptionIndices } from "../../../../common";
 
 export enum LobbyMenu {
   MAIN = "main",
@@ -111,7 +110,7 @@ const ladderSlice = createSlice({
       if (state.gameRoom) state.gameRoom.gameStatus = action.payload;
       if (action.payload !== GameStatus.IN_WAITING_LIST) state.gameCreationWaitingList.currentPosition = null;
     },
-    updategameRoomConfig(state, action: PayloadAction<BattleRoomGameConfig>) {
+    updategameRoomConfig(state, action: PayloadAction<BattleRoomGameConfigOptionIndices>) {
       if (state.gameRoom) state.gameRoom.battleRoomGameConfigOptionIndices = action.payload;
     },
     updatePlayerRole(state, action: PayloadAction<PlayerRole>) {

@@ -5,11 +5,10 @@ export default async function saveBattleRoomGameSettings(userId: number, newOpti
   const existingBattleRoomConfig = await BattleRoomGameSettingsRepo.findByUserId(userId);
   if (!existingBattleRoomConfig) {
     const createdConfig = await BattleRoomGameSettingsRepo.insert(userId, new BattleRoomGameConfigOptionIndices(newOptions));
-    console.log("created new battle room config");
     return createdConfig;
   }
 
-  const updatedConfig = await BattleRoomGameSettingsRepo.update(userId, newOptions);
-  console.log("updated battle room config");
+  const completeOptions = new BattleRoomGameConfigOptionIndices(newOptions);
+  const updatedConfig = await BattleRoomGameSettingsRepo.update(userId, completeOptions);
   return updatedConfig;
 }

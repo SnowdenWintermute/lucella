@@ -1,6 +1,6 @@
 /* eslint-disable consistent-return */
 import { NextFunction, Request, Response } from "express";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { ERROR_MESSAGES, SanitizedUser } from "../../../../common";
 import { verifyJwtAsymmetric } from "../utils/jwt";
@@ -18,7 +18,7 @@ export default async function accountActivationHandler(req: Request<object, obje
     if (!accountActivationSession) return next([new CustomError(ERROR_MESSAGES.AUTH.USED_OR_EXPIRED_ACCOUNT_CREATION_SESSION, 401)]);
     const parsedSession = JSON.parse(accountActivationSession);
     const { name, password } = parsedSession;
-    const user = await UserRepo.insert(name, email, password);
+    const user = await UsersRepo.insert(name, email, password);
     await wrappedRedis.context!.del(`${ACCOUNT_CREATION_SESSION_PREFIX}${email}`);
     res.status(201).json({ user: new SanitizedUser(user) });
   } catch (error: any) {
