@@ -1,8 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { SERVER_HOSTNAME_DOCKER_PRODUCTION, IPBanReason, ModerationRoutePaths } from "../../../../common";
 
-// must use the plain text string for localhost because CI doesn't play nice with using an env variable for some reason
-
 const baseQuery = fetchBaseQuery({
   baseUrl:
     process.env.NODE_ENV === "production"

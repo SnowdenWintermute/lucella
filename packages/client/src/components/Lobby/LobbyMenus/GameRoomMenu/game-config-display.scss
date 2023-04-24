@@ -31,8 +31,13 @@
 .game-config-display__radio-input {
   margin-bottom: spacing(2);
 }
-
+.game-config-display__bottom-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
 .game-config-display__reset-to-defaults-button {
   max-width: fit-content;
   min-height: height(3);
+  margin-right: spacing(1);
 }

@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, FrontendRoutes, SUCCESS_ALERTS } from "../../../../common";
 import { APP_TEXT } from "../../../src/consts/app-text";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
 import { TaskNames } from "../../support/TaskNames";
@@ -34,7 +34,7 @@ export default function loginForm() {
     cy.findByLabelText(new RegExp(`${APP_TEXT.AUTH.INPUTS.PASSWORD}.*`))
       .clear()
       .type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-    cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
+    cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.LOGIN, "i")).should("exist");
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}/battle-room`);
   });
 }

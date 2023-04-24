@@ -1,7 +1,7 @@
 /* eslint-disable no-nested-ternary */
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, ERROR_MESSAGES, SuccessAlerts } from "../../../../common";
+import { CustomErrorDetails, ERROR_MESSAGES, SUCCESS_ALERTS } from "../../../../common";
 import { Alert } from "../../classes/Alert";
 import AuthPage from "../../components/common-components/AuthPage/AuthPage";
 import { APP_TEXT } from "../../consts/app-text";
@@ -24,7 +24,7 @@ export default function AccountActivation() {
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setAlert(new Alert(SuccessAlerts.USERS.ACCOUNT_CREATED, AlertType.SUCCESS)));
+      dispatch(setAlert(new Alert(SUCCESS_ALERTS.USERS.ACCOUNT_CREATED, AlertType.SUCCESS)));
       router.push("/login");
     }
     if (isError && error && "data" in error) {

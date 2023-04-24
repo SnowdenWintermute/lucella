@@ -8,12 +8,14 @@ import chatSlice from "./slices/chat-slice";
 import lobbyUiSlice from "./slices/lobby-ui-slice";
 import UISlice from "./slices/ui-slice";
 import { moderationApi } from "./api-slices/moderation-api-slice";
+import { battleRoomGameSettingsApi } from "./api-slices/battle-room-game-settings-slice";
 
 const store = configureStore({
   reducer: {
     [authApi.reducerPath]: authApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
     [ladderApi.reducerPath]: ladderApi.reducer,
+    [battleRoomGameSettingsApi.reducerPath]: battleRoomGameSettingsApi.reducer,
     [moderationApi.reducerPath]: moderationApi.reducer,
     alerts: alertsSlice,
     chat: chatSlice,
@@ -21,7 +23,13 @@ const store = configureStore({
     UI: UISlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat([authApi.middleware, usersApi.middleware, ladderApi.middleware, moderationApi.middleware]),
+    getDefaultMiddleware({ serializableCheck: false }).concat([
+      authApi.middleware,
+      usersApi.middleware,
+      ladderApi.middleware,
+      battleRoomGameSettingsApi.middleware,
+      moderationApi.middleware,
+    ]),
 }); // disabled serializable check because we are using instances of classes for alerts, game rooms etc
 
 const makeStore = () => store;

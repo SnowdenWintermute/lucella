@@ -6,8 +6,6 @@ export interface ILadderPageResponse {
   pageData: BattleRoomLadderEntry[];
 }
 
-// must use the plain text string for localhost because CI doesn't play nice with using an env variable for some reason
-
 const baseQuery = fetchBaseQuery({
   baseUrl:
     process.env.NODE_ENV === "production"

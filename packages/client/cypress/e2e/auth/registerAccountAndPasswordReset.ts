@@ -1,5 +1,5 @@
 import { recurse } from "cypress-recurse";
-import { ERROR_MESSAGES, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, FrontendRoutes, SUCCESS_ALERTS } from "../../../../common";
 import { APP_TEXT } from "../../../src/consts/app-text";
 import { ARIA_LABELS } from "../../../src/consts/aria-labels";
 import { getLastEmailTimeout } from "../../support/consts";
@@ -20,7 +20,7 @@ export default function passwordResetTest() {
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
       cy.findByLabelText(APP_TEXT.AUTH.INPUTS.CONFIRM_PASSWORD).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
       cy.findByLabelText(APP_TEXT.AUTH.INPUTS.USERNAME).type(`${Cypress.env("CYPRESS_TEST_USER_NAME_ALTERNATE")}{enter}`);
-      cy.findByText(new RegExp(SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, "i")).should("exist");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, "i")).should("exist");
       // follow the link in email to complete registration
       recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: getLastEmailTimeout, delay: 5000 })
         .its("html")
@@ -28,7 +28,7 @@ export default function passwordResetTest() {
           cy.document({ log: false }).invoke({ log: false }, "write", html);
         });
       cy.get('[data-cy="activation-link"]').click();
-      cy.findByText(new RegExp(SuccessAlerts.USERS.ACCOUNT_CREATED, "i")).should("exist");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.USERS.ACCOUNT_CREATED, "i")).should("exist");
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
       cy.findByLabelText(APP_TEXT.AUTH.INPUTS.EMAIL_ADDRESS).type(`${userEmail}`);
       cy.findByLabelText(APP_TEXT.AUTH.INPUTS.PASSWORD).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
@@ -36,7 +36,7 @@ export default function passwordResetTest() {
       cy.findByLabelText(ARIA_LABELS.USER_MENU.OPEN).click();
       cy.clickLinkAndVerifyHeading(APP_TEXT.USER_MENU.ITEMS.SETTINGS, APP_TEXT.SETTINGS.TITLE);
       cy.clickButton(APP_TEXT.SETTINGS.CHANGE_PASSWORD);
-      cy.findByText(new RegExp(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("exist");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("exist");
       // follow the link in email to change password
       recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: getLastEmailTimeout, delay: 5000 })
         .its("html")

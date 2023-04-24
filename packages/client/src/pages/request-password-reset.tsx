@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../common";
+import { CustomErrorDetails, InputFields, SUCCESS_ALERTS } from "../../../common";
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/common-components/AuthPage/AuthPage";
@@ -29,7 +29,7 @@ function RequestPasswordResetEmail() {
   };
 
   useEffect(() => {
-    if (isSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
+    if (isSuccess) dispatch(setAlert(new Alert(SUCCESS_ALERTS.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
     if (isError && error && "data" in error) {
       const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
       const newFieldErrors = { ...fieldErrors };

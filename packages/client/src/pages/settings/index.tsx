@@ -7,25 +7,24 @@ import { setAlert } from "../../redux/slices/alerts-slice";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useDeleteAccountMutation, useGetMeQuery } from "../../redux/api-slices/users-api-slice";
-import { BattleRoomGameConfigOptionIndices, ERROR_MESSAGES, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, SUCCESS_ALERTS } from "../../../../common";
 import DeleteAccountModal from "../../components/settings-page/DeleteAccountModal";
 import { APP_TEXT } from "../../consts/app-text";
-import GameConfigDisplay from "../../components/Lobby/LobbyMenus/GameRoomMenu/GameConfigDisplay";
+import BattleRoomGameSettings from "./BattleRoomGameSettings";
 
 function Settings() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [deleteAccount, { isLoading: deleteAccountIsLoading }] = useDeleteAccountMutation();
-  const [
-    requestPasswordResetEmail,
-    { isLoading: passwordResetIsLoading, isSuccess: passwordResetIsSuccess, isError: passwordResetIsError, error: passwordResetError },
-  ] = useRequestPasswordResetEmailMutation();
+  const [requestPasswordResetEmail, { isLoading: passwordResetIsLoading, isSuccess: passwordResetIsSuccess, isError: passwordResetIsError }] =
+    useRequestPasswordResetEmailMutation();
   const {
     data: user,
     isLoading: userQueryIsLoading,
     isSuccess: userQueryIsSuccess,
     isFetching: userQueryIsFetching,
   } = useGetMeQuery(null, { refetchOnMountOrArgChange: true });
+
   const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
 
   const accountEmail = user?.email ? user.email : "...";
@@ -35,11 +34,8 @@ function Settings() {
   };
 
   useEffect(() => {
-    if (passwordResetIsSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
-    if (passwordResetIsError) {
-      console.log(passwordResetError);
-      dispatch(setAlert(new Alert(ERROR_MESSAGES.AUTH.CHANGE_PASSWORD_EMAIL, AlertType.DANGER)));
-    }
+    if (passwordResetIsSuccess) dispatch(setAlert(new Alert(SUCCESS_ALERTS.AUTH.CHANGE_PASSWORD_EMAIL_SENT, AlertType.SUCCESS)));
+    if (passwordResetIsError) dispatch(setAlert(new Alert(ERROR_MESSAGES.AUTH.CHANGE_PASSWORD_EMAIL, AlertType.DANGER)));
   }, [passwordResetIsSuccess, passwordResetIsError]);
 
   useEffect(() => {
@@ -82,19 +78,7 @@ function Settings() {
               </li>
             </ul>
           </div>
-          <div className="settings-page__battle-room-game-settings">
-            <h3>Casual game options</h3>
-            <GameConfigDisplay
-              disabled={false}
-              handleEditOption={(a: string, b: number) => null}
-              handleResetToDefaults={() => null}
-              currentValues={new BattleRoomGameConfigOptionIndices({})}
-              extraStyles={{
-                main: "settings-page__game-config-element",
-                columnsContainer: "settings-page__game-config-columns-container",
-              }}
-            />
-          </div>
+          <BattleRoomGameSettings />
         </div>
       </main>
     </section>

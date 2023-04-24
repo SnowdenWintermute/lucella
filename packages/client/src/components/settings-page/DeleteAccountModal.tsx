@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, ERROR_MESSAGES, InputFields, SanitizedUser, SuccessAlerts } from "../../../../common";
+import { CustomErrorDetails, ERROR_MESSAGES, InputFields, SanitizedUser, SUCCESS_ALERTS } from "../../../../common";
 import { Alert } from "../../classes/Alert";
 import { BUTTON_NAMES } from "../../consts/button-names";
 import { AlertType } from "../../enums";
@@ -41,7 +41,7 @@ export default function DeleteAccountModal({ user, setParentDisplay }: { user: S
 
   useEffect(() => {
     if (deleteAccountIsSuccess) {
-      dispatch(setAlert(new Alert(SuccessAlerts.USERS.ACCOUNT_DELETED, AlertType.SUCCESS)));
+      dispatch(setAlert(new Alert(SUCCESS_ALERTS.USERS.ACCOUNT_DELETED, AlertType.SUCCESS)));
       logoutUser();
       dispatch(authApi.util.resetApiState());
       router.push("/register");

@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, FrontendRoutes, SUCCESS_ALERTS } from "../../../../common";
 import { APP_TEXT } from "../../../src/consts/app-text";
 import { ARIA_LABELS } from "../../../src/consts/aria-labels";
 import { TaskNames } from "../../support/TaskNames";
@@ -19,7 +19,7 @@ export default function accountDeletion() {
     cy.findByRole("heading", { name: APP_TEXT.AUTH.PAGE_TITLES.LOGIN }).should("exist");
     cy.findByLabelText(new RegExp(`${APP_TEXT.AUTH.INPUTS.EMAIL_ADDRESS}.*`)).type(Cypress.env("CYPRESS_TEST_USER_EMAIL"));
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-    cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("exist");
+    cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.LOGIN, "i")).should("exist");
     cy.findByLabelText(ARIA_LABELS.USER_MENU.OPEN).click();
     cy.findByRole("link", { name: APP_TEXT.USER_MENU.ITEMS.SETTINGS }).click();
     cy.clickButton(APP_TEXT.SETTINGS.DELETE_ACCOUNT);
@@ -30,7 +30,7 @@ export default function accountDeletion() {
       .type(`${Cypress.env("CYPRESS_TEST_USER_EMAIL")}{enter}`);
     cy.findByText(new RegExp(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS, "i")).should("exist");
     cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-    cy.findByText(new RegExp(SuccessAlerts.USERS.ACCOUNT_DELETED, "i")).should("exist");
+    cy.findByText(new RegExp(SUCCESS_ALERTS.USERS.ACCOUNT_DELETED, "i")).should("exist");
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.REGISTER}`);
     cy.findByRole("link", { name: APP_TEXT.AUTH.LINKS.LOG_IN }).click();
     cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
