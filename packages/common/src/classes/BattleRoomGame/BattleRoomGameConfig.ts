@@ -24,13 +24,10 @@ export class BattleRoomGameConfig {
     speedIncrementRate?: number;
     numberOfRoundsRequiredToWin?: number;
   }) {
-    const { acceleration, topSpeed, hardBrakingSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin } = modifiedValues;
-    if (typeof acceleration === "number") this.acceleration = acceleration;
-    if (typeof topSpeed === "number") this.topSpeed = topSpeed;
-    if (typeof hardBrakingSpeed === "number") this.hardBrakingSpeed = hardBrakingSpeed;
-    if (typeof turningSpeedModifier === "number") this.turningSpeedModifier = turningSpeedModifier;
-    if (typeof speedIncrementRate === "number") this.speedIncrementRate = speedIncrementRate;
-    if (typeof numberOfRoundsRequiredToWin === "number") this.numberOfRoundsRequiredToWin = numberOfRoundsRequiredToWin;
+    Object.entries(modifiedValues).forEach(([key, value]) => {
+      // @ts-ignore
+      if (typeof value === "number") this[key] = value;
+    });
   }
   updateConfigValueFromOptionIndex(key: keyof typeof BattleRoomGameOptions, selectedIndex: number) {
     if (!Object.prototype.hasOwnProperty.call(this, key)) return console.error("upon configuring a new game, tried to set an option that didn't exist: ", key);

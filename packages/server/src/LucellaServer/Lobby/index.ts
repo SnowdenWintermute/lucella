@@ -138,7 +138,7 @@ export class Lobby {
       gameRoom.battleRoomGameConfigOptionIndices[key] = value;
     });
     const gameChatChannelName = gameChannelNamePrefix + currentGameName;
-    io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, gameRoom.battleRoomGameConfigOptionIndices);
+    io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, newConfig);
     // unready users
     const { playersReady } = gameRoom;
     // @ts-ignore
@@ -241,7 +241,7 @@ export class Lobby {
       this.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, gameRoom.players[PlayerRole.CHALLENGER]!);
       removedPlayerSocket.emit(
         SocketEventsFromServer.NEW_CHAT_MESSAGE,
-        new ChatMessage(`Game ${gameRoom.gameName} closed by host.`, "Server", ChatMessageStyles.PRIVATE)
+        new ChatMessage(ERROR_MESSAGES.LOBBY.GAME_CLOSED_BY_HOST(gameRoom.gameName), "Server", ChatMessageStyles.PRIVATE)
       );
     }
 

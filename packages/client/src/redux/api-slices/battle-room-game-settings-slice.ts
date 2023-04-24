@@ -40,8 +40,19 @@ export const battleRoomGameSettingsApi = createApi({
           };
         },
       }),
+      resetBattleRoomGameSettings: builder.mutation<void, null>({
+        query() {
+          return {
+            url: BattleRoomConfigRoutePaths.RESET,
+            method: "PUT",
+            credentials: "include",
+            body: {},
+          };
+        },
+      }),
     };
   },
 });
 
-export const { useGetUserBattleRoomGameSettingsQuery, useUpdateBattleRoomGameSettingsMutation } = battleRoomGameSettingsApi;
+export const { useGetUserBattleRoomGameSettingsQuery, useUpdateBattleRoomGameSettingsMutation, useResetBattleRoomGameSettingsMutation } =
+  battleRoomGameSettingsApi;

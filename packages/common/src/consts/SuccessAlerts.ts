@@ -16,5 +16,6 @@ export const SUCCESS_ALERTS = {
   },
   SETTINGS: {
     BATTLE_ROOM_GAME_SETTINGS_UPDATED: "Your settings for Battle Room have been saved and will be used in the next casual game you host",
+    BATTLE_ROOM_GAME_SETTINGS_RESET: "Your settings for Battle Room have been reset to the default values",
   },
 };

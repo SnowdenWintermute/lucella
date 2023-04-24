@@ -20,7 +20,7 @@ function AlertElement({ message, type, id }: Props) {
   if (!id) return <span>Error, the alert was not provided an Id. Please report this issue on GitHub.</span>;
 
   useEffect(() => {
-    timeoutRef.current = setTimeout(() => dispatch(clearAlert(id)), defaultAlertTimeout);
+    timeoutRef.current = setTimeout(() => dispatch(clearAlert(id)), defaultAlertTimeout + message.length * 25);
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };

@@ -25,6 +25,7 @@ export enum ConfigRoutePaths {
 
 export enum BattleRoomConfigRoutePaths {
   ROOT = "/battle-room-config",
+  RESET = "/reset",
 }
 
 export enum CypressTestRoutePaths {

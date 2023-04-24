@@ -111,7 +111,11 @@ const ladderSlice = createSlice({
       if (action.payload !== GameStatus.IN_WAITING_LIST) state.gameCreationWaitingList.currentPosition = null;
     },
     updategameRoomConfig(state, action: PayloadAction<BattleRoomGameConfigOptionIndices>) {
-      if (state.gameRoom) state.gameRoom.battleRoomGameConfigOptionIndices = action.payload;
+      if (!state.gameRoom) return;
+      Object.entries(action.payload).forEach(([key, value]) => {
+        if (!state.gameRoom) return;
+        state.gameRoom.battleRoomGameConfigOptionIndices[key as keyof typeof state.gameRoom.battleRoomGameConfigOptionIndices] = value;
+      });
     },
     updatePlayerRole(state, action: PayloadAction<PlayerRole>) {
       state.playerRole = action.payload;

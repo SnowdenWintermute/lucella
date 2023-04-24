@@ -64,13 +64,9 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
       dispatch(setGameRoom(data));
       if (data) dispatch(setActiveMenu(LobbyMenu.GAME_ROOM));
-      // else dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
     socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, (data) => {
       dispatch(updategameRoomConfig(data));
-    });
-    socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
-      dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
     socket.on(SocketEventsFromServer.PLAYER_READINESS_UPDATE, (playersReady) => {
       dispatch(updatePlayersReady(playersReady));
@@ -111,7 +107,6 @@ function UISocketListener({ socket }: Props) {
       socket.off(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE);
       socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM);
       socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG);
-      socket.off(SocketEventsFromServer.GAME_CLOSED_BY_HOST);
       socket.off(SocketEventsFromServer.PLAYER_READINESS_UPDATE);
       socket.off(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT);
       socket.off(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE);

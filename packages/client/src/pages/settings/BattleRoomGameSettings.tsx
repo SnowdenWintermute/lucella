@@ -3,7 +3,11 @@ import { BattleRoomGameConfigOptionIndices, SUCCESS_ALERTS } from "../../../../c
 import { Alert } from "../../classes/Alert";
 import GameConfigDisplay from "../../components/Lobby/LobbyMenus/GameRoomMenu/GameConfigDisplay";
 import { AlertType } from "../../enums";
-import { useGetUserBattleRoomGameSettingsQuery, useUpdateBattleRoomGameSettingsMutation } from "../../redux/api-slices/battle-room-game-settings-slice";
+import {
+  useGetUserBattleRoomGameSettingsQuery,
+  useResetBattleRoomGameSettingsMutation,
+  useUpdateBattleRoomGameSettingsMutation,
+} from "../../redux/api-slices/battle-room-game-settings-slice";
 import { useAppDispatch } from "../../redux/hooks";
 import { setAlert } from "../../redux/slices/alerts-slice";
 
@@ -14,32 +18,58 @@ function BattleRoomGameSettings() {
   });
   const [
     updateBattleRoomGameSettings,
-    { isLoading: updatedBattleRoomGameSettingsIsLoading, isError: updateBattleRoomGameSettingsIsError, error: updateBattleRoomGameSettingsError },
+    { isLoading: updatedBattleRoomGameSettingsIsLoading, isError: updateBattleRoomGameSettingsIsError, isSuccess: updateBattleRoomGameSettingsIsSuccess },
   ] = useUpdateBattleRoomGameSettingsMutation();
+  const [
+    resetBattleRoomGameSettings,
+    { isLoading: resetBattleRoomGameSettingsIsLoading, isError: resetBattleRoomGameSettingsIsError, isSuccess: resetBattleRoomGameSettingsIsSuccess },
+  ] = useResetBattleRoomGameSettingsMutation();
 
   const [battleRoomGameSettings, setBattleRoomGameSettings] = useState<BattleRoomGameConfigOptionIndices | null>(null);
+  const [newValuesToSaveExist, setNewValuesToSaveExist] = useState(false);
+  const [resetToDefaultsDisabled, setResetToDefaultsDisabled] = useState(false);
 
   useEffect(() => {
     if (battleRoomGameSettingsIsError || !battleRoomGameSettingsData) return;
     const newSettings = new BattleRoomGameConfigOptionIndices({});
     Object.keys(newSettings).forEach((key) => {
-      // @ts-ignore
-      newSettings[key] = battleRoomGameSettingsData[key];
+      newSettings[key as keyof typeof newSettings] = battleRoomGameSettingsData[key as keyof typeof battleRoomGameSettings];
     });
     setBattleRoomGameSettings(newSettings);
   }, [battleRoomGameSettingsData, battleRoomGameSettingsIsError]);
 
   useEffect(() => {
-    if (!updatedBattleRoomGameSettingsIsLoading && !updateBattleRoomGameSettingsIsError)
+    if (!updatedBattleRoomGameSettingsIsLoading && updateBattleRoomGameSettingsIsSuccess) {
       dispatch(setAlert(new Alert(SUCCESS_ALERTS.SETTINGS.BATTLE_ROOM_GAME_SETTINGS_UPDATED, AlertType.SUCCESS)));
+    }
   }, [updatedBattleRoomGameSettingsIsLoading, updateBattleRoomGameSettingsIsError]);
 
   const handleEditOption = (key: string, value: number) => {
     const newOptions = new BattleRoomGameConfigOptionIndices({ ...battleRoomGameSettings });
+    if (newOptions[key as keyof typeof newOptions] !== value) setNewValuesToSaveExist(true);
     // @ts-ignore
     newOptions[key] = value;
     setBattleRoomGameSettings(newOptions);
+    setResetToDefaultsDisabled(false);
   };
+
+  const handleSaveOptions = (values: BattleRoomGameConfigOptionIndices) => {
+    setNewValuesToSaveExist(false);
+    updateBattleRoomGameSettings(values);
+  };
+
+  const sendResetToDefaultsRequest = () => {
+    setNewValuesToSaveExist(false);
+    setResetToDefaultsDisabled(true);
+    resetBattleRoomGameSettings(null);
+  };
+
+  useEffect(() => {
+    if (!resetBattleRoomGameSettingsIsLoading && resetBattleRoomGameSettingsIsSuccess) {
+      setBattleRoomGameSettings(new BattleRoomGameConfigOptionIndices({}));
+      dispatch(setAlert(new Alert(SUCCESS_ALERTS.SETTINGS.BATTLE_ROOM_GAME_SETTINGS_RESET, AlertType.SUCCESS)));
+    }
+  }, [resetBattleRoomGameSettingsIsLoading, resetBattleRoomGameSettingsIsError]);
 
   return (
     <div className="settings-page__battle-room-game-settings">
@@ -48,14 +78,15 @@ function BattleRoomGameSettings() {
         <GameConfigDisplay
           disabled={false}
           handleEditOption={handleEditOption}
-          handleResetToDefaults={() => null}
+          handleResetToDefaults={sendResetToDefaultsRequest}
           currentValues={battleRoomGameSettings}
           extraStyles={{
             main: "settings-page__game-config-element",
             columnsContainer: "settings-page__game-config-columns-container",
           }}
-          handleSaveOptions={updateBattleRoomGameSettings}
-          saveButtonDisabled={updatedBattleRoomGameSettingsIsLoading}
+          handleSaveOptions={(values) => handleSaveOptions(values)}
+          saveButtonDisabled={updatedBattleRoomGameSettingsIsLoading || !newValuesToSaveExist}
+          resetToDefaultsButtonDisabled={resetBattleRoomGameSettingsIsLoading || resetToDefaultsDisabled}
         />
       )}
     </div>

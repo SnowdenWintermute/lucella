@@ -1,6 +1,5 @@
 import request from "supertest";
 import { Application } from "express";
-import nodemailer from "nodemailer";
 import { sendEmail } from "../utils/sendEmail";
 import { AuthRoutePaths, ERROR_MESSAGES } from "../../../../common";
 import PGContext from "../../utils/PGContext";

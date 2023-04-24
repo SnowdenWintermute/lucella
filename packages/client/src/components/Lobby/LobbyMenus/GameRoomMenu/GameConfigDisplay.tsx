@@ -12,6 +12,7 @@ function GameConfigDisplay({
   extraStyles,
   handleSaveOptions,
   saveButtonDisabled,
+  resetToDefaultsButtonDisabled,
 }: {
   disabled: boolean;
   handleEditOption: (optionName: string, newValue: number) => void;
@@ -23,6 +24,7 @@ function GameConfigDisplay({
   };
   handleSaveOptions?: (newValues: BattleRoomGameConfigOptionIndices) => void;
   saveButtonDisabled?: boolean;
+  resetToDefaultsButtonDisabled?: boolean;
 }) {
   const gameConfigDisplayRef = useRef<HTMLDivElement>(null);
   const isOverflowing = useElementIsOverflowing(gameConfigDisplayRef.current);
@@ -120,10 +122,15 @@ function GameConfigDisplay({
         </div>
       </div>
       <div className="game-config-display__bottom-buttons">
-        <button type="button" className="button game-config-display__reset-to-defaults-button" onClick={handleResetToDefaults} disabled={usingDefaultSettings}>
+        <button
+          type="button"
+          className="button game-config-display__reset-to-defaults-button"
+          onClick={handleResetToDefaults}
+          disabled={usingDefaultSettings || resetToDefaultsButtonDisabled}
+        >
           RESET TO DEFAULTS
         </button>
-        {handleSaveOptions ? (
+        {handleSaveOptions && (
           <button
             type="button"
             disabled={saveButtonDisabled}
@@ -132,8 +139,6 @@ function GameConfigDisplay({
           >
             SAVE
           </button>
-        ) : (
-          <p>Setting saved on game start</p>
         )}
       </div>
     </div>
