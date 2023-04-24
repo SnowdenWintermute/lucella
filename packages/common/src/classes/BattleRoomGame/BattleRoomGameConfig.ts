@@ -29,9 +29,19 @@ export class BattleRoomGameConfig {
       if (typeof value === "number") this[key] = value;
     });
   }
+  static isValidOptionIndex(optionName: string, index: number) {
+    if (
+      typeof index === "number" &&
+      index % 1 === 0 &&
+      index >= 0 &&
+      index < BattleRoomGameOptions[optionName as keyof typeof BattleRoomGameOptions].options.length
+    )
+      return true;
+    return false;
+  }
   updateConfigValueFromOptionIndex(key: keyof typeof BattleRoomGameOptions, selectedIndex: number) {
     if (!Object.prototype.hasOwnProperty.call(this, key)) return console.error("upon configuring a new game, tried to set an option that didn't exist: ", key);
-    if (selectedIndex < 0 || selectedIndex > BattleRoomGameOptions[key].options.length - 1)
+    if (!BattleRoomGameConfig.isValidOptionIndex(key, selectedIndex))
       return console.error("upon configuring a new game, tried to access an option index that didn't exist");
     this[key] = BattleRoomGameOptions[key].options[selectedIndex].value;
   }

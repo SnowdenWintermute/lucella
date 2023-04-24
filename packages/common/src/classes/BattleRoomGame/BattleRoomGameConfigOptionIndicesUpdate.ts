@@ -1,4 +1,5 @@
 import { BattleRoomGameOptions } from "../../consts/battle-room-game-config";
+import { BattleRoomGameConfig } from "./BattleRoomGameConfig";
 
 export class BattleRoomGameConfigOptionIndicesUpdate {
   acceleration?: number;
@@ -9,10 +10,18 @@ export class BattleRoomGameConfigOptionIndicesUpdate {
   numberOfRoundsRequiredToWin?: number;
   constructor(modifiedValues: BattleRoomGameConfigOptionIndicesUpdate) {
     Object.entries(modifiedValues).forEach(([key, value]) => {
-      if (typeof value === "number" && value >= 0 && value < BattleRoomGameOptions[key as keyof typeof BattleRoomGameOptions].options.length) {
+      if (BattleRoomGameConfig.isValidOptionIndex(key, value)) {
         // @ts-ignore
         this[key] = value;
-      } else return console.error("Tried to create a BattleRoomGameConfigOptionIndicesUpdate with an invalid key or out of bounds option index");
+      } else {
+        // @ts-ignore
+        this[key] = BattleRoomGameOptions[key as keyof typeof BattleRoomGameOptions].defaultIndex;
+        console.log(
+          "Tried to create a BattleRoomGameConfigOptionIndicesUpdate with an invalid key or out of bounds option index",
+          `key: ${key}, value: ${value}`,
+          "setting to default value"
+        );
+      }
     });
   }
 }
