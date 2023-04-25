@@ -25,7 +25,7 @@ export default function gameListMenu() {
     cy.verifyVeiwingMainMenu();
     //  - pressing back closes the menu
     cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.JOIN, APP_TEXT.GAME_LIST.TITLE);
-    cy.clickButton(BUTTON_NAMES.GAME_LIST.BACK);
+    cy.clickButton(BUTTON_NAMES.GENERIC_NAV.BACK);
     cy.verifyVeiwingMainMenu();
     //  - if no games are being hosted, show a message "no games found"
     cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.JOIN, APP_TEXT.GAME_LIST.TITLE);

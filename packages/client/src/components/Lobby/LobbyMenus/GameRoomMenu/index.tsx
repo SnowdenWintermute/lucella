@@ -76,13 +76,14 @@ function GameRoomMenu({ socket }: { socket: Socket }) {
       <ul className="lobby-menus__top-buttons">
         {!viewingGameConfigDisplay && <LobbyTopListItemWithButton title={BUTTON_NAMES.GAME_ROOM.LEAVE_GAME} onClick={handleLeaveGameClick} extraStyles="" />}
         {viewingGameConfigDisplay && (
-          <LobbyTopListItemWithButton title={BUTTON_NAMES.GAME_LIST.BACK} onClick={() => setViewingGameConfigDisplay(false)} extraStyles="" />
+          <LobbyTopListItemWithButton title={BUTTON_NAMES.GENERIC_NAV.BACK} onClick={() => setViewingGameConfigDisplay(false)} extraStyles="" />
         )}
         <button
           type="button"
           title={!viewingGameConfigDisplay ? "game config" : "close config"}
           className={`button game-room-menu__settings-button ${viewingGameConfigDisplay && "button--accent"}`}
           onClick={() => setViewingGameConfigDisplay(!viewingGameConfigDisplay)}
+          aria-label={ARIA_LABELS.GAME_ROOM.GAME_SETTINGS}
         >
           <SettingsIcon className="game-room-menu__settings-icon" />
         </button>

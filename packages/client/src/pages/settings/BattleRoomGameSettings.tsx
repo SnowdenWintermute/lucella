@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { BattleRoomGameConfigOptionIndices, BattleRoomGameConfigOptionIndicesUpdate, SUCCESS_ALERTS } from "../../../../common";
 import { Alert } from "../../classes/Alert";
+import LoadingSpinner from "../../components/common-components/LoadingSpinner";
 import GameConfigDisplay from "../../components/Lobby/LobbyMenus/GameRoomMenu/GameConfigDisplay";
 import { AlertType } from "../../enums";
 import {
@@ -77,6 +78,7 @@ function BattleRoomGameSettings() {
   return (
     <div className="settings-page__battle-room-game-settings">
       <h3>Casual game options</h3>
+      {!battleRoomGameSettings && <LoadingSpinner />}
       {battleRoomGameSettings && (
         <GameConfigDisplay
           disabled={false}

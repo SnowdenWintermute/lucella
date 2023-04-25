@@ -1,12 +1,7 @@
 import { TaskNames } from "../../support/TaskNames";
-import chat from "./chat";
-import gameListMenu from "./gameListMenu";
-import gameRoomGameConfig from "./gameRoomGameConfig";
-import gameRoomMenu from "./gameRoomMenu";
-import gameSetupMenu from "./gameSetupMenu";
-import matchmakingQueueMenu from "./matchmakingQueueMenu";
+import gameSettingsConfig from "./gameSettingsConfig";
 
-describe("lobby chat, hosting, joining and game start and end functionality", () => {
+describe("settings page", () => {
   // eslint-disable-next-line no-undef
   before(() => {
     cy.task(TaskNames.disconnectAllSockets);
@@ -22,10 +17,6 @@ describe("lobby chat, hosting, joining and game start and end functionality", ()
     cy.task(TaskNames.disconnectAllSockets);
     cy.task(TaskNames.deleteAllSocketsAndAccessTokens);
   });
-  chat();
-  gameSetupMenu();
-  gameRoomMenu();
-  gameListMenu();
-  matchmakingQueueMenu();
-  gameRoomGameConfig();
+
+  gameSettingsConfig();
 });

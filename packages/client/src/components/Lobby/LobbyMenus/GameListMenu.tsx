@@ -69,7 +69,7 @@ function GameListMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className="lobby-menus__top-buttons">
-        <LobbyTopListItemWithButton title={BUTTON_NAMES.GAME_LIST.BACK} onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
+        <LobbyTopListItemWithButton title={BUTTON_NAMES.GENERIC_NAV.BACK} onClick={() => dispatch(setActiveMenu(LobbyMenu.MAIN))} extraStyles="" />
         <button
           type="button"
           className="button game-list-buttons__refresh"

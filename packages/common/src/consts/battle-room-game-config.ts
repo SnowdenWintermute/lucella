@@ -18,6 +18,7 @@ export const orbWaypointListSizeLimit = 100;
 export const BattleRoomGameOptions = {
   numberOfRoundsRequiredToWin: {
     defaultIndex: 2,
+    readableTitle: "Rounds",
     options: [
       { title: "Best of 1", value: 1 },
       { title: "Best of 3", value: 2 },
@@ -27,6 +28,7 @@ export const BattleRoomGameOptions = {
   },
   acceleration: {
     defaultIndex: 4,
+    readableTitle: "Acceleration",
     options: [
       { title: "Very slow", value: 0.05 },
       { title: "Slow", value: 0.1 },
@@ -37,6 +39,7 @@ export const BattleRoomGameOptions = {
   },
   topSpeed: {
     defaultIndex: 1,
+    readableTitle: "Top speed",
     options: [
       { title: "Very slow", value: 1 },
       { title: "Slow", value: 2 }, // default
@@ -47,6 +50,7 @@ export const BattleRoomGameOptions = {
   },
   turningSpeedModifier: {
     defaultIndex: 3,
+    readableTitle: "Turning modifier",
     options: [
       { title: "Low assist", value: 0.1 },
       { title: "Medium assist", value: 0.2 },
@@ -56,6 +60,7 @@ export const BattleRoomGameOptions = {
   },
   hardBrakingSpeed: {
     defaultIndex: 4,
+    readableTitle: "Braking",
     options: [
       { title: "Very soft", value: 0.05 },
       { title: "Soft", value: 0.1 },
@@ -66,6 +71,7 @@ export const BattleRoomGameOptions = {
   },
   speedIncrementRate: {
     defaultIndex: 2,
+    readableTitle: "Speed increment",
     options: [
       { title: "None", value: 0 },
       { title: "Low", value: 0.05 },

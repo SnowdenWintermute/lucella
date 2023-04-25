@@ -1,4 +1,8 @@
 export const APP_TEXT = {
+  NAV: {
+    GAME: "Game",
+    LADDER: "Ladder",
+  },
   MATCHMAKING_QUEUE: {
     SEEKING_RANKED_MATCH: "Searching for ranked match...",
     NUM_PLAYERS_IN_QUEUE: "Number of players in queue: ",

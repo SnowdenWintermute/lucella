@@ -5,6 +5,8 @@ import { UserMenu } from "./UserMenu";
 import Logo from "../../../img/logo.svg";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setTheme, Theme } from "../../../redux/slices/ui-slice";
+import { APP_TEXT } from "../../../consts/app-text";
+import { FrontendRoutes } from "../../../../../common";
 
 function NavigationLink({ title, href }: { title: string; href: string }) {
   const router = useRouter();
@@ -35,8 +37,8 @@ export default function Navbar() {
           <Link href="/" className="main-navigation__logo-text">
             Battle School
           </Link>
-          <NavigationLink title="Game" href="/battle-room" />
-          <NavigationLink title="Ladder" href="/ladder" />
+          <NavigationLink title={APP_TEXT.NAV.GAME} href={FrontendRoutes.BATTLE_ROOM} />
+          <NavigationLink title={APP_TEXT.NAV.LADDER} href={FrontendRoutes.LADDER} />
         </div>
       </div>
       <UserMenu />

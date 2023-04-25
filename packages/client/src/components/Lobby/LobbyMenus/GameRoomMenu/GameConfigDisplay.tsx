@@ -3,6 +3,7 @@ import RadioBar from "../../../common-components/RadioBar";
 import { BattleRoomGameConfigOptionIndices, BattleRoomGameOptions } from "../../../../../../common";
 import useElementIsOverflowing from "../../../../hooks/useElementIsOverflowing";
 import useScrollbarSize from "../../../../hooks/useScrollbarSize";
+import { BUTTON_NAMES } from "../../../../consts/button-names";
 
 function GameConfigDisplay({
   disabled,
@@ -54,7 +55,7 @@ function GameConfigDisplay({
       >
         <div className="game-config-display__option-column">
           <RadioBar
-            title="Acceleration"
+            title={BattleRoomGameOptions.acceleration.readableTitle}
             options={BattleRoomGameOptions.acceleration.options.map((option, i) => {
               return { title: option.title, value: i };
             })}
@@ -64,7 +65,7 @@ function GameConfigDisplay({
             extraStyles="game-config-display__radio-input"
           />
           <RadioBar
-            title="Top speed"
+            title={BattleRoomGameOptions.topSpeed.readableTitle}
             options={BattleRoomGameOptions.topSpeed.options.map((option, i) => {
               return { title: option.title, value: i };
             })}
@@ -76,7 +77,7 @@ function GameConfigDisplay({
         </div>
         <div className="game-config-display__option-column">
           <RadioBar
-            title="Turning modifier"
+            title={BattleRoomGameOptions.turningSpeedModifier.readableTitle}
             options={BattleRoomGameOptions.turningSpeedModifier.options.map((option, i) => {
               return { title: option.title, value: i };
             })}
@@ -84,9 +85,10 @@ function GameConfigDisplay({
             setValue={(value) => handleEditOption("turningSpeedModifier", value)}
             disabled={disabled}
             extraStyles="game-config-display__radio-input"
+            tooltip="Additional acceleration to assist an orb in countering momentum in a direction other than its destination"
           />
           <RadioBar
-            title="Braking"
+            title={BattleRoomGameOptions.hardBrakingSpeed.readableTitle}
             options={BattleRoomGameOptions.hardBrakingSpeed.options.map((option, i) => {
               return { title: option.title, value: i };
             })}
@@ -94,11 +96,12 @@ function GameConfigDisplay({
             setValue={(value) => handleEditOption("hardBrakingSpeed", value)}
             disabled={disabled}
             extraStyles="game-config-display__radio-input"
+            tooltip="How quickly orbs come to a stop after reaching their destinations"
           />
         </div>
         <div className="game-config-display__option-column">
           <RadioBar
-            title="Speed increment"
+            title={BattleRoomGameOptions.speedIncrementRate.readableTitle}
             options={BattleRoomGameOptions.speedIncrementRate.options.map((option, i) => {
               return { title: option.title, value: i };
             })}
@@ -109,7 +112,7 @@ function GameConfigDisplay({
             tooltip="How much the game speed increases after each point is scored"
           />
           <RadioBar
-            title="Rounds"
+            title={BattleRoomGameOptions.numberOfRoundsRequiredToWin.readableTitle}
             options={BattleRoomGameOptions.numberOfRoundsRequiredToWin.options.map((option, i) => {
               return { title: option.title, value: i };
             })}
@@ -117,7 +120,7 @@ function GameConfigDisplay({
             setValue={(value) => handleEditOption("numberOfRoundsRequiredToWin", value)}
             disabled={disabled}
             extraStyles="game-config-display__radio-input"
-            tooltip="How much the game speed increases after each point is scored"
+            tooltip="Number of rounds required to win the match"
           />
         </div>
       </div>
@@ -128,7 +131,7 @@ function GameConfigDisplay({
           onClick={handleResetToDefaults}
           disabled={usingDefaultSettings || resetToDefaultsButtonDisabled}
         >
-          RESET TO DEFAULTS
+          {BUTTON_NAMES.GAME_CONFIG.RESET_TO_DEFAULTS}
         </button>
         {handleSaveOptions && (
           <button
@@ -137,7 +140,7 @@ function GameConfigDisplay({
             className="button game-config-display__reset-to-defaults-button"
             onClick={() => handleSaveOptions(currentValues)}
           >
-            SAVE
+            {BUTTON_NAMES.GAME_CONFIG.SAVE}
           </button>
         )}
       </div>

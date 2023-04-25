@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { ARIA_LABELS } from "../../../consts/aria-labels";
 
 function RadioButton({
   title,
@@ -46,7 +47,7 @@ function RadioBar({
   const [selectedIndex, setSelectedIndex] = useState(options.reduce((accumulator, option, i) => (option.value === value ? i : accumulator), 0));
 
   useEffect(() => {
-    setValue(options[selectedIndex].value);
+    if (options[selectedIndex].value !== value) setValue(options[selectedIndex].value);
   }, [selectedIndex]);
 
   // this is so when user presses the reset to defaults button or selected values are otherwise updated via other means besides this input
@@ -70,11 +71,15 @@ function RadioBar({
     );
   });
 
+  const currentValue = options.reduce((acc, option) => (option.value === value ? option.title : acc), "");
+
   return (
-    <menu className={`radio-bar ${extraStyles}`} data-disabled={disabled ? "true" : "false"} title={tooltip}>
+    <menu className={`radio-bar ${extraStyles}`} data-disabled={disabled ? "true" : "false"} aria-label={title} title={tooltip}>
       <p className="radio-bar__title">{title}</p>
       <div className="radio-bar__options">{displayedOptions}</div>
-      <p className="radio-bar__value">{options.reduce((acc, option) => (option.value === value ? option.title : acc), "")}</p>
+      <p className="radio-bar__value" aria-label={ARIA_LABELS.GAME_CONFIG.OPTION_CURRENT_VALUE(title)}>
+        {currentValue}
+      </p>
     </menu>
   );
 }
