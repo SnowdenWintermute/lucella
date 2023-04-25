@@ -26,6 +26,8 @@ import { GameCreationWaitingList } from "./GameCreationWaitingList";
 import createGamePhysicsInterval from "../battleRoomGame/createGamePhysicsInterval";
 import LucellaServerConfig from "./LucellaServerConfig";
 import updateScoreCardsAndSaveGameRecord from "../battleRoomGame/endGameCleanup/updateScoreCardsAndSaveGameRecord";
+import saveBattleRoomGameSettings from "../controllers/utils/saveBattleRoomGameSettings";
+import UsersRepo from "../database/repos/users";
 // import broadcastLatencyUpdates from "./broadcastLatencyUpdates";
 
 export class LucellaServer {
@@ -152,7 +154,7 @@ export class LucellaServer {
     }, ONE_SECOND);
   }
 
-  initiateGameStartCountdown(gameRoom: GameRoom) {
+  async initiateGameStartCountdown(gameRoom: GameRoom) {
     const { io, lobby, games } = this;
     const gameChatChannelName = gameChannelNamePrefix + gameRoom.gameName;
     gameRoom.countdown.current = this.config.gameStartCountdownDuration;
@@ -160,7 +162,7 @@ export class LucellaServer {
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
     lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName] = gameRoom;
     io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
-    gameRoom.countdownInterval = setInterval(() => {
+    gameRoom.countdownInterval = setInterval(async () => {
       if (gameRoom.countdown.current > 0) {
         gameRoom.countdown.current -= 1;
         io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
@@ -173,13 +175,19 @@ export class LucellaServer {
         if (!players.host || !players.challenger) return console.error("tried to start a a game but one of the players was not found");
         games[gameRoom.gameName] = new BattleRoomGame(
           gameRoom.gameName,
-          gameRoom.numberOfRoundsRequiredToWin,
           { host: players.host.associatedUser.username, challenger: players.challenger.associatedUser.username },
+          !gameRoom.isRanked ? gameRoom.battleRoomGameConfigOptionIndices : undefined,
           gameRoom.isRanked
         );
         const game = games[gameRoom.gameName];
         io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
         game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);
+        // save their configuration options if not a ranked game
+        if (gameRoom.isRanked) return;
+        if (gameRoom.players.host?.associatedUser.isGuest) return;
+        const hostUser = await UsersRepo.findOne("name", gameRoom.players.host?.associatedUser.username);
+        if (!hostUser) return;
+        saveBattleRoomGameSettings(hostUser.id, gameRoom.battleRoomGameConfigOptionIndices);
       }
     }, ONE_SECOND);
   }

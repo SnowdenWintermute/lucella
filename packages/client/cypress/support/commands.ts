@@ -1,6 +1,6 @@
 import "@testing-library/cypress/add-commands";
 import { recurse } from "cypress-recurse";
-import { battleRoomDefaultChatChannel, SocketEventsFromClient } from "../../../common/dist";
+import { battleRoomDefaultChatChannel, SocketEventsFromClient } from "../../../common";
 import { BUTTON_NAMES } from "../../src/consts/button-names";
 import { APP_TEXT } from "../../src/consts/app-text";
 import { TaskNames } from "./TaskNames";

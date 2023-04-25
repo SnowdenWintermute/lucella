@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer, SOCKET_ADDRESS_PRODUCTION } from "../../../../common";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { LobbyMenu, setAuthenticating, setCurrentGameRoom, setActiveMenu } from "../../redux/slices/lobby-ui-slice";
+import { LobbyMenu, setAuthenticating, setGameRoom, setActiveMenu } from "../../redux/slices/lobby-ui-slice";
 import { INetworkPerformanceMetrics } from "../../types";
 import { pingIntervalMs } from "../../consts";
 import ChatSocketListener from "./ChatSocketListener";
@@ -29,7 +29,7 @@ function SocketManager({ socket, defaultChatChannel, networkPerformanceMetricsRe
     console.log("socket address: ", socketAddress);
     return () => {
       if (socket.current) socket.current.disconnect();
-      dispatch(setCurrentGameRoom(null));
+      dispatch(setGameRoom(null));
       dispatch(setActiveMenu(LobbyMenu.MAIN));
     };
   }, [dispatch]);

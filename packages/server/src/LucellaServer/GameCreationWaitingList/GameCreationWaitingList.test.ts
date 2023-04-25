@@ -177,7 +177,7 @@ describe("GameCreationWaitingList", () => {
           }
         });
 
-        clients.user5.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+        clients.user5.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
           if (!data) return;
           eventsOccurred.user5HostedGame = true;
           if (!data.players.challenger) {

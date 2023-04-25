@@ -29,7 +29,7 @@ export function putTwoSocketClientsInRoomAndHaveBothReadyUp(socket1: Socket, soc
       if (Object.values(data).every((value) => value)) resolve(true);
     });
 
-    socket2.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+    socket2.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
       if (!data) return;
       if (!eventsOccurred.socket2ClickedReady) {
         socket2.emit(SocketEventsFromClient.CLICKS_READY);
@@ -37,7 +37,7 @@ export function putTwoSocketClientsInRoomAndHaveBothReadyUp(socket1: Socket, soc
       }
     });
 
-    socket1.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+    socket1.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
       if (!data) return;
       if (!eventsOccurred.socket2JoinedGame) {
         eventsOccurred.socket2JoinedGame = true;

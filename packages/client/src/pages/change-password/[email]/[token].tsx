@@ -6,7 +6,7 @@ import { AlertType } from "../../../enums";
 import { setAlert } from "../../../redux/slices/alerts-slice";
 import { useAppDispatch } from "../../../redux/hooks";
 import { useChangePasswordMutation } from "../../../redux/api-slices/users-api-slice";
-import { CustomErrorDetails, InputFields, SuccessAlerts } from "../../../../../common";
+import { CustomErrorDetails, InputFields, SUCCESS_ALERTS } from "../../../../../common";
 import AuthPage from "../../../components/common-components/AuthPage/AuthPage";
 import LabeledTextInputWithErrorDisplay from "../../../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import { BUTTON_NAMES } from "../../../consts/button-names";
@@ -37,7 +37,7 @@ function ChangePassword() {
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setAlert(new Alert(SuccessAlerts.AUTH.PASSWORD_CHANGED, AlertType.SUCCESS)));
+      dispatch(setAlert(new Alert(SUCCESS_ALERTS.AUTH.PASSWORD_CHANGED, AlertType.SUCCESS)));
       logoutUser();
       router.push("/login");
     }

@@ -189,8 +189,8 @@ export default defineConfig({
             if (!users[username].socket) console.error(`tried to emit event ${event} but no socket was found`);
             if (event === SocketEventsFromClient.HOSTS_NEW_GAME || event === SocketEventsFromClient.JOINS_GAME) {
               console.log(`${username}: ${event}`);
-              users[username].socket?.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, () => {
-                users[username].socket?.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
+              users[username].socket?.on(SocketEventsFromServer.CURRENT_GAME_ROOM, () => {
+                users[username].socket?.off(SocketEventsFromServer.CURRENT_GAME_ROOM);
                 resolve(null);
               });
               users[username].socket?.on(SocketEventsFromServer.ERROR_MESSAGE, (error: string) => {

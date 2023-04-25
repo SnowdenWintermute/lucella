@@ -1,6 +1,6 @@
 import { ONE_DAY } from "./index";
 
-export const SuccessAlerts = {
+export const SUCCESS_ALERTS = {
   USERS: {
     ACCOUNT_CREATED: "Account created",
     ACCOUNT_DELETED: "Account deleted",
@@ -13,5 +13,9 @@ export const SuccessAlerts = {
   },
   ADMIN: {
     USER_BANNED: (username: string, duration: number | null) => `User ${username} banned for ${duration ? `${duration / ONE_DAY} days` : `indefinitely`}`,
+  },
+  SETTINGS: {
+    BATTLE_ROOM_GAME_SETTINGS_UPDATED: "Your settings for Battle Room have been saved and will be used in the next casual game you host",
+    BATTLE_ROOM_GAME_SETTINGS_RESET: "Your settings for Battle Room have been reset to the default values",
   },
 };

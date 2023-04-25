@@ -18,7 +18,7 @@ export default async function createLoggedInUsersWithConnectedSockets(usersToCre
           extraHeaders: { cookie: `${CookieNames.ACCESS_TOKEN}=${loginResult.accessToken};` },
         });
         clients[user.name] = userSocket;
-        userSocket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => console.error(`${user.name} got error: ${data}`));
+        userSocket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => console.log(`SOCKET_ERROR: ${user.name} got error: ${data}`));
         userSocket.on(GENERIC_SOCKET_EVENTS.CONNECT_ERROR, () => {
           console.log(`${user.name}'s socket unable to connect`);
           reject(new Error(`${user.name}'s socket unable to connect`));

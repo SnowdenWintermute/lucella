@@ -46,7 +46,7 @@ async function loadTest() {
         hostSocket.emit(SocketEventsFromClient.HOSTS_NEW_GAME, `${i}`);
       });
 
-      hostSocket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+      hostSocket.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
         if (data?.gameName && !hostReadied) {
           hostSocket.emit(SocketEventsFromClient.CLICKS_READY);
           hostReadied = true;
@@ -54,7 +54,7 @@ async function loadTest() {
         challengerSocket.emit(SocketEventsFromClient.JOINS_GAME, `${i}`);
       });
 
-      challengerSocket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, async (data) => {
+      challengerSocket.on(SocketEventsFromServer.CURRENT_GAME_ROOM, async (data) => {
         if (data?.gameName && !challengerReadied) {
           challengerSocket.emit(SocketEventsFromClient.CLICKS_READY);
           challengerReadied = true;

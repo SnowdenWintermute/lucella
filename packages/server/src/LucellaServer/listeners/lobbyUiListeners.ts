@@ -20,8 +20,8 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
   socket.on(SocketEventsFromClient.HOSTS_NEW_GAME, (gameName) => {
     server.lobby.handleHostNewGameRequest(socket, gameName, false);
   });
-  socket.on(SocketEventsFromClient.GAME_ROOM_NUMBER_OF_ROUNDS_EDIT_REQUEST, (data) => {
-    server.lobby.handleEditNumberOfRoundsRequiredToWinRequest(socket, data);
+  socket.on(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, (data) => {
+    server.lobby.handleEditGameRoomConfigRequest(socket, data);
   });
   socket.on(SocketEventsFromClient.LEAVES_GAME, () => {
     server.handleSocketLeavingGame(socket, false);

@@ -25,7 +25,7 @@ export default function gameListMenu() {
     cy.verifyVeiwingMainMenu();
     //  - pressing back closes the menu
     cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.JOIN, APP_TEXT.GAME_LIST.TITLE);
-    cy.clickButton(BUTTON_NAMES.GAME_LIST.BACK);
+    cy.clickButton(BUTTON_NAMES.GENERIC_NAV.BACK);
     cy.verifyVeiwingMainMenu();
     //  - if no games are being hosted, show a message "no games found"
     cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.JOIN, APP_TEXT.GAME_LIST.TITLE);
@@ -67,5 +67,6 @@ export default function gameListMenu() {
     cy.findByLabelText(ARIA_LABELS.GAME_LIST.JOIN_GAME_BY_NAME_OF("a")).click();
     cy.findByLabelText(ARIA_LABELS.CHAT.CHANNEL_NAME_WITH_NUM_USERS).should("contain.text", `${gameChannelNamePrefix}a`);
     cy.findByText(`${APP_TEXT.GAME_ROOM.GAME_NAME_HEADER}a`).should("be.visible");
+    cy.task(TaskNames.disconnectAllSockets);
   });
 }

@@ -19,12 +19,16 @@ export const BUTTON_NAMES = {
     CANCEL: "Cancel",
     CREATE_GAME: "Create Game",
   },
-  GAME_LIST: {
+  GENERIC_NAV: {
     BACK: "Back",
   },
   GAME_ROOM: {
     READY: "Ready",
     LEAVE_GAME: "Leave Game",
+  },
+  GAME_CONFIG: {
+    RESET_TO_DEFAULTS: "Reset to Defaults",
+    SAVE: "Save",
   },
   MATCHMAKING_QUEUE: {
     CANCEL: "Cancel",

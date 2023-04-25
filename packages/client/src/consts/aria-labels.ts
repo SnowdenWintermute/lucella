@@ -19,6 +19,11 @@ export const ARIA_LABELS = {
     GAME_STATUS: "game status",
     GAME_START_COUNTDOWN: "game start countdown",
     WAITING_LIST_POSITION: "waiting list position",
+    GAME_SETTINGS: "game settings",
+  },
+  GAME_CONFIG: {
+    OPTION_CURRENT_VALUE: (optionName: string) => `${optionName} current value`,
+    OPTION_SELECT_BUTTON: (optionName: string, readableValueName: number) => `set ${optionName} to ${readableValueName}`,
   },
   GAME_LIST: {
     REFRESH_GAME_LIST: "refresh game list",

@@ -16,7 +16,9 @@ export const ERROR_MESSAGES = {
     LOG_IN_TO_PLAY_RANKED: "Log in or create an account to play ranked games",
     CANT_JOIN_RANKED_GAME_IF_NOT_ASSIGNED: "You can't join a ranked game that the matchmaking didn't assign you to",
     ALREADY_IN_MATCHMAKING_QUEUE: "You are already in the matchmaking queue",
-    CANT_EDIT_ROUNDS_IF_BOTH_PLAYERS_READY: "You can't edit the number of rounds if both players are ready",
+    CANT_EDIT_GAME_CONFIG_IF_BOTH_PLAYERS_READY: "You can't edit the game config if both players are ready",
+    ONLY_HOST_MAY_EDIT_GAME_CONFIG: "You can only edit the game config if you are the game host",
+    GAME_CLOSED_BY_HOST: (gameName?: string) => `Game${gameName ? ` ${gameName} ` : " "}closed by host.`,
     GAME_NAME: {
       NOT_ENTERED: "Please enter a game name",
       MIN_LENGTH: "Game name must be at least one character long",

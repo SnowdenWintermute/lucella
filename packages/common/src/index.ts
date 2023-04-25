@@ -1,8 +1,22 @@
 export * from "./types";
-export { IBattleRoomGameRecord, IBattleRoomScoreCard, BattleRoomLadderEntry, BattleRoomLadderEntryWithUserId } from "./types/BattleRoomGameRecords";
+export {
+  IBattleRoomGameRecord,
+  IBattleRoomScoreCard,
+  BattleRoomLadderEntry,
+  BattleRoomLadderEntryWithUserId,
+  IBattleRoomConfigSettings,
+} from "./types/BattleRoomGameRecords";
 export { GameStatus, PlayerRole, UserInputs, UserRole, IPBanReason } from "./enums";
 export { SocketEventsFromClient, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "./enums/SocketEvents";
-export { AuthRoutePaths, UsersRoutePaths, ModerationRoutePaths, ConfigRoutePaths, CypressTestRoutePaths, LadderRoutePaths } from "./enums/APIRoutePaths";
+export {
+  AuthRoutePaths,
+  UsersRoutePaths,
+  BattleRoomConfigRoutePaths,
+  ModerationRoutePaths,
+  ConfigRoutePaths,
+  CypressTestRoutePaths,
+  LadderRoutePaths,
+} from "./enums/APIRoutePaths";
 export { FrontendRoutes } from "./enums/FrontendRoutePaths";
 export * from "./consts";
 export * from "./consts/battle-room-game-config";
@@ -11,13 +25,15 @@ export * from "./consts/game-lobby-config";
 export * from "./consts/auth-validation-config";
 export * from "./consts/colors";
 export { ERROR_MESSAGES } from "./consts/ErrorMessages";
-export { SuccessAlerts } from "./consts/SuccessAlerts";
+export { SUCCESS_ALERTS } from "./consts/SuccessAlerts";
 export { InputFields } from "./consts/InputFields";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
 export { GameElementsOfConstantInterest } from "./classes/BattleRoomGame/GameElementsOfConstantInterest";
 export { setOrbsAtStartPositions } from "./classes/BattleRoomGame/setOrbsAtStartPositions";
 export * from "./classes/ChatChannel";
+export { BattleRoomGameConfigOptionIndicesUpdate } from "./classes/BattleRoomGame/BattleRoomGameConfigOptionIndicesUpdate";
+export { BattleRoomGameConfigOptionIndices } from "./classes/BattleRoomGame/BattleRoomGameConfigOptionIndices";
 export { User, SanitizedUser } from "./classes/User";
 export { ChatMessage, ChatMessageStyles } from "./classes/ChatMessage";
 export { MouseData } from "./classes/MouseData";

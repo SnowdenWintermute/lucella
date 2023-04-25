@@ -2,7 +2,7 @@ import { Application } from "express";
 import request from "supertest";
 import bcrypt from "bcryptjs";
 import { ERROR_MESSAGES, UsersRoutePaths } from "../../../../common";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
 import { TEST_USER_EMAIL_ALTERNATE, TEST_USER_NAME_ALTERNATE, TEST_USER_PASSWORD } from "../../utils/test-utils/consts";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
@@ -31,7 +31,7 @@ describe("accountActivationHandler", () => {
 
   it(`upon visiting /account-activation with proper token while a valid session is active creates user account
     and doesn't allow reuse of the same token/session`, async () => {
-    const startingCount = await UserRepo.count();
+    const startingCount = await UsersRepo.count();
 
     // create appropriate jwt for link
     const token = signJwtAsymmetric({ email: TEST_USER_EMAIL_ALTERNATE }, process.env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY!, {
@@ -55,7 +55,7 @@ describe("accountActivationHandler", () => {
     expect(response.body.user.name).toBe(TEST_USER_NAME_ALTERNATE);
     expect(response.body.user.email).toBe(TEST_USER_EMAIL_ALTERNATE);
 
-    const finishCount = await UserRepo.count();
+    const finishCount = await UsersRepo.count();
     expect(finishCount - startingCount).toEqual(1);
     const responseForSecondCreation = await request(app).post(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.ACCOUNT_ACTIVATION}`).send({ token });
     expect(responseForSecondCreation.status).toBe(401);

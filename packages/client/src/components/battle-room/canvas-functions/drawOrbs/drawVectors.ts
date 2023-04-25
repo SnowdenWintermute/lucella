@@ -1,5 +1,5 @@
 import { Vector } from "matter-js";
-import { findAngle, Orb, Point, slope } from "../../../../../../common";
+import { Orb, Point } from "../../../../../../common";
 
 export default function drawVectors(context: CanvasRenderingContext2D, orb: Orb, canvasDrawFractions: Point) {
   if (!orb.destination) return;
@@ -19,13 +19,4 @@ export default function drawVectors(context: CanvasRenderingContext2D, orb: Orb,
   context.moveTo(rx, ry);
   context.lineTo((x + force.x) * canvasDrawFractions.x, (y + force.y) * canvasDrawFractions.y);
   context.stroke();
-  //   const deltaVectorSlope = slope(x, y, x + deltaVector.x, y + deltaVector.y);
-  //   const forceSlope = slope(x, y, x + force.x, y + force.y);
-  //   console.log(findAngle(deltaVectorSlope, forceSlope));
-  //   console.log(
-  // Vector.angle(
-  //   Vector.create((x + force.x) * canvasDrawFractions.x, (y + force.y) * canvasDrawFractions.x),
-  //   Vector.create((x + deltaVector.x) * canvasDrawFractions.x, (y + deltaVector.y) * canvasDrawFractions.x)
-  // )
-  //   );
 }

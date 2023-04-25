@@ -22,7 +22,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
   game.physicsEngine.gravity.scale = 0;
 
   for (let i = 1; i <= numberOfOrbsPerPlayer; i += 1) {
-    const hostOrbBody = Matter.Bodies.circle(0, 0, BattleRoomGame.baseOrbRadius, {
+    const hostOrbBody = Matter.Bodies.circle(0, 0, game.config.orbRadius, {
       collisionFilter: { category: hostOrbCollisionCategory, mask: challengerOrbCollisionCategory },
       frictionAir,
       density: orbDensity,
@@ -31,7 +31,7 @@ export default function initializeWorld(game: BattleRoomGame, prevGameState?: Ba
     game.orbs.host[`host-orb-${i}`] = new Orb(hostOrbBody, PlayerRole.HOST, i);
     setOrbAtStartPosition(game.orbs.host[`host-orb-${i}`], i, PlayerRole.HOST);
     Matter.Composite.add(game.physicsEngine.world, hostOrbBody);
-    const challengerOrbBody = Matter.Bodies.circle(0, 0, BattleRoomGame.baseOrbRadius, {
+    const challengerOrbBody = Matter.Bodies.circle(0, 0, game.config.orbRadius, {
       collisionFilter: { category: challengerOrbCollisionCategory, mask: hostOrbCollisionCategory },
       frictionAir,
       density: orbDensity,

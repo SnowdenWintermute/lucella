@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import bcrypt from "bcryptjs";
 import { NextFunction, Request, Response } from "express";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { ERROR_MESSAGES } from "../../../../common";
 import { UserRegistrationUserInput } from "../../user-input-validation-schema/register-user-schema";
@@ -14,9 +14,9 @@ import { ACCOUNT_CREATION_SESSION_PREFIX } from "../../consts";
 export default async function registerNewAccountHandler(req: Request<object, object, UserRegistrationUserInput>, res: Response, next: NextFunction) {
   const { name, email, password } = req.body;
 
-  const emailAlreadyExists = await UserRepo.findOne("email", email);
+  const emailAlreadyExists = await UsersRepo.findOne("email", email);
   if (emailAlreadyExists) return next([new CustomError(ERROR_MESSAGES.AUTH.EMAIL_IN_USE_OR_UNAVAILABLE, 403)]);
-  const nameAlreadyExists = await UserRepo.findOne("name", name.toLowerCase().trim());
+  const nameAlreadyExists = await UsersRepo.findOne("name", name.toLowerCase().trim());
   if (nameAlreadyExists) return next([new CustomError(ERROR_MESSAGES.AUTH.NAME_IN_USE_OR_UNAVAILABLE, 403)]);
 
   const token = signJwtAsymmetric({ email }, process.env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY!, {

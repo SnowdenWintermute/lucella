@@ -2,13 +2,16 @@ import { Body, Vector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
 import { renderRate } from "../consts";
-import { orbMaxSpeed, decelerationDistance } from "../consts/battle-room-game-config";
-import { distanceBetweenTwoPoints, findAngle, numberInRangeToBetweenZeroAndOne, slope } from "../utils";
+import { angleBetweenVectors, numberInRangeToBetweenZeroAndOne } from "../utils";
 
 export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
+  const { hardBrakingSpeed, turningSpeedModifier, topSpeed } = game.config;
+
+  const minimumMovementSpeed = 0.05;
+
   if (!orb.destination) {
-    if (Vector.magnitude(orb.body.force) < 0.4) orb.body.force = Vector.create(0, 0);
-    else Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.2)));
+    if (Vector.magnitude(orb.body.force) < minimumMovementSpeed) orb.body.force = Vector.create(0, 0); // stop any orb moving at miniscule speeds
+    else Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, hardBrakingSpeed)));
     Body.update(orb.body, renderRate, 1, 0);
     return;
   }
@@ -21,28 +24,30 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
     position.x >= destination.x - tolerance &&
     position.y <= destination.y + tolerance &&
     position.y >= destination.y - tolerance;
-  if (entityReachedDestination || !destination) {
+  if (entityReachedDestination) {
     orb.destination = null;
-    Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.2)));
+    Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, hardBrakingSpeed)));
+    Body.update(orb.body, renderRate, 1, 0);
     return;
   }
 
-  const force = game.speedModifier;
-  const deltaVector = Vector.sub(orb.destination, orb.body.position);
-  const normalizedDelta = Vector.normalise(deltaVector);
-  const forceVector = Vector.mult(normalizedDelta, force);
+  const destinationVector = Vector.sub(orb.destination, orb.body.position); // vector of the difference between orb position and destination with direction and magnitude
 
-  const deltaVectorSlope = slope(position.x, position.y, position.x + deltaVector.x, position.y + deltaVector.y);
-  const forceSlope = slope(position.x, position.y, position.x + orb.body.force.x, position.y + orb.body.force.y);
-  const angle = findAngle(deltaVectorSlope, forceSlope);
-  const multiplier = numberInRangeToBetweenZeroAndOne(angle, 360);
-  Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, multiplier)));
-  const shouldBeBraking =
-    distanceBetweenTwoPoints(position, destination) < decelerationDistance - game.speedModifier || orb.body.speed > orbMaxSpeed + game.speedModifier;
-  if (!shouldBeBraking) Body.applyForce(orb.body, orb.body.position, forceVector);
-  else {
-    Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, 0.1)));
-    if (!entityReachedDestination) Body.applyForce(orb.body, orb.body.position, Vector.mult(normalizedDelta, 0.3));
-  }
+  // find the angle between the current force on the orb (it's "momentum") and it's intended destination
+  const angleBetweenCurrentForceAndDestination = angleBetweenVectors(destinationVector, orb.body.force) || 0;
+  const turningForce = Vector.neg(
+    Vector.mult(orb.body.force, turningSpeedModifier * numberInRangeToBetweenZeroAndOne(angleBetweenCurrentForceAndDestination, 180))
+  );
+  // deccelerate the orb against any current (previous) force that isn't lined up with it's current destination to simulate turning
+  Body.applyForce(orb.body, orb.body.position, turningForce);
+
+  // // get the force vector to apply to this orb
+  const travellingAboveSpeedLimit = orb.body.speed > topSpeed * game.speedModifier;
+  const acceleration = game.config.acceleration * game.speedModifier;
+  const normalizedDestinationVector = Vector.normalise(destinationVector); // direction only (magnitude of 1)
+  const impulseVector = Vector.mult(normalizedDestinationVector, acceleration); // vector in the direction of the orb's destination with the magnitude of the game's acceleration
+
+  if (!travellingAboveSpeedLimit) Body.applyForce(orb.body, orb.body.position, impulseVector);
+
   Body.update(orb.body, renderRate, 1, 0);
 }

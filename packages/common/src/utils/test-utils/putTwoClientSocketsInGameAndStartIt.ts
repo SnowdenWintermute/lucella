@@ -23,7 +23,7 @@ export function putTwoClientSocketsInGameAndStartIt(socket1: Socket, socket2: So
       }
     });
 
-    socket2.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+    socket2.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
       if (!data) return;
       if (!eventsOccurred.client2ClickedReady) {
         socket2.emit(SocketEventsFromClient.CLICKS_READY);
@@ -31,7 +31,7 @@ export function putTwoClientSocketsInGameAndStartIt(socket1: Socket, socket2: So
       }
     });
 
-    socket1.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+    socket1.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
       if (!data) return;
       if (!eventsOccurred.client2JoinedGame) {
         socket2.emit(SocketEventsFromClient.JOINS_GAME, gameName);

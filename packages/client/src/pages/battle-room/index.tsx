@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
-import { GameStatus, battleRoomDefaultChatChannel } from "../../../../common";
+import { GameStatus, battleRoomDefaultChatChannel, GameRoom } from "../../../../common";
 import BattleRoomGameInstance from "../../components/battle-room/BattleRoomGameInstance";
 import Lobby from "../../components/Lobby";
 import SocketManager from "../../components/SocketManager";
@@ -9,7 +9,7 @@ import { INetworkPerformanceMetrics } from "../../types";
 
 function BattleRoom() {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { currentGameRoom } = lobbyUiState;
+  const { gameRoom } = lobbyUiState;
   const socket = useRef<Socket>();
   const [socketCreated, setSocketCreated] = useState(false);
   const networkPerformanceMetricsRef = useRef<INetworkPerformanceMetrics>({
@@ -24,8 +24,7 @@ function BattleRoom() {
     minLatency: 0,
   });
 
-  const gameStatus = currentGameRoom && currentGameRoom.gameStatus ? currentGameRoom.gameStatus : null;
-  const inGame = gameStatus === GameStatus.IN_PROGRESS || gameStatus === GameStatus.STARTING_NEXT_ROUND || gameStatus === GameStatus.ENDING;
+  const inGame = gameRoom && GameRoom.gameScreenActive(gameRoom);
 
   useEffect(() => {
     if (socket.current) setSocketCreated(true);

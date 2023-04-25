@@ -1,5 +1,5 @@
 import { recurse } from "cypress-recurse";
-import { ERROR_MESSAGES, failedLoginCountTolerance, FrontendRoutes, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, failedLoginCountTolerance, FrontendRoutes, SUCCESS_ALERTS } from "../../../../common";
 import { APP_TEXT } from "../../../src/consts/app-text";
 import { getLastEmailTimeout } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
@@ -56,7 +56,7 @@ export default function loginLockoutAndResetFlow() {
       // request a password reset to unlock the account
       cy.findByRole("link", { name: APP_TEXT.AUTH.LINKS.RESET_PASSWORD }).click();
       cy.findByLabelText(APP_TEXT.AUTH.INPUTS.PASSWORD_RESET_REQUEST_EMAIL).clear().type(`${userEmail}{enter}`);
-      cy.findByText(new RegExp(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("be.visible");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("be.visible");
       // follow the link in email to change password
       recurse(() => cy.task(TaskNames.getLastEmail), Cypress._.isObject, { timeout: getLastEmailTimeout, delay: 5000 })
         .its("html")
@@ -67,7 +67,7 @@ export default function loginLockoutAndResetFlow() {
       cy.findByRole("heading", { name: APP_TEXT.AUTH.PAGE_TITLES.CHANGE_PASSWORD }).should("be.visible");
       cy.findByLabelText(/^password$/i).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}`);
       cy.findByLabelText(APP_TEXT.AUTH.INPUTS.CONFIRM_PASSWORD).type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-      cy.findByText(new RegExp(SuccessAlerts.AUTH.PASSWORD_CHANGED, "i")).should("be.visible");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.PASSWORD_CHANGED, "i")).should("be.visible");
       // user can now log in again
       cy.findByRole("heading", { name: APP_TEXT.AUTH.PAGE_TITLES.LOGIN }).should("be.visible");
       cy.findByLabelText(new RegExp(`${APP_TEXT.AUTH.INPUTS.EMAIL_ADDRESS}.*`))
@@ -76,7 +76,7 @@ export default function loginLockoutAndResetFlow() {
       cy.findByLabelText(/^password$/i)
         .clear()
         .type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
-      cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("be.visible");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.LOGIN, "i")).should("be.visible");
     });
   });
 }

@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 import bcrypt from "bcryptjs";
 import { CookieOptions, NextFunction, Request, Response } from "express";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
 import CustomError from "../../classes/CustomError";
 import {
@@ -31,12 +31,12 @@ if (process.env.NODE_ENV === "production") accessTokenCookieOptions.secure = tru
 
 export default async function loginHandler(req: Request<object, object, LoginUserInput>, res: Response, next: NextFunction) {
   try {
-    const user = await UserRepo.findOne("email", req.body.email);
+    const user = await UsersRepo.findOne("email", req.body.email);
     if (!user || user.status === UserStatuses.DELETED) return next([new CustomError(ERROR_MESSAGES.AUTH.EMAIL_DOES_NOT_EXIST, 401)]);
     if (user.status === UserStatuses.LOCKED_OUT) return next([new CustomError(ERROR_MESSAGES.AUTH.ACCOUNT_LOCKED, 401)]);
     if (user.status === UserStatuses.BANNED) {
       if (user.banExpiresAt && Date.now() > new Date(user.banExpiresAt).getTime())
-        await UserRepo.update({ ...user, status: UserStatuses.ACTIVE, banExpiresAt: null });
+        await UsersRepo.update({ ...user, status: UserStatuses.ACTIVE, banExpiresAt: null });
       else return next([new CustomError(ERROR_MESSAGES.AUTH.ACCOUNT_BANNED, 401)]);
     }
 
@@ -44,7 +44,7 @@ export default async function loginHandler(req: Request<object, object, LoginUse
       const failedAttempts = await wrappedRedis.context!.incrBy(`${user.email}${REDIS_KEY_PREFIXES.FAILED_LOGINS}`, 1);
       await wrappedRedis.context!.expire(`${user.email}${REDIS_KEY_PREFIXES.FAILED_LOGINS}`, failedLoginCounterExpiration);
       if (failedAttempts > failedLoginCountTolerance) {
-        await UserRepo.update({ ...user, status: UserStatuses.LOCKED_OUT });
+        await UsersRepo.update({ ...user, status: UserStatuses.LOCKED_OUT });
         return next([new CustomError(ERROR_MESSAGES.RATE_LIMITER.TOO_MANY_FAILED_LOGINS, 401)]);
       }
       return next([new CustomError(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS_WITH_ATTEMPTS_REMAINING(failedLoginCountTolerance - failedAttempts), 401)]);

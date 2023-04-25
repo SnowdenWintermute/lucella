@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common";
+import { CustomErrorDetails, FrontendRoutes, InputFields, SUCCESS_ALERTS } from "../../../common";
 import { Alert } from "../classes/Alert";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/common-components/AuthPage/AuthPage";
@@ -42,7 +42,7 @@ function Login() {
   useEffect(() => {
     if (isSuccess) {
       dispatch(usersApi.endpoints.getMe.initiate(null));
-      dispatch(setAlert(new Alert(SuccessAlerts.AUTH.LOGIN, AlertType.SUCCESS)));
+      dispatch(setAlert(new Alert(SUCCESS_ALERTS.AUTH.LOGIN, AlertType.SUCCESS)));
       router.push("/battle-room");
     }
     if (isError && error && "data" in error) {

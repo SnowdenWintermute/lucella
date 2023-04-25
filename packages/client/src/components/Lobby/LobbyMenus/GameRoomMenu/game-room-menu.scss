@@ -1,10 +1,11 @@
-@import "../../../styles/abstracts/variables";
+@import "../../../../styles/abstracts/variables";
 
 .game-room-menu__left {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  position: relative;
   @media only screen and (max-width: breakpoint(small)) {
     overflow: auto;
     width: 100% !important;
@@ -23,6 +24,21 @@
 
 .game-room-menu__select-input {
   justify-self: flex-start;
+  @media only screen and (max-width: breakpoint(small)) {
+    margin-bottom: spacing(1);
+  }
+}
+
+.game-room-menu__settings-button {
+  padding: spacing(0);
+  width: height(3);
+  margin-left: auto;
+}
+
+.game-room-menu__settings-icon {
+  width: 100%;
+  height: 100%;
+  fill: var(--color-primary);
 }
 
 .game-room-menu__rounds-required-to-win-display {
@@ -58,10 +74,22 @@
 
 .game-room-menu__player {
   font-size: fontSize(3);
+  // margin-bottom: spacing(0);
 }
 
 .game-room-menu__vs {
-  font-size: fontSize(3);
+  font-size: fontSize(2);
+}
+
+.game-room-menu__player-ready-badge {
+  padding: spacing(0);
+  padding-left: spacing(2);
+  padding-right: spacing(2);
+}
+
+.game-room-menu__player-ready-badge--ready {
+  background-color: var(--color-primary);
+  color: var(--color-bg);
 }
 
 .game-room-menu__right {

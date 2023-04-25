@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import { UserStatuses, User, CookieNames, ERROR_MESSAGES } from "../../../../common";
 import CustomError from "../../classes/CustomError";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import { lucella } from "../../lucella";
 import { wrappedRedis } from "../../utils/RedisContext";
 
@@ -12,8 +12,8 @@ export default async function deleteAccountHandler(req: Request, res: Response, 
     user.status = UserStatuses.DELETED;
     if (!req.body.password || !(await bcrypt.compare(req.body.password, user.password)))
       return next([new CustomError(ERROR_MESSAGES.AUTH.INVALID_CREDENTIALS, 401)]);
-    await UserRepo.update(user);
-    const deletedUser = await UserRepo.findOne(`email`, user.email);
+    await UsersRepo.update(user);
+    const deletedUser = await UsersRepo.findOne(`email`, user.email);
     wrappedRedis.context!.del(deletedUser.id.toString());
     console.log(`flagged user ${deletedUser.name} as deleted`);
     lucella.server?.disconnectUser(user.name);

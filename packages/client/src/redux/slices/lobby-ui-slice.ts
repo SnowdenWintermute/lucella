@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord } from "../../../../common";
+import { GameRoom, BattleRoomGame, GameStatus, PlayerRole, IBattleRoomGameRecord, BattleRoomGameConfigOptionIndices } from "../../../../common";
 
 export enum LobbyMenu {
   MAIN = "main",
@@ -36,8 +36,8 @@ export interface ILobbyUIState {
       queueSize: number | null;
     };
   };
-  currentGameRoom: GameRoom | null;
-  currentGameRoomLoading: boolean | string;
+  gameRoom: GameRoom | null;
+  gameRoomLoading: boolean | string;
   playerReadyLoading: boolean;
   playerRole: PlayerRole | null;
   guestUsername: string | null;
@@ -61,8 +61,8 @@ const initialState: ILobbyUIState = {
       currentEloDiffThreshold: null,
     },
   },
-  currentGameRoom: null,
-  currentGameRoomLoading: false,
+  gameRoom: null,
+  gameRoomLoading: false,
   playerReadyLoading: false,
   playerRole: null,
   guestUsername: null,
@@ -85,39 +85,43 @@ const ladderSlice = createSlice({
       state.activeMenu = action.payload;
       if (action.payload === LobbyMenu.MATCHMAKING_QUEUE) state.matchmakingMenu = initialState.matchmakingMenu;
     },
-    setCurrentGameRoomLoading(state, action: PayloadAction<boolean | string>) {
-      state.currentGameRoomLoading = action.payload;
+    setGameRoomLoading(state, action: PayloadAction<boolean | string>) {
+      state.gameRoomLoading = action.payload;
     },
-    setCurrentGameRoom(state, action: PayloadAction<GameRoom | null>) {
-      state.currentGameRoom = action.payload;
-      state.currentGameRoomLoading = false;
+    setGameRoom(state, action: PayloadAction<GameRoom | null>) {
+      state.gameRoom = action.payload;
+      state.gameRoomLoading = false;
     },
     setPlayerReadyLoading(state, action: PayloadAction<boolean>) {
       state.playerReadyLoading = action.payload;
     },
     updatePlayersReady(state, action: PayloadAction<{ host: boolean; challenger: boolean }>) {
-      if (state.currentGameRoom) {
-        if (state.playerRole === PlayerRole.HOST && action.payload.host !== state.currentGameRoom.playersReady.host) state.playerReadyLoading = false;
-        if (state.playerRole === PlayerRole.CHALLENGER && action.payload.challenger !== state.currentGameRoom.playersReady.challenger)
+      if (state.gameRoom) {
+        if (state.playerRole === PlayerRole.HOST && action.payload.host !== state.gameRoom.playersReady.host) state.playerReadyLoading = false;
+        if (state.playerRole === PlayerRole.CHALLENGER && action.payload.challenger !== state.gameRoom.playersReady.challenger)
           state.playerReadyLoading = false;
-        state.currentGameRoom.playersReady = action.payload;
+        state.gameRoom.playersReady = action.payload;
       }
     },
     updateGameCountdown(state, action: PayloadAction<number>) {
-      if (state.currentGameRoom) state.currentGameRoom.countdown.current = action.payload;
+      if (state.gameRoom) state.gameRoom.countdown.current = action.payload;
     },
     updateGameStatus(state, action: PayloadAction<GameStatus>) {
-      if (state.currentGameRoom) state.currentGameRoom.gameStatus = action.payload;
+      if (state.gameRoom) state.gameRoom.gameStatus = action.payload;
       if (action.payload !== GameStatus.IN_WAITING_LIST) state.gameCreationWaitingList.currentPosition = null;
     },
-    updateCurrentGameRoomNumberOfRoundsRequiredToWin(state, action: PayloadAction<number>) {
-      if (state.currentGameRoom) state.currentGameRoom.numberOfRoundsRequiredToWin = action.payload;
+    updategameRoomConfig(state, action: PayloadAction<BattleRoomGameConfigOptionIndices>) {
+      if (!state.gameRoom) return;
+      Object.entries(action.payload).forEach(([key, value]) => {
+        if (!state.gameRoom) return;
+        state.gameRoom.battleRoomGameConfigOptionIndices[key as keyof typeof state.gameRoom.battleRoomGameConfigOptionIndices] = value;
+      });
     },
     updatePlayerRole(state, action: PayloadAction<PlayerRole>) {
       state.playerRole = action.payload;
     },
     setGameWinner(state, action: PayloadAction<string>) {
-      if (state.currentGameRoom) state.currentGameRoom.winner = action.payload;
+      if (state.gameRoom) state.gameRoom.winner = action.payload;
     },
     setMatchmakingLoading(state, action: PayloadAction<boolean>) {
       state.matchmakingMenu.isLoading = action.payload;
@@ -160,13 +164,13 @@ export const {
   setAuthenticating,
   setGuestUsername,
   setActiveMenu,
-  setCurrentGameRoomLoading,
-  setCurrentGameRoom,
+  setGameRoomLoading,
+  setGameRoom,
   setPlayerReadyLoading,
   updatePlayersReady,
   updateGameCountdown,
   updateGameStatus,
-  updateCurrentGameRoomNumberOfRoundsRequiredToWin,
+  updategameRoomConfig,
   updatePlayerRole,
   setGameWinner,
   setMatchmakingLoading,

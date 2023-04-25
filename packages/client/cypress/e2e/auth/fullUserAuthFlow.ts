@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES, FrontendRoutes, nameMaxLength, passwordMaxLength, SuccessAlerts } from "../../../../common";
+import { ERROR_MESSAGES, FrontendRoutes, nameMaxLength, passwordMaxLength, SUCCESS_ALERTS } from "../../../../common";
 import { TaskNames } from "../../support/TaskNames";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
 import { APP_TEXT } from "../../../src/consts/app-text";
@@ -83,12 +83,12 @@ export default function fullUserAuthFlow() {
       cy.findByLabelText(new RegExp(`${APP_TEXT.AUTH.INPUTS.EMAIL_ADDRESS}.*`))
         .clear()
         .type(`${userEmail}{enter}`);
-      cy.findByText(new RegExp(SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, "i")).should("be.visible");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, "i")).should("be.visible");
       // follow the link in email to complete registration
       cy.openLastEmail();
       cy.get('[data-cy="activation-link"]').click();
       cy.findByRole("heading", { name: APP_TEXT.AUTH.PAGE_TITLES.ACCOUNT_ACTIVATION }).should("be.visible");
-      cy.findByText(new RegExp(SuccessAlerts.USERS.ACCOUNT_CREATED, "i")).should("be.visible");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.USERS.ACCOUNT_CREATED, "i")).should("be.visible");
       // redirected to login after account creation completed
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.LOGIN}`);
       cy.findByRole("heading", { name: APP_TEXT.AUTH.PAGE_TITLES.LOGIN }).should("be.visible");
@@ -98,7 +98,7 @@ export default function fullUserAuthFlow() {
         .clear()
         .type(`${Cypress.env("CYPRESS_TEST_USER_PASSWORD")}{enter}`);
       // after successful login...
-      cy.findByText(new RegExp(SuccessAlerts.AUTH.LOGIN, "i")).should("be.visible");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.LOGIN, "i")).should("be.visible");
       cy.url().should("be.equal", `${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
       cy.findByLabelText(ARIA_LABELS.USER_MENU.OPEN).should("be.visible").click();
       cy.findByRole("link", { name: APP_TEXT.USER_MENU.ITEMS.SETTINGS }).click();
@@ -115,7 +115,7 @@ export default function fullUserAuthFlow() {
       cy.findByLabelText(ARIA_LABELS.USER_MENU.OPEN).should("be.visible").click();
       cy.findByRole("link", { name: APP_TEXT.USER_MENU.ITEMS.SETTINGS }).click();
       cy.clickButton(APP_TEXT.SETTINGS.CHANGE_PASSWORD);
-      cy.findByText(new RegExp(SuccessAlerts.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("be.visible");
+      cy.findByText(new RegExp(SUCCESS_ALERTS.AUTH.CHANGE_PASSWORD_EMAIL_SENT, "i")).should("be.visible");
       // follow the link in email to change password
       cy.openLastEmail();
       cy.get('[data-cy="password-reset-link"]').click();

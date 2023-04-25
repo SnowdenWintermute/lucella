@@ -10,7 +10,7 @@ export default class BattleRoomGameRecordRepo {
     return toCamelCase(rows)[0] as unknown as IBattleRoomGameRecord;
   }
 
-  static async findAllByUserId(id: number): Promise<IBattleRoomGameRecord | undefined> {
+  static async findByUserId(id: number): Promise<IBattleRoomGameRecord | undefined> {
     const result = await wrappedPool.query(`SELECT * FROM ${PSQL_TABLES.BATTLE_ROOM_GAME_RECORDS} WHERE first_player_id = $1 OR second_player_id = $1;`, [id]);
     if (!result) return undefined;
     const { rows } = result;

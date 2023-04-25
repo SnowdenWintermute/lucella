@@ -15,7 +15,7 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
   const dispatch = useAppDispatch();
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
   const uiState = useAppSelector((state) => state.UI);
-  const { data: user } = useGetMeQuery(null);
+  const { data: user, refetch } = useGetMeQuery(null);
   const [showChangeChatChannelModal, setShowChangeChatChannelModal] = useState(false);
 
   const handleViewGamesListClick = () => {
@@ -32,6 +32,7 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
   const handleRankedClick = () => {
     if (!socket) return;
     if (!user) {
+      refetch();
       dispatch(setAlert(new Alert(ERROR_MESSAGES.LOBBY.LOG_IN_TO_PLAY_RANKED, AlertType.DANGER)));
       return;
     }

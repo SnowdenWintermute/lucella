@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from "react";
-import { Ban, CustomErrorDetails, IPBanReason, ONE_DAY, SuccessAlerts } from "../../../../../common";
+import { Ban, CustomErrorDetails, IPBanReason, ONE_DAY, SUCCESS_ALERTS } from "../../../../../common";
 import { Alert } from "../../../classes/Alert";
 import { AlertType } from "../../../enums";
 import { useBanIpAddressMutation } from "../../../redux/api-slices/moderation-api-slice";
@@ -32,7 +32,7 @@ export default function BanModal({ banMode, setParentDisplay }: { banMode: BanMo
 
   useEffect(() => {
     if (banIpIsSuccess || banUserIsSuccess) {
-      dispatch(setAlert(new Alert(SuccessAlerts.ADMIN.USER_BANNED(username, banDuration), AlertType.SUCCESS)));
+      dispatch(setAlert(new Alert(SUCCESS_ALERTS.ADMIN.USER_BANNED(username, banDuration), AlertType.SUCCESS)));
       setParentDisplay(false);
     }
     if (banIpIsError && banIpError && "data" in banIpError) {

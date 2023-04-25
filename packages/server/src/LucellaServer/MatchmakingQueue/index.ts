@@ -11,7 +11,7 @@ import {
   UserStatuses,
   IBattleRoomScoreCard,
 } from "../../../../common";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { LucellaServer } from "..";
 import { lucella } from "../../lucella";
@@ -38,7 +38,7 @@ export class MatchmakingQueue {
   }
 
   async addUser(socket: Socket) {
-    const user = await UserRepo.findOne("name", this.server.connectedSockets[socket.id]?.associatedUser.username);
+    const user = await UsersRepo.findOne("name", this.server.connectedSockets[socket.id]?.associatedUser.username);
     if (!user || user.status === UserStatuses.DELETED) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.LOG_IN_TO_PLAY_RANKED);
     if (this.users[socket.id]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.ALREADY_IN_MATCHMAKING_QUEUE);
     const userBattleRoomRecord = await LucellaServer.fetchOrCreateBattleRoomScoreCard(user);

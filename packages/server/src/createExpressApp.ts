@@ -9,11 +9,20 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth-route";
 import usersRouter from "./routes/users-route";
+import battleRoomGameSettingsRouter from "./routes/battle-room-game-settings-route";
 import moderationRouter from "./routes/moderation-route";
 import configRouter from "./routes/config-route";
 import cypressTestRouter from "./routes/cypress-test-route";
 import errorHandler from "./middleware/errorHandler";
-import { AuthRoutePaths, CypressTestRoutePaths, ModerationRoutePaths, UsersRoutePaths, LadderRoutePaths, ConfigRoutePaths } from "../../common";
+import {
+  AuthRoutePaths,
+  CypressTestRoutePaths,
+  ModerationRoutePaths,
+  UsersRoutePaths,
+  LadderRoutePaths,
+  ConfigRoutePaths,
+  BattleRoomConfigRoutePaths,
+} from "../../common";
 import { ipRateLimiter } from "./middleware/rateLimiter";
 import checkForBannedIpAddress from "./middleware/checkForBannedIpAddress";
 import morgan from "morgan";
@@ -37,6 +46,7 @@ export default function createExpressApp() {
   app.use(`/api${AuthRoutePaths.ROOT}`, authRouter);
   app.use(`/api${UsersRoutePaths.ROOT}`, usersRouter);
   app.use(`/api${LadderRoutePaths.ROOT + LadderRoutePaths.BATTLE_ROOM}`, battleRoomLadderRouter);
+  app.use(`/api${BattleRoomConfigRoutePaths.ROOT}`, battleRoomGameSettingsRouter);
   app.use(`/api${ModerationRoutePaths.ROOT}`, moderationRouter);
   app.use(`/api${ConfigRoutePaths.ROOT}`, configRouter);
   app.use(`/api${CypressTestRoutePaths.ROOT}`, cypressTestRouter);

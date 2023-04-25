@@ -1,6 +1,7 @@
 import { TaskNames } from "../../support/TaskNames";
 import chat from "./chat";
 import gameListMenu from "./gameListMenu";
+import gameRoomGameConfig from "./gameRoomGameConfig";
 import gameRoomMenu from "./gameRoomMenu";
 import gameSetupMenu from "./gameSetupMenu";
 import matchmakingQueueMenu from "./matchmakingQueueMenu";
@@ -15,15 +16,17 @@ describe("lobby chat, hosting, joining and game start and end functionality", ()
       CYPRESS_TESTER_KEY: Cypress.env("CYPRESS_TESTER_KEY"),
     });
   });
-  // afterEach(() => cy.task(TaskNames.disconnectAllSockets));
+  // beforeEach(() => ));
   // eslint-disable-next-line no-undef
   after(() => {
     cy.task(TaskNames.disconnectAllSockets);
     cy.task(TaskNames.deleteAllSocketsAndAccessTokens);
   });
+
   chat();
   gameSetupMenu();
   gameRoomMenu();
   gameListMenu();
-  matchmakingQueueMenu();
+  gameRoomGameConfig();
+  // matchmakingQueueMenu();
 });

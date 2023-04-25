@@ -27,7 +27,7 @@ function MatchmakingQueueMenu({ socket }: { socket: Socket }) {
   return (
     <>
       <ul className="lobby-menus__top-buttons">
-        {!lobbyUiState.currentGameRoom && (
+        {!lobbyUiState.gameRoom && (
           <LobbyTopListItemWithButton title={BUTTON_NAMES.MATCHMAKING_QUEUE.CANCEL} onClick={handleCancelRankedMatchmaking} extraStyles="" />
         )}
       </ul>

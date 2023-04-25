@@ -11,7 +11,7 @@ export enum SocketEventsFromClient {
   LEAVES_MATCHMAKING_QUEUE = "8",
   NEW_INPUT = "9",
   CURRENT_TICK_NUMBER = "10",
-  GAME_ROOM_NUMBER_OF_ROUNDS_EDIT_REQUEST = "36",
+  GAME_ROOM_CONFIG_EDIT_REQUEST = "36",
 }
 
 export enum SocketEventsFromServer {
@@ -20,8 +20,8 @@ export enum SocketEventsFromServer {
   NEW_CHAT_MESSAGE = "13",
   CHAT_CHANNEL_UPDATE = "14",
   GAME_ROOM_LIST_UPDATE = "15",
-  CURRENT_GAME_ROOM_UPDATE = "16",
-  GAME_CLOSED_BY_HOST = "17",
+  CURRENT_GAME_ROOM = "16",
+  // GAME_CLOSED_BY_HOST = "17",
   PLAYER_READINESS_UPDATE = "18",
   PLAYER_ROLE_ASSIGNMENT = "19",
   CURRENT_GAME_STATUS_UPDATE = "20",
@@ -40,7 +40,7 @@ export enum SocketEventsFromServer {
   GUEST_USER_NAME = "33", // used in the score screens so the user knows if they won or lost
   NEW_ROUND_STARTING_COUNTDOWN_UPDATE = "34",
   CURRENT_GAME_NUMBER_OF_ROUNDS_WON = "35",
-  CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED = "37",
+  CURRENT_GAME_ROOM_CONFIG = "37",
 }
 
 export const GENERIC_SOCKET_EVENTS = {

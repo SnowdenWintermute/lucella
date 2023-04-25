@@ -10,7 +10,7 @@ import { newChatMessage, setNewChatChannelLoading } from "../../redux/slices/cha
 import {
   clearLobbyUi,
   setAuthenticating,
-  setCurrentGameRoom,
+  setGameRoom,
   setMatchmakingData,
   setMatchmakingLoading,
   setScoreScreenData,
@@ -23,8 +23,8 @@ import {
   setActiveMenu,
   LobbyMenu,
   setGuestUsername,
-  setCurrentGameRoomLoading,
-  updateCurrentGameRoomNumberOfRoundsRequiredToWin,
+  setGameRoomLoading,
+  updategameRoomConfig,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -34,8 +34,8 @@ interface Props {
 
 function UISocketListener({ socket }: Props) {
   const dispatch = useAppDispatch();
-  const { currentGameRoom } = useAppSelector((state) => state.lobbyUi);
-  const gameName = currentGameRoom && currentGameRoom.gameName ? currentGameRoom.gameName : null;
+  const { gameRoom } = useAppSelector((state) => state.lobbyUi);
+  const gameName = gameRoom && gameRoom.gameName ? gameRoom.gameName : null;
 
   useEffect(() => {
     if (!socket) return;
@@ -53,7 +53,7 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.ERROR_MESSAGE, (data) => {
       console.log(`error from server: ${data}`);
       dispatch(setAlert(new Alert(data, AlertType.DANGER)));
-      dispatch(setCurrentGameRoomLoading(false));
+      dispatch(setGameRoomLoading(false));
     });
     socket.on(SocketEventsFromServer.GUEST_USER_NAME, (data) => {
       dispatch(setGuestUsername(data));
@@ -61,16 +61,12 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, (data) => {
       dispatch(updateGameList(data));
     });
-    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
-      dispatch(setCurrentGameRoom(data));
+    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
+      dispatch(setGameRoom(data));
       if (data) dispatch(setActiveMenu(LobbyMenu.GAME_ROOM));
-      // else dispatch(setActiveMenu(LobbyMenu.MAIN));
     });
-    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED, (data) => {
-      dispatch(updateCurrentGameRoomNumberOfRoundsRequiredToWin(data));
-    });
-    socket.on(SocketEventsFromServer.GAME_CLOSED_BY_HOST, () => {
-      dispatch(setActiveMenu(LobbyMenu.MAIN));
+    socket.on(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG, (data) => {
+      dispatch(updategameRoomConfig(data));
     });
     socket.on(SocketEventsFromServer.PLAYER_READINESS_UPDATE, (playersReady) => {
       dispatch(updatePlayersReady(playersReady));
@@ -109,9 +105,8 @@ function UISocketListener({ socket }: Props) {
       socket.off(GENERIC_SOCKET_EVENTS.DISCONNECT);
       socket.off(SocketEventsFromServer.ERROR_MESSAGE);
       socket.off(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE);
-      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE);
-      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_NUMBER_OF_ROUNDS_REQUIRED);
-      socket.off(SocketEventsFromServer.GAME_CLOSED_BY_HOST);
+      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM);
+      socket.off(SocketEventsFromServer.CURRENT_GAME_ROOM_CONFIG);
       socket.off(SocketEventsFromServer.PLAYER_READINESS_UPDATE);
       socket.off(SocketEventsFromServer.PLAYER_ROLE_ASSIGNMENT);
       socket.off(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE);

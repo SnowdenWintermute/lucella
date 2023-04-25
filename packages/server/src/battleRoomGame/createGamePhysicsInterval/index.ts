@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import cloneDeep from "lodash.clonedeep";
 import Matter, { Detector } from "matter-js";
-import { Server, Socket } from "socket.io";
+import { Server } from "socket.io";
 import {
   BattleRoomGame,
   GameElementsOfConstantInterest,
@@ -12,6 +12,7 @@ import {
   SocketEventsFromServer,
   UserInput,
   createDeltaPacket,
+  baseSpeedModifier,
 } from "../../../../common";
 import { LucellaServer } from "../../LucellaServer";
 import handleScoringPoints from "./handleScoringPoints";
@@ -19,6 +20,7 @@ import handleScoringPoints from "./handleScoringPoints";
 export default function createGamePhysicsInterval(io: Server, server: LucellaServer, gameName: string) {
   const game = server.games[gameName];
   BattleRoomGame.initializeWorld(game);
+  game.speedModifier = baseSpeedModifier;
   Detector.setBodies(game.physicsEngine!.detector, game.physicsEngine!.world.bodies);
   console.log(`game physics started for ${gameName}`);
   // eslint-disable-next-line consistent-return

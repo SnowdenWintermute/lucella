@@ -1,6 +1,6 @@
 import request from "supertest";
 import { Application } from "express";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import PGContext from "../../utils/PGContext";
 import { wrappedRedis } from "../../utils/RedisContext";
 import createSequentialEloTestUsers from "../../utils/test-utils/createSequentialEloTestUsers";
@@ -32,7 +32,7 @@ describe("updateScoreCardsAndSaveGameRecord (ladder and elo change behavior)", (
   ladder pages and individual ladder entries`, async () => {
     await createSequentialEloTestUsers(10, 200, 10);
     await loadLadderIntoRedis();
-    const users = await UserRepo.find();
+    const users = await UsersRepo.find();
     expect(users).toHaveLength(11);
 
     const userWith210Elo = await request(app).get(`/api${LadderRoutePaths.ROOT}${LadderRoutePaths.BATTLE_ROOM}${LadderRoutePaths.ENTRIES}/test-210`);
@@ -45,7 +45,7 @@ describe("updateScoreCardsAndSaveGameRecord (ladder and elo change behavior)", (
     expect(ladderPage0BeforeGame.body.pageData[7].name).toBe("test-220");
 
     const gameRoom = new GameRoom("game-test", true);
-    const game = new BattleRoomGame("game-test", gameRoom.numberOfRoundsRequiredToWin, { host: "test", challenger: "test2" }, true);
+    const game = new BattleRoomGame("game-test", { host: "test", challenger: "test2" }, undefined, true);
     const user210SocketMeta = new SocketMetadata("someSocketId", "someip", { username: "test-210", isGuest: false }, "someChannel", "game-test");
     const user220SocketMeta = new SocketMetadata("someSocketId", "someip", { username: "test-220", isGuest: false }, "someChannel", "game-test");
     gameRoom.players.host = user210SocketMeta;

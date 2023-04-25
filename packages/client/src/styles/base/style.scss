@@ -82,3 +82,16 @@ select:-webkit-autofill:focus {
     background: var(--color-primary);
   }
 }
+
+[data-theme="Virginia Bluebell"] {
+  ::-moz-selection {
+    /* Code for Firefox */
+    color: var(--color-primary);
+    background: var(--color-accent);
+  }
+
+  ::selection {
+    color: var(--color-primary);
+    background: var(--color-accent);
+  }
+}

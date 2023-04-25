@@ -160,10 +160,10 @@ describe("MatchmakingQueue", () => {
       }
 
       // 1.a the two closely matched players should get a game room update
-      firstplace.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+      firstplace.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
         resolveIfMatchedWithCorrectOpponent(data, "secondplace");
       });
-      secondplace.on(SocketEventsFromServer.CURRENT_GAME_ROOM_UPDATE, (data) => {
+      secondplace.on(SocketEventsFromServer.CURRENT_GAME_ROOM, (data) => {
         resolveIfMatchedWithCorrectOpponent(data, "firstplace");
       });
 

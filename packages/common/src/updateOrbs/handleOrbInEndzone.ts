@@ -1,12 +1,11 @@
 import { Body, Vector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
 import { Orb } from "../classes/Orb";
-import { gameSpeedIncrementRate } from "../consts/battle-room-game-config";
 import { PlayerRole } from "../enums";
 
 const incrementScoreAndGameSpeed = (orb: Orb, game: BattleRoomGame, playerRole: PlayerRole) => {
   game.score[playerRole] += 1;
-  game.speedModifier += gameSpeedIncrementRate;
+  game.speedModifier += game.config.speedIncrementRate;
   orb.isGhost = true;
   Body.applyForce(orb.body, orb.body.position, Vector.neg(orb.body.force));
 };

@@ -7,7 +7,7 @@ import { Alert } from "../classes/Alert";
 import { setAlert } from "../redux/slices/alerts-slice";
 import { RegisterInput } from "../redux/types";
 import { useGetMeQuery, useRegisterUserMutation } from "../redux/api-slices/users-api-slice";
-import { CustomErrorDetails, FrontendRoutes, InputFields, SuccessAlerts } from "../../../common";
+import { CustomErrorDetails, FrontendRoutes, InputFields, SUCCESS_ALERTS } from "../../../common";
 import LabeledTextInputWithErrorDisplay from "../components/common-components/inputs/LabeledTextInputWithErrorDisplay";
 import AuthPage from "../components/common-components/AuthPage/AuthPage";
 import { BUTTON_NAMES } from "../consts/button-names";
@@ -43,7 +43,7 @@ function Register() {
   }, [user]);
 
   useEffect(() => {
-    if (isSuccess) dispatch(setAlert(new Alert(SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, AlertType.SUCCESS)));
+    if (isSuccess) dispatch(setAlert(new Alert(SUCCESS_ALERTS.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT, AlertType.SUCCESS)));
     if (isError && error && "data" in error) {
       const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
       const newFieldErrors = { ...fieldErrors };
@@ -61,7 +61,7 @@ function Register() {
 
   return isSuccess ? (
     <AuthPage title={APP_TEXT.AUTH.PAGE_TITLES.REGISTER} submitHandler={() => {}}>
-      <p>{SuccessAlerts.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT}</p>
+      <p>{SUCCESS_ALERTS.AUTH.ACCOUNT_ACTIVATION_EMAIL_SENT}</p>
       <p>Please follow the link in your email to complete registration</p>
     </AuthPage>
   ) : (

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { signJwtSymmetric } from "../utils/jwt";
-import UserRepo from "../../database/repos/users";
+import UsersRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { ERROR_MESSAGES, UserStatuses } from "../../../../common";
 import { sendEmail } from "../utils/sendEmail";
@@ -9,7 +9,7 @@ import { buildPasswordResetHTML, buildPasswordResetText, RESET_PASSWORD_SUBJECT 
 // eslint-disable-next-line consistent-return
 export default async function passwordResetEmailRequestHandler(req: Request, res: Response, next: NextFunction) {
   try {
-    const user = await UserRepo.findOne("email", req.body.email);
+    const user = await UsersRepo.findOne("email", req.body.email);
     if (!user || user.status === UserStatuses.DELETED) return next([new CustomError(ERROR_MESSAGES.AUTH.EMAIL_DOES_NOT_EXIST, 404)]);
     if (user.status === UserStatuses.BANNED) return next([new CustomError(ERROR_MESSAGES.AUTH.ACCOUNT_BANNED, 401)]);
     const payload = { user: { email: user.email } };
