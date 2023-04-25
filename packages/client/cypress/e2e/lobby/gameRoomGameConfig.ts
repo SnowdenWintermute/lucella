@@ -6,11 +6,12 @@ import {
   SocketEventsFromClient,
   BattleRoomGameOptions,
   AuthRoutePaths,
+  toKebabCase,
 } from "../../../../common";
 import { BUTTON_NAMES } from "../../../src/consts/button-names";
 import { APP_TEXT } from "../../../src/consts/app-text";
 import { ARIA_LABELS } from "../../../src/consts/aria-labels";
-import { shortTestText } from "../../support/consts";
+import { shortTestText, shortTestText2 } from "../../support/consts";
 import { TaskNames } from "../../support/TaskNames";
 
 export default function gameRoomGameConfig() {
@@ -87,7 +88,10 @@ export default function gameRoomGameConfig() {
     cy.get(`[data-cy="battle-room-canvas"]`).should("be.visible");
     cy.visit(`${Cypress.env("BASE_URL")}${FrontendRoutes.BATTLE_ROOM}`);
     cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.HOST, APP_TEXT.GAME_SETUP.TITLE);
-    cy.findByLabelText(APP_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL).focus().clear().type(`${shortTestText}{enter}`);
+    cy.findByLabelText(APP_TEXT.GAME_SETUP.GAME_CREATION_INPUT_LABEL)
+      .focus()
+      .clear()
+      .type(`${toKebabCase(shortTestText2)}{enter}`);
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_SETTINGS).click();
     cy.findByLabelText(ARIA_LABELS.GAME_CONFIG.OPTION_CURRENT_VALUE(BattleRoomGameOptions.acceleration.readableTitle)).should(
       "contain.text",
@@ -99,10 +103,10 @@ export default function gameRoomGameConfig() {
     cy.task(TaskNames.socketEmit, {
       username: arbitraryNameForAnonUserInCypressSocketList,
       event: SocketEventsFromClient.HOSTS_NEW_GAME,
-      data: shortTestText,
+      data: toKebabCase(shortTestText2),
     });
     cy.openAndVerifyMenu(BUTTON_NAMES.MAIN_MENU.JOIN, APP_TEXT.GAME_LIST.TITLE);
-    cy.findByLabelText(ARIA_LABELS.GAME_LIST.JOIN_GAME_BY_NAME_OF(shortTestText)).click();
+    cy.findByLabelText(ARIA_LABELS.GAME_LIST.JOIN_GAME_BY_NAME_OF(toKebabCase(shortTestText2))).click();
     cy.findByLabelText(ARIA_LABELS.GAME_ROOM.GAME_SETTINGS).click();
     cy.findByLabelText(BattleRoomGameOptions.acceleration.readableTitle).findByLabelText(selectedOptionTitle).should("be.disabled");
     cy.findByLabelText(ARIA_LABELS.GAME_CONFIG.OPTION_CURRENT_VALUE(BattleRoomGameOptions.acceleration.readableTitle)).should(

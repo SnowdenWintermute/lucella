@@ -67,5 +67,6 @@ export default function gameListMenu() {
     cy.findByLabelText(ARIA_LABELS.GAME_LIST.JOIN_GAME_BY_NAME_OF("a")).click();
     cy.findByLabelText(ARIA_LABELS.CHAT.CHANNEL_NAME_WITH_NUM_USERS).should("contain.text", `${gameChannelNamePrefix}a`);
     cy.findByText(`${APP_TEXT.GAME_ROOM.GAME_NAME_HEADER}a`).should("be.visible");
+    cy.task(TaskNames.disconnectAllSockets);
   });
 }
