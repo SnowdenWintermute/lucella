@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { BattleRoomGameConfigOptionIndices, SUCCESS_ALERTS } from "../../../../common";
+import React, { useEffect, useRef, useState } from "react";
+import { BattleRoomGameConfigOptionIndices, BattleRoomGameConfigOptionIndicesUpdate, SUCCESS_ALERTS } from "../../../../common";
 import { Alert } from "../../classes/Alert";
 import GameConfigDisplay from "../../components/Lobby/LobbyMenus/GameRoomMenu/GameConfigDisplay";
 import { AlertType } from "../../enums";
@@ -28,6 +28,7 @@ function BattleRoomGameSettings() {
   const [battleRoomGameSettings, setBattleRoomGameSettings] = useState<BattleRoomGameConfigOptionIndices | null>(null);
   const [newValuesToSaveExist, setNewValuesToSaveExist] = useState(false);
   const [resetToDefaultsDisabled, setResetToDefaultsDisabled] = useState(false);
+  const newValuesToSave = useRef<BattleRoomGameConfigOptionIndicesUpdate>({});
 
   useEffect(() => {
     if (battleRoomGameSettingsIsError || !battleRoomGameSettingsData) return;
@@ -50,12 +51,14 @@ function BattleRoomGameSettings() {
     // @ts-ignore
     newOptions[key] = value;
     setBattleRoomGameSettings(newOptions);
+    newValuesToSave.current[key as keyof typeof newValuesToSave.current] = value;
     setResetToDefaultsDisabled(false);
   };
 
-  const handleSaveOptions = (values: BattleRoomGameConfigOptionIndices) => {
+  const handleSaveOptions = () => {
+    updateBattleRoomGameSettings(newValuesToSave.current);
+    newValuesToSave.current = {};
     setNewValuesToSaveExist(false);
-    updateBattleRoomGameSettings(values);
   };
 
   const sendResetToDefaultsRequest = () => {
@@ -84,7 +87,7 @@ function BattleRoomGameSettings() {
             main: "settings-page__game-config-element",
             columnsContainer: "settings-page__game-config-columns-container",
           }}
-          handleSaveOptions={(values) => handleSaveOptions(values)}
+          handleSaveOptions={handleSaveOptions}
           saveButtonDisabled={updatedBattleRoomGameSettingsIsLoading || !newValuesToSaveExist}
           resetToDefaultsButtonDisabled={resetBattleRoomGameSettingsIsLoading || resetToDefaultsDisabled}
         />

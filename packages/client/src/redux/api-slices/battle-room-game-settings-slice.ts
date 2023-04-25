@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { SERVER_HOSTNAME_DOCKER_PRODUCTION, BattleRoomConfigRoutePaths, BattleRoomGameConfigOptionIndices } from "../../../../common";
+import { SERVER_HOSTNAME_DOCKER_PRODUCTION, BattleRoomConfigRoutePaths, BattleRoomGameConfigOptionIndicesUpdate } from "../../../../common";
 
 interface IBattleRoomGameSettingsResponse {
   //
@@ -30,7 +30,7 @@ export const battleRoomGameSettingsApi = createApi({
         },
         keepUnusedDataFor: 0,
       }),
-      updateBattleRoomGameSettings: builder.mutation<void, BattleRoomGameConfigOptionIndices>({
+      updateBattleRoomGameSettings: builder.mutation<void, BattleRoomGameConfigOptionIndicesUpdate>({
         query(newValues) {
           return {
             url: "",

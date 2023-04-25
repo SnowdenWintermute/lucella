@@ -87,7 +87,7 @@ export class Lobby {
     }
   }
   async handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
-    if (!gameName) return console.error(ERROR_MESSAGES.LOBBY.GAME_NAME.MAX_LENGTH);
+    if (!gameName) return console.log(ERROR_MESSAGES.LOBBY.GAME_NAME.MAX_LENGTH);
     gameName = gameName.replace(/\s+/g, "-").toLowerCase();
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
@@ -126,13 +126,15 @@ export class Lobby {
   handleEditGameRoomConfigRequest(socket: Socket, newConfig: BattleRoomGameConfigOptionIndicesUpdate) {
     const { connectedSockets, io } = this.server;
     const { currentGameName } = connectedSockets[socket.id];
-    if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} tried to edit game room config but wasn't in a game`);
+    if (!currentGameName) return console.log(`${connectedSockets[socket.id].associatedUser.username} tried to edit game room config but wasn't in a game`);
     const gameRoom = this.gameRooms[currentGameName];
-    if (!gameRoom) return console.error("No such game exists");
+    if (!gameRoom) return console.log("No such game exists");
     if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN || gameRoom.gameStatus === GameStatus.IN_WAITING_LIST)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_EDIT_GAME_CONFIG_IF_BOTH_PLAYERS_READY);
     if (GameRoom.gameScreenActive(gameRoom)) return console.log("client tried to edit game room config from a game but it had already started");
-    if (gameRoom.isRanked) return console.error("Can't edit game room config from ranked game");
+    if (gameRoom.isRanked) return console.log("Can't edit game room config from ranked game");
+    if (gameRoom.players.host?.associatedUser.username !== connectedSockets[socket.id].associatedUser.username)
+      return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.ONLY_HOST_MAY_EDIT_GAME_CONFIG);
     Object.entries(newConfig).forEach(([key, value]) => {
       // @ts-ignore
       gameRoom.battleRoomGameConfigOptionIndices[key] = value;
@@ -148,11 +150,11 @@ export class Lobby {
   handleReadyStateToggleRequest(socket: Socket) {
     const { connectedSockets, io } = this.server;
     const { currentGameName } = connectedSockets[socket.id];
-    if (!currentGameName) return console.error(`${connectedSockets[socket.id].associatedUser.username} clicked ready but wasn't in a game`);
+    if (!currentGameName) return console.log(`${connectedSockets[socket.id].associatedUser.username} clicked ready but wasn't in a game`);
     const gameRoom = this.gameRooms[currentGameName];
-    if (!gameRoom) return console.error("No such game exists");
+    if (!gameRoom) return console.log("No such game exists");
     if (GameRoom.gameScreenActive(gameRoom)) return console.log("client tried to unready from a game but it had already started");
-    if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.error("Can't unready from ranked game that is starting");
+    if (gameRoom.gameStatus === GameStatus.COUNTING_DOWN && gameRoom.isRanked) return console.log("Can't unready from ranked game that is starting");
     const { players, playersReady } = gameRoom;
     const gameChatChannelName = gameChannelNamePrefix + currentGameName;
     const previousHostReadyState = playersReady.host;
