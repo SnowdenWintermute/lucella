@@ -31,12 +31,7 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
     return;
   }
 
-  // // get the force vector to apply to this orb
-  const travellingAboveSpeedLimit = orb.body.speed > topSpeed * game.speedModifier;
-  const acceleration = travellingAboveSpeedLimit ? 0 : game.config.acceleration * game.speedModifier;
   const destinationVector = Vector.sub(orb.destination, orb.body.position); // vector of the difference between orb position and destination with direction and magnitude
-  const normalizedDestinationVector = Vector.normalise(destinationVector); // direction only (magnitude of 1)
-  const impulseVector = Vector.mult(normalizedDestinationVector, acceleration); // vector in the direction of the orb's destination with the magnitude of the game's acceleration
 
   // find the angle between the current force on the orb (it's "momentum") and it's intended destination
   const angleBetweenCurrentForceAndDestination = angleBetweenVectors(destinationVector, orb.body.force) || 0;
@@ -45,6 +40,12 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   );
   // deccelerate the orb against any current (previous) force that isn't lined up with it's current destination to simulate turning
   Body.applyForce(orb.body, orb.body.position, turningForce);
+
+  // // get the force vector to apply to this orb
+  const travellingAboveSpeedLimit = orb.body.speed > topSpeed * game.speedModifier;
+  const acceleration = game.config.acceleration * game.speedModifier;
+  const normalizedDestinationVector = Vector.normalise(destinationVector); // direction only (magnitude of 1)
+  const impulseVector = Vector.mult(normalizedDestinationVector, acceleration); // vector in the direction of the orb's destination with the magnitude of the game's acceleration
 
   if (!travellingAboveSpeedLimit) Body.applyForce(orb.body, orb.body.position, impulseVector);
 

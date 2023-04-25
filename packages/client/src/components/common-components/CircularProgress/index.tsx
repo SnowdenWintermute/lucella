@@ -16,7 +16,6 @@ export default function CircularProgress({ thickness = 20, percentage, rotateAni
   const [height, setHeight] = useState(1);
 
   useEffect(() => {
-    console.log("svgRef.current?.clientHeight: ", svgRef.current?.clientHeight);
     if (svgRef.current?.clientHeight) setHeight(svgRef.current.clientHeight);
   }, [svgRef]);
 

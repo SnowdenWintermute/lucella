@@ -7,6 +7,8 @@ import {
   baseTurningSpeedModifier,
   baseNumberOfRoundsRequiredToWin,
   BattleRoomGameOptions,
+  baseNumberOfPointsRequiredToWinRound,
+  baseOrbRadius,
 } from "../../consts/battle-room-game-config";
 
 export class BattleRoomGameConfig {
@@ -16,6 +18,8 @@ export class BattleRoomGameConfig {
   turningSpeedModifier = baseTurningSpeedModifier;
   speedIncrementRate = baseSpeedIncrementRate;
   numberOfRoundsRequiredToWin = baseNumberOfRoundsRequiredToWin;
+  numberOfPointsRequiredToWinRound = baseNumberOfPointsRequiredToWinRound;
+  orbRadius = baseOrbRadius;
   constructor(modifiedValues: {
     acceleration?: number;
     topSpeed?: number;
@@ -23,6 +27,8 @@ export class BattleRoomGameConfig {
     turningSpeedModifier?: number;
     speedIncrementRate?: number;
     numberOfRoundsRequiredToWin?: number;
+    numberOfPointsRequiredToWinRound?: number;
+    orbRadius?: number;
   }) {
     Object.entries(modifiedValues).forEach(([key, value]) => {
       // @ts-ignore
@@ -43,6 +49,7 @@ export class BattleRoomGameConfig {
     if (!Object.prototype.hasOwnProperty.call(this, key)) return console.error("upon configuring a new game, tried to set an option that didn't exist: ", key);
     if (!BattleRoomGameConfig.isValidOptionIndex(key, selectedIndex))
       return console.error("upon configuring a new game, tried to access an option index that didn't exist");
+    // @ts-ignore
     this[key] = BattleRoomGameOptions[key].options[selectedIndex].value;
   }
 }

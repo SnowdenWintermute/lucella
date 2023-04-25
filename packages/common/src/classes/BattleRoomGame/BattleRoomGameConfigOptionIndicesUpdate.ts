@@ -8,6 +8,8 @@ export class BattleRoomGameConfigOptionIndicesUpdate {
   turningSpeedModifier?: number;
   speedIncrementRate?: number;
   numberOfRoundsRequiredToWin?: number;
+  numberOfPointsRequiredToWinRound?: number;
+  orbRadius?: number;
   constructor(modifiedValues: BattleRoomGameConfigOptionIndicesUpdate) {
     Object.entries(modifiedValues).forEach(([key, value]) => {
       if (BattleRoomGameConfig.isValidOptionIndex(key, value)) {

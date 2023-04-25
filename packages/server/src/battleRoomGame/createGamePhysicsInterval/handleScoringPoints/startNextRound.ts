@@ -16,7 +16,7 @@ export default function startNextRound(server: LucellaServer, game: BattleRoomGa
   game.score.host = 0;
   game.score.challenger = 0;
   game.speedModifier = baseSpeedModifier;
-  game.score.neededToWin = BattleRoomGame.initialScoreNeededToWin;
+  game.score.neededToWin = game.config.numberOfPointsRequiredToWinRound;
   //
   gameRoom.gameStatus = GameStatus.STARTING_NEXT_ROUND;
   server.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);

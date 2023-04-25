@@ -17,24 +17,18 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  // justify-content: space-between;
   margin-bottom: spacing(1);
-}
-
-.game-config-display__option-column {
-  margin-right: spacing(1);
-  &:last-child {
-    margin-right: spacing(1);
-  }
 }
 
 .game-config-display__radio-input {
   margin-bottom: spacing(2);
+  width: width(2);
 }
 .game-config-display__bottom-buttons {
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  // justify-content: space-between;
 }
 .game-config-display__reset-to-defaults-button {
   max-width: fit-content;

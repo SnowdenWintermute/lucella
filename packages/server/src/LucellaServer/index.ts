@@ -182,7 +182,8 @@ export class LucellaServer {
         const game = games[gameRoom.gameName];
         io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
         game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);
-        // save their configuration options
+        // save their configuration options if not a ranked game
+        if (gameRoom.isRanked) return;
         if (gameRoom.players.host?.associatedUser.isGuest) return;
         const hostUser = await UsersRepo.findOne("name", gameRoom.players.host?.associatedUser.username);
         if (!hostUser) return;

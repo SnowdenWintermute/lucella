@@ -7,13 +7,6 @@ export const orbSpawnOffsetFromEndzone = 100;
 export const newRoundStartingCountdownDuration = 5; // 5
 export const gameOverCountdownDuration = 3; // 3
 export const initialScoreNeededToWin = 5; // 5
-// orbs
-export const baseOrbRadius = 15;
-export const decelerationDistance = 30;
-export const orbDensity = 10;
-export const frictionAir = 20.9;
-export const initialEndZoneHeight = 60;
-export const orbWaypointListSizeLimit = 100;
 // game options
 export const BattleRoomGameOptions = {
   numberOfRoundsRequiredToWin: {
@@ -30,11 +23,11 @@ export const BattleRoomGameOptions = {
     defaultIndex: 4,
     readableTitle: "Acceleration",
     options: [
-      { title: "Very slow", value: 0.05 },
-      { title: "Slow", value: 0.1 },
-      { title: "Moderate", value: 0.2 },
-      { title: "Fast", value: 0.5 },
-      { title: "Very fast", value: 1 }, // default
+      { title: "Very slow", value: 0.25 },
+      { title: "Slow", value: 0.5 },
+      { title: "Moderate", value: 1 },
+      { title: "Fast", value: 2 },
+      { title: "Very fast", value: 4 }, // default
     ],
   },
   topSpeed: {
@@ -44,8 +37,8 @@ export const BattleRoomGameOptions = {
       { title: "Very slow", value: 1 },
       { title: "Slow", value: 2 }, // default
       { title: "Moderate", value: 4 },
-      { title: "Fast", value: 6 },
-      { title: "Very fast", value: 8 },
+      { title: "Fast", value: 8 },
+      { title: "Very fast", value: 12 },
     ],
   },
   turningSpeedModifier: {
@@ -80,10 +73,33 @@ export const BattleRoomGameOptions = {
       { title: "Very high", value: 0.3 },
     ],
   },
+  numberOfPointsRequiredToWinRound: {
+    defaultIndex: 2,
+    readableTitle: "Points",
+    options: [
+      { title: "1", value: 1 },
+      { title: "2", value: 2 },
+      { title: "5", value: 5 }, // default
+      { title: "9", value: 9 },
+      { title: "50", value: 50 },
+    ],
+  },
+  orbRadius: {
+    defaultIndex: 2,
+    readableTitle: "Orb size",
+    options: [
+      { title: "Tiny", value: 8 },
+      { title: "Smaller", value: 12 },
+      { title: "Standard", value: 15 }, // default
+      { title: "Larger", value: 20 },
+      { title: "Gargantuan", value: 40 },
+    ],
+  },
 };
 
 // speeds
-const { acceleration, hardBrakingSpeed, topSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin } = BattleRoomGameOptions;
+const { acceleration, hardBrakingSpeed, topSpeed, turningSpeedModifier, speedIncrementRate, numberOfRoundsRequiredToWin, numberOfPointsRequiredToWinRound } =
+  BattleRoomGameOptions;
 export const baseAcceleration = acceleration.options[acceleration.defaultIndex].value;
 export const baseTopSpeed = topSpeed.options[topSpeed.defaultIndex].value;
 export const baseTurningSpeedModifier = turningSpeedModifier.options[turningSpeedModifier.defaultIndex].value;
@@ -92,3 +108,13 @@ export const baseSpeedIncrementRate = speedIncrementRate.options[speedIncrementR
 
 export const baseSpeedModifier = 1;
 export const baseNumberOfRoundsRequiredToWin = numberOfRoundsRequiredToWin.options[numberOfRoundsRequiredToWin.defaultIndex].value;
+export const baseNumberOfPointsRequiredToWinRound = numberOfPointsRequiredToWinRound.options[numberOfPointsRequiredToWinRound.defaultIndex].value;
+
+// orbs
+const { orbRadius } = BattleRoomGameOptions;
+export const baseOrbRadius = orbRadius.options[orbRadius.defaultIndex].value;
+export const decelerationDistance = 30;
+export const orbDensity = 10;
+export const frictionAir = 20.9;
+export const initialEndZoneHeight = 60;
+export const orbWaypointListSizeLimit = 100;

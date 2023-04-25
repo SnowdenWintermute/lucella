@@ -14,7 +14,9 @@ exports.up = (pgm) => {
     turning_speed_modifier INTEGER,
     hard_braking_speed INTEGER,
     speed_increment_rate INTEGER,
-    number_of_rounds_required_to_win INTEGER
+    number_of_rounds_required_to_win INTEGER,
+    number_of_points_required_to_win_round INTEGER,
+    orb_radius INTEGER
 );
     `);
 };

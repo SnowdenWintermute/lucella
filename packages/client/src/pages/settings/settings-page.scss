@@ -48,14 +48,17 @@
   }
 }
 
+.settings-page__options-and-email {
+}
+
 .settings-page__battle-room-game-settings {
 }
 
 .settings-page__game-config-element {
-  border: 1px solid var(--color-primary);
   height: fit-content;
-  padding: spacing(2);
-  max-width: width(4);
+  // border: 1px solid var(--color-primary);
+  // padding: spacing(2);
+  max-width: width(5);
 }
 
 .settings-page__game-config-columns-container {

@@ -83,6 +83,7 @@ export class BattleRoomGame {
       // @ts-ignore
       this.config.updateConfigValueFromOptionIndex(option, value);
     });
+    this.score.neededToWin = this.config.numberOfPointsRequiredToWinRound;
   }
   clearPhysicsInterval() {
     clearInterval(this.intervals.physics);
