@@ -8,7 +8,13 @@ function PatchNotes({ setViewingPatchNotes, versionNumber }: { setViewingPatchNo
       <div>
         <h4>Version History</h4>
       </div>
-      <span className="patch-notes__version-name">{versionNumber} "four orbs"</span>
+      <span className="patch-notes__version-name">{versionNumber}"physics options"</span>
+      <ul>
+        <li>Added 8 options that users can use to customize their casual game experience</li>
+        <li>Options are saved to the host's account when a game created by them is started</li>
+        <li>Options can be edited and saved in the settings menu</li>
+      </ul>
+      <span className="patch-notes__version-name">alpha 0.5.0 "four orbs"</span>
       <ul>
         <li>Reduced the number of orbs each player controls from 5 to 4</li>
         <li>Fixed a bug in which orbs would not cause each other to ghost when colliding after the first round</li>
