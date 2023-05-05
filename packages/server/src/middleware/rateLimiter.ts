@@ -34,7 +34,7 @@ export default function createRateLimiterMiddleware(
   slidingWindowMs = ONE_MINUTE * 60,
   windowLimit = 100,
   counterFixedWindowMs = ONE_MINUTE,
-  counterLimit = 15,
+  counterLimit = 30,
   onCounterLimitReached = (next: NextFunction) => next([new CustomError(ERROR_MESSAGES.RATE_LIMITER.REQUESTING_TOO_QUICKLY, 429)]),
   onSlidingWindowLimitReached = (next: NextFunction) => next([new CustomError(ERROR_MESSAGES.RATE_LIMITER.TOO_MANY_REQUESTS, 429)])
 ) {

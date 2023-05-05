@@ -1,0 +1,8 @@
+{
+  "trailingComma": "es5",
+  "semi": true,
+  "singleQuote": false,
+  "quotes": "backtick",
+  "printWidth": 160,
+  "endOfLine": "auto",
+} 
