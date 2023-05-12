@@ -6,6 +6,7 @@ message SmallVectorProto{
   int32 x = 1;
   int32 y = 2;
 }
+
 message InputProto{
   int32 type = 1;
   uint32 number = 2;
