@@ -1,0 +1,19 @@
+processPlayerInput
+  - space held
+  - input x
+  - input y
+  - number pressed 1-4 or None
+
+observation space
+- own score
+- opponent score
+- own score needed to win
+- opponent score needed to win
+- own endzone location
+- opponent endzone location
+- own orb locations 1-4
+- opponent orb locations 1-4
+- own orb ghost statuses 1-4
+- oponnent orb ghost statuses 1-4
+- current game speed
+- orb radius'
