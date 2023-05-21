@@ -49,38 +49,39 @@ class CustomEnvironment {
       this.game.queues.server.receivedInputs.push(new ClientTickNumber(null, this.inputNumber, playerRole));
     });
 
-    console.log(JSON.stringify(this.game.queues.server.receivedInputs, null, 2));
-    // const rewards = { host: 0, challenger: 0 };
-    // let terminated = false;
-    // let truncated = false;
-    // const { game } = this;
-    // let numInputsToProcess = game.queues.server.receivedInputs.length;
-    // while (numInputsToProcess > 0) {
-    //   const input: UserInput = game.queues.server.receivedInputs.shift();
-    //   processPlayerInput(input, game, renderRate, input.playerRole);
-    //   numInputsToProcess -= 1;
-    //   const collisions = Detector.collisions(game.physicsEngine!.detector);
-    //   collisions.forEach((collision) => {
-    //     game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
-    //   });
-    // }
-    // updateScoreNeededToWin(game);
-    // // handle scoring points and calculate rewards / terminated / truncated
-    // const hostNewPoints = this.game.score.host - this.scoresFromPreviousStep.host;
-    // if (hostNewPoints > 0) rewards.host += hostNewPoints;
-    // const challengerNewPoints = this.game.score.challenger - this.scoresFromPreviousStep.challenger;
-    // if (challengerNewPoints > 0) rewards.challenger += challengerNewPoints;
-    // const challengerWon = game.score.challenger >= game.score.neededToWin;
-    // const hostWon = game.score.host >= game.score.neededToWin;
-    // if (hostWon) rewards.host += 10;
-    // if (challengerWon) rewards.challenger += 10;
-    // if (hostWon || challengerWon) terminated = true;
-    // if (!terminated && this.timestep > this.MAX_TIMESTEP) truncated = true;
-    // this.timestep += 1;
-    // const terminations = { host: terminated, challenger: terminated };
-    // const truncations = { host: truncated, challenger: truncated };
-    // const info = {};
-    // return [this.getObservations(), rewards, terminations, truncations, info];
+    // console.log(JSON.stringify(this.game.queues.server.receivedInputs, null, 2));
+    const rewards = { host: 0, challenger: 0 };
+    let terminated = false;
+    let truncated = false;
+    const { game } = this;
+    let numInputsToProcess = game.queues.server.receivedInputs.length;
+    while (numInputsToProcess > 0) {
+      const input: UserInput = game.queues.server.receivedInputs.shift();
+      processPlayerInput(input, game, renderRate, input.playerRole);
+      numInputsToProcess -= 1;
+      const collisions = Detector.collisions(game.physicsEngine!.detector);
+      collisions.forEach((collision) => {
+        game.currentCollisionPairs.push(Matter.Pair.create(collision, +Date.now()));
+      });
+    }
+    updateScoreNeededToWin(game);
+    // handle scoring points and calculate rewards / terminated / truncated
+    const hostNewPoints = this.game.score.host - this.scoresFromPreviousStep.host;
+    if (hostNewPoints > 0) rewards.host += hostNewPoints;
+    const challengerNewPoints = this.game.score.challenger - this.scoresFromPreviousStep.challenger;
+    if (challengerNewPoints > 0) rewards.challenger += challengerNewPoints;
+    const challengerWon = game.score.challenger >= game.score.neededToWin;
+    const hostWon = game.score.host >= game.score.neededToWin;
+    if (hostWon) rewards.host += 10;
+    if (challengerWon) rewards.challenger += 10;
+    if (hostWon || challengerWon) terminated = true;
+    if (!terminated && this.timestep > this.MAX_TIMESTEP) truncated = true;
+    this.timestep += 1;
+    const terminations = { host: terminated, challenger: terminated };
+    const truncations = { host: truncated, challenger: truncated };
+    const info = {};
+    // console.log(this.getObservations(), rewards, terminations, truncations, info);
+    return [this.getObservations(), rewards, terminations, truncations, info];
   }
 
   getObservations() {
