@@ -3086,6 +3086,11 @@ call-bind@^1.0.0, call-bind@^1.0.2:
     function-bind "^1.1.1"
     get-intrinsic "^1.0.2"
 
+caller@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/caller/-/caller-1.1.0.tgz#46228555cfecb57d82bcd173b493f87cee9680fe"
+  integrity sha512-n+21IZC3j06YpCWaxmUy5AnVqhmCIM2bQtqQyy00HJlmStRt6kwDX5F9Z97pqwAB+G/tgSz6q/kUBbNyQzIubw==
+
 callsites@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/callsites/-/callsites-3.1.0.tgz#b3630abd8943432f54b3f0519238e33cd7df2f73"
@@ -3133,7 +3138,7 @@ chalk@^3.0.0:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-chalk@^4.0.0, chalk@^4.1.0:
+chalk@^4.0.0, chalk@^4.1.0, chalk@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
   integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==
@@ -7614,6 +7619,14 @@ punycode@^2.1.0, punycode@^2.1.1:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.3.0.tgz#f67fa67c94da8f4d0cfff981aee4118064199b8f"
   integrity sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==
+
+pythonia@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/pythonia/-/pythonia-1.0.1.tgz#c516c65e48caa348e3b07886732027754b6ecc90"
+  integrity sha512-J8tAEUJvYy00VgguOVezDsEx1vipW1T7Q5VBhBrGiNlkwU+c6VY6DnxA0P0GgBuPGJbL25AisAMRy0rRrUKS8w==
+  dependencies:
+    caller "^1.0.1"
+    chalk "^4.1.2"
 
 qs@6.11.0, qs@^6.11.0:
   version "6.11.0"

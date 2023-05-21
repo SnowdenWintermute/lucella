@@ -7,8 +7,7 @@ ACCENT_COLOR = pygame.Color('#080b11')
 SELECT_COLOR = pygame.Color('#ffc0cb')
 pygame.init()
 default_font = pygame.font.get_default_font()
-print("DEFAULT FONT ", default_font)
-font = pygame.font.SysFont("freesansbold", 20)
+font = pygame.font.SysFont(["freesansbold","arial","times"], 20)
 
 def draw_orb(game_window, orb, colorPrimary, colorAccent):
     # font = pygame.font.SysFont("freesansbold", 12)
@@ -26,8 +25,12 @@ def draw_orb(game_window, orb, colorPrimary, colorAccent):
 def draw_endzones(game_window, game):
     host_end_zone = game.endzones.host
     challenger_end_zone = game.endzones.challenger
-    pygame.draw.rect(game_window, ACCENT_COLOR, pygame.Rect(host_end_zone.x, host_end_zone.y), host_end_zone.width, host_end_zone.height)
-    pygame.draw.rect(game_window, ACCENT_COLOR, pygame.Rect(host_end_zone.x, host_end_zone.y), host_end_zone.width, host_end_zone.height)
+    # print("RECT: ", pygame.Rect(host_end_zone.x, host_end_zone.y, host_end_zone.width, host_end_zone.height))
+    # print("RECT VALUES: ", host_end_zone.x, host_end_zone.y, host_end_zone.width, host_end_zone.height)
+    pygame.draw.rect(game_window, ACCENT_COLOR, pygame.Rect(host_end_zone.origin.x, host_end_zone.origin.y, host_end_zone.width, host_end_zone.height))
+    pygame.draw.line(game_window, PRIMARY_COLOR, (host_end_zone.origin.x, host_end_zone.origin.y+host_end_zone.height), (host_end_zone.origin.x + host_end_zone.width, host_end_zone.origin.y+host_end_zone.height))
+    pygame.draw.rect(game_window, ACCENT_COLOR, pygame.Rect(challenger_end_zone.origin.x, challenger_end_zone.origin.y, challenger_end_zone.width, challenger_end_zone.height))
+    pygame.draw.line(game_window, PRIMARY_COLOR, (challenger_end_zone.origin.x, challenger_end_zone.origin.y), (challenger_end_zone.origin.x + challenger_end_zone.width, challenger_end_zone.origin.y))
 
 def draw_game(game_window, game):
     game_window.fill(BG_COLOR)

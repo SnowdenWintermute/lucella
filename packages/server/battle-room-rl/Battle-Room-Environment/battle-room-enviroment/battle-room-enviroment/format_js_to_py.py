@@ -1,3 +1,11 @@
+import javascript
+
+def format_shallow_object_to_py(js):
+    to_return = {}
+    for key in js:
+        to_return[key] = js[key]
+    return to_return
+
 def format_js_obs_to_py(agents, js):
     return { a: {
         "ownEndzoneY": js[a]['ownEndzoneY'],
