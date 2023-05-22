@@ -38,25 +38,20 @@ class CustomEnvironment {
     return [this.getObservations(), {}];
   }
 
-  // async step(actions: { playerRole: PlayerRole; cursor_position: number[]; number_key_pressed: number }[]) {
-  async step(actions: string) {
-    // console.log("Eeeee");
-    // const parsed = JSON.parse(actions);
-    console.log(actions);
-    // console.log(parsed);
-    console.log("JS ACTIONS: ", JSON.stringify(actions, null, 2));
-    // Object.values(parsed).forEach((action: { cursor_position: number[]; number_key_pressed: number; playerRole: string }) => {
-    //   const [x, y] = action.cursor_position;
-    //   const { number_key_pressed, playerRole } = action;
-    //   const orbIds = [];
-    //   if (number_key_pressed) orbIds.push(number_key_pressed);
-    //   this.inputNumber += 1;
-    //   this.game.queues.server.receivedInputs.push(new SelectOrbAndAssignDestination({ orbIds, mousePosition: new Point(x, y) }, this.inputNumber, playerRole));
-    //   this.inputNumber += 1;
-    //   this.game.queues.server.receivedInputs.push(new ClientTickNumber(null, this.inputNumber, playerRole));
-    // });
+  async step(actions: { playerRole: PlayerRole; cursor_position: number[]; number_key_pressed: number }[]) {
+    // console.log("JS ACTIONS: ", actions);
+    Object.values(actions).forEach((action) => {
+      const [x, y] = action.cursor_position;
+      const { number_key_pressed, playerRole } = action;
+      const orbIds = [];
+      if (number_key_pressed) orbIds.push(number_key_pressed);
+      this.inputNumber += 1;
+      this.game.queues.server.receivedInputs.push(new SelectOrbAndAssignDestination({ orbIds, mousePosition: new Point(x, y) }, this.inputNumber, playerRole));
+      this.inputNumber += 1;
+      this.game.queues.server.receivedInputs.push(new ClientTickNumber(null, this.inputNumber, playerRole));
+    });
 
-    // console.log(JSON.stringify(this.game.queues.server.receivedInputs, null, 2));
+    console.log(JSON.stringify(this.game.queues.server.receivedInputs, null, 2));
     const rewards = { host: 0, challenger: 0 };
     let terminated = false;
     let truncated = false;

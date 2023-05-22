@@ -1,5 +1,6 @@
 import javascript
 from javascript import require
+import functools
 from gymnasium.spaces import Dict, Discrete, Tuple, Box
 from numpy import inf
 from pettingzoo.utils.env import ParallelEnv
@@ -24,14 +25,13 @@ class BattleRoomEnvironment(ParallelEnv):
         jsFormattedObservations = self.jsBattleSchoolEnv['getObservations']()
         pyFormatted = format_js_obs_to_py(self.agents, jsFormattedObservations)
         print('reset reset ended')
-        return pyFormatted, {} 
+        return (pyFormatted, {"host": {"info": "dummy_info"}, "challenger": {"info": "dummy_info"}})
 
     def step(self, actions):
         host_cursor_x = actions['host']['cursor_position'][0]
         host_cursor_y = actions['host']['cursor_position'][1]
         challenger_cursor_x = actions['challenger']['cursor_position'][0]
         challenger_cursor_y = actions['challenger']['cursor_position'][1]
-        print('host_cursor_x', host_cursor_x)
         jsActions = [
                 {
                     "playerRole": "host",
@@ -44,20 +44,16 @@ class BattleRoomEnvironment(ParallelEnv):
                     "number_key_pressed": 0
                     },
                 ] 
-        print("step called with actions: ", actions)
-        print(actions["host"]['cursor_position'])
+        print("step called with actions: ", jsActions)
 
-        # testJson = json.dumps([{"A":"b"}]) 
-        testJson = json.dumps(jsActions) 
-        print("JS ACTIONS PRE BRIDGE: ", testJson)
-
-        # actions = {
-        #         "host": {"cursor_position": (450, 234),"number_key_pressed": 2, "playerRole": "host"},
-        #         "challenger": {"cursor_position": (450, 234),"number_key_pressed": 0, "playerRole": "challenger"},
-        #         }
         results = self.jsBattleSchoolEnv.step(jsActions)
-        # print("RESULTS: ", format_js_obs_to_py(self.agents, results[0]))
-        formattedResults = format_js_obs_to_py(self.agents, results[0]), format_shallow_object_to_py(results[1]), format_shallow_object_to_py(results[2]),format_shallow_object_to_py(results[3]), {}
+        formattedResults = (format_js_obs_to_py(self.agents, results[0]),
+                            format_shallow_object_to_py(results[1]),
+                            format_shallow_object_to_py(results[2]),
+                            format_shallow_object_to_py(results[3]),
+                            {"host": {"info": "dummy_info"}, "challenger": {"info": "dummy_info"}})
+        print(formattedResults[1])
+        print(formattedResults[0]['host']['own_orb_positions'])
         print("step ended")
         return formattedResults
 
@@ -67,9 +63,9 @@ class BattleRoomEnvironment(ParallelEnv):
             gymnasium.logger.warn("You are calling render method without specifying any render mode.")
             return
 
-        # assert (
-        #         self.render_mode in self.metadata["render_modes"]
-        #         ), f"{self.render_mode} is not a valid render mode"
+        assert (
+                self.render_mode in self.metadata["render_modes"]
+                ), f"{self.render_mode} is not a valid render mode"
         if self.render_mode == "human":
             import pygame
             import sys
@@ -93,32 +89,34 @@ class BattleRoomEnvironment(ParallelEnv):
                         sys.exit()
             print("render ended")
 
+    @functools.lru_cache(maxsize=None)
     def observation_space(self, agent):
         print("observation space called")
         return Dict({
             "ownEndzoneY": Discrete(750),
-            "gameSpeed": Box(low=.2, high=+inf, shape=(1,)),
+            "gameSpeed": Box(low=.2, high=500, shape=(1,)),
             "orbRadius": Discrete(40),
-            "ownScore": Discrete(+inf),
-            "opponentScore": Discrete(+inf),
-            "scoreNeededToWin": Discrete(+inf),
-            "own_orb_positions": Tuple(
-                Tuple(Discrete(450), Discrete(750)),
-                Tuple(Discrete(450), Discrete(750)),
-                Tuple(Discrete(450), Discrete(750)),
-                Tuple(Discrete(450), Discrete(750)),
-                ),
-            "opponent_orb_positions": Tuple(
-                Tuple(Discrete(450), Discrete(750)),
-                Tuple(Discrete(450), Discrete(750)),
-                Tuple(Discrete(450), Discrete(750)),
-                Tuple(Discrete(450), Discrete(750)),
-                ),
-            "ownOrbGhostStatus": Tuple(Discrete(1), Discrete(1), Discrete(1), Discrete(1)),
-            "opponentOrbGhostStatus": Tuple(Discrete(1), Discrete(1), Discrete(1), Discrete(1))
+            "ownScore": Discrete(500),
+            "opponentScore": Discrete(500),
+            "scoreNeededToWin": Discrete(500),
+            "own_orb_positions": Tuple((
+                Tuple((Discrete(450), Discrete(750))),
+                Tuple((Discrete(450), Discrete(750))),
+                Tuple((Discrete(450), Discrete(750))),
+                Tuple((Discrete(450), Discrete(750))),
+                )),
+            "opponent_orb_positions": Tuple((
+                Tuple((Discrete(450), Discrete(750))),
+                Tuple((Discrete(450), Discrete(750))),
+                Tuple((Discrete(450), Discrete(750))),
+                Tuple((Discrete(450), Discrete(750))),
+                )),
+            "ownOrbGhostStatus": Tuple((Discrete(1), Discrete(1), Discrete(1), Discrete(1))),
+            "opponentOrbGhostStatus": Tuple((Discrete(1), Discrete(1), Discrete(1), Discrete(1)))
             })
         return self.observation_spaces[agent]
 
+    @functools.lru_cache(maxsize=None)
     def action_space(self, agent):
         print("action space called")
         return Dict({

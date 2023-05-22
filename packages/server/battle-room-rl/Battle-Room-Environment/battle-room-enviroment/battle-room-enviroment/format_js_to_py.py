@@ -48,7 +48,7 @@ def format_js_obs_to_py(agents, js):
             (
                 js[a]['opponentOrbPositions'][3].x,
                 js[a]['opponentOrbPositions'][3].y
-                ),
+                )
             ),
         "ownOrbGhostStatus": (
             js[a]['ownOrbGhostStatus'][0],
