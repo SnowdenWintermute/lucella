@@ -21,30 +21,30 @@ class BattleRoomEnvironment(ParallelEnv):
         self.render_mode = render_mode
 
     def reset(self, seed=None, options=None):
-        print('reset called')
         jsFormattedObservations = self.jsBattleSchoolEnv['getObservations']()
         pyFormatted = format_js_obs_to_py(self.agents, jsFormattedObservations)
-        print('reset reset ended')
         return (pyFormatted, {"host": {"info": "dummy_info"}, "challenger": {"info": "dummy_info"}})
 
     def step(self, actions):
         host_cursor_x = actions['host']['cursor_position'][0]
         host_cursor_y = actions['host']['cursor_position'][1]
+        host_number_key_pressed = actions['host']['number_key_pressed']
         challenger_cursor_x = actions['challenger']['cursor_position'][0]
         challenger_cursor_y = actions['challenger']['cursor_position'][1]
+        challenger_number_key_pressed = actions['challenger']['number_key_pressed']
         jsActions = [
                 {
                     "playerRole": "host",
                     "cursor_position": [int(host_cursor_x), int(host_cursor_y)],
-                    "number_key_pressed": 0
+                    "number_key_pressed": int(host_number_key_pressed)
                     },
                 {
                     "playerRole": "challenger",
                     "cursor_position": [int(challenger_cursor_x), int(challenger_cursor_y)],
-                    "number_key_pressed": 0
+                    "number_key_pressed": int(challenger_number_key_pressed)
                     },
                 ] 
-        print("step called with actions: ", jsActions)
+        # print("step called with actions: ", jsActions)
 
         results = self.jsBattleSchoolEnv.step(jsActions)
         formattedResults = (format_js_obs_to_py(self.agents, results[0]),
@@ -53,12 +53,11 @@ class BattleRoomEnvironment(ParallelEnv):
                             format_shallow_object_to_py(results[3]),
                             {"host": {"info": "dummy_info"}, "challenger": {"info": "dummy_info"}})
         print(formattedResults[1])
-        print(formattedResults[0]['host']['own_orb_positions'])
-        print("step ended")
+        # print(formattedResults[0]['host']['own_orb_positions'])
+        # print("step ended")
         return formattedResults
 
     def render(self):
-        print('render called')
         if self.render_mode is None:
             gymnasium.logger.warn("You are calling render method without specifying any render mode.")
             return
@@ -87,11 +86,9 @@ class BattleRoomEnvironment(ParallelEnv):
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
-            print("render ended")
 
     @functools.lru_cache(maxsize=None)
     def observation_space(self, agent):
-        print("observation space called")
         return Dict({
             "ownEndzoneY": Discrete(750),
             "gameSpeed": Box(low=.2, high=500, shape=(1,)),
@@ -118,20 +115,7 @@ class BattleRoomEnvironment(ParallelEnv):
 
     @functools.lru_cache(maxsize=None)
     def action_space(self, agent):
-        print("action space called")
         return Dict({
             "cursor_position": Tuple((Discrete(450), Discrete(750))),
             "number_key_pressed": Discrete(5),
             })
-
-# test = BattleSchoolEnvironment(render_mode="human")
-
-# print(test.reset())
-
-# test.step([])
-# test.render()
-from pettingzoo.test import parallel_api_test
-
-if __name__ == "__main__":
-    env = BattleRoomEnvironment(render_mode=None)
-    parallel_api_test(env, num_cycles=1_00)

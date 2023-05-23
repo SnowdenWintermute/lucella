@@ -51,7 +51,7 @@ class CustomEnvironment {
       this.game.queues.server.receivedInputs.push(new ClientTickNumber(null, this.inputNumber, playerRole));
     });
 
-    console.log(JSON.stringify(this.game.queues.server.receivedInputs, null, 2));
+    // console.log(JSON.stringify(this.game.queues.server.receivedInputs, null, 2));
     const rewards = { host: 0, challenger: 0 };
     let terminated = false;
     let truncated = false;
