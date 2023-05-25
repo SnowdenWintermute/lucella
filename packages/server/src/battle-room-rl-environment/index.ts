@@ -89,6 +89,7 @@ class CustomEnvironment {
   getObservations() {
     return {
       host: {
+        playerRole: 0,
         ownEndzoneY: this.game.endzones.host.origin.y + this.game.endzones.host.height,
         gameSpeed: this.game.speedModifier,
         orbRadius: this.game.config.orbRadius,
@@ -105,6 +106,7 @@ class CustomEnvironment {
         opponentOrbGhostStatus: Object.values(this.game.orbs.challenger).map((orb) => orb.isGhost),
       },
       challenger: {
+        playerRole: 1,
         ownEndzoneY: this.game.endzones.challenger.origin.y,
         gameSpeed: this.game.speedModifier,
         orbRadius: this.game.config.orbRadius,

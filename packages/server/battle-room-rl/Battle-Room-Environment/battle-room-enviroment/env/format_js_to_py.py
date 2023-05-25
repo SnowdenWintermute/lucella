@@ -8,6 +8,7 @@ def format_shallow_object_to_py(js):
 
 def format_js_obs_to_py(agents, js):
     return { a: {
+        "playerRole": js[a]['playerRole'],
         "ownEndzoneY": js[a]['ownEndzoneY'],
         "gameSpeed": js[a]['gameSpeed'],
         "orbRadius":js[a]['orbRadius'], 

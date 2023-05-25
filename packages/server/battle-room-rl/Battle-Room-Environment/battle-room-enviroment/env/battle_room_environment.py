@@ -26,12 +26,13 @@ class BattleRoomEnvironment(ParallelEnv):
         return (pyFormatted, {"host": {"info": "dummy_info"}, "challenger": {"info": "dummy_info"}})
 
     def step(self, actions):
-        host_cursor_x = actions['host']['cursor_position'][0]
-        host_cursor_y = actions['host']['cursor_position'][1]
-        host_number_key_pressed = actions['host']['number_key_pressed']
-        challenger_cursor_x = actions['challenger']['cursor_position'][0]
-        challenger_cursor_y = actions['challenger']['cursor_position'][1]
-        challenger_number_key_pressed = actions['challenger']['number_key_pressed']
+        print("ACTIONS: ", actions)
+        host_cursor_x = actions['host'][0]
+        host_cursor_y = actions['host'][1]
+        host_number_key_pressed = actions['host'][2]
+        challenger_cursor_x = actions['challenger'][0]
+        challenger_cursor_y = actions['challenger'][1]
+        challenger_number_key_pressed = actions['challenger'][2]
         jsActions = [
                 {
                     "playerRole": "host",
@@ -77,19 +78,19 @@ class BattleRoomEnvironment(ParallelEnv):
                 self.frame_size_y = 750
                 self.game_window = pygame.display.set_mode(( self.frame_size_x, self.frame_size_y ))
 
-            while True:
-                draw_game(self.game_window, self.jsBattleSchoolEnv.game)
-                clock.tick(33)
-                pygame.display.update()
+            draw_game(self.game_window, self.jsBattleSchoolEnv.game)
+            clock.tick(33)
+            pygame.display.update()
 
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
     @functools.lru_cache(maxsize=None)
     def observation_space(self, agent):
         return Dict({
+            "playerRole": Discrete(2),
             "ownEndzoneY": Discrete(750),
             "gameSpeed": Box(low=.2, high=500, shape=(1,)),
             "orbRadius": Discrete(40),
@@ -111,7 +112,6 @@ class BattleRoomEnvironment(ParallelEnv):
             "ownOrbGhostStatus": Tuple((Discrete(1), Discrete(1), Discrete(1), Discrete(1))),
             "opponentOrbGhostStatus": Tuple((Discrete(1), Discrete(1), Discrete(1), Discrete(1)))
             })
-        return self.observation_spaces[agent]
 
     @functools.lru_cache(maxsize=None)
     def action_space(self, agent):
