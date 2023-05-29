@@ -2,6 +2,7 @@ import javascript
 from javascript import require
 import functools
 from gymnasium.spaces import Dict, Discrete, Tuple, Box
+import numpy as np
 from numpy import inf
 from pettingzoo.utils.env import ParallelEnv
 import pygame
@@ -115,7 +116,4 @@ class BattleRoomEnvironment(ParallelEnv):
 
     @functools.lru_cache(maxsize=None)
     def action_space(self, agent):
-        return Dict({
-            "cursor_position": Tuple((Discrete(450), Discrete(750))),
-            "number_key_pressed": Discrete(5),
-            })
+        return  Box(np.array([0,0,0]), np.array([450, 750, 5]))

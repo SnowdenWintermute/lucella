@@ -1,4 +1,3 @@
-# docs and experiment results can be found at https://docs.cleanrl.dev/rl-algorithms/ppo/#ppo_pettingzoo_ma_ataripy
 import argparse
 import importlib
 import os
@@ -37,7 +36,7 @@ def parse_args():
         help="whether to capture videos of the agent performances (check out `videos` folder)")
 
     # Algorithm specific arguments
-    parser.add_argument("--env-id", type=str, default="pong_v3",
+    parser.add_argument("--env-id", type=str, default="multiwalker_v9",
         help="the id of the environment")
     parser.add_argument("--total-timesteps", type=int, default=20000000,
         help="total timesteps of the experiments")
@@ -86,35 +85,34 @@ def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
 
 class Agent(nn.Module):
     def __init__(self, envs):
-        super().__init__()
-        self.network = nn.Sequential(
-            layer_init(nn.Conv2d(6, 32, 8, stride=4)),
-            nn.ReLU(),
-            layer_init(nn.Conv2d(32, 64, 4, stride=2)),
-            nn.ReLU(),
-            layer_init(nn.Conv2d(64, 64, 3, stride=1)),
-            nn.ReLU(),
-            nn.Flatten(),
-            layer_init(nn.Linear(64 * 7 * 7, 512)),
-            nn.ReLU(),
+        super(Agent, self).__init__()
+        self.critic = nn.Sequential(
+            layer_init(nn.Linear(np.array(envs.single_observation_space.shape).prod(), 64)),
+            nn.Tanh(),
+            layer_init(nn.Linear(64, 64)),
+            nn.Tanh(),
+            layer_init(nn.Linear(64, 1), std=1.0),
         )
-        self.actor = layer_init(nn.Linear(512, envs.single_action_space.n), std=0.01)
-        self.critic = layer_init(nn.Linear(512, 1), std=1)
+        self.actor_mean = nn.Sequential(
+            layer_init(nn.Linear(np.array(envs.single_observation_space.shape).prod(), 64)),
+            nn.Tanh(),
+            layer_init(nn.Linear(64, 64)),
+            nn.Tanh(),
+            layer_init(nn.Linear(64, np.prod(envs.single_action_space.shape)), std=0.01),
+        )
+        self.actor_logstd = nn.Parameter(torch.zeros(1, np.prod(envs.single_action_space.shape)))
 
     def get_value(self, x):
-        x = x.clone()
-        x[:, :, :, [0, 1, 2, 3]] /= 255.0
-        return self.critic(self.network(x.permute((0, 3, 1, 2))))
+        return self.critic(x)
 
     def get_action_and_value(self, x, action=None):
-        x = x.clone()
-        x[:, :, :, [0, 1, 2, 3]] /= 255.0
-        hidden = self.network(x.permute((0, 3, 1, 2)))
-        logits = self.actor(hidden)
-        probs = Categorical(logits=logits)
+        action_mean = self.actor_mean(x)
+        action_logstd = self.actor_logstd.expand_as(action_mean)
+        action_std = torch.exp(action_logstd)
+        probs = Normal(action_mean, action_std)
         if action is None:
             action = probs.sample()
-        return action, probs.log_prob(action), probs.entropy(), self.critic(hidden)
+        return action, probs.log_prob(action).sum(1), probs.entropy().sum(1), self.critic(x)
 
 
 if __name__ == "__main__":
@@ -147,13 +145,14 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
     # env setup
-    env = importlib.import_module(f"pettingzoo.atari.{args.env_id}").parallel_env()
-    env = ss.max_observation_v0(env, 2)
-    env = ss.frame_skip_v0(env, 4)
+    env = importlib.import_module(f"pettingzoo.sisl.{args.env_id}").parallel_env()
+    # env = ss.multiagent_wrappers.pad_observations_v0(env)
+    # env = ss.max_observation_v0(env, 2)
+    # env = ss.frame_skip_v0(env, 4)
     env = ss.clip_reward_v0(env, lower_bound=-1, upper_bound=1)
-    env = ss.color_reduction_v0(env, mode="B")
-    env = ss.resize_v1(env, x_size=84, y_size=84)
-    env = ss.frame_stack_v1(env, 4)
+    # env = ss.color_reduction_v0(env, mode="B")
+    # env = ss.resize_v1(env, x_size=84, y_size=84)
+    # env = ss.frame_stack_v1(env, 4)
     env = ss.agent_indicator_v0(env, type_only=False)
     env = ss.pettingzoo_env_to_vec_env_v1(env)
     envs = ss.concat_vec_envs_v1(env, args.num_envs // 2, num_cpus=0, base_class="gymnasium")
@@ -248,7 +247,7 @@ if __name__ == "__main__":
                 end = start + args.minibatch_size
                 mb_inds = b_inds[start:end]
 
-                _, newlogprob, entropy, newvalue = agent.get_action_and_value(b_obs[mb_inds], b_actions.long()[mb_inds])
+                _, newlogprob, entropy, newvalue = agent.get_action_and_value(b_obs[mb_inds], b_actions[mb_inds])
                 logratio = newlogprob - b_logprobs[mb_inds]
                 ratio = logratio.exp()
 
