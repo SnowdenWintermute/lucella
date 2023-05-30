@@ -15,7 +15,7 @@ function WelcomeDropdown() {
   const [viewingPatchNotes, setViewingPatchNotes] = useState(false);
 
   let mainMenuLeftContent = <div />;
-  const versionNumber = "alpha 0.6.0";
+  const versionNumber = "alpha 0.7.0";
 
   // if (userIsLoading && !uiState.showContextMenu) mainMenuLeftContent = <LoadingSpinner />;
   if (userIsLoading) mainMenuLeftContent = <LoadingSpinner />;

@@ -31,7 +31,7 @@ export const BattleRoomGameOptions = {
     ],
   },
   topSpeed: {
-    defaultIndex: 1,
+    defaultIndex: 0,
     readableTitle: "Top speed",
     options: [
       { title: "Very slow", value: 1 },
@@ -85,12 +85,12 @@ export const BattleRoomGameOptions = {
     ],
   },
   orbRadius: {
-    defaultIndex: 2,
+    defaultIndex: 3,
     readableTitle: "Orb size",
     options: [
       { title: "Tiny", value: 8 },
       { title: "Smaller", value: 12 },
-      { title: "Standard", value: 15 }, // default
+      { title: "Midsize", value: 15 }, // default
       { title: "Larger", value: 20 },
       { title: "Gargantuan", value: 40 },
     ],
