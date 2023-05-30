@@ -8,7 +8,7 @@ function PatchNotes({ setViewingPatchNotes, versionNumber }: { setViewingPatchNo
       <div>
         <h4>Version History</h4>
       </div>
-      <span className="patch-notes__version-name">{versionNumber}"physics options"</span>
+      <span className="patch-notes__version-name">{versionNumber} "physics options"</span>
       <ul>
         <li>Added 8 options that users can use to customize their casual game experience</li>
         <li>Options are saved to the host's account when a game created by them is started</li>

@@ -1,2 +1,0 @@
-PettingZoo==1.23.0
-javascript==1.0.1
