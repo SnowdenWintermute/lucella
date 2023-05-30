@@ -9,15 +9,11 @@ import {
   SocketEventsFromServer,
 } from "../../../../../common";
 import { LucellaServer } from "../../../LucellaServer";
+import resetScoreAndSpeed from "./resetScoreAndSpeed";
 export default function startNextRound(server: LucellaServer, game: BattleRoomGame) {
   const gameRoom = server.lobby.gameRooms[game.gameName];
   const gameChatChannelName = gameChannelNamePrefix + game.gameName;
-  //
-  game.score.host = 0;
-  game.score.challenger = 0;
-  game.speedModifier = baseSpeedModifier;
-  game.score.neededToWin = game.config.numberOfPointsRequiredToWinRound;
-  //
+  resetScoreAndSpeed(game);
   gameRoom.gameStatus = GameStatus.STARTING_NEXT_ROUND;
   server.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
   game.newRoundCountdown.current = game.newRoundCountdown.duration;
