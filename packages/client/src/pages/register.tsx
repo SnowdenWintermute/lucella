@@ -127,6 +127,11 @@ function Register() {
           {isLoading || isSuccess ? "..." : BUTTON_NAMES.AUTH_FORMS.CREATE_ACCOUNT}
         </button>
       </div>
+      <br />
+      <div>
+        Notice - some users of Yahoo mail have been getting their account activation emails up to 24 hours after they are delivered. Using another email
+        provider is suggested.
+      </div>
     </AuthPage>
   );
 }
