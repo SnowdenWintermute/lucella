@@ -13,7 +13,7 @@ export default function gameSettingsConfig() {
 
   it("allows a user to select and save game settings in the settings page", () => {
     const defaultOptionValue = BattleRoomGameOptions.topSpeed.options[BattleRoomGameOptions.topSpeed.defaultIndex];
-    const selectedOptionTitle = BattleRoomGameOptions.topSpeed.options[0].title;
+    const selectedOptionTitle = BattleRoomGameOptions.topSpeed.options[3].title;
     cy.request("POST", `http://localhost:8080/api${AuthRoutePaths.ROOT}`, {
       email: Cypress.env("CYPRESS_TEST_USER_EMAIL"),
       password: Cypress.env("CYPRESS_TEST_USER_PASSWORD"),
