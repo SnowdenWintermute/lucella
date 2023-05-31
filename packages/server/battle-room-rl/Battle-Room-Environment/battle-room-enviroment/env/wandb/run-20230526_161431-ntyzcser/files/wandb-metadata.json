@@ -1,0 +1,60 @@
+{
+    "os": "Linux-6.1.26-1-MANJARO-x86_64-with-glibc2.37",
+    "python": "3.10.10",
+    "heartbeatAt": "2023-05-26T20:14:32.327192",
+    "startedAt": "2023-05-26T20:14:31.717616",
+    "docker": null,
+    "cuda": null,
+    "args": [
+        "--capture-video",
+        "--track"
+    ],
+    "state": "running",
+    "program": "/home/mike/projects/lucella/packages/server/battle-room-rl/Battle-Room-Environment/battle-room-enviroment/env/wandb_copied_ppo.py",
+    "codePath": "packages/server/battle-room-rl/Battle-Room-Environment/battle-room-enviroment/env/wandb_copied_ppo.py",
+    "git": {
+        "remote": "https://github.com/SnowdenWintermute/lucella.git",
+        "commit": "301bcd2d351aa1f33e9a05a489959e7d4ab50fee"
+    },
+    "email": "michael.p.silverman@gmail.com",
+    "root": "/home/mike/projects/lucella",
+    "host": "lappy",
+    "username": "mike",
+    "executable": "/usr/bin/python",
+    "cpu_count": 2,
+    "cpu_count_logical": 4,
+    "cpu_freq": {
+        "current": 2345.5789999999997,
+        "min": 1200.0,
+        "max": 3600.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 3392.125,
+            "min": 1200.0,
+            "max": 3600.0
+        },
+        {
+            "current": 3392.074,
+            "min": 1200.0,
+            "max": 3600.0
+        },
+        {
+            "current": 3392.08,
+            "min": 1200.0,
+            "max": 3600.0
+        },
+        {
+            "current": 3392.063,
+            "min": 1200.0,
+            "max": 3600.0
+        }
+    ],
+    "disk": {
+        "total": 48.951622009277344,
+        "used": 17.156478881835938
+    },
+    "memory": {
+        "total": 15.26724624633789
+    }
+}

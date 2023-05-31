@@ -6,12 +6,12 @@ export class GameElementsOfConstantInterest {
   orbs: HostAndChallengerOrbSets;
   score: { host: number; challenger: number; neededToWin: number };
   speedModifier: number;
-  serverLastProcessedInputNumbers: { host: number | null; challenger: number | null };
+  serverLastProcessedInputNumbers: { [playerName: string]: number };
   constructor(
     orbs?: { host: { [orbLabel: string]: Orb }; challenger: { [orbLabel: string]: Orb } },
     score?: { host: number; challenger: number; neededToWin: number },
     speedModifier?: number,
-    serverLastProcessedInputNumbers?: { host: number | null; challenger: number | null }
+    serverLastProcessedInputNumbers?: { [playerName: string]: number }
   ) {
     this.orbs = orbs || { host: {}, challenger: {} };
     this.score = score || { host: 0, challenger: 0, neededToWin: 0 };

@@ -1,32 +1,37 @@
 import Matter from "matter-js";
-import { baseOrbRadius, baseSpeedModifier, baseWindowDimensions, initialEndZoneHeight, initialScoreNeededToWin } from "../../consts/battle-room-game-config";
+import { baseWindowDimensions } from "../../consts/battle-room-game-config";
 import { MouseData } from "../MouseData";
-import { Point } from "../Point";
-import { Rectangle } from "../Rectangles";
+import { NetCode } from "../NetCode";
+import { AntiCheatValueTracker } from "../AntiCheat";
+import { SocketMetadata } from "../SocketMetadata";
+import { InputQueues } from "../InputQueues";
+import { Entity } from "./Entity";
+import { MobileEntity } from "./MobileEntity";
 
 export class CombatSimulator {
   id: string;
   physicsEngine: Matter.Engine | undefined;
+  currentCollisionPairs: Matter.Pair[] = [];
   netcode = new NetCode();
-  antiCheat = new AntiCheatValues();
-  players: { [socketId: string]: SocketMetadata } = {};
-  entities: {
-    playerControlled: { [playerName: string]: MobileEntity } = {};
-    mobile: { [id: string]: MobileEntity } = {};
-    static: { [id: string]: StaticEntity } = {};
-  };
+  antiCheat = new AntiCheatValueTracker();
+  // queues: InputQueues<>;
   intervals: {
     physics: NodeJS.Timeout | undefined;
   } = { physics: undefined };
-  queues = new BattleRoomQueues();
+
+  players: { [socketId: string]: SocketMetadata } = {};
+  entities: {
+    playerControlled: { [playerName: string]: MobileEntity };
+    mobile: { [id: string]: MobileEntity };
+    static: { [id: string]: Entity };
+  } = {
+    playerControlled: {},
+    mobile: {},
+    static: {},
+  };
   mouseData = new MouseData();
-  currentCollisionPairs: Matter.Pair[] = [];
-  speedModifier = baseSpeedModifier;
   static baseWindowDimensions = baseWindowDimensions;
-  static baseEndzoneHeight = initialEndZoneHeight;
-  static baseOrbRadius = baseOrbRadius;
-  static initialScoreNeededToWin = initialScoreNeededToWin;
-  static initializeWorld = initializeWorld;
+  // static initializeWorld = initializeWorld;
   constructor(id: string) {
     this.id = id;
   }

@@ -1,0 +1,14 @@
+Entity
+  body: Matter.body
+    position, velocity etc
+  height: 0 - 100 // for jumping/flying over
+  z: 0 - 100 // for crouching under
+  owner: playerName, aiName
+  hp:
+    max: -1 = invincible
+    current: destroyed at 0
+
+MobileEntity
+  acceleration: number
+  top speed: number
+  jumpHeight: number

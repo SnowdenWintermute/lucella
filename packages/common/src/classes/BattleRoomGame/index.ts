@@ -3,38 +3,38 @@ import {
   baseOrbRadius,
   baseSpeedModifier,
   baseWindowDimensions,
-  BattleRoomGameOptions,
   gameOverCountdownDuration,
   initialEndZoneHeight,
   initialScoreNeededToWin,
   newRoundStartingCountdownDuration,
 } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
-import { HostAndChallengerOrbSets } from "../../types";
+import { HostAndChallengerOrbSets, ServerPacket } from "../../types";
 import { MouseData } from "../MouseData";
 import { Point } from "../Point";
 import { Rectangle } from "../Rectangles";
-import { AntiCheatValues } from "./AntiCheatValues";
 import { BattleRoomGameConfig } from "./BattleRoomGameConfig";
-import { BattleRoomGameConfigOptionIndices } from "./BattleRoomGameConfigOptionIndices";
 import { BattleRoomGameConfigOptionIndicesUpdate } from "./BattleRoomGameConfigOptionIndicesUpdate";
-import { BattleRoomQueues } from "./BattleRoomQueues";
 import { DebugValues } from "./DebugValues";
 import initializeWorld from "./initializeWorld";
-import { NetCode } from "./NetCode";
+import { NetCode } from "../NetCode";
+import { GameElementsOfConstantInterest } from "./GameElementsOfConstantInterest";
+import { AntiCheatValueTracker } from "../AntiCheat";
+import { UserInput } from "../inputs/UserInput";
+import { InputQueues } from "../InputQueues";
 
 export class BattleRoomGame {
   gameName: string;
   isRanked: boolean;
   physicsEngine: Matter.Engine | undefined;
-  netcode = new NetCode();
-  antiCheat = new AntiCheatValues();
+  netcode = new NetCode<GameElementsOfConstantInterest, ServerPacket>(["host", "challenger"]);
+  antiCheat = new AntiCheatValueTracker(["host", "challenger"]);
   intervals: {
     physics: NodeJS.Timeout | undefined;
     endingCountdown: NodeJS.Timeout | undefined;
     newRoundCountdown: NodeJS.Timeout | undefined;
   } = { physics: undefined, endingCountdown: undefined, newRoundCountdown: undefined };
-  queues = new BattleRoomQueues();
+  queues = new InputQueues<UserInput>();
   mouseData = new MouseData();
   waypointKeyIsPressed: boolean = false;
   newRoundCountdown: { duration: number; current: number | null } = { duration: newRoundStartingCountdownDuration, current: null };

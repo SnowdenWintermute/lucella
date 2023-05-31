@@ -17,6 +17,7 @@ export class Orb {
     numInputsAppliedBeforeComingToRest: 0,
     highestNumberInputApplied: 0,
   };
+
   constructor(body: Matter.Body, owner: string, id: number, color?: string, strokeColor?: string) {
     this.body = body;
     this.color = color;

@@ -15,20 +15,21 @@ export default function antiCheat(game: BattleRoomGame, inputToQueue: UserInput,
   let clientTryingToMoveTooFast = false;
   if (!inputToQueue) return;
   if (inputToQueue.type !== UserInputs.CLIENT_TICK_NUMBER) return;
+  if (!game.antiCheat.trackedPlayers[playerRole]) return console.log(`No anticheat values stored for player${playerRole}`);
 
-  const timeSinceGameStarted = Date.now() - game.antiCheat.gameStartedAt;
+  const timeSinceGameStarted = Date.now() - game.antiCheat.trackedPlayers[playerRole].joinedGameAt;
   const numberOfPossibleCommandsSinceGameStarted = Math.ceil(timeSinceGameStarted / renderRate);
-  if (numberOfPossibleCommandsSinceGameStarted < game.antiCheat.numberOfMovementRequests[playerRole]) {
+  if (numberOfPossibleCommandsSinceGameStarted < game.antiCheat.trackedPlayers[playerRole].numberOfMovementRequests) {
     clientTryingToMoveTooFast = true;
     console.log(
       "Client sending move requests too quickly - numAllowed: ",
       numberOfPossibleCommandsSinceGameStarted,
       " num received: ",
-      game.antiCheat.numberOfMovementRequests[playerRole]
+      game.antiCheat.trackedPlayers[playerRole].numberOfMovementRequests
     );
   }
 
-  game.antiCheat.numberOfMovementRequests[playerRole] += 1;
+  game.antiCheat.trackedPlayers[playerRole].numberOfMovementRequests += 1;
   game.netcode.serverLastSeenMovementInputTimestamps[playerRole] = +Date.now();
 
   return clientTryingToMoveTooFast;
