@@ -90,7 +90,7 @@ export const BattleRoomGameOptions = {
     options: [
       { title: "Tiny", value: 8 },
       { title: "Smaller", value: 12 },
-      { title: "Midsize", value: 15 }, // default
+      { title: "Standard", value: 15 }, // default
       { title: "Larger", value: 20 },
       { title: "Gargantuan", value: 40 },
     ],
