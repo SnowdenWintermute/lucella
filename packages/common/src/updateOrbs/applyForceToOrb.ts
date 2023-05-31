@@ -6,13 +6,14 @@ import { angleBetweenVectors, numberInRangeToBetweenZeroAndOne } from "../utils"
 
 export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   const { hardBrakingSpeed, turningSpeedModifier, topSpeed } = game.config;
-
+  Body.setVelocity(orb.body, Vector.create(0, 0));
   const minimumMovementSpeed = 0.05;
 
   if (!orb.destination) {
     if (Vector.magnitude(orb.body.force) < minimumMovementSpeed) orb.body.force = Vector.create(0, 0); // stop any orb moving at miniscule speeds
     else Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, hardBrakingSpeed)));
-    Body.update(orb.body, renderRate, 1, 0);
+    // @ts-ignore
+    Body.update(orb.body, renderRate);
     return;
   }
 
@@ -27,7 +28,8 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   if (entityReachedDestination) {
     orb.destination = null;
     Body.applyForce(orb.body, orb.body.position, Vector.neg(Vector.mult(orb.body.force, hardBrakingSpeed)));
-    Body.update(orb.body, renderRate, 1, 0);
+    // @ts-ignore
+    Body.update(orb.body, renderRate);
     return;
   }
 
@@ -42,12 +44,14 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   Body.applyForce(orb.body, orb.body.position, turningForce);
 
   // // get the force vector to apply to this orb
-  const travellingAboveSpeedLimit = orb.body.speed > topSpeed * game.speedModifier;
+  // const travellingAboveSpeedLimit = orb.body.speed > topSpeed * game.speedModifier;
+  const travellingAboveSpeedLimit = Vector.magnitude(orb.body.force) > topSpeed * game.speedModifier;
+  if (orb.id === 1) console.log(Vector.magnitude(orb.body.force), orb.body.speed);
   const acceleration = game.config.acceleration * game.speedModifier;
   const normalizedDestinationVector = Vector.normalise(destinationVector); // direction only (magnitude of 1)
   const impulseVector = Vector.mult(normalizedDestinationVector, acceleration); // vector in the direction of the orb's destination with the magnitude of the game's acceleration
 
   if (!travellingAboveSpeedLimit) Body.applyForce(orb.body, orb.body.position, impulseVector);
-
-  Body.update(orb.body, renderRate, 1, 0);
+  // @ts-ignore
+  Body.update(orb.body, renderRate);
 }

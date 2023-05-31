@@ -29,7 +29,7 @@ export { SUCCESS_ALERTS } from "./consts/SuccessAlerts";
 export { InputFields } from "./consts/InputFields";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
-export { GameElementsOfConstantInterest } from "./classes/BattleRoomGame/GameElementsOfConstantInterest";
+export { BRGameElementsOfConstantInterest } from "./classes/BattleRoomGame/BRGameElementsOfConstantInterest";
 export { setOrbsAtStartPositions } from "./classes/BattleRoomGame/setOrbsAtStartPositions";
 export * from "./classes/ChatChannel";
 export { BattleRoomGameConfigOptionIndicesUpdate } from "./classes/BattleRoomGame/BattleRoomGameConfigOptionIndicesUpdate";

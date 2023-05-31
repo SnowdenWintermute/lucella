@@ -16,7 +16,7 @@ RUN mkdir -p /app/packages/common/dist/proto/generated/src/proto
 COPY packages/server/package.json ./packages/server
 COPY packages/common/package.json ./packages/common
 
-RUN yarn install --pure-lockfile --non-interactive
+RUN yarn install --pure-lockfile --non-interactive --network-timeout 1000000
 
 COPY packages/server ./packages/server
 COPY packages/common ./packages/common

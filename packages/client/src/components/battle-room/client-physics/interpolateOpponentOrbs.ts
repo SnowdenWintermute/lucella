@@ -5,7 +5,7 @@ import {
   BattleRoomGame,
   physicsTickRate,
   PlayerRole,
-  ServerPacket,
+  BRServerPacket,
   setOrbSetNonPhysicsPropertiesFromAnotherSet,
 } from "../../../../../common";
 import { INetworkPerformanceMetrics } from "../../../types";
@@ -13,7 +13,7 @@ import { INetworkPerformanceMetrics } from "../../../types";
 export default function interpolateOpponentOrbs(
   game: BattleRoomGame,
   newGameState: BattleRoomGame,
-  lastUpdateFromServerCopy: ServerPacket,
+  lastUpdateFromServerCopy: BRServerPacket,
   playerRole: PlayerRole,
   networkPerformanceMetrics: INetworkPerformanceMetrics
 ) {

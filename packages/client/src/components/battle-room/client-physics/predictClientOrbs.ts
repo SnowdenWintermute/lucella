@@ -1,8 +1,21 @@
 import { Detector, Pair } from "matter-js";
-import { BattleRoomGame, PlayerRole, processPlayerInput, renderRate, UserInput, ServerPacket, applyValuesFromOneOrbSetToAnother } from "../../../../../common";
+import {
+  BattleRoomGame,
+  PlayerRole,
+  processPlayerInput,
+  renderRate,
+  UserInput,
+  BRServerPacket,
+  applyValuesFromOneOrbSetToAnother,
+} from "../../../../../common";
 import setNonOrbGameState from "./setNonOrbGameState";
 
-export default function predictClientOrbs(game: BattleRoomGame, newGameState: BattleRoomGame, lastUpdateFromServerCopy: ServerPacket, playerRole: PlayerRole) {
+export default function predictClientOrbs(
+  game: BattleRoomGame,
+  newGameState: BattleRoomGame,
+  lastUpdateFromServerCopy: BRServerPacket,
+  playerRole: PlayerRole
+) {
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
   const inputsToKeep: UserInput[] = [];
 

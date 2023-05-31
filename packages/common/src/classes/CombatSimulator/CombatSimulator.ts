@@ -7,12 +7,14 @@ import { SocketMetadata } from "../SocketMetadata";
 import { InputQueues } from "../InputQueues";
 import { Entity } from "./Entity";
 import { MobileEntity } from "./MobileEntity";
+import { CSGameState } from "./CSGameState";
+import { CSServerPacket } from "../../types";
 
 export class CombatSimulator {
   id: string;
   physicsEngine: Matter.Engine | undefined;
   currentCollisionPairs: Matter.Pair[] = [];
-  netcode = new NetCode();
+  netcode = new NetCode<CSGameState, CSServerPacket>();
   antiCheat = new AntiCheatValueTracker();
   // queues: InputQueues<>;
   intervals: {
@@ -29,6 +31,7 @@ export class CombatSimulator {
     mobile: {},
     static: {},
   };
+
   mouseData = new MouseData();
   static baseWindowDimensions = baseWindowDimensions;
   // static initializeWorld = initializeWorld;

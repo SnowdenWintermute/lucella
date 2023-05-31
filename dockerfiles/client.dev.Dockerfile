@@ -15,7 +15,7 @@ RUN mkdir /app/packages/common
 COPY packages/client/package.json ./packages/client
 COPY packages/common/package.json ./packages/common
 
-RUN yarn install --pure-lockfile --non-interactive
+RUN yarn install --pure-lockfile --non-interactive --network-timeout 1000000
 
 COPY packages/client ./packages/client
 COPY packages/common ./packages/common

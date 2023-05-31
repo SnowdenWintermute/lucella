@@ -9,7 +9,7 @@ import {
   newRoundStartingCountdownDuration,
 } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
-import { HostAndChallengerOrbSets, ServerPacket } from "../../types";
+import { HostAndChallengerOrbSets, BRServerPacket } from "../../types";
 import { MouseData } from "../MouseData";
 import { Point } from "../Point";
 import { Rectangle } from "../Rectangles";
@@ -18,7 +18,7 @@ import { BattleRoomGameConfigOptionIndicesUpdate } from "./BattleRoomGameConfigO
 import { DebugValues } from "./DebugValues";
 import initializeWorld from "./initializeWorld";
 import { NetCode } from "../NetCode";
-import { GameElementsOfConstantInterest } from "./GameElementsOfConstantInterest";
+import { BRGameElementsOfConstantInterest } from "./BRGameElementsOfConstantInterest";
 import { AntiCheatValueTracker } from "../AntiCheat";
 import { UserInput } from "../inputs/UserInput";
 import { InputQueues } from "../InputQueues";
@@ -27,7 +27,7 @@ export class BattleRoomGame {
   gameName: string;
   isRanked: boolean;
   physicsEngine: Matter.Engine | undefined;
-  netcode = new NetCode<GameElementsOfConstantInterest, ServerPacket>(["host", "challenger"]);
+  netcode = new NetCode<BRGameElementsOfConstantInterest, BRServerPacket>(["host", "challenger"]);
   antiCheat = new AntiCheatValueTracker(["host", "challenger"]);
   intervals: {
     physics: NodeJS.Timeout | undefined;

@@ -1,3 +1,5 @@
+import { Entity } from "../classes/CombatSimulator/Entity";
+import { MobileEntity } from "../classes/CombatSimulator/MobileEntity";
 import { Orb } from "../classes/Orb";
 import { Point } from "../classes/Point";
 
@@ -20,11 +22,19 @@ export interface IUnpackedGameStateDeltas {
   gameSpeedModifier?: number;
 }
 
-export interface ServerPacket {
+export interface BRServerPacket {
   orbs: HostAndChallengerOrbSets;
   serverLastProcessedInputNumber: number;
   speedModifier: number;
   score: { host: number; challenger: number; neededToWin: number };
+}
+
+export interface CSServerPacket {
+  entities: {
+    playerControlled: { [playerName: string]: MobileEntity };
+    mobile: { [id: string]: MobileEntity };
+    static: { [id: string]: Entity };
+  };
 }
 
 export type CustomErrorDetails = { message: string; field?: string };

@@ -4,7 +4,7 @@ import Matter, { Detector } from "matter-js";
 import { Server } from "socket.io";
 import {
   BattleRoomGame,
-  GameElementsOfConstantInterest,
+  BRGameElementsOfConstantInterest,
   physicsTickRate,
   PlayerRole,
   processPlayerInput,
@@ -56,7 +56,7 @@ export default function createGamePhysicsInterval(io: Server, server: LucellaSer
     if (server.lobby.gameRooms[gameName]?.players.challenger && server.lobby.gameRooms[gameName].players.challenger!.socketId)
       io.to(server.lobby.gameRooms[gameName]?.players.challenger!.socketId!).emit(SocketEventsFromServer.COMPRESSED_GAME_PACKET, updateForChallenger);
 
-    game.netcode.prevGameState = new GameElementsOfConstantInterest(
+    game.netcode.prevGameState = new BRGameElementsOfConstantInterest(
       cloneDeep(game.orbs),
       cloneDeep(game.score),
       game.speedModifier,

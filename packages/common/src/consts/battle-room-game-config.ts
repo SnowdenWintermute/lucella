@@ -20,7 +20,7 @@ export const BattleRoomGameOptions = {
     ],
   },
   acceleration: {
-    defaultIndex: 4,
+    defaultIndex: 3,
     readableTitle: "Acceleration",
     options: [
       { title: "Very slow", value: 0.25 },
@@ -31,14 +31,14 @@ export const BattleRoomGameOptions = {
     ],
   },
   topSpeed: {
-    defaultIndex: 0,
+    defaultIndex: 4,
     readableTitle: "Top speed",
     options: [
-      { title: "Very slow", value: 1 },
+      { title: "Very slow", value: 0.5 },
       { title: "Slow", value: 2 }, // default
       { title: "Moderate", value: 4 },
       { title: "Fast", value: 8 },
-      { title: "Very fast", value: 12 },
+      { title: "Very fast", value: 30 },
     ],
   },
   turningSpeedModifier: {
@@ -115,6 +115,6 @@ const { orbRadius } = BattleRoomGameOptions;
 export const baseOrbRadius = orbRadius.options[orbRadius.defaultIndex].value;
 export const decelerationDistance = 30;
 export const orbDensity = 10;
-export const frictionAir = 20.9;
+export const frictionAir = 1;
 export const initialEndZoneHeight = 60;
 export const orbWaypointListSizeLimit = 100;
