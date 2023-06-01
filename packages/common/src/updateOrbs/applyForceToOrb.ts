@@ -47,11 +47,17 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   // const travellingAboveSpeedLimit = orb.body.speed > topSpeed * game.speedModifier;
   const travellingAboveSpeedLimit = Vector.magnitude(orb.body.force) > topSpeed * game.speedModifier;
   if (orb.id === 1) console.log(Vector.magnitude(orb.body.force), orb.body.speed);
-  const acceleration = game.config.acceleration * game.speedModifier;
+  const acceleration = game.config.acceleration * topSpeed;
   const normalizedDestinationVector = Vector.normalise(destinationVector); // direction only (magnitude of 1)
   const impulseVector = Vector.mult(normalizedDestinationVector, acceleration); // vector in the direction of the orb's destination with the magnitude of the game's acceleration
 
   if (!travellingAboveSpeedLimit) Body.applyForce(orb.body, orb.body.position, impulseVector);
+  const travellingAboveSpeedLimitAfterImpulse = Vector.magnitude(orb.body.force) > topSpeed * game.speedModifier;
+  if (travellingAboveSpeedLimitAfterImpulse) {
+    const normalized = Vector.normalise(orb.body.force);
+    orb.body.force = Vector.mult(normalized, topSpeed);
+  }
+  console.log(Vector.magnitude(orb.body.force));
   // @ts-ignore
   Body.update(orb.body, renderRate);
 }

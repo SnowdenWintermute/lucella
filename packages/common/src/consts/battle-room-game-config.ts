@@ -20,25 +20,25 @@ export const BattleRoomGameOptions = {
     ],
   },
   acceleration: {
-    defaultIndex: 3,
+    defaultIndex: 4,
     readableTitle: "Acceleration",
     options: [
-      { title: "Very slow", value: 0.25 },
-      { title: "Slow", value: 0.5 },
-      { title: "Moderate", value: 1 },
-      { title: "Fast", value: 2 },
-      { title: "Very fast", value: 4 }, // default
+      { title: "Very slow", value: 0.025 },
+      { title: "Slow", value: 0.05 },
+      { title: "Moderate", value: 0.1 },
+      { title: "Fast", value: 0.2 },
+      { title: "Instant", value: 1 }, // default
     ],
   },
   topSpeed: {
-    defaultIndex: 4,
+    defaultIndex: 1,
     readableTitle: "Top speed",
     options: [
-      { title: "Very slow", value: 0.5 },
-      { title: "Slow", value: 2 }, // default
-      { title: "Moderate", value: 4 },
-      { title: "Fast", value: 8 },
-      { title: "Very fast", value: 30 },
+      { title: "Very slow", value: 10 },
+      { title: "Slow", value: 20 }, // default
+      { title: "Moderate", value: 30 },
+      { title: "Fast", value: 50 },
+      { title: "Very fast", value: 80 },
     ],
   },
   turningSpeedModifier: {
