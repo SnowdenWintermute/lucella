@@ -6,8 +6,8 @@ export {
   BattleRoomLadderEntryWithUserId,
   IBattleRoomConfigSettings,
 } from "./types/BattleRoomGameRecords";
-export { GameStatus, PlayerRole, BRPlayerActions, UserRole, IPBanReason } from "./enums";
-export { SocketEventsFromClient, SocketEventsFromServer, GENERIC_SOCKET_EVENTS } from "./enums/SocketEvents";
+export { GameStatus, PlayerRole, BRPlayerActions, UserRole, IPBanReason, GameType } from "./enums";
+export { SocketEventsFromClient, SocketEventsFromServer, GENERIC_SOCKET_EVENTS, CSEventsFromClient, CSEventsFromServer } from "./enums/SocketEvents";
 export {
   AuthRoutePaths,
   UsersRoutePaths,
@@ -29,6 +29,8 @@ export { SUCCESS_ALERTS } from "./consts/SuccessAlerts";
 export { InputFields } from "./consts/InputFields";
 export { GameRoom } from "./classes/BattleRoomGame/GameRoom";
 export { BattleRoomGame } from "./classes/BattleRoomGame";
+export { CombatSimulator } from "./classes/CombatSimulator";
+
 export { BRGameElementsOfConstantInterest } from "./classes/BattleRoomGame/BRGameElementsOfConstantInterest";
 export { setOrbsAtStartPositions } from "./classes/BattleRoomGame/setOrbsAtStartPositions";
 export * from "./classes/Lobby/ChatChannel";
@@ -42,6 +44,7 @@ export { Point } from "./classes/GameGenerics/Point";
 export { Rectangle, DetailedRectangle } from "./classes/GameGenerics/Rectangles";
 export { SocketMetadata, SanitizedSocketMetadata } from "./classes/SocketMetadata";
 export * from "./classes/BattleRoomGame/br-game-actions";
+export * from "./classes/CombatSimulator/cs-game-actions";
 export { BRPlayerAction } from "./classes/BattleRoomGame/BRPlayerAction";
 export { processPlayerAction } from "./processPlayerAction";
 export { updateOrbs } from "./updateOrbs";

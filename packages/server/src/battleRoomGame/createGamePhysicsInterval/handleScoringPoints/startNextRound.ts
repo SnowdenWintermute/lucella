@@ -1,15 +1,8 @@
 /* eslint-disable consistent-return */
-import {
-  baseSpeedModifier,
-  BattleRoomGame,
-  gameChannelNamePrefix,
-  GameStatus,
-  ONE_SECOND,
-  setOrbsAtStartPositions,
-  SocketEventsFromServer,
-} from "../../../../../common";
+import { BattleRoomGame, gameChannelNamePrefix, GameStatus, ONE_SECOND, setOrbsAtStartPositions, SocketEventsFromServer } from "../../../../../common";
 import { LucellaServer } from "../../../LucellaServer";
 import resetScoreAndSpeed from "./resetScoreAndSpeed";
+
 export default function startNextRound(server: LucellaServer, game: BattleRoomGame) {
   const gameRoom = server.lobby.gameRooms[game.gameName];
   const gameChatChannelName = gameChannelNamePrefix + game.gameName;

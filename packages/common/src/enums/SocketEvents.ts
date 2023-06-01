@@ -43,6 +43,18 @@ export enum SocketEventsFromServer {
   CURRENT_GAME_ROOM_CONFIG = "37",
 }
 
+export enum CSEventsFromClient {
+  CREATES_NEW_COMBAT_SIM = "38",
+  ENTERS_COMBAT_SIM = "39",
+  LEAVES_COMBAT_SIM = "40",
+  SENDS_INPUTS = "41",
+}
+
+export enum CSEventsFromServer {
+  REMOVED_FROM_COMBAT_SIM = "42",
+  CS_GAME_PACKET = "43",
+}
+
 export const GENERIC_SOCKET_EVENTS = {
   CONNECT: "connect",
   DISCONNECT: "disconnect",

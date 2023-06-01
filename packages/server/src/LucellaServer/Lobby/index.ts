@@ -17,8 +17,9 @@ import {
   GameStatus,
   chatChannelWelcomeMessage,
   BattleRoomGameConfigOptionIndicesUpdate,
-  BattleRoomGameConfigOptionIndices,
   IBattleRoomConfigSettings,
+  GameType,
+  CSEventsFromServer,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
@@ -48,6 +49,7 @@ export class Lobby {
   getSanitizedChatChannel(channelName: string) {
     return sanitizeChatChannel(this.chatChannels[channelName]);
   }
+
   updateChatChannelUsernameListsAndDeleteEmptyChannels(
     socketMeta: SocketMetadata,
     channelNameLeaving: string | null | undefined,
@@ -55,6 +57,7 @@ export class Lobby {
   ) {
     updateChatChannelUsernameListsAndDeleteEmptyChannels(this.chatChannels, socketMeta, channelNameLeaving, channelNameJoining);
   }
+
   handleNewChatMessage(socket: Socket, data: { style: ChatMessageStyles; text: string }) {
     // @todo - check the style the user sends against a list of valid styles for that user (can sell styles)
     const { style, text } = data;
@@ -64,6 +67,7 @@ export class Lobby {
       .in(this.server.connectedSockets[socket.id].currentChatChannel!)
       .emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(text, this.server.connectedSockets[socket.id].associatedUser.username, style));
   }
+
   changeSocketChatChannelAndEmitUpdates(socket: Socket, channelNameJoining: string | null, authorizedForGameChannel?: boolean) {
     const { io, connectedSockets } = this.server;
     if (!socket || !connectedSockets[socket.id]) return;
@@ -86,12 +90,47 @@ export class Lobby {
       socket.emit(SocketEventsFromServer.NEW_CHAT_MESSAGE, new ChatMessage(chatChannelWelcomeMessage(channelNameJoining), "Server", ChatMessageStyles.PRIVATE));
     }
   }
-  async handleHostNewGameRequest(socket: Socket, gameName: string, isRanked?: boolean) {
+
+  async handleHostNewGameRequest(socket: Socket, gameName: string, gameType: GameType, isRanked?: boolean) {
     if (!gameName) return console.log(ERROR_MESSAGES.LOBBY.GAME_NAME.MAX_LENGTH);
     gameName = gameName.replace(/\s+/g, "-").toLowerCase();
     if (!this.server.connectedSockets[socket.id]) return console.log("socket no longer registered");
     if (this.server.connectedSockets[socket.id].currentGameName)
       return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_HOST_IF_ALREADY_IN_GAME);
+    if (gameType === GameType.BATTLE_ROOM) this.hostNewBattleRoomGameRoom(socket, gameName, isRanked);
+    else if (gameType === GameType.COMBAT_SIMULATOR) this.handleCreateNewCombatSimulator(socket, gameName);
+  }
+
+  handleCreateNewCombatSimulator(socket: Socket, gameName: string) {
+    const socketMeta = this.server.connectedSockets[socket.id];
+    if (socketMeta.currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
+    if (this.server.combatSimulators[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.GAME_NAME.GAME_EXISTS);
+    this.server.createCombatSimulator(gameName);
+    this.handleJoinCombatSimulator(socket, gameName);
+  }
+
+  handleJoinCombatSimulator(socket: Socket, gameName: string) {
+    const socketMeta = this.server.connectedSockets[socket.id];
+    const cs = this.server.combatSimulators[gameName];
+    if (!cs) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.GAME_DOES_NOT_EXIST);
+    if (socketMeta.currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
+    // TODO - check if game is full
+    cs.players[socket.id] = socketMeta;
+    socketMeta.currentGameName = gameName;
+    // don't need to emit a message because they'll just listen for the first update about it and that will betheir cue to start rendering
+  }
+
+  handleLeaveCombatSimulator(socket: Socket) {
+    const socketMeta = this.server.connectedSockets[socket.id];
+    const { currentGameName } = socketMeta;
+    if (!currentGameName) return console.log("Socket tried to leave a combat simulator but didn't have a registered game name");
+    const cs = this.server.combatSimulators[currentGameName];
+    if (!cs) return console.log("Socket tried to leave a combat simulator that didn't exist");
+    delete cs.players[socket.id];
+    socket.emit(CSEventsFromServer.REMOVED_FROM_COMBAT_SIM);
+  }
+
+  async hostNewBattleRoomGameRoom(socket: Socket, gameName: string, isRanked?: boolean) {
     // load their config if not guest and not ranked
     let options;
     if (!isRanked) {
@@ -107,6 +146,7 @@ export class Lobby {
     this.changeSocketChatChannelAndEmitUpdates(socket, this.gameRooms[gameName].chatChannel, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
+
   handleJoinGameRoomRequest(socket: Socket, gameName: string, assignedToGameByMatchmaking?: boolean) {
     // console.log("client requesting to join game ", gameName, "current game rooms: ", this.gameRooms);
     const gameRoom = this.gameRooms[gameName];
@@ -123,6 +163,7 @@ export class Lobby {
     this.changeSocketChatChannelAndEmitUpdates(socket, gameRoom.chatChannel, true);
     this.putSocketInGameRoomAndEmitUpdates(socket, gameName);
   }
+
   handleEditGameRoomConfigRequest(socket: Socket, newConfig: BattleRoomGameConfigOptionIndicesUpdate) {
     const { connectedSockets, io } = this.server;
     const { currentGameName } = connectedSockets[socket.id];
@@ -147,6 +188,7 @@ export class Lobby {
     Object.keys(playersReady).forEach((key) => (playersReady[key] = false));
     io.to(gameChatChannelName).emit(SocketEventsFromServer.PLAYER_READINESS_UPDATE, playersReady);
   }
+
   handleReadyStateToggleRequest(socket: Socket) {
     const { connectedSockets, io } = this.server;
     const { currentGameName } = connectedSockets[socket.id];
@@ -189,12 +231,14 @@ export class Lobby {
       io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     }
   }
+
   createGameRoom(gameName: string, isRanked?: boolean, options?: IBattleRoomConfigSettings | undefined) {
     if (this.gameRooms[gameName]) return ERROR_MESSAGES.LOBBY.GAME_NAME.GAME_EXISTS;
     const gameNameValidationError = validateGameName(gameName, isRanked);
     if (gameNameValidationError) return gameNameValidationError;
     this.gameRooms[gameName] = new GameRoom(gameName, isRanked, options);
   }
+
   putSocketInGameRoomAndEmitUpdates(socket: Socket, gameName: string) {
     const { io, connectedSockets } = this.server;
     const { username } = connectedSockets[socket.id].associatedUser;

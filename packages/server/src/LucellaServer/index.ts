@@ -2,6 +2,7 @@
 import SocketIO, { Socket } from "socket.io";
 import {
   BattleRoomGame,
+  CombatSimulator,
   ERROR_MESSAGES,
   gameChannelNamePrefix,
   GameRoom,
@@ -28,11 +29,13 @@ import LucellaServerConfig from "./LucellaServerConfig";
 import updateScoreCardsAndSaveGameRecord from "../battleRoomGame/endGameCleanup/updateScoreCardsAndSaveGameRecord";
 import saveBattleRoomGameSettings from "../controllers/utils/saveBattleRoomGameSettings";
 import UsersRepo from "../database/repos/users";
+import stepCSPhysics from "../combat-simulator/stepCSPhysics";
 // import broadcastLatencyUpdates from "./broadcastLatencyUpdates";
 
 export class LucellaServer {
   io: SocketIO.Server;
   games: { [gameName: string]: BattleRoomGame } = {};
+  combatSimulators: { [id: string]: CombatSimulator } = {};
   connectedSockets: SocketMetadataList = {};
   connectedUsers: SocketIDsByUsername = {};
   lobby: Lobby;
@@ -53,179 +56,99 @@ export class LucellaServer {
 
   handleSocketLeavingGame(socket: Socket, isDisconnecting: boolean) {
     const { currentGameName } = this.connectedSockets[socket.id];
-    const usernameOfPlayerLeaving =
-      this.connectedSockets[socket.id].associatedUser.username;
+    const usernameOfPlayerLeaving = this.connectedSockets[socket.id].associatedUser.username;
     // console.log(`${usernameOfPlayerLeaving} leaving game ${currentGameName}`);
-    if (!currentGameName)
-      return socket.emit(
-        SocketEventsFromServer.ERROR_MESSAGE,
-        ERROR_MESSAGES.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE
-      );
+    if (!currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_LEAVE_GAME_IF_YOU_ARE_NOT_IN_ONE);
     const gameRoom = this.lobby.gameRooms[currentGameName];
-    if (!gameRoom)
-      return socket.emit(
-        SocketEventsFromServer.ERROR_MESSAGE,
-        ERROR_MESSAGES.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST
-      );
+    if (!gameRoom) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_LEAVE_GAME_THAT_DOES_NOT_EXIST);
 
     const { players } = gameRoom;
-    const playerToKick =
-      players.challenger &&
-      players.host?.associatedUser.username === usernameOfPlayerLeaving
-        ? players.challenger
-        : undefined;
+    const playerToKick = players.challenger && players.host?.associatedUser.username === usernameOfPlayerLeaving ? players.challenger : undefined;
 
-    if (
-      gameRoom.gameStatus === GameStatus.IN_LOBBY ||
-      gameRoom.gameStatus === GameStatus.COUNTING_DOWN ||
-      gameRoom.gameStatus === GameStatus.IN_WAITING_LIST
-    ) {
-      if (gameRoom.isRanked)
-        this.lobby.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
-      else
-        this.lobby.handleSocketLeavingGameRoom(
-          socket,
-          gameRoom,
-          isDisconnecting,
-          playerToKick
-        );
+    if (gameRoom.gameStatus === GameStatus.IN_LOBBY || gameRoom.gameStatus === GameStatus.COUNTING_DOWN || gameRoom.gameStatus === GameStatus.IN_WAITING_LIST) {
+      if (gameRoom.isRanked) this.lobby.handleSocketLeavingRankedGameRoomInLobby(socket, gameRoom);
+      else this.lobby.handleSocketLeavingGameRoom(socket, gameRoom, isDisconnecting, playerToKick);
     } else {
       const game = this.games[currentGameName];
-      if (!game)
-        return console.log(
-          `tried to assign game ${currentGameName} winner but no game was found.`
-        );
-      const remainingPlayer =
-        usernameOfPlayerLeaving === players!.host!.associatedUser.username
-          ? PlayerRole.CHALLENGER
-          : PlayerRole.HOST;
+      if (!game) return console.log(`tried to assign game ${currentGameName} winner but no game was found.`);
+      const remainingPlayer = usernameOfPlayerLeaving === players!.host!.associatedUser.username ? PlayerRole.CHALLENGER : PlayerRole.HOST;
       game.winner = remainingPlayer;
       if (gameRoom.gameStatus === GameStatus.ENDING) return;
-      gameRoom.winner =
-        game.winner === PlayerRole.HOST
-          ? players!.host!.associatedUser.username
-          : players!.challenger!.associatedUser.username;
+      gameRoom.winner = game.winner === PlayerRole.HOST ? players!.host!.associatedUser.username : players!.challenger!.associatedUser.username;
       this.endGameAndEmitUpdates(game);
     }
   }
+
   handleSocketDisconnection(socket: Socket) {
     if (!this.connectedSockets[socket.id]) return;
     const socketMetaLeaving = this.connectedSockets[socket.id];
-    console.log(
-      `user ${socketMetaLeaving.associatedUser.username} disconnecting, currentGameName: ${socketMetaLeaving.currentGameName}`
-    );
-    if (socketMetaLeaving.currentGameName)
-      this.handleSocketLeavingGame(socket, true);
+    console.log(`user ${socketMetaLeaving.associatedUser.username} disconnecting, currentGameName: ${socketMetaLeaving.currentGameName}`);
+    if (socketMetaLeaving.currentGameName) this.handleSocketLeavingGame(socket, true);
     else this.lobby.changeSocketChatChannelAndEmitUpdates(socket, null, false);
-    if (this.matchmakingQueue.users[socket.id])
-      this.matchmakingQueue.removeUser(socket.id);
+    if (this.matchmakingQueue.users[socket.id]) this.matchmakingQueue.removeUser(socket.id);
 
     const userLeaving = socketMetaLeaving.associatedUser;
     const { username } = userLeaving;
     if (!userLeaving.isGuest) {
-      this.connectedUsers[username] = this.connectedUsers[username].filter(
-        (socketId) => socketId !== socket.id
-      );
-      if (this.connectedUsers[username].length < 1)
-        delete this.connectedUsers[username];
+      this.connectedUsers[username] = this.connectedUsers[username].filter((socketId) => socketId !== socket.id);
+      if (this.connectedUsers[username].length < 1) delete this.connectedUsers[username];
     } else delete this.connectedUsers[username];
 
     delete this.connectedSockets[socket.id];
     console.log(`user ${username} on socket ${socket.id} disconnected`);
   }
+
   disconnectUser(username: string) {
-    if (!this.connectedUsers[username])
-      return console.log(
-        "tried to disconnect a user but they weren't in the list of connected users"
-      );
+    if (!this.connectedUsers[username]) return console.log("tried to disconnect a user but they weren't in the list of connected users");
     const socketIdsDisconnected: string[] = [];
     this.connectedUsers[username].forEach((socketId) => {
       if (!this.io.sockets.sockets.get(socketId))
-        return console.log(
-          `tried to forcibly disconnect socket ${socketId} belonging to user ${username} but it wasn't connected`
-        );
+        return console.log(`tried to forcibly disconnect socket ${socketId} belonging to user ${username} but it wasn't connected`);
       this.io.sockets.sockets.get(socketId)!.disconnect();
       socketIdsDisconnected.push(socketId);
     });
-    console.log(
-      `forcibly disconnected user ${username} and their socket(s) ${socketIdsDisconnected.join(
-        ", "
-      )}`
-    );
+    console.log(`forcibly disconnected user ${username} and their socket(s) ${socketIdsDisconnected.join(", ")}`);
   }
+
   async endGameAndEmitUpdates(game: BattleRoomGame) {
     console.log("endGameAndEmitUpdates called");
     const gameRoom = this.lobby.gameRooms[game.gameName];
-    if (!gameRoom)
-      return console.error(
-        "tried to call endGameAndEmitUpdates but no game room was found"
-      );
+    if (!gameRoom) return console.error("tried to call endGameAndEmitUpdates but no game room was found");
     const gameChatChannelName = gameChannelNamePrefix + game.gameName;
     const { players } = gameRoom;
 
     gameRoom.gameStatus = GameStatus.ENDING;
-    this.io
-      .in(gameChatChannelName)
-      .emit(
-        SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE,
-        gameRoom.gameStatus
-      );
-    this.io
-      .in(gameChatChannelName)
-      .emit(
-        SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE,
-        game.gameOverCountdown.current
-      );
+    this.io.in(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
+    this.io.in(gameChatChannelName).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
     game.clearNewRoundCountdownInterval();
     game.clearPhysicsInterval();
 
     const loser =
-      gameRoom.winner === players.host?.associatedUser.username
-        ? players.challenger?.associatedUser.username
-        : players.host?.associatedUser.username;
+      gameRoom.winner === players.host?.associatedUser.username ? players.challenger?.associatedUser.username : players.host?.associatedUser.username;
 
-    let gameRecord:
-      | IBattleRoomGameRecord
-      | { firstPlayerScore: number; secondPlayerScore: number }
-      | null = {
+    let gameRecord: IBattleRoomGameRecord | { firstPlayerScore: number; secondPlayerScore: number } | null = {
       firstPlayerScore: game.score.host,
       secondPlayerScore: game.score.challenger,
     };
 
-    if (!gameRoom.winner || !loser)
-      console.error(
-        "Tried to update game records but either winner or loser wasn't found"
-      );
-    else if (game.isRanked)
-      gameRecord = await updateScoreCardsAndSaveGameRecord(gameRoom, game);
-    this.io
-      .in(gameChatChannelName)
-      .emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
+    if (!gameRoom.winner || !loser) console.error("Tried to update game records but either winner or loser wasn't found");
+    else if (game.isRanked) gameRecord = await updateScoreCardsAndSaveGameRecord(gameRoom, game);
+    this.io.in(gameChatChannelName).emit(SocketEventsFromServer.NAME_OF_GAME_WINNER, gameRoom.winner);
 
     game.gameOverCountdown.current = game.gameOverCountdown.duration;
     game.intervals.endingCountdown = setInterval(() => {
       game.gameOverCountdown.current! -= 1;
-      this.io
-        .to(gameChatChannelName)
-        .emit(
-          SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE,
-          game.gameOverCountdown.current
-        );
+      this.io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_ENDING_COUNTDOWN_UPDATE, game.gameOverCountdown.current);
       if (game.gameOverCountdown.current! >= 1) return;
       game.clearGameEndingCountdownInterval();
-      this.io
-        .in(gameChatChannelName)
-        .emit(SocketEventsFromServer.SHOW_SCORE_SCREEN, {
-          gameRoom,
-          gameRecord,
-        });
+      this.io.in(gameChatChannelName).emit(SocketEventsFromServer.SHOW_SCORE_SCREEN, {
+        gameRoom,
+        gameRecord,
+      });
 
       Object.values(gameRoom.players).forEach((player) => {
         if (!player) return;
-        this.lobby.changeSocketChatChannelAndEmitUpdates(
-          this.io.sockets.sockets.get(player.socketId!)!,
-          player.previousChatChannelName || null
-        );
+        this.lobby.changeSocketChatChannelAndEmitUpdates(this.io.sockets.sockets.get(player.socketId!)!, player.previousChatChannelName || null);
         this.lobby.removeSocketMetaFromGameRoomAndEmitUpdates(gameRoom, player);
       });
       // this cleans out the names of any players that disconnected
@@ -233,10 +156,7 @@ export class LucellaServer {
 
       delete this.lobby.gameRooms[game.gameName];
       delete this.games[game.gameName];
-      this.io.sockets.emit(
-        SocketEventsFromServer.GAME_ROOM_LIST_UPDATE,
-        this.lobby.getSanitizedGameRooms()
-      );
+      this.io.sockets.emit(SocketEventsFromServer.GAME_ROOM_LIST_UPDATE, this.lobby.getSanitizedGameRooms());
     }, ONE_SECOND);
   }
 
@@ -244,71 +164,39 @@ export class LucellaServer {
     const { io, lobby, games } = this;
     const gameChatChannelName = gameChannelNamePrefix + gameRoom.gameName;
     gameRoom.countdown.current = this.config.gameStartCountdownDuration;
-    io.to(gameChatChannelName).emit(
-      SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE,
-      gameRoom.countdown.current
-    );
+    io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
     gameRoom.gameStatus = GameStatus.COUNTING_DOWN;
     lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName] = gameRoom;
-    io.to(gameChatChannelName).emit(
-      SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE,
-      gameRoom.gameStatus
-    );
+    io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
     gameRoom.countdownInterval = setInterval(async () => {
       if (gameRoom.countdown.current > 0) {
         gameRoom.countdown.current -= 1;
-        io.to(gameChatChannelName).emit(
-          SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE,
-          gameRoom.countdown.current
-        );
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_COUNTDOWN_UPDATE, gameRoom.countdown.current);
       } else {
-        if (gameRoom.countdownInterval)
-          clearInterval(gameRoom.countdownInterval);
+        if (gameRoom.countdownInterval) clearInterval(gameRoom.countdownInterval);
         gameRoom.gameStatus = GameStatus.IN_PROGRESS;
-        delete this.lobby.gameRoomsExecutingGameStartCountdown[
-          gameRoom.gameName
-        ];
-        io.to(gameChatChannelName).emit(
-          SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE,
-          gameRoom.gameStatus
-        );
+        delete this.lobby.gameRoomsExecutingGameStartCountdown[gameRoom.gameName];
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.CURRENT_GAME_STATUS_UPDATE, gameRoom.gameStatus);
         const { players } = gameRoom;
-        if (!players.host || !players.challenger)
-          return console.error(
-            "tried to start a a game but one of the players was not found"
-          );
+        if (!players.host || !players.challenger) return console.error("tried to start a a game but one of the players was not found");
         games[gameRoom.gameName] = new BattleRoomGame(
           gameRoom.gameName,
           {
             host: players.host.associatedUser.username,
             challenger: players.challenger.associatedUser.username,
           },
-          !gameRoom.isRanked
-            ? gameRoom.battleRoomGameConfigOptionIndices
-            : undefined,
+          !gameRoom.isRanked ? gameRoom.battleRoomGameConfigOptionIndices : undefined,
           gameRoom.isRanked
         );
         const game = games[gameRoom.gameName];
-        io.to(gameChatChannelName).emit(
-          SocketEventsFromServer.GAME_INITIALIZATION
-        );
-        game.intervals.physics = createGamePhysicsInterval(
-          io,
-          this,
-          gameRoom.gameName
-        );
+        io.to(gameChatChannelName).emit(SocketEventsFromServer.GAME_INITIALIZATION);
+        game.intervals.physics = createGamePhysicsInterval(io, this, gameRoom.gameName);
         // save their configuration options if not a ranked game
         if (gameRoom.isRanked) return;
         if (gameRoom.players.host?.associatedUser.isGuest) return;
-        const hostUser = await UsersRepo.findOne(
-          "name",
-          gameRoom.players.host?.associatedUser.username
-        );
+        const hostUser = await UsersRepo.findOne("name", gameRoom.players.host?.associatedUser.username);
         if (!hostUser) return;
-        saveBattleRoomGameSettings(
-          hostUser.id,
-          gameRoom.battleRoomGameConfigOptionIndices
-        );
+        saveBattleRoomGameSettings(hostUser.id, gameRoom.battleRoomGameConfigOptionIndices);
       }
     }, ONE_SECOND);
   }
@@ -320,12 +208,17 @@ export class LucellaServer {
     }
     gameRoom.gameStatus = GameStatus.IN_LOBBY;
   }
+
   static async fetchOrCreateBattleRoomScoreCard(user: User) {
     let scoreCard = await BattleRoomScoreCardRepo.findByUserId(user.id);
     if (!scoreCard) scoreCard = await BattleRoomScoreCardRepo.insert(user.id);
-    await wrappedRedis.context?.zAdd(REDIS_KEYS.BATTLE_ROOM_LADDER, [
-      { value: user.id.toString(), score: scoreCard.elo },
-    ]);
+    await wrappedRedis.context?.zAdd(REDIS_KEYS.BATTLE_ROOM_LADDER, [{ value: user.id.toString(), score: scoreCard.elo }]);
     return scoreCard;
+  }
+
+  createCombatSimulator(gameName: string) {
+    this.combatSimulators[gameName] = new CombatSimulator(gameName);
+    stepCSPhysics(this, this.combatSimulators[gameName]);
+    return this.combatSimulators[gameName];
   }
 }

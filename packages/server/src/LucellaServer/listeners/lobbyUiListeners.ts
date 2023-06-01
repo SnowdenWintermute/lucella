@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { chatMessageMaxLength, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
+import { chatMessageMaxLength, GameType, GENERIC_SOCKET_EVENTS, SocketEventsFromClient, SocketEventsFromServer } from "../../../../common";
 import { LucellaServer } from "..";
 
 export default function gameUiListeners(server: LucellaServer, socket: Socket) {
@@ -18,7 +18,7 @@ export default function gameUiListeners(server: LucellaServer, socket: Socket) {
     server.lobby.changeSocketChatChannelAndEmitUpdates(socket, channelName, false);
   });
   socket.on(SocketEventsFromClient.HOSTS_NEW_GAME, (gameName) => {
-    server.lobby.handleHostNewGameRequest(socket, gameName, false);
+    server.lobby.handleHostNewGameRequest(socket, gameName, GameType.BATTLE_ROOM, false);
   });
   socket.on(SocketEventsFromClient.GAME_ROOM_CONFIG_EDIT_REQUEST, (data) => {
     server.lobby.handleEditGameRoomConfigRequest(socket, data);

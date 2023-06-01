@@ -13,7 +13,7 @@ import { KeyboardInputState } from "../GameGenerics/KeyboardInputState";
 import { CS_BASE_WINDOW_DIMENSIONS } from "./cs-game-config";
 
 export class CombatSimulator {
-  id: string;
+  gameName: string;
   physicsEngine: Matter.Engine | undefined;
   currentCollisionPairs: Matter.Pair[] = [];
   netcode = new NetCode<CSGameState, CSServerPacket>();
@@ -37,9 +37,10 @@ export class CombatSimulator {
   mouseData = new MouseData();
   static baseWindowDimensions = CS_BASE_WINDOW_DIMENSIONS;
   // static initializeWorld = initializeWorld;
-  constructor(id: string) {
-    this.id = id;
+  constructor(gameName: string) {
+    this.gameName = gameName;
   }
+
   clearPhysicsInterval() {
     clearInterval(this.intervals.physics);
   }

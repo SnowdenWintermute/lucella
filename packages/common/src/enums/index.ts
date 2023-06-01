@@ -31,3 +31,8 @@ export enum IPBanReason {
   RATE_LIMIT_ABUSE = "rate_limit_abuse",
   CHAT = "chat",
 }
+
+export enum GameType {
+  BATTLE_ROOM,
+  COMBAT_SIMULATOR,
+}

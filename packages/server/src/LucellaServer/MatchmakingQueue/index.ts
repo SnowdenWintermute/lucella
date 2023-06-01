@@ -10,6 +10,7 @@ import {
   ONE_SECOND,
   UserStatuses,
   IBattleRoomScoreCard,
+  GameType,
 } from "../../../../common";
 import UsersRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";
@@ -114,7 +115,7 @@ export class MatchmakingQueue {
   }
   startRankedGame(hostSocket: Socket, challengerSocket: Socket) {
     const gameName = rankedGameChannelNamePrefix + this.rankedGameCurrentNumber;
-    this.server.lobby.handleHostNewGameRequest(hostSocket, gameName, true);
+    this.server.lobby.handleHostNewGameRequest(hostSocket, gameName, GameType.BATTLE_ROOM, true);
     this.server.lobby.handleJoinGameRoomRequest(challengerSocket, gameName, true);
     this.server.lobby.handleReadyStateToggleRequest(hostSocket);
     this.server.lobby.handleReadyStateToggleRequest(challengerSocket);
