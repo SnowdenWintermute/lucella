@@ -1,5 +1,5 @@
 import { BattleRoomGame } from "../classes/BattleRoomGame";
-import { SelectOrbs } from "../classes/inputs";
+import { SelectOrbs } from "../classes/BattleRoomGame/br-game-actions";
 
 export default function handleSelectOrbs(input: SelectOrbs, game: BattleRoomGame) {
   Object.values(game.orbs[input.playerRole!]).forEach((orb) => {

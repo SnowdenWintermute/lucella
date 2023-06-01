@@ -10,18 +10,18 @@ import {
 } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
 import { HostAndChallengerOrbSets, BRServerPacket } from "../../types";
-import { MouseData } from "../MouseData";
-import { Point } from "../Point";
-import { Rectangle } from "../Rectangles";
+import { MouseData } from "../GameGenerics/MouseData";
+import { Point } from "../GameGenerics/Point";
+import { Rectangle } from "../GameGenerics/Rectangles";
 import { BattleRoomGameConfig } from "./BattleRoomGameConfig";
 import { BattleRoomGameConfigOptionIndicesUpdate } from "./BattleRoomGameConfigOptionIndicesUpdate";
 import { DebugValues } from "./DebugValues";
 import initializeWorld from "./initializeWorld";
-import { NetCode } from "../NetCode";
+import { NetCode } from "../GameGenerics/NetCode";
 import { BRGameElementsOfConstantInterest } from "./BRGameElementsOfConstantInterest";
-import { AntiCheatValueTracker } from "../AntiCheat";
-import { UserInput } from "../inputs/UserInput";
-import { InputQueues } from "../InputQueues";
+import { AntiCheatValueTracker } from "../GameGenerics/AntiCheat";
+import { BRPlayerAction } from "./BRPlayerAction";
+import { ActionQueues } from "../GameGenerics/ActionQueues";
 
 export class BattleRoomGame {
   gameName: string;
@@ -34,7 +34,7 @@ export class BattleRoomGame {
     endingCountdown: NodeJS.Timeout | undefined;
     newRoundCountdown: NodeJS.Timeout | undefined;
   } = { physics: undefined, endingCountdown: undefined, newRoundCountdown: undefined };
-  queues = new InputQueues<UserInput>();
+  queues = new ActionQueues<BRPlayerAction>();
   mouseData = new MouseData();
   waypointKeyIsPressed: boolean = false;
   newRoundCountdown: { duration: number; current: number | null } = { duration: newRoundStartingCountdownDuration, current: null };

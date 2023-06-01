@@ -1,6 +1,6 @@
 /* eslint-disable no-promise-executor-return */
 const io = require("socket.io-client");
-const { SocketEventsFromClient, SocketEventsFromServer, UserInput, UserInputs, Point, randBetween, baseWindowDimensions } = require("../../common");
+const { SocketEventsFromClient, SocketEventsFromServer, PlayerAction, PlayerActions, Point, randBetween, baseWindowDimensions } = require("../../common");
 const serializeInput = require("./serializeInputForLoadTest");
 
 // const websiteAddress = "http://localhost:8080";
@@ -13,7 +13,7 @@ async function emitRandomMoveCommands(socket, numberOfCommands) {
     socket.emit(
       SocketEventsFromClient.NEW_INPUT,
       serializeInput(
-        new UserInput(UserInputs.SELECT_ORBS, {
+        new PlayerAction(PlayerActions.SELECT_ORBS, {
           orbIds: [Math.round(randBetween(1, 5))],
           mousePosition: new Point(Math.round(randBetween(0, baseWindowDimensions.width)), Math.round(randBetween(0, baseWindowDimensions.height))),
         })

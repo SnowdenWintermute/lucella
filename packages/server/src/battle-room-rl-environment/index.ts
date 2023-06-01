@@ -7,11 +7,11 @@ import {
   ClientTickNumber,
   PlayerRole,
   Point,
-  processPlayerInput,
+  processPlayerAction,
   renderRate,
   SelectOrbAndAssignDestination,
   setOrbsAtStartPositions,
-  UserInput,
+  BRPlayerAction,
 } from "../../../common";
 import resetScoreAndSpeed from "../battleRoomGame/createGamePhysicsInterval/handleScoringPoints/resetScoreAndSpeed";
 import updateScoreNeededToWin from "../battleRoomGame/createGamePhysicsInterval/handleScoringPoints/updateScoreNeededToWin";
@@ -58,8 +58,8 @@ class CustomEnvironment {
     const { game } = this;
     let numInputsToProcess = game.queues.server.receivedInputs.length;
     while (numInputsToProcess > 0) {
-      const input: UserInput = game.queues.server.receivedInputs.shift();
-      processPlayerInput(input, game, renderRate, input.playerRole);
+      const input: BRPlayerAction = game.queues.server.receivedInputs.shift();
+      processPlayerAction(input, game, renderRate, input.playerRole);
       numInputsToProcess -= 1;
       const collisions = Detector.collisions(game.physicsEngine!.detector);
       collisions.forEach((collision) => {

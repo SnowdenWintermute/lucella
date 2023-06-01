@@ -1,7 +1,7 @@
 import { Entity } from "../classes/CombatSimulator/Entity";
 import { MobileEntity } from "../classes/CombatSimulator/MobileEntity";
-import { Orb } from "../classes/Orb";
-import { Point } from "../classes/Point";
+import { Orb } from "../classes/BattleRoomGame/Orb";
+import { Point } from "../classes/GameGenerics/Point";
 
 export type WidthAndHeight = { width: number; height: number };
 

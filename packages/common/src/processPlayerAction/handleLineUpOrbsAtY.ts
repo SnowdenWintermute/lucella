@@ -1,6 +1,6 @@
 import { BattleRoomGame } from "../classes/BattleRoomGame";
-import { LineUpOrbsHorizontallyAtMouseY } from "../classes/inputs";
-import { Point } from "../classes/Point";
+import { LineUpOrbsHorizontallyAtMouseY } from "../classes/BattleRoomGame/br-game-actions";
+import { Point } from "../classes/GameGenerics/Point";
 import { orbsSpawnSpacing } from "../consts/battle-room-game-config";
 
 export default function handleLineUpOrbsAtY(input: LineUpOrbsHorizontallyAtMouseY, game: BattleRoomGame) {

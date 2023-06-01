@@ -1,4 +1,4 @@
-const { InputProto, SmallVectorProto, UserInputs } = require("../../common");
+const { InputProto, SmallVectorProto, PlayerActions } = require("../../common");
 
 function serializeInput(input) {
   const { data } = input;
@@ -9,7 +9,7 @@ function serializeInput(input) {
     const { orbIds, mousePosition } = data;
     if (orbIds) inputProto.setOrbidsList(orbIds);
 
-    if (input.type === UserInputs.LINE_UP_ORBS_HORIZONTALLY_AT_Y) {
+    if (input.type === PlayerActions.LINE_UP_ORBS_HORIZONTALLY_AT_Y) {
       inputProto.setYonly(data);
     } else if (mousePosition) {
       const smallVectorProto = new SmallVectorProto();

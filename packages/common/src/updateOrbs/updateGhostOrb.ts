@@ -1,6 +1,6 @@
 import { BattleRoomGame } from "../classes/BattleRoomGame";
-import { Orb } from "../classes/Orb";
-import { Point } from "../classes/Point";
+import { Orb } from "../classes/BattleRoomGame/Orb";
+import { Point } from "../classes/GameGenerics/Point";
 import { PlayerRole } from "../enums";
 
 export default function updateGhostOrb(game: BattleRoomGame, playerRole: "host" | "challenger", orb: Orb) {

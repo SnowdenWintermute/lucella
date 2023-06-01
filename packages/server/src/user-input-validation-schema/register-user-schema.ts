@@ -18,4 +18,4 @@ export const registerUserSchema = object({
 });
 
 export type RegisterUserSchema = z.infer<typeof registerUserSchema>;
-export type UserRegistrationUserInput = TypeOf<typeof registerUserSchema>["body"];
+export type UserRegistrationInput = TypeOf<typeof registerUserSchema>["body"];

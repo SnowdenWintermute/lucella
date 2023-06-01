@@ -1,6 +1,6 @@
 import { Body, Vector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
-import { Orb } from "../classes/Orb";
+import { Orb } from "../classes/BattleRoomGame/Orb";
 import { renderRate } from "../consts";
 import { angleBetweenVectors, numberInRangeToBetweenZeroAndOne } from "../utils";
 
@@ -46,7 +46,6 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
   // // get the force vector to apply to this orb
   // const travellingAboveSpeedLimit = orb.body.speed > topSpeed * game.speedModifier;
   const travellingAboveSpeedLimit = Vector.magnitude(orb.body.force) > topSpeed * game.speedModifier;
-  if (orb.id === 1) console.log(Vector.magnitude(orb.body.force), orb.body.speed);
   const acceleration = game.config.acceleration * topSpeed;
   const normalizedDestinationVector = Vector.normalise(destinationVector); // direction only (magnitude of 1)
   const impulseVector = Vector.mult(normalizedDestinationVector, acceleration); // vector in the direction of the orb's destination with the magnitude of the game's acceleration
@@ -57,7 +56,6 @@ export default function applyForceToOrb(orb: Orb, game: BattleRoomGame) {
     const normalized = Vector.normalise(orb.body.force);
     orb.body.force = Vector.mult(normalized, topSpeed);
   }
-  console.log(Vector.magnitude(orb.body.force));
   // @ts-ignore
   Body.update(orb.body, renderRate);
 }

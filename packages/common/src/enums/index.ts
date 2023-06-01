@@ -12,7 +12,7 @@ export enum PlayerRole {
   CHALLENGER = "challenger",
 }
 
-export enum UserInputs {
+export enum BRPlayerActions {
   CLIENT_TICK_NUMBER,
   SELECT_ORBS,
   ASSIGN_DESTINATIONS_TO_SELECTED_ORBS,

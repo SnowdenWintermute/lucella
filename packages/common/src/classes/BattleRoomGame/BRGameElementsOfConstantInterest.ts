@@ -1,6 +1,6 @@
 import { baseSpeedModifier } from "../../consts/battle-room-game-config";
 import { HostAndChallengerOrbSets } from "../../types";
-import { Orb } from "../Orb";
+import { Orb } from "./Orb";
 
 export class BRGameElementsOfConstantInterest {
   orbs: HostAndChallengerOrbSets;

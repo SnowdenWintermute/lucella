@@ -1,6 +1,6 @@
 import { Body, Vector } from "matter-js";
 import { BattleRoomGame } from "../classes/BattleRoomGame";
-import { Orb } from "../classes/Orb";
+import { Orb } from "../classes/BattleRoomGame/Orb";
 import { PlayerRole } from "../enums";
 
 const incrementScoreAndGameSpeed = (orb: Orb, game: BattleRoomGame, playerRole: PlayerRole) => {

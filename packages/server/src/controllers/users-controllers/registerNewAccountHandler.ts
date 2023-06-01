@@ -4,14 +4,14 @@ import { NextFunction, Request, Response } from "express";
 import UsersRepo from "../../database/repos/users";
 import CustomError from "../../classes/CustomError";
 import { ERROR_MESSAGES } from "../../../../common";
-import { UserRegistrationUserInput } from "../../user-input-validation-schema/register-user-schema";
+import { UserRegistrationInput } from "../../user-input-validation-schema/register-user-schema";
 import { sendEmail } from "../utils/sendEmail";
 import { buildAccountActivationHTML, buildAccountActivationText, ACCOUNT_ACTIVATION_SUBJECT } from "../utils/buildEmails";
 import { signJwtAsymmetric } from "../utils/jwt";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { ACCOUNT_CREATION_SESSION_PREFIX } from "../../consts";
 
-export default async function registerNewAccountHandler(req: Request<object, object, UserRegistrationUserInput>, res: Response, next: NextFunction) {
+export default async function registerNewAccountHandler(req: Request<object, object, UserRegistrationInput>, res: Response, next: NextFunction) {
   const { name, email, password } = req.body;
 
   const emailAlreadyExists = await UsersRepo.findOne("email", email);

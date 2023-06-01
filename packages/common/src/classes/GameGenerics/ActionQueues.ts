@@ -1,7 +1,7 @@
-export class InputQueues<Input> {
+export class ActionQueues<Action> {
   client: {
-    localInputs: Input[];
-    inputsFromLastTick: Input[];
+    localInputs: Action[];
+    inputsFromLastTick: Action[];
   };
   server: {
     receivedInputs: any[];

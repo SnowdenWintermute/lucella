@@ -1,6 +1,6 @@
 import { BattleRoomGame } from "../classes/BattleRoomGame";
-import { AssignDestinationsToSelectedOrbs } from "../classes/inputs";
-import { Point } from "../classes/Point";
+import { AssignDestinationsToSelectedOrbs } from "../classes/BattleRoomGame/br-game-actions";
+import { Point } from "../classes/GameGenerics/Point";
 
 export default function handleAssignDestinationsToSelectedOrbs(input: AssignDestinationsToSelectedOrbs, game: BattleRoomGame) {
   if (!input.data.mousePosition) return;

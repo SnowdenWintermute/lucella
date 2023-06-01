@@ -1,5 +1,5 @@
 import Matter from "matter-js";
-import { Point } from "./Point";
+import { Point } from "../GameGenerics/Point";
 
 export class Orb {
   body: Matter.Body;

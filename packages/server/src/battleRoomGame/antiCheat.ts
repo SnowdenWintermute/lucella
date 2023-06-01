@@ -1,20 +1,11 @@
 /* eslint-disable consistent-return */
 
-import {
-  BattleRoomGame,
-  firstMovementRequestTimeLimiter,
-  movementRequestAntiCheatGracePeriod,
-  movementRequestRateMarginOfError,
-  PlayerRole,
-  renderRate,
-  UserInput,
-  UserInputs,
-} from "../../../common";
+import { BattleRoomGame, PlayerRole, renderRate, BRPlayerAction, BRPlayerActions } from "../../../common";
 
-export default function antiCheat(game: BattleRoomGame, inputToQueue: UserInput, playerRole: PlayerRole) {
+export default function antiCheat(game: BattleRoomGame, inputToQueue: BRPlayerAction, playerRole: PlayerRole) {
   let clientTryingToMoveTooFast = false;
   if (!inputToQueue) return;
-  if (inputToQueue.type !== UserInputs.CLIENT_TICK_NUMBER) return;
+  if (inputToQueue.type !== BRPlayerActions.CLIENT_TICK_NUMBER) return;
   if (!game.antiCheat.trackedPlayers[playerRole]) return console.log(`No anticheat values stored for player${playerRole}`);
 
   const timeSinceGameStarted = Date.now() - game.antiCheat.trackedPlayers[playerRole].joinedGameAt;

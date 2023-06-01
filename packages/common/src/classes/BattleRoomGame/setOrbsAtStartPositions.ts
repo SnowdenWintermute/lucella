@@ -2,8 +2,8 @@ import Matter from "matter-js";
 import { baseWindowDimensions, numberOfOrbsPerPlayer, orbSpawnOffsetFromEndzone, orbsSpawnSpacing } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
 import { HostAndChallengerOrbSets } from "../../types";
-import { Orb } from "../Orb";
-import { Point } from "../Point";
+import { Orb } from "./Orb";
+import { Point } from "../GameGenerics/Point";
 
 export function setOrbAtStartPosition(orb: Orb, orbIndex: number, playerRole: PlayerRole) {
   const x = orbIndex * orbsSpawnSpacing;

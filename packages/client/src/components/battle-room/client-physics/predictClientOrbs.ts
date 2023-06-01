@@ -2,9 +2,9 @@ import { Detector, Pair } from "matter-js";
 import {
   BattleRoomGame,
   PlayerRole,
-  processPlayerInput,
+  processPlayerAction,
   renderRate,
-  UserInput,
+  PlayerAction,
   BRServerPacket,
   applyValuesFromOneOrbSetToAnother,
 } from "../../../../../common";
@@ -17,7 +17,7 @@ export default function predictClientOrbs(
   playerRole: PlayerRole
 ) {
   const lastProcessedClientInputNumber = lastUpdateFromServerCopy.serverLastProcessedInputNumber;
-  const inputsToKeep: UserInput[] = [];
+  const inputsToKeep: PlayerAction[] = [];
 
   applyValuesFromOneOrbSetToAnother(lastUpdateFromServerCopy.orbs[playerRole], newGameState.orbs[playerRole], {
     applyPhysicsProperties: true,
@@ -31,7 +31,7 @@ export default function predictClientOrbs(
 
   newGameState.queues.client.localInputs.forEach((input) => {
     if (lastProcessedClientInputNumber && input.number <= lastProcessedClientInputNumber) return;
-    processPlayerInput(input, newGameState, renderRate, playerRole);
+    processPlayerAction(input, newGameState, renderRate, playerRole);
     const collisions = Detector.collisions(newGameState.physicsEngine!.detector);
     collisions.forEach((collision) => {
       newGameState.currentCollisionPairs.push(Pair.create(collision, +Date.now()));

@@ -4,7 +4,7 @@ import { challengerOrbCollisionCategory, hostOrbCollisionCategory } from "../../
 import { orbDensity, frictionAir, numberOfOrbsPerPlayer } from "../../consts/battle-room-game-config";
 import { PlayerRole } from "../../enums";
 import { setOrbSetNonPhysicsPropertiesFromAnotherSet, setOrbSetPhysicsPropertiesFromAnotherSet, setOrbSetPositionBuffersFromAnotherSet } from "../../utils";
-import { Orb } from "../Orb";
+import { Orb } from "./Orb";
 import { setOrbAtStartPosition } from "./setOrbsAtStartPositions";
 
 /**

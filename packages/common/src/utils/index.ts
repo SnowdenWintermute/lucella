@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 import cloneDeep from "lodash.clonedeep";
 import { Vector } from "matter-js";
-import { Orb } from "../classes/Orb";
-import { Point } from "../classes/Point";
+import { Orb } from "../classes/BattleRoomGame/Orb";
+import { Point } from "../classes/GameGenerics/Point";
 import { OrbSet } from "../types";
 import { setBodyProperties } from "./setBodyProperties";
 
