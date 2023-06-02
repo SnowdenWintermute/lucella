@@ -30,6 +30,7 @@ import updateScoreCardsAndSaveGameRecord from "../battleRoomGame/endGameCleanup/
 import saveBattleRoomGameSettings from "../controllers/utils/saveBattleRoomGameSettings";
 import UsersRepo from "../database/repos/users";
 import stepCSPhysics from "../combat-simulator/stepCSPhysics";
+import Matter from "matter-js";
 // import broadcastLatencyUpdates from "./broadcastLatencyUpdates";
 
 export class LucellaServer {
@@ -83,8 +84,10 @@ export class LucellaServer {
     if (!this.connectedSockets[socket.id]) return;
     const socketMetaLeaving = this.connectedSockets[socket.id];
     console.log(`user ${socketMetaLeaving.associatedUser.username} disconnecting, currentGameName: ${socketMetaLeaving.currentGameName}`);
-    if (socketMetaLeaving.currentGameName) this.handleSocketLeavingGame(socket, true);
-    else this.lobby.changeSocketChatChannelAndEmitUpdates(socket, null, false);
+    if (socketMetaLeaving.currentGameName) {
+      this.lobby.handleLeaveCombatSimulator(socket);
+      this.handleSocketLeavingGame(socket, true);
+    } else this.lobby.changeSocketChatChannelAndEmitUpdates(socket, null, false);
     if (this.matchmakingQueue.users[socket.id]) this.matchmakingQueue.removeUser(socket.id);
 
     const userLeaving = socketMetaLeaving.associatedUser;
@@ -218,7 +221,9 @@ export class LucellaServer {
 
   createCombatSimulator(gameName: string) {
     this.combatSimulators[gameName] = new CombatSimulator(gameName);
-    stepCSPhysics(this, this.combatSimulators[gameName]);
-    return this.combatSimulators[gameName];
+    const cs = this.combatSimulators[gameName];
+    cs.physicsEngine = Matter.Engine.create();
+    stepCSPhysics(this, cs, true);
+    return cs;
   }
 }

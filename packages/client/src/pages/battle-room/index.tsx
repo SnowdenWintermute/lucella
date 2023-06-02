@@ -6,10 +6,11 @@ import Lobby from "../../components/Lobby";
 import SocketManager from "../../components/SocketManager";
 import { useAppSelector } from "../../redux/hooks";
 import { INetworkPerformanceMetrics } from "../../types";
+import CombatSimulatorGameClient from "../../components/combat-simulator";
 
 function BattleRoom() {
   const lobbyUiState = useAppSelector((state) => state.lobbyUi);
-  const { gameRoom } = lobbyUiState;
+  const { gameRoom, inCombatSimulator } = lobbyUiState;
   const socket = useRef<Socket>();
   const [socketCreated, setSocketCreated] = useState(false);
   const networkPerformanceMetricsRef = useRef<INetworkPerformanceMetrics>({
@@ -35,6 +36,7 @@ function BattleRoom() {
       <SocketManager socket={socket} defaultChatChannel={battleRoomDefaultChatChannel} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
       {!inGame && socket.current && <Lobby socket={socket.current} />}
       {inGame && socket.current && <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />}
+      {inCombatSimulator && socket.current && <CombatSimulatorGameClient socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />}
     </section>
   );
 }

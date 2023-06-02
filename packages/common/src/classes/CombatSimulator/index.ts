@@ -42,6 +42,7 @@ export class CombatSimulator {
   }
 
   clearPhysicsInterval() {
-    clearInterval(this.intervals.physics);
+    clearTimeout(this.intervals.physics);
+    this.intervals.physics = undefined;
   }
 }

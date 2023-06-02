@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import React, { useEffect } from "react";
 import { Socket } from "socket.io-client";
-import { ERROR_MESSAGES, SocketEventsFromServer, GENERIC_SOCKET_EVENTS, ChatMessage, ChatMessageStyles } from "../../../../common";
+import { ERROR_MESSAGES, SocketEventsFromServer, GENERIC_SOCKET_EVENTS, ChatMessage, ChatMessageStyles, CSEventsFromServer } from "../../../../common";
 import { Alert } from "../../classes/Alert";
 import { AlertType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -25,6 +25,7 @@ import {
   setGuestUsername,
   setGameRoomLoading,
   updategameRoomConfig,
+  setInCombatSimulator,
 } from "../../redux/slices/lobby-ui-slice";
 import { setShowScoreScreenModal } from "../../redux/slices/ui-slice";
 
@@ -99,6 +100,13 @@ function UISocketListener({ socket }: Props) {
     socket.on(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION, (data) => {
       dispatch(setGameCreationWaitingListPosition(data));
     });
+    socket.on(CSEventsFromServer.ADDED_TO_CS_SIM, () => {
+      console.log("Added to combat sim");
+      dispatch(setInCombatSimulator(true));
+    });
+    socket.on(CSEventsFromServer.REMOVED_FROM_COMBAT_SIM, () => {
+      dispatch(setInCombatSimulator(false));
+    });
     return () => {
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT);
       socket.off(GENERIC_SOCKET_EVENTS.CONNECT_ERROR);
@@ -116,6 +124,7 @@ function UISocketListener({ socket }: Props) {
       socket.off(SocketEventsFromServer.MATCHMAKING_QUEUE_UPDATE);
       socket.off(SocketEventsFromServer.REMOVED_FROM_MATCHMAKING);
       socket.off(SocketEventsFromServer.GAME_CREATION_WAITING_LIST_POSITION);
+      socket.off(CSEventsFromServer.REMOVED_FROM_COMBAT_SIM);
     };
   }, [socket, dispatch, gameName]);
 

@@ -41,6 +41,7 @@ export interface ILobbyUIState {
   playerReadyLoading: boolean;
   playerRole: PlayerRole | null;
   guestUsername: string | null;
+  inCombatSimulator: boolean;
 }
 
 const initialState: ILobbyUIState = {
@@ -66,6 +67,7 @@ const initialState: ILobbyUIState = {
   playerReadyLoading: false,
   playerRole: null,
   guestUsername: null,
+  inCombatSimulator: false,
 };
 
 const ladderSlice = createSlice({
@@ -145,7 +147,11 @@ const ladderSlice = createSlice({
       state.gameList.isFetching = false;
     },
     setScoreScreenData(state, action: PayloadAction<IGameScoreScreen>) {
+      // @ts-ignore
       state.scoreScreenData = action.payload;
+    },
+    setInCombatSimulator(state, action: PayloadAction<boolean>) {
+      state.inCombatSimulator = action.payload;
     },
   },
   extraReducers: {
@@ -179,6 +185,7 @@ export const {
   setGameListFetching,
   updateGameList,
   setScoreScreenData,
+  setInCombatSimulator,
 } = ladderSlice.actions;
 
 export default ladderSlice.reducer;

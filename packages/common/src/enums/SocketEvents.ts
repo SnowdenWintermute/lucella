@@ -53,6 +53,7 @@ export enum CSEventsFromClient {
 export enum CSEventsFromServer {
   REMOVED_FROM_COMBAT_SIM = "42",
   CS_GAME_PACKET = "43",
+  ADDED_TO_CS_SIM = "44",
 }
 
 export const GENERIC_SOCKET_EVENTS = {

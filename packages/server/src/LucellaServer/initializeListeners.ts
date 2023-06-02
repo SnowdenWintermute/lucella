@@ -4,6 +4,7 @@ import handleNewSocketConnection from "./handleNewSocketConnection";
 import lobbyUiListeners from "./listeners/lobbyUiListeners";
 import battleRoomGameListeners from "./listeners/battleRoomGameListeners";
 import { LucellaServer } from ".";
+import combatSimulatorListeners from "./listeners/combatSimulatorListeners";
 
 export default function initializeListeners(server: LucellaServer) {
   server.io.sockets.on(GENERIC_SOCKET_EVENTS.CONNECT, async (socket) => {
@@ -16,6 +17,7 @@ export default function initializeListeners(server: LucellaServer) {
     });
     lobbyUiListeners(server, socket);
     battleRoomGameListeners(server, socket);
+    combatSimulatorListeners(server, socket);
     socket.on(GENERIC_SOCKET_EVENTS.DISCONNECT, () => server.handleSocketDisconnection(socket));
   });
 }

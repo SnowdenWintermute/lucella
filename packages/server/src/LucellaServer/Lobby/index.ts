@@ -106,6 +106,7 @@ export class Lobby {
     if (socketMeta.currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
     if (this.server.combatSimulators[gameName]) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.GAME_NAME.GAME_EXISTS);
     this.server.createCombatSimulator(gameName);
+    console.log(`created combat sim ${gameName}`);
     this.handleJoinCombatSimulator(socket, gameName);
   }
 
@@ -117,7 +118,8 @@ export class Lobby {
     // TODO - check if game is full
     cs.players[socket.id] = socketMeta;
     socketMeta.currentGameName = gameName;
-    // don't need to emit a message because they'll just listen for the first update about it and that will betheir cue to start rendering
+    console.log("put socket in cs: ", cs);
+    socket.emit(CSEventsFromServer.ADDED_TO_CS_SIM);
   }
 
   handleLeaveCombatSimulator(socket: Socket) {
@@ -127,6 +129,11 @@ export class Lobby {
     const cs = this.server.combatSimulators[currentGameName];
     if (!cs) return console.log("Socket tried to leave a combat simulator that didn't exist");
     delete cs.players[socket.id];
+    if (Object.keys(cs.players).length < 1) {
+      console.log("removing combat simulator ", cs.gameName, " because the last player left");
+      this.server.combatSimulators[cs.gameName].clearPhysicsInterval();
+      delete this.server.combatSimulators[cs.gameName];
+    }
     socket.emit(CSEventsFromServer.REMOVED_FROM_COMBAT_SIM);
   }
 
