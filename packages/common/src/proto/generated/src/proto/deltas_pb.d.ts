@@ -1,4 +1,4 @@
-// package: deltas
+// package: 
 // file: src/proto/deltas.proto
 
 import * as jspb from "google-protobuf";

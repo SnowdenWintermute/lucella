@@ -1,4 +1,5 @@
 import Matter from "matter-js";
+import { Socket } from "socket.io";
 import { MouseData } from "../GameGenerics/MouseData";
 import { NetCode } from "../GameGenerics/NetCode";
 import { AntiCheatValueTracker } from "../GameGenerics/AntiCheat";
@@ -33,6 +34,7 @@ export class CombatSimulator {
     mobile: {},
     static: {},
   };
+  // for client only:
   keyboardInputState = new KeyboardInputState();
   mouseData = new MouseData();
   static baseWindowDimensions = CS_BASE_WINDOW_DIMENSIONS;
@@ -44,5 +46,15 @@ export class CombatSimulator {
   clearPhysicsInterval() {
     clearTimeout(this.intervals.physics);
     this.intervals.physics = undefined;
+  }
+
+  addPlayerControlledEntity(socket: Socket) {
+    const player = this.players[socket.id];
+    this.entities.playerControlled[player.associatedUser.username] = new MobileEntity(player.associatedUser.username, 1, 10, 0);
+  }
+
+  removeEntity(type: "playerControlled" | "mobile" | "static", id: string) {
+    console.log(`removing ${this.entities[type][id]}`);
+    delete this.entities[type][id];
   }
 }

@@ -118,7 +118,7 @@ export class Lobby {
     // TODO - check if game is full
     cs.players[socket.id] = socketMeta;
     socketMeta.currentGameName = gameName;
-    console.log("put socket in cs: ", cs);
+    cs.addPlayerControlledEntity(socket);
     socket.emit(CSEventsFromServer.ADDED_TO_CS_SIM);
   }
 
@@ -128,6 +128,7 @@ export class Lobby {
     if (!currentGameName) return console.log("Socket tried to leave a combat simulator but didn't have a registered game name");
     const cs = this.server.combatSimulators[currentGameName];
     if (!cs) return console.log("Socket tried to leave a combat simulator that didn't exist");
+    cs.removeEntity("playerControlled", socketMeta.associatedUser.username);
     delete cs.players[socket.id];
     if (Object.keys(cs.players).length < 1) {
       console.log("removing combat simulator ", cs.gameName, " because the last player left");

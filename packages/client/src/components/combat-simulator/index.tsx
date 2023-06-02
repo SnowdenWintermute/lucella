@@ -15,6 +15,8 @@ export default function CombatSimulatorGameClient({ socket, networkPerformanceMe
   return (
     <div className="" onContextMenu={(e) => e.preventDefault()}>
       <div className="" onContextMenu={(e) => e.preventDefault()}>
+        <h3>Combat Simulator</h3>
+        {JSON.stringify(currentGame.current)}
         {currentGame.current && <CombatSimulatorListener socket={socket} />}
       </div>
     </div>
