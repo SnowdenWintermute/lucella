@@ -52,6 +52,8 @@ export { handleOrbBodyCollisions } from "./updateOrbs/handleOrbBodyCollisions";
 export * from "./utils";
 export { setBodyProperties } from "./utils/setBodyProperties";
 export { OrbsProto, VectorProto, OrbProto, ScoreProto, DeltasProto } from "./proto/generated/src/proto/deltas_pb";
+export { CSGameStateProto, EntityProto } from "./proto/generated/src/proto/cs-game-state-deltas_pb";
+export { CSGameState } from "./classes/CombatSimulator/CSGameState";
 export { InputProto, SmallVectorProto } from "./proto/generated/src/proto/client-inputs_pb";
 export { Ban } from "./classes/Ban";
 export { createDeltaPacket } from "./protocol-buffer-utils/createDeltaPacket/createDeltaPacket";

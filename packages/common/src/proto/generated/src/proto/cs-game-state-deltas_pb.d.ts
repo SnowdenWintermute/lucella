@@ -4,12 +4,18 @@
 import * as jspb from "google-protobuf";
 
 export class Vec3Proto extends jspb.Message {
+  hasX(): boolean;
+  clearX(): void;
   getX(): number;
   setX(value: number): void;
 
+  hasY(): boolean;
+  clearY(): void;
   getY(): number;
   setY(value: number): void;
 
+  hasZ(): boolean;
+  clearZ(): void;
   getZ(): number;
   setZ(value: number): void;
 
@@ -85,7 +91,7 @@ export namespace EntitiesProto {
   }
 }
 
-export class GameStateProto extends jspb.Message {
+export class CSGameStateProto extends jspb.Message {
   hasPlayercontrolledentities(): boolean;
   clearPlayercontrolledentities(): void;
   getPlayercontrolledentities(): EntitiesProto | undefined;
@@ -102,16 +108,16 @@ export class GameStateProto extends jspb.Message {
   setStaticentities(value?: EntitiesProto): void;
 
   serializeBinary(): Uint8Array;
-  toObject(includeInstance?: boolean): GameStateProto.AsObject;
-  static toObject(includeInstance: boolean, msg: GameStateProto): GameStateProto.AsObject;
+  toObject(includeInstance?: boolean): CSGameStateProto.AsObject;
+  static toObject(includeInstance: boolean, msg: CSGameStateProto): CSGameStateProto.AsObject;
   static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
   static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
-  static serializeBinaryToWriter(message: GameStateProto, writer: jspb.BinaryWriter): void;
-  static deserializeBinary(bytes: Uint8Array): GameStateProto;
-  static deserializeBinaryFromReader(message: GameStateProto, reader: jspb.BinaryReader): GameStateProto;
+  static serializeBinaryToWriter(message: CSGameStateProto, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): CSGameStateProto;
+  static deserializeBinaryFromReader(message: CSGameStateProto, reader: jspb.BinaryReader): CSGameStateProto;
 }
 
-export namespace GameStateProto {
+export namespace CSGameStateProto {
   export type AsObject = {
     playercontrolledentities?: EntitiesProto.AsObject,
     mobileentities?: EntitiesProto.AsObject,

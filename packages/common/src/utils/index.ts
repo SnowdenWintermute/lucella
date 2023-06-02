@@ -6,6 +6,10 @@ import { Point } from "../classes/GameGenerics/Point";
 import { OrbSet } from "../types";
 import { setBodyProperties } from "./setBodyProperties";
 
+export type DeepPartial<T> = {
+  [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
+};
+
 export function randBetween(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
