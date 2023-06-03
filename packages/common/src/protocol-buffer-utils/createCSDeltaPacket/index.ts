@@ -23,5 +23,5 @@ export function packCSGameStateDeltas(deltasToSerialize: DeepPartial<CSGameState
     });
   }
 
-  return packet;
+  return packet.serializeBinary();
 }

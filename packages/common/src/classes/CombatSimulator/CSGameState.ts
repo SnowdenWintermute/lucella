@@ -3,7 +3,7 @@ import { MobileEntity } from "./MobileEntity";
 
 export class CSGameState {
   entities: {
-    playerControlled: { [playerName: string]: MobileEntity };
+    playerControlled: { [id: string]: MobileEntity };
     mobile: { [id: string]: MobileEntity };
     static: { [id: string]: Entity };
   } = {

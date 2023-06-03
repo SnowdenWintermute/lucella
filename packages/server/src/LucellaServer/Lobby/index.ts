@@ -20,6 +20,7 @@ import {
   IBattleRoomConfigSettings,
   GameType,
   CSEventsFromServer,
+  CSPlayer,
 } from "../../../../common";
 import { sanitizeChatChannel, sanitizeAllGameRooms, sanitizeGameRoom } from "./sanitizers";
 import updateChatChannelUsernameListsAndDeleteEmptyChannels from "./updateChatChannelUsernameListsAndDeleteEmptyChannels";
@@ -116,7 +117,7 @@ export class Lobby {
     if (!cs) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.GAME_DOES_NOT_EXIST);
     if (socketMeta.currentGameName) return socket.emit(SocketEventsFromServer.ERROR_MESSAGE, ERROR_MESSAGES.LOBBY.CANT_JOIN_IF_ALREADY_IN_GAME);
     // TODO - check if game is full
-    cs.players[socket.id] = socketMeta;
+    cs.players[socket.id] = new CSPlayer(socketMeta);
     socketMeta.currentGameName = gameName;
     cs.addPlayerControlledEntity(socket);
     socket.emit(CSEventsFromServer.ADDED_TO_CS_SIM);

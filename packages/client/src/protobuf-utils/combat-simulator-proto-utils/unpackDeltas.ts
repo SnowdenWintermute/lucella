@@ -3,11 +3,27 @@
 //   return false;
 // }
 
-import { DeepPartial, CSGameState, CSGameStateProto } from "../../../../common";
+import { DeepPartial, CSGameState, CSGameStateProto, EntityProto } from "../../../../common";
+import { MobileEntity } from "../../../../common/src/classes/CombatSimulator/MobileEntity";
 
-export default function unpackCSGameStateDeltas(deltas: CSGameStateProto) {
+export default function unpackCSGameStateDeltas(serialized: Uint8Array) {
+  const deltas = CSGameStateProto.deserializeBinary(serialized);
   // if (!orbProtoHasAnyProperty(orbProto)) return null;
   const unpackedDeltas: DeepPartial<CSGameState> = {};
+  console.log("got deltas: ", deltas);
+  if (deltas.hasPlayercontrolledentities()) {
+    const entities = deltas.getMobileentities()?.getEntitiesList();
+    entities?.forEach((entityProto: EntityProto) => {
+      const unpacked: DeepPartial<MobileEntity> = {
+        id: entityProto.getId(),
+      };
+      if (entityProto.hasPosition()) {
+        const position = entityProto.getPosition();
+        // if(position?.hasX)
+      }
+      // if (unpackedOrb) unpacked.orbs.challenger[`challenger-orb-${unpackedOrb.id}`] = unpackedOrb;
+    });
+  }
   // unpackedDeltas.id = orbProto.getId();
   // const destination = orbProto.hasDestination() ? orbProto.getDestination() : null;
   // if (destination) unpackedDeltas.destination = new Point(destination.getX(), destination.getY());
