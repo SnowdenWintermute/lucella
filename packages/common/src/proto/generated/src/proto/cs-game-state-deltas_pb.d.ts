@@ -38,8 +38,8 @@ export namespace Vec3Proto {
 }
 
 export class EntityProto extends jspb.Message {
-  getId(): string;
-  setId(value: string): void;
+  getId(): number;
+  setId(value: number): void;
 
   hasPosition(): boolean;
   clearPosition(): void;
@@ -63,7 +63,7 @@ export class EntityProto extends jspb.Message {
 
 export namespace EntityProto {
   export type AsObject = {
-    id: string,
+    id: number,
     position?: Vec3Proto.AsObject,
     angle: number,
   }

@@ -60,8 +60,10 @@ export class CombatSimulator {
 
   addPlayerControlledEntity(socket: Socket) {
     const player = this.players[socket.id];
-    const entity = new MobileEntity((this.lastAssignedEntityId += 1), player.socketMeta.associatedUser.username, 1, 10, 0);
-    this.entities.playerControlled[player.socketMeta.associatedUser.username] = entity;
+    const id = this.lastAssignedEntityId + 1;
+    const entity = new MobileEntity(id, player.socketMeta.associatedUser.username, 1, 10, 0);
+    this.lastAssignedEntityId += 1;
+    this.entities.playerControlled[id] = entity;
     player.ownedEntities[entity.id] = entity;
   }
 

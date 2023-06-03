@@ -7,7 +7,7 @@ message Vec3Proto {
 }
 
 message EntityProto {
-  string id = 1;
+  int32 id = 1;
   optional Vec3Proto position = 2;
   optional float angle = 3;
 }

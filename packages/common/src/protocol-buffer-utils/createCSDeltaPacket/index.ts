@@ -14,7 +14,7 @@ export function packCSGameStateDeltas(deltasToSerialize: DeepPartial<CSGameState
         if (entity?.body?.position?.x) entityPosition.setX(entity.body.position.x);
         if (entity?.body?.position?.y) entityPosition.setX(entity.body.position.y);
         entityProto.setPosition(entityPosition);
-        entityProto.setId(id);
+        entityProto.setId(Number(id));
       });
       // need to do this because you can't progromatically access the proto.setWhatever() methods
       if (categoryName === "playerControlled") packet.setPlayercontrolledentities(categoryEntitiesProto);
