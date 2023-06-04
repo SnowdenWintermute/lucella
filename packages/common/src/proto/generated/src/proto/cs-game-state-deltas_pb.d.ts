@@ -3,6 +3,34 @@
 
 import * as jspb from "google-protobuf";
 
+export class Vec2Proto extends jspb.Message {
+  hasX(): boolean;
+  clearX(): void;
+  getX(): number;
+  setX(value: number): void;
+
+  hasY(): boolean;
+  clearY(): void;
+  getY(): number;
+  setY(value: number): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): Vec2Proto.AsObject;
+  static toObject(includeInstance: boolean, msg: Vec2Proto): Vec2Proto.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: Vec2Proto, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): Vec2Proto;
+  static deserializeBinaryFromReader(message: Vec2Proto, reader: jspb.BinaryReader): Vec2Proto;
+}
+
+export namespace Vec2Proto {
+  export type AsObject = {
+    x: number,
+    y: number,
+  }
+}
+
 export class Vec3Proto extends jspb.Message {
   hasX(): boolean;
   clearX(): void;
@@ -37,6 +65,28 @@ export namespace Vec3Proto {
   }
 }
 
+export class VerticesProto extends jspb.Message {
+  clearVerticesList(): void;
+  getVerticesList(): Array<Vec2Proto>;
+  setVerticesList(value: Array<Vec2Proto>): void;
+  addVertices(value?: Vec2Proto, index?: number): Vec2Proto;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): VerticesProto.AsObject;
+  static toObject(includeInstance: boolean, msg: VerticesProto): VerticesProto.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: VerticesProto, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): VerticesProto;
+  static deserializeBinaryFromReader(message: VerticesProto, reader: jspb.BinaryReader): VerticesProto;
+}
+
+export namespace VerticesProto {
+  export type AsObject = {
+    verticesList: Array<Vec2Proto.AsObject>,
+  }
+}
+
 export class EntityProto extends jspb.Message {
   getId(): number;
   setId(value: number): void;
@@ -50,6 +100,11 @@ export class EntityProto extends jspb.Message {
   clearAngle(): void;
   getAngle(): number;
   setAngle(value: number): void;
+
+  hasVertices(): boolean;
+  clearVertices(): void;
+  getVertices(): VerticesProto | undefined;
+  setVertices(value?: VerticesProto): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): EntityProto.AsObject;
@@ -66,6 +121,7 @@ export namespace EntityProto {
     id: number,
     position?: Vec3Proto.AsObject,
     angle: number,
+    vertices?: VerticesProto.AsObject,
   }
 }
 

@@ -1,23 +1,33 @@
 syntax = "proto3";
 
+message Vec2Proto {
+  optional float x = 1;
+  optional float y = 2;
+}
+
 message Vec3Proto {
   optional float x = 1;
   optional float y = 2;
   optional float z = 3;
 }
 
+message VerticesProto {
+  repeated Vec2Proto vertices = 1;
+}
+
 message EntityProto {
   int32 id = 1;
   optional Vec3Proto position = 2;
   optional float angle = 3;
+  optional VerticesProto vertices = 4;
 }
 
 message EntitiesProto {
   repeated EntityProto entities = 1;
-  }
+}
 
 message CSGameStateProto {
-    optional EntitiesProto playerControlledEntities = 1;
-    optional EntitiesProto mobileEntities = 2;
-    optional EntitiesProto staticEntities = 3;
-  }
+  optional EntitiesProto playerControlledEntities = 1;
+  optional EntitiesProto mobileEntities = 2;
+  optional EntitiesProto staticEntities = 3;
+}
