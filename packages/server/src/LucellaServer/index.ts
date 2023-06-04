@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 import SocketIO, { Socket } from "socket.io";
+import Matter from "matter-js";
 import {
   BattleRoomGame,
   CombatSimulator,
@@ -30,7 +31,6 @@ import updateScoreCardsAndSaveGameRecord from "../battleRoomGame/endGameCleanup/
 import saveBattleRoomGameSettings from "../controllers/utils/saveBattleRoomGameSettings";
 import UsersRepo from "../database/repos/users";
 import stepCSPhysics from "../combat-simulator/stepCSPhysics";
-import Matter from "matter-js";
 // import broadcastLatencyUpdates from "./broadcastLatencyUpdates";
 
 export class LucellaServer {
@@ -223,6 +223,9 @@ export class LucellaServer {
     this.combatSimulators[gameName] = new CombatSimulator(gameName);
     const cs = this.combatSimulators[gameName];
     cs.physicsEngine = Matter.Engine.create();
+    cs.physicsEngine.gravity.y = 0;
+    cs.physicsEngine.gravity.x = 0;
+    cs.physicsEngine.gravity.scale = 0;
     stepCSPhysics(this, cs, true);
     return cs;
   }
