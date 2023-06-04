@@ -3,7 +3,7 @@ import React from "react";
 interface Props {
   title: string | JSX.Element;
   onClick: () => void;
-  extraStyles: string;
+  extraStyles?: string;
   children?: JSX.Element | JSX.Element[] | false;
   ariaControls?: string;
   ariaExpanded?: boolean;

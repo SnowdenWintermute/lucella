@@ -6,7 +6,7 @@
 import { DeepPartial, CSGameState, CSGameStateProto, EntityProto } from "../../../../common";
 import { MobileEntity } from "../../../../common/src/classes/CombatSimulator/MobileEntity";
 
-function unpackEntities(entities: EntityProto[]) {
+function unpackEntities(entities: EntityProto[], categoryName: string) {
   const unpackedEntities: { [id: number]: DeepPartial<MobileEntity> } = {};
   entities?.forEach((entityProto: EntityProto) => {
     const unpacked: DeepPartial<MobileEntity> = {
@@ -25,7 +25,7 @@ function unpackEntities(entities: EntityProto[]) {
     unpackedEntities[unpacked.id!] = unpacked;
   });
 
-  console.log(unpackedEntities);
+  // console.log(unpackedEntities, categoryName);
   return unpackedEntities;
 }
 
@@ -38,15 +38,15 @@ export default function unpackCSGameStateDeltas(serialized: Uint8Array) {
 
   if (deltas.hasPlayercontrolledentities()) {
     const entities = deltas.getPlayercontrolledentities()!.getEntitiesList();
-    unpackedDeltas.entities!.playerControlled = unpackEntities(entities);
+    unpackedDeltas.entities!.playerControlled = unpackEntities(entities, "playerControlled");
   }
   if (deltas.hasMobileentities()) {
     const entities = deltas.getMobileentities()!.getEntitiesList();
-    unpackedDeltas.entities!.mobile = unpackEntities(entities);
+    unpackedDeltas.entities!.mobile = unpackEntities(entities, "Mobile");
   }
   if (deltas.hasStaticentities()) {
     const entities = deltas.getStaticentities()!.getEntitiesList();
-    unpackedDeltas.entities!.static = unpackEntities(entities);
+    unpackedDeltas.entities!.static = unpackEntities(entities, "Static");
   }
 
   // console.log(unpackedDeltas);

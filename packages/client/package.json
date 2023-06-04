@@ -20,6 +20,8 @@
     "watch-and-compile-proto": "yarn --cwd ../common watch-and-compile-proto"
   },
   "dependencies": {
+    "@babylonjs/core": "^6.6.0",
+    "@babylonjs/inspector": "^6.6.0",
     "@reduxjs/toolkit": "^1.9.1",
     "@svgr/webpack": "^8.0.1",
     "@types/matter-js": "^0.18.5",
@@ -55,6 +57,7 @@
     "cypress": "^12.9.0",
     "cypress-recurse": "^1.26.0",
     "cypress-terminal-report": "^5.0.0",
+    "earcut": "^2.2.4",
     "env-cmd": "^10.1.0",
     "imap": "^0.8.19",
     "imap-simple": "^5.1.0",

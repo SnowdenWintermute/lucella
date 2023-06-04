@@ -18,8 +18,8 @@ export function packCSGameStateDeltas(deltasToSerialize: DeepPartial<CSGameState
       });
       // need to do this because you can't progromatically access the proto.setWhatever() methods
       if (categoryName === "playerControlled") packet.setPlayercontrolledentities(categoryEntitiesProto);
-      if (categoryName === "mobileEntities") packet.setMobileentities(categoryEntitiesProto);
-      if (categoryName === "static") packet.setStaticentities(categoryEntitiesProto);
+      if (categoryName === "mobile" && Object.keys(category).length) packet.setMobileentities(categoryEntitiesProto);
+      if (categoryName === "static" && Object.keys(category).length) packet.setStaticentities(categoryEntitiesProto);
     });
   }
 

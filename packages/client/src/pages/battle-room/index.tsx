@@ -32,12 +32,17 @@ function BattleRoom() {
   }, [socket.current]);
 
   return (
-    <section className={!inGame ? "page-padded-container" : "battle-room-game-instance"}>
+    <>
       <SocketManager socket={socket} defaultChatChannel={battleRoomDefaultChatChannel} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />
-      {!inGame && !inCombatSimulator && socket.current && <Lobby socket={socket.current} />}
-      {inGame && socket.current && <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />}
+      {!inCombatSimulator && (
+        <section className={!inGame ? "page-padded-container" : "battle-room-game-instance"}>
+          {!inGame && !inCombatSimulator && socket.current && <Lobby socket={socket.current} />}
+          {inGame && socket.current && <BattleRoomGameInstance socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />}
+        </section>
+      )}
+
       {inCombatSimulator && socket.current && <CombatSimulatorGameClient socket={socket.current} networkPerformanceMetricsRef={networkPerformanceMetricsRef} />}
-    </section>
+    </>
   );
 }
 

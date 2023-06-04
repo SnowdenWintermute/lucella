@@ -12,6 +12,7 @@ interface Props {
 export default function LayoutWithAlerts({ children }: Props) {
   const dispatch = useAppDispatch();
   const lobbyUIState = useAppSelector((state) => state.lobbyUi);
+  const { inCombatSimulator } = lobbyUIState;
   const { gameStatus } = lobbyUIState.gameRoom || { gameStatus: null }; // used to hide navbar in game
   const currentTheme = useAppSelector((state) => state.UI.theme);
 
@@ -22,9 +23,12 @@ export default function LayoutWithAlerts({ children }: Props) {
     }
   }, []);
 
+  const shouldDisplayNavbar =
+    !inCombatSimulator && gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && gameStatus !== GameStatus.STARTING_NEXT_ROUND;
+
   return (
     <div data-theme={currentTheme} data-theme-type="light" className="app-layout">
-      {gameStatus !== GameStatus.IN_PROGRESS && gameStatus !== GameStatus.ENDING && gameStatus !== GameStatus.STARTING_NEXT_ROUND && <Navbar />}
+      {shouldDisplayNavbar && <Navbar />}
       <AlertsHolder />
       <main className="app-layout__main-content">{children}</main>
     </div>

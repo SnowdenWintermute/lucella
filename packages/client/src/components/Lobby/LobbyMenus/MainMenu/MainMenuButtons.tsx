@@ -2,7 +2,7 @@ import { Socket } from "socket.io-client";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { useGetMeQuery } from "../../../../redux/api-slices/users-api-slice";
-import { ERROR_MESSAGES, SocketEventsFromClient } from "../../../../../../common";
+import { CSEventsFromClient, ERROR_MESSAGES, SocketEventsFromClient } from "../../../../../../common";
 import { LobbyMenu, setActiveMenu, setGameListFetching, setMatchmakingLoading } from "../../../../redux/slices/lobby-ui-slice";
 import { setAlert } from "../../../../redux/slices/alerts-slice";
 import { Alert } from "../../../../classes/Alert";
@@ -61,6 +61,7 @@ function MainMenuButtons({ socket }: { socket: Socket }) {
       />
       <LobbyTopListItemWithButton title={BUTTON_NAMES.MAIN_MENU.HOST} onClick={handleSetupNewGameClick} extraStyles="" />
       <LobbyTopListItemWithButton title={BUTTON_NAMES.MAIN_MENU.JOIN} onClick={handleViewGamesListClick} extraStyles="" />
+      <LobbyTopListItemWithButton title="CS TEST" onClick={() => socket.emit(CSEventsFromClient.CREATES_NEW_COMBAT_SIM, "test")} />
     </>
   );
 }
