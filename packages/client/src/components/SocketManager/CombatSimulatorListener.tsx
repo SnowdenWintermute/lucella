@@ -11,7 +11,7 @@ export function CombatSimulatorListener({ socket, cs }: { socket: Socket; cs: Co
     socket.on(CSEventsFromServer.CS_GAME_PACKET, async (data: Uint8Array) => {
       const unpacked = unpackCSGameStateDeltas(data);
       const updated = mapUnpackedCSDeltasToCSObject(unpacked, cs);
-      console.log(updated);
+      // console.log(updated);
       // if (!playerRole) return console.log("failed to accept a delta update from server because no player role was assigned");
       // const unpacked = unpackDeltaPacket(data, playerRole);
       // const prevGameStateWithDeltas = mapUnpackedPacketToUpdateObject(game, unpacked);

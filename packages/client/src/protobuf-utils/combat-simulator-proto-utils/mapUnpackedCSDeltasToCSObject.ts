@@ -19,6 +19,6 @@ function mergeDeep<T>(source: T, partial: DeepPartial<T>): T {
 }
 
 export function mapUnpackedCSDeltasToCSObject(unpacked: DeepPartial<CombatSimulator>, cs: CombatSimulator) {
-  const oldGameStateCopy = cloneDeep(cs);
+  // const oldGameStateCopy = cloneDeep(cs);
   return mergeDeep(cs, unpacked);
 }
