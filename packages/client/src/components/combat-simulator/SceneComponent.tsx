@@ -3,6 +3,7 @@
 /* eslint-disable react/destructuring-assignment */
 import { Engine, EngineOptions, Scene, SceneOptions } from "@babylonjs/core";
 import React, { useEffect, useRef, useState } from "react";
+import { renderRate } from "../../../../common";
 type Props = {
   antialias: boolean;
   engineOptions?: EngineOptions;
@@ -16,6 +17,7 @@ type Props = {
 
 function BabylonScene(props: Props) {
   const reactCanvas = useRef(null);
+  const renderRef = useRef<NodeJS.Timeout | null>(null);
   const { antialias, engineOptions, adaptToDeviceRatio, sceneOptions, onRender, onSceneReady, ...rest } = props;
 
   const [loaded, setLoaded] = useState(false);
@@ -44,6 +46,11 @@ function BabylonScene(props: Props) {
     if (newScene.isReady()) onSceneReady(newScene, reactCanvas.current!);
     else newScene.onReadyObservable.addOnce((readyScene) => onSceneReady(readyScene, reactCanvas.current!));
 
+    // renderRef.current = setInterval(() => {
+    //   if (typeof onRender === "function") onRender(newScene, reactCanvas.current!);
+    //   if (newScene.getCameraById("Camera")) newScene.render();
+    // }, renderRate);
+
     engine.runRenderLoop(() => {
       if (typeof onRender === "function") onRender(newScene, reactCanvas.current!);
       if (newScene.getCameraById("Camera")) newScene.render();
@@ -51,6 +58,7 @@ function BabylonScene(props: Props) {
 
     return () => {
       if (scene !== null) scene.dispose();
+      if (renderRef.current) clearInterval(renderRef.current);
     };
   }, [reactCanvas]);
 
