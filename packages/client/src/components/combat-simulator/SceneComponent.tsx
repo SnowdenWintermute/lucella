@@ -3,8 +3,10 @@
 /* eslint-disable react/destructuring-assignment */
 import { Engine, EngineOptions, Scene, SceneOptions } from "@babylonjs/core";
 import React, { useEffect, useRef, useState } from "react";
-import { renderRate } from "../../../../common";
+import { addCSInputEventListeners, removeCSInputEventListeners } from "./CSInputEventListeners";
+import { CombatSimulator } from "../../../../common";
 type Props = {
+  cs: CombatSimulator;
   antialias: boolean;
   engineOptions?: EngineOptions;
   adaptToDeviceRatio?: boolean;
@@ -16,9 +18,8 @@ type Props = {
 };
 
 function BabylonScene(props: Props) {
-  const reactCanvas = useRef(null);
-  const renderRef = useRef<NodeJS.Timeout | null>(null);
-  const { antialias, engineOptions, adaptToDeviceRatio, sceneOptions, onRender, onSceneReady, ...rest } = props;
+  const reactCanvas = useRef<HTMLCanvasElement>(null);
+  const { cs, antialias, engineOptions, adaptToDeviceRatio, sceneOptions, onRender, onSceneReady, ...rest } = props;
 
   const [loaded, setLoaded] = useState(false);
   const [scene, setScene] = useState<Scene | null>(null);
@@ -40,26 +41,21 @@ function BabylonScene(props: Props) {
     setLoaded(true);
     const engine = new Engine(reactCanvas.current, antialias, engineOptions, adaptToDeviceRatio);
     const newScene = new Scene(engine, sceneOptions);
-    console.log("creating scene");
     setScene(newScene);
-    // console.log(newScene.isReady());
     if (!newScene) return;
     if (newScene.isReady()) onSceneReady(newScene, reactCanvas.current!);
     else newScene.onReadyObservable.addOnce((readyScene) => onSceneReady(readyScene, reactCanvas.current!));
-
-    // renderRef.current = setInterval(() => {
-    //   if (typeof onRender === "function") onRender(newScene, reactCanvas.current!);
-    //   if (newScene.getCameraById("Camera")) newScene.render();
-    // }, renderRate);
 
     engine.runRenderLoop(() => {
       if (typeof onRender === "function") onRender(newScene, reactCanvas.current!);
       if (newScene.getCameraById("Camera")) newScene.render();
     });
 
+    if (reactCanvas.current) addCSInputEventListeners(reactCanvas.current, cs);
+
     return () => {
       if (scene !== null) scene.dispose();
-      if (renderRef.current) clearInterval(renderRef.current);
+      if (reactCanvas.current) removeCSInputEventListeners(reactCanvas.current, cs);
     };
   }, [reactCanvas]);
 
