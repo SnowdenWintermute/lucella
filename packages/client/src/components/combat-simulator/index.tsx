@@ -18,8 +18,8 @@ interface Props {
 export default function CombatSimulatorGameClient({ socket, networkPerformanceMetricsRef }: Props) {
   const csRef = useRef(new CombatSimulator("test"));
 
-  const onSceneReady = (scene: Scene, canvas: HTMLCanvasElement) => {
-    csRef.current.intervals.physics = createCSClientInterval(csRef.current);
+  const onSceneReady = (scene: Scene) => {
+    csRef.current.intervals.physics = createCSClientInterval(socket, csRef.current);
     return setupCSScene(scene);
   };
 

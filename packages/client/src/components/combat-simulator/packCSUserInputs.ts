@@ -1,6 +1,7 @@
 import { CSInputProto, CSPlayerInputState } from "../../../../common";
 
-export default function packCSUserInputs(inputs: CSPlayerInputState) {
+export default function packCSUserInputs(inputs?: CSPlayerInputState) {
+  if (!inputs) return console.log("received no inputs to serialize");
   const inputProto = new CSInputProto();
   if (typeof inputs.up === "boolean") inputProto.setUp(inputs.up);
   if (typeof inputs.down === "boolean") inputProto.setDown(inputs.down);

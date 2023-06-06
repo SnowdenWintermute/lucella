@@ -11,6 +11,7 @@ function setInputs(e: KeyboardEvent, inputs: CSPlayerInputState, active: boolean
   if (code === "KeyA") inputs.left = active;
   if (code === "KeyD") inputs.right = active;
   if (code === "Space") inputs.space = active;
+  // console.log("inputs: ", inputs);
 }
 
 export function addCSInputEventListeners(canvas: HTMLCanvasElement, cs: CombatSimulator) {
