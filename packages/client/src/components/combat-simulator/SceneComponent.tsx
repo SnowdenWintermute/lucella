@@ -40,6 +40,7 @@ function BabylonScene(props: Props) {
     setLoaded(true);
     const engine = new Engine(reactCanvas.current, antialias, engineOptions, adaptToDeviceRatio);
     const newScene = new Scene(engine, sceneOptions);
+    console.log("creating scene");
     setScene(newScene);
     // console.log(newScene.isReady());
     if (!newScene) return;
