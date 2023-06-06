@@ -1,6 +1,6 @@
 import { Socket } from "socket.io-client";
 import { Scene } from "@babylonjs/core";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import BabylonScene from "./SceneComponent";
 import { CombatSimulator } from "../../../../common";
 import { INetworkPerformanceMetrics } from "../../types";
@@ -8,6 +8,7 @@ import { CombatSimulatorListener } from "../../components/SocketManager/CombatSi
 import createCSPlayerMesh from "./createCSPlayerMesh";
 import updateCSPlayerAndCamera from "./updateCSPlayerAndCamera";
 import setupCSScene from "./setupCSScene";
+import createCSClientInterval from "./createCSClientInterval";
 
 interface Props {
   socket: Socket;
@@ -18,6 +19,7 @@ export default function CombatSimulatorGameClient({ socket, networkPerformanceMe
   const csRef = useRef(new CombatSimulator("test"));
 
   const onSceneReady = (scene: Scene, canvas: HTMLCanvasElement) => {
+    csRef.current.intervals.physics = createCSClientInterval(csRef.current);
     return setupCSScene(scene);
   };
 
@@ -28,6 +30,12 @@ export default function CombatSimulatorGameClient({ socket, networkPerformanceMe
       else updateCSPlayerAndCamera(entity, poly, scene);
     });
   };
+
+  useEffect(() => {
+    return () => {
+      csRef.current.clearPhysicsInterval();
+    };
+  }, []);
 
   return (
     <div className="" onContextMenu={(e) => e.preventDefault()}>
