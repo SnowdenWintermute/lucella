@@ -15,7 +15,7 @@ export default function setupCSScene(scene: Scene) {
   const material = new StandardMaterial("standardMaterial", scene);
   material.emissiveColor = Color3.FromHexString("#9ba8b8");
   material.disableLighting = true;
-  for (let i = 100; i < 110; i += 1) {
+  for (let i = 100; i < 150; i += 1) {
     const x = Math.random() * 1000;
     const y = Math.random() * 100 - 50;
     const v1 = new Vector2(x, y);

@@ -3,8 +3,7 @@
 //   return false;
 // }
 
-import { DeepPartial, CSGameState, CSGameStateProto, EntityProto } from "../../../../common";
-import { MobileEntity } from "../../../../common/src/classes/CombatSimulator/MobileEntity";
+import { DeepPartial, CSGameState, CSGameStateProto, EntityProto, MobileEntity } from "../../../../common";
 
 function unpackEntities(entities: EntityProto[], categoryName: string) {
   const unpackedEntities: { [id: number]: DeepPartial<MobileEntity> } = {};
@@ -35,7 +34,6 @@ function unpackEntities(entities: EntityProto[], categoryName: string) {
     unpackedEntities[unpacked.id!] = unpacked;
   });
 
-  // console.log(unpackedEntities, categoryName);
   return unpackedEntities;
 }
 

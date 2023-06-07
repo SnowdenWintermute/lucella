@@ -4,7 +4,7 @@ export default function determineCSUserInputDeltas(cs: CombatSimulator) {
   const prevInputs = cs.netcode.prevGameState?.inputs;
   const currInputs = cs.inputState;
   if (!prevInputs) return console.log("Couldnt' calculate deltas without an initial game state");
-
+  let hasDeltasToSend = false;
   const deltas = new CSPlayerInputState();
   Object.entries(currInputs).forEach(([key, value]) => {
     // @ts-ignore
@@ -12,6 +12,7 @@ export default function determineCSUserInputDeltas(cs: CombatSimulator) {
     // @ts-ignore
     if (value !== prevInputs[key]) {
       console.log("detected delta for input ", key);
+      hasDeltasToSend = true;
       // @ts-ignore
       deltas[key] = value;
     }
@@ -19,5 +20,5 @@ export default function determineCSUserInputDeltas(cs: CombatSimulator) {
 
   // console.log("input deltas: ", deltas);
 
-  return deltas;
+  return hasDeltasToSend ? deltas : null;
 }
