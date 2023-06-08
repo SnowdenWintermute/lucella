@@ -9,7 +9,7 @@ export default function createCSPlayerMesh(entity: MobileEntity, scene: Scene, c
   const poly = polygonTriangulation.build();
   poly.position = new Vector3(entity.body.position.x, entity.z, entity.body.position.y);
   poly.material = material;
-  const camera = new ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 4, 100, poly.position, scene);
+  const camera = new ArcRotateCamera("Camera", -Math.PI, Math.PI / 4, 100, poly.position, scene);
   // camera.upperRadiusLimit = 200;
   // camera.lowerRadiusLimit = 40;
   // camera.upperBetaLimit = Math.PI / 4;

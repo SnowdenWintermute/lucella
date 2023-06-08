@@ -12,7 +12,7 @@ type Props = {
   adaptToDeviceRatio?: boolean;
   sceneOptions?: SceneOptions;
   onRender: (scene: Scene, canvas: HTMLCanvasElement) => void;
-  onSceneReady: (scene: Scene) => void;
+  onSceneReady: (scene: Scene, canvas: HTMLCanvasElement) => void;
   id?: string;
   className?: string;
 };
@@ -42,9 +42,10 @@ function BabylonScene(props: Props) {
     const engine = new Engine(reactCanvas.current, antialias, engineOptions, adaptToDeviceRatio);
     const newScene = new Scene(engine, sceneOptions);
     setScene(newScene);
-    if (!newScene) return;
-    if (newScene.isReady()) onSceneReady(newScene);
-    else newScene.onReadyObservable.addOnce((readyScene) => onSceneReady(readyScene));
+    if (!newScene || !reactCanvas.current) return;
+
+    if (newScene.isReady()) onSceneReady(newScene, reactCanvas.current);
+    else newScene.onReadyObservable.addOnce((readyScene) => onSceneReady(readyScene, reactCanvas.current!));
 
     engine.runRenderLoop(() => {
       if (typeof onRender === "function") onRender(newScene, reactCanvas.current!);

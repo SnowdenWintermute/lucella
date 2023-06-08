@@ -11,6 +11,8 @@ function setInputs(e: KeyboardEvent, inputs: CSPlayerInputState, active: boolean
   if (code === "KeyA") inputs.left = active;
   if (code === "KeyD") inputs.right = active;
   if (code === "Space") inputs.space = active;
+  if (code === "KeyJ") inputs.turnLeft = active;
+  if (code === "KeyK") inputs.turnRight = active;
   // console.log("inputs: ", inputs);
 }
 
