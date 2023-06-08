@@ -12,5 +12,6 @@ export default function packCSUserInputs(inputs?: CSPlayerInputState) {
   if (typeof inputs.mouseLeft === "boolean") inputProto.setMouseleft(inputs.mouseLeft);
   if (typeof inputs.mouseRight === "boolean") inputProto.setMouseright(inputs.mouseRight);
   if (typeof inputs.space === "boolean") inputProto.setSpace(inputs.space);
+  if (typeof inputs.targetAngle === "number") inputProto.setTargetangle(inputs.targetAngle);
   return inputProto.serializeBinary();
 }

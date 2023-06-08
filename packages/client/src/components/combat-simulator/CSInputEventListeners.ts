@@ -16,6 +16,8 @@ function setInputs(e: KeyboardEvent, inputs: CSPlayerInputState, active: boolean
   // console.log("inputs: ", inputs);
 }
 
+// function setTurnInputs(e: MouseEvent)
+
 export function addCSInputEventListeners(canvas: HTMLCanvasElement, cs: CombatSimulator) {
   canvas.addEventListener("keydown", logCode);
   canvas.addEventListener("keydown", (e) => setInputs(e, cs.inputState, true));

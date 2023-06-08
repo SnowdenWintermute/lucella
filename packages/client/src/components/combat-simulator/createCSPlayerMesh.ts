@@ -13,7 +13,6 @@ export default function createCSPlayerMesh(entity: MobileEntity, scene: Scene, c
   // camera.upperRadiusLimit = 200;
   // camera.lowerRadiusLimit = 40;
   // camera.upperBetaLimit = Math.PI / 4;
-  // const camera = new UniversalCamera("Camera", new Vector3(276, 384, 0), scene);
   camera.attachControl(canvas, true);
   scene.addMesh(poly);
   const linePoints = getPolygonAngleLinePoints(entity.body.vertices, entity.body.angle);

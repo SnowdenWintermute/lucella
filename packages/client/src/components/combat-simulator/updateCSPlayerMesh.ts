@@ -1,9 +1,9 @@
 import { Vector3, ArcRotateCamera, Scene, Mesh, AbstractMesh, VertexBuffer } from "@babylonjs/core";
 import cloneDeep from "lodash.clonedeep";
-import { MobileEntity } from "../../../../common";
+import { CombatSimulator, MobileEntity } from "../../../../common";
 import { createEntityAngleLineIdString, getPolygonAngleLinePoints } from "./utils";
 
-export default function updateCSPlayerAndCamera(entity: MobileEntity, poly: Mesh | AbstractMesh, scene: Scene) {
+export default function updateCSPlayerMesh(cs: CombatSimulator, entity: MobileEntity, poly: Mesh | AbstractMesh, scene: Scene) {
   const oldPolyPosition = cloneDeep(poly.position);
   poly.position = Vector3.Lerp(poly.position, new Vector3(entity.body.position.x, entity.z, entity.body.position.y), 0.1);
   poly.rotation = Vector3.Lerp(poly.rotation, new Vector3(0, entity.body.angle * -1, 0), 0.1);
@@ -26,14 +26,11 @@ export default function updateCSPlayerAndCamera(entity: MobileEntity, poly: Mesh
       linePoints[1].y,
       linePoints[1].z,
     ]);
-
-  const camera = scene.getCameraById("Camera");
-  if (camera instanceof ArcRotateCamera) {
-    // console.log(Math.abs(camera.alpha + Math.PI), entity.body.angle);
-    // entity.desiredAngle = camera.alpha + Math.PI;
-    const diff = poly.position.subtract(oldPolyPosition);
-    const newCameraPosition = camera.position.add(diff);
-    camera.setPosition(newCameraPosition);
-    camera.setTarget(poly.position);
-  }
+  return oldPolyPosition;
 }
+
+// set targetDiff,
+// move toward lowering diff
+// accept move toward diff commands until diff is within threshold
+// if within threshold and recieve move toward diff command, lerp toward 0 diff
+//
