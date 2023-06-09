@@ -42,6 +42,7 @@ export default function unpackCSGameStateDeltas(serialized: Uint8Array) {
   // if (!orbProtoHasAnyProperty(orbProto)) return null;
   const unpackedDeltas: DeepPartial<CSGameState> = {
     entities: {},
+    entityIdsRemovedSinceLastUpdate: [],
   };
 
   if (deltas.hasPlayercontrolledentities()) {
@@ -55,6 +56,11 @@ export default function unpackCSGameStateDeltas(serialized: Uint8Array) {
   if (deltas.hasStaticentities()) {
     const entities = deltas.getStaticentities()!.getEntitiesList();
     unpackedDeltas.entities!.static = unpackEntities(entities, "Static");
+  }
+  if (deltas.hasEntitiesremovedsincelastupdate()) {
+    const entityIds = deltas.getEntitiesremovedsincelastupdate()?.getEntityidsList();
+    unpackedDeltas.entityIdsRemovedSinceLastUpdate = entityIds;
+    console.log("REMOVED ENTITY IDS: ", unpackedDeltas.entityIdsRemovedSinceLastUpdate);
   }
 
   if (deltas.hasPlayerentityid()) unpackedDeltas.playerEntityId = deltas.getPlayerentityid();
