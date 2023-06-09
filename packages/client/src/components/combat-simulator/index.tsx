@@ -1,11 +1,11 @@
 import { Socket } from "socket.io-client";
-import { ArcRotateCamera, Scene, Vector3 } from "@babylonjs/core";
+import { Scene, Vector3 } from "@babylonjs/core";
 import React, { useEffect, useRef } from "react";
 import BabylonScene from "./SceneComponent";
-import { CSPlayer, CombatSimulator, SocketMetadata } from "../../../../common";
+import { CombatSimulator } from "../../../../common";
 import { INetworkPerformanceMetrics } from "../../types";
 import { CombatSimulatorListener } from "../../components/SocketManager/CombatSimulatorListener";
-import createCSPlayerMesh from "./createCSPlayerMesh";
+import createCSPlayerMeshAndCamera from "./createCSPlayerMeshAndCamera";
 import updateCSPlayerMesh from "./updateCSPlayerMesh";
 import setupCSScene from "./setupCSScene";
 import createCSClientInterval from "./createCSClientInterval";
@@ -20,7 +20,7 @@ export default function CombatSimulatorGameClient({ socket, networkPerformanceMe
   const csRef = useRef(new CombatSimulator("test"));
 
   const onSceneReady = (scene: Scene, canvas: HTMLCanvasElement) => {
-    csRef.current.intervals.physics = createCSClientInterval(socket, csRef.current);
+    csRef.current.intervals.physics = createCSClientInterval(socket, csRef.current, scene);
     return setupCSScene(scene, canvas);
   };
 
@@ -28,10 +28,11 @@ export default function CombatSimulatorGameClient({ socket, networkPerformanceMe
     Object.values(csRef.current.entities.playerControlled).forEach((entity) => {
       let poly = scene.getMeshByName(entity.id.toString());
       let oldPolyPosition = poly?.position || Vector3.Zero();
-      if (!poly) poly = createCSPlayerMesh(entity, scene, canvas);
+      if (!poly) poly = createCSPlayerMeshAndCamera(entity, scene, canvas);
       else oldPolyPosition = updateCSPlayerMesh(csRef.current, entity, poly, scene);
-      console.log("SOCKET OWNED ENTITIES: ", csRef.current.players[socket.id]);
-      if (entity.id === csRef.current.players[socket.id]?.ownedEntities[0].id) updateCSPlayerCamera(poly, oldPolyPosition, scene);
+      if (typeof csRef.current.playerEntityId === "number" && entity.id === csRef.current.playerEntityId) {
+        updateCSPlayerCamera(poly, oldPolyPosition, scene);
+      }
     });
   };
 

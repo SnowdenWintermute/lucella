@@ -59,6 +59,5 @@ export default function unpackCSGameStateDeltas(serialized: Uint8Array) {
 
   if (deltas.hasPlayerentityid()) unpackedDeltas.playerEntityId = deltas.getPlayerentityid();
 
-  console.log(unpackedDeltas);
   return unpackedDeltas;
 }

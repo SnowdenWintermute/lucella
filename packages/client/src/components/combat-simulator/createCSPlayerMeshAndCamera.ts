@@ -1,18 +1,19 @@
 import earcut from "earcut";
-import { Scene, PolygonMeshBuilder, ArcRotateCamera, MeshBuilder, Vector3, StandardMaterial, Color3, Color4 } from "@babylonjs/core";
+import { Scene, PolygonMeshBuilder, ArcRotateCamera, MeshBuilder, Vector3, Color4 } from "@babylonjs/core";
 import { MobileEntity } from "../../../../common";
-import { createEntityAngleLineIdString, getAverageOfVec2Array, getPolygonAngleLinePoints } from "./utils";
+import { createEntityAngleLineIdString, getPolygonAngleLinePoints } from "./utils";
 
-export default function createCSPlayerMesh(entity: MobileEntity, scene: Scene, canvas: HTMLCanvasElement) {
+export default function createCSPlayerMeshAndCamera(entity: MobileEntity, scene: Scene, canvas: HTMLCanvasElement) {
   const material = scene.getMaterialById("standardMaterial");
   const polygonTriangulation = new PolygonMeshBuilder(entity.id.toString(), [...entity.body.vertices], scene, earcut);
   const poly = polygonTriangulation.build();
   poly.position = new Vector3(entity.body.position.x, entity.z, entity.body.position.y);
   poly.material = material;
-  const camera = new ArcRotateCamera("Camera", -Math.PI, Math.PI / 4, 100, poly.position, scene);
-  // camera.upperRadiusLimit = 200;
-  // camera.lowerRadiusLimit = 40;
+  const camera = new ArcRotateCamera("Camera", -Math.PI, Math.PI / 4, 200, poly.position, scene);
+  camera.upperRadiusLimit = 200;
+  camera.lowerRadiusLimit = 40;
   // camera.upperBetaLimit = Math.PI / 4;
+  // camera.lowerBetaLimit = Math.PI / 4;
   camera.attachControl(canvas, true);
   scene.addMesh(poly);
   const linePoints = getPolygonAngleLinePoints(entity.body.vertices, entity.body.angle);
