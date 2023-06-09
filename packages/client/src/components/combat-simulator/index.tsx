@@ -29,7 +29,7 @@ export default function CombatSimulatorGameClient({ socket, networkPerformanceMe
       let poly = scene.getMeshByName(entity.id.toString());
       let oldPolyPosition = poly?.position || Vector3.Zero();
       if (!poly) poly = createCSPlayerMeshAndCamera(entity, scene, canvas);
-      else oldPolyPosition = updateCSPlayerMesh(csRef.current, entity, poly, scene);
+      else oldPolyPosition = updateCSPlayerMesh(entity, poly, scene);
       if (typeof csRef.current.playerEntityId === "number" && entity.id === csRef.current.playerEntityId) {
         updateCSPlayerCamera(poly, oldPolyPosition, scene);
       }

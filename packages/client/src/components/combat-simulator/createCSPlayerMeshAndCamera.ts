@@ -1,26 +1,37 @@
 import earcut from "earcut";
-import { Scene, PolygonMeshBuilder, ArcRotateCamera, MeshBuilder, Vector3, Color4 } from "@babylonjs/core";
+import { Scene, PolygonMeshBuilder, ArcRotateCamera, Vector3, Color3, StandardMaterial, CreateBox } from "@babylonjs/core";
 import { MobileEntity } from "../../../../common";
-import { createEntityAngleLineIdString, getPolygonAngleLinePoints } from "./utils";
 
 export default function createCSPlayerMeshAndCamera(entity: MobileEntity, scene: Scene, canvas: HTMLCanvasElement) {
-  const material = scene.getMaterialById("standardMaterial");
+  if (!scene.getMeshById(`${entity.id}-rectangular-prism`)) {
+    const rectangularPrism = CreateBox(`${entity.id}-rectangular-prism`, { size: 1, width: 10, height: 1, depth: 1 });
+    rectangularPrism.position = new Vector3(entity.body.position.x, 1, entity.body.position.y);
+    const redMaterial = new StandardMaterial("red-material");
+    redMaterial.emissiveColor = Color3.FromHexString("#a52026");
+    redMaterial.disableLighting = true;
+    rectangularPrism.material = redMaterial;
+  }
+
   const polygonTriangulation = new PolygonMeshBuilder(entity.id.toString(), [...entity.body.vertices], scene, earcut);
   const poly = polygonTriangulation.build();
   poly.position = new Vector3(entity.body.position.x, entity.z, entity.body.position.y);
+  const material = scene.getMaterialById("standardMaterial");
   poly.material = material;
+
+  if (!scene.getMeshById(`${entity.id}-player-box`)) {
+    const greenMaterial = new StandardMaterial("green-material");
+    greenMaterial.emissiveColor = Color3.FromHexString(`#028a7e`);
+    greenMaterial.disableLighting = true;
+    const playerBox = CreateBox(`${entity.id}-player-box`, { size: 1, width: 4, height: 10, depth: 4 });
+    playerBox.material = greenMaterial;
+    playerBox.material!.wireframe = true;
+  }
+
   const camera = new ArcRotateCamera("Camera", -Math.PI, Math.PI / 4, 200, poly.position, scene);
   camera.upperRadiusLimit = 200;
   camera.lowerRadiusLimit = 40;
   // camera.upperBetaLimit = Math.PI / 4;
   // camera.lowerBetaLimit = Math.PI / 4;
   camera.attachControl(canvas, true);
-  scene.addMesh(poly);
-  const linePoints = getPolygonAngleLinePoints(entity.body.vertices, entity.body.angle);
-  MeshBuilder.CreateLines(
-    createEntityAngleLineIdString(entity.id),
-    { points: linePoints, updatable: true, colors: [Color4.FromHexString("#FF0000"), Color4.FromHexString("#FF0000")] },
-    scene
-  );
   return poly;
 }
