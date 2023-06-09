@@ -1,15 +1,16 @@
 import { Socket } from "socket.io-client";
-import { Scene, Vector3 } from "@babylonjs/core";
+import { ArcRotateCamera, Scene, Vector3 } from "@babylonjs/core";
 import React, { useEffect, useRef } from "react";
 import BabylonScene from "./SceneComponent";
 import { CombatSimulator } from "../../../../common";
 import { INetworkPerformanceMetrics } from "../../types";
 import { CombatSimulatorListener } from "../../components/SocketManager/CombatSimulatorListener";
-import createCSPlayerMeshAndCamera from "./createCSPlayerMeshAndCamera";
 import updateCSPlayerMesh from "./updateCSPlayerMesh";
 import setupCSScene from "./setupCSScene";
 import createCSClientInterval from "./createCSClientInterval";
 import updateCSPlayerCamera from "./updateCSPlayerCamera";
+import createCSPlayerMesh from "./createCSPlayerMesh";
+import createCSPlayerCamera from "./createCSPlayerCamera";
 
 interface Props {
   socket: Socket;
@@ -28,10 +29,12 @@ export default function CombatSimulatorGameClient({ socket, networkPerformanceMe
     Object.values(csRef.current.entities.playerControlled).forEach((entity) => {
       let poly = scene.getMeshByName(entity.id.toString());
       let oldPolyPosition = poly?.position || Vector3.Zero();
-      if (!poly) poly = createCSPlayerMeshAndCamera(entity, scene, canvas);
+      if (!poly) poly = createCSPlayerMesh(entity, scene, canvas);
       else oldPolyPosition = updateCSPlayerMesh(entity, poly, scene);
       if (typeof csRef.current.playerEntityId === "number" && entity.id === csRef.current.playerEntityId) {
-        updateCSPlayerCamera(poly, oldPolyPosition, scene);
+        let camera = scene.getCameraById("Camera");
+        if (!(camera instanceof ArcRotateCamera)) camera = createCSPlayerCamera(poly, scene, canvas);
+        else updateCSPlayerCamera(poly, oldPolyPosition, scene, camera);
       }
     });
   };
