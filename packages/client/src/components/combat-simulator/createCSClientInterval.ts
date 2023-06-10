@@ -16,16 +16,19 @@ function stepCSClient(socket: Socket, cs: CombatSimulator, scene: Scene) {
     cs.netcode.prevGameState = new CSGameState();
   }
 
-  // const numIdsToRemove = cs.meshIdsToRemove.length;
-  // for (let i = 0; i <= numIdsToRemove; i += 1) {
-  //   const id = cs.meshIdsToRemove.shift();
-  //   const playerBox = scene.getMeshById(`${id}-player-box`);
-  //   if (playerBox) scene.removeMesh(playerBox);
-  //   const playerRectangularPrism = scene.getMeshById(`${id}-rectangular-prism`);
-  //   if (playerRectangularPrism) scene.removeMesh(playerRectangularPrism);
-  //   const playerPoly = scene.getMeshById(id!.toString());
-  //   if (playerPoly) scene.removeMesh(playerPoly);
-  // }
+  const numIdsToRemove = cs.entityIdsRemovedSinceLastUpdate.length;
+  for (let i = 0; i < numIdsToRemove; i += 1) {
+    const id = cs.entityIdsRemovedSinceLastUpdate.shift();
+    delete cs.entities.playerControlled[id!];
+    console.log("REMOVING MESHES FOR ID: ", id);
+    const playerBox = scene.getMeshById(`${id}-player-box`);
+    console.log(playerBox);
+    if (playerBox) scene.removeMesh(playerBox);
+    const playerRectangularPrism = scene.getMeshById(`${id}-rectangular-prism`);
+    if (playerRectangularPrism) scene.removeMesh(playerRectangularPrism);
+    const playerPoly = scene.getMeshById(id!.toString());
+    if (playerPoly) scene.removeMesh(playerPoly);
+  }
 
   if (typeof cs.playerEntityId === "number") {
     const playerEntity = cs.entities.playerControlled[cs.playerEntityId];

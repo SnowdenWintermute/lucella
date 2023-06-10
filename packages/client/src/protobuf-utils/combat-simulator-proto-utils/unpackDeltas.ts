@@ -60,7 +60,6 @@ export default function unpackCSGameStateDeltas(serialized: Uint8Array) {
   if (deltas.hasEntitiesremovedsincelastupdate()) {
     const entityIds = deltas.getEntitiesremovedsincelastupdate()?.getEntityidsList();
     unpackedDeltas.entityIdsRemovedSinceLastUpdate = entityIds;
-    console.log("REMOVED ENTITY IDS: ", unpackedDeltas.entityIdsRemovedSinceLastUpdate);
   }
 
   if (deltas.hasPlayerentityid()) unpackedDeltas.playerEntityId = deltas.getPlayerentityid();
