@@ -4,6 +4,7 @@ class WrappedPool {
   private _pool: pg.Pool | null = null;
 
   connect(options: pg.PoolConfig) {
+    //
     this._pool = new pg.Pool(options);
     return this._pool.query("SELECT 1+1;");
   }
