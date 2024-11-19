@@ -10,6 +10,7 @@ import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/
 import { wrappedRedis } from "../../utils/RedisContext";
 import { ACCOUNT_CREATION_SESSION_PREFIX } from "../../consts";
 import { signJwtAsymmetric } from "../utils/jwt";
+import { env } from "../../validate-env";
 
 describe("accountActivationHandler", () => {
   let context: PGContext | undefined;
@@ -34,8 +35,8 @@ describe("accountActivationHandler", () => {
     const startingCount = await UsersRepo.count();
 
     // create appropriate jwt for link
-    const token = signJwtAsymmetric({ email: TEST_USER_EMAIL_ALTERNATE }, process.env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY!, {
-      expiresIn: process.env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION!,
+    const token = signJwtAsymmetric({ email: TEST_USER_EMAIL_ALTERNATE }, env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY!, {
+      expiresIn: env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION!,
     });
     // setup account activation session
     const hashedPassword = await bcrypt.hash(TEST_USER_PASSWORD, 12);
@@ -43,7 +44,7 @@ describe("accountActivationHandler", () => {
       `${ACCOUNT_CREATION_SESSION_PREFIX}${TEST_USER_EMAIL_ALTERNATE}`,
       JSON.stringify({ name: TEST_USER_NAME_ALTERNATE, email: TEST_USER_EMAIL_ALTERNATE, password: hashedPassword }),
       {
-        EX: parseInt(process.env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION!, 10),
+        EX: env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION,
       }
     );
 

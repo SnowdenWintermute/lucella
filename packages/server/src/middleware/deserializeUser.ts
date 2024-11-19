@@ -6,6 +6,7 @@ import UsersRepo from "../database/repos/users";
 import CustomError from "../classes/CustomError";
 import { AuthRoutePaths, ERROR_MESSAGES, UserStatuses } from "../../../common";
 import { wrappedRedis } from "../utils/RedisContext";
+import { env } from "../validate-env";
 
 export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
   if (res.locals.rateLimited) {
@@ -16,7 +17,7 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
     let accessToken;
     if (req.cookies.access_token) accessToken = req.cookies.access_token;
     if (!accessToken) return next([new CustomError(ERROR_MESSAGES.AUTH.NOT_LOGGED_IN, 401)]);
-    const decoded = verifyJwtAsymmetric<{ sub: string }>(accessToken, process.env.ACCESS_TOKEN_PUBLIC_KEY!);
+    const decoded = verifyJwtAsymmetric<{ sub: string }>(accessToken, env.ACCESS_TOKEN_PUBLIC_KEY!);
     if (!decoded) return next([new CustomError(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
 
     const session = await wrappedRedis.context!.get(decoded.sub.toString());

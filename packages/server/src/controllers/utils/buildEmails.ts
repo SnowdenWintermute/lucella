@@ -1,7 +1,8 @@
 import { FrontendRoutes, websiteName } from "../../../../common";
+import { env } from "../../validate-env";
 
-const rootUrl = process.env.NODE_ENV === "production" ? process.env.EMAIL_ROOT_URL : process.env.EMAIL_ROOT_URL_DEV;
-const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
+const rootUrl = env.NODE_ENV === "production" ? env.EMAIL_ROOT_URL : env.EMAIL_ROOT_URL_DEV;
+const protocol = env.NODE_ENV === "production" ? "https" : "http";
 
 export const RESET_PASSWORD_SUBJECT = "Reset your password";
 

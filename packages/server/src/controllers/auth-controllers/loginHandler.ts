@@ -16,18 +16,17 @@ import {
 } from "../../../../common";
 import { LoginUserInput } from "../../user-input-validation-schema/login-schema";
 import { wrappedRedis } from "../../utils/RedisContext";
+import { env } from "../../validate-env";
 
-const accessTokenExpiresIn: number = parseInt(process.env.ACCESS_TOKEN_EXPIRES_IN!, 10);
+const accessTokenExpiresIn: number = env.ACCESS_TOKEN_EXPIRES_IN;
 const accessTokenCookieOptions: CookieOptions = {
   expires: new Date(Date.now() + accessTokenExpiresIn),
   maxAge: accessTokenExpiresIn,
   httpOnly: true,
-  sameSite: "lax", // @todo - figure out if this is the right option
+  sameSite: env.NODE_ENV === "production" ? "strict" : "none",
 };
 
-// @todo - find out why this
-// Only set secure to true in production // @production
-if (process.env.NODE_ENV === "production") accessTokenCookieOptions.secure = true;
+if (env.NODE_ENV === "production") accessTokenCookieOptions.secure = true;
 
 export default async function loginHandler(req: Request<object, object, LoginUserInput>, res: Response, next: NextFunction) {
   try {

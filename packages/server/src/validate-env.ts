@@ -1,0 +1,35 @@
+import { cleanEnv, num, port, str, url } from "envalid";
+import * as dotenv from "dotenv";
+dotenv.config({ path: ".env" });
+
+export const env = cleanEnv(process.env, {
+  NODE_ENV: str({ choices: ["development", "production", "test"] }),
+  SENDGRID_API_KEY: str(),
+  SENDGRID_EMAIL: str(),
+  EMAIL_ROOT_URL: str(),
+  EMAIL_ROOT_URL_DEV: str(),
+  PORT: port(),
+  ORIGIN: url(),
+  POSTGRES_USER: str(),
+  POSTGRES_PASSWORD: str(),
+  POSTGRES_DB: str(),
+  POSTGRES_HOST_PRODUCTION: str(),
+  POSTGRES_HOST_DEV: str(),
+  POSTGRES_USER_PRODUCTION: str(),
+  POSTGRES_PASSWORD_PRODUCTION: str(),
+  POSTGRES_DB_PRODUCTION: str(),
+  REDIS_URL: url(),
+  ACCESS_TOKEN_EXPIRES_IN: num(),
+  AUTH_SESSION_EXPIRATION: num(),
+  PASSWORD_RESET_TOKEN_EXPIRES_IN: num(),
+  ACCOUNT_ACTIVATION_SESSION_EXPIRATION: num(),
+  TESTER_KEY: str(),
+  ACCESS_TOKEN_PRIVATE_KEY: str(),
+  ACCESS_TOKEN_PUBLIC_KEY: str(),
+  REFRESH_TOKEN_PRIVATE_KEY: str(),
+  REFRESH_TOKEN_PUBLIC_KEY: str(),
+  PASSWORD_RESET_TOKEN_PRIVATE_KEY: str(),
+  PASSWORD_RESET_TOKEN_PUBLIC_KEY: str(),
+  ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY: str(),
+  ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY: str(),
+});

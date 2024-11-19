@@ -27,16 +27,17 @@ import { ipRateLimiter } from "./middleware/rateLimiter";
 import checkForBannedIpAddress from "./middleware/checkForBannedIpAddress";
 import morgan from "morgan";
 import battleRoomLadderRouter from "./routes/battle-room-ladder";
+import { env } from "./validate-env";
 
 export default function createExpressApp() {
   const app = express();
   app.use(express.json({ limit: "10kb" }));
   app.use(cookieParser());
   app.use(helmet());
-  if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+  if (env.NODE_ENV === "development") app.use(morgan("dev"));
   app.use(
     cors({
-      origin: true,
+      origin: env.ORIGIN,
       credentials: true,
     })
   );

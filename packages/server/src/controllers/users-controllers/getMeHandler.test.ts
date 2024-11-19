@@ -9,6 +9,7 @@ import { wrappedRedis } from "../../utils/RedisContext";
 import setupExpressRedisAndPgContextAndOneTestUser from "../../utils/test-utils/setupExpressRedisAndPgContextAndOneTestUser";
 import { responseBodyIncludesCustomErrorMessage } from "../../utils/test-utils";
 import logTestUserIn from "../../utils/test-utils/logTestUserIn";
+import { env } from "../../validate-env";
 
 describe("getMeHandler", () => {
   let context: PGContext | undefined;
@@ -59,7 +60,7 @@ describe("getMeHandler", () => {
 
   it("should tell a user if their session has expired", async () => {
     // it will show expried if they provide a vaild token but no session is stored in redis
-    const accessToken = signJwtAsymmetric({ sub: 1 }, process.env.ACCESS_TOKEN_PRIVATE_KEY!, {
+    const accessToken = signJwtAsymmetric({ sub: 1 }, env.ACCESS_TOKEN_PRIVATE_KEY, {
       expiresIn: `1000m`,
     });
     const response = await request(app)

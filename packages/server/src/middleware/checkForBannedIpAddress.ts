@@ -4,7 +4,10 @@ import ipAddressIsBanned from "../utils/ipAddressIsBanned";
 
 export default async function checkForBannedIpAddress(req: Request, res: Response, next: NextFunction) {
   const { ip } = req;
-  const isBanned = await ipAddressIsBanned(ip);
+  let isBanned = true;
+  if (typeof ip === "string") {
+    isBanned = await ipAddressIsBanned(ip);
+  }
   if (isBanned) return res.end();
   next();
 }

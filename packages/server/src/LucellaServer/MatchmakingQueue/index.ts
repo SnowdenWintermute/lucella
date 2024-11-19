@@ -15,6 +15,7 @@ import UsersRepo from "../../database/repos/users";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { LucellaServer } from "..";
 import { lucella } from "../../lucella";
+import { env } from "../../validate-env";
 
 export interface MatchmakingQueueUser {
   userId: string;
@@ -50,7 +51,7 @@ export class MatchmakingQueue {
     };
     // refresh their session because they took an action that requires being logged in
     wrappedRedis.context!.set(user.id.toString(), JSON.stringify(user), {
-      EX: parseInt(process.env.AUTH_SESSION_EXPIRATION!, 10),
+      EX: env.AUTH_SESSION_EXPIRATION,
     });
 
     socket.join(OfficialChannels.matchmakingQueue);

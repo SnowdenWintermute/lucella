@@ -13,6 +13,7 @@ RUN mkdir /app/packages/server
 RUN mkdir /app/packages/common
 RUN mkdir -p /app/packages/common/dist/proto/generated/src/proto
 
+COPY node_modules ./node_modules
 COPY packages/server/package.json ./packages/server
 COPY packages/common/package.json ./packages/common
 

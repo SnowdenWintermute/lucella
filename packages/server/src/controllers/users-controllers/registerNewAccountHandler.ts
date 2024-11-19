@@ -10,6 +10,7 @@ import { buildAccountActivationHTML, buildAccountActivationText, ACCOUNT_ACTIVAT
 import { signJwtAsymmetric } from "../utils/jwt";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { ACCOUNT_CREATION_SESSION_PREFIX } from "../../consts";
+import { env } from "../../validate-env";
 
 export default async function registerNewAccountHandler(req: Request<object, object, UserRegistrationUserInput>, res: Response, next: NextFunction) {
   const { name, email, password } = req.body;
@@ -19,12 +20,12 @@ export default async function registerNewAccountHandler(req: Request<object, obj
   const nameAlreadyExists = await UsersRepo.findOne("name", name.toLowerCase().trim());
   if (nameAlreadyExists) return next([new CustomError(ERROR_MESSAGES.AUTH.NAME_IN_USE_OR_UNAVAILABLE, 403)]);
 
-  const token = signJwtAsymmetric({ email }, process.env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY!, {
-    expiresIn: process.env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION!,
+  const token = signJwtAsymmetric({ email }, env.ACCOUNT_ACTIVATION_TOKEN_PRIVATE_KEY, {
+    expiresIn: env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION!,
   });
   const hashedPassword = await bcrypt.hash(password, 12);
   wrappedRedis.context!.set(`${ACCOUNT_CREATION_SESSION_PREFIX}${email}`, JSON.stringify({ name, email, password: hashedPassword }), {
-    EX: parseInt(process.env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION!, 10),
+    EX: env.ACCOUNT_ACTIVATION_SESSION_EXPIRATION,
   });
   await sendEmail(email, ACCOUNT_ACTIVATION_SUBJECT, buildAccountActivationText(name, token!), buildAccountActivationHTML(name, token!));
 

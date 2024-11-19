@@ -10,6 +10,7 @@ import { LucellaServer } from ".";
 import UsersRepo from "../database/repos/users";
 import { wrappedRedis } from "../utils/RedisContext";
 import getIpFromSocketHandshake from "./utils/getIpFromSocketHandshake";
+import { env } from "../validate-env";
 
 export default async function handleNewSocketConnection(server: LucellaServer, socket: Socket) {
   try {
@@ -18,7 +19,7 @@ export default async function handleNewSocketConnection(server: LucellaServer, s
     let isGuest = true;
     const token = cookie.parse(socket.handshake.headers.cookie || "").access_token || null;
     let decoded;
-    if (token) decoded = verifyJwtAsymmetric<{ sub: string }>(token.toString(), process.env.ACCESS_TOKEN_PUBLIC_KEY!);
+    if (token) decoded = verifyJwtAsymmetric<{ sub: string }>(token.toString(), env.ACCESS_TOKEN_PUBLIC_KEY!);
     if (decoded) {
       const session = await wrappedRedis.context!.get(decoded.sub.toString());
       if (!session) {

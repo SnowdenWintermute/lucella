@@ -6,12 +6,13 @@ import { ERROR_MESSAGES, SanitizedUser } from "../../../../common";
 import { verifyJwtAsymmetric } from "../utils/jwt";
 import { wrappedRedis } from "../../utils/RedisContext";
 import { ACCOUNT_CREATION_SESSION_PREFIX } from "../../consts";
+import { env } from "../../validate-env";
 
 export default async function accountActivationHandler(req: Request<object, object, { token: string }>, res: Response, next: NextFunction) {
   try {
     const { token } = req.body;
     if (!token) return next([new CustomError(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
-    const decoded: { email: string } | null = verifyJwtAsymmetric(token, process.env.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY!);
+    const decoded: { email: string } | null = verifyJwtAsymmetric(token, env.ACCOUNT_ACTIVATION_TOKEN_PUBLIC_KEY);
     if (!decoded) return next([new CustomError(ERROR_MESSAGES.AUTH.INVALID_OR_EXPIRED_TOKEN, 401)]);
     const { email } = decoded;
     const accountActivationSession = await wrappedRedis.context!.get(`${ACCOUNT_CREATION_SESSION_PREFIX}${email}`);

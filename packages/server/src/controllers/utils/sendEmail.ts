@@ -1,8 +1,10 @@
 /* eslint-disable consistent-return */
 import sgMail from "@sendgrid/mail";
+import { env } from "../../validate-env";
 
 export async function sendEmail(emailAddress: string, subject: string, textOutput: string, htmlOutput: string) {
-  if (process.env.SENDGRID_API_KEY) sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  // eslint-disable-next-line no-undef
+  if (env.SENDGRID_API_KEY) sgMail.setApiKey(env.SENDGRID_API_KEY);
   else return console.error("No sendgrid api key was found");
   const msg = {
     to: emailAddress, // Change to your recipient

@@ -15,7 +15,7 @@ export default class CypressTestRepo {
     );
   }
   static async deleteTestUsers() {
-    // if (process.env.NODE_ENV !== "development") return
+    // if (env.NODE_ENV !== "development") return
     await wrappedPool.query(`DELETE FROM ${PSQL_TABLES.USERS} WHERE name = $1 OR name = $2;`, [
       TEST_USER_NAME.toLowerCase().trim(),
       TEST_USER_NAME_ALTERNATE.toLowerCase().trim(),

@@ -11,8 +11,9 @@ import wrappedPool from "./database/wrappedPool";
 import { wrappedRedis, RedisContext } from "./utils/RedisContext";
 import { lucella } from "./lucella";
 import loadLadderIntoRedis from "./utils/loadLadderIntoRedis";
+import { env } from "./validate-env";
 
-const { PORT } = process.env;
+const { PORT } = env;
 
 wrappedPool
   .connect(pgOptions)

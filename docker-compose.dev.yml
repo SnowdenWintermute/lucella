@@ -23,6 +23,7 @@ services:
     volumes:
       - ./packages/server:/app/packages/server
       - ./packages/common:/app/packages/common
+      - ./node_modules:/app/node_modules
   toxiproxy:
     depends_on:
       - node-server

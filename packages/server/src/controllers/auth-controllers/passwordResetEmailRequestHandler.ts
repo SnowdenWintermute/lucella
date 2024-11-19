@@ -5,6 +5,7 @@ import CustomError from "../../classes/CustomError";
 import { ERROR_MESSAGES, UserStatuses } from "../../../../common";
 import { sendEmail } from "../utils/sendEmail";
 import { buildPasswordResetHTML, buildPasswordResetText, RESET_PASSWORD_SUBJECT } from "../utils/buildEmails";
+import { env } from "../../validate-env";
 
 // eslint-disable-next-line consistent-return
 export default async function passwordResetEmailRequestHandler(req: Request, res: Response, next: NextFunction) {
@@ -15,7 +16,7 @@ export default async function passwordResetEmailRequestHandler(req: Request, res
     const payload = { user: { email: user.email } };
 
     const passwordResetToken = signJwtSymmetric(payload, user.password, {
-      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!, 10) / 1000 / 60}m`,
+      expiresIn: `${env.PASSWORD_RESET_TOKEN_EXPIRES_IN / 1000 / 60}m`,
     });
 
     const htmlOutput = buildPasswordResetHTML(user.email, passwordResetToken!);

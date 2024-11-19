@@ -1,15 +1,17 @@
+import { env } from "../validate-env";
+
 export const pgOptions = {
-  host: process.env.NODE_ENV === "production" ? process.env.POSTGRES_HOST_PRODUCTION : process.env.POSTGRES_HOST_DEV,
+  host: env.NODE_ENV === "production" ? env.POSTGRES_HOST_PRODUCTION : env.POSTGRES_HOST_DEV,
   port: 5432,
-  database: process.env.NODE_ENV === "production" ? process.env.POSTGRES_DB_PRODUCTION : process.env.POSTGRES_DB,
-  user: process.env.NODE_ENV === "production" ? process.env.POSTGRES_USER_PRODUCTION : process.env.POSTGRES_USER,
-  password: process.env.NODE_ENV === "production" ? process.env.POSTGRES_PASSWORD_PRODUCTION : process.env.POSTGRES_PASSWORD,
+  database: env.NODE_ENV === "production" ? env.POSTGRES_DB_PRODUCTION : env.POSTGRES_DB,
+  user: env.NODE_ENV === "production" ? env.POSTGRES_USER_PRODUCTION : env.POSTGRES_USER,
+  password: env.NODE_ENV === "production" ? env.POSTGRES_PASSWORD_PRODUCTION : env.POSTGRES_PASSWORD,
 };
 
 export const pgOptionsTestDB = {
   host: "localhost",
   port: 5432,
   database: "lucella-test",
-  user: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
+  user: env.POSTGRES_USER,
+  password: env.POSTGRES_PASSWORD,
 };

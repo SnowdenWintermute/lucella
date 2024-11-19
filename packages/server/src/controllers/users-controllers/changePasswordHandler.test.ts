@@ -9,6 +9,7 @@ import { TEST_USER_ALTERNATE_PASSWORD, TEST_USER_EMAIL, TEST_USER_PASSWORD } fro
 import { signJwtSymmetric } from "../utils/jwt";
 import UsersRepo from "../../database/repos/users";
 import signTokenAndCreateSession from "../utils/signTokenAndCreateSession";
+import { env } from "../../validate-env";
 
 describe("changePasswordHandler", () => {
   let context: PGContext | undefined;
@@ -43,7 +44,7 @@ describe("changePasswordHandler", () => {
     // bypass login and give the token to authorize the user to update their password, just for this test
     const { accessToken } = await signTokenAndCreateSession(user);
     const passwordResetToken = signJwtSymmetric(payload, user.password, {
-      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!, 10) / 1000 / 60}m`,
+      expiresIn: `${env.PASSWORD_RESET_TOKEN_EXPIRES_IN / 1000 / 60}m`,
     });
 
     const response = await request(app).put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.PASSWORD}`).send({
@@ -120,7 +121,7 @@ describe("changePasswordHandler", () => {
     const user = await UsersRepo.findById(1);
     if (!user) return;
     const passwordResetToken = signJwtSymmetric(payload, user.password, {
-      expiresIn: `${parseInt(process.env.PASSWORD_RESET_TOKEN_EXPIRES_IN!, 10) / 1000 / 60}m`,
+      expiresIn: `${env.PASSWORD_RESET_TOKEN_EXPIRES_IN / 1000 / 60}m`,
     });
 
     const response = await request(app).put(`/api${UsersRoutePaths.ROOT}${UsersRoutePaths.PASSWORD}`).send({

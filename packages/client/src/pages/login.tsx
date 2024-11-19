@@ -48,6 +48,7 @@ function Login() {
     if (isError && error && "data" in error) {
       console.log(error);
       const errors: CustomErrorDetails[] = error.data as CustomErrorDetails[];
+      console.log(error.data);
       const newFieldErrors = { ...fieldErrors };
       errors.forEach((currError) => {
         if (currError.field === InputFields.AUTH.EMAIL) newFieldErrors.email = currError.message;

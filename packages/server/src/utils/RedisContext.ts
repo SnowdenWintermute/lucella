@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import { createClient, RedisClientType, SetOptions } from "redis";
 import { randomBytes } from "crypto";
+import { env } from "../validate-env";
 
 export class RedisContext {
   keyPrefix: string;
@@ -10,7 +11,7 @@ export class RedisContext {
     const keyPrefix = randomBytes(4).toString("hex");
     return new RedisContext(
       createClient({
-        url: process.env.REDIS_URL,
+        url: env.REDIS_URL,
       }),
       withPrefix ? keyPrefix : ""
     );
